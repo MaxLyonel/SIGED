@@ -204,16 +204,68 @@ class TramiteAceleraController extends Controller
             ->getSingleResult();
         $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
-        // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));dump($restudianteinst->getInstitucioneducativaCurso());die;
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));
+//  dump($restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId());
+
+
+        $objAreasCurrentLevel = $this->getAsignaturasPerStudent(
+            $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
+            $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
+            $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId(),
+            $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId(),
+            $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId()
+        );
+      
+
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
         $informe = $datos->informe;
         if ($datos->procede_aceleracion == "SI") {
-            return $this->render('SieHerramientaBundle:TramiteAcelera:supletorio.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision));
+            return $this->render('SieHerramientaBundle:TramiteAcelera:supletorio.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision,
+                'materiasnotas1' => $objAreasCurrentLevel, ));
         } else {
             return $this->render('SieHerramientaBundle:TramiteAcelera:observacion.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision));
         }
     }
+
+      /**
+     * get the asignaturas per student
+     * @param type $sie
+     * @param type $nivel
+     * @param type $grado
+     * @param type $paralelo
+     * @param type $turno
+     * @return \Sie\AppWebBundle\Controller\Exception
+     */
+    private function getAsignaturasPerStudent($sie, $nivel, $grado, $paralelo, $turno) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('ast.id', 'ast.asignatura, ieco.id as iecoId')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco', 'WITH', 'iec.id=ieco.insitucioneducativaCurso')
+                ->leftjoin('SieAppWebBundle:AsignaturaTipo', 'ast', 'WITH', 'ieco.asignaturaTipo=ast.id')
+                ->leftjoin('SieAppWebBundle:AreaTipo', 'at', 'WITH', 'ast.areaTipo = at.id')
+                ->where('iec.institucioneducativa= :sie')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('iec.nivelTipo = :nivel')
+                ->andwhere('iec.gradoTipo = :grado')
+                ->andwhere('iec.paraleloTipo = :paralelo')
+                ->andwhere('iec.turnoTipo = :turno')
+                ->setParameter('sie', $sie)
+                ->setParameter('gestion', $this->session->get('currentyear'))
+                ->setParameter('nivel', $nivel)
+                ->setParameter('grado', $grado)
+                ->setParameter('paralelo', $paralelo)
+                ->setParameter('turno', $turno)
+                ->orderBy('at.id,ast.id')
+                ->getQuery();
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
+
 
     public function guardaSupleAction(Request $request) {
         $estado = 200;
