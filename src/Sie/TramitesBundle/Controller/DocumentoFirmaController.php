@@ -242,4 +242,96 @@ class DocumentoFirmaController extends Controller {
         $response = new JsonResponse();
         return $response->setData(array('aregistro' => $respuesta));
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion accion que lista las firmas activas registradas en el sistema 
+    // PARAMETROS: 
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function listaAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+            select df.id, lt.lugar, pt.persona as tipo, p.nombre, p.paterno, p.materno, p.nombre || ' ' || p.paterno || ' ' || p.materno as persona
+            , encode(df.firma,'escape') as firma, df.fecha_registro 
+            from documento_firma as df
+            inner join persona as p on p.id = df.persona_id
+            inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id
+            inner join persona_tipo as pt on pt.id = df.persona_tipo_id
+            where df.esactivo = true
+            order by pt.persona, lt.lugar, p.nombre, p.paterno, p.materno, df.id
+        ");
+        $query->execute();
+        $entity = $query->fetchAll();
+
+        return $this->render($this->session->get('pathSystem') . ':DocumentoFirma:firmaLista.html.twig', array(                
+            'titulo' => 'Firma Electrónica',
+            'subtitulo' => 'Lista',
+            'firmas' => $entity
+        ));
+    }
+
+    public function modificaAction(Request $request){
+        // get the send values
+    	$firma = base64_decode($request->get('firma'));
+    	$id = $request->get('id');
+    	// $arrData = json_decode($jsonData,true);
+    	//$arrCouchs = $this->getTheCouch(json_decode($jsonData,true));
+    	// $showOptionRegister = sizeof($arrCouchs)>0?false:true;
+        $showOptionRegister = true;
+    	return $this->render($this->session->get('pathSystem') . ':DocumentoFirma:firmaModifica.html.twig',array(
+    		'form'=>$this->creaFormularioFirma($firma, $id)->createView(),
+    	));
+    }
+
+    private function creaFormularioFirma($firmaId, $id)
+    { 
+        $form = $this->createFormBuilder()
+            ->add('id', 'hidden', array('attr' => array('value' => $id))) 
+            ->add('firma', 'hidden', array('attr' => array('value' => base64_encode($firmaId))))            
+            ->add('foto', 'file', array('label' => 'Fotografía (.png)', 'required' => true)) 
+            ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-blue', 'onclick'=>'confirma()')))
+            ->getForm();
+        return $form;        
+    }
+
+    public function modificaGuardaAction(Request $request){
+        $msg_correcto = "";
+        $msg_incorrecto = "";
+    	// get the send values
+    	$firma = base64_decode($request->get('firma'));
+       
+        $form = $request->get('form');
+        $file = $request->files->get('form');
+        if($form and $file){
+            $foto = $file['foto'];
+            $documentoFirmaId = base64_decode($form['firma']);
+            $strm = fopen($foto->getRealPath(),'rb');
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try{        
+            $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                $entityDocumentoFirma->setFirma(base64_encode(stream_get_contents($strm)));
+                $entityDocumentoFirma->setObs('Modificado');
+                $em->persist($entityDocumentoFirma);
+                $em->flush(); 
+                $em->getConnection()->commit();
+                $msg_correcto = "Modificado correctamente";
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $msg_incorrecto = "Error al realizar la modificación, intente nuevamente";
+            }
+        } else {
+            $msg_incorrecto = "Error al procesar el formulario, intente nuevamente";
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(
+            array(
+                'firma1' => (($entityDocumentoFirma->getFirma())), 
+                'msg_correcto' => $msg_correcto, 
+                'msg_incorrecto' => $msg_incorrecto
+            )
+        );
+    }
 }
