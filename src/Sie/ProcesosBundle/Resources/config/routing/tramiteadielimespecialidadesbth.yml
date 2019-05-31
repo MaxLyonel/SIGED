@@ -1,0 +1,39 @@
+tramite_especialidades_bth:
+    path:      /
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index" }
+
+tramite_solicitud_especialidades_bth:
+    path:      /solicitudEspecialidadesBTH
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidades" }
+
+tramite_validar_solicitud_especialidades_bth:
+    path:      /verifica
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:validariniciosolicitudespecialidadesbth" }
+#Distrito
+tramite_especialidades_distrito_bth:
+    path:      /solicitusespecialidadesDistritalbth
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:VerSolicitudEspecialidadBTHDis" }
+
+tramite_solicitud_especialidades_bth_Dis:
+    path:      /solicitudEspecialidadesBTHDis
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidadesDis" }
+
+#Departamental
+VerSolicitudEspecialidadesBTHDep:
+    path:      /VersolicitudEspecialidadesBTHDep
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:VerSolicitudEspecialidadesBTHDep" }
+
+tramite_solicitud_especialidades_bth_Dep:
+    path:      /solicitudEspecialidadesBTHDep
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidadesDep" }
+
+
+
+
+
+
+
+
+
+
+

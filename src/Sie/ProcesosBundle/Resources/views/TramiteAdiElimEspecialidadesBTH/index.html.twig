@@ -1,179 +1,569 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
-<div class="header-content">
-    <h2><i class="fa fa-list-alt"></i> Anular BTH <span> Búsqueda</span></h2>
-      <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
+    <style type="text/css">
+        .swal-overlay {
+            background-color: rgba(43, 165, 137, 0.45);
+        }
+    </style>
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí12312:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Anular BTH</a>
+                    <a href={#{{ path('solicitud_bth_index') }}#}>Nueva Solicitud BTH</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
+
+                <li class="active">Index</li>
             </ol>
-      </div><!-- /.breadcrumb-wrapper -->
-</div>
-<div class="body-content animated fadeIn">
-    <div class="row">
-        <div id="mensaje"></div>
-    </div>
-    <div class="col-md-12">
-        <div class="panel rounded shadow">
-            <div class="panel-heading">
-                <div class="pull-left">
-                    <h3 class="panel-title">Buscar SIE</h3>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+    {% if estado == 0 %}
+        {% set iedu = ieducativa[0] %}
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Formularios de Solicitudes</h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">
+                                    {{form_start(form,{'attr':{'id':'formSolicitud'} })}}
+                                    <div class="col-md-4 col-md-offset-4">
+                                        <h3><strong>Adición y eliminación de especialidades</strong></h3>
+                                        {{form_widget(form.solicitud)}}
+                                    </div>
+                                    {{form_end(form)}}
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
                 </div>
-                <div class="clearfix"></div>
-            </div><!-- /.panel-heading -->
-            <div class="panel-body no-padding">
-                <form id="form_busquedabth">
-                    <div class="form-body">
-                        <div class="form-group">
-                            <label class="control-label">Inserte SIE</label>
-                            <input type="text" class="form-control rounded" name="sie" id="sie" style="text-transform: uppercase" maxlength="8" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="form-footer">
-                        <div class="pull-right">
-                            <button type="submit" class="btn btn-theme" id="buscarbth">Buscar</button>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
-    <div class="col-md-12" id="respuestabth" style="display: none" >
-        <div class="panel rounded shadow">
-            <div class="panel-heading">
-                <div class="pull-left">
-                    <h3 class="panel-title">Unidad Educativa</h3>
-                </div>
-                <div class="clearfix"></div>
-            </div><!-- /.panel-heading -->
-            <div class="panel-body no-padding">
+        <div class="row"  >
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title" id="titulo">Formularios </h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="row" id="form_adicionar_especialidad" style="display: none" >
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">1.- Información General</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
 
-                    <div class="form-body">
-                        <div id="no-more-tables">
-                            <table class="table" id="tablaelimina">
-                                <thead>
-                                <tr>
-                                    <th>Sie</th>
-                                    <th>Unidad Educativa</th>
-                                    <th>Anular Trámite BTH</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><label id="sie_id"></label> </td>
-                                        <td><label id="ue"></label></td>
-                                        <td data-title="Acciones">
-                                            <button class="btn btn-success rounded" onclick="anularBTh()" id="btnanulabth" > Anular BTH</button>
-                                        </td>
-                                    </tr>
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Código RUE</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Unidad Educativa</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {{ id_institucion }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {{ iedu.institucioneducativa }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">2.- Información de la(s) especialidad con las que cuenta su Unidad Educativa</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="table-responsive mb-20">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="text-center">#</th>
+                                                                <th>Especialidad</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for especialidad in objespecialidades_ue %}
+                                                                <tr>
+                                                                    <td class="text-center">{{loop.index}}</td>
+                                                                    <td>{{especialidad.especialidad}} </td>
+                                                                </tr>
+                                                            {% endfor%}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
 
-                                </tbody>
-                            </table>
+                                                </div>
+                                            </div>
+
+                                        </div><!-- /.panel-body -->
+
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Especialidades a adicionar</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <strong>Seleccionar las especialidades para adicionar</strong>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                                {% for especialidad in objespecialidades %}
+                                                                    <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="pull-right">
+                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-footer">
+                    <div class="row" id="form_eliminar_especialidad" style="display: none">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">1.- Información General</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
 
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Código RUE</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Unidad Educativa</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {{ id_institucion }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {{ iedu.institucioneducativa }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">2.- Información de la(s) especialidad con las que cuenta su Unidad Educativa</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="table-responsive mb-20">
+                                                        <table class="table" id="especialidades_eliminar" >
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="text-center">#</th>
+                                                                <th>Especialidad</th>
+                                                                <th>Eliminar</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for especialidadlista in objespecialidades_ue %}
+                                                                <tr style="color: #ff6d00 !important;">
+                                                                    <td class="text-center">{{loop.index}}</td>
+                                                                    <td class="espe" >{{especialidadlista.especialidad}} </td>
+                                                                    <td> <input id="marca_{{loop.index}}" type="checkbox"   class="marcado" data-title="Eliminar">
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor%}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="pull-right">
+                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="pruebalupe()"><i class="fa fa-pencil"></i> pruebalupe</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
+        </div>
+        <div class="modal fade" id="recargar" tabindex="-1" role="dialog" style=" border-radius: 80px;" >
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    {#<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>#}
+                    <div class="modal-body">
+                        <h2 align="center"><span id="msg">¡Su formulario fue enviado con éxito!.</span></h2>
+
+                        <div class="alert alert-danger">
+                            <strong>Nota.- !</strong> Descargue su comporbante en "Trámites Enviados".
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-facebook" onclick="recargar()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"></h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="alert alert-warning ">
+                                        <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                        <div class="notification-info">
+                                            {% if estado == 1 %}
+                                            <p>
+                                                Su Unidad Educativa no es plena.
+                                            </p>
+                                            {% elseif estado == 2 %}
+                                                <p>
+                                                    Su Unidad Educativa ya inicio su trámite ó no le corresponde realizar la solicitud para BTH.
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <a href="{{ path('wf_tramite_index') }}" class="btn btn-info">Volver</a>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endif %}
     </div>
-</div>
-
-
 {% endblock %}
 {% block javascripts%}
- {{ parent() }}
-<script>
-    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-        $(".alert").slideUp(1000);
-    });
-    $("#form_busquedabth").submit( function (event) {
-        event.preventDefault();
-       /* $("#buscarbth").attr('disabled', true);*/
-        var formdata = $('#form_busquedabth').serialize();
-        $.ajax({
-            type: 'post',
-            url: "{{ path('anularbth_listasie') }}",
-            data: formdata,
-            beforeSend: function () {
-                //$("#respuestabth").empty();
-                //$("#respuestabth").append('<div class="text-center">Cargando... <img src="{ {asset('img/loading.gif')}}" /></div>');
-            },
-            success: function (data) {
-                console.log(data);
-                if(data.estado==1){
-                    mesage("danger","Notificación",data.msg);
-                }else if(data.estado==2){
-                    mesage("warning","Notificación",data.msg);
-                }else if(data.estado==4){
-                    mesage("danger","Notificación",data.msg);
-                }else if(data.estado==5){
-                    mesage("danger","Notificación",data.msg);
-                }else if(data.estado==3){
-                    $('#respuestabth').show(300);
-                    $('#sie_id').text(data.sie);
-                    $('#ue').text(data.ue);
-                }
-            },
-            error: function (error) {
-                $("#buscarbth").attr('disabled', false);
+    {{ parent() }}
+    <script>
+        var campos_max  = 10;   //max de 10 campos
+        var x = 0;
+        $('#nueva_especialidad').click (function(e) {
+            e.preventDefault();
+            if (x < campos_max) {
+                $('#listas_especialidad').append('<div>\
+                                <input type="text" name="campo[]">\
+                                <a href="#" class="remover_campo"><span class=".text-danger"><strong>(-)</strong></span></a>\
+                                <br>\
+                                </div>');
+                x++;
             }
         });
-    });
-    function anularBTh() {
-        swal({
-            title: "¿Está Segura/o de anular la solicitud BTH ?",
-            text: "Tomar en cuenta que el trámite de la Unidad Educativa se finalizará.",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-            buttons: ["Cancelar", "Continuar"]
-        })
-            .then(function(willDelete)  {
-                if (willDelete) {
-                    var formData = {sie:$('#sie_id').text()};
-                    console.log(formData);
-                    $.ajax({
-                        type: 'post',
-                        url: "{{ path('anularbth_anula') }}",
-                        data: formData,
-                        beforeSend: function () {
-                            /*$("#eventos").empty();
-                            $("#eventos").append('<div class="text-center">Cargando... <img src="{ {asset('img/loading.gif')}}" /></div>');*/
-                        },
-                        success: function (data) {
-                            console.log(data);
-                            //$("#btnanulabth").attr('disabled', false);
-                            if (data.estado == 1) {
-                                mesage("success","Notificación",data.msg);
-                                $('#respuestabth').hide();
+        // Remover o div anterior
+        $('#listas_especialidad').on("click",".remover_campo",function(e) {
+            e.preventDefault();
+            $(this).parent('div').remove();
+            x--;
+        });
+        $('.marcado').on("change",function(e) {
+          console.log($(this).val());
+        });
 
-                                //window.location.reload(true)
-                                //setTimeout(function () { window.location.reload(true);}, 2000);
-                            }else if (data.estado == 2) {
-                                mesage("danger","Notificación",data.msg);
-                            }else {
-                                mesage("danger","Notificación",data.msg);
+        function enviarSolicitudEspecialidadesbth() {
+            /*
+            * Funcion que envia la solicitud BTH capturando los valor introducidos
+            * en el formulario.*/
+            var idsolicitud=$('#form_solicitud').val();
+            var solicitud=$('#form_solicitud :selected').text();
+            switch (solicitud){
+                case 'Adicionar Especialidades': //Registro Nuevo
+                    swal({
+                        title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                        text:  "La información llenada será enviada a la Dirección Distrital." + '\n'+
+                        "Puede descargar su formulario como comprobante " +
+                        "en : Trámites Enviados" +'\n'+"",
+                        icon:  "warning",
+                        buttons: true,
+                        dangerMode: true,
+                        buttons: ["Cancelar", "Continuar"],
+                    })
+                        .then(function(willDelete)  {
+                            if (willDelete) {
+                                var institucionid={{ id_institucion }}
+                                var idsolicitud=$('#form_solicitud').val();
+                                if($('#select_especialidad').val()) {
+                                } else {
+                                    swal("Debe seleccionar al menos una especialidad.");
+                                    return false;
+                                }
+                                //var ipt=JSON.stringify(ip);
+                                var imagen = '{{ asset("img/loading96.gif") }}';
+                                $.ajax({
+                                    type: 'post',
+                                    url: "{{ path('tramite_solicitud_especialidades_bth') }}",
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    dataType : 'json',
+                                    beforeSend: function () {
+                                        swal({
+                                            title: "Enviando...",
+                                            text: "Espere un momento por favor",
+                                            icon: imagen,
+                                            buttons: false
+                                        });
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        if (data.estado==1){
+                                            swal.stopLoading();
+                                            swal.close();
+                                            $(".modal-backdrop ").css("display", "none");
+                                            $('#msg').text(data.msg);
+                                            $('#recargar').modal('show');
+                                            $(".modal-backdrop ").css("display", "none");
+
+                                        }
+                                        else if(data.estado==3 ){
+                                            swal("Su trámite ya fue iniciado'");
+                                        }else if(data.estado == 4){
+                                            swal(data.msg)
+                                        }
+                                        else {
+                                            swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
+                                                '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
+                                                '- Su Unidad Educativa ya se encuentra registrado como BTH.');
+                                        }
+                                    },
+                                    complete: function () {
+                                        swal.stopLoading();
+                                        swal.close();
+                                    }
+                                });
                             }
+                        });
+                    break;
+                case (solicitud == 'Eliminar Especialidades')://Eliminar Especialidades
+                    swal({
+                        title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                        text:  "La información llenada será enviada a la Dirección Distrital." + '\n'+
+                        "Puede descargar su formulario como comprobante " +
+                        "en : Trámites Enviados" +'\n'+"",
+                        icon:  "warning",
+                        buttons: true,
+                        dangerMode: true,
+                        buttons: ["Cancelar", "Continuar"],
+                    })
+                        .then(function(willDelete)  {
+                            if (willDelete) {
+                                var institucionid={{ id_institucion }}
+                                var idsolicitud=$('#form_solicitud').val();
 
-                        },
-                        error: function (error) {
-                            $("#guardar").attr('disabled', false);
-                        }
+                                $("tr.item").each(function() {
+                                    $this = $(this);
+                                    var value = $this.find("span.value").html();
+                                    var quantity = $this.find("input.quantity").val();
+                                });
+                                ///pendienteeeeeee
+                                if($('#select_especialidad').val()) {
+                                } else {
+                                    swal("Debe seleccionar al menos una especialidad.");
+                                    return false;
+                                }
+                                var imagen = '{{ asset("img/loading96.gif") }}';
+                                $.ajax({
+                                    type: 'post',
+                                    url: "{{ path('tramite_solicitud_especialidades_bth') }}",
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    dataType : 'json',
+                                    beforeSend: function () {
+                                        swal({
+                                            title: "Enviando...",
+                                            text: "Espere un momento por favor",
+                                            icon: imagen,
+                                            buttons: false
+                                        });
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        if (data.estado==1){
+                                            swal.stopLoading();
+                                            swal.close();
+                                            $(".modal-backdrop ").css("display", "none");
+                                            $('#msg').text(data.msg);
+                                            $('#recargar').modal('show');
+                                            $(".modal-backdrop ").css("display", "none");
+                                        }
+                                        else if(data.estado==3 ){
+                                            swal("Su trámite ya fue iniciado'");
+                                        }else if(data.estado == 4){
+                                            swal(data.msg)
+                                        }
+                                        else {
+                                            swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
+                                                '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
+                                                '- Su Unidad Educativa ya se encuentra registrado como BTH.');
+                                        }
+                                    },
+                                    complete: function () {
+                                        swal.stopLoading();
+                                        swal.close();
+                                    }
+                                });
+                            }
+                        });
+                    break;
+            }
+        }
+        function pruebalupe(){
+            alert("das");
+            $('#especialidades_eliminar tbody').find("tr").each(function(i,item) {
+                $(this).find('td').each(function(j,col) {
+                    console.log($(this).find('input'))
+                    if($('#informeregularizacion:checked').val())
+                    if($('#marca_'+(j+1)+':checked')){
+                        console.log("sd",$('#marca_'+(j+1)+':checked'));
+                    }$('.micheckbox').attr('checked')
+                   // console.log($(this).val(),col.val());
+                });
+            });
+            //console.log(valores);
+        }
+        function cargarFormularioSolicitud() {
+            var solicitud=$('#form_solicitud :selected').text();
+            var idsolicitud=$('#form_solicitud').val();
+            switch (true){
+                case (solicitud == 'Adicionar Especialidades'):
+                        document.getElementById("titulo").innerHTML = "Formulario de <strong><em>Adición de especialidades</em></strong>";
+                        $('#form_eliminar_especialidad').hide();
+                        $('#form_adicionar_especialidad').show(2000);
+                    break;
+                case (solicitud == 'Eliminar Especialidades')://Eliminar Especialidades
+                    document.getElementById("titulo").innerHTML= "Formulario de <strong><em>Eliminación de especialidades</em></strong>";
+                    $('#form_adicionar_especialidad').hide();
+                    $('#form_eliminar_especialidad').show(2000);
+                    break;
+            }
+        }
+        function validarsolicitud() {
+            var solicitud=$('#form_solicitud :selected').text();
+            var idsolicitud=$('#form_solicitud').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            $.ajax({
+                type: 'post',
+                url: "{{ path('tramite_validar_solicitud_especialidades_bth') }}",
+                data:{institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }}},
+                dataType : 'json',
+                beforeSend: function () {
+                    swal({
+                        title: "Verificando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
                     });
+                },
+                success: function (data) {
+                    if (data.respuesta==0){
+                        cargarFormularioSolicitud();
+                    }else if(data.respuesta==1)  {
+                        swal('Usted ya dio inicio al trámite de adicionar especialidades');
+                    }else if(data.respuesta==2){
+                        swal('Usted ya dio inicio al trámite de eliminar especialidades');
+                    }
+                },
+                complete: function () {
+                    swal.stopLoading();
+                    swal.close();
                 }
             });
-    }
-
-    function mesage(tipo, titulo, msg) {
-        $("#mensaje").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-            '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-    }
-</script>
+        }
+        function recargar() {
+            $('#recargar').modal('hide');
+            location.href = "{{ path('wf_tramite_index') }}";
+        }
+        $(document).ready(function(){
+            $('#form_adicionar_especialidad').hide();
+            $('#form_eliminar_especialidad').hide();
+            $('#mensaje').hide();
+        });
+    </script>
 {% endblock %}
