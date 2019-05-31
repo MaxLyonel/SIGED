@@ -1,86 +1,86 @@
-    <style>
-        .modal-dialog{
-            width: 70%;
-        }
-    </style>
-                {% if app.session.flashBag.has('exito') %}
-                    <div class="alert alert-success">
-                        {% for msg in app.session.flashBag.get('exito') %}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                {{ msg }}
+<style>
+    .modal-dialog{
+        width: 70%;
+    }
+</style>
+{% if app.session.flashBag.has('exito') %}
+    <div class="alert alert-success">
+        {% for msg in app.session.flashBag.get('exito') %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ msg }}
+        {% endfor %}
+    </div>
+{% endif %}
+{% if app.session.flashBag.has('error') %}
+    <div class="alert alert-danger">
+        {% for msg in app.session.flashBag.get('error') %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ msg }}
+        {% endfor %}
+    </div>
+{% endif %}    
+<div class="row">
+	<div class="col-md-12">
+        <div class="table-responsive">
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped table-primary" id="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="min-width: 15px;">No. Trámite</th>
+                            <th>Trámite</th>
+                            <th>Tipo de Trámite</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Fecha de inicio</th>
+                            <th>Fecha de fin</th>
+                            <th>Duración del trámite(días)</th>
+                            <th>Esdado</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="text-center" style="min-width: 15px;">No. Trámite</th>
+                            <th>Trámite</th>
+                            <th>Tipo de Trámite</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Fecha de inicio</th>
+                            <th>Fecha de fin</th>
+                            <th>Duración del trámite(días)</th>
+                            <th>Esdado</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for entity in entities %}
+                            <tr>
+                                <td>{{ entity.id }}</td>
+                                <td>{{ entity.flujo }}</td>
+                                <td>{{ entity.tramite_tipo }}</td>
+                                <td>{{ entity.codigo_tabla }}</td>
+                                <td>{{ entity.nombre }}</td>
+                                <td>{{ entity.fecha_registro|date('d-m-Y') }}</td>
+                                <td>{{ entity.fecha_fin|date('d-m-Y') }}</td>
+                                <td>{{ entity.duracion }}</td>
+                                <td><span class="label label-success">{{ entity.estado }} </span></td>
+                                <td class="text-center">
+                                    <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
+                                        <i class="fa fa-list"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         {% endfor %}
-                    </div>
-                {% endif %}
-                {% if app.session.flashBag.has('error') %}
-                    <div class="alert alert-danger">
-                        {% for msg in app.session.flashBag.get('error') %}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                {{ msg }}
-                        {% endfor %}
-                    </div>
-                {% endif %}    
-                        <div class="row">
-							<div class="col-md-12">
-                            <div class="table-responsive">
-                                <div class="col-md-12">
-                                <table class="table table-bordered table-striped table-primary" id="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center" style="min-width: 15px;">No. Trámite</th>
-                                            <th>Trámite</th>
-                                            <th>Tipo de Trámite</th>
-                                            <th>Código</th>
-                                            <th>Nombre</th>
-                                            <th>Fecha de inicio</th>
-                                            <th>Fecha de fin</th>
-                                            <th>Duración del trámite(días)</th>
-                                            <th>Esdado</th>
-                                            <th>Detalle</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th class="text-center" style="min-width: 15px;">No. Trámite</th>
-                                            <th>Trámite</th>
-                                            <th>Tipo de Trámite</th>
-                                            <th>Código</th>
-                                            <th>Nombre</th>
-                                            <th>Fecha de inicio</th>
-                                            <th>Fecha de fin</th>
-                                            <th>Duración del trámite(días)</th>
-                                            <th>Esdado</th>
-                                            <th>Detalle</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% for entity in entities %}
-                                        <tr>
-                                            <td>{{ entity.id }}</td>
-                                            <td>{{ entity.flujo }}</td>
-                                            <td>{{ entity.tramite_tipo }}</td>
-                                            <td>{{ entity.codigo_tabla }}</td>
-                                            <td>{{ entity.nombre }}</td>
-                                            <td>{{ entity.fecha_registro|date('d-m-Y') }}</td>
-                                            <td>{{ entity.fecha_fin|date('d-m-Y') }}</td>
-                                            <td>{{ entity.duracion }}</td>
-                                            <td><span class="label label-success">{{ entity.estado }} </span></td>
-                                            <td class="text-center">
-                                                <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
-                                                    <i class="fa fa-list"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-    <script>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
         function detalle(id,flujo){
             //confirm('¿Esta suguro de eliminar?');
-            //alert(id);
+            alert(id);
             formData = {id: id,flujo:flujo};
             $.ajax({
                 type: 'POST',

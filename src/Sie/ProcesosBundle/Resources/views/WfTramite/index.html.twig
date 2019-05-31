@@ -1,17 +1,21 @@
 {# {% extends 'layoutHerramienta.html.twig' %} #}
 {% extends app.session.get('layout') %}
-
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+    </style>
+{% endblock %}
 {% block contentoption %}
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span>Nuevo Trámite</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Inicio</a>
+                    <a href="#">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
             </ol>
@@ -49,23 +53,31 @@
                     <!-- Start panel content -->
                     <div class="panel-body">
                         <div class="row">
+                            {# <div class="section-sample" id="nav">
+                                <button type="button" class="btn btn-twitter  active" onclick="nuevotramite()">Nuevo Trámite</button>
+                                <button type="button" class="btn btn-twitter" onclick="recibidos()">Recibidos</button>
+                                <button type="button" class="btn btn-twitter" onclick="enviados()">Enviados</button>
+                                <button type="button" class="btn btn-twitter" onclick="concluidos()">Concluidos</button>
+                                <button type="button" class="btn btn-twitter" onclick="seguimiento()">Seguimiento</button>
+                            </div> #}
+
                             <div class="col-sm-2">
                                 <div class="panel rounded shadow">
                                     <ul class="nav nav-pills nav-stacked nav-email shadow mb-20">
                                         <li class="active">
-                                            <a onclick="nuevotramite()"><i class="fa fa-inbox"></i>Nuevo Trámite</a>
+                                            <a onclick="nuevotramite()"><i class="fa fa-file-o"></i>Nuevo Trámite</a>
                                         </li>
                                         <li>    
-                                            <a onclick="recibidos()"><i class="fa fa-envelope-o"></i>Recibidos</a>
+                                            <a onclick="recibidos()"><i class="fa fa-list"></i>Recibidos</a>
                                         </li>
                                         <li>
-                                            <a onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
+                                            <a onclick="enviados()"><i class="fa fa-paper-plane"></i> Enviados</a>
                                         </li>
                                         <li>
                                             <a onclick="concluidos()"><i class="fa fa-file-text-o"></i>Concluidos</a>
                                         </li>
                                         <li>
-                                            <a onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
+                                            <a onclick="seguimiento()"> <i class="fa fa-cogs"></i> Seguimiento</a>
                                         </li>
                                     </ul>
                                 </div>    
@@ -88,7 +100,7 @@
                                                                 <tr>
                                                                     <th class="text-center" style="max-width: 5px">No.</th>
                                                                     <th>Trámite</th>
-                                                                    <th class="text-center" style="max-width: 20px">Nuevo Trámite</th>
+                                                                    <th class="text-center">Nuevo Trámite</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -98,7 +110,7 @@
                                                                             <strong>{{ loop.index }}</strong>
                                                                         </td>
                                                                         <td>{{ entity.flujo }}</td>
-                                                                        <td class="text-center" style="max-width: 20px">
+                                                                        <td class="text-center">
                                                                             <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Iniciar Trámite">
                                                                                 <i class="fa fa-pencil"></i>
                                                                             </a>
@@ -128,6 +140,17 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+        $(function() {
+            // elementos de la lista
+            var menues = $(".nav li"); 
+              // manejador de click sobre todos los elementos
+            menues.click(function() {
+                // eliminamos active de todos los elementos
+                menues.removeClass("active");
+                // activamos el elemento clicado.
+                $(this).addClass("active");
+            });
+        });
         function nuevotramite(){
             $.ajax({
                 type: 'GET',
