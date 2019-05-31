@@ -192,10 +192,8 @@ class InfoNotasController extends Controller {
 
     public function createUpdateAction(Request $request){
         try {
-            dump($request);die;
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
-            dump($request);die;
             $em = $this->getDoctrine()->getManager();
             // Registramos las notas
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
