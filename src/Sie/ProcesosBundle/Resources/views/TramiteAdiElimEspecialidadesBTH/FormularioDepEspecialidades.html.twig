@@ -105,6 +105,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    {% if solicitud == 'Adicionar Especialidades' %}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">3.- Especialidades Solicitadas</h3>
@@ -135,6 +136,38 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% else %}
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">3.- Especialidades Solicitadas para eliminar</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div id="listaespecialidades_adicionar">
+                                                        <div class="table-responsive mb-20">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="text-center">#</th>
+                                                                    <th>Especialidad</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for especialidad in objespecialidades_solicitadas %}
+                                                                    <tr>
+                                                                        <td class="text-center">{{loop.index}}</td>
+                                                                        <td>{{especialidad.especialidad}} </td>
+                                                                    </tr>
+                                                                {% endfor%}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="panel panel-primary">

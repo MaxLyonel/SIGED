@@ -1,3 +1,4 @@
+#Directro
 tramite_especialidades_bth:
     path:      /
     defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index" }
@@ -9,6 +10,11 @@ tramite_solicitud_especialidades_bth:
 tramite_validar_solicitud_especialidades_bth:
     path:      /verifica
     defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:validariniciosolicitudespecialidadesbth" }
+
+tramite_solicitud_bth_formulario_dev:
+    path:      /formularioespecialidades
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:formularioDirectorEspecialidades" }
+
 #Distrito
 tramite_especialidades_distrito_bth:
     path:      /solicitusespecialidadesDistritalbth
@@ -17,6 +23,12 @@ tramite_especialidades_distrito_bth:
 tramite_solicitud_especialidades_bth_Dis:
     path:      /solicitudEspecialidadesBTHDis
     defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidadesDis" }
+
+tramite_solicitud_especialidades_bth_formularioDis_dev:
+    path:      /formularioespecialidades_dis
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:formularioDistritoEspecialidades" }
+
+
 
 #Departamental
 VerSolicitudEspecialidadesBTHDep:
