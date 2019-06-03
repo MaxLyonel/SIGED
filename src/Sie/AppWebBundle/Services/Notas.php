@@ -3036,13 +3036,13 @@ die;/*
             }else{
                 $estadosFinales = array();
             }
-            $estadosPermitidos = array(4,5,10,78);
+            $estadosPermitidos = array(4);
             return array(
                 'cuantitativas'     =>array(),
                 'cualitativas'      =>$arrayCualitativas,
                 'operativo'         =>$operativo,
                 'nivel'             =>$nivel,
-                'estadoMatricula'   =>4,//$inscripcion->getEstadomatriculaTipo()->getId(),
+                'estadoMatricula'   =>$inscripcion->getEstadomatriculaTipo()->getId(),
                 'gestionActual'     =>$this->session->get('currentyear'),
                 'idInscripcion'     =>$idInscripcion,
                 'gestion'           =>$gestion,
@@ -3058,26 +3058,74 @@ die;/*
     }
 
     public function especial_auditiva($idInscripcion,$operativo){
-        try {//dump($idInscripcion,$operativo);die;
+        try {
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
             $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-            $gestionActual = $this->session->get('currentyear');
 
+            vuelve:
             $asignaturas = $this->em->createQueryBuilder()
-                ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
-                ->groupBy('asit.id, asit.asignatura, ea.id')
-                ->orderBy('asit.id','ASC')
-                ->where('ei.id = :idInscripcion')
-                ->setParameter('idInscripcion',$idInscripcion)
-                ->getQuery()
-                ->getResult();
+                        ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                        ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                        ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                        ->groupBy('asit.id, asit.asignatura, ea.id')
+                        ->orderBy('asit.id','ASC')
+                        ->where('ei.id = :idInscripcion')
+                        ->setParameter('idInscripcion',$idInscripcion)
+                        ->getQuery()
+                        ->getResult();
+
+            $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+
+            $arrayAsignaturasEstudiante = array();
+            foreach ($asignaturas as $a) {
+                $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
+            }
+
+            $nuevaArea = false;
+            foreach ($cursoOferta as $co) {
+                if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
+
+                    // Si no existe la asignatura, registramos la asignatura para el maestro
+                    $newEstAsig = new EstudianteAsignatura();
+                    $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                    $newEstAsig->setFechaRegistro(new \DateTime('now'));
+                    $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                    $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+                    $this->em->persist($newEstAsig);
+                    $this->em->flush();
+                    $nuevaArea = true;
+
+                    // Registro de materia para estudiantes estudiante_asignatura en el log
+                    $arrayEstAsig = [];
+                    $arrayEstAsig['id'] = $newEstAsig->getId();
+                    $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                    $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                    $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                    $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                    
+                    $this->funciones->setLogTransaccion(
+                        $newEstAsig->getId(),
+                        'estudiante_asignatura',
+                        'C',
+                        '',
+                        $arrayEstAsig,
+                        '',
+                        'ESPECIAL',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                    );
+                }
+            }
+
+            // Volvemos atras si se adiciono alguna nueva materia o asignatura
+            if($nuevaArea == true){
+                goto vuelve;
+            }
+
             $idNotaTipo = 0;
             $arrayCualitativas = array();
             $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findOneBy(array('obs'=>'SEG'));
@@ -3093,13 +3141,13 @@ die;/*
             }
 
             $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78));
-            $estadosPermitidos = array(4,10,78);
+            $estadosPermitidos = array(4);
             return array(
                 'cuantitativas'=>$asignaturas,
                 'cualitativas'=>$arrayCualitativas,
                 'operativo'=>$operativo,
                 'nivel'=>$nivel,
-                'estadoMatricula'=>4,//$inscripcion->getEstadomatriculaTipo()->getId(),
+                'estadoMatricula'=>$inscripcion->getEstadomatriculaTipo()->getId(),
                 'gestionActual'=>$this->session->get('currentyear'),
                 'idInscripcion'=>$idInscripcion,
                 'gestion'=>$gestion,

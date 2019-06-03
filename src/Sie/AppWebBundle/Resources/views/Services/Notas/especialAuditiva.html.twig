@@ -11,7 +11,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        {# {% if notas.cuantitativas|length > 0 %} #}
+        {% if notas.cuantitativas|length > 0 %}
         <table class="table table-bordered" id="tbl_nota19">
             <thead class="cf">
                 <tr>
@@ -35,7 +35,7 @@
                             <!-- <label for="anho">Año</label> -->
                             <select class="form-control" name="anho" id="anho" required {% if notas.enota == 1 %} disabled {% endif %}>
                                 <option value="" disabled selected>Seleccione año</option>
-                                <option value="Primero" {% if notas.cualitativas|length > 0 and notas.cualitativas.anho == 'Primer' %} selected {% endif %}>Primero</option>
+                                <option value="Primero" {% if notas.cualitativas|length > 0 and notas.cualitativas.anho == 'Primero' %} selected {% endif %}>Primero</option>
                                 <option value="Segundo" {% if notas.cualitativas|length > 0 and notas.cualitativas.anho == 'Segundo' %} selected {% endif %}>Segundo</option>
                             </select>
                             <br/>
@@ -48,17 +48,17 @@
                 <tr class="text-center">
                     <td><b>Promedio Final</b></td>
                     <td>
-                        <input type="text" id="promanual" name="promanual" {% if notas.cualitativas|length > 0 %} value="{{notas.cualitativas.promanual}}" {% endif %} size="2" onkeypress="return validarNota(event,this.id,this.value)" class="form-control input-sm nota" maxlength="3" autocomplete="off" required {% if notas.enota == 1 %} disabled {% endif %}>
+                        <input type="number" id="promanual" name="promanual" {% if notas.cualitativas|length > 0 %} value="{{notas.cualitativas.promanual}}" {% endif %} size="2" min="0" max="80" onkeypress="return validarNota(event,this.id,this.value)" class="form-control input-sm nota" maxlength="2" autocomplete="off" required {% if notas.enota == 1 %} disabled {% endif %}>
                     </td>
                 </tr>
             </tbody>
         </table>
-        {# {% else %}
+        {% else %}
             <div class="alert alert-warning">
                 <i class="fa fa-warning"></i>
                 El curso no tiene materias registradas, debe registrar las materias del curso para poder realizar el registro de notas.
             </div>
-        {% endif %} #}
+        {% endif %}
     </div>
     <br/>
     {# <div class="col-lg-12" {% if notas.enota == 1 %} style="display: none" {% endif %}>
@@ -72,54 +72,9 @@
             </select>
         </div>
     </div> #}
-
-    {# <div class="col-lg-12">
-        {% if notas.cuantitativas|length > 0 %}
-            <table class="table">
-                {% if notas.cualitativas|length > 0 and notas.operativo >= 4 %}
-                    {% for c in notas.cualitativas %}
-                        <tr>
-                            <td style="padding:0px; margin:0px">
-                                {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                                    {% if (c.notaCualitativa == "") or (vista == 2) %}
-                                        <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
-                                        <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                                        <p>
-                                            <b>Informe anual del proceso educativo</b>
-                                        </p>
-                                        <p class="text-justify">
-                                            <textarea class="form-control jnumbersletters notaCualitativa" cols="30" maxlength="200" minlength="16" name="notaCualitativa[]" rows="5" style="resize:vertical; max-height: 200px; text-transform:uppercase">{{c.notaCualitativa}}</textarea>
-                                        </p>
-                                    {% else %}
-                                        <p>
-                                            <b>Informe anual del proceso educativo</b>
-                                        </p>
-                                        <p class="text-justify">
-                                            <textarea class="form-control jnumbersletters" cols="30" disabled="disabled" maxlength="200" rows="5" style="resize:vertical; max-height: 200px; text-transform:uppercase">{{c.notaCualitativa}}</textarea>
-                                        </p>
-                                    {% endif %}
-                                {% else %}
-                                    <p>
-                                        <b>Informe anual del proceso educativo</b>
-                                    </p>
-                                    <p class="text-justify">
-                                        <textarea class="form-control jnumbersletters" cols="30" disabled="disabled" maxlength="200" rows="5" style="resize:vertical; max-height: 200px; text-transform:uppercase">{{c.notaCualitativa}}</textarea>
-                                    </p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-
-                {% endif %}
-            </table>
-        {% endif %}
-    </div> #}
 </div>
 
 <script>
-
-
     var validarEnvioNotas = function () {
         var enviar = true;
         var mensaje = "";
