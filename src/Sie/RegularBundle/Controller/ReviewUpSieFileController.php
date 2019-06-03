@@ -66,9 +66,26 @@ class ReviewUpSieFileController extends Controller{
         $query->execute();
         //get all files to the distrito selected
         $objUeUploadFiles = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getFilesUploadByDistritoAndOperativo($form);
+        $arrUeUploadFiles = array();
+        reset($objUeUploadFiles);
+        while (($arrData = current($objUeUploadFiles)) !== FALSE) {
+
+            $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                'gestion'=>$arrData['gestion'],
+                'unidadEducativa'=>$arrData['id'],
+                'bim'.$arrData['bimestre']=>$arrData['bimestre'],
+            ));
+            if($objInfoConsolidation){
+                $arrData['statusInfoConsolidation'] = true;    
+            }else{
+                $arrData['statusInfoConsolidation'] = false;    
+            }
+            $arrUeUploadFiles[] = $arrData;   
+            next($objUeUploadFiles);
+        }
         
         return $this->render('SieRegularBundle:ReviewUpSieFile:find.html.twig', array(
-                'ueuploadfiles' => $objUeUploadFiles,
+                'ueuploadfiles' => $arrUeUploadFiles,
             ));    
     }
 
