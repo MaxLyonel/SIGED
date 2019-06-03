@@ -178,7 +178,7 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            // dump($notas);die;
+            //dump($notas,$discapacidad);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad,'progserv'=>$progserv));
             }else{
@@ -196,6 +196,7 @@ class InfoNotasController extends Controller {
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
             // Registramos las notas
+            //dump($request);die;
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
                 if($discapacidad == 2 and $gestion > 2018){
@@ -228,6 +229,17 @@ class InfoNotasController extends Controller {
                         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                         $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($idEstadoMatriicula));
                         $em->flush();
+                        if(($discapacidad == 3 or $discapacidad == 5) and $gestion > 2018 and $idEstadoMatriicula == 5){
+                            $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcion->getId()));
+                            $notacArray = json_decode($notaCualitativa->getNotaCualitativa(),true);
+                            $notacArray['promovido'] = mb_strtoupper($request->get('promovido'),'utf-8');
+                            $notaCualitativa->setNotaCualitativa(json_encode($notacArray));
+                            $em->flush();
+                            //dump($notaCualitativa);die;
+
+                        }
+                        
+
                     }
                 }
 
