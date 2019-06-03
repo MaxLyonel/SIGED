@@ -62,8 +62,8 @@ class ReviewUpSieFileController extends Controller{
         $em = $this->getDoctrine()->getManager();
         //get the lost emp files
         $bimestre = $form['operativo']-1;
-        $query = $em->getConnection()->prepare("select * from sp_verifica_archivos_emp('" . $form['gestion'] . "','','" . $form['distrito'] . "','','" . $bimestre . "') ;");
-        $query->execute();
+        // $query = $em->getConnection()->prepare("select * from sp_verifica_archivos_emp('" . $form['gestion'] . "','','" . $form['distrito'] . "','','" . $bimestre . "') ;");
+        // $query->execute();
         //get all files to the distrito selected
         $objUeUploadFiles = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getFilesUploadByDistritoAndOperativo($form);
         $arrUeUploadFiles = array();
