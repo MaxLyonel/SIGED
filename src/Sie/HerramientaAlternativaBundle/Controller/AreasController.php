@@ -763,12 +763,12 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $superiorModuloPeriodo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
-
         $superiorModuloTipo = $superiorModuloPeriodo->getSuperiorModuloTipo();
 
         return $this->render($this->session->get('pathSystem') . ':Areas:emergente.html.twig', array(
                 'smpid' => $smpid,
                 'modulo' => $superiorModuloTipo,
+                'moduloPeriodo' => $superiorModuloPeriodo,
             )
         );
     }
@@ -779,12 +779,20 @@ class AreasController extends Controller {
         $smpid = $request->get('smpid');
         $smtid = $request->get('smtid');
         $emergente = mb_strtoupper($request->get('emergente'), 'utf-8');
+        $emergente_horas = mb_strtoupper($request->get('emergente_horas'), 'utf-8');
         
         $moduloEmergente = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtid);
+        $moduloEmergentePeriodo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
 
         if($moduloEmergente){
             $moduloEmergente->setModulo($emergente);
             $em->persist($moduloEmergente);
+            $em->flush();
+        }
+
+        if($moduloEmergentePeriodo){
+            $moduloEmergentePeriodo->setHorasModulo($emergente_horas);
+            $em->persist($moduloEmergentePeriodo);
             $em->flush();
         }
 
