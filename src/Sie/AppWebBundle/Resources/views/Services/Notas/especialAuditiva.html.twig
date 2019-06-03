@@ -1,0 +1,138 @@
+{#
+	variable vista
+	vista = 0  // La vista estara totalmente bloqueada
+	vista = 1  // Se podran modificar las notas dirferentes a cero y vacio
+	vista = 2  // Se podra modificar todo
+#}
+
+<input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
+<input type="hidden" name="nivel" value="{{notas.nivel}}">
+<input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
+
+<div class="row">
+    <div class="col-lg-12">
+        {% if notas.cuantitativas|length > 0 %}
+        <table class="table table-bordered" id="tbl_nota19">
+            <thead class="cf">
+                <tr>
+                    <th>
+                        Asignatura
+                    </th>
+                    <th>
+                        Informe de Gestión
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in notas.cuantitativas %}
+                <tr>
+                    <td data-title="Asignatura">
+                        {{a.asignatura}} 
+                    </td>
+                    {% if loop.index == 1 %}
+                    <td rowspan="5">
+                        <div class="form-group">
+                            <!-- <label for="anho">Año</label> -->
+                            <select class="form-control" name="anho" id="anho" required {% if notas.enota == 1 %} disabled {% endif %}>
+                                <option value="" disabled selected>Seleccione año</option>
+                                <option value="Primero" {% if notas.cualitativas|length > 0 and notas.cualitativas.anho == 'Primero' %} selected {% endif %}>Primero</option>
+                                <option value="Segundo" {% if notas.cualitativas|length > 0 and notas.cualitativas.anho == 'Segundo' %} selected {% endif %}>Segundo</option>
+                            </select>
+                            <br/>
+                            <textarea class="form-control jnumbersletters" id="resumen" name="resumen" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" placeholder="Describa el informe conciso" {% if notas.enota == 1 %} disabled {% endif %}>{% if notas.cualitativas|length > 0 %} {{notas.cualitativas.resumen}} {% endif %}</textarea>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                <tr class="text-center">
+                    <td><b>Promedio Final</b></td>
+                    <td>
+                        <input type="number" id="promanual" name="promanual" {% if notas.cualitativas|length > 0 %} value="{{notas.cualitativas.promanual}}" {% endif %} size="2" min="0" max="80" onkeypress="return validarNota(event,this.id,this.value)" class="form-control input-sm nota" maxlength="2" autocomplete="off" required {% if notas.enota == 1 %} disabled {% endif %}>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% else %}
+            <div class="alert alert-warning">
+                <i class="fa fa-warning"></i>
+                El curso no tiene materias registradas, debe registrar las materias del curso para poder realizar el registro de notas.
+            </div>
+        {% endif %}
+    </div>
+    <br/>
+    {# <div class="col-lg-12" {% if notas.enota == 1 %} style="display: none" {% endif %}>
+        <div class="form-group">
+            <label for="nuevoEstadomatricula">Estado</label>
+            <select class="form-control" name="nuevoEstadomatricula" id="nuevoEstadomatricula" required>
+                <option value="" selected disabled>Seleccionar....</option>
+                {% for estadoF in notas.estadosFinales %}
+                <option value="{{estadoF.id}}">{{estadoF.estadomatricula}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div> #}
+</div>
+
+<script>
+    var validarEnvioNotas = function () {
+        var enviar = true;
+        var mensaje = "";
+
+        $(".notaCualitativa").each(function (index) {
+            if ($(this).val().length < 16) {
+                mensaje = 'Las notas cualitativas deben tener al menos 16 dígitos';
+                enviar = false;
+            }
+        });
+
+        if (enviar == false) {
+            alert(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+
+    $(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122) // letras minusculas
+        && (k < 65 || k > 90) // letras mayusculas
+        && (k < 48 || k > 57) // NUmeros
+        && (k != 13) // ENTER
+        && (k != 8) // retroceso
+        && (k != 9) // tab
+        && (k != 241) // ñ
+        && (k != 209) // Ñ
+        && (k != 32) // espacio
+        && (k != 225) // á
+        && (k != 233) // é
+        && (k != 237) // í
+        && (k != 243) // ó
+        && (k != 250) // ú
+        && (k != 193) // Á
+        && (k != 201) // É
+        && (k != 205) // Í
+        && (k != 211) // Ó
+        && (k != 218) // Ú
+        && (k != 44) // coma ,
+        && (k != 46) // punto .
+        ) 
+            return false;
+        
+    });
+</script>
+

@@ -40,14 +40,14 @@
 					            <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
 					        </tr>
 					    </table>
-						{% if (notas.gestion > 2018 and discapacidad in [7]) %}
+						{% if (notas.gestion > 2018 and ((discapacidad == 1 and progserv == 19) or discapacidad == 4 or discapacidad == 6 or discapacidad == 7 )) %}
 						<h5 style="color:#0086DD">Seguimiento</h5>
 						{% else %}
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
 						{% endif %}
 					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
 						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
-						{% if discapacidad != 2 or  (discapacidad == 2 and notas.gestion  < 2019)%}
+						{% if discapacidad != 2 or (discapacidad == 2 and notas.gestion  < 2019)%}
 							{% if (operativo >= 4 and notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and actualizar == false) or (notas.gestion < notas.gestionActual and notas.tipoNota == 'Trimestral' and discapacidad != 1) or (notas.gestion < notas.gestionActual and discapacidad == 1 and notas.nivel in [1,11,403]) and notas.cuantitativas|length > 0 %}
 								<table class="table table-condensed table-bordered" style="background:#8AE5B6">
 									<tr>
@@ -98,6 +98,7 @@
 	            </div>
 	        </div>
 	        <div class="modal-footer">
+				<input type="hidden" name="progserv" value="{{progserv}}">
 	            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
 	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
@@ -142,7 +143,9 @@
 				$this = $(this);
 				notas.push({"inter": $this.find("textarea.pi").val(), "desc": $this.find("textarea.dc").val()});
 			});
-			formData = formData+"&seguimiento="+JSON.stringify(notas);
+			if(notas.length > 0) {
+				formData = formData+"&seguimiento="+JSON.stringify(notas);
+			}
 		    $.ajax({
 		        type: 'post',
 		        url: Routing.generate('especialInfoNotas_create_update'),

@@ -2905,12 +2905,30 @@ die;/*
                 }
             }
             // Datos del siguimiento
-            if($gestion > 2018 and ($discapacidad == 4 or $discapacidad == 6 or $discapacidad == 7)){
+            if($gestion > 2018 and ($discapacidad == 4 or $discapacidad == 6 or $discapacidad == 7 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
                 $seguimientoNota = new EstudianteNotaCualitativa();
                 $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
                 $seguimientoNota->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion')));
                 $seguimientoNota->setNotaCuantitativa(0);
                 $seguimientoNota->setNotaCualitativa($request->get('seguimiento'));
+                $seguimientoNota->setRecomendacion('');
+                $seguimientoNota->setUsuarioId($this->session->get('userId'));
+                $seguimientoNota->setFechaRegistro(new \DateTime('now'));
+                $seguimientoNota->setFechaModificacion(new \DateTime('now'));
+                $seguimientoNota->setObs('');
+                $this->em->persist($seguimientoNota);
+                $this->em->flush();
+            }
+            if(!empty($request->get('progserv')) and $gestion > 2018 and $discapacidad == 1 and $request->get('progserv') == 19){
+                $seguimiento = array();
+                $seguimiento['anho'] = $request->get('anho');
+                $seguimiento['resumen'] = mb_strtoupper($request->get('resumen'), 'utf-8');
+                $seguimiento['promanual'] = $request->get('promanual');
+                $seguimientoNota = new EstudianteNotaCualitativa();
+                $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
+                $seguimientoNota->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion')));
+                $seguimientoNota->setNotaCuantitativa(0);
+                $seguimientoNota->setNotaCualitativa(json_encode($seguimiento));
                 $seguimientoNota->setRecomendacion('');
                 $seguimientoNota->setUsuarioId($this->session->get('userId'));
                 $seguimientoNota->setFechaRegistro(new \DateTime('now'));
@@ -3037,7 +3055,7 @@ die;/*
             }else{
                 $estadosFinales = array();
             }
-            $estadosPermitidos = array(4,10,78);
+            $estadosPermitidos = array(4);
             return array(
                 'cuantitativas'     =>array(),
                 'cualitativas'      =>$arrayCualitativas,
@@ -3057,4 +3075,109 @@ die;/*
             return null;
         }
     }
+
+    public function especial_auditiva($idInscripcion,$operativo){
+        try {
+            $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+            $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+            vuelve:
+            $asignaturas = $this->em->createQueryBuilder()
+                        ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                        ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                        ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                        ->groupBy('asit.id, asit.asignatura, ea.id')
+                        ->orderBy('asit.id','ASC')
+                        ->where('ei.id = :idInscripcion')
+                        ->setParameter('idInscripcion',$idInscripcion)
+                        ->getQuery()
+                        ->getResult();
+
+            $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+
+            $arrayAsignaturasEstudiante = array();
+            foreach ($asignaturas as $a) {
+                $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
+            }
+
+            $nuevaArea = false;
+            foreach ($cursoOferta as $co) {
+                if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
+
+                    // Si no existe la asignatura, registramos la asignatura para el maestro
+                    $newEstAsig = new EstudianteAsignatura();
+                    $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                    $newEstAsig->setFechaRegistro(new \DateTime('now'));
+                    $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                    $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+                    $this->em->persist($newEstAsig);
+                    $this->em->flush();
+                    $nuevaArea = true;
+
+                    // Registro de materia para estudiantes estudiante_asignatura en el log
+                    $arrayEstAsig = [];
+                    $arrayEstAsig['id'] = $newEstAsig->getId();
+                    $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                    $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                    $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                    $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                    
+                    $this->funciones->setLogTransaccion(
+                        $newEstAsig->getId(),
+                        'estudiante_asignatura',
+                        'C',
+                        '',
+                        $arrayEstAsig,
+                        '',
+                        'ESPECIAL',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                    );
+                }
+            }
+
+            // Volvemos atras si se adiciono alguna nueva materia o asignatura
+            if($nuevaArea == true){
+                goto vuelve;
+            }
+
+            $idNotaTipo = 0;
+            $arrayCualitativas = array();
+            $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findOneBy(array('obs'=>'SEG'));
+            if($tipoNota) {
+                $idNotaTipo = $tipoNota->getId();
+                $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$idNotaTipo));
+                if($notaCualitativas) {
+                    $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true);
+                    $enota = 1;
+                } else {
+                    $enota = 0;
+                }
+            }
+
+            $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78));
+            $estadosPermitidos = array(4);
+            return array(
+                'cuantitativas'=>$asignaturas,
+                'cualitativas'=>$arrayCualitativas,
+                'operativo'=>$operativo,
+                'nivel'=>$nivel,
+                'estadoMatricula'=>$inscripcion->getEstadomatriculaTipo()->getId(),
+                'gestionActual'=>$this->session->get('currentyear'),
+                'idInscripcion'=>$idInscripcion,
+                'gestion'=>$gestion,
+                'tipoNota'=>$idNotaTipo,
+                'estadosPermitidos'=>$estadosPermitidos,
+                'estadosFinales'=>$estadosFinales,
+                'enota'=>$enota
+            );
+        } catch (Exception $e) {
+            return null;
+        }
+
+	}
 }
