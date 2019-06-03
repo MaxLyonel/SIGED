@@ -94,6 +94,35 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="no-more-tables">
+                    <table class="table table-bordered table-hover cf">
+                        <thead class="cf">
+                            <tr class="info">
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Áreas</th>
+                                <th class="text-center">Nota Promedio</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for currentmateria in materiasnotas1 %}
+                                <tr>
+                                    <td>{{loop.index}}</td>
+                                    <td data-title="Asignatura"> {{currentmateria.asignatura}}</td>
+                                    <td data-title="Nota Promedio" class="form-group">
+                                        <!--input type="number" maxlength="3"  min="10" max="100" step="1" id="form_{{currentmateria.id}}"  name="currentmaterias[{{currentmateria.id}}]" required="required" class="form-control" value=""-->
+                                        <input type="number" maxlength="3"  min="1" max="100" step="1" id="form_{{currentmateria.iecoId}}"  name="currentmaterias[{{currentmateria.iecoId}}]" required="required"  class="form-control" value="">
+                                        <div class="help-block with-errors"></div>
+                                    </td>
+                                </tr>
+                            {% endfor%}
+                        </tbody>
+                    </table>
+                </div>  
+            </div>
+        </div>
     </div>
     <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm" role="document">
