@@ -70,11 +70,19 @@ class ReviewUpSieFileController extends Controller{
         reset($objUeUploadFiles);
         while (($arrData = current($objUeUploadFiles)) !== FALSE) {
 
-            $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            if($bimestre == 0){
+                $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                'gestion'=>$arrData['gestion'],
+                'unidadEducativa'=>$arrData['id'],
+                ));
+            }else{
+                $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                 'gestion'=>$arrData['gestion'],
                 'unidadEducativa'=>$arrData['id'],
                 'bim'.$arrData['bimestre']=>$arrData['bimestre'],
-            ));
+                ));
+            }
+
             if($objInfoConsolidation){
                 $arrData['statusInfoConsolidation'] = true;    
             }else{
