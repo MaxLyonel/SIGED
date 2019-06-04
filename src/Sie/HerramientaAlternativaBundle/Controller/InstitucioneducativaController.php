@@ -472,7 +472,11 @@ class InstitucioneducativaController extends Controller {
             case 6: //REGULARIZACION NOTAS O INSCRIPCIONES
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '!En operativo de regularización!');
-                break;                       
+                break;
+            case 7: //REGULARIZACION INSCRIPCIONES
+                $sesion->set('ie_per_estado', '1');
+                $sesion->set('ie_operativo', '!En operativo de regularización inscripciones!');
+                break;    
             case 10: //INSCRIPCIONES - INICIO DE SEMESTRE
                 /**
                  * Verificamos si el operativo esta dentro de plazo
