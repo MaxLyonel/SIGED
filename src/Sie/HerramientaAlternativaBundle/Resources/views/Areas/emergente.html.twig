@@ -16,9 +16,9 @@
                 <td style="width: 30%;">
                     {% if moduloPeriodo %}
                         <select name="emergente_horas" class="form-control input-md" {% if app.session.get('ie_per_estado') == '0' %}disabled{% endif %}>
-                            <option value="20" {% if moduloPeriodo.horasModulo == 20 %}selected{% endif %}>20 (Aprendizajes Elementales 1er. año)</option>
-                            <option value="100" {% if moduloPeriodo.horasModulo == 100 %}selected{% endif %}>100 (Aprendizajes Elementales 2do. año)</option>
-                            <option value="120" {% if moduloPeriodo.horasModulo == 120 %}selected{% endif %}>120 (Aprendizajes Avanzados 1er. y 2do. año)</option>
+                            <option value="40" {% if moduloPeriodo.horasModulo == 40 %}selected{% endif %}>40 (Aprendizajes Elementales 1er. semestre)</option>
+                            <option value="100" {% if moduloPeriodo.horasModulo == 100 %}selected{% endif %}>100 (Aprendizajes Elementales 2do. semestre)</option>
+                            <option value="120" {% if moduloPeriodo.horasModulo == 120 %}selected{% endif %}>120 (Aprendizajes Avanzados 1er. y 2do. semestre)</option>
                         </select>
                     {% endif %}
                 </td>
