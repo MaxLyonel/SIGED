@@ -3,7 +3,6 @@
 	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad in [2,3,5]) %} style="width:80%; z-index:99999;" {% endif %}>
 	    <div class="modal-content" {% if ((notas.gestion < 2019 and discapacidad in [2,3,5]) or discapacidad not in [2,3,5]) %} style="width:900px; margin-left:-100px" {% endif %}>
 	    	<form action="" id="formNotasEspecial" onsubmit="registrarNotasEspecial(); return false">
-
 	 		<input type="hidden" name="actualizar" value="{{actualizar}}">
 	 		<input type="hidden" name="operativo" value="{{operativo}}">
 	 		<input type="hidden" name="discapacidad" value="{{discapacidad}}">
@@ -54,7 +53,7 @@
 									<tr>
 										<th style="vertical-align:middle; text-align:center">Actualizar estado de matrícula</th>
 										<td>
-											<select name="nuevoEstadomatricula" id="" class="form-control" required="required">
+											<select name="nuevoEstadomatricula" id="nuevoEstadomatricula" class="form-control" required="required" onchange="verificarEstado()">
 												<option value="">Seleccionar...</option>
 												{% for em in estadosMatricula %}
 													{% if notas.estadoMatricula == em.id %}
@@ -65,6 +64,31 @@
 													<option value="{{em.id}}" {{selected}} >{{em.estadomatricula}}</option>
 												{% endfor %}
 											</select>
+											<div>
+											{% if discapacidad in [3,5] and  notas.gestion > 2018 %}
+												{% if notas.estadoMatricula == 5 %}
+													{% set display = "display:block"%}
+													{% if notas.cualitativas.0.promovido == "CON APOYO" %}
+														{% set checked1 = "checked" %}
+														{% set checked2 = "" %}
+													{% else %}
+														{% set checked1 = "" %}
+														{% set checked2 = "checked" %}
+													{% endif %}
+												{% else %}
+													{% set display = "display:none"%}
+												{% endif %}
+												<div class="form-group" style={{display}} id ="radio">
+													<div class="rdio rdio-primary circle col-md-3">
+                                                    	<input id="radio-type-circle1" type="radio" name="promovido" class="matricula" value = "CON APOYO" {{checked1}} >
+                                                    	<label for="radio-type-circle1">CON APOYO</label>
+                                                	</div>
+													<div class="rdio rdio-primary circle col-md-3">
+                                                    	<input id="radio-type-circle2" type="radio" name="promovido" class="matricula" value = "SIN APOYO" {{checked2}}>
+                                                    	<label for="radio-type-circle2">SIN APOYO</label>
+                                                	</div>
+                                        	    </div>
+											{% endif %}
 										</td>
 									</tr>
 								</table>
@@ -94,8 +118,22 @@
 	</div>
 {% endif %}
 <script>
+	function verificarEstado(){
+		if({{discapacidad}} == 3 || {{discapacidad}} == 5){
+			var estadoMatricula = $('#nuevoEstadomatricula').val();
+			if(estadoMatricula == 5 ){
+				$("#radio").show();
+				$(".matricula").attr('required', true);
+			}else{
+				$("#radio").hide();
+				$(".matricula").removeAttr('required');
+				$(".matricula").prop('checked', false);
+			}
+		}
+	}
 
     var registrarNotasEspecial = function(){
+		alert('entra');
     	var enviar = validarEnvioNotas();
         if(enviar == true){
 	    	var formData = $('#formNotasEspecial').serialize();//"textarea[name!=int1]", .not('form[textarea]')

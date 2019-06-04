@@ -66,7 +66,7 @@
                             {% if a.notas is defined and a.notas|length > 0 %}
                                 {% for n in a.notas %}
                                     {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                                        {% if n.nota == "" or n.nota.idIndicador not in [1,2,3,5] or vista == 2 %}
+                                        {% if n.nota == "" or n.nota.idIndicador not in [1,2,4] or vista == 2 %}
                                             <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
                                                 <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                                                 <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">

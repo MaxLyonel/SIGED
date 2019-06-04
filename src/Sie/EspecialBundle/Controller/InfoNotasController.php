@@ -237,6 +237,16 @@ class InfoNotasController extends Controller {
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                     $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($idEstadoMatriicula));
                     $em->flush();
+                    if(($discapacidad == 3 or $discapacidad == 5) and $gestion > 2018 and $idEstadoMatriicula == 5){
+                        $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcion->getId()));
+                        $notacArray = json_decode($notaCualitativa->getNotaCualitativa(),true);
+                        $notacArray['promovido'] = mb_strtoupper($request->get('promovido'),'utf-8');
+                        $notaCualitativa->setNotaCualitativa(json_encode($notacArray));
+                        $em->flush();
+                        //dump($notaCualitativa);die;
+
+                    }
+
                 }
             }
 

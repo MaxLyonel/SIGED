@@ -2041,11 +2041,21 @@ die;/*
                 $existe = false;
                 foreach ($cualitativas as $c) {
                     if($c->getNotaTipo()->getId() == 18){
+                        
+                        if (($nivel == 401 or $nivel == 402) and $gestion > 2018){
+                            $nota['notaCualitativa'] = json_decode($c->getNotaCualitativa(),true)['notaCualitativa'];
+                            $nota['promovido'] = json_decode($c->getNotaCualitativa(),true)['promovido'];
+                        }else{
+                            $nota['notaCualitativa'] = $c->getNotaCualitativa();
+                            $nota['promovido'] = '';
+                            
+                        }
                         $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                      'idEstudianteNotaCualitativa'=>$c->getId(),
                                                      'idNotaTipo'=>$c->getNotaTipo()->getId(),
-                                                     'notaCualitativa'=>$c->getNotaCualitativa(),
-                                                     'notaTipo'=>$c->getNotaTipo()->getNotaTipo()
+                                                     'notaCualitativa'=>$nota['notaCualitativa'],
+                                                     'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
+                                                     'promovido'=>$nota['promovido']
                                                     );
                         $existe = true;
                     }
@@ -2053,7 +2063,7 @@ die;/*
                 if($existe == false and $operativo >= 4){
                     $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                  'idEstudianteNotaCualitativa'=>'nuevo',
-                                                 'idNotaTipo'=>18,
+                                                 'idNotaTipo'=>18,  
                                                  'notaCualitativa'=>'',
                                                  'notaTipo'=>$this->literal(18).' '.$tipoNota
                                                 );
@@ -2408,6 +2418,8 @@ die;/*
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             if($gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5)){
+                //$estadoPromovido = $request->get('contenidos');
+                $promovido = $request->get('promovido');
                 $contenidos = $request->get('contenidos');
                 $resultados = $request->get('resultados');
                 $indicador = $request->get('indicador');
@@ -2428,7 +2440,10 @@ die;/*
             $idEstudianteNotaCualitativa = $request->get('idEstudianteNotaCualitativa');
             $idNotaTipoCualitativa = $request->get('idNotaTipoCualitativa');
             $notaCualitativa = $request->get('notaCualitativa');
-            //dump($request);die;
+            if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5)){
+                $notaCualitativa[0] = array('notaCualitativa'=>mb_strtoupper($notaCualitativa[0],'utf-8'),'promovido'=>mb_strtoupper($promovido,'utf-8'));
+            }
+            //dump($notaCualitativa);die;
 
             /* Datos de las notas cualitativas de primaria gestion 2013 */
             $idEstudianteNotaC = $request->get('idEstudianteNotaC');
@@ -2578,7 +2593,11 @@ die;/*
                             $newCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipoCualitativa[$j]));
                             $newCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                             $newCualitativa->setNotaCuantitativa(0);
-                            $newCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
+                            if($gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5) and $request->get('nuevoEstadomatricula') == 5){
+                                $newCualitativa->setNotaCualitativa(json_encode($notaCualitativa[$j]));
+                            }else{
+                                $newCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
+                            }
                             $newCualitativa->setRecomendacion('');
                             $newCualitativa->setUsuarioId($this->session->get('userId'));
                             $newCualitativa->setFechaRegistro(new \DateTime('now'));
