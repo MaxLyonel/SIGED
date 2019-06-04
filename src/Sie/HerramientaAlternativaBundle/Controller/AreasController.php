@@ -289,9 +289,9 @@ class AreasController extends Controller {
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
                     ->getResult();
-                // dump($iePeriodo);die;
+                
                 $moduloPeriodo = $em->createQueryBuilder()
-                    ->select('l')
+                    ->select('l.codigo')
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
                     ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
@@ -300,27 +300,27 @@ class AreasController extends Controller {
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
                     ->getResult();
-                // dump($moduloPeriodo);die;                
-                    if($moduloPeriodo) {                    
-                        $modulos = $em->createQueryBuilder()
-                        ->select('l')
-                        ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
-                        ->where('l.codigo IN (:codigos)')
-                        ->andWhere('l.id NOT IN (:modulos)')
-                        ->setParameter('codigos', array(401,402,403,404,408))
-                        ->setparameter('modulos', $moduloPeriodo)
-                        ->getQuery()
-                        ->getResult();
-                    }else {
-                        $modulos = $em->createQueryBuilder()
-                        ->select('l')
-                        ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
-                        ->where('l.codigo IN (:codigos)')
-                        ->setParameter('codigos', array(401,402,403,404,408))
-                        ->getQuery()
-                        ->getResult();
-                    }                
-                //dump($modulos); die;
+                
+                if($moduloPeriodo) {                    
+                    $modulos = $em->createQueryBuilder()
+                    ->select('l')
+                    ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
+                    ->where('l.codigo IN (:codigos)')
+                    ->andWhere('l.codigo NOT IN (:modulos)')
+                    ->setParameter('codigos', array(401,402,403,404,408))
+                    ->setparameter('modulos', $moduloPeriodo)
+                    ->getQuery()
+                    ->getResult();
+                }else {
+                    $modulos = $em->createQueryBuilder()
+                    ->select('l')
+                    ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
+                    ->where('l.codigo IN (:codigos)')
+                    ->setParameter('codigos', array(401,402,403,404,408))
+                    ->getQuery()
+                    ->getResult();
+                }                
+                
                 foreach ($modulos as $modulo) {
                     //die("abc");        
                     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
@@ -339,21 +339,22 @@ class AreasController extends Controller {
 
         // CONSULTA PARA OBTENER EL CODIGO DE ACREDITACION Y DE ESPECIALIDAD
         // CON LO CUAL SE PUEDE DEFINIR SI ES PRIMARIA O SECUNDARIA , ETC
-        $cursoTipo = $em->createQueryBuilder()
-                        ->select('sat.codigo as codigosat, sest.codigo as codigosest')
-                        ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
-                        ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo','siep','with','iec.superiorInstitucioneducativaPeriodo = siep.id')
-                        ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion','siea','with','siep.superiorInstitucioneducativaAcreditacion = siea.id')
-                        ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad','sae','with','siea.acreditacionEspecialidad = sae.id')
-                        ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo','sat','with','sae.superiorAcreditacionTipo = sat.id')
-                        ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo','sest','with','sae.superiorEspecialidadTipo = sest.id')
-                        ->where('iec.id = :idCurso')
-                        ->setParameter('idCurso', $iecId)
-                        ->getQuery()
-                        ->getResult();
+        // $cursoTipo = $em->createQueryBuilder()
+        //                 ->select('sat.codigo as codigosat, sest.codigo as codigosest')
+        //                 ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+        //                 ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo','siep','with','iec.superiorInstitucioneducativaPeriodo = siep.id')
+        //                 ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion','siea','with','siep.superiorInstitucioneducativaAcreditacion = siea.id')
+        //                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad','sae','with','siea.acreditacionEspecialidad = sae.id')
+        //                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo','sat','with','sae.superiorAcreditacionTipo = sat.id')
+        //                 ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo','sest','with','sae.superiorEspecialidadTipo = sest.id')
+        //                 ->where('iec.id = :idCurso')
+        //                 ->setParameter('idCurso', $iecId)
+        //                 ->getQuery()
+        //                 ->getResult();
 
         // VERIFICAMOS SI EL CURSO ES PRIMARIA  SUPERIOR_ESPECIALIDAD_TIPO 1 Y SPERIOR_ACREDITRACION_TIPO 1 O 2
-        if($cursoTipo[0]['codigosest'] == 1 and ($cursoTipo[0]['codigosat'] == 1 or $cursoTipo[0]['codigosat'] == 2) and $gestion >= 2019){
+        // if($cursoTipo[0]['codigosest'] == 1 and ($cursoTipo[0]['codigosat'] == 1 or $cursoTipo[0]['codigosat'] == 2) and $gestion >= 2019){
+        if($this->get('funciones')->validatePrimariaCourse($iecId)){
             // VERIFICAMOS SI EL CURSO YA TIENE REGISTRADO LA OFERTA CON TODAS LAS MATERIAS INCLUIDO EL EMERGENTE
             $cursoOferta = $em->createQueryBuilder()
                             ->select('smt')
@@ -452,14 +453,75 @@ class AreasController extends Controller {
 //                ->setParameter('idCurso', $iecId)
 //                ->getQuery()
 //                ->getResult();
-
+// dump($cursoOferta);
         $actuales = array();
         foreach ($cursoOferta as $co) {
             $actuales[] = $co['smpid'];
         }
-        
-        if($actuales){
-            $curso = $em->createQueryBuilder()                
+        if($nivel == 15 || $nivel == 5){
+            if($actuales){
+                $curso = $em->createQueryBuilder()                
+                ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
+                ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'sip')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'sip.id = iec.superiorInstitucioneducativaPeriodo')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'smp', 'WITH', 'sip.id = smp.institucioneducativaPeriodo')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'smt', 'WITH', 'smt.id = smp.superiorModuloTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'sia', 'WITH', 'sia.id = sip.superiorInstitucioneducativaAcreditacion')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'sae', 'WITH', 'sae.id = sia.acreditacionEspecialidad')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'sat', 'WITH', 'sat.id = sae.superiorAcreditacionTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'seti', 'WITH', 'seti.id = sae.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'isuc', 'WITH', 'isuc.id = sia.institucioneducativaSucursal')
+                ->where('seti.id = :setId')
+                ->andWhere('sat.codigo = :satCodigo')
+                ->andWhere('isuc.periodoTipoId = :periodoId')
+                ->andWhere('isuc.gestionTipo = :gestion')
+                ->andWhere('isuc.institucioneducativa = :institucion')
+                ->andWhere('isuc.id = :sucursal')
+                ->andWhere('smp.id NOT IN (:actuales)')
+                ->andWhere('iec.id = :cursoId')
+                ->setParameter('setId', $setId)
+                ->setParameter('satCodigo', $satCodigo)
+                ->setParameter('periodoId', $periodo)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('institucion', $institucion)
+                ->setParameter('sucursal', $sucursal)
+                ->setParameter('actuales', $actuales)
+                ->setParameter('cursoId', $iecId)
+                ->getQuery()
+                ->getResult();
+            }
+            else{
+                $curso = $em->createQueryBuilder()
+                ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
+                ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'sip')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'sip.id = iec.superiorInstitucioneducativaPeriodo')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'smp', 'WITH', 'sip.id = smp.institucioneducativaPeriodo')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'smt', 'WITH', 'smt.id = smp.superiorModuloTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'sia', 'WITH', 'sia.id = sip.superiorInstitucioneducativaAcreditacion')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'sae', 'WITH', 'sae.id = sia.acreditacionEspecialidad')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'sat', 'WITH', 'sat.id = sae.superiorAcreditacionTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'seti', 'WITH', 'seti.id = sae.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'isuc', 'WITH', 'isuc.id = sia.institucioneducativaSucursal')
+                ->where('seti.id = :setId')
+                ->andWhere('sat.codigo = :satCodigo')
+                ->andWhere('isuc.periodoTipoId = :periodoId')
+                ->andWhere('isuc.gestionTipo = :gestion')
+                ->andWhere('isuc.institucioneducativa = :institucion')
+                ->andWhere('isuc.id = :sucursal')
+                ->andWhere('iec.id = :cursoId')
+                ->setParameter('setId', $setId)
+                ->setParameter('satCodigo', $satCodigo)
+                ->setParameter('periodoId', $periodo)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('institucion', $institucion)
+                ->setParameter('sucursal', $sucursal)
+                ->setParameter('cursoId', $iecId)
+                ->getQuery()
+                ->getResult();
+            }
+        } else {
+            if($actuales){
+                $curso = $em->createQueryBuilder()                
                 ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
                 ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'sip')
                 ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'smp', 'WITH', 'sip.id = smp.institucioneducativaPeriodo')
@@ -485,9 +547,9 @@ class AreasController extends Controller {
                 ->setParameter('actuales', $actuales)
                 ->getQuery()
                 ->getResult();
-        }
-        else{
-            $curso = $em->createQueryBuilder()
+            }
+            else{
+                $curso = $em->createQueryBuilder()
                 ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
                 ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'sip')
                 ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'smp', 'WITH', 'sip.id = smp.institucioneducativaPeriodo')
@@ -511,6 +573,7 @@ class AreasController extends Controller {
                 ->setParameter('sucursal', $sucursal)
                 ->getQuery()
                 ->getResult();
+            }
         }
 //        dump($iecId);
         // dump($curso); die;
@@ -700,12 +763,12 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $superiorModuloPeriodo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
-
         $superiorModuloTipo = $superiorModuloPeriodo->getSuperiorModuloTipo();
 
         return $this->render($this->session->get('pathSystem') . ':Areas:emergente.html.twig', array(
                 'smpid' => $smpid,
                 'modulo' => $superiorModuloTipo,
+                'moduloPeriodo' => $superiorModuloPeriodo,
             )
         );
     }
@@ -716,12 +779,20 @@ class AreasController extends Controller {
         $smpid = $request->get('smpid');
         $smtid = $request->get('smtid');
         $emergente = mb_strtoupper($request->get('emergente'), 'utf-8');
+        $emergente_horas = mb_strtoupper($request->get('emergente_horas'), 'utf-8');
         
         $moduloEmergente = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtid);
+        $moduloEmergentePeriodo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
 
         if($moduloEmergente){
             $moduloEmergente->setModulo($emergente);
             $em->persist($moduloEmergente);
+            $em->flush();
+        }
+
+        if($moduloEmergentePeriodo){
+            $moduloEmergentePeriodo->setHorasModulo($emergente_horas);
+            $em->persist($moduloEmergentePeriodo);
             $em->flush();
         }
 
