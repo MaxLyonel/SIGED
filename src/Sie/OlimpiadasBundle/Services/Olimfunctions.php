@@ -496,7 +496,7 @@ class Olimfunctions {
           left join grado_tipo gt on (iec.grado_tipo_id = gt.id)
           left join paralelo_tipo pt on (iec.paralelo_tipo_id = pt.id)
           left join turno_tipo tt on (iec.turno_tipo_id = tt.id)
-          where e.codigo_rude = '".$data['codigoRude']."' and iec.gestion_tipo_id = ".$data['gestiontipoid']."
+          where i.institucioneducativa_tipo_id = 1 and e.codigo_rude = '".$data['codigoRude']."' and iec.gestion_tipo_id = ".$data['gestiontipoid']."
         
       "
     );

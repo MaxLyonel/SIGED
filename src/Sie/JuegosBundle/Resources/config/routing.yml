@@ -10,6 +10,10 @@ sie_juegos_registro:
     resource: "@SieJuegosBundle/Resources/config/routing/registro.yml"
     prefix:   /registro
 
+sie_juegos_reemplazo:
+    resource: "@SieJuegosBundle/Resources/config/routing/reemplazo.yml"
+    prefix:   /reemplazo
+
 sie_juegos_clasificacion:
     resource: "@SieJuegosBundle/Resources/config/routing/clasificacion.yml"
     prefix:   /clasificacion
