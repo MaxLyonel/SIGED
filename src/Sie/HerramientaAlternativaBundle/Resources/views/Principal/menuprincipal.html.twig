@@ -159,6 +159,19 @@
 
 
         <div class="body-content animated fadeIn">
+        {% if estadoOperativo is defined and estadoOperativo %}
+            <div class="alert alert-danger ">
+                <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="pull-left notification-sender text-danger"><strong>{{app.session.get('ie_operativo')}}</strong></li>
+                    </ul>
+                    <p>
+                        <a href="{{path(rutaObservaciones)}}">Ver lista de observaciones</a>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
         <hr>
         <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
 

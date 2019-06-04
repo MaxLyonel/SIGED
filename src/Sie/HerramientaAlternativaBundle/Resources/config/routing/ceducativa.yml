@@ -207,6 +207,10 @@ herramientalt_ceducativa_lista_subcea:
     path:     /ceducativaListaSubcea/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceducativaListaSubcea}
 
+sie_alt_ges_sub_sem_panel_operativos_observaciones:
+    path:     /gessubsempaneloperativosobservaciones/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:paneloperativosobservaciones}  
+
 
 
 
