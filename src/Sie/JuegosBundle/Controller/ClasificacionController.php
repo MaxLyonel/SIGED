@@ -1822,6 +1822,40 @@ class ClasificacionController extends Controller {
      * @param type $fase
      * return array validacion
      */
+    public function verificaInscripcionActivoEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,$prueba,$fase){
+        $repositoryVerInsPru = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
+        $queryVerInsPru = $repositoryVerInsPru->createQueryBuilder('eij')
+            ->select('eij.id as inscripcionId, pt.id as pruebaId, dt.id as disciplinaId, e.paterno, e.materno, e.nombre')
+            ->leftJoin('SieAppWebBundle:JdpPruebaTipo','pt','WITH','pt.id = eij.pruebaTipo')
+            ->leftJoin('SieAppWebBundle:JdpDisciplinaTipo','dt','WITH','dt.id = pt.disciplinaTipo')
+            ->leftJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
+            ->leftJoin('SieAppWebBundle:Estudiante','e','WITH','e.id = ei.estudiante')
+            ->where('eij.estudianteInscripcion = :codInscripcion')
+            ->andwhere('eij.pruebaTipo = :codPrueba')
+            ->andwhere('eij.gestionTipo = :codGestion')
+            ->andwhere('eij.faseTipo = :codFase')
+            ->andwhere('eij.esactivo = true')
+            ->setParameter('codInscripcion', $inscripcionEstudiante)
+            ->setParameter('codPrueba', $prueba)
+            ->setParameter('codGestion', $gestion)
+            ->setParameter('codFase', $fase)
+            ->getQuery();
+        $verInsPru = $queryVerInsPru->getArrayResult();
+        if (count($verInsPru) > 0){
+            return array('0'=>true, '1'=>$verInsPru[0]["nombre"].' '.$verInsPru[0]["paterno"].' '.$verInsPru[0]["materno"]);
+        } else {
+            return array('0'=>false, '1'=>'');
+        }
+    }
+
+    /**
+     * get verificacion inscripcion
+     * @param type $inscripcionEstudiante
+     * @param type $gestion
+     * @param type $prueba
+     * @param type $fase
+     * return array validacion
+     */
     public function verificaInscripcionEstudianteGestionDisciplinaFase($inscripcionEstudiante,$gestion,$prueba,$fase){
         $em = $this->getDoctrine()->getManager();
         $objEntidad = $em->getRepository('SieAppWebBundle:PruebaTipo')->findOneBy(array('id' => $prueba));

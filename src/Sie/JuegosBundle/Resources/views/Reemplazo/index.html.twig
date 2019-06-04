@@ -1,0 +1,293 @@
+{# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> {{ titulo }} <span>{{ subtitulo }}</span></h2>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="alert alert-danger alert-dismissable" style="display: none;" id="msg" name="msg">                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="alert alert-success alert-dismissable" style="display: none;" id="msg1" name="msg1">                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% if form is defined %}
+                                {{form_start(form, { 'attr': {'id': 'form', 'role': "form", 'class': "form-horizontal"} } )}}
+                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                                        {{ form_widget(form.rude1, { 'attr': {'class': "form-control input-sm"} }) }}
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                                        {{ form_widget(form.prueba, { 'attr': {'class': "form-control input-sm"} }) }}
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
+                                        {{ form_widget(form.fase, { 'attr': {'class': "form-control input-sm"} }) }}
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                                        {{ form_widget(form.rude2, { 'attr': {'class': "form-control input-sm"} }) }}
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        {{ form_widget(form.save) }}
+                                    </div>
+                                {{form_end(form)}}
+                            {% endif %}
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">                            
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">                            
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    <!--/ End mail page -->
+    </div>
+    <!-- Start body content -->
+    <!--/ End body content -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        $(document).ready( function(){
+            $("#form_rude1").focus();
+        });       
+
+        var listar_prueba = function (rude) {
+            $('#msg1').hide();
+            $('#msg').hide();
+            var peticion;
+            if(rude.length > 14){
+                peticion = $.ajax({
+                    type: 'POST',
+                    url: '{{ path("sie_juegos_reemplazo_busqueda_prueba")}}',
+                    data: {'rude': rude},
+                    beforeSend: function () {
+                        $("#form_rude1").attr('disabled', 'true');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Cargando Datos..</option>');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $("#form_fase").attr('disabled', 'true');
+                        $("#form_rude2").attr('disabled', 'true');
+                        $('#msg').hide();
+                    },
+                    success: function (data) {
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $('#msg').empty();
+                                $('#msg').show();
+                                $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong>' + data.msg_incorrecto);
+                            }
+                        }
+                        $("#form_rude1").removeAttr('disabled');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar Prueba</option>');
+                        if (data.pruebas) {
+                            for (var i in data.pruebas) {
+                                $("#form_prueba").append('<option value="' + data.pruebas[i].id + '">' + data.pruebas[i].prueba + '</option>');
+                            }
+                            $("#form_prueba").focus();
+                        } else {
+                            $("#form_rude1").focus();
+                        }
+                        $("#form_prueba").removeAttr('disabled');
+                    },
+                    error: function(error){
+                        $('#msg').show();
+                        $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong> Error al procesar la información.');
+                        $("#form_rude1").removeAttr('disabled');
+                        $("#form_prueba").removeAttr('disabled');
+                        $("#form_fase").removeAttr('disabled');
+                        $("#form_rude2").removeAttr('disabled');
+                        $("#form_rude2").val("");
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar Prueba</option>');
+                        $('#form_fase').empty();
+                        $("#form_fase").append('<option value="">Seleccionar Fase</option>');
+                    }
+                });
+            } 
+            return false;
+        };
+
+        var listar_fase = function (prueba) {
+            $('#msg1').hide();
+            $('#msg').hide();
+            var rude = $('#form_rude1').val();
+            var peticion;
+            if(rude.length > 14 && $('#form_prueba option').length > 0){
+                peticion = $.ajax({
+                    type: 'POST',
+                    url: '{{ path("sie_juegos_reemplazo_busqueda_fase")}}',
+                    data: {'rude': rude, 'prueba': prueba},
+                    beforeSend: function () {
+                        $("#form_rude1").attr('disabled', 'true');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_fase').empty();
+                        $("#form_fase").append('<option value="">Cargando Datos..</option>');
+                        $("#form_fase").attr('disabled', 'true');
+                        $("#form_rude2").attr('disabled', 'true');
+                        $('#msg').hide();
+                    },
+                    success: function (data) {
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $('#msg').empty();
+                                $('#msg').show();
+                                $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong>' + data.msg_incorrecto);
+                            }
+                        }
+                        $("#form_rude1").removeAttr('disabled');
+                        $("#form_prueba").removeAttr('disabled');
+                        $('#form_fase').empty();
+                        $("#form_fase").append('<option value="">Seleccionar Fase</option>');
+                        if (data.fases) {
+                            for (var i in data.fases) {
+                                $("#form_fase").append('<option value="' + data.fases[i].id + '">' + data.fases[i].fase + '</option>');
+                            }
+                            $("#form_fase").focus();
+                        } else {
+                            $("#form_prueba").focus();
+                        }
+                        $("#form_fase").removeAttr('disabled');
+                    },
+                    error: function(error){
+                        $('#msg').show();
+                        $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong> Error al procesar la información.');
+                        $("#form_rude1").removeAttr('disabled');
+                        $("#form_prueba").removeAttr('disabled');
+                        $("#form_fase").removeAttr('disabled');
+                        $("#form_rude2").removeAttr('disabled');
+                        $("#form_rude2").val("");
+                        $('#form_fase').empty();
+                        $("#form_fase").append('<option value="">Seleccionar Fase</option>');
+                    }
+                });
+            } 
+            return false;
+        };
+
+        var habilitar_rude = function (fase) {
+            if(fase == 0){
+                $("#form_rude2").attr('disabled', 'true');
+            } else {
+                $("#form_rude2").val('');
+                $("#form_rude2").removeAttr('disabled');
+            }
+            return false;
+        };
+
+        var confirma = function(){
+
+            $('#msg1').hide();
+            $('#msg').hide();
+
+            if($('#form_rude1').val() == $('#form_rude2').val()){
+                alert("Error: Deben ser rudes diferentes");
+                $('#form_rude2').focus();
+                return false;
+            }
+            if($('#form_rude1').val() == ""){
+                alert("Error: Debe ingresar el codigo rude del estudiante en mal estado de salud");
+                return false;
+            }
+            if($('#form_prueba').val() == ""){
+                alert("Error: Debe seleccionar la prueba");
+                return false;
+            }
+            if($('#form_fase').val() == ""){
+                alert("Error: Debe seleccionar la fase");
+                return false;
+            }
+            if($('#form_rude2').val() == ""){
+                alert("Error: Debe ingresar el codigo rude del estudiante reemplazante");
+                return false;
+            }
+
+            var r = confirm("¿ Está seguro de reemplazar al estudiante " + $('#form_rude1').val() + " ?");
+            if (r == true) {
+                var formulario = $('#form')[0];
+                var formData = new FormData(formulario);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('sie_juegos_reemplazo_guarda'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $('#modal').empty();
+                        $('#modal').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        $('#modal').show();
+                    },
+                    success: function (data) {
+                        $('#modal').empty();
+                        $('#modal').hide();
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $('#msg').empty();
+                                $('#msg').show();
+                                $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong>' + data.msg_incorrecto);
+                            }
+                        }
+                        if(data.msg_correcto){
+                            if(data.msg_correcto != ''){
+                                $('#msg1').empty();
+                                $('#msg1').show();
+                                $('#msg1').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto </strong>' + data.msg_correcto);
+                            }
+                        }
+                        $("#form_rude1").val('');
+                        $('#form_prueba').empty();
+                        $("#form_fase").append('<option value="">Seleccionar Prueba</option>')
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_fase').empty();
+                        $("#form_fase").append('<option value="">Seleccionar Fase</option>');
+                        $("#form_fase").attr('disabled', 'true');
+                        $("#form_rude2").val('');
+                        $("#form_rude2").attr('disabled', 'true');
+                    },
+                    error: function(error){
+                        $('#modal').modal('toggle');
+                    },
+                }); 
+                return true;
+            } else {
+                return false;
+            }
+        }  
+
+                
+    </script>
+
+
+{%endblock%}

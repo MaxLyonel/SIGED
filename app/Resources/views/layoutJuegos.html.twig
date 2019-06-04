@@ -292,7 +292,8 @@
                                         <li><a href="{{path('sie_juegos_representacion_cultural_index')}}">Registro Rep. Cultural</a></li>
                                     {% endif %}
                                     {% if app.session.get('roluser') == 8 %}
-                                    <li><a href="{{path('sie_juegos_comision_nacional_lista_index')}}">Registro Delegados</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_nacional_lista_index')}}">Registro Delegados</a></li>
+                                        <li><a href="{{path('sie_juegos_reemplazo_index')}}">Reemplazos</a></li>
                                     {% endif %}
                                 </ul>
                             </li>
