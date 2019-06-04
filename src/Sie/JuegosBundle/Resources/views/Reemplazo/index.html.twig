@@ -52,7 +52,7 @@
                     <div class="panel-head">
                     </div>
                     <div class="panel-body">
-                        <div class="row">                            
+                        <div class="row" id="historial1">                            
                         </div>
                     </div><!-- /.panel-body -->
                 </div>
@@ -62,7 +62,7 @@
                     <div class="panel-head">
                     </div>
                     <div class="panel-body">
-                        <div class="row">                            
+                        <div class="row" id="historial2">                         
                         </div>
                     </div><!-- /.panel-body -->
                 </div>
@@ -87,7 +87,7 @@
             $('#msg1').hide();
             $('#msg').hide();
             var peticion;
-            if(rude.length > 14){
+            if(rude.length > 10){
                 peticion = $.ajax({
                     type: 'POST',
                     url: '{{ path("sie_juegos_reemplazo_busqueda_prueba")}}',
@@ -145,7 +145,7 @@
             $('#msg').hide();
             var rude = $('#form_rude1').val();
             var peticion;
-            if(rude.length > 14 && $('#form_prueba option').length > 0){
+            if(rude.length > 10 && $('#form_prueba option').length > 0){
                 peticion = $.ajax({
                     type: 'POST',
                     url: '{{ path("sie_juegos_reemplazo_busqueda_fase")}}',
@@ -284,10 +284,6 @@
             } else {
                 return false;
             }
-        }  
-
-                
+        }                  
     </script>
-
-
 {%endblock%}
