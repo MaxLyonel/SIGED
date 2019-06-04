@@ -38,15 +38,13 @@
                                         <label for="nombre">Nombre del Estudiante</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante }}" disabled>
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <label for="procede_aceleracion">¿Procede Aceleración?</label>
-                                            <input type="text" class="form-control noedit" id="procede_aceleracion" name="procede_aceleracion" value="{{ procede_aceleracion }}" disabled>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="grado_cantidad">Grados a Acelerar</label>
-                                            <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" value="{{ grado_cantidad }}" disabled>
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="procede_aceleracion">¿Procede Aceleración?</label>
+                                        <input type="text" class="form-control noedit" id="procede_aceleracion" name="procede_aceleracion" value="{{ procede_aceleracion }}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="grado_cantidad">Grados a Acelerar</label>
+                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" value="{{ grado_cantidad }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
@@ -77,8 +75,135 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
-                                    Formulario para visualizar y revisar notas
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5><b>Curso Inscripción</b></h5>
+                                            <div id="no-more-tables">
+                                                {% if curso is defined %}
+                                                <input type="hidden" id="nivel_id" value="{{ curso.nivel_id }}">
+                                                <input type="hidden" id="grado_id" value="{{ curso.grado_id }}">
+                                                <table class="table table-bordered">
+                                                    <tbody class="text-muted">
+                                                        <tr>
+                                                            <td width="40%"><b>SIE</b></td>
+                                                            <td>{{ curso.sie }}<br>{{ curso.nombre }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%"><b>Nivel</b></td>
+                                                            <td>{{ curso.nivel }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%"><b>Grado</b></td>
+                                                            <td>{{ curso.grado }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%"><b>Paralelo</b></td>
+                                                            <td>{{ curso.paralelo }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%"><b>Turno</b></td>
+                                                            <td>{{ curso.turno }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                {% endif %}
+                                                <table class="table table-bordered">
+                                                    <thead class="font-weight-bold">
+                                                        <tr>
+                                                            <th class="text-center"><b>No.</b></th>
+                                                            <th class="text-center"><b>Áreas</b></th>
+                                                            <th class="text-center"><b>Nota Promedio</b></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {%for item in asignatura_notas %}
+                                                            <tr>
+                                                                <td>{{loop.index}}</td>
+                                                                <td><span>{{item.asignatura}}</span></td>
+                                                                <td>
+                                                                    <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" value="{{item.nota}}" disabled style="background-color: #fafafa">
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor%}
+                                                    </tbody>
+                                                </table>
+                                            </div>  
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5><b>Curso Aceleración</b></h5>
+                                            <div id="no-more-tables">
+                                                <table class="table table-bordered">
+                                                    <tbody class="text-muted">
+                                                        <tr>
+                                                            <td width="40%">
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon" style="background-color: #fafafa">SIE</div>
+                                                                    <input type="text" class="form-control" id="sel_sie" value="{{ codigo_sie }}" onkeyUp="institucionEducativa()">
+                                                                    <div class="input-group-addon" onclick="institucionEducativa()" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span id="txt_institucioneducativa"></span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%"><b>Nivel</b></td>
+                                                            <td>
+                                                                <span id="txt_nivel"></span>
+                                                                <input type="hidden" id="sel_nivel">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%"><b>Grado</b></td>
+                                                            <td><span id="txt_grado"></span><input type="hidden" id="sel_grado"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="40%">
+                                                                <div class="form-groups">
+                                                                    <label for="sel_paralelo">Paralelo</label>
+                                                                    <select class="form-control" id="sel_paralelo" required>
+                                                                        <option value="">Seleccionar...</option>
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-groups">
+                                                                    <label for="sel_turno">Turno</label>
+                                                                    <select class="form-control" id="sel_turno" required>
+                                                                        <option value="">Seleccionar...</option>
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table table-bordered" id="tbl_aceleracion">
+                                                    <thead>
+                                                        <tr class="sinfo">
+                                                            <th class="text-center"><b>No.</b></th>
+                                                            <th class="text-center"><b>Áreas</b></th>
+                                                            <th class="text-center"><b>Nota Promedio</b></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {%for currentmateria in materiasnotas %}
+                                                            <tr>
+                                                                <td>{{loop.index}}</td>
+                                                                <td><span>{{currentmateria.asignatura}}</span></td>
+                                                                <td>
+                                                                    <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" required value="87">
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor%}
+                                                    </tbody>
+                                                </table>
+                                            </div> 
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <br/>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="radio">
                                         <label><input type="radio" name="optradio" value="NO" onclick="showHideObs()" required>Proceder con Registro e Inscripción</label>
@@ -96,7 +221,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {# <h5 class="float-left"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5> #}
+                            <h5 class="float-right"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -139,6 +264,7 @@
                     $(this).css('background', '#ffffff');
                 }
             });
+            institucionEducativa($('#sel_sie').val());
         });
         $('.noedit').keydown(function() {
             return false;
@@ -177,10 +303,15 @@
 
         function sendVerifica() {
             $("#guardar").attr('disabled', true);
+            var curso = {sie: $('#sel_sie').val(), nivel_id: $('#sel_nivel').val(), grado_id: $('#sel_grado').val(), paralelo_id: $('#sel_paralelo').val(), turno_id: $('#sel_turno').val()};
+            var asignatura_notas = [];
+            $('#tbl_aceleracion tbody').find("tr").each(function() {
+                asignatura_notas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+            });
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_acelera_save_verify'),
-                data: {'tramite_id': $('#tramite_id').val(), 'institucioneducativa_id': $('#institucioneducativa_id').val(), 'tiene_obs': document.querySelector('input[name="optradio"]:checked').value, 'observacion': $('#observacion').val()},
+                data: {'tramite_id': $('#tramite_id').val(), 'institucioneducativa_id': $('#institucioneducativa_id').val(), 'tiene_obs': document.querySelector('input[name="optradio"]:checked').value, 'observacion': $('#observacion').val(), 'curso': JSON.stringify(curso), 'notas': JSON.stringify(asignatura_notas)},
                 dataType: 'json',
                 beforeSend: function () {
                     $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
@@ -208,6 +339,49 @@
             $("#modalConfirm").modal('hide');
             if ($("#tramite_st").val() == 1) {
                 location.href = "{{ path('wf_tramite_index') }}";
+            }
+        }
+
+        function institucionEducativa() {
+            var id = $('#sel_sie').val()
+            if (id.length > 7) {
+                nivel = $('#nivel_id').val();
+                grado = $('#grado_id').val();
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_acelera_search_ie', {'id': id, 'nivel': nivel, 'grado': grado}),
+                    beforeSend: function () {
+                        $("#sel_paralelo").append('<option value="" selected disabled>Buscando...</option>');
+                        $("#sel_turno").append('<option value="" selected disabled>Buscando...</option>');
+                    },
+                    success: function (data) {
+                        $("#txt_institucioneducativa").text(data.nombre);
+                        $("#txt_nivel").text(data.nivel);
+                        $("#txt_grado").text(data.grado);
+                        $("#sel_nivel").val(data.nivel_id);
+                        $("#sel_grado").val(data.grado_id);
+
+                        $("#sel_paralelo").empty();
+                        $("#sel_paralelo").append('<option value="" selected disabled>Seleccionar...</option>');
+                        $.each(data.paralelo, function (i, value) {
+                            $("#sel_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        
+                        $("#sel_turno").empty();
+                        $("#sel_turno").append('<option value="" selected disabled>Seleccionar...</option>');
+                        $.each(data.turno, function (i, value) {
+                        $("#sel_turno").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+                lastue = $('#form_lastue').val();
+                $("#form_institucionEducativaName").val('');
+                $("#form_paralelo").empty();
+                $("#form_turno").empty();
+
             }
         }
     </script>

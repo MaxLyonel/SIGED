@@ -29,3 +29,9 @@ tramite_acelera_save_obs:
     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaObs }
     options:
         expose: true
+
+tramite_acelera_search_ie:
+     path:    /buscaie/{id}/{nivel}/{grado}
+     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaIe }
+     options:
+         expose: true

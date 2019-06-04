@@ -75,12 +75,63 @@
                             </div>
                             <hr>
                             <div class="row">
+                                <div class="col-md-6">
+                                    <h5><b>Curso Inscripción</b></h5>
+                                    <div id="no-more-tables">
+                                        {% if curso is defined %}
+                                        <input type="hidden" id="sel_sie" value="{{curso.codigo_sie}}">
+                                        <input type="hidden" id="sel_nivel" value="{{curso.nivel_id}}">
+                                        <input type="hidden" id="sel_grado" value="{{curso.grado_id}}">
+                                        <input type="hidden" id="sel_paralelo" value="{{curso.paralelo_id}}">
+                                        <input type="hidden" id="sel_turno" value="{{curso.turno_id}}">
+                                        <table class="table table-bordered">
+                                            <tbody class="text-muted">
+                                                <tr>
+                                                    <td width="40%"><b>SIE</b></td>
+                                                    <td>{{ curso.codigo_sie }}<br>{{ curso.nombre_sie }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="40%"><b>Nivel</b></td>
+                                                    <td>{{ curso.nivel }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="40%"><b>Turno, Grado - Paralelo</b></td>
+                                                    <td>{{ curso.turno }}, {{ curso.grado }} - {{ curso.paralelo }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        {% endif %}
+                                        <table class="table table-bordered" id="tbl_notas">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center"><b>No.</b></th>
+                                                    <th class="text-center"><b>Áreas</b></th>
+                                                    <th class="text-center"><b>Nota Promedio</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {%for currentmateria in materiasnotas %}
+                                                    <tr>
+                                                        <td>{{loop.index}}</td>
+                                                        <td><span>{{currentmateria.asignatura}}</span></td>
+                                                        <td>
+                                                            <!--input type="number" maxlength="3"  min="10" max="100" step="1" id="form_{ {currentmateria.id}}"  name="currentmaterias[{ {currentmateria.id}}]" required="required" class="form-control" value=""-->
+                                                            <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" required>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor%}
+                                            </tbody>
+                                        </table>
+                                    </div>  
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="acta_supletorio">Acta Supletorio</label>
                                         <input type="file" class="form-control myfiles" id="acta_supletorio" name="acta_supletorio" accept=".pdf,.doc,.docx" required>
                                     </div>
-                                    Formulario para cargar notas
                                 </div>
                             </div>
                             <h5 class="float-left"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
@@ -92,35 +143,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div id="no-more-tables">
-                    <table class="table table-bordered table-hover cf">
-                        <thead class="cf">
-                            <tr class="info">
-                                <th class="text-center">No.</th>
-                                <th class="text-center">Áreas</th>
-                                <th class="text-center">Nota Promedio</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {%for currentmateria in materiasnotas1 %}
-                                <tr>
-                                    <td>{{loop.index}}</td>
-                                    <td data-title="Asignatura"> {{currentmateria.asignatura}}</td>
-                                    <td data-title="Nota Promedio" class="form-group">
-                                        <!--input type="number" maxlength="3"  min="10" max="100" step="1" id="form_{{currentmateria.id}}"  name="currentmaterias[{{currentmateria.id}}]" required="required" class="form-control" value=""-->
-                                        <input type="number" maxlength="3"  min="1" max="100" step="1" id="form_{{currentmateria.iecoId}}"  name="currentmaterias[{{currentmateria.iecoId}}]" required="required"  class="form-control" value="">
-                                        <div class="help-block with-errors"></div>
-                                    </td>
-                                </tr>
-                            {% endfor%}
-                        </tbody>
-                    </table>
-                </div>  
             </div>
         </div>
     </div>
@@ -146,7 +168,6 @@
     {{parent()}}
     <script>
         $(document).ready(function() {
-            $("#envio").html('<h5>¿Está seguro(a) de haber llenado las notas coherentemente? verifique antes de enviar.</h5>');
             $('.myfiles').change(function() {
                 if(this.files[0].size > 2057157) {
                     $(this).val('');
@@ -174,6 +195,7 @@
 
         $("#form_supletorio").submit(function (event) {
             event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de haber llenado las notas coherentemente? verifique antes de enviar.</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
             $("#modalConfirm").modal('show');
@@ -181,10 +203,16 @@
 
         function sendSupletorio() {
             $("#guardar").attr('disabled', true);
+            var curso = {sie: $('#sel_sie').val(), nivel_id: $('#sel_nivel').val(), grado_id: $('#sel_grado').val(), paralelo_id: $('#sel_paralelo').val(), turno_id: $('#sel_turno').val()};
+            var asignatura_notas = [];
+            $('#tbl_notas tbody').find("tr").each(function() {
+                asignatura_notas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+            });
             var fd = new FormData();
             fd.append('tramite_id', $("#tramite_id").val());
             fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
-            fd.append('notas', 'Sin notas todavia');//Enviar las notas correspondientes
+            fd.append('curso', JSON.stringify(curso));
+            fd.append('notas', JSON.stringify(asignatura_notas));
             var docsup = document.getElementById('acta_supletorio');
             fd.append('acta_supletorio', docsup.files[0]);
             $.ajax({
