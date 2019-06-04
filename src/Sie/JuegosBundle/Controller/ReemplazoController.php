@@ -341,9 +341,12 @@ class ReemplazoController extends Controller {
 
         $inscripcionActivo = $clasificacionController->verificaInscripcionActivoEstudianteGestionPruebaFase($estudianteInscripcionId,$gestionId,$pruebaId,$faseId);
         if(!$inscripcionActivo[0]){
-            return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "No se encontro la inscripcion activa del estudiante lesionado en juegos, ya se reemplazo, intentelo nuevamente",
-            ));
+            $inscripcionActivo = $clasificacionController->verificaInscripcionActivoEstudianteGestionPruebaFase($estudianteInscripcionId,$gestionId,$pruebaId,($faseId-1));
+            if(!$inscripcionActivo[0]){
+                return $response->setData(array(
+                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "No se encontro la inscripcion activa del estudiante lesionado en juegos, ya se reemplazo, intentelo nuevamente",
+                ));
+            }
         }
         // $entidadUsuario = $clasificacionController->buscaEntidadFase($faseId, $id_usuario);
         // dump($estudianteInscripcionJuegosEntity->getInstitucioneducativaCurso);die;
