@@ -629,7 +629,7 @@ class DocumentoController extends Controller {
         $em->flush();
 
         $documentoId = $entityDocumento->getId();
-        if($documentoTipo == 1 or $documentoTipo == 2){
+        if($documentoTipo == 1 or $documentoTipo == 2 or $documentoTipo == 6 or $documentoTipo == 7){
             if ($documentoFirmaId != 0 and $documentoFirmaId != ""){
                 if($documentoTipo == 2){
                     $entityDocumentoGenerado = $this->getDocumentoLegalizado($documentoId);
@@ -647,6 +647,12 @@ class DocumentoController extends Controller {
                     case 2:
                         $personaTipoId = 2;
                         break;
+                    case 6:
+                        $personaTipoId = 1;
+                        break;
+                    case 7:
+                        $personaTipoId = 1;
+                        break;
                     default:
                         $personaTipoId = 0;
                 }
@@ -661,8 +667,10 @@ class DocumentoController extends Controller {
                     $lugarNacimiento = $entityDocumentoGenerado['paisnacimiento'];
                 }    
                 
-                $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
-                $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
+                // $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
+                // $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
+                $dateNacimiento = ($entityDocumentoGenerado['fechanacimiento']);
+                $dateEmision = ($entityDocumentoGenerado['fechaemision']);
                             
                 $datos = array(
                     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
@@ -690,7 +698,7 @@ class DocumentoController extends Controller {
                 $entityDocumento->setTokenPrivado($keys['keyPrivada']);
                 $entityDocumento->setTokenImpreso($keys['token']);
                 $em->persist($entityDocumento);
-                $em->flush();
+                // $em->flush();
 
                 // dump($entityDocumento);dump($entityDocumentoFirma);dump($datos);die;    
                 
@@ -700,6 +708,8 @@ class DocumentoController extends Controller {
                 $cantidadIncremento = ($entityDocumentoFirmaAutorizada->getUsado()) + 1;
                 $entityDocumentoFirmaAutorizada->setUsado($cantidadIncremento);
                 $em->persist($entityDocumentoFirmaAutorizada);
+                // $em->flush();
+
                 $em->flush();
             } 
 

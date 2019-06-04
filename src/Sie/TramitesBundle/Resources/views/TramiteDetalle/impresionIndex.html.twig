@@ -7,6 +7,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <form name="formtable" role="form" action="{{ path('tramite_detalle_certificado_tecnico_impresion_guarda') }}" method="POST" onsubmit="return verificaCampos()">
                 <input type="hidden" name="_token" value="{{ csrf_token('imprimir') }}">
+                <input type="hidden" name="_info" value="{{ datosBusqueda }}">
                 <div class="panel">
                     <div class="panel-heading">
                         <div class="pull-left">
@@ -38,11 +39,11 @@
                             </div>
                             <div class="clearfix">
                                 <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         Nro. Serie Inicial: 
                                         <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="validarFormImpresion(this)" onKeyUp="validarFormImpresion(this)" onchange="validarFormImpresion(this)"/>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         Serie:
                                         <select class="form-control" name="serie" id="serie">
                                             {% for serie in series %}
@@ -50,12 +51,25 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         Fecha de emisión
                                         <input name="fechaSerie" id="fechaSerie" class="form-control date-range-picker-single" value="{{ "now"|date("d/m/Y", "America/La_Paz") }}" type="text">
                                     </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        {% if firmaHabilitada %}
+                                            Firma:
+                                            <select class="form-control" name="firma" id="firma" onchange="validarFormImpresion(this)">
+                                                <option value="">Seleccione la persona que firmara</option>
+                                                {% for firma in listaFirma %}
+                                                    <option value="{{ firma.documento_firma_id|base64_encode }}">{{firma.nombre}} {{firma.paterno}} {{firma.materno}}</option>
+                                                {% endfor %}
+                                                <option value="{{ 0|base64_encode }}">SIN FIRMA EN EL DOCUMENTO</option>
+                                            </select>
+                                        {% else %}
+                                            <input type="hidden" name="firma" id="firma" value="{{'0'|base64_encode}}">
+                                        {% endif %}
+                                    </div>
                                 </div>
-
                             </div>
                         {% endif %}
                     </div>
