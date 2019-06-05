@@ -413,7 +413,8 @@ class ReemplazoController extends Controller {
 
         //dump($estudianteInscripcionIdRude2);dump($gestionId);dump($pruebaId);dump($faseId);dump($equipoId);dump($entidadUsuarioId);dump($posicion);dump($estudianteInscripcionId);    
         if($estadoEstudianteInscripcion and $estadoEstudianteInscripcionRude2){
-            $msg = $reglaController->valEstudianteReemplazoJuegos($estudianteInscripcionIdRude2, $gestionId, $pruebaId, ($faseId-1), $equipoId, $entidadUsuarioId, $posicion, $estudianteInscripcionId);
+            $msg = $reglaController->valEstudianteReemplazoJuegos($estudianteInscripcionIdRude2, $gestionId, $pruebaId, $faseId, $equipoId, $entidadUsuarioId, $posicion, $estudianteInscripcionId);
+            //dump($msg);die;
             if($msg[0]){
                 $em->getConnection()->beginTransaction();
                 try {
@@ -441,13 +442,13 @@ class ReemplazoController extends Controller {
 
                         $em->flush();
                     } else {
-                        $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$faseClasificacion);
+                        $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($estudianteInscripcionJuegosId,$faseId);
                         $entrenadorSave = false;
                         if(count($entrenadorEntity) > 0){
                             $entrenadorSave = true;
                             $personaId = $entrenadorEntity["personaId"];
                         } else {
-                            $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$fase);
+                            $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($estudianteInscripcionJuegosId,($faseId-1));
                             if(count($entrenadorEntity) > 0){
                                 $entrenadorSave = true;
                                 $personaId = $entrenadorEntity["personaId"];
@@ -456,10 +457,10 @@ class ReemplazoController extends Controller {
                             }
                         }
 
-                        $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $deportistaPrueba));
-                        $gestionEntity = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $deportistaGestion));
-                        $faseEntity = $em->getRepository('SieAppWebBundle:JdpFaseTipo')->findOneBy(array('id' => $faseClasificacion));
-                        $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $deportistaEstudianteInscripcion));
+                        $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $pruebaId));
+                        $gestionEntity = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionId));
+                        $faseEntity = $em->getRepository('SieAppWebBundle:JdpFaseTipo')->findOneBy(array('id' => $faseId));
+                        $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionIdRude2));
                         $estudianteNombre = $estudianteInscripcionEntity->getEstudiante()->getNombre();
                         $estudiantePaterno = $estudianteInscripcionEntity->getEstudiante()->getPaterno();
                         $estudianteMaterno = $estudianteInscripcionEntity->getEstudiante()->getMaterno();
