@@ -99,7 +99,7 @@ class InfoNotasController extends Controller {
                 case 2: // Visual
                         $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
                         $progserv = $cursoEspecial->getEspecialServicioTipo()->getId();
-                        if($nivel == 411 and in_array($programa, array(7,8,9,12,14,15))){
+                        if($nivel == 411 and in_array($programa, array(7,8,9,10,11,12,14,15,16))){
                             if($gestion < 2019){
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
@@ -120,13 +120,11 @@ class InfoNotasController extends Controller {
                             }
                             
                             
-                        }elseif($nivel <> 405){
-                            if($gestion >2018){
-                                $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
-                                $template = 'especialSeguimiento';
-                                $actualizarMatricula = false;
-                                $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
-                            }
+                        }elseif($nivel <> 405 and $gestion >2018){
+                            $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                            $template = 'especialSeguimiento';
+                            $actualizarMatricula = false;
+                            $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                         }
                         
                         break;
@@ -204,10 +202,11 @@ class InfoNotasController extends Controller {
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
+            //dump($request);die;
             // Registramos las notas
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
-            if($discapacidad == 2 and $gestion > 2018){
+            if($discapacidad == 2 and $gestion > 2018 and $request->get('nivel') == 411){
                 if($request->get('notaCualitativa') == 80){
                     $idEstadoMatriicula = 79;
                 }else{
@@ -231,7 +230,7 @@ class InfoNotasController extends Controller {
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
             
-            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2019 ))) or ($discapacidad == 4 and $request->get('actualizar') == false) or ($discapacidad == 6 and $request->get('actualizar') == false) or ($discapacidad == 7 and $request->get('actualizar') == false)){
+            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2019 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false)){
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula');
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -324,7 +323,7 @@ class InfoNotasController extends Controller {
         $arrInfoUe = unserialize($request->get('infoUe'));
         $arrInfoStudent = json_decode($request->get('infoStudent'),true);
 
-        //dump($arrInfoStudent);die;
+        //dump($request);die;
         $sie = $arrInfoUe['requestUser']['sie'];
         $estInsId = $arrInfoStudent['estInsId'];
         $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];

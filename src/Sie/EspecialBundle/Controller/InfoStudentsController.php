@@ -178,13 +178,14 @@ class InfoStudentsController extends Controller {
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
+     
       
       if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
       }
-      
+            
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
