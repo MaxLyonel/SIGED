@@ -75,28 +75,29 @@
                             </div>
                             <hr>
                             <div class="row">
+                                {%for cumano in cursomateriasnotas %}
                                 <div class="col-md-6">
                                     <h5><b>Curso Inscripción</b></h5>
                                     <div id="no-more-tables">
-                                        {% if curso is defined %}
-                                        <input type="hidden" id="sel_sie" value="{{curso.codigo_sie}}">
-                                        <input type="hidden" id="sel_nivel" value="{{curso.nivel_id}}">
-                                        <input type="hidden" id="sel_grado" value="{{curso.grado_id}}">
-                                        <input type="hidden" id="sel_paralelo" value="{{curso.paralelo_id}}">
-                                        <input type="hidden" id="sel_turno" value="{{curso.turno_id}}">
+                                        {% if cumano.curso is defined %}
+                                        <input type="hidden" id="sel_sie" value="{{cumano.curso.codigo_sie}}">
+                                        <input type="hidden" id="sel_nivel" value="{{cumano.curso.nivel_id}}">
+                                        <input type="hidden" id="sel_grado" value="{{cumano.curso.grado_id}}">
+                                        <input type="hidden" id="sel_paralelo" value="{{cumano.curso.paralelo_id}}">
+                                        <input type="hidden" id="sel_turno" value="{{cumano.curso.turno_id}}">
                                         <table class="table table-bordered">
                                             <tbody class="text-muted">
                                                 <tr>
                                                     <td width="40%"><b>SIE</b></td>
-                                                    <td>{{ curso.codigo_sie }}<br>{{ curso.nombre_sie }}</td>
+                                                    <td>{{ cumano.curso.codigo_sie }}<br>{{ cumano.curso.nombre_sie }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td width="40%"><b>Nivel</b></td>
-                                                    <td>{{ curso.nivel }}</td>
+                                                    <td>{{ cumano.curso.nivel }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td width="40%"><b>Turno, Grado - Paralelo</b></td>
-                                                    <td>{{ curso.turno }}, {{ curso.grado }} - {{ curso.paralelo }}</td>
+                                                    <td>{{ cumano.curso.turno }}, {{ cumano.curso.grado }} - {{ cumano.curso.paralelo }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -110,7 +111,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {%for currentmateria in materiasnotas %}
+                                                {%for currentmateria in cumano.materiasnotas %}
                                                     <tr>
                                                         <td>{{loop.index}}</td>
                                                         <td><span>{{currentmateria.asignatura}}</span></td>
@@ -119,11 +120,12 @@
                                                             <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" required>
                                                         </td>
                                                     </tr>
-                                                {% endfor%}
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>  
                                 </div>
+                                {% endfor %}
                             </div>
                             <br/>
                             <div class="row">
