@@ -128,9 +128,10 @@
                                         <div class="help-block with-errors"></div>
                                     </div>                                   
                                     <div class="form-group col-lg-6 col-md-12" id="divEc" style="display:none">
-                                        <div class="ckbox ckbox-primary">
+                                        <div class="ckbox ckbox-primary text-primary">
                                             {{form_widget(form.educacionCasa) }}
-                                            {{form_label(form.educacionCasa)}}
+                                            <label for="form_educacionCasa"><strong>Educación Sociocomunitaria en Casa</strong></label>
+                                            {# {{form_label(form.educacionCasa)}} #}
                                         </div>
                                         <div class="help-block with-errors"></div>
                                     </div>  
@@ -371,6 +372,8 @@
             $("#form_programa").html('<option value="">Seleccionar...</option>');
             $("#form_servicio").html('<option value="">Seleccionar...</option>');
             $("#form_modalidad").val('');
+            $(".multiple").prop('checked', false);
+            $(".fisicoMotor").prop('checked', false);
             if(area == 2){
                 $('#idparalelo').text("Grupo");
             }else{

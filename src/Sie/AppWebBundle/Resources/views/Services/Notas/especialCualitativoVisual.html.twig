@@ -55,7 +55,7 @@
                     {% set cont = 0 %}
                     {% for a in notas.cuantitativas %}
                         <tr>
-                            <td data-title="Asignatura">
+                            <td data-title="Asignatura" style="vertical-align:middle;">
                                 {{a.asignatura}}
                             </td>
                             {% if a.notas is defined and a.notas|length > 0 %}
@@ -70,11 +70,21 @@
                                                     
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                        <td style = "border-top-style: none;"><textarea name="contenidos[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea></td>
+                                                        <td style = "border-top-style: none;">
+                                                            {# <textarea name="contenidos[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea> #}
+                                                            <p class="text-justify">
+                                                                <textarea name="contenidos[]" class="form-control jnumbersletters contenido" rows="3" required style="resize:vertical; text-transform:uppercase;" maxlength="80" minlength="16">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea>
+                                                            </p>  
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados</td>
-                                                        <td><textarea name="resultados[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
+                                                        <td>
+                                                            {# <textarea name="resultados[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea> #}
+                                                            <p class="text-justify">
+                                                                <textarea name="resultados[]" class="form-control jnumbersletters contenido" rows="3" required style="resize:vertical; text-transform:uppercase;" maxlength="80" minlength="16">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea>
+                                                            </p>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado</td>
@@ -105,16 +115,16 @@
                                                 <table class="table">
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados:</td>
-                                                        <td style = "border-top-style: none;"><textarea class="form-control" name="" readonly>{{n.nota.contenidos}}</textarea></td>
+                                                        <td style = "border-top-style: none;"><textarea class="form-control" name="" rows="3" style="resize:vertical; text-transform:uppercase;" readonly>{{n.nota.contenidos}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados:</td>
-                                                        <td><textarea class="form-control" name="" readonly>{{n.nota.resultados}}</textarea></td>
+                                                        <td><textarea class="form-control" name="" rows="3" style="resize:vertical; text-transform:uppercase;" readonly >{{n.nota.resultados}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado:</td>
                                                         <td>
-                                                            <select class="form-control" name="" id="" readonly>
+                                                            <select class="form-control" name="" id="" disabled>
                                                                 <option value="">Seleccionar....</option>
                                                                 {% for tn in notas.tiposNotas %}
                                                                     <option value="{{tn.id}}" {% if tn.id == n.nota.idIndicador %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
@@ -125,7 +135,7 @@
                                                     <tr>
                                                         <td>Estado Final:</td>
                                                         <td>
-                                                            <select class="form-control" name="" id="" readonly>
+                                                            <select class="form-control" name="" id="" disabled>
                                                                 <option value="">Seleccionar....</option>
                                                                 {% for ef in notas.estadosFinales %}
                                                                     <option value="{{ef.id}}" {% if ef.id == n.nota.idEstado %} selected {% endif %}>{{ef.estadomatricula}}</option>
@@ -141,11 +151,11 @@
                                             <table class="table">
                                                 <tr>
                                                     <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="" disabled>{% if n.nota %}{{n.nota.contenidos}} {% endif %}</textarea></td>
+                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="" rows="3" style="resize:vertical; text-transform:uppercase;" readonly>{% if n.nota %}{{n.nota.contenidos}} {% endif %}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Resultados Alcanzados</td>
-                                                    <td><textarea class="form-control" name="" disabled>{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
+                                                    <td><textarea class="form-control" name="" rows="3" style="resize:vertical; text-transform:uppercase;" readonly>{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Indicador Alcanzado</td>
@@ -238,9 +248,9 @@
         var enviar = true;
         var mensaje = "";
 
-        $(".notaCualitativa").each(function (index) {
+        $(".contenido").each(function (index) {
             if($(this).val().length < 16){
-                mensaje = 'Las notas cualitativas deben tener al menos 16 dígitos';
+                mensaje = 'Los Contenidos Programados y los Resultados Alcanzados deben tener al menos 16 dígitos';
                 enviar = false;
             }
         });
@@ -252,7 +262,6 @@
             return true;
         }
     }
-
 
     $(".jnumbersletters").keypress(function (key) {
         var key = key || window.event;
