@@ -3,7 +3,7 @@
 {% set onlyview = app.session.get('onlyview') %}
 <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="fa fa-table"></i> Creación de Cursos <span>Buscar</span></h2>
+    <h2><i class="fa fa-table"></i> Creación de Oferta <span>Buscar</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
@@ -25,14 +25,14 @@
                 <i class="fa fa-angle-right">
                 </i>
             </li>
-            <li class="active"><a href="#">Creación de Cursos</a></li>
+            <li class="active"><a href="#">Creación de Oferta</a></li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
 </div><!-- /.header-content -->
 <!--/ End page header -->
 <div class="body-content animated fadeIn">
 
-    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Cursos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
 
     <div class="row">
@@ -101,13 +101,13 @@
                     <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                         <input type="hidden" name="idGestion" value="{{gestion}}">
-                        <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Curso</button>
+                        <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Oferta</button>
                     </form>
                 {% endif %}
             </div>
             <div class="callout callout-warning">
                 <strong>Recuerde que:</strong><br />
-                - Es obligatorio el registro de todos los cursos existentes en el Centro de Educación Especial.<br />
+                - Es obligatorio el registro de todos los cursos/oferta existentes en el Centro de Educación Especial.<br />
                 - Una vez finalizado el registro y validación, se debe generar e imprimir el reporte.
             </div>
         </div>
@@ -186,7 +186,7 @@
                                         <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
                                             class="success" 
                                         {% else %}
-                                            {% if c .institucioneducativaCurso.nivelTipo.id == 12 %}
+                                            {% if c.institucioneducativaCurso.nivelTipo.id == 12 %}
                                                 class="warning"
                                             {% else %}
                                                 class="info"
