@@ -306,9 +306,9 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
                     ->add('fisicoMotor','choice',array('label'=>'Fisico-Motora','choices'=>array('Físico-Motora/Auditiva'=>'Físico-Motora/Auditiva','Físico-Motora/Visual'=>'Físico-Motora/Visual','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
-                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Visual/Multiple'=>'Visual/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
-                    ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación en Casa','required' => false))
-                    ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
+                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación Sociocomunitaria en Casa','required' => false))
+                    ->add('guardar','submit',array('label'=>'Crear Oferta','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
             $em->getConnection()->commit();
 
@@ -778,91 +778,64 @@ class CreacionCursosEspecialController extends Controller {
     }
 
     public function listarProgramasAction($area,$nivel,$grado,$modalidad) {
+        
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
     	if ( $area == "1" and $nivel == "411" and  $grado == "99" ) {
     		if ($this->session->get('idGestion') < 2019) {
-                $query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id)'
-    				)->setParameter('id',array(13));
+                $programas = array(13);
             } else {
-                $nivelesArray = array(19, 20, 21, 22, 23);
-                // if($modalidad == 1){
-                //     $nivelesArray = array(19, 20, 21, 22, 23);
-                // }else{
-                //     $nivelesArray = array(13);
-                // }
-                $query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id)'
-    				)->setParameter('id',$nivelesArray);//array(13, 19, 20, 21, 22, 23)
+                $programas = array(19, 20, 21, 22, 23);
             }
         }
     	elseif ($area == "2" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2019) {
-                $nivelesArray = array(7,8,9,10,11,12,14,15,16);
+                $programas = array(7,8,9,10,11,12,14,15,16);
             }else{
                 if($modalidad == 1){
-                    $nivelesArray = array(7,8,9,12,14,15,16);
+                    $programas = array(7,8,9,11,12,14,15,16);
                 }else{
-                    $nivelesArray = array(10);
+                    $programas = array(10);
                 }
-            }
-    		$query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id)'
-    				)->setParameter('id',$nivelesArray);//array(7,8,9,10,11,12,14,15,16)
+            }//array(7,8,9,10,11,12,14,15,16)
         }
         elseif (($area == "3" or $area == "5") and $nivel == "411" and  $grado == "99" ) {
-    		$query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id) order by p.programa'
-                    )->setParameter('id',array(99));
+            $programas = array(99);
         }elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
-    		$query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id) order by p.programa'
-                    //)->setParameter('id',array(1,2,3,4,5,6));
-                    )->setParameter('id',array(5,6));
+            if ($this->session->get('idGestion') < 2019) {
+                $programas = array(1,2,3,4,5,6);
+            }else{
+                $programas = array(5,6);
+            }
     	}elseif ($area == "4" and $nivel == "411" and  $grado == "99" ) {
-            $query = $em->createQuery(
-                'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                WHERE p.id IN (:id) order by p.programa'
-                )->setParameter('id',array(18));
+            if ($this->session->get('idGestion') < 2019) {
+                $programas = array(99);
+            }else{
+                $programas = array(18);
+            }
         }elseif ($area == "7" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2019) {
-                $query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id = (:id)'
-    				)->setParameter('id',99);
+                $programas = array(99);
             } else {
                 if($modalidad == 1){
-                    $nivelesArray = array(23, 24);
+                    $programas = array(23, 24);
                 }else{
-                    $nivelesArray = array(99);
+                    $programas = array(99);
                 }
-                $query = $em->createQuery(
-    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id)'
-    				)->setParameter('id',$nivelesArray);//array(23, 24)
             }
     	}else{
-            $query = $em->createQuery(
-                'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                WHERE p.id = (:id)'
-                )->setParameter('id',99);
+            $programas = array(99);
         }
-//     	    		$query = $em->createQuery(
-//     	    				'SELECT p.id, p.programa FROM SieAppWebBundle:ProgramaTipo p
-//     	                                    WHERE p.id = (:id)'
-//     	    				)->setParameter('id',99);
 
+        $query = $em->createQuery(
+            'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
+                    WHERE p.id IN (:id)'
+            )->setParameter('id',$programas);
 
-    	$programas = $query->getResult();
+        $lista = $query->getResult();
     	$programasArray = array();
-    	for($i=0;$i<count($programas);$i++){
-    		$programasArray[$programas[$i]['id']] = $programas[$i]['programa'];
+    	for($i=0;$i<count($lista);$i++){
+    		$programasArray[$lista[$i]['id']] = $lista[$i]['programa'];
     	}
     	$response = new JsonResponse();
     	return $response->setData(array('programas' => $programasArray));
