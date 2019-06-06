@@ -91,16 +91,27 @@ class ReemplazoController extends Controller {
         $id_rol = $this->session->get('roluser');
         $response = new JsonResponse();
         $msg_incorrecto = '';
+        $estudianteInscripcionId = 0;
+        $historial = array();
        
         try {
             $pruebas = $this->getPruebaRudeGestion($_POST['rude'],$gestionActual);
             if (count($pruebas)>0){
                 $msg_incorrecto = '';
+                $estudianteInscripcionId = $pruebas[0]['estudiante_inscripcion_id'];
             } else {
                 $msg_incorrecto = 'el estudiante no cuenta con pruebas de conjunto o equipo validas para reemplazar';
             }
+            $em = $this->getDoctrine()->getManager();
+            $object = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->getListInscriptionStudentPerGestion($estudianteInscripcionId, $gestionActual);
+            if(count($object)>0){
+                foreach ($object as $registro) {
+                    $deportista = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];                    
+                    $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion']);
+                }
+            }
             return $response->setData(array(
-                'pruebas' => $pruebas, 'msg_incorrecto' => $msg_incorrecto,
+                'pruebas' => $pruebas, 'msg_incorrecto' => $msg_incorrecto, 'historial' => $historial,
             ));
 
         } catch (Exception $ex) {
@@ -119,7 +130,7 @@ class ReemplazoController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select distinct pt.id, pt.prueba 
+            select distinct pt.id, pt.prueba, ei.id as estudiante_inscripcion_id 
             from jdp_estudiante_inscripcion_juegos as eij
             inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
             inner join estudiante as e on e.id = ei.estudiante_id
