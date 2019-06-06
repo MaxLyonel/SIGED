@@ -633,7 +633,7 @@ class CreacionCursosEspecialController extends Controller {
         }*/
         elseif ($area == "7") {    //TALENTO EXTRAORDINARIO
             if($modalidad == 1){
-                $nivelesArray = array(411);
+                $nivelesArray = array(410,411);
             }else{
                 $nivelesArray = array(410);
             }
@@ -725,10 +725,15 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE s.id IN (:id)'
     				)->setParameter('id',array(8,9,10,11,12,13,14,15,16,17,18,19));
             } else {
+                if($modalidad == 1){
+                    $nivelesArray = array(10,11,12,14,15);
+                } else {
+                    $nivelesArray = array(8,9);
+                }
                 $query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
-    				)->setParameter('id',array(8,9,10,11,12,14,15));
+    				)->setParameter('id',$nivelesArray);//array(8,9,10,11,12,14,15)
             }
         }
     	elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {

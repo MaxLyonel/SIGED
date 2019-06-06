@@ -295,17 +295,16 @@ class Notas{
                 //dump($asignaturas);die;
 
                 $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
-
+                
                 $arrayAsignaturasEstudiante = array();
                 foreach ($asignaturas as $a) {
                     $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
                 }
-
                 
                 $nuevaArea = false;
                 foreach ($cursoOferta as $co) {
                     // LA MATERIA TECNICA GENERAL Y ESPECILIZADA NO SE AGREGAN AUTOMATICAMENTE A TODOS LOS ESTUDIANTES A PARTIR DE LA GESTION 2019
-                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039))) {
+                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039) or ($gestion >= 2019 and $nivel!=13) )) {
 
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
@@ -337,7 +336,6 @@ class Notas{
                         );
                     }
                 }
-
                 // Volvemos atras si se adiciono alguna nueva materia o asignatura
                 if($nuevaArea == true){
                     goto vuelve;
