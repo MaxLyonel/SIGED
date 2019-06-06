@@ -232,7 +232,7 @@
                                                                 <tr style="color: #ff6d00 !important;">
                                                                     <td class="text-center">{{loop.index}}</td>
                                                                     <td class="espe" >{{especialidadlista.especialidad}} </td>
-                                                                    <td> <input id="marca_{{loop.index}}" type="checkbox"   class="marcado" data-title="Eliminar">
+                                                                    <td> <input type="checkbox" class="marcado" id="marca_{{loop.index}}" name="marca_{{loop.index}}" data-id="{{especialidadlista.id}}">
                                                                     </td>
                                                                 </tr>
                                                             {% endfor%}
@@ -351,7 +351,6 @@
             /*
             * Funcion que envia la solicitud BTH capturando los valor introducidos
             * en el formulario.*/
-            var idsolicitud=$('#form_solicitud').val();
             var solicitud=$('#form_solicitud :selected').text();
             switch (solicitud){
                 case 'Adicionar Especialidades': //Registro Nuevo
@@ -419,7 +418,7 @@
                             }
                         });
                     break;
-                case (solicitud == 'Eliminar Especialidades')://Eliminar Especialidades
+                case 'Eliminar Especialidades'://Eliminar Especialidades
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text:  "La información llenada será enviada a la Dirección Distrital." + '\n'+
@@ -434,15 +433,16 @@
                             if (willDelete) {
                                 var institucionid={{ id_institucion }}
                                 var idsolicitud=$('#form_solicitud').val();
-
-                                $("tr.item").each(function() {
-                                    $this = $(this);
-                                    var value = $this.find("span.value").html();
-                                    var quantity = $this.find("input.quantity").val();
+                                var select_especialidad = [];
+                                $('#especialidades_eliminar tbody').find("tr").each(function() {
+                                    $(this).find('td input').each(function() {
+                                        if($(this)[0].checked == true) {
+                                            select_especialidad.push($(this).data("id"));
+                                        }
+                                    });
                                 });
-                                ///pendienteeeeeee
-                                if($('#select_especialidad').val()) {
-                                } else {
+                                console.log(select_especialidad);
+                                if(select_especialidad.length== 0) {
                                     swal("Debe seleccionar al menos una especialidad.");
                                     return false;
                                 }
@@ -450,7 +450,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -473,12 +473,10 @@
                                         else if(data.estado==3 ){
                                             swal("Su trámite ya fue iniciado'");
                                         }else if(data.estado == 4){
-                                            swal(data.msg)
+                                            swal(data.msg);
                                         }
                                         else {
-                                            swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
-                                                '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
-                                                '- Su Unidad Educativa ya se encuentra registrado como BTH.');
+                                            swal(data.msg);
                                         }
                                     },
                                     complete: function () {
@@ -491,20 +489,7 @@
                     break;
             }
         }
-        function pruebalupe(){
-            alert("das");
-            $('#especialidades_eliminar tbody').find("tr").each(function(i,item) {
-                $(this).find('td').each(function(j,col) {
-                    console.log($(this).find('input'))
-                    if($('#informeregularizacion:checked').val())
-                    if($('#marca_'+(j+1)+':checked')){
-                        console.log("sd",$('#marca_'+(j+1)+':checked'));
-                    }$('.micheckbox').attr('checked')
-                   // console.log($(this).val(),col.val());
-                });
-            });
-            //console.log(valores);
-        }
+
         function cargarFormularioSolicitud() {
             var solicitud=$('#form_solicitud :selected').text();
             var idsolicitud=$('#form_solicitud').val();

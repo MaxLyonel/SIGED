@@ -31,7 +31,7 @@ sie_procesos_flujousuarios:
     prefix:   /flujousuarios
 
 sie_procesos_adicioneliminacionespecialidadesBTH:
-    resource: "@SieProcesosBundle/Resources/config/routing/tramiteadielimespecialidadesBTH.yml"
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteadielimespecialidadesbth.yml"
     prefix:   /AddElimEspecialidades
 
 #modulo de tramites con flujos

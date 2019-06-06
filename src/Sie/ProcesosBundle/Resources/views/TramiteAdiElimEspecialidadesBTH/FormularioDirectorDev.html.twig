@@ -153,7 +153,7 @@
                                                                     <tr style="color: #ff6d00 !important;">
                                                                         <td class="text-center">{{loop.index}}</td>
                                                                         <td class="espe" >{{especialidadlista.especialidad}} </td>
-                                                                        <td> <input id="marca_{{loop.index}}" type="checkbox"   class="marcado" data-title="Eliminar">
+                                                                        <td> <input type="checkbox" class="marcado" id="marca_{{loop.index}}" name="marca_{{loop.index}}" data-id="{{especialidadlista.id}}">
                                                                         </td>
                                                                     </tr>
                                                                 {% endfor%}
@@ -167,10 +167,17 @@
                                         </div>
                                     {% endif %}
                                     <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Documento adjunto</strong><br>
+                                            <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~id_institucion~'/'~'adielimespec/'~ documento )}}" target="_blank">
+                                                <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="pull-right">
                                                 <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
-                                                <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="pruebalupe()"><i class="fa fa-pencil"></i> pruebalupe</button>
                                             </div>
                                         </div>
                                     </div>
@@ -234,7 +241,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,flujotipo:{{ flujotipo}},id_tramite:{{ id_tramite }},sw:1},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ flujotipo}},id_tramite:{{ id_tramite }},sw:1},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -274,7 +281,74 @@
                             }
                         });
                     break;
-                case (solicitud == 'Eliminar Especialidades')://Eliminar Especialidades
+                case 'Eliminar Especialidades'://Eliminar Especialidades
+                    swal({
+                        title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                        text:  "La información llenada será enviada a la Dirección Distrital." + '\n'+
+                        "Puede descargar su formulario como comprobante " +
+                        "en : Trámites Enviados" +'\n'+"",
+                        icon:  "warning",
+                        buttons: true,
+                        dangerMode: true,
+                        buttons: ["Cancelar", "Continuar"],
+                    })
+                        .then(function(willDelete)  {
+                            if (willDelete) {
+                                var institucionid={{ id_institucion }}
+                                var idsolicitud=$('#form_solicitud').val();
+                                var select_especialidad = [];
+                                $('#especialidades_eliminar tbody').find("tr").each(function() {
+                                    $(this).find('td input').each(function() {
+                                        if($(this)[0].checked == true) {
+                                            select_especialidad.push($(this).data("id"));
+                                        }
+                                    });
+                                });
+                                console.log(select_especialidad);
+                                if(select_especialidad.length== 0) {
+                                    swal("Debe seleccionar al menos una especialidad.");
+                                    return false;
+                                }
+                                var imagen = '{{ asset("img/loading96.gif") }}';
+                                $.ajax({
+                                    type: 'post',
+                                    url: "{{ path('tramite_solicitud_especialidades_bth') }}",
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ flujotipo }},id_tramite:{{ id_tramite }} ,sw:1},
+                                    dataType : 'json',
+                                    beforeSend: function () {
+                                        swal({
+                                            title: "Enviando...",
+                                            text: "Espere un momento por favor",
+                                            icon: imagen,
+                                            buttons: false
+                                        });
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        if (data.estado==1){
+                                            swal.stopLoading();
+                                            swal.close();
+                                            $(".modal-backdrop ").css("display", "none");
+                                            $('#msg').text(data.msg);
+                                            $('#recargar').modal('show');
+                                            $(".modal-backdrop ").css("display", "none");
+                                        }
+                                        else if(data.estado==3 ){
+                                            swal("Su trámite ya fue iniciado'");
+                                        }else if(data.estado == 4){
+                                            swal(data.msg);
+                                        }
+                                        else {
+                                            swal(data.msg);
+                                        }
+                                    },
+                                    complete: function () {
+                                        swal.stopLoading();
+                                        swal.close();
+                                    }
+                                });
+                            }
+                        });
 
                     break;
             }
