@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="fa fa-table"></i> Creación de Cursos <span>Nuevo Curso</span></h2>
+    <h2><i class="fa fa-table"></i> Creación de Oferta <span>Nueva Oferta</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
@@ -22,7 +22,7 @@
                 </i>
             </li>
             <li>
-                <a href="{{path('creacioncursos_especial', {'op':'result'})}}">Creación de Cursos</a>
+                <a href="{{path('creacioncursos_especial', {'op':'result'})}}">Creación de Oferta</a>
                 <i class="fa fa-angle-right">
                 </i>
             </li>
@@ -33,14 +33,14 @@
 <!--/ End page header -->
 <div class="body-content animated fadeIn">
 
-    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Cursos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        <h4>Nuevo curso</h4>
+                        <h4>Nueva oferta</h4>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -333,9 +333,9 @@
         function validacion(){
             var area  = $('#form_area').val();
             if((area == 3 || area == 4 || area == 5) && $("#form_educacionCasa").is(':checked')){
-                msg = "¿Está seguro/a de crear un nuevo curso?\n Tome nota que el curso será creado para:\n -EDUCACIÓN EN CASA";
+                msg = "¿Está seguro/a de crear una nueva oferta?\n Tome nota que la oferta será creado para:\n -EDUCACIÓN SOCIOCOMUNITARIA EN CASA";
             }else{
-                msg = '¿Está seguro/a de crear un nuevo curso?';
+                msg = '¿Está seguro/a de crear una nueva oferta?';
             }
             
             if(confirm(msg)){
@@ -356,12 +356,12 @@
         $('#form_educacionCasa').change(function() {
             if ($('#form_servicio').val() != 20) {
                 if($(this).is(":checked")) {
-                   var returnVal = confirm("¿Esta seguro(a) de definir el curso para Programa de Atención en Casa?");
+                   var returnVal = confirm("¿Esta seguro(a) de definir la oferta para EDUCACIÓN SOCIOCOMUNITARIA EN CASA?");
                     $(this).attr("checked", returnVal);
                 }
                 $('#form_educacionCasa').val($(this).is(':checked'));
             } else {
-                alert('No se puede marcar Programa de Atención en Casa por que está seleccionado Apoyo Técnico Pedagógico.');
+                alert('No se puede marcar EDUCACIÓN SOCIOCOMUNITARIA EN CASA por que está seleccionado Apoyo Técnico Pedagógico.');
                 $(this).attr("checked", false);
                 $('#form_educacionCasa').val(false);
             }
