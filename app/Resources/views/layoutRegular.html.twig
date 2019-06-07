@@ -241,8 +241,8 @@
                         <!-- end SIDE NAV USER PANEL -->
 
                         <!-- begin DASHBOARD LINK -->
-
-                        {#{% for key,menu in app.session.get('aMenu') %}
+                        {#
+                        {% for key,menu in app.session.get('aMenu') %}
                             <li class="panel">
                                 <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menu{{loop.index}}">
                                     <i class="fa fa-bar-chart-o"></i> {{key}} <i class="fa fa-caret-down"></i>
@@ -259,15 +259,17 @@
                                 <!-- /.nav-second-level -->
                             </li>
                         {% endfor %}#}
+
                         {#{{ render(controller('SieAppWebBundle:GestionMenu:generamenuGuadalupe',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}#}
+
+                            
                         {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
-                        {% if app.session.get('userId') == '13794833' or app.session.get('userId') == '13833122' %}
-                        <li class="panel">
-                            <a href="{{path('sie_gestion_menu_principal')}}">
+                            
+                            <li>
+                                    <a href="{{path('sie_gestion_menu_principal')}}">
                                 <i class="fa fa-gear"></i> Gestión de Menús
-                            </a>
-                        </li>
-                        {% endif %}
+                            </li>
+                            
                         {% if app.session.get('userId') == '92506087' or app.session.get('userId') == '92506090' %}
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">

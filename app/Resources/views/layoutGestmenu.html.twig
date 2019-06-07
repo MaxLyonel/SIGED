@@ -273,8 +273,50 @@
                             <span class="selected"></span>
                         </a>
                     </li>
-                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  15 ,'userId':app.session.get('userId')  })) }}
-                </ul><!-- /.sidebar-menu -->
+                    {#
+                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  15 ,'userId':app.session.get('userId')  })) }}#}
+                    <li class="panel">
+                            <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">
+                                <i class="fa fa-bar-chart-o"></i> Áreas <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="collapse nav" id="menuAreas">
+                                <li>
+                                    <a href="{{ path('gestionmenu_administra_sistema') }}">
+                                        <i class="fa fa-edit"></i> gestion Sistemas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('gestionmenu') }}">
+                                        <i class="fa fa-edit"></i> gestion menus
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('gestionmenu_asiganar_rol_sistema') }}">
+                                        <i class="fa fa-edit"></i> sistema-rol
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('gestionmenu_asignar_menu_sistema') }}">
+                                        <i class="fa fa-edit"></i> menu-sistema
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('gestionmenu_asignar_menu_sistema_rol') }}">
+                                        <i class="fa fa-edit"></i> menu-sistema-rol
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('gestionmenu_sistema_menu_rol') }}">
+                                        <i class="fa fa-edit"></i> lista
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                    </li>
+                
+                </ul>
+
+                <!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 
                 <!-- Start left navigation - footer -->

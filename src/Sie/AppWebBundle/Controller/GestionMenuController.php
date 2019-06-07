@@ -106,7 +106,7 @@ class GestionMenuController extends Controller {
         $url                     = $form['url'];
         $em = $this->getDoctrine()->getManager();
         $sistema=new SistemaTipo();
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_tipo');")->execute();
+       // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_tipo');")->execute();
         $tamaño=strlen($abreviatura);
         if($tamaño > 5){
             $mensaje = 'La Abreviatura: ' . $sistema->getAbreviatura() . 'solo debe contener como máximo 5 letras';
