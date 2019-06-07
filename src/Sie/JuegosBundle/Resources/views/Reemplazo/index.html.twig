@@ -73,7 +73,7 @@
             <div class="col-md-6">
                     <div class="row message-wrapper rounded shadow mb-20">
                         <div class="col-md-12 message-sideleft">
-                            <div class="panel panel-lilac">
+                            <div class="panel panel-warning">
                                 <div class="panel-heading">
                                     <div class="pull-left">
                                         <h3 class="panel-title" id="historial2-title"></h3>
@@ -151,15 +151,21 @@
                                 $("#historial1-title").append(i);  
                                 $.each(deportista, function (j, registro) {   
                                     if(registro.posicion != 0){
-                                        posicion = registro.posicion;
+                                        posicion = "Puesto "+registro.posicion;
                                     } else {
                                         posicion = "";
                                     }
+                                    if(registro.fase == 0){
+                                        fase = "FP";
+                                    } 
+                                    else {
+                                        fase = "F" + registro.fase;
+                                    }
                                     lista = lista + '<a href="#" class="list-group-item">'; 
-                                    lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+'</small></h4>'; 
+                                    lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+' <span class="label label-primary pull-right rounded"> '+fase+' </span></small></h4>'; 
                                     lista = lista + '<p class="list-group-item-text">'+registro.genero+' <strong>'+posicion+'</strong></p>'; 
                                     if(registro.equipo != 0){
-                                        lista = lista + '<span class="label label-success pull-right rounded"> '+registro.equipo+' </span>'; 
+                                        lista = lista + '<span class="label label-lilac pull-right rounded"> '+registro.equipo+' </span>'; 
                                     }                                    
                                     lista = lista + '<div class="clearfix"></div>'; 
                                     lista = lista + '</a>'; 

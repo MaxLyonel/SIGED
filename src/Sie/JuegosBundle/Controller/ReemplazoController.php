@@ -107,7 +107,7 @@ class ReemplazoController extends Controller {
             if(count($object)>0){
                 foreach ($object as $registro) {
                     $deportista = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];                    
-                    $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion']);
+                    $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion'],"fase"=>($registro['fase'])-1);
                 }
             }
             return $response->setData(array(
