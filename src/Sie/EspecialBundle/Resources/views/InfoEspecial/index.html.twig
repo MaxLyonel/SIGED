@@ -36,24 +36,24 @@
             <!-- Start order table -->
             <div class="panel">
                 <div class="panel-heading">
-                    <h3 class="panel-title text-center">Información Centro</h3>
+                    <h3 class="panel-title text-center">Información Centro Educativo</h3>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body no-padding">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-middle table-danger">
+                        <table class="table table-bordered table-middle table-dangers">
                             <thead>
                             <tr>
-                                <th>&nbsp;</th>
-                                <th>Código Centro</th>
-                                <th>Centro</th>
-                                <th>Gestión</th>
-                                <th class="text-center" style="width: 11%;">Acciones</th>
+                                <th><b>Nro.</b></th>
+                                <th><b>Código</b></th>
+                                <th><b>Centro</b></th>
+                                <th class="text-center"><b>Gestión</b></th>
+                                <th class="text-center" style="width: 11%;"><b>Acciones</b></th>
                             </tr>
                             </thead>
                             <tbody>
                                 {% for arrInfoCentroGestion in arrInfoCentro %}
                                     <tr class="border-lilac">
-                                        <td class="text-center" style="width: 7%;"><b># {{loop.index}}</b></td>
+                                        <td class="text-center" style="width: 7%;"><b>{{loop.index}}</b></td>
                                         <td>{{arrInfoCentroGestion.sie}}</td>
                                         <td>{{objCentro.institucioneducativa}}</td>
 

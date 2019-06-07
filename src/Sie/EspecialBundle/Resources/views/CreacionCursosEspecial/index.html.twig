@@ -7,20 +7,8 @@
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
-            {#<li>
-                <i class="fa fa-home"></i>
-                <a href="#">Creación de Cursos</a>
-                <i class="fa fa-angle-right"></i>
-            </li>
-
-            <li class="active">Buscar</li>+#}
             <li>
-                <i class="fa fa-home"></i>
-                <a href="#">Inicio</a>
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li>
-                <i class="fa fa-home"></i>
+                <i class="fa fa-windows"></i>
                 <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion':gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
                 <i class="fa fa-angle-right">
                 </i>
@@ -101,7 +89,7 @@
                     <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                         <input type="hidden" name="idGestion" value="{{gestion}}">
-                        <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Oferta</button>
+                        <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Nueva Oferta</button>
                     </form>
                 {% endif %}
             </div>
@@ -119,17 +107,17 @@
                 {% set turno = cursos[0].institucioneducativaCurso.turnoTipo.id %}
                 {% set turnoNombre = cursos[0].institucioneducativaCurso.turnoTipo.turno %}
 
-                <div class="panel panel-primary">
+                <div class="panel panel-teal">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4>Turno - {{turnoNombre}}</h4>
+                            Turno - {{turnoNombre}}
                         </div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-collapse collapse in" id="panel{{turno}}">
                         <div class="panel-body">
-                            <div id="no-more-tables">
-                                <table class="table table bordered cf dataTable">
+                            <div id="no-more-tabless">
+                                <table class="table table-bordered cf dataTable">
                                     <thead class="cf">
                                         <tr>
                                             <th>Área Esp.</th>
@@ -156,17 +144,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-primary">
+                <div class="panel panel-teal">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4>Turno - {{c.institucioneducativaCurso.turnoTipo.turno}}</h4>
+                            Turno - {{c.institucioneducativaCurso.turnoTipo.turno}}
                         </div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-collapse collapse in" id="panel{{turno}}">
                         <div class="panel-body">
                             <div id="no-more-tables">
-                                <table class="table table bordered cf dataTable">
+                                <table class="table table-bordered cf dataTable">
                                     <thead class="cf">
                                         <tr>
                                             <th>Área Esp.</th>

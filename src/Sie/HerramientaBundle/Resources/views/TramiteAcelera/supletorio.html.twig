@@ -74,17 +74,17 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
+                            <div class="row" id="tbl_cumano">
                                 {%for cumano in cursomateriasnotas %}
                                 <div class="col-md-6">
                                     <h5><b>Curso Inscripción</b></h5>
                                     <div id="no-more-tables">
                                         {% if cumano.curso is defined %}
-                                        <input type="hidden" id="sel_sie" value="{{cumano.curso.codigo_sie}}">
-                                        <input type="hidden" id="sel_nivel" value="{{cumano.curso.nivel_id}}">
-                                        <input type="hidden" id="sel_grado" value="{{cumano.curso.grado_id}}">
-                                        <input type="hidden" id="sel_paralelo" value="{{cumano.curso.paralelo_id}}">
-                                        <input type="hidden" id="sel_turno" value="{{cumano.curso.turno_id}}">
+                                        <input type="hidden" id="sel_sie{{loop.index}}" value="{{cumano.curso.codigo_sie}}">
+                                        <input type="hidden" id="sel_nivel{{loop.index}}" value="{{cumano.curso.nivel_id}}">
+                                        <input type="hidden" id="sel_grado{{loop.index}}" value="{{cumano.curso.grado_id}}">
+                                        <input type="hidden" id="sel_paralelo{{loop.index}}" value="{{cumano.curso.paralelo_id}}">
+                                        <input type="hidden" id="sel_turno{{loop.index}}" value="{{cumano.curso.turno_id}}">
                                         <table class="table table-bordered">
                                             <tbody class="text-muted">
                                                 <tr>
@@ -102,7 +102,7 @@
                                             </tbody>
                                         </table>
                                         {% endif %}
-                                        <table class="table table-bordered" id="tbl_notas">
+                                        <table class="table table-bordered tbl_notas">
                                             <thead>
                                                 <tr>
                                                     <th class="text-center"><b>No.</b></th>
@@ -204,17 +204,22 @@
         });
 
         function sendSupletorio() {
-            $("#guardar").attr('disabled', true);
-            var curso = {sie: $('#sel_sie').val(), nivel_id: $('#sel_nivel').val(), grado_id: $('#sel_grado').val(), paralelo_id: $('#sel_paralelo').val(), turno_id: $('#sel_turno').val()};
-            var asignatura_notas = [];
-            $('#tbl_notas tbody').find("tr").each(function() {
-                asignatura_notas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+            $("#guardar").attr('disabled', true);            
+            var curso_asignatura_notas = [];
+            $('#tbl_cumano').find('table.tbl_notas tbody').each(function(index, item) {
+                //var asignaturanotas = [];
+                var curso = {sie: $('#sel_sie'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
+                var asignaturanotas = [];
+                $(this).find("tr").each(function() {
+                    asignaturanotas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+                });
+                // asignaturanotas.push({curso: curso, asignatura_notas: asignaturanotas});
+                curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
             });
             var fd = new FormData();
             fd.append('tramite_id', $("#tramite_id").val());
             fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
-            fd.append('curso', JSON.stringify(curso));
-            fd.append('notas', JSON.stringify(asignatura_notas));
+            fd.append('curso_asignatura_notas', JSON.stringify(curso_asignatura_notas));
             var docsup = document.getElementById('acta_supletorio');
             fd.append('acta_supletorio', docsup.files[0]);
             $.ajax({

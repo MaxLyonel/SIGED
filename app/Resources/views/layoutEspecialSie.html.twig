@@ -112,7 +112,8 @@
         |=========================================================================================================================|
 
     -->
-    <body>
+    <!-- class="page-session page-sound page-header-fixed page-sidebar-fixed page-footer-fixed demo-dashboard-session" -->
+    <body class="page-session page-sound page-header-fixed page-sidebar-fixed page-footer-fixed demo-dashboard-session">
 
         <!--[if lt IE 9]>
         <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
@@ -234,13 +235,13 @@
                             <li class="dropdown navbar-profile">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
-                                        <span class="avatar"><img src="{{asset('webEspecial/img/avatar/35/1.png')}}" class="img-circle" alt="admin"></span>
+                                        <span class="avatar"><img src="{{asset('webEspecial/img/avatar/user.svg')}}" class="img-circle" alt="admin"></span>
                                         <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu animated flipInX">
-                                    <li class="dropdown-header">Account</li>
+                                    <li class="dropdown-header">Cuenta</li>
                                     <li><a href="{{path('sie_usuarios_homepage')}}"><i class="fa fa-user"></i>Gestión de usuarios</a></li>
                                     <li><a href="{{path('logout')}}"><i class="fa fa-sign-out"></i>Salir</a></li>
                                 </ul>
@@ -277,40 +278,40 @@
             |=========================================================================================================================|
 
             -->
-            <aside id="sidebar-left" class="sidebar-circle sidebar-ale">
+            <aside id="sidebar-left" class="sidebar-circle sidebar-ales">
 
                 <!-- Start left navigation - profile shortcut -->
                 <div class="sidebar-content">
                     <div class="media">
-                        <a class="pull-left has-notif avatar" href="page-profile.html">
-                            <img src="{{asset('webEspecial/img/avatar/50/1.png')}}" alt="admin">
-                            <i class="online"></i>
+                        <a class="pull-left has-notif avatar" role="button">
+                            <img src="{{asset('webEspecial/img/avatar/user.svg')}}" alt="admin">
+                            {# <i class="online"></i> #}
                         </a>
                         <div class="media-body">
                             <h4 class="media-heading">Hola, <span>{{app.session.get('name')}}</span></h4>
-                            <small>{{app.session.get('cuentauser')}}</small>
+                            <small><b>{{app.session.get('cuentauser')}}</b></small>
                         </div>
                     </div>
                 </div><!-- /.sidebar-content -->
                 <!--/ End left navigation -  profile shortcut -->
 
                 <!-- Start left navigation - menu -->
-
+                {% set route = app.request.attributes.get('_route') %}
                 <ul class="sidebar-menu">
-                    <li class="active">
+                    <li class="{{ route == 'principal_web' ? 'active':'' }}">
                         <a href="{{path('principal_web')}}">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Inicio</span>
-                            <span class="selected"></span>
+                            <span class="{{ route == 'principal_web' ? 'selected':'' }}"></span>
                         </a>
                     </li>
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
 
-                    <li class="submenu">
+                    <li class="{{ route == 'herramienta_especial_buscar_centro' ? 'active':'submenu' }}">
                         <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="icon"><i class="fa fa-windows"></i></span>
                             <span class="text">Especial</span>
-                            <span class="arrow"></span>
+                            <span class="{{ route == 'herramienta_especial_buscar_centro' ? 'selected':'arrow' }}"></span>
                         </a>
                         <ul>
                             <li><a href="{{ path('herramienta_especial_buscar_centro') }}">Seleccionar Centro</a></li>
@@ -333,47 +334,46 @@
                         </ul>
                     </li>#}
                     {% else %}
-                    <li class="submenu">
+                    <li class="{{ route == 'info_especial_index' ? 'active':'submenu' }}">
                         <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="icon"><i class="fa fa-windows"></i></span>
                             <span class="text">Información Centro</span>
-                            <span class="arrow"></span>
+                            <span class="{{ route == 'info_especial_index' ? 'selected':'arrow' }}"></span>
                         </a>
                         <ul>
                             <li><a href="{{ path('info_especial_index') }}">Info. Centro Especial</a></li>
-
                         </ul>
                     </li>
 
                     {% endif %}
 
-                    <li class="submenu">
+                    <li class="{{ (route == 'estudiante_index' or route == 'history_new_inscription_index') ? 'active':'submenu' }}">
                         <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="icon"><i class="fa fa-user"></i></span>
                             <span class="text">Estudiante</span>
-                            <span class="arrow"></span>
+                            <span class="{{ (route == 'estudiante_index' or route == 'history_new_inscription_index') ? 'selected':'arrow' }}"></span>
                         </a>
                         <ul>
                             <li><a href="{{ path('estudiante_index') }}"> Buscar Estudiante</a></li>
                             <li><a href="{{ path('history_new_inscription_index') }}"> Historial de Inscripción</a></li>
                         </ul>
                     </li>
-                    <li class="submenu">
+                    <li class="{{ route == 'herramienta_info_estudiante_bjp_index' ? 'active':'submenu' }}">
                         <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="icon"><i class="fa fa-file-text"></i></span>
                             <span class="text">Bono Juancito Pinto</span>
-                            <span class="arrow"></span>
+                            <span class="{{ route == 'herramienta_info_estudiante_bjp_index' ? 'selected':'arrow' }}"></span>
                         </a>
                         <ul>
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
                     </li>
                     {% if app.session.get('roluser') != 20 %}
-                        <li class="submenu">
+                        <li class="{{ (route == 'herramienta_especial_habilitar_gestion_search' or route == 'herramienta_especial_infoconsolidation_gestion_index') ? 'active':'submenu' }}">
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="icon"><i class="fa fa-cog"></i></span>
                                 <span class="text">Herramientas</span>
-                                <span class="arrow"></span>
+                                <span class="{{ (route == 'herramienta_especial_habilitar_gestion_search' or route == 'herramienta_especial_infoconsolidation_gestion_index') ? 'selected':'arrow' }}"></span>
                             </a>
                             <ul>
                                 {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
@@ -385,11 +385,11 @@
                             </ul>
                         </li>
                     {% endif %}
-                    <li class="">
+                    <li class="{{ route == 'wf_tramite_index' ? 'active':'' }}">
                         <a href="{{path('wf_tramite_index')}}">
-                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="icon"><i class="fa fa-list-alt"></i></span>
                             <span class="text">Trámites</span>
-                            <span class="selected"></span>
+                            <span class="{{ route == 'wf_tramite_index' ? 'selected':'' }}"></span>
                         </a>
                     </li>
                     {# <li class="submenu">

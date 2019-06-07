@@ -202,20 +202,21 @@ class TramiteAceleraController extends Controller
             ->orderBy("td.flujoProceso")
             ->getQuery()
             ->getSingleResult();
-        $datos = json_decode($resultDatos->getdatos());//dump($datos);die;
+        $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
         $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));
         //dump($restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId());
         $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-        $grado_id = 6;//$restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
         $turno_id = $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
 
         $objAreasCurrentLevel = array();
-        for ($i=0; $i < $datos->grado_cantidad; $i++) {dump($nivel_id, $grado_id);
+        for ($i=0; $i < $datos->grado_cantidad; $i++) {
             $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_id);
             $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_id);
+            // dump($nivel_id, $grado_id);
             $objAreasCurrentLevel[] = array(
                 'curso' => array(
                     'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
@@ -254,7 +255,7 @@ class TramiteAceleraController extends Controller
         $informe = $datos->informe;
         if ($datos->procede_aceleracion == "SI") {
             return $this->render('SieHerramientaBundle:TramiteAcelera:supletorio.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision,
-            'cursomateriasnotas' => $objAreasCurrentLevel));//, 'curso' => $curso
+            'cursomateriasnotas' => $objAreasCurrentLevel));
         } else {
             return $this->render('SieHerramientaBundle:TramiteAcelera:observacion.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision,
             'cursomateriasnotas' => $objAreasCurrentLevel));
@@ -279,8 +280,7 @@ class TramiteAceleraController extends Controller
         $datos = array();
         $datos['tramite_id'] = $request->get('tramite_id');
         $datos['institucioneducativa_id'] = $request->get('institucioneducativa_id');
-        $datos['curso'] = $request->get('curso');
-        $datos['notas'] = $request->get('notas');
+        $datos['curso_asignatura_notas'] = $request->get('curso_asignatura_notas');
         $datos['acta_supletorio'] = $doc_acta;
 
         $usuario_id = $request->getSession()->get('userId');
@@ -416,14 +416,14 @@ class TramiteAceleraController extends Controller
             ->getQuery()
             ->getResult();
         $datos1 = json_decode($resultDatos[0]->getdatos());
-        $datos2 = json_decode($resultDatos[1]->getdatos());
+        $datos2 = json_decode($resultDatos[1]->getdatos());//dump(json_decode($datos2->curso_asignatura_notas));die;
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
 
         $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));
         
-        $nivel_grado = json_decode($datos2->curso);
+        $nivel_grado = json_decode($datos2->curso_asignatura_notas)[0]->curso;
         $curso = array(
             'sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
             'nombre'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
@@ -479,7 +479,7 @@ class TramiteAceleraController extends Controller
             'informe_comision' => $datos1->informe_comision,
             'acta_supletorio' => $datos2->acta_supletorio,
             'curso' => $curso,
-            'asignatura_notas' => json_decode($datos2->notas),
+            'asignatura_notas' => json_decode($datos2->curso_asignatura_notas)[0]->asignatura_notas,
             'materiasnotas' => $objAreasCurrentLevel));
     }
 
