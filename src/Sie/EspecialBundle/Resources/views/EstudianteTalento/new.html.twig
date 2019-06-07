@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{path('wf_tramite_index')}}">Trámites</a>
+                    <a href="{{path('wf_tramite_index', {'tipo':1})}}">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Nuevo</li>
@@ -112,7 +112,7 @@
                                 <div class="alert alert-danger" role="alert">
                                     <strong>El Centro de Educacion Especial no está acreditado en área de Talento Extraordinario, por lo tanto no puede realizar el trámite.</strong>
                                 </div>
-                                <a class="btn btn-primary" href="{{path('wf_tramite_index')}}">Volver a Trámites</a>
+                                <a class="btn btn-primary" href="{{path('wf_tramite_index', {'tipo':1})}}">Volver a Trámites</a>
                             </div>
                         </div>
                         {% endif %}
@@ -230,7 +230,7 @@
                     if (data.estado == 200) {
                         clearInput();
                         //location.href = "{ { path('wf_tramite_recibido') }}";
-                        location.href = "{{ path('wf_tramite_index') }}";
+                        location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
                         mesage('danger', 'Alerta', data.msg, false);
                     }

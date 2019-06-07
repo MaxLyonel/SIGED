@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{path('wf_tramite_index')}}">Trámites</a>
+                    <a href="{{path('wf_tramite_index', {'tipo':1})}}">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Verifica</li>
@@ -323,7 +323,7 @@
                         clearInput();
                         $("#tramite_st").val(1);
                         mesage('info', 'Notificación', data.msg, false);
-                        //location.href = "{{ path('wf_tramite_index') }}";
+                        //location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
                         $("#guardar").attr('disabled', false);
                         mesage('danger', 'Alerta', data.msg, false);
@@ -338,7 +338,7 @@
         function closeModal() {
             $("#modalConfirm").modal('hide');
             if ($("#tramite_st").val() == 1) {
-                location.href = "{{ path('wf_tramite_index') }}";
+                location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
             }
         }
 
