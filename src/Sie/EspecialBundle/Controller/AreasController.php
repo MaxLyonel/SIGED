@@ -660,7 +660,7 @@ class AreasController extends Controller {
                             ->setParameter('ids',array(1000,1001,1002,1003))
                             ->getResult();
                             break;
-                case 403:    $asignaturas = $em->createQuery(
+                case 403:   $asignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel IN (:idNivel)
@@ -670,7 +670,6 @@ class AreasController extends Controller {
                             		->setParameter('ids',array(1000,1001,1002,1003,32832))
                             		->getResult();
                             		break;
-
 
                 case 12:    $asignaturas = $em->createQuery(
                                     'SELECT at
@@ -682,7 +681,7 @@ class AreasController extends Controller {
                             ->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019))
                             ->getResult();
                             break;
-                case 404:   $asignaturas = $em->createQuery(
+                case 404:   $rasignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel = :idNivel
@@ -690,10 +689,15 @@ class AreasController extends Controller {
                                     ORDER BY at.id ASC'
                             		)->setParameter('idNivel', 12)
                             		->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019,32832))
-                            		->getResult();
-                            		break;
-
-
+                                    ->getResult();
+                            $asignaturas = array();
+                            foreach ($rasignaturas as $item) {
+                                if ($item->getAsignatura() == "COMUNICACIÓN Y LENGUAJES (CASTELLANA, ORIGINARIA Y LENGUA EXTRANJERA)") {
+                                    $item->setAsignatura("COMUNICACIÓN Y LENGUAJES (CASTELLANA-ESCRITA, ORIGINARIA Y LENGUA EXTRANJERA)");
+                                }
+                                $asignaturas[] = $item;
+                            }
+                        	break;
                 case 13:    switch ($grado) {
                                 case 1:
                                 case 2:

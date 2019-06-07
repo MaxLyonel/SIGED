@@ -276,6 +276,16 @@ class Notas{
                                 ->setParameter('idInscripcion',$idInscripcion)
                                 ->getQuery()
                                 ->getResult();
+                    if ($nivel == 404) {
+                        $rasignaturas = array();
+                        foreach ($asignaturas as $item) {
+                            if ($item['asignatura'] == "COMUNICACIÓN Y LENGUAJES (CASTELLANA, ORIGINARIA Y LENGUA EXTRANJERA)") {
+                                $item['asignatura'] = "COMUNICACIÓN Y LENGUAJES (CASTELLANA-ESCRITA, ORIGINARIA Y LENGUA EXTRANJERA)";
+                            }
+                            $rasignaturas[] = $item;
+                        }
+                        $asignaturas = $rasignaturas;
+                    }
                 }else{
                     // Obtenemos las asigganturas sin areas o campos del estudiante
                     $asignaturas = $this->em->createQueryBuilder()
@@ -290,6 +300,16 @@ class Notas{
                                 ->setParameter('idInscripcion',$idInscripcion)
                                 ->getQuery()
                                 ->getResult();
+                    if ($nivel == 404) {
+                        $rasignaturas = array();
+                        foreach ($asignaturas as $item) {
+                            if ($item['asignatura'] == "COMUNICACIÓN Y LENGUAJES (CASTELLANA, ORIGINARIA Y LENGUA EXTRANJERA)") {
+                                $item['asignatura'] = "COMUNICACIÓN Y LENGUAJES (CASTELLANA-ESCRITA, ORIGINARIA Y LENGUA EXTRANJERA)";
+                            }
+                            $rasignaturas[] = $item;
+                        }
+                        $asignaturas = $rasignaturas;
+                    }
                 }
 
                 //dump($asignaturas);die;
