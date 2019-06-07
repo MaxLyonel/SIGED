@@ -67,7 +67,7 @@ body.page-sidebar-minimize #header .navbar-minimize:hover > a {
 #sidebar-left.sidebar-box .sidebar-menu > li.active > a > .icon i,
 #sidebar-left.sidebar-rounded .sidebar-menu > li.active > a > .icon i,
 #sidebar-left.sidebar-circle .sidebar-menu > li.active > a > .icon i {
-  background-color: #5577b4;
+  background-color: #e53935;
 }
 #sidebar-left.sidebar-box .sidebar-menu > li > ul > li:hover:after,
 #sidebar-left.sidebar-rounded .sidebar-menu > li > ul > li:hover:after,

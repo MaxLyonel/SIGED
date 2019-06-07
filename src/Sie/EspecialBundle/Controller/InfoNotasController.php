@@ -327,8 +327,23 @@ class InfoNotasController extends Controller {
         $sie = $arrInfoUe['requestUser']['sie'];
         $estInsId = $arrInfoStudent['estInsId'];
         $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];
-
         switch ($areaEspecialId){
+            case 1:
+                $nivelId = $arrInfoUe['ueducativaInfoId']['nivelId'];
+                if ($arrInfoUe['ueducativaInfoId']['nivelId'] == 403) {
+                    $archivo = "libreta_auditiva_inicial_v1_amg.rptdesign";
+                    $nombre = 'libreta_especial_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                    $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                    $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
+                } else {
+                    $archivo = "libreta_auditiva_primaria_v1_amg.rptdesign";
+                    $nombre = 'libreta_especial_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                    $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                    $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
+                }
+                break;
             case 2:
                 $idNotaTipo = $request->get('idNotaTipo');
                 //dump($idNotaTipo);die;

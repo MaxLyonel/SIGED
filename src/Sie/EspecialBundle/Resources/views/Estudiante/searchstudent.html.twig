@@ -34,45 +34,40 @@
             {% endfor %}
 
             <!-- Website Stats  Widget -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-12">
-
-                    <div class="panel panel-teal">
-                            <div class="panel-heading">
-                                <div class="panel-title">
-                                    <h4><i class="fa fa-search"></i> Inserte Datos</h4>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-                            <div class="panel-body">
-                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        {{form_label(form.paterno)}}
-                                        {{form_widget(form.paterno)}}
-                                    </div>
-                                    <div class="col-md-4">
-                                        {{form_label(form.materno)}}
-                                        {{form_widget(form.materno)}}
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        {{form_label(form.nombre)}}
-                                        {{form_widget(form.nombre)}}
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="row">
-                                    <div class="col-md-12">{{form_widget(form.lookfor,{ 'attr':{'class':'btn btn-primary' } } ) }}</div>
-                                </div>
-                                {{form_end(form)}}
-                            </div>
-                      </div>
+            <!-- End of Website Stats Widget -->
+        </div>
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-teal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <i class="fa fa-search"></i> Inserte Datos
                     </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{form_label(form.paterno)}}
+                            {{form_widget(form.paterno)}}
+                        </div>
+                        <div class="col-md-4">
+                            {{form_label(form.materno)}}
+                            {{form_widget(form.materno)}}
+                        </div>
+                        <div class="col-md-4 form-group">
+                            {{form_label(form.nombre)}}
+                            {{form_widget(form.nombre)}}
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">{{form_widget(form.lookfor,{ 'attr':{'class':'btn btn-primary' } } ) }}</div>
+                    </div>
+                    {{form_end(form)}}
                 </div>
             </div>
-            <!-- End of Website Stats Widget -->
         </div>
     </div>
 
