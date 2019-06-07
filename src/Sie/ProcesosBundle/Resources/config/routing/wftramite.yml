@@ -6,19 +6,15 @@ wf_tramite_lista:
     defaults: { _controller: SieProcesosBundle:WfTramite:lista }
 
 wf_tramite_nuevo:
-    path:     /{id}/nuevo
+    path:     /nuevo
     defaults: { _controller: SieProcesosBundle:WfTramite:nuevo }
-
-wf_tramite_recibido:
-    path:     /recibidos
-    defaults: { _controller: SieProcesosBundle:WfTramite:recibidos }
 
 wf_tramite_recibido_guardar:
     path:     /recibidosguardar
     defaults: { _controller: SieProcesosBundle:WfTramite:recibidosGuardar }
 
 wf_tramite_recibido_enviar:
-    path:     /{id}/recibidosenviar
+    path:     /recibidosenviar
     defaults: { _controller: SieProcesosBundle:WfTramite:recibidosEnviar }
 
 wf_tramite_recibido_detalle:
@@ -33,16 +29,8 @@ wf_tramite_recibido_derivar_guardar:
     path:     /recibidosderivarguardar
     defaults: { _controller: SieProcesosBundle:WfTramite:recibidosDerivarGuardar }
 
-wf_tramite_enviados:
-    path:     /enviados
-    defaults: { _controller: SieProcesosBundle:WfTramite:enviados }
-
-wf_tramite_concluidos:
-    path:     /concluidos
-    defaults: { _controller: SieProcesosBundle:WfTramite:concluidos }
-
 wf_tramite_reporte_formulario:
-    path:     /{idtramite}/{id_td}/reporteformulario
+    path:     /reporteformulario
     defaults: { _controller: "SieProcesosBundle:WfTramite:reporteFormulario" }
 
 wf_tramite_seguimiento:

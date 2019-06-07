@@ -1,10 +1,6 @@
 {# {% extends 'layoutHerramienta.html.twig' %} #}
 {% extends app.session.get('layout') %}
-{% block stylesheets %}
-    {{parent()}}
-    <style>
-    </style>
-{% endblock %}
+
 {% block contentoption %}
 
     <!-- Start page header -->
@@ -26,111 +22,47 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-md-12">
-                {% if app.session.flashBag.has('exito') %}
-                    <div class="alert alert-success">
-                        {% for msg in app.session.flashBag.get('exito') %}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <i class="glyphicon glyphicon-ok"></i> {{ msg }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                {% if app.session.flashBag.has('error') %}
-                    <div class="alert alert-danger">
-                        {% for msg in app.session.flashBag.get('error') %}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <i class="glyphicon glyphicon-remove"></i> {{ msg }}
-                        {% endfor %}
-                    </div>
-                {% endif %}    
-                <!-- Start default panel -->
-                {# <div class="panel panel-primary rounded shadow">
-                    <!-- Start panel heading -->
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{titulo}}</h3>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading --> #}
-                    <!--/ End panel heading -->
-                    <!-- Start panel content -->
-                    <div class="panel-body">
-                        <div class="row">
-                            {# <div class="section-sample" id="nav">
-                                <button type="button" class="btn btn-twitter  active" onclick="nuevotramite()">Nuevo Trámite</button>
-                                <button type="button" class="btn btn-twitter" onclick="recibidos()">Recibidos</button>
-                                <button type="button" class="btn btn-twitter" onclick="enviados()">Enviados</button>
-                                <button type="button" class="btn btn-twitter" onclick="concluidos()">Concluidos</button>
-                                <button type="button" class="btn btn-twitter" onclick="seguimiento()">Seguimiento</button>
-                            </div> #}
-
-                            <div class="col-sm-2">
-                                <div class="panel rounded shadow">
-                                    <ul class="nav nav-pills nav-stacked nav-email shadow mb-20">
-                                        <li class="active">
-                                            <a onclick="nuevotramite()"><i class="fa fa-file-o"></i>Nuevo Trámite</a>
-                                        </li>
-                                        <li>    
-                                            <a onclick="recibidos()"><i class="fa fa-list"></i>Recibidos</a>
-                                        </li>
-                                        <li>
-                                            <a onclick="enviados()"><i class="fa fa-paper-plane"></i> Enviados</a>
-                                        </li>
-                                        <li>
-                                            <a onclick="concluidos()"><i class="fa fa-file-text-o"></i>Concluidos</a>
-                                        </li>
-                                        <li>
-                                            <a onclick="seguimiento()"> <i class="fa fa-cogs"></i> Seguimiento</a>
-                                        </li>
-                                    </ul>
-                                </div>    
-                            </div>
-                            <div class="col-sm-10">
-                                <div class="panel rounded shadow panel-primary">
-                                    <div class="panel-heading">
-                                        <div class="pull-left">
-                                            <h3 class="panel-title" id="titulo">{{titulo}}</h3>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div><!-- /.panel-heading -->
-                                    <div class="panel-body">
-                                        <div id="contenido">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered table-middle table-primary">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="text-center" style="max-width: 5px">No.</th>
-                                                                    <th>Trámite</th>
-                                                                    <th class="text-center">Nuevo Trámite</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {% for entity in entities %}
-                                                                    <tr>
-                                                                        <td class="text-center" style="max-width: 5px">
-                                                                            <strong>{{ loop.index }}</strong>
-                                                                        </td>
-                                                                        <td>{{ entity.flujo }}</td>
-                                                                        <td class="text-center">
-                                                                            <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Iniciar Trámite">
-                                                                                <i class="fa fa-pencil"></i>
-                                                                            </a>
-                                                                        </td>
-                                                                    </tr>
-                                                                {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><!-- /.panel-body -->
-                                </div><!-- /.panel -->
-                            </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="panel rounded shadow">
+                                <ul class="nav nav-pills nav-stacked nav-email shadow mb-20">
+                                    <li {% if tipo == 1 %}class="active"{% endif %}>
+                                        <a onclick="nuevotramite()"><i class="fa fa-inbox"></i> Nuevo Trámite</a>
+                                    </li>
+                                    <li {% if tipo == 2 %} class="active"{% endif %}>    
+                                        <a onclick="recibidos()"><i class="fa fa-envelope-o"></i> Recibidos</a>
+                                    </li>
+                                    <li {% if tipo == 3 %} class="active"{% endif %}>
+                                        <a onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
+                                    </li>
+                                    <li>
+                                        <a onclick="concluidos()"><i class="fa fa-file-text-o"></i> Concluidos</a>
+                                    </li>
+                                    <li>
+                                        <a onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
+                                    </li>
+                                </ul>
+                            </div>    
                         </div>
-                    </div><!-- /.panel-body -->
-                    <!--/ End panel content -->
-                {# </div><!-- /.panel -->
-                <!--/ End default panel --> #}
+                        <div class="col-sm-10">
+                            <div class="panel rounded shadow panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title" id="titulo">{{titulo}}</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="contenido">
+                                        {% include 'SieProcesosBundle:WfTramite:contenido.html.twig' with { 'entities':entities,'titulo':titulo,'tipo':tipo } %}
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                        </div>
+                    </div>
+                </div><!-- /.panel-body -->
+                <!--/ End panel content -->
             </div>
         </div><!-- /.row -->
     </div>
@@ -140,6 +72,12 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+        $( document ).ready(function() {
+            if({{tipo}} == 2){
+                cargatablas();
+            }
+            $(".tooltips").tooltip();
+        });
         $(function() {
             // elementos de la lista
             var menues = $(".nav li"); 
@@ -152,9 +90,11 @@
             });
         });
         function nuevotramite(){
+            formData = {tipo: 1};
             $.ajax({
                 type: 'GET',
                 url: "{{path('wf_tramite_lista')}}",
+                data: formData,
                 beforeSend: function () {
                     $('#contenido').empty();
                     $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
@@ -162,15 +102,18 @@
                 success: function (data) {
                     $('#contenido').empty();
                     $('#contenido').append(data);
-                    $('#titulo').text('Nuevo trámite')
+                    $('#titulo').text('Nuevo trámite');
+                    $(".tooltips").tooltip();
                 },
             });
         }
 
         function recibidos(){
+            formData = {tipo: 2};
             $.ajax({
                 type: 'GET',
-                url: "{{path('wf_tramite_recibido')}}",
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
                 beforeSend: function () {
                     $('#titulo').text('Trámites recibidos');
                     $('#contenido').empty();
@@ -180,15 +123,17 @@
                     $('#contenido').empty();
                     $('#contenido').append(data);
                     cargatablas();
+                    $(".tooltips").tooltip();
                 },
             });
         }
 
         function enviados(){
-            //alert('entra');
+            formData = {tipo: 3};
             $.ajax({
                 type: 'GET',
-                url: "{{path('wf_tramite_enviados')}}",
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
                 beforeSend: function () {
                     $('#titulo').text('Trámites enviados');
                     $('#contenido').empty();
@@ -198,14 +143,17 @@
                     $('#contenido').empty();
                     $('#contenido').append(data);
                     cargatablas();
+                    $(".tooltips").tooltip();
                 },
             });
         }
 
         function concluidos(){
+            formData = {tipo: 4};
             $.ajax({
                 type: 'GET',
-                url: "{{path('wf_tramite_concluidos')}}",
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
                 beforeSend: function () {
                     $('#titulo').text('Trámites concluidos');
                     $('#contenido').empty();
@@ -215,6 +163,7 @@
                     $('#contenido').empty();
                     $('#contenido').append(data);
                     cargatablas();
+                    $(".tooltips").tooltip();
                 },
             });
         }
@@ -267,6 +216,39 @@
                 } );
             } );
         };
+        function detalle(id,flujo){
+            formData = {id: id,flujo:flujo};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('wf_tramite_recibido_detalle')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
+        }
+
+        function derivar(id,flujo){
+            formData = {id: id,flujo:flujo};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('wf_tramite_recibido_derivar')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
+        }
 
     </script>
 {% endblock %}
