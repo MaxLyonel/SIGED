@@ -589,6 +589,147 @@ class ReportesController extends Controller {
 //     die;
     }
 
+
+
+    public function reportAlterPrimariaPdfAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        // dump($arrDataInfo);
+        // dump($reporte);die;
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA';
+
+        $response = new Response();
+        //   dump($periodo);dump($gestion);dump($lugar);die;
+         //     dump($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=pdf&');die;
+        // por defecto
+        $response->headers->set('Content-type', 'application/pdf');
+        // dump($roluser);die;
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+
+
+
+//        dump($formatreport   );
+//     die;
+    }
+    public function reportAlterPrimariaExcelAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        //dump($arrDataInfo);
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA ';
+
+        $response = new Response();
+
+        $response->headers->set('Content-type', 'application/xlsx');
+
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+    }
+    public function reportAlterPrimariaMIEPdfAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        // dump($arrDataInfo);
+        // dump($reporte);die;
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA ';
+
+        $response = new Response();
+        //   dump($periodo);dump($gestion);dump($lugar);die;
+        //      dump($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_distrito_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=pdf&');die;
+        // por defecto
+        $response->headers->set('Content-type', 'application/pdf');
+        // dump($roluser);die;
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_mie_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+
+
+
+//        dump($formatreport   );
+//     die;
+    }
+    public function reportAlterPrimariaMIEExcelAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        //dump($arrDataInfo);
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA';
+
+        $response = new Response();
+
+        $response->headers->set('Content-type', 'application/xlsx');
+
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_mie_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
+
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+    }
+
+
+
     public function reportEstAction(Request $request, $dataInfo){
 
         $arrDataInfo = unserialize($dataInfo);
@@ -743,8 +884,6 @@ class ReportesController extends Controller {
 
 
     }
-
-
 
     public function reportEspPeceAction(Request $request, $dataInfo){
 

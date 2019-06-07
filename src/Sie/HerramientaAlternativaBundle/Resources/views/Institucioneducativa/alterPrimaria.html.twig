@@ -1,0 +1,102 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-plus-circle animated flip"></i> Generar Reportes<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio </a>
+                <i class="fa fa-angle-right"></i>
+                <li class="active">Reportes Alternativa Primaria</li>
+                </li>
+
+                <li class="active"></li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+    <div class="body-content animated fadeIn" >
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Reportes por gestión y periodo</h3>
+                        </div>
+                        <div class="pull-right">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            {% for flashMessage in app.session.flashbag.get('errorMsg') %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('successMsg') %}
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    {#<div class="form-group col-lg-3 col-md-3">#}
+                                        {#{{ form_label(form.idInstitucion)}}#}
+                                        {#{{form_widget(form.idInstitucion) }}#}
+                                        {#<div class="help-block with-errors"></div>#}
+                                    {#</div>#}
+                                    <div class="form-group col-lg-3 col-md-3">
+                                        {{ form_label(form.gestion)}}
+                                        {{form_widget(form.gestion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-3">
+                                        {{ form_label(form.periodo)}}
+                                         {{form_widget(form.periodo) }}
+                                         <div class="help-block with-errors"></div>
+                                    </div>
+                                    {#<div class="form-group col-lg-3 col-md-3">#}
+                                        {#{{ form_label(form.subcea)}}#}
+                                        {#{{form_widget(form.subcea) }}#}
+                                        {#<div class="help-block with-errors"></div>#}
+                                    {#</div>#}
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6">
+                                        {{ form_widget(form.crear ) }}
+                                        <a href="{{ path('principal_web') }}" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% if app.session.get('ie_id') != '-1' %}
+            <script>
+            $(document).ready(function () {                
+                selgessubsemFormShow();
+            });  
+            </script>
+{% endif %}
+{% endblock %}
+    

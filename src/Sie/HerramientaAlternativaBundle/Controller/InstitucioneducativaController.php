@@ -3548,5 +3548,144 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     	$response = new JsonResponse();
     	return $response->setData(array('subcea' => $subceasArray));
     }
+    public function submenuAlterPrimariaAction(Request $request){
 
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
+        $query = $repository->createQueryBuilder('g')
+            ->orderBy('g.id', 'ASC')
+            ->where(' g.id > 2017')
+            ->getQuery();
+        $gestiones = $query->getResult();
+        $gestionesArray = array();
+        foreach ($gestiones as $g) {
+            $gestionesArray[$g->getId()] = $g->getId();
+        }
+//dump($gestionesArray);die;
+        $repository = $em->getRepository('SieAppWebBundle:PeriodoTipo');
+        $query = $repository->createQueryBuilder('p')
+            ->orderBy('p.id')
+            ->where('p.id in (2,3)')
+            ->getQuery();
+        $periodos = $query->getResult();
+        $periodosArray = array();
+        foreach ($periodos as $p) {
+            $periodosArray[$p->getId()] = $p->getPeriodo();
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('sie_alt_reportes_alterprimaria'))
+            //       ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
+            ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+            //   ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
+            ->add('crear', 'submit', array('label' => 'Generar Reportes', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:alterPrimaria.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
+    public function reporteAlterPrimariaAction(Request $request){
+
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $gestion = $form['gestion'];
+        $periodo = $form['periodo'];
+        $roltipo = ' ';
+        $semestre = ' ';
+
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+        // dump($idlugarusuario);die;
+
+
+        // dump($request);die;
+
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $idrol= $this->session->get('roluser');
+        //validationremoveInscriptionAction if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $query = $em->getConnection()->prepare('
+        select codigo from lugar_tipo where id = :idlugar 
+');
+        $query->bindValue(':idlugar', $idlugarusuario);
+
+        $query->execute();
+        $lugar =$query->fetch();
+
+        if(($idrol==8)||($idrol==20))
+        {
+            $roltipo = 'Nacional';
+        }elseif($idrol==7)
+        {
+            //departamental
+            $roltipo = 'Departamental';
+        }elseif($idrol==10)
+        {
+            //distrital
+            $roltipo = 'Distrital';
+        }elseif($idrol==9)
+        {
+            //distrital
+            $roltipo = 'Centro';
+        }elseif($idrol==20)
+        {
+            //distrital
+            $roltipo = 'Invitado Nacional';
+        }
+
+        //  dump($lugar);die;
+
+//        $query = $em->getConnection()->prepare('
+////        select * from periodo_tipo where id = :idperiodo
+//');
+//        $query->bindValue(':idperiodo', $periodo);
+//
+//        $query->execute();
+//        $semestre =$query->fetch();
+        //get and set the variables
+
+        if($periodo==2)
+        {
+            $semestre = 'Primer Semestre';
+        }elseif($periodo==3)
+        {
+            //departamental
+            $semestre = 'Segundo Semestre';
+        }
+
+        $arrDataReport = array(
+            'roluser' => $this->session->get('roluser'),
+            'rol' =>  $roltipo,
+            'semestre' =>  $semestre,
+            'userId' => $this->session->get('userId'),
+            'sie' => $this->session->get('ie_id'),
+            'gestion' => $gestion,
+            //'subcea' => $this->session->get('ie_subcea'),
+            'periodo' => $periodo,
+            'lugarid'=> $lugar['codigo']
+        );
+        //dump($arrDataReport);die;
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:reporteAlterPrimaria.html.twig', array(
+            'dataReport' => $arrDataReport,
+            'dataInfo' => serialize($arrDataReport),
+        ));
+
+
+
+//        $em = $this->getDoctrine()->getManager();
+//        $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
+//        dump($objUeducativa);die;
+    }
 }
