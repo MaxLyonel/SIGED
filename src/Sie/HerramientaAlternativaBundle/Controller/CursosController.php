@@ -374,7 +374,7 @@ class CursosController extends Controller {
                         ->add('level','choice',array('label'=>'Nivel','choices'=>$arrLevel, 'empty_value'=>'Seleccionar Nivel...', 'attr'=>array('class'=>'form-control')))
                         ->add('etapa','choice',array('label'=>'Etapa', 'attr'=>array('class'=>'form-control')))
                         ->add('paralelo','choice',array('label'=>'Paralelo', 'attr'=>array('class'=>'form-control')))
-                        ->add('infoUe', 'text', array('data' => $data))
+                        ->add('infoUe', 'hidden', array('data' => $data))
                         ->getForm();
     }    
     public function getEtapaAction(Request $request){
