@@ -20,13 +20,7 @@
                         </th>
                         {% if notas.operativo > 0 %}
                             {% for i in 1..notas.operativo %}
-                                {% if i < 5  %}
-                                    <th>{{ i }}{% if notas.gestion > 2018 and discapacidad == 2  %} ° Etapa {% else %} Bimestre {% endif %}</th>
-                                {% else %}
-                                    {% if notas.nivel != 11 %}
-                                        <th>Promedio</th>
-                                    {% endif %}
-                                {% endif %}
+                                <th>{{ i }} Bimestre</th>
                             {% endfor %}
                         {% else %}
                             <th>Notas Cuantitativas</th>
@@ -34,29 +28,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if notas.gestion > 2018 and discapacidad == 2  %}
-                        <tr>
-                            <td></td>
-                            {% if notas.operativo > 0 %}
-                                {% for i in 1..notas.operativo %}
-                                    {% if i < 5  %}
-                                        <td>
-                                            <label for="fechaEtapas" class="col-sm-2">Fechas:</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" id="fechaEtapas" placeholder= "{{ "now"|date("d/m/Y") }}-{{ "now"|date("d/m/Y") }}"class="form-control noedit fecha" name="fechaEtapas[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechaEtapa}}" disabled {% else %} "" {% endif %} autocomplete="off" required ></br>
-                                            </div>
-                                        </td>
-                                    {% else %}
-                                        {% if notas.nivel != 11 %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                <td></td>
-                            {% endif %}
-                        </tr>
-                    {% endif %}
                     {% set cont = 0 %}
                     {% for a in notas.cuantitativas %}
                         <tr>
@@ -67,19 +38,26 @@
                                 {% for n in a.notas %}
                                     {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                                         {% if n.nota == "" or n.nota.idIndicador not in [1,2,4] or vista == 2 %}
-                                            <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
+                                            <td data-title="{{n.idNotaTipo}} Bimestre">
                                                 <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                                                 <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                                 <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
                                                 <table class="table">
-                                                    
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                        <td style = "border-top-style: none;"><textarea name="contenidos[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea></td>
+                                                        <td style = "border-top-style: none;">
+                                                            <p class="text-justify">
+                                                                <textarea name="contenidos[]" class="form-control jnumbersletters contenido" rows="3" required style="resize:vertical; text-transform:uppercase;" maxlength="80" minlength="16">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea>
+                                                            </p>                                                                
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados</td>
-                                                        <td><textarea name="resultados[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
+                                                        <td>
+                                                            <p class="text-justify">
+                                                                <textarea name="resultados[]" class="form-control jnumbersletters contenido" rows="3" required style="resize:vertical; text-transform:uppercase;" maxlength="80" minlength="16">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea>
+                                                             </p>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado</td>
@@ -106,16 +84,15 @@
                                                 </table>
                                             </td>
                                         {% else %}
-                                            {# <td data-title="{{n.idNotaTipo}} Bimestre"> #}
-                                            <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
+                                            <td data-title="{{n.idNotaTipo}} Bimestre">
                                                 <table class="table">
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados:</td>
-                                                        <td style = "border-top-style: none;"><textarea class="form-control" name="" readonly>{{n.nota.contenidos}}</textarea></td>
+                                                        <td style = "border-top-style: none;"><textarea class="form-control" name="" rows="3" style="resize:vertical; text-transform:uppercase;" readonly>{{n.nota.contenidos}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados:</td>
-                                                        <td><textarea class="form-control" name="" readonly>{{n.nota.resultados}}</textarea></td>
+                                                        <td><textarea class="form-control" name="" rows="3" readonly style="resize:vertical; text-transform:uppercase;">{{n.nota.resultados}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado:</td>
@@ -143,16 +120,15 @@
                                             </td>
                                         {% endif %}
                                     {% else %}
-                                        {# <td data-title="{{n.idNotaTipo}} Bimestre"> #}
-                                        <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
+                                        <td data-title="{{n.idNotaTipo}} Bimestre">
                                             <table class="table">
                                                 <tr>
                                                     <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="contenidos[]" disabled>{% if n.nota %}{{n.nota.contenidos}} {% endif %}</textarea></td>
+                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="contenidos[]" rows="3" readonly style="resize:vertical; text-transform:uppercase;">{% if n.nota %}{{n.nota.contenidos}} {% endif %}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Resultados Alcanzados</td>
-                                                    <td><textarea class="form-control" name="" disabled>{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
+                                                    <td><textarea class="form-control" name="" rows="3" readonly style="resize:vertical; text-transform:uppercase;">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Indicador Alcanzado</td>
@@ -233,20 +209,7 @@
 </div>
 
 <script>
-    $('.noedit').keydown(function() {
-        return false;
-    });
     
-    //$(".fecha").daterangepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0, format: "DD/MM/YYYY", applyClass:"btn-success", cancelClass:"btn-default" });
-    $(".fecha").daterangepicker({format: "DD/MM/YYYY", applyClass:"btn-success", cancelClass:"btn-default", buttonClasses:"btn btn-xs",opens: "left", locale: {fromLabel: "Del:",toLabel: "Al:"} });
-    {# $('.fecha').daterangepicker({
-        "startDate": "04/09/2019",
-        "endDate": "04/15/2019"
-        }, function(start, end, label) {
-            console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
-    }); #}
-    
-
     var validarEnvioNotas = function(){
         var enviar = true;
         var mensaje = "";
@@ -254,6 +217,13 @@
         $(".notaCualitativa").each(function (index) {
             if($(this).val().length < 16){
                 mensaje = 'Las notas cualitativas deben tener al menos 16 dígitos';
+                enviar = false;
+            }
+        });
+
+        $(".contenido").each(function (index) {
+            if($(this).val().length < 16){
+                mensaje = 'Los Contenidos Programados y los Resultados Alcanzados deben tener al menos 16 dígitos';
                 enviar = false;
             }
         });
