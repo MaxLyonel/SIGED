@@ -23,24 +23,24 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel-body">
-                    <div class="row">
+                    <div class="row compose-mail-wrapper">
                         <div class="col-sm-2">
-                            <div class="panel rounded shadow">
-                                <ul class="nav nav-pills nav-stacked nav-email shadow mb-20">
+                            <div class="panel">
+                                <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
                                     <li {% if tipo == 1 %}class="active"{% endif %}>
-                                        <a onclick="nuevotramite()"><i class="fa fa-inbox"></i> Nuevo Trámite</a>
+                                        <a href="javascript:void(0);" onclick="nuevotramite()"><i class="fa fa-inbox"></i> Nuevo Trámite</a>
                                     </li>
                                     <li {% if tipo == 2 %} class="active"{% endif %}>    
-                                        <a onclick="recibidos()"><i class="fa fa-envelope-o"></i> Recibidos</a>
+                                        <a href="javascript:void(0);" onclick="recibidos()"><i class="fa fa-envelope-o"></i> Recibidos</a>
                                     </li>
                                     <li {% if tipo == 3 %} class="active"{% endif %}>
-                                        <a onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
+                                        <a href="javascript:void(0);" onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
                                     </li>
                                     <li>
-                                        <a onclick="concluidos()"><i class="fa fa-file-text-o"></i> Concluidos</a>
+                                        <a href="javascript:void(0);" onclick="concluidos()"><i class="fa fa-file-text-o"></i> Concluidos</a>
                                     </li>
                                     <li>
-                                        <a onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
+                                        <a href="javascript:void(0);" onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
                                     </li>
                                 </ul>
                             </div>    
