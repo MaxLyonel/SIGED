@@ -1960,7 +1960,7 @@ body.page-footer-fixed #page-content .footer-content {
   bottom: 6px;
 }
 .sidebar-menu > li.active {
-  background-color: #3c3c3c;
+  background-color: #b71c1c;
 }
 .sidebar-menu > li.active .icon {
   text-shadow: 0px 1px 1px #fafafa;
@@ -2155,7 +2155,7 @@ body.page-footer-fixed #page-content .footer-content {
   background-color: #ff5252;
 }
 .sidebar-menu > li > ul > li > ul > li > ul > li > ul {
-  background-color: #0b0b0b;
+  background-color: #f00;
 }
 .sidebar-menu > li > ul > li > ul > li > ul > li > ul > li > a {
   padding: 8px 0px 8px 40px;
@@ -2178,10 +2178,11 @@ body.page-footer-fixed #page-content .footer-content {
 .sidebar-menu > li > ul > li.active.submenu > a {
   background-color: #373737;
 }
+/* Background del submenu */
 .sidebar-menu ul {
   margin: 0;
   padding: 0;
-  background-color: #424242;
+  background-color: #ff5252;
   list-style: none;
 }
 .sidebar-menu ul li {
@@ -3239,14 +3240,14 @@ body.page-footer-fixed #page-content .footer-content {
  * SIDEBAR VARIANT
  * ======================================================================== */
 .sidebar-box .sidebar-menu > li > a > .icon:after, .sidebar-rounded .sidebar-menu > li > a > .icon:after, .sidebar-circle .sidebar-menu > li > a > .icon:after {
-  border: 1px solid #373737;
+  border: 1px solid #b71c1c;
 }
 .sidebar-box .sidebar-menu > li > a > .icon i, .sidebar-rounded .sidebar-menu > li > a > .icon i, .sidebar-circle .sidebar-menu > li > a > .icon i {
-  border: 2px solid #373737;
-  background-color: #222222;
+  border: 2px solid #b71c1c;
+  background-color: #455a64;
 }
 .sidebar-box .sidebar-menu > li > ul:after, .sidebar-rounded .sidebar-menu > li > ul:after, .sidebar-circle .sidebar-menu > li > ul:after {
-  border-left: 2px solid #373737;
+  border-left: 2px solid #b71c1c;
 }
 .sidebar-box .sidebar-menu > li > ul > li:after, .sidebar-rounded .sidebar-menu > li > ul > li:after, .sidebar-circle .sidebar-menu > li > ul > li:after {
   z-index: 1;
@@ -3261,9 +3262,9 @@ body.page-footer-fixed #page-content .footer-content {
   -webkit-transition: all 0.5s ease-in-out;
   -webkit-transition-delay: 0s;
   transition: all 0.5s ease-in-out 0s;
-  -moz-box-shadow: 0 0 0 2px #373737;
-  -webkit-box-shadow: 0 0 0 2px #373737;
-  box-shadow: 0 0 0 2px #373737;
+  -moz-box-shadow: 0 0 0 2px #455a64;
+  -webkit-box-shadow: 0 0 0 2px #455a64;
+  box-shadow: 0 0 0 2px #455a64;
 }
 .sidebar-box .sidebar-menu > li > ul > li a:before, .sidebar-rounded .sidebar-menu > li > ul > li a:before, .sidebar-circle .sidebar-menu > li > ul > li a:before {
   content: "\2014\00a0";
