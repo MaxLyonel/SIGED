@@ -91,12 +91,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-{% if app.session.get('ie_id') != '-1' %}
-            <script>
-            $(document).ready(function () {                
-                selgessubsemFormShow();
-            });  
-            </script>
-{% endif %}
+{
 {% endblock %}
     

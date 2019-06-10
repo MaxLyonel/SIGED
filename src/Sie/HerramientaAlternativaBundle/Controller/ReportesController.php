@@ -644,7 +644,8 @@ class ReportesController extends Controller {
 
         $response->headers->set('Content-type', 'application/xlsx');
 
-
+        //      dump($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=xlsx&');die;
+        // por defecto
         if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
@@ -669,7 +670,7 @@ class ReportesController extends Controller {
         $gestion = $arrDataInfo['gestion'];
         $periodo=$arrDataInfo['periodo'];
         $lugar= $arrDataInfo['lugarid'];
-        $argum= 'REPORTE ALTERNATIVA PRIMARIA ';
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA MIE ';
 
         $response = new Response();
         //   dump($periodo);dump($gestion);dump($lugar);die;
@@ -712,6 +713,7 @@ class ReportesController extends Controller {
 
         $response->headers->set('Content-type', 'application/xlsx');
 
+       // dump($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_mie_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=xlsx&');die;
 
         if (($roluser== 8) || ($roluser==20))
         {

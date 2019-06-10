@@ -138,13 +138,13 @@ sie_alt_reportes_diversa:
          expose: true
 
 sie_alt_submenu_alterprimaria:
-    path:     /sie/submenuAlterPrimaria
+    path:     /submenuAlterPrimaria
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:submenuAlterPrimaria}
     options:
         expose: true
 
 sie_alt_reportes_alterprimaria:
-    path:     /sie/reportesAlterPrimaria
+    path:     /reportesAlterPrimaria
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:reporteAlterPrimaria}
     options:
         expose: true
