@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{path('wf_tramite_index')}}">Trámites</a>
+                    <a href="{{path('wf_tramite_index', {'tipo':1})}}">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Nuevo</li>
@@ -219,7 +219,7 @@
                     $("#carga").empty();
                     if (data.estado == 200) {
                         clearInput();
-                        location.href = "{{ path('wf_tramite_index') }}";
+                        location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
                         mesage('danger', 'Alerta', data.msg, false);
                     }
