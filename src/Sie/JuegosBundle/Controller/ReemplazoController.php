@@ -107,7 +107,7 @@ class ReemplazoController extends Controller {
             if(count($object)>0){
                 foreach ($object as $registro) {
                     $deportista = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];                    
-                    $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion']);
+                    $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion'],"fase"=>($registro['fase'])-1);
                 }
             }
             return $response->setData(array(
@@ -323,6 +323,7 @@ class ReemplazoController extends Controller {
         $faseId = $form['fase'];
         $rude2 = $form['rude2'];
         $gestionId = $gestionActual;
+        $historial = array();
 
         $inscripcionJuegosRude = $this->getInscripcionJuegosRudeGestionPruebaFase($rude1, $pruebaId, $gestionId, $faseId);
         if(count($inscripcionJuegosRude)>0){
@@ -347,6 +348,22 @@ class ReemplazoController extends Controller {
         $institucionEducativaId = $estudianteInscripcionJuegosEntity->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $nivelId = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 
+        $estudianteInscripcionRude = $this->getEstudianteInscripcionRude($rude2, $gestionId, $institucionEducativaId);
+        if(count($estudianteInscripcionRude)==0){
+            return $response->setData(array(
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante con código rude ".$rude2." y u.e. ".$institucionEducativaId." no existe, intentelo nuevamente",
+            ));
+        }
+        $estudianteInscripcionIdRude2 =  $estudianteInscripcionRude[0]['id'];
+
+        $object = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->getListInscriptionStudentPerGestion($estudianteInscripcionIdRude2, $gestionActual);
+        if(count($object)>0){
+            foreach ($object as $registro) {
+                $deportista = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];                    
+                $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion'],"fase"=>($registro['fase'])-1);
+            }
+        }
+
         $clasificacionController = new clasificacionController();
         $clasificacionController->setContainer($this->container);
 
@@ -355,7 +372,7 @@ class ReemplazoController extends Controller {
             $inscripcionActivo = $clasificacionController->verificaInscripcionActivoEstudianteGestionPruebaFase($estudianteInscripcionId,$gestionId,$pruebaId,($faseId-1));
             if(!$inscripcionActivo[0]){
                 return $response->setData(array(
-                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "No se encontro la inscripcion activa del estudiante lesionado en juegos, ya se reemplazo, intentelo nuevamente",
+                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "No se encontro la inscripcion activa del estudiante lesionado en juegos, ya se reemplazo, intentelo nuevamente", 'historial' => $historial,
                 ));
             }
         }
@@ -366,12 +383,12 @@ class ReemplazoController extends Controller {
         $lugarInscripcionFase = $this->getLugarFaseInscripcion($estudianteInscripcionJuegosEntity->getId(), $faseId);
         if(count($lugarInscripcionFase) == 0){
             return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El equipo del estudiante lesionado no cuenta con area geografica, intentelo nuevamente",
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El equipo del estudiante lesionado no cuenta con area geografica, intentelo nuevamente", 'historial' => $historial,
             ));
         } else {
             if($lugarInscripcionFase[0]['lugar_id'] == 0){
                 return $response->setData(array(
-                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El equipo del estudiante lesionado no cuenta con area geografica, intentelo nuevamente",
+                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El equipo del estudiante lesionado no cuenta con area geografica, intentelo nuevamente", 'historial' => $historial,
                 ));
             }
         }
@@ -388,40 +405,32 @@ class ReemplazoController extends Controller {
         $posicionEquipo = $this->getPosicionGestionEquipoPruebaFase($equipoId, $pruebaId, $gestionId, $faseId);
         if(count($posicionEquipo)==0){
             return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El equipo del estudiante lesionado no se encuentra clasificado en la fase selecionada, intentelo nuevamente",
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El equipo del estudiante lesionado no se encuentra clasificado en la fase selecionada, intentelo nuevamente", 'historial' => $historial,
             ));
         }
         $posicion = $posicionEquipo[0]['posicion'];
-
-        $estudianteInscripcionRude = $this->getEstudianteInscripcionRude($rude2, $gestionId, $institucionEducativaId);
-        if(count($posicionEquipo)==0){
-            return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante con código rude ".$rude2." y u.e. ".$institucionEducativaId." no existe, intentelo nuevamente",
-            ));
-        }
-        $estudianteInscripcionIdRude2 =  $estudianteInscripcionRude[0]['id'];
-
+       
         $validaGeneroNivelRude = $this->getValidaGeneroNivelRude($estudianteInscripcionId, $estudianteInscripcionIdRude2);
         if(count($validaGeneroNivelRude)==0){
             return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "el estudiante ".$rude2." no cuenta con las caracteristicas de ".$rude1.", intentelo nuevamente",
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "el estudiante ".$rude2." no cuenta con las caracteristicas de ".$rude1.", intentelo nuevamente", 'historial' => $historial,
             ));
         }
 
         if(!$validaGeneroNivelRude[0]['val_genero']){
             return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ".$rude2." no cuenta con el mismo género del estudiante ".$rude1.", intentelo nuevamente",
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ".$rude2." no cuenta con el mismo género del estudiante ".$rude1.", intentelo nuevamente", 'historial' => $historial,
             ));
         }
 
         if(!$validaGeneroNivelRude[0]['val_nivel']){
             return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ".$rude2." no cuenta con el mismo nivel de educacion del estudiante ".$rude1.", intentelo nuevamente",
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ".$rude2." no cuenta con el mismo nivel de educacion del estudiante ".$rude1.", intentelo nuevamente", 'historial' => $historial,
             ));
         }
 
         $estadoEstudianteInscripcionRude2 = $clasificacionController->verificaEstadoInscripcionEstudiante($estudianteInscripcionIdRude2);
-
+       
         //dump($estudianteInscripcionIdRude2);dump($gestionId);dump($pruebaId);dump($faseId);dump($equipoId);dump($entidadUsuarioId);dump($posicion);dump($estudianteInscripcionId);    
         if($estadoEstudianteInscripcion and $estadoEstudianteInscripcionRude2){
             $msg = $reglaController->valEstudianteReemplazoJuegos($estudianteInscripcionIdRude2, $gestionId, $pruebaId, $faseId, $equipoId, $entidadUsuarioId, $posicion, $estudianteInscripcionId);
@@ -440,7 +449,7 @@ class ReemplazoController extends Controller {
                             $estudianteInscripcionJuegosIdAnterior = $inscripcionJuegosRude1Anterior[0]['id'];
                         } else {
                             return $response->setData(array(
-                                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ".$rude1." no cuenta con inscripcion en la fase ".($faseId-1).", intentelo nuevamente",
+                                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ".$rude1." no cuenta con inscripcion en la fase ".($faseId-1).", intentelo nuevamente", 'historial' => $historial,
                             ));
                         }
 
@@ -519,23 +528,32 @@ class ReemplazoController extends Controller {
                         //array_push($ainscritos,array('id'=>($estudianteInscripcionJuegosId), 'nombre'=>$estudianteNombreApellido, 'posicion'=> $posicion));
                     }
                     $em->getConnection()->commit();
+
+                    $object = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->getListInscriptionStudentPerGestion($estudianteInscripcionIdRude2, $gestionActual);
+                    if(count($object)>0){
+                        foreach ($object as $registro) {
+                            $deportista = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];                    
+                            $historial[$deportista][] = array("equipo"=>$registro['equipoNombre'],"disciplina"=>$registro['disciplina'],"prueba"=>$registro['prueba'],"genero"=>$registro['genero'],"posicion"=>$registro['posicion'],"fase"=>($registro['fase'])-1);
+                        }
+                    }
+
                     return $response->setData(array(
-                        'msg_correcto' => $msg[1], 'msg_incorrecto' => $msg_incorrecto,
+                        'msg_correcto' => $msg[1], 'msg_incorrecto' => $msg_incorrecto, 'historial' => $historial,
                     ));
                 } catch (Exception $e) {
                     $em->getConnection()->rollback();
                     return $response->setData(array(
-                        'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "Error al registrar, intente nuevamente",
+                        'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "Error al registrar, intente nuevamente",  'historial' => $historial,
                     ));
                 }
             } else {
                 return $response->setData(array(
-                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => $msg[1],
+                    'msg_correcto' => $msg_correcto, 'msg_incorrecto' => $msg[1],  'historial' => $historial,
                 ));
             }
         } else {
             return $response->setData(array(
-                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante",
+                'msg_correcto' => $msg_correcto, 'msg_incorrecto' => "El estudiante ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante", 'historial' => $historial,
             ));
         }
     }

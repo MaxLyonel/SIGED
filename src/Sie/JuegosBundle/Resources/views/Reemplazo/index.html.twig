@@ -73,7 +73,7 @@
             <div class="col-md-6">
                     <div class="row message-wrapper rounded shadow mb-20">
                         <div class="col-md-12 message-sideleft">
-                            <div class="panel panel-lilac">
+                            <div class="panel panel-warning">
                                 <div class="panel-heading">
                                     <div class="pull-left">
                                         <h3 class="panel-title" id="historial2-title"></h3>
@@ -146,20 +146,27 @@
                             }
                             var c = 0;
                             var lista = ""; 
-                            var posicion = "";                             
+                            var posicion = "";     
+                            var fase = "";                            
                             $.each(data.historial, function (i, deportista) { 
                                 $("#historial1-title").append(i);  
                                 $.each(deportista, function (j, registro) {   
                                     if(registro.posicion != 0){
-                                        posicion = registro.posicion;
+                                        posicion = "Puesto "+registro.posicion;
                                     } else {
                                         posicion = "";
                                     }
+                                    if(registro.fase == 0){
+                                        fase = "FP";
+                                    } 
+                                    else {
+                                        fase = "F" + registro.fase;
+                                    }
                                     lista = lista + '<a href="#" class="list-group-item">'; 
-                                    lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+'</small></h4>'; 
+                                    lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+' <span class="label label-primary pull-right rounded"> '+fase+' </span></small></h4>'; 
                                     lista = lista + '<p class="list-group-item-text">'+registro.genero+' <strong>'+posicion+'</strong></p>'; 
                                     if(registro.equipo != 0){
-                                        lista = lista + '<span class="label label-success pull-right rounded"> '+registro.equipo+' </span>'; 
+                                        lista = lista + '<span class="label label-lilac pull-right rounded"> '+registro.equipo+' </span>'; 
                                     }                                    
                                     lista = lista + '<div class="clearfix"></div>'; 
                                     lista = lista + '</a>'; 
@@ -230,6 +237,7 @@
                         } else {
                             $("#form_prueba").focus();
                         }
+                        
                         $("#form_fase").removeAttr('disabled');
                     },
                     error: function(error){
@@ -260,6 +268,8 @@
         };
 
         var confirma = function(){
+            $('#historial2-title').empty();   
+            $('#historial2-content').empty(); 
 
             $('#msg1').hide();
             $('#msg').hide();
@@ -297,27 +307,57 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function () {
-                        $('#modal').empty();
-                        $('#modal').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-                        $('#modal').show();
+                        $('#msg').empty();
+                        $('#msg').show();
+                        $('#msg').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                     },
                     success: function (data) {
-                        $('#modal').empty();
-                        $('#modal').hide();
+                        $('#msg').empty();
+                        $('#msg').hide();
+                        $('#msg1').empty();
+                        $('#msg1').hide();
                         if(data.msg_incorrecto){
                             if(data.msg_incorrecto != ''){
-                                $('#msg').empty();
                                 $('#msg').show();
                                 $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong>' + data.msg_incorrecto);
                             }
                         }
                         if(data.msg_correcto){
                             if(data.msg_correcto != ''){
-                                $('#msg1').empty();
                                 $('#msg1').show();
                                 $('#msg1').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto </strong>' + data.msg_correcto);
                             }
                         }
+
+                        var lista = ""; 
+                        var posicion = "";     
+                        var fase = "";                            
+                        $.each(data.historial, function (i, deportista) { 
+                            $("#historial2-title").append(i);  
+                            $.each(deportista, function (j, registro) {   
+                                if(registro.posicion != 0){
+                                    posicion = "Puesto "+registro.posicion;
+                                } else {
+                                    posicion = "";
+                                }
+                                if(registro.fase == 0){
+                                    fase = "FP";
+                                } 
+                                else {
+                                    fase = "F" + registro.fase;
+                                }
+                                lista = lista + '<a href="#" class="list-group-item">'; 
+                                lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+' <span class="label label-primary pull-right rounded"> '+fase+' </span></small></h4>'; 
+                                lista = lista + '<p class="list-group-item-text">'+registro.genero+' <strong>'+posicion+'</strong></p>'; 
+                                if(registro.equipo != 0){
+                                    lista = lista + '<span class="label label-lilac pull-right rounded"> '+registro.equipo+' </span>'; 
+                                }                                    
+                                lista = lista + '<div class="clearfix"></div>'; 
+                                lista = lista + '</a>'; 
+                            });          
+                        });  
+                        $("#historial2-content").append(lista); 
+
                         $("#form_rude1").val('');
                         $('#form_prueba').empty();
                         $("#form_fase").append('<option value="">Seleccionar Prueba</option>')
@@ -327,9 +367,12 @@
                         $("#form_fase").attr('disabled', 'true');
                         $("#form_rude2").val('');
                         $("#form_rude2").attr('disabled', 'true');
+                        
                     },
                     error: function(error){
-                        $('#modal').modal('toggle');
+                        $('#msg').empty();
+                        $('#msg').show();
+                        $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong> No se puede procesar la petición');
                     },
                 }); 
                 return true;
