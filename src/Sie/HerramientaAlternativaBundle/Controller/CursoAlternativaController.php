@@ -169,6 +169,7 @@ class CursoAlternativaController extends Controller {
         
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $id_sucursal = $this->session->get('ie_suc_id');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -195,13 +196,12 @@ class CursoAlternativaController extends Controller {
         $sae->execute($params);
         $saeid = $sae->fetchAll();                
         
-        $acreditacion_especialidad = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findOneById(intval($saeid[0]['sae']));
-        
         $primaria = ($saeid[0]['sfat'] == 15 and $saeid[0]['set'] == 1 and ($saeid[0]['sat'] == 1 or $saeid[0]['sat'] == 2)) ? true : false;
-
+        $condicion = (($dat[1] == '-1' and !$primaria) or $primaria) ? true : false;
+        
         $em->getConnection()->beginTransaction();
         try {           
-            if (($dat[1] == '-1' and !$primaria) or $primaria){
+            if ($condicion){
                 
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_acreditacion');")->execute();
                 $siea = new SuperiorInstitucioneducativaAcreditacion();                
