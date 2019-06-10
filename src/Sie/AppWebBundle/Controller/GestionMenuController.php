@@ -66,7 +66,7 @@ class GestionMenuController extends Controller {
     }
 
     /**
-     * Administracíon de Meús Princpales.
+     * Administracíon de Menús Princpales.
      */
     public function  administraSistemaAction(){
         $id_usuario = $this->session->get('userId');
@@ -269,7 +269,7 @@ class GestionMenuController extends Controller {
         $query->execute();
         $cantidad= $query->fetch();
         if($cantidad['count'] == 0){
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_tipo');")->execute();
+           // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_tipo');")->execute();
             $menutipo = new MenuTipo();
             $niveltipo = $em->getRepository('SieAppWebBundle:MenuNivelTipo')->find(1);
             $menutipo ->setDetalleMenu($form['nombre']);
@@ -447,7 +447,7 @@ class GestionMenuController extends Controller {
         $cantidad= $query->fetch();
         $cant=(int)$cantidad['count'];
         if($cant==0){
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_tipo');")->execute();
+           // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_tipo');")->execute();
             $menutipo = new MenuTipo();
             $menutipoid = $em->getRepository('SieAppWebBundle:MenuTipo')->find($form['idmenu']);
             $niveltipo = $em->getRepository('SieAppWebBundle:MenuNivelTipo')->find($form['idnivel']+1);
@@ -649,7 +649,7 @@ class GestionMenuController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $sistemaRol= new  SistemaRol();
 
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_rol');")->execute();
+        //$em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_rol');")->execute();
 
         $sistema = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
         $idrol = $em->getRepository('SieAppWebBundle:RolTipo')->find($idrol);
@@ -777,7 +777,7 @@ class GestionMenuController extends Controller {
         $query->execute();
         $menupadre = $query->fetch();
         if (!empty($menupadre) && $menupadre['menu_tipo_id']==null) {
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
+           //s $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
             $menusistema = new MenuSistema();
 
             $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($idmenu);
@@ -804,7 +804,7 @@ class GestionMenuController extends Controller {
             $query->execute();
             $existepadre = $query->fetch();
             if (!empty($existepadre) && $existepadre['canti']>0) {
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
+               // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
                 $menusistema = new MenuSistema();
 
                 $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($idmenu);
@@ -891,7 +891,7 @@ class GestionMenuController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
+        //$em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
         $menusistema = $em->getRepository('SieAppWebBundle:MenuSistema')->find($idmenu);
         $menusistema->setDetalleMenu($detalle_menu);
         $menusistema->setIcono($icono);
@@ -1187,7 +1187,7 @@ ORDER BY 2,3,4");
         $existepadrerol = $query->fetch();
         if ($existepadrerol['pcant']==0) {
             //Menu padre
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
+           // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
             $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($menusistemaid);
             $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
 
@@ -1212,7 +1212,7 @@ ORDER BY 2,3,4");
             $em->flush();
 
             //Menu hijo
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
+            //$em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
             $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($id_menu);
             $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
 
@@ -1226,7 +1226,7 @@ ORDER BY 2,3,4");
             $em->persist($menusistemarol);
             $em->flush();
 
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permiso');")->execute();
+           // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permiso');")->execute();
             $permiso = new Permiso();
             $permiso->setMenuSistemaRolId($menusistemarol->getId());
             $permiso->setCreate($crear);
@@ -1237,7 +1237,7 @@ ORDER BY 2,3,4");
             $em->persist($permiso);
             $em->flush();
         } else {
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
+           // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
             $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($id_menu);
             $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
 
