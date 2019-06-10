@@ -365,7 +365,7 @@ class ClasificacionController extends Controller {
         $exist = true;
 
         $query = $em->getConnection()->prepare("
-                    select nt.id as nivelid, nt.nivel as nivel, dt.id as disciplinaid, dt.disciplina as disciplina, pt.id as pruebaid, pt.prueba as prueba, gt.id as generoid, gt.genero as genero, ppt.id as pruebatipoid, ppt.disciplina_participacion as pruebatipo from prueba_tipo as pt
+                    select nt.id as nivelid, nt.nivel as nivel, dt.id as disciplinaid, dt.disciplina as disciplina, pt.id as pruebaid, pt.prueba as prueba, gt.id as generoid, gt.genero as genero, ppt.id as pruebatipoid, ppt.disciplina_participacion as pruebatipo from jdp_prueba_tipo as pt
                     inner join jdp_prueba_participacion_tipo as ppt on ppt.id = pt.prueba_participacion_tipo_id
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
@@ -380,8 +380,8 @@ class ClasificacionController extends Controller {
             foreach ($entityNiveles as $uDeporte) {
                 //get the literal data of unidad educativa
                 $sinfoDeportes = serialize(array(
-                    'deportesInfo' => array('nivel' => $uDeporte['nivel'], 'disciplina' => $uDeporte['disciplina'], 'prueba' => $uDeporte['prueba'], 'genero' => $uDeporte['genero']),
-                    'deportesInfoId' => array('nivelId' => $uDeporte['nivelid'], 'disciplinaId' => $uDeporte['disciplinaid'], 'pruebaId' => $uDeporte['pruebaid'], 'generoId' => $uDeporte['generoid']),
+                    'deportesInfo' => array('nivel' => $uDeporte['nivel'], 'disciplina' => $uDeporte['disciplina'], 'prueba' => $uDeporte['prueba'], 'genero' => $uDeporte['genero'], 'pruebaTipo' => $uDeporte['pruebatipo']),
+                    'deportesInfoId' => array('nivelId' => $uDeporte['nivelid'], 'disciplinaId' => $uDeporte['disciplinaid'], 'pruebaId' => $uDeporte['pruebaid'], 'generoId' => $uDeporte['generoid'], 'pruebaTipoId' => $uDeporte['pruebatipoid']),
                     'requestUser' => array('codigoEntidad' => $codigoEntidad, 'gestion' => $gestion, 'fase' => $fase)
                 ));
 
@@ -451,8 +451,8 @@ class ClasificacionController extends Controller {
             foreach ($entityNiveles as $uDeporte) {
                 //get the literal data of unidad educativa
                 $sinfoDeportes = serialize(array(
-                    'deportesInfo' => array('nivel' => $uDeporte['nivel'], 'disciplina' => $uDeporte['disciplina'], 'prueba' => $uDeporte['prueba'], 'genero' => $uDeporte['genero']),
-                    'deportesInfoId' => array('nivelId' => $uDeporte['nivelid'], 'disciplinaId' => $uDeporte['disciplinaid'], 'pruebaId' => $uDeporte['pruebaid'], 'generoId' => $uDeporte['generoid']),
+                    'deportesInfo' => array('nivel' => $uDeporte['nivel'], 'disciplina' => $uDeporte['disciplina'], 'prueba' => $uDeporte['prueba'], 'genero' => $uDeporte['genero'], 'pruebaTipo' => $uDeporte['pruebatipo']),
+                    'deportesInfoId' => array('nivelId' => $uDeporte['nivelid'], 'disciplinaId' => $uDeporte['disciplinaid'], 'pruebaId' => $uDeporte['pruebaid'], 'generoId' => $uDeporte['generoid'], 'pruebaTipoId' => $uDeporte['pruebatipoid']),
                     'requestUser' => array('codigoEntidad' => $codigoEntidad, 'gestion' => $gestion, 'fase' => $fase)
                 ));
 
@@ -872,6 +872,13 @@ class ClasificacionController extends Controller {
                 $deportistas = $request->get('deportistas');
                 $listaDeportistas = "";
 
+                if($fase == 2){
+                    $entityUsuarioLugar = $this->buscaEntidadFase($fase,$id_usuario);
+                    if(count($entityUsuarioLugar) > 0){
+                        $id_usuario_lugar = $entityUsuarioLugar[0]['id'];
+                    }
+                }
+
                 $entityDatos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('id'=>$deportistas[0]));
                 $nivelId = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $disciplinaId = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getId();
@@ -1051,7 +1058,7 @@ class ClasificacionController extends Controller {
                     //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "Estudiante (".$msgEstudiantesObservados.")"));
                     // }
                     $em->getConnection()->commit();
-
+                    // dump($id_usuario_lugar."-".$gestionActual."-".$faseClasificacion."-".$nivelId."-".$disciplinaId."-".$pruebaId."-".$generoId);die;
                     $objDeportistasFase = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->getListDeportistasPorFaseNivelDisciplinaPruebaGenero($id_usuario_lugar, $gestionActual, $faseClasificacion, $nivelId, $disciplinaId, $pruebaId, $generoId);
                     //dump($id_usuario_lugar); dump($gestionActual); dump($faseClasificacion); dump($nivelId); dump($disciplinaId); dump($pruebaId); dump($generoId);die;
                     //dump($objDeportistasFase[0]['eInsJueId']);die;
@@ -1096,7 +1103,6 @@ class ClasificacionController extends Controller {
                             $ainscritos = $arrNewTeam;
                         }        	
                     }
-
                                        
                     if($pruebaId == 89 or $pruebaId == 90){
                         $conjunto = true;
