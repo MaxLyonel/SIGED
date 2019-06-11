@@ -203,12 +203,13 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         }
         return new JsonResponse(array('respuesta' => $respuesta));
     }
-    public function guardasolicitudEspecialidadesAction(Request $request){ //dump($request);die;
+    public function guardasolicitudEspecialidadesAction(Request $request){ 
         $iddistrito     = $request->get('iddistrito');
         $idinstitucion  = $request->get('institucionid');
         $idsolicitud    = $request->get('idsolicitud');
         $solicitud      = $request->get('solicitud');
         $idflujotipo    = $request->get('idflujotipo');
+        $textDirector   = $request->get('textDirector');
         $sw             = $request->get('sw');
         $datos          = json_encode($request->get('ipt'));
         $gestion        =  $request->getSession()->get('currentyear');
@@ -217,10 +218,10 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             /**
              * Verifiacion del usuario como director y vigente para la gestion actual
              */
-            $id_rol         = $this->session->get('roluser');
-            $id_Institucion = $request->get('institucionid');
+            $id_rol               = $this->session->get('roluser');
+            $id_Institucion       = $request->get('institucionid');
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_Institucion);
-            $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
+            $query                = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                         join usuario u on m.persona_id=u.persona_id
                         where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
             $query->execute();
@@ -241,11 +242,11 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                     $id_tipoTramite = $idsolicitud; //Adicion de especialidades
                     $idTramite='';
                     if($sw == 0){//primer envio de solicitud
-                        $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$iddistrito);
+                        $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,$textDirector,$id_tipoTramite,'',$idTramite,$datos,'',$iddistrito);
                     }
                     else{ //devuelto
                         $idTramite = $request->get('id_tramite');
-                        $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$iddistrito);
+                        $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,$textDirector,'',$idTramite,$datos,'',$iddistrito);
                     }
                     if ($mensaje['dato']==true){
                         $res = 1;//se guardo el tramite

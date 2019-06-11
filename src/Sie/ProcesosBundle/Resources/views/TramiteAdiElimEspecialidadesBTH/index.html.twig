@@ -1,4 +1,4 @@
-{% extends 'layoutHerramienta.html.twig' %}
+    {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <style type="text/css">
         .swal-overlay {
@@ -138,14 +138,20 @@
                                                         <div class="col-md-4">
                                                             <strong>Seleccionar las especialidades para adicionar</strong>
                                                         </div>
-                                                        <div class="col-md-3">
-                                                        </div>
-                                                        <div class="col-md-5">
+                                                        {# <div class="col-md-3">
+                                                        </div> #}
+                                                        <div class="col-md-6 col-md-offset-2">
                                                             <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                                 {% for especialidad in objespecialidades %}
                                                                     <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                                 {% endfor %}
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <p><strong> Informe breve de la adici&oacute;n de la(s) especialidades </strong></p>
+                                                            <textarea id="textdirector" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -242,12 +248,18 @@
 
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p><strong> Informe breve de la eliminaci&oacute;n de la(s) especialidades </strong></p>
+                                                    <textarea id="textdirector" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="pull-right">
                                                     <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
-                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="pruebalupe()"><i class="fa fa-pencil"></i> pruebalupe</button>
+                                                    {# <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="pruebalupe()"><i class="fa fa-pencil"></i> pruebalupe</button> #}
                                                 </div>
                                             </div>
                                         </div>
@@ -348,6 +360,7 @@
         });
 
         function enviarSolicitudEspecialidadesbth() {
+            var textDirector = $('#textdirector').val();
             /*
             * Funcion que envia la solicitud BTH capturando los valor introducidos
             * en el formulario.*/
@@ -378,7 +391,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},textDirector:textDirector,sw:0},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
