@@ -744,11 +744,11 @@ class InfoStudentsController extends Controller {
   $sw = true;
   if($form['estadomatriculaTipo'] == 6 and $notas){  //NO INCORPORADO
     $sw = false;
-    $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>NO INCORPORADO</strong>, pues estudiante cuanta con calificaciones.');
+    $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>NO INCORPORADO</strong>, pues el estudiante cuenta con calificaciones.');
   }
   if($form['estadomatriculaTipo'] == 10 and !$notas) { //RETIRO ABANDONO
     $sw = false;
-    $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>RETIRADO ABANDONO</strong>, pues estudiante no cuanta con calificaciones.');
+    $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>RETIRADO ABANDONO</strong>, pues el estudiante no cuenta con calificaciones.');
   }
   if($sw == true){
     try {
