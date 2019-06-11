@@ -204,6 +204,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         return new JsonResponse(array('respuesta' => $respuesta));
     }
     public function guardasolicitudEspecialidadesAction(Request $request){ 
+
         $iddistrito     = $request->get('iddistrito');
         $idinstitucion  = $request->get('institucionid');
         $idsolicitud    = $request->get('idsolicitud');
@@ -212,6 +213,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $textDirector   = $request->get('textDirector');
         $sw             = $request->get('sw');
         $datos          = json_encode($request->get('ipt'));
+
         $gestion        =  $request->getSession()->get('currentyear');
         //$datos          = json_decode($ipt);
         $em = $this->getDoctrine()->getManager();
@@ -242,11 +244,11 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                     $id_tipoTramite = $idsolicitud; //Adicion de especialidades
                     $idTramite='';
                     if($sw == 0){//primer envio de solicitud
-                        $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,$textDirector,$id_tipoTramite,'',$idTramite,$datos,'',$iddistrito);
+                        $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$iddistrito);
                     }
                     else{ //devuelto
                         $idTramite = $request->get('id_tramite');
-                        $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,$textDirector,'',$idTramite,$datos,'',$iddistrito);
+                        $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$idflujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$iddistrito);
                     }
                     if ($mensaje['dato']==true){
                         $res = 1;//se guardo el tramite
@@ -451,7 +453,8 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             'objespecialidades_solicitadas'=>$especialidadarray,
             'id_tramite'=>$id_tramite,
             'solicitud'=>$solicitud,
-            'idespecialidades'=> json_encode($datos['select_especialidad'])
+            'idespecialidades'=> json_encode($datos['select_especialidad']),
+            'textDirector'=> json_encode($datos['textDirector'])
             ));
     }
      public function  guardasolicitudEspecialidadesDisAction(Request $request){
@@ -460,7 +463,12 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         if(!empty($documento)){
             /*$dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
             */
-            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/adielimespec/';
+            $root_bth_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid');
+            if (!file_exists($root_bth_path)) {
+                mkdir($root_bth_path, 0777);
+            }
+            $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid').'/addremovespeciality/';
+            // $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/adielimespec/';
             if (!file_exists($destination_path)) {
                 mkdir($destination_path, 0777);
             }

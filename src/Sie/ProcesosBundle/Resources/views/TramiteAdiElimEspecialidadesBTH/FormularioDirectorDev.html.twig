@@ -168,6 +168,12 @@
                                     {% endif %}
                                     <div class="row">
                                         <div class="col-md-4">
+                                            <p><strong> Informe breve de la adici&oacute;n de la(s) especialidades </strong></p>
+                                            <textarea id="textdirector" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
                                             <strong>Documento adjunto</strong><br>
                                             <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~id_institucion~'/'~'adielimespec/'~ documento )}}" target="_blank">
                                                 <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
@@ -213,7 +219,7 @@
         function enviarSolicitudEspecialidadesbth() {
             /* Funcion que envia la solicitud BTH capturando los valor introducidos
             * en el formulario.*/
-
+            var textDirector = $('#textdirector').val();
             var solicitud = $('#solicitud').val();
             switch (solicitud){
                 case 'Adicionar Especialidades': //Adicionar especialidades
@@ -241,7 +247,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ flujotipo}},id_tramite:{{ id_tramite }},sw:1},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val(),textDirector:textDirector},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ flujotipo}},id_tramite:{{ id_tramite }},sw:1},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -313,7 +319,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ flujotipo }},id_tramite:{{ id_tramite }} ,sw:1},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad,textDirector:textDirector},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ flujotipo }},id_tramite:{{ id_tramite }} ,sw:1},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({

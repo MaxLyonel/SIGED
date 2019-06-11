@@ -391,7 +391,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val()},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},textDirector:textDirector,sw:0},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val(),textDirector:textDirector},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -463,7 +463,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad,textDirector:textDirector},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
