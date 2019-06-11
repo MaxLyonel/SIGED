@@ -1204,6 +1204,7 @@ class AreasController extends Controller {
                      WHERE ct.rolTipo = 2');
             $cargos = $queryCargos->getResult();
             $cargosArray = array();
+            $progSer = null;
 
             foreach ($cargos as $c) {
                 $cargosArray[$c->getId()] = $c->getId();
@@ -1228,10 +1229,22 @@ class AreasController extends Controller {
                         ->getResult();
                 $array = array();
                 foreach ($totalAreasCurso as $tac) {
+                    if($tac['idAsignatura']==4){
+                        if($tac['idPrograma']==99){
+                            $programaServicio = $tac['servicio'];
+                            $progSer = "Servicio";
+                        }else{
+                            $programaServicio = $tac['programa'];
+                            $progSer = "Programa";
+                        }
+                    }else{
+                        $programaServicio = null;
+                    }
                     $array[$tac['idAsignatura']] = array('id' => $tac['id'],
                         'area' => $tac['area'],
                         'idAsignatura' => $tac['idAsignatura'],
-                        'asignatura' => $tac['asignatura']);
+                        'asignatura' => $tac['asignatura'],
+                        'programaServicio' => $programaServicio);
                 }
                 $areasCurso = $array;
 
@@ -1241,6 +1254,7 @@ class AreasController extends Controller {
                 'curso'         => $curso, 
                 'mensaje'       => $mensaje,
                 'esvisual'      => $esvisual,
+                'progSer'       => $progSer,
                 'form'          => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
