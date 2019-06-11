@@ -207,13 +207,11 @@
             $("#guardar").attr('disabled', true);            
             var curso_asignatura_notas = [];
             $('#tbl_cumano').find('table.tbl_notas tbody').each(function(index, item) {
-                //var asignaturanotas = [];
                 var curso = {sie: $('#sel_sie'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
                 var asignaturanotas = [];
                 $(this).find("tr").each(function() {
                     asignaturanotas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
                 });
-                // asignaturanotas.push({curso: curso, asignatura_notas: asignaturanotas});
                 curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
             });
             var fd = new FormData();

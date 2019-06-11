@@ -129,55 +129,67 @@
                                                 </table>
                                             </div>  
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" id="tbl_cumano">
+                                            {% for cursoasignaturas in arraycursoasignaturas %}
                                             <h5><b>Curso Aceleración</b></h5>
-                                            <div id="no-more-tables">
-                                                <table class="table table-bordered">
+                                            <div class="no-more-tables">
+                                                <input type="hidden" id="nivel_id{{loop.index}}" value="{{ cursoasignaturas.curso.nivel_id }}">
+                                                <input type="hidden" id="grado_id{{loop.index}}" value="{{ cursoasignaturas.curso.grado_id }}">
+                                                <table class="table table-bordered ">
                                                     <tbody class="text-muted">
                                                         <tr>
                                                             <td width="40%">
                                                                 <div class="input-group">
                                                                     <div class="input-group-addon" style="background-color: #fafafa">SIE</div>
-                                                                    <input type="text" class="form-control" id="sel_sie" value="{{ codigo_sie }}" onkeyUp="institucionEducativa()">
-                                                                    <div class="input-group-addon" onclick="institucionEducativa()" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                                                    <input type="text" class="form-control" id="sel_sie{{loop.index}}" value="{{ cursoasignaturas.curso.codigo_sie }}" onkeyUp="institucionEducativa({{loop.index}})">
+                                                                    <div class="input-group-addon" onclick="institucionEducativa({{loop.index}})" style="cursor: pointer"><i class="fa fa-search"></i></div>
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <span id="txt_institucioneducativa"></span>
+                                                                <span id="txt_institucioneducativa{{loop.index}}">{{ cursoasignaturas.curso.nombre_sie }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td width="40%"><b>Nivel</b></td>
                                                             <td>
-                                                                <span id="txt_nivel"></span>
-                                                                <input type="hidden" id="sel_nivel">
+                                                                <span id="txt_nivel{{loop.index}}">{{ cursoasignaturas.curso.nivel }}</span>
+                                                                <input type="hidden" id="sel_nivel{{loop.index}}" value="{{ cursoasignaturas.curso.nivel_id }}">
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td width="40%"><b>Grado</b></td>
-                                                            <td><span id="txt_grado"></span><input type="hidden" id="sel_grado"></td>
+                                                            <td>
+                                                                <span id="txt_grado{{loop.index}}">{{ cursoasignaturas.curso.grado }}</span>
+                                                                <input type="hidden" id="sel_grado{{loop.index}}" value="{{ cursoasignaturas.curso.grado_id }}">
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td width="40%">
                                                                 <div class="form-groups">
-                                                                    <label for="sel_paralelo">Paralelo</label>
-                                                                    <select class="form-control" id="sel_paralelo" required>
+                                                                    <label for="sel_paralelo{{loop.index}}">Paralelo</label>
+                                                                    <select class="form-control" id="sel_paralelo{{loop.index}}" required>
                                                                         <option value="">Seleccionar...</option>
+                                                                        {% for itemp in cursoasignaturas.curso.paralelos %}
+                                                                        <option value="{{ itemp.paraleloTipo }}">{{ itemp.paralelo }}</option>
+                                                                        {% endfor %}
                                                                     </select>
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div class="form-groups">
-                                                                    <label for="sel_turno">Turno</label>
-                                                                    <select class="form-control" id="sel_turno" required>
+                                                                    <label for="sel_turno{{loop.index}}">Turno</label>
+                                                                    <select class="form-control" id="sel_turno{{loop.index}}" required>
                                                                         <option value="">Seleccionar...</option>
+                                                                        {% for itemt in cursoasignaturas.curso.turnos %}
+                                                                        <option value="{{ itemt.turnoTipo }}">{{ itemt.turno }}</option>
+                                                                        {% endfor %}
                                                                     </select>
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table class="table table-bordered" id="tbl_aceleracion">
+                                                <table class="table table-bordered tbl_aceleracion">
                                                     <thead>
                                                         <tr class="sinfo">
                                                             <th class="text-center"><b>No.</b></th>
@@ -186,7 +198,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {%for currentmateria in materiasnotas %}
+                                                        {% for currentmateria in cursoasignaturas.materiasnotas %}
                                                             <tr>
                                                                 <td>{{loop.index}}</td>
                                                                 <td><span>{{currentmateria.asignatura}}</span></td>
@@ -194,10 +206,11 @@
                                                                     <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" required value="87">
                                                                 </td>
                                                             </tr>
-                                                        {% endfor%}
+                                                        {% endfor %}
                                                     </tbody>
                                                 </table>
                                             </div> 
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +277,6 @@
                     $(this).css('background', '#ffffff');
                 }
             });
-            institucionEducativa($('#sel_sie').val());
         });
         $('.noedit').keydown(function() {
             return false;
@@ -304,14 +316,23 @@
         function sendVerifica() {
             $("#guardar").attr('disabled', true);
             var curso = {sie: $('#sel_sie').val(), nivel_id: $('#sel_nivel').val(), grado_id: $('#sel_grado').val(), paralelo_id: $('#sel_paralelo').val(), turno_id: $('#sel_turno').val()};
-            var asignatura_notas = [];
-            $('#tbl_aceleracion tbody').find("tr").each(function() {
-                asignatura_notas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
-            });
+            // var asignatura_notas = [];
+            // $('#tbl_aceleracion tbody').find("tr").each(function() {
+            //     asignatura_notas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+            // });
+            var curso_asignatura_notas = [];
+            $('#tbl_cumano').find('table.tbl_aceleracion tbody').each(function(index, item) {
+                var curso = {sie: $('#sel_sie'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
+                var asignaturanotas = [];
+                $(this).find("tr").each(function() {
+                    asignaturanotas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+                });
+                curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
+            });console.log(curso_asignatura_notas);
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_acelera_save_verify'),
-                data: {'tramite_id': $('#tramite_id').val(), 'institucioneducativa_id': $('#institucioneducativa_id').val(), 'tiene_obs': document.querySelector('input[name="optradio"]:checked').value, 'observacion': $('#observacion').val(), 'curso': JSON.stringify(curso), 'notas': JSON.stringify(asignatura_notas)},
+                data: {'tramite_id': $('#tramite_id').val(), 'institucioneducativa_id': $('#institucioneducativa_id').val(), 'tiene_obs': document.querySelector('input[name="optradio"]:checked').value, 'observacion': $('#observacion').val(), 'curso_asignatura_notas': JSON.stringify(curso_asignatura_notas)},
                 dataType: 'json',
                 beforeSend: function () {
                     $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
@@ -342,46 +363,38 @@
             }
         }
 
-        function institucionEducativa() {
-            var id = $('#sel_sie').val()
+        function institucionEducativa(index) {
+            var id = $('#sel_sie'+index).val()
             if (id.length > 7) {
-                nivel = $('#nivel_id').val();
-                grado = $('#grado_id').val();
+                nivel = $('#nivel_id'+index).val();
+                grado = $('#grado_id'+index).val();
                 $.ajax({
                     type: 'get',
                     url: Routing.generate('tramite_acelera_search_ie', {'id': id, 'nivel': nivel, 'grado': grado}),
                     beforeSend: function () {
-                        $("#sel_paralelo").append('<option value="" selected disabled>Buscando...</option>');
-                        $("#sel_turno").append('<option value="" selected disabled>Buscando...</option>');
+                        $("#sel_paralelo"+index).append('<option value="" selected disabled>Buscando...</option>');
+                        $("#sel_turno"+index).append('<option value="" selected disabled>Buscando...</option>');
                     },
                     success: function (data) {
-                        $("#txt_institucioneducativa").text(data.nombre);
-                        $("#txt_nivel").text(data.nivel);
-                        $("#txt_grado").text(data.grado);
-                        $("#sel_nivel").val(data.nivel_id);
-                        $("#sel_grado").val(data.grado_id);
+                        $("#txt_institucioneducativa"+index).text(data.nombre);
+                        $("#txt_nivel"+index).text(data.nivel);
+                        $("#txt_grado"+index).text(data.grado);
+                        $("#sel_nivel"+index).val(data.nivel_id);
+                        $("#sel_grado"+index).val(data.grado_id);
 
-                        $("#sel_paralelo").empty();
-                        $("#sel_paralelo").append('<option value="" selected disabled>Seleccionar...</option>');
+                        $("#sel_paralelo"+index).empty();
+                        $("#sel_paralelo"+index).append('<option value="" selected disabled>Seleccionar...</option>');
                         $.each(data.paralelo, function (i, value) {
-                            $("#sel_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                            $("#sel_paralelo"+index).append('<option value="' + i + '">' + value + '</option>');
                         });
                         
-                        $("#sel_turno").empty();
-                        $("#sel_turno").append('<option value="" selected disabled>Seleccionar...</option>');
+                        $("#sel_turno"+index).empty();
+                        $("#sel_turno"+index).append('<option value="" selected disabled>Seleccionar...</option>');
                         $.each(data.turno, function (i, value) {
-                        $("#sel_turno").append('<option value="' + i + '">' + value + '</option>');
+                        $("#sel_turno"+index).append('<option value="' + i + '">' + value + '</option>');
                         });
                     }
                 });
-            } else {
-                nivel = $('#form_nivelId').val();
-                grado = $('#form_gradoId').val();
-                lastue = $('#form_lastue').val();
-                $("#form_institucionEducativaName").val('');
-                $("#form_paralelo").empty();
-                $("#form_turno").empty();
-
             }
         }
     </script>
