@@ -180,9 +180,9 @@
                                             <div class="row">
                                                 <div id="listaespecialidades_adicionar">
                                                     <div class="table-responsive mb-20">
-                                                        <p>
+                                                        <textarea id="textDirector">
                                                             {{textDirector}}
-                                                        </p>
+                                                        </textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -311,7 +311,8 @@
                         //fd.append('id_distrito', { { ubicacion['codigo_distrito'] }});
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', institucionid);
-                        fd.append('id_tramite', {{ id_tramite}});
+                        fd.append('id_tramite', {{ id_tramite}});  
+                        fd.append('textDirector', '{{textDirector}}');
                         fd.append('obstxt', obstxt);
                         //fd.append('docpdf', $('#adjdocumento')[0]);
                         var docpdf = document.getElementById('adjdocumento');
