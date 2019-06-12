@@ -5279,7 +5279,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $estudiante->setFolio('');
             //$estudiante->setSangreTipoId($this->getDoctrine()->getRepository('SieAppWebBundle:SangreTipo')->find($persona->getSangreTipo())->getId());
             $estudiante->setIdiomaMaternoId('0');
-            $estudiante->setSegipId($persona->getSegipId());
+            $estudiante->setSegipId('1');
             $estudiante->setComplemento($persona->getComplemento());
             $estudiante->setBolean(false);
             $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                            

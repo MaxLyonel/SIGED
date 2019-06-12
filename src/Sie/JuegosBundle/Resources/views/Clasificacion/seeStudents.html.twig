@@ -483,7 +483,6 @@
                             var divLista = "";
                             var c = 0;
                             var expanded = "";
-
                             if (data.conjunto){         
                                 divLista = '<div class="panel-group rounded shadow" id="accordionlistaParticipante">';                     
                                 $.each(data.registrados, function (i, participante) {                 
@@ -548,7 +547,6 @@
 
                         return true;
                     },
-                    timeout: 5000, // sets timeout to 5 seconds
                     statusCode: {
                         500: function () {
                             return false;

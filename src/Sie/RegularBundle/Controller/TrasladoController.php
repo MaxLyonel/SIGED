@@ -131,13 +131,14 @@ class TrasladoController extends Controller {
 
 
           if($inscriptionOfStudent[0]['nivelTipo']==11 || $inscriptionOfStudent[0]['nivelTipo']==1){
-              reset($objNota);
-              while ($val = current($objNota)) {
-                if($val['notaCualitativa']){
-                  $bolNote = true;
-                }
-                  next($objNota);
-              }
+              // reset($objNota);
+              // while ($val = current($objNota)) {
+              //   if($val['notaCualitativa']){
+              //     $bolNote = true;
+              //   }
+              //     next($objNota);
+              // }
+              $bolNote = true;
             }else{
               //validate if the student has notas
               reset($objNota);
@@ -150,7 +151,7 @@ class TrasladoController extends Controller {
             }//end if
 
             //check if the student has calification
-            if($bolNote){
+            if(!$bolNote){
               $session->getFlashBag()->add('noticemove', 'El estudiante no cuenta con notas... favor revisar calificaciones');
               return $this->render($this->session->get('pathSystem') . ':Traslado:index.html.twig', array(
                           'form' => $this->createSearchForm()->createView(),

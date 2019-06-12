@@ -84,7 +84,7 @@ class DocumentoFirmaController extends Controller {
                 $arrayPersona[base64_encode($entityPersona->getId())] = $entityPersona->getNombre().' '.$entityPersona->getPaterno().' '.$entityPersona->getMaterno();
             }
 
-            $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findBy(array('id' => array(1,2)));
+            $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findBy(array('id' => array(1,2,6,7)), array('id' => 'ASC'));
 
             $arrayDocumentoTipo = array(''=>'Seleccione el tipo de documento');
             foreach ($entityDocumentoTipo as $dato) {

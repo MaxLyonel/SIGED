@@ -727,7 +727,7 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId." group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 17 limit 1)
             ) as td on td.tramite_id = t.id
-            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4)
+            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
@@ -1055,7 +1055,7 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 18 limit 1)
             ) as td on td.tramite_id = t.id
-            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4)
+            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
@@ -1318,20 +1318,28 @@ class TramiteDetalleController extends Controller {
                     $documentoController = new documentoController();
                     $documentoController->setContainer($this->container);
 
+                    $documentoTipoId = $nivelCertificacionId;
+                    $rolPermitido = 16;
+                    $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                    $entityFirma = $documentoController->getPersonaFirmaAutorizada($departamentoCodigo,$documentoTipoId);
+
                     $entityDocumentoSerie = $documentoController->getSerieTipo($nivelCertificacionId);
                     $entituDocumentoGestion = $documentoController->getGestionTipo('6,7,8');
 
                     $datosBusqueda = base64_encode(serialize($form));
+                    $firmaHabilitada = false;
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:impresionIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_impresion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Impresión',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
+                        'listaFirma' => $entityFirma,
                         'series' => $entityDocumentoSerie,
                         'gestiones' => $entituDocumentoGestion,
                         'infoAutorizacionCentro' => $entityAutorizacionCentro,
                         'datosBusqueda' => $datosBusqueda,
+                        'firmaHabilitada' => $firmaHabilitada
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
@@ -1446,9 +1454,23 @@ class TramiteDetalleController extends Controller {
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
             if ($ges >= 2018){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_v3_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                switch ($nivel) {
+                    case 1:
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                        break;
+                    case 2:
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                        break;
+                    case 3:
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_medio_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                        break;
+                }  
             } else {
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                if ($ges >= 2018){
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_v3_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                } else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                }
             }
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -1520,11 +1542,25 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            if ($ges >= 2018){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_ci_v3_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            if ($ges >= 2019){
+                switch ($nivel) {
+                    case 1:
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                        break;
+                    case 2:
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                        break;
+                    case 3:
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_medio_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                        break;
+                }                
             } else {
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_ci_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
-            }            
+                if ($ges >= 2018){
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_ci_v3_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                } else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_ci_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                }  
+            }          
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -1576,7 +1612,7 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 19 limit 1)
             ) as td on td.tramite_id = t.id
-            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4)
+            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
@@ -1615,12 +1651,21 @@ class TramiteDetalleController extends Controller {
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
-        $institucioneducativaId = 0;
-        $gestionId = $gestionActual->format('Y');
+
+        $info = $request->get('_info');
+        $form = unserialize(base64_decode($info));
+
+        if (!$form){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_busca');
+        }
+
+        $institucionEducativaId = $form['sie'];
+        $gestionId = $form['gestion'];
         $gestionActual = $gestionActual->format('Y');
         $periodoId = 3;
-        $especialidadId = 0;
-        $nivelId = 0;
+        $especialidadId = $form['especialidad'];
+        $nivelId = $form['nivel'];
         $tramiteTipoId = 0;
         $flujoSeleccionado = '';
 
@@ -1639,14 +1684,55 @@ class TramiteDetalleController extends Controller {
                 }
                 $numeroCarton = $request->get('numeroSerie');
                 $serieCarton = $request->get('serie');
+
                 //$gestionCarton = $request->get('gestion');
                 $fechaCarton = new \DateTime($request->get('fechaSerie'));
             //$fechaCarton = $fechaActual;
-
+                $documentoFirmaId = base64_decode($request->get('firma'));
+                
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
+                }
+
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $numCarton =$numeroCarton;
+                $serCarton = $serieCarton;
+
+                if (count($tramites) > 0) {                
+                    switch ($form["nivel"]) {
+                        case 1:
+                            $documentoTipoId = 6;
+                            break;
+                        case 2:
+                            $documentoTipoId = 7;
+                            break;
+                        case 3:
+                            $documentoTipoId = 8;
+                            break;
+                        default:
+                            $documentoTipoId = 0;
+                            break;
+                    }
+                } else {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error, no se enviarion tramites para procesar, intente nuevamente'));
+                    return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
+                }
+                
+                if($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                    $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                    if (count($entidadDocumentoFirma)>0) {
+                        $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                        $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
+                    } else {
+                        $valFirmaDisponible = array(0 => false, 1 => 'Firma no habilitada, intente nuevamente');
+                    }
+                } else {
+                    $valFirmaDisponible = array(0 => true, 1 => 'Generar documento sin firma');
+                    $documentoFirmaId = 0;
                 }
 
                 $tramiteController = new tramiteController();
@@ -1654,113 +1740,116 @@ class TramiteDetalleController extends Controller {
 
                 $messageCorrecto = "";
                 $messageError = "";
-                foreach ($tramites as $tramite) {
-                    $tramiteId = (Int) base64_decode($tramite);
-                    $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
-                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();                    
-                    $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
-                    //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
-                    $msgContenido = "";
-                    $msgContenidoDocumento = "";
-                    if(count($entidadEstudianteInscripcion)>0){
-                        $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
-                        $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
-                        $nivelId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getAcreditacionEspecialidad()->getSuperiorAcreditacionTipo()->getCodigo();
-                        $especialidadId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getAcreditacionEspecialidad()->getSuperiorEspecialidadTipo()->getId();
-                        $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativa()->getId();
-                        $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
-
-                        $msg = array('0'=>true, '1'=>$participante);
-
-                        switch ($nivelId) {
-                            case 1:
-                                $tramiteTipoId = 6;
-                                $documentoTipoId = 6;
-                                $documentoTipoSerie = "B";
-                                break;
-                           case 2:
-                                $tramiteTipoId = 7;
-                                $documentoTipoId = 7;
-                                $documentoTipoSerie = "A";
-                                break;
-                           case 3:
-                                $tramiteTipoId = 8;
-                                $documentoTipoId = 8;
-                                $documentoTipoSerie = "M";
-                                break;
-                            default:
-                                $tramiteTipoId = 0;
-                                $documentoTipoId = 0;
-                                $documentoTipoSerie = "";
-                                break;
-                        }
-
-                        if ($flujoSeleccionado == 'Adelante'){
-                            $entidadSucursal = $tramiteController->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionActual);
-
-                            if(count($entidadSucursal) > 0){
-                                $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
-                            } else {
-                                $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
-                            }
-
-                            $tipoMallaEstudianteInscripcion = $tramiteController->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
-                        
-                            $mallaNueva = false;
-                            if(count($tipoMallaEstudianteInscripcion)>0){
-                                $mallaNueva = $tipoMallaEstudianteInscripcion[0]['vigente'];
-                            }
+                if($valFirmaDisponible[0]){
+                    foreach ($tramites as $tramite) {
+                        $tramiteId = (Int) base64_decode($tramite);
+                        $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+                        $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();                    
+                        $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
+                        //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                        $msgContenido = "";
+                        $msgContenidoDocumento = "";
+                        if(count($entidadEstudianteInscripcion)>0){
+                            $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+                            $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+                            $nivelId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getAcreditacionEspecialidad()->getSuperiorAcreditacionTipo()->getCodigo();
+                            $especialidadId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getAcreditacionEspecialidad()->getSuperiorEspecialidadTipo()->getId();
+                            $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativa()->getId();
+                            $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
 
                             $msg = array('0'=>true, '1'=>$participante);
-                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
-                            
-                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
 
-                            $documentoController = new documentoController();
-                            $documentoController->setContainer($this->container);
-
-                            $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
-                            if ($serieCarton == 'ALT'){
-                                $serCarton = $serieCarton.$documentoTipoSerie;
-                            } else {
-                                $serCarton = $serieCarton;
+                            switch ($nivelId) {
+                                case 1:
+                                    $tramiteTipoId = 6;
+                                    $documentoTipoId = 6;
+                                    $documentoTipoSerie = "B";
+                                    break;
+                            case 2:
+                                    $tramiteTipoId = 7;
+                                    $documentoTipoId = 7;
+                                    $documentoTipoSerie = "A";
+                                    break;
+                            case 3:
+                                    $tramiteTipoId = 8;
+                                    $documentoTipoId = 8;
+                                    $documentoTipoSerie = "M";
+                                    break;
+                                default:
+                                    $tramiteTipoId = 0;
+                                    $documentoTipoId = 0;
+                                    $documentoTipoSerie = "";
+                                    break;
                             }
+
+                            if ($flujoSeleccionado == 'Adelante'){
+                                $entidadSucursal = $tramiteController->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionActual);
+
+                                if(count($entidadSucursal) > 0){
+                                    $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
+                                } else {
+                                    $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                                }
+
+                                $tipoMallaEstudianteInscripcion = $tramiteController->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
                             
+                                $mallaNueva = false;
+                                if(count($tipoMallaEstudianteInscripcion)>0){
+                                    $mallaNueva = $tipoMallaEstudianteInscripcion[0]['vigente'];
+                                }
 
-                            $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
-                        }
+                                $msg = array('0'=>true, '1'=>$participante);
+                                $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
+                                
+                                // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
 
-                        if($msgContenido != ""){
-                            if($msgContenidoDocumento != ""){
-                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.', '.$msgContenidoDocumento.')');
+                                $documentoController = new documentoController();
+                                $documentoController->setContainer($this->container);
+
+                                $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
+                                if ($serieCarton == 'ALT'){
+                                    $serCarton = $serieCarton.$documentoTipoSerie;
+                                } else {
+                                    $serCarton = $serieCarton;
+                                }                               
+
+                                $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
+                            }
+
+                            if($msgContenido != ""){
+                                if($msgContenidoDocumento != ""){
+                                    $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.', '.$msgContenidoDocumento.')');
+                                } else {
+                                    $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                                }
                             } else {
-                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                                if($msgContenidoDocumento != ""){
+                                    $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenidoDocumento.')');
+                                }
                             }
                         } else {
-                            if($msgContenidoDocumento != ""){
-                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenidoDocumento.')');
+                            $msg = array('0'=>false, '1'=>'participante no encontrado');
+                        }
+
+                        if ($msg[0]) {
+                            if ($flujoSeleccionado == 'Adelante'){
+                                $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
+                                //$documentoFirmaId = 0;
+                                $msgContenidoDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton, $documentoFirmaId);
                             }
+
+                            if ($flujoSeleccionado == 'Atras'){
+                                $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
+                            }
+
+                            $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+                        } else {
+                            $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
                         }
-                    } else {
-                        $msg = array('0'=>false, '1'=>'participante no encontrado');
+                        $numeroCarton = $numeroCarton + 1;
                     }
-
-                    if ($msg[0]) {
-                        if ($flujoSeleccionado == 'Adelante'){
-                            $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
-                            $documentoFirmaId = 0;
-                            $msgContenidoDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton, $documentoFirmaId);
-                        }
-
-                        if ($flujoSeleccionado == 'Atras'){
-                            $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
-                        }
-
-                        $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
-                    } else {
-                        $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
-                    }
-                    $numeroCarton = $numeroCarton + 1;
+                } else {
+                    $messageError = $valFirmaDisponible[1];
                 }
                 if($messageCorrecto!=""){
                     $em->getConnection()->commit();
@@ -1972,7 +2061,7 @@ class TramiteDetalleController extends Controller {
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 20 limit 1)
             ) as td on td.tramite_id = t.id
             inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
-            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4)
+            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
@@ -2311,7 +2400,7 @@ class TramiteDetalleController extends Controller {
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 21 limit 1)
             ) as td on td.tramite_id = t.id
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
-            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4)
+            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
