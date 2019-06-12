@@ -573,7 +573,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
              ->setMaxResults('1')
              ->getQuery()
              ->getResult();
-         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true); dump($datos);die;
 
          $especialidadarray = array();
          for($i=0;$i<count($datos['select_especialidad']);$i++) {
@@ -594,7 +594,8 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
              'objespecialidades_solicitadas'=>$especialidadarray,
              'id_tramite'=>$id_tramite,
              'solicitud'=>$solicitud,
-             'idespecialidades'=> json_encode($datos['select_especialidad'])
+             'idespecialidades'=> json_encode($datos['select_especialidad']),
+             'textDirector'=>json_encode($datos['textDirector'])
          ));
 
 
