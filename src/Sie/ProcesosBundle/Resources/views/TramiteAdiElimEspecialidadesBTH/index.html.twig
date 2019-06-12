@@ -151,7 +151,7 @@
                                                     <div class="row">
                                                         <div class="col-md-4">
                                                             <p><strong> Informe breve de la adici&oacute;n de la(s) especialidades </strong></p>
-                                                            <textarea id="textdirector" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
+                                                            <textarea id="textDirectorAdicionar" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -248,11 +248,11 @@
 
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <p><strong> Informe breve de la eliminaci&oacute;n de la(s) especialidades </strong></p>
-                                                    <textarea id="textdirector" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
-                                                </div>
+                                             <div class="row">
+                                                        <div class="col-md-4">
+                                                            <p><strong> Informe breve de la adici&oacute;n de la(s) especialidades </strong></p>
+                                                            <textarea id="textDirectorEliminar" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
+                                                        </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -360,7 +360,8 @@
         });
 
         function enviarSolicitudEspecialidadesbth() {
-            var textDirector = $('#textdirector').val();
+            
+            //alert (textDirector); return false;
             /*
             * Funcion que envia la solicitud BTH capturando los valor introducidos
             * en el formulario.*/
@@ -379,6 +380,7 @@
                     })
                         .then(function(willDelete)  {
                             if (willDelete) {
+                                var textDirectorAdicionar = $('#textDirectorAdicionar').val(); 
                                 var institucionid={{ id_institucion }}
                                 var idsolicitud=$('#form_solicitud').val();
                                 if($('#select_especialidad').val()) {
@@ -391,7 +393,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val(),textDirector:textDirector},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : $('#select_especialidad').val(),textDirector:textDirectorAdicionar},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -444,7 +446,8 @@
                     })
                         .then(function(willDelete)  {
                             if (willDelete) {
-                                var institucionid={{ id_institucion }}
+                                var institucionid={{ id_institucion }};
+                                var textDirectorEliminar = $('#textDirectorEliminar').val(); 
                                 var idsolicitud=$('#form_solicitud').val();
                                 var select_especialidad = [];
                                 $('#especialidades_eliminar tbody').find("tr").each(function() {
@@ -463,7 +466,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
-                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad,textDirector:textDirector},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
+                                    data:{ipt: {institucionid : institucionid,select_especialidad : select_especialidad,textDirector:textDirectorEliminar},iddistrito: {{ iddistrito }},institucionid:{{ id_institucion }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({

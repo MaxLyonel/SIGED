@@ -359,7 +359,7 @@
                         var institucionid={{ id_institucion }};
                         var idespecialidades={{ idespecialidades|raw }};
                         var obstxt=$('#obstxt').val();
-                        var textDirector=$('#textDirector').text();
+                        //var textDirector=$('#textDirector').text();
                         var evaluacion  = "NO";
                         if($('#siprocededep:checked').val())
                         { evaluacion  ="SI";}
@@ -390,7 +390,7 @@
                         fd.append('evaluacion', evaluacion);
                         fd.append('evaluacion2', evaluacion2);
                         fd.append('institucionid', institucionid);
-                        fd.append('textDirector', textDirector);
+                        fd.append('textDirector', '{{textDirector}}');
                         fd.append('id_tramite', {{ id_tramite}});
                         fd.append('obstxt', obstxt);
                         //fd.append('docpdf', $('#adjdocumento')[0]);

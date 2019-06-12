@@ -279,6 +279,7 @@
                 $('#obs').show(2000);
             }
         }
+
         function enviarSolicitusespecialidadesDepartamentaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar la respuesta a la solicitud?",
@@ -313,19 +314,18 @@
                         var imagen = '{{ asset("img/loading96.gif") }}';
                         var fd = new FormData();
                         fd.append('ipt',[idespecialidades]);
-                        //fd.append('id_distrito', { { ubicacion['codigo_distrito'] }});
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', institucionid);
                         fd.append('textDirector', '{{textDirector}}');
                         fd.append('id_tramite', {{ id_tramite}});                        
                         fd.append('obstxt', obstxt);
-                        //fd.append('docpdf', $('#adjdocumento')[0]);
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
                         $.ajax({
                             type: 'post',
                             url: "{{ path('tramite_solicitud_especialidades_bth_Dis') }}",
-                            data: {fd:{fd},textDirector:textDirector},
+                            data: fd,
+                            //data: {fd:{fd},textDirector:textDirector},
                             mimeType:"multipart/form-data",
                             contentType: false,
                             cache: false,

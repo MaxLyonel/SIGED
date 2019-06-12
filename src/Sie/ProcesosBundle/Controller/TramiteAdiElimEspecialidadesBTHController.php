@@ -203,7 +203,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         }
         return new JsonResponse(array('respuesta' => $respuesta));
     }
-    public function guardasolicitudEspecialidadesAction(Request $request){ 
+    public function guardasolicitudEspecialidadesAction(Request $request){ //dump($request);die;
 
         $iddistrito     = $request->get('iddistrito');
         $idinstitucion  = $request->get('institucionid');
@@ -457,7 +457,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             'textDirector'=> json_encode($datos['textDirector'])
             ));
     }
-     public function  guardasolicitudEspecialidadesDisAction(Request $request){ dump($request);die;
+     public function  guardasolicitudEspecialidadesDisAction(Request $request){ //dump($request);die;
          $datos = array();
          $documento = $request->files->get('docpdf');
         if(!empty($documento)){
@@ -499,8 +499,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
           $datos['imagen'] = $imagen;
           $datos['textDirector'] = $textDirector;
           $datos = json_encode($datos);
-          dump($datos);
-          die;
+
           //ELABORA INFORME
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
         $tarea1   = $flujoproceso->getId();//elaborainfrorme y envia BTH
@@ -575,7 +574,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
              ->setMaxResults('1')
              ->getQuery()
              ->getResult();
-         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true); dump($datos);die;
+         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);// dump($datos);die;
 
          $especialidadarray = array();
          for($i=0;$i<count($datos['select_especialidad']);$i++) {
@@ -690,7 +689,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         ));
 
     }
-    public function guardasolicitudEspecialidadesDepAction(Request $request){
+    public function guardasolicitudEspecialidadesDepAction(Request $request){ //dump($request);die;
         $datos = array();
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
@@ -723,7 +722,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $datos['obs']                   = $obs;
         $datos['imagen']                = $imagen;
         $datos['textDirector']          = $textDirector;
-        $datos                          = json_encode($datos); dump($datos);die;
+        $datos                          = json_encode($datos); //dump($datos);die;
 
         $tramite        = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($idtramite);
         $flujoproceso   = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 4));
@@ -776,7 +775,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                           WHERE institucioneducativa_id=$institucionid and gestion_tipo_id=$gestion AND especialidad_tecnico_humanistico_tipo_id=$idespecialidad");
                         $query->execute();
                     }
-                    //DELETE SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico ietu WHERE ietu.Institucioneducativa=:institucionid and ietu.GestionTipo =: gestion AND ietu.EspecialidadTecnicoHumanisticoTipo in (:especialidades)
+                    //DELETE SieAppWebBundlgsdfge:InstitucioneducativaEspecialidadTecnicoHumanistico ietu WHERE ietu.Institucioneducativa=:institucionid and ietu.GestionTipo =: gestion AND ietu.EspecialidadTecnicoHumanisticoTipo in (:especialidades)
                     /*$query=$em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->createQueryBuilder('esp')
 //                        ->delete()
                         ->where('esp.Institucioneducativa = :institucionid')
@@ -790,17 +789,40 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                     dump($result);die;*/
                 }
                 ///// FIN DE volcado a la base de datoa
-            }
+            }//si la repsuesta 1 fue NO
             else{
-                $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 6));
-                $tarea2   = $flujoproceso->getId();//6 realiza observacion
-                $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
-                $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
-                if ($mensaje['dato']==true){
-                    $res = 1;
-                }else{
-                    $res = 2;
-                }
+
+                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 6));
+                 $tarea2   = $flujoproceso->getId();//6 realiza observacion
+                 $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
+                 $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
+                   
+                    if ($mensaje['dato']==true){
+                        $res = 1;
+                    }else{
+                        $res = 2;
+                    }
+                     //dump($res);die;
+
+                /*if($evaluacion2 =='SI'){
+                    $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
+                    $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
+                    if ($mensaje['dato']==true){
+                        $res = 1;
+                    }else{
+                        $res = 2;
+                    }
+                } else{
+                    //$mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
+                    $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
+                    if ($mensaje['dato']==true){
+                        $res = 1;
+                    }else{
+                        $res = 2;
+                    }
+
+                }*/
+
             }
             $res = 1;
         }
@@ -808,6 +830,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $res = 0;
         }
        // dump($res);die;
-        return  new Response($res);
+        return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
+        //return  new Response($res);
     }
 }
