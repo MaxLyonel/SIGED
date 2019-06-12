@@ -35,6 +35,9 @@
             /* background: #EEEEEE; */
             /* margin-right: 30px; */
         }
+        h5{
+            font-weight: bold;
+        }
     </style>
     
     <div id="app">
@@ -68,10 +71,12 @@
                                 <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
+                            
+                            
 
                             <table class="table table-condensed">
                                 <thead>
-                                    <tr><th colspan="2">Datos Estudiante</th></tr>
+                                    <tr><th colspan="2"><h5>Datos Estudiante</h5></th></tr>
                                 </thead>
                                 <tbody>
                                     <tr><th>Código Rude</th><td>{{estudiante.codigoRude}}</td></tr>
@@ -81,7 +86,7 @@
                             <br>
                             <table class="table table-condensed">
                                 <thead>
-                                    <tr><th colspan="2">Datos Inscripción</th></tr>
+                                    <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
                                 </thead>
                                 <tbody>
                                     <tr><th>Código SIE</th><td>{{ inscripcion.institucioneducativaCurso.institucioneducativa.id }}</td></tr>

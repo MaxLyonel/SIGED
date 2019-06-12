@@ -50,6 +50,9 @@
 
                     <div v-cloak>
                         <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
+                        <div v-if="buscando" class="text-center">
+                            <img src="{{asset('img/loading96.gif')}}" alt="">
+                        </div>
                         <div v-if="estudiante != ''">
                             <br>
                             <p class="h5">
@@ -109,13 +112,17 @@
             el: '#app',
             data: {
                 // codigoRude: '8073023520101288A',
-                codigoRude: '8073003220081593',
+                // codigoRude: '8073003220081593',
+                codigoRude: '407300182007718',
                 estudiante: '',
                 respuesta: '',
-                inscripciones: []
+                inscripciones: [],
+                buscando: false
             },
             methods: {
                 buscarEstudiante: function(){
+
+                    this.buscando = true;
                     
                     this.estudiante = '';
                     this.inscripciones = '';
@@ -135,9 +142,12 @@
                         if( response.status == 202){
                             this.respuesta = response.data;
                         }
+
+                        this.buscando = false;
                     })
                     .catch(e => {
                         console.log(e);
+                        this.buscando = false;
                     });
                 }
             },
