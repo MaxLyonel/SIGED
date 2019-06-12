@@ -80,9 +80,11 @@ class ReglaController extends Controller
                 }                
                 $msg = array('0' => true, '1' => '');
             }
-
-            if ($msg[0]){                
+            if ($msg[0]){          
+                //dump($estudianteInscripcionId.'-'.$gestionId.'-'.$pruebaId.'-'.$faseId.'-'.$equipoId.'-'.$posicion.'-'.$lugarTipoId);      
                 $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion, $lugarTipoId);
+
+                //dump($msg2);dump("as");die;
                 if (!$msg2[0]){
                     if (count($estudianteInscripcionJuegosLesionado) > 0){
                         return array('0' => true, '1' => 'Update');
@@ -441,7 +443,11 @@ class ReglaController extends Controller
         
         switch ($faseId) {
             case 2:
-                $institucionId = $this->session->get('roluserlugarid');
+                if($this->session->get('roluserlugarid') == 1){
+                    $institucionId = $entidadUsuarioId;
+                } else {
+                    $institucionId = $this->session->get('roluserlugarid');
+                }                
                 $xCupo = 1;
                 if ($entidadUsuarioId == 31642){ // MAGDALENA/ BAURES/ HUACARAJE
                     $xCupo = 3;
@@ -575,10 +581,18 @@ class ReglaController extends Controller
                 }
                 break;
             case 3:
-                $institucionId = $this->session->get('roluserlugarid');
+                if($this->session->get('roluserlugarid') == 1){
+                    $institucionId = $entidadUsuarioId;
+                } else {
+                    $institucionId = $this->session->get('roluserlugarid');
+                }  
                 break;
             case 4:
-                $institucionId = $this->session->get('roluserlugarid');
+                if($this->session->get('roluserlugarid') == 1){
+                    $institucionId = $entidadUsuarioId;
+                } else {
+                    $institucionId = $this->session->get('roluserlugarid');
+                }  
                 break;
             default:                
                 $institucionId = $institucioneducativaCursoEntity->getInstitucioneducativa()->getId();
@@ -593,7 +607,7 @@ class ReglaController extends Controller
         
         if($pruebaParticipacionId == 1){   
             $listaEquipoEstudiantePruebaInstitucion = $estudianteInscripcionJuegosController->getEquipoEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $equipoId, $posicion);
-            //dump($listaEquipoEstudiantePruebaInstitucion);die;
+            //dump($institucionId."-".$pruebaId."-".$gestionId."-".$faseId."-".$equipoId."-".$posicion);die;
             $cantidadListaEquipoEstudiantePruebaInstitucion = count($listaEquipoEstudiantePruebaInstitucion);
 
             //dump($cantidadListaEquipoEstudiantePruebaInstitucion);dump($cupoInscripcion);die;

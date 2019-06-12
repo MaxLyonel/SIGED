@@ -1,6 +1,8 @@
 {# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
 {% extends 'layoutJuegos.html.twig' %}
-
+{% block stylesheets %}
+{{parent()}}
+{% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
@@ -48,29 +50,53 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-head">
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">                            
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div>
+                <div class="row message-wrapper rounded shadow mb-20">
+                    <div class="col-md-12 message-sideleft">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title" id="historial1-title"></h3>
+                                </div>
+                                <div class="pull-right">                                    
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                <div class="list-group no-margin list-message" id="historial1-content">
+                                    
+                                </div><!-- /.list-group -->
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel -->
+                    </div><!-- /.message-sideleft -->
+                </div>     
             </div>
             <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-head">
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">                            
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div>
+                    <div class="row message-wrapper rounded shadow mb-20">
+                        <div class="col-md-12 message-sideleft">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title" id="historial2-title"></h3>
+                                    </div>
+                                    <div class="pull-right">                                    
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+                                    <div class="list-group no-margin list-message" id="historial2-content">
+                                        
+                                    </div><!-- /.list-group -->
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                        </div><!-- /.message-sideleft -->
+                    </div>  
             </div>
         </div>
     <!--/ End mail page -->
     </div>
     <!-- Start body content -->
+
+    
     <!--/ End body content -->
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
     </div><!-- /.modal -->
@@ -84,10 +110,12 @@
         });       
 
         var listar_prueba = function (rude) {
+            $('#historial1-title').empty();   
+            $('#historial1-content').empty(); 
             $('#msg1').hide();
             $('#msg').hide();
             var peticion;
-            if(rude.length > 14){
+            if(rude.length > 10){
                 peticion = $.ajax({
                     type: 'POST',
                     url: '{{ path("sie_juegos_reemplazo_busqueda_prueba")}}',
@@ -116,6 +144,35 @@
                             for (var i in data.pruebas) {
                                 $("#form_prueba").append('<option value="' + data.pruebas[i].id + '">' + data.pruebas[i].prueba + '</option>');
                             }
+                            var c = 0;
+                            var lista = ""; 
+                            var posicion = "";     
+                            var fase = "";                            
+                            $.each(data.historial, function (i, deportista) { 
+                                $("#historial1-title").append(i);  
+                                $.each(deportista, function (j, registro) {   
+                                    if(registro.posicion != 0){
+                                        posicion = "Puesto "+registro.posicion;
+                                    } else {
+                                        posicion = "";
+                                    }
+                                    if(registro.fase == 0){
+                                        fase = "FP";
+                                    } 
+                                    else {
+                                        fase = "F" + registro.fase;
+                                    }
+                                    lista = lista + '<a href="#" class="list-group-item">'; 
+                                    lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+' <span class="label label-primary pull-right rounded"> '+fase+' </span></small></h4>'; 
+                                    lista = lista + '<p class="list-group-item-text">'+registro.genero+' <strong>'+posicion+'</strong></p>'; 
+                                    if(registro.equipo != 0){
+                                        lista = lista + '<span class="label label-lilac pull-right rounded"> '+registro.equipo+' </span>'; 
+                                    }                                    
+                                    lista = lista + '<div class="clearfix"></div>'; 
+                                    lista = lista + '</a>'; 
+                                });          
+                            });  
+                            $("#historial1-content").append(lista); 
                             $("#form_prueba").focus();
                         } else {
                             $("#form_rude1").focus();
@@ -123,6 +180,7 @@
                         $("#form_prueba").removeAttr('disabled');
                     },
                     error: function(error){
+                        $('#msg').empty();
                         $('#msg').show();
                         $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong> Error al procesar la información.');
                         $("#form_rude1").removeAttr('disabled');
@@ -145,7 +203,7 @@
             $('#msg').hide();
             var rude = $('#form_rude1').val();
             var peticion;
-            if(rude.length > 14 && $('#form_prueba option').length > 0){
+            if(rude.length > 10 && $('#form_prueba option').length > 0){
                 peticion = $.ajax({
                     type: 'POST',
                     url: '{{ path("sie_juegos_reemplazo_busqueda_fase")}}',
@@ -179,9 +237,11 @@
                         } else {
                             $("#form_prueba").focus();
                         }
+                        
                         $("#form_fase").removeAttr('disabled');
                     },
                     error: function(error){
+                        $('#msg').empty();
                         $('#msg').show();
                         $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong> Error al procesar la información.');
                         $("#form_rude1").removeAttr('disabled');
@@ -208,6 +268,8 @@
         };
 
         var confirma = function(){
+            $('#historial2-title').empty();   
+            $('#historial2-content').empty(); 
 
             $('#msg1').hide();
             $('#msg').hide();
@@ -245,27 +307,57 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function () {
-                        $('#modal').empty();
-                        $('#modal').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-                        $('#modal').show();
+                        $('#msg').empty();
+                        $('#msg').show();
+                        $('#msg').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                     },
                     success: function (data) {
-                        $('#modal').empty();
-                        $('#modal').hide();
+                        $('#msg').empty();
+                        $('#msg').hide();
+                        $('#msg1').empty();
+                        $('#msg1').hide();
                         if(data.msg_incorrecto){
                             if(data.msg_incorrecto != ''){
-                                $('#msg').empty();
                                 $('#msg').show();
                                 $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong>' + data.msg_incorrecto);
                             }
                         }
                         if(data.msg_correcto){
                             if(data.msg_correcto != ''){
-                                $('#msg1').empty();
                                 $('#msg1').show();
                                 $('#msg1').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto </strong>' + data.msg_correcto);
                             }
                         }
+
+                        var lista = ""; 
+                        var posicion = "";     
+                        var fase = "";                            
+                        $.each(data.historial, function (i, deportista) { 
+                            $("#historial2-title").append(i);  
+                            $.each(deportista, function (j, registro) {   
+                                if(registro.posicion != 0){
+                                    posicion = "Puesto "+registro.posicion;
+                                } else {
+                                    posicion = "";
+                                }
+                                if(registro.fase == 0){
+                                    fase = "FP";
+                                } 
+                                else {
+                                    fase = "F" + registro.fase;
+                                }
+                                lista = lista + '<a href="#" class="list-group-item">'; 
+                                lista = lista + '<h4 class="list-group-item-heading">'+registro.disciplina+' <small>'+registro.prueba+' <span class="label label-primary pull-right rounded"> '+fase+' </span></small></h4>'; 
+                                lista = lista + '<p class="list-group-item-text">'+registro.genero+' <strong>'+posicion+'</strong></p>'; 
+                                if(registro.equipo != 0){
+                                    lista = lista + '<span class="label label-lilac pull-right rounded"> '+registro.equipo+' </span>'; 
+                                }                                    
+                                lista = lista + '<div class="clearfix"></div>'; 
+                                lista = lista + '</a>'; 
+                            });          
+                        });  
+                        $("#historial2-content").append(lista); 
+
                         $("#form_rude1").val('');
                         $('#form_prueba').empty();
                         $("#form_fase").append('<option value="">Seleccionar Prueba</option>')
@@ -275,19 +367,18 @@
                         $("#form_fase").attr('disabled', 'true');
                         $("#form_rude2").val('');
                         $("#form_rude2").attr('disabled', 'true');
+                        
                     },
                     error: function(error){
-                        $('#modal').modal('toggle');
+                        $('#msg').empty();
+                        $('#msg').show();
+                        $('#msg').append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error </strong> No se puede procesar la petición');
                     },
                 }); 
                 return true;
             } else {
                 return false;
             }
-        }  
-
-                
+        }                  
     </script>
-
-
 {%endblock%}
