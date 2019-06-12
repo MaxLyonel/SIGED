@@ -510,7 +510,7 @@ class InstitucioneducativaController extends Controller {
                                     }else{
                                         $teid = 99;
                                         $estadoOperativo = false;
-                                        $rutaObservaciones = "";
+                                        $rutaObservaciones = "!TOME NOTA: El operativo inscripciones fué cerrado automaticamente, pues su plazo para el cierre venció el ". $o->getFechaFin()->format('d-m-Y')." y no presentó observaciones.";
                                         goto vuelve;
                                     }
                                     
@@ -532,7 +532,7 @@ class InstitucioneducativaController extends Controller {
                     }else{
                         $teid = 99;
                         $estadoOperativo = false;
-                        $rutaObservaciones = "";
+                        $rutaObservaciones = "!TOME NOTA: El operativo inscripciones fué cerrado automaticamente, pues encuentra fuera de plazo y no presentó observaciones.";
                         goto vuelve;
                     }
                 }else{
@@ -572,7 +572,7 @@ class InstitucioneducativaController extends Controller {
                                     }else{
                                         $teid = 99;
                                         $estadoOperativo = false;
-                                        $rutaObservaciones = "";
+                                        $rutaObservaciones = "!TOME NOTA: El operativo fin de semestre (notas) fué cerrado automaticamente, pues su plazo para el cierre venció el ". $o->getFechaFin()->format('d-m-Y')." y no presentó observaciones.";
                                         goto vuelve;
                                     }
                                 }else{
@@ -593,7 +593,7 @@ class InstitucioneducativaController extends Controller {
                     }else{
                         $teid = 99;
                         $estadoOperativo = false;
-                        $rutaObservaciones = "";
+                        $rutaObservaciones = "!TOME NOTA: El operativo fin de semestre (notas) fué cerrado automaticamente, pues se encuentra fuera de plazo y no presentó observaciones.";
                         goto vuelve;
                     }
                 }else{
@@ -680,7 +680,7 @@ class InstitucioneducativaController extends Controller {
                                     }else{
                                         $teid = 99;
                                         $estadoOperativo = false;
-                                        $rutaObservaciones = "";
+                                        $rutaObservaciones = "!TOME NOTA: El operativo fin de semestre (notas) fué cerrado automaticamente, pues su plazo para el cierre venció el ". $o->getFechaFin()->format('d-m-Y')." y no presentó observaciones.";
                                         goto vuelve;
                                     }
                                 }else{
@@ -701,7 +701,7 @@ class InstitucioneducativaController extends Controller {
                     }else{
                         $teid = 99;
                         $estadoOperativo = false;
-                        $rutaObservaciones = "";
+                        $rutaObservaciones = "!TOME NOTA: El operativo fin de semestre (notas) fué cerrado automaticamente, pues se encuentra fuera de plazo y no presentó observaciones.";
                         goto vuelve;
                     }
                 }else{
