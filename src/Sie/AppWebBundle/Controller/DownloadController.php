@@ -1107,7 +1107,7 @@ class DownloadController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/empfiles/';
         $archivo = "archsOlimpiadasRoboticaTxt.zip";
 
         // Generamos Archivo
@@ -1124,7 +1124,7 @@ class DownloadController extends Controller {
     }
 
     public function downloadArchsOlimpiadasRoboticaTxtAction(Request $request) {
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/empfiles/';
         $archivo = "archsOlimpiadasRoboticaTxt.zip";
 
         //create response to donwload the file
