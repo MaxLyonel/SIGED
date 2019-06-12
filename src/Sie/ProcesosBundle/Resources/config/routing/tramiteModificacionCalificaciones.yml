@@ -1,0 +1,19 @@
+tramite_modificacion_calificaciones_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:index }
+
+tramite_modificacion_calificaciones_buscar_estudiante:
+    path:     /buscarEstudiante
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_modificacion_calificaciones_formulario:
+    path:     /formulario/{flujoTipo}/{idInscripcion}
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formulario }
+
+tramite_modificacion_calificaciones_formulario_save:
+    path:     /formulariosave
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioSave }
+    options:
+        expose: true

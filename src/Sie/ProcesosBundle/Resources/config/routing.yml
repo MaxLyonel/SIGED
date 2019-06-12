@@ -39,3 +39,7 @@ sie_procesos_wf_tramite:
     resource: "@SieProcesosBundle/Resources/config/routing/wftramite.yml"
     prefix:   /sie/tramite
 
+sie_procesos_tramite_modificacion_calificaciones:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificaciones.yml"
+    prefix:   /tramitemodificacionCalificaciones
+
