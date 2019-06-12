@@ -39,10 +39,10 @@ class TramiteModificacionCalificacionesController extends Controller {
     }
 
     public function indexAction (Request $request) {
-        $this->session  = $request->getSession();
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
         $ie_id = $this->session->get('ie_id');
+
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -52,7 +52,9 @@ class TramiteModificacionCalificacionesController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:index.html.twig');
+        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:index.html.twig', array(
+            'flujoTipo'=>$request->get('id')
+        ));
     }
 
     public function buscarEstudianteAction(Request $request){
@@ -60,6 +62,7 @@ class TramiteModificacionCalificacionesController extends Controller {
         $response = new JsonResponse();
 
         $codigoRude = $request->get('codigoRude');
+        $flujoTipo = $request->get('flujoTipo');
         $sie = $this->session->get('ie_id');
 
         $em = $this->getDoctrine()->getManager();
@@ -100,11 +103,11 @@ class TramiteModificacionCalificacionesController extends Controller {
 
 
         // VALIDAMOS SI LA UNIDAD EDUCATIVA TIENE TUICION SOBRE EL ESTUDIANTE
-        // if($inscripciones[0]['sie'] != $sie){
-        //     $response->setStatusCode(202);
-        //     $response->setData('No tiene tuición sobre el estudiante');
-        //     return $response;   
-        // }
+        if($inscripciones[0]['sie'] != $sie){
+            $response->setStatusCode(202);
+            $response->setData('No tiene tuición sobre el estudiante');
+            return $response;   
+        }
 
         $inscripcionesArray = [];
         foreach ($inscripciones as $key => $value) {
@@ -117,7 +120,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'grado'=>$value['grado'],
                 'paralelo'=>$value['paralelo'],
                 'estadomatricula'=>$value['estadomatricula'],
-                'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('idInscripcion'=>$value['id']))
+                'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
         }
 
@@ -130,7 +133,7 @@ class TramiteModificacionCalificacionesController extends Controller {
         return $response;
     }
 
-    public function formularioAction(Request $request, $idInscripcion){
+    public function formularioAction(Request $request, $idInscripcion, $flujoTipo){
 
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -141,14 +144,129 @@ class TramiteModificacionCalificacionesController extends Controller {
         return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formulario.html.twig', array(
             'inscripcion'=>$inscripcion,
             'estudiante'=>$estudiante,
-            'data'=>$data
+            'data'=>$data,
+            'idInscripcion'=>$inscripcion->getId(),
+            'flujoTipo'=>$flujoTipo
         ));
     }
 
     public function formularioSaveAction(Request $request){
-        dump($request);
         $response = new JsonResponse();
-        return $response;
+        try {
+            // VERIFICAMOS SI EXISTE EL ARCHIVO
+            if(isset($_FILES['archivo'])){
+                $file = $_FILES['archivo'];
+
+                $type = $file['type'];
+                $size = $file['size'];
+                $tmp_name = $file['tmp_name'];
+                $name = $file['name'];
+                $extension = explode('.', $name);
+                $extension = $extension[count($extension)-1];
+                $new_name = date('YmdHis').'.'.$extension;
+
+                // OBTENEMOS EL ID DE INSCRIPCION
+                $idInscripcion = $request->get('idInscripcion');
+                $em = $this->getDoctrine()->getManager();
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+                $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+                // GUARDAMOS EL ARCHIVO
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionNotas/' . $sie;
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0777, true);
+                }
+
+                $archivador = $directorio.'/'.$new_name;
+                //unlink($archivador);
+                if(!move_uploaded_file($tmp_name, $archivador)){
+                    $response->setStatusCode(500);
+                    return $response;
+                }
+                
+                // CREAMOS LOS DATOS DE LA IMAGEN
+                $archivo = array(
+                    'name' => $name,
+                    'type' => $type,
+                    'tmp_name' => 'nueva_ruta',
+                    'size' => $size,
+                    'new_name' => $new_name
+                );
+
+                // OBTENEMOS LA INFORMACION DEL FORMULARIO
+                $flujoTipo = $request->get('flujoTipo');
+                $notas = json_decode($request->get('notas'),true);
+                $notasCualitativas = json_decode($request->get('notasCualitativas'),true);
+                $justificacion = mb_strtoupper($request->get('justificacion'),'utf-8');
+
+                $data = array(
+                    'idInscripcion'=> $idInscripcion,
+                    'flujoTipo'=>$flujoTipo,
+                    'notas'=> $notas,
+                    'notasCualitativas'=>$notasCualitativas,
+                    'justificacion'=>$justificacion,
+                    'archivo'=>$archivo
+                );
+
+                // buscamos un aolicitud previa
+                $solicitudes = $em->createQueryBuilder()
+                                ->select('td')
+                                ->from('SieAppWebBundle:Tramite','t')
+                                ->innerJoin('SieAppWebBundle:TramiteDetalle','td','with','td.tramite = t.id')
+                                ->innerJoin('SieAppWebBundle:WfSolicitudTramite','wfst','with','wfst.tramiteDetalle = td.id')
+                                ->where('t.institucioneducativa = :sie')
+                                ->andWhere('t.flujoTipo = 7')
+                                ->andWhere('wfst.datos like :inscripcion')
+                                ->setParameter('sie', $sie)
+                                ->setParameter('inscripcion', '%"idInscripcion":"'. $idInscripcion .'"%')
+                                ->getQuery()
+                                ->getResult();
+
+
+                $data = json_encode($data);
+                dump($solicitudes);
+                dump($data);
+                die;
+
+                // OBTENEMOS EL ID DE LA TAREA
+                $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array(
+                    'flujoTipo'=>$flujoTipo,
+                    'orden'=>1
+                ));
+
+                $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+// dump($lugarTipo);die;
+                $tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'AMN'));
+
+                $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
+                    $this->session->get('userId'),
+                    $this->session->get('roluser'),
+                    $flujoTipo,
+                    $tarea->getId(),
+                    'institucioneducativa',
+                    $sie,
+                    '',//$obs,
+                    $tipoTramite->getId(),//$tipoTramite,
+                    '',//$varevaluacion,
+                    '',//$idTramite,
+                    json_encode($data),
+                    '',//$lugarTipoLocalidad,
+                    $lugarTipo['lugarTipoIdDistrito']
+                );
+
+                // dump($registroTramite);die;
+
+                $response->setStatusCode(200);
+                $response->setData($registroTramite);
+                return $response;
+            }
+            $response->setStatusCode(500);
+            return $response;
+        } catch (Exception $e) {
+            $response->setStatusCode(500);
+            return $response;
+        }
     }
 
 }

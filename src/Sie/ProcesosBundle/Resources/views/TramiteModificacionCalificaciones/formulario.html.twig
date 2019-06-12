@@ -27,13 +27,16 @@
             background: #B8F1CA !important;
         }
         .headtabla{
-            background: #DDDDDD !important;
+            background: #717171 !important;
+            color: #FFFFFF;
             border-bottom: none !important;
         }
-        .ckbox{
-            margin-top: 10px;
-            padding: 5px;
-            background: #EEEEEE;
+        .check{
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        }
+        h5{
+            font-weight: bold;
         }
     </style>
     
@@ -57,7 +60,7 @@
         
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title"> <i class="fa fa-file"></i> Solicitud </h3>
+                    <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Solicitud </h3>
                 </div>
                 <div class="panel-body">
 
@@ -68,20 +71,22 @@
                                 <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
+                            
+                            
 
                             <table class="table table-condensed">
                                 <thead>
-                                    <tr><th colspan="2">Datos Estudiante</th></tr>
+                                    <tr><th colspan="2"><h5>Datos Estudiante</h5></th></tr>
                                 </thead>
                                 <tbody>
                                     <tr><th>Código Rude</th><td>{{estudiante.codigoRude}}</td></tr>
-                                    <tr><th>Nombre completo</th><td>{{estudiante.nombre}}</td></tr>
+                                    <tr><th>Nombre completo</th><td>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</td></tr>
                                 </tbody>
                             </table>
                             <br>
                             <table class="table table-condensed">
                                 <thead>
-                                    <tr><th colspan="2">Datos Inscripción</th></tr>
+                                    <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
                                 </thead>
                                 <tbody>
                                     <tr><th>Código SIE</th><td>{{ inscripcion.institucioneducativaCurso.institucioneducativa.id }}</td></tr>
@@ -95,7 +100,7 @@
                             </table>
                             <hr>
                             <h5>
-                                Detalle de calificaciones
+                                <b>Detalle de calificaciones</b>
                                 <a class="btn btn-primary" data-toggle="modal" href='#modal-id' style="float:right; margin-top:-12px;">Agregar calificación</a>
                             </h5>
                             <div v-if="notas.length > 0 || notasCualitativas.length > 0">
@@ -118,7 +123,7 @@
                                             <td>${nota.bimestre}</td>
                                             <td>${nota.nota}</td>
                                             <td>
-                                                <input type="text" class="form-control input-sm" style="width:50px;" v-model="nota.notaNueva" v-on:keypress="validarNota">
+                                                <input type="text" class="form-control input-sm" style="width:50px;" v-model.number="nota.notaNueva" v-on:keypress="validarNota" v-on:keyup="validarValorNota(nota)" maxlength="3">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-default btn-xs" v-on:click="eliminarNota(nota)"> <i class="fa fa-remove"></i>  </button>
@@ -141,7 +146,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(cualitativa, pos) in notasCualitativas">
-                                            <td>${cualitativa.bimestre}</td>
+                                            <td class="table-cell" style="vertical-align:middle">${cualitativa.bimestre}</td>
                                             <td>${cualitativa.notaCualitativa}</td>
                                             <td>
                                                 <textarea  class="form-control input-sm jupper" cols="17" rows="4" v-model="cualitativa.notaNuevaCualitativa" v-on:keypress="validarNotaCualitativa();"></textarea>
@@ -152,27 +157,27 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <br>
+                                <hr>
                                 <div class="row">
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h5>justificación de la solicitud</h5>
-                                        <textarea v-model="justificacion" id="" rows="5" class="form-control jupper" ref="justificacion"></textarea>
+                                        <h5><b>Justificación de la solicitud</b></h5>
+                                        <textarea v-model="justificacion" id="" rows="4" class="form-control jupper" ref="justificacion"></textarea>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                         <h5>Adjuntar Resolución Ministerial</h5>
                                         <input type="file" name="image" @change="getImage" accept="image/*" class="form-control">  
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="ckbox ckbox-primary">
-                                            <input id="acuerdo" checked="checked" type="checkbox">
-                                            <label for="acuerdo">EStoy de acuerdo</label>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="row">
                                     <hr>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 check">
+                                        <div class="ckbox ckbox-primary">
+                                            <input id="acuerdo" type="checkbox" @change="setAcuerdo" ref="acuerdo">
+                                            <label for="acuerdo"> Yo {{app.user.persona.nombre}} {{app.user.persona.paterno}}, declaro que la información presentada es fidedigna.</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
                                         <a href="" class="btn btn-default">Cancelar</a>
                                         <button v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
                                     </div>
@@ -195,7 +200,7 @@
     
 
         <div class="modal modal-primary fade" id="modal-id">
-            <div class="modal-dialog" style="width:70%">
+            <div class="modal-dialog" {% if data.tipoNota == 'Trimestre' %} style="width:70%" {% endif %} >
                 <div class="modal-content">
                     <div class="modal-header ">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -268,6 +273,7 @@
                                 </table>
                             {% else %}
                                 No tiene valoraciones cualitativas...
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum sint quaerat, iusto. Quisquam magnam quae nisi voluptatem fugiat eos mollitia, quaerat quas deserunt aliquid sapiente eaque autem, eligendi excepturi et cumque. Obcaecati placeat unde accusantium error soluta officiis qui animi libero. Omnis delectus a accusamus magni, repudiandae debitis architecto eius?
                             {% endif %}
                         {% endif %}
                     </div>
@@ -289,12 +295,15 @@
             delimiters: ['${', '}'],
             el: '#app',
             data: {
+                idInscripcion: '{{idInscripcion}}',
+                flujoTipo: '{{flujoTipo}}',
                 notas: [],
                 filas: [],
                 notasCualitativas: [],
                 filasCualitativas: [],
                 justificacion: '',
-                archivo: ''
+                archivo: '',
+                acuerdo: false
             },
             methods: {
                 agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura){
@@ -337,15 +346,24 @@
                     console.log(this.filas);
                 },
                 validarNota: function(event){
-                    console.log(event.charCode);
-                    // var key = window.event;
                     var k = event.charCode || event.keyCode;
                     if ((k < 48 || k > 57) //NUmeros
                         && (k != 13) //ENTER
                         && (k != 8) //retroceso
                         && (k != 9) //tab
-                    )
-                    return false;
+                    ){
+                        event.preventDefault();
+                        return false;
+                    }
+                },
+                validarValorNota: function(nota){
+                    // if(nota.notaNueva == ""){ nota.notaNueva = 0; }
+                    if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                    if(nota.notaNueva > 100){ nota.notaNueva = 100; }
+
+                    if(nota.notaNueva != "" && nota.notaNueva != 0){
+                        nota.notaNueva = Math.round(nota.notaNueva);
+                    }
                 },
                 agregarNotaCualitativa: function(idEstudianteNotaCualitativa,idInscripcion,idNotaTipo,idFila,notaCualitativa,notaCuantitativa,notaTipo,idEstudianteNotaCualitativa){
                     var nuevaNotaCualitativa = {
@@ -396,11 +414,51 @@
                 getImage: function(event){
                     this.archivo = event.target.files[0];
                 },
+                setAcuerdo: function(){
+                    this.acuerdo = !this.acuerdo;
+                },
                 enviarSolicitud: function(){
-                    console.log(this.notas);
-                    console.log(this.notasCualitativas);
-                    console.log(this.justificacion);
-                    console.log(this.archivo);
+                    // VALIDAR NOTAS
+                    var notasValidas = true;
+                    $.each(this.notas, function(index, val) {
+                        if(val.notaNueva == '' || val.notaNueva == 0){
+                            notasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasValidas){
+                        Swal.fire(
+                          'Completar calificación!',
+                          'Las calificaciones no pueden ser vacias o tener valor cero.',
+                          'warning'
+                        );
+                        return;
+                    }
+                    
+                    // VALIDAR NOTAS CUALITATIVAS
+                    var notasCualitativasValidas = true;
+                    var cualitativaMensaje = '';
+                    $.each(this.notasCualitativas, function(index, val) {
+                        if(val.notaNuevaCualitativa.trim() == ''){
+                            cualitativaMensaje = 'Las valoraciones no pueden estar vacias.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+
+                        if(val.notaNuevaCualitativa.trim().length < 15){
+                            cualitativaMensaje = 'Las valoraciones deben tener al menos 15 caracteres.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasCualitativasValidas){
+                        Swal.fire(
+                          'Completar valoración!',
+                          cualitativaMensaje,
+                          'warning'
+                        );
+                        return;
+                    }
 
                     // VALIDAMOS QUE SE HAYA LLENADO EL JUSTIFICATIVO
                     if (this.justificacion.trim().length == 0) {
@@ -414,18 +472,36 @@
                     }
 
                     // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DE LA RESOLUCION ADMINISTRATIVA
-                    if (this.archivo.trim().length == 0) {
+                    if (typeof this.archivo != 'object') {
                         Swal.fire(
-                          'Archivo!',
-                          'Debe adjuntar la fotografia de la Resolución Ministerial.',
+                          'Adjuntar R.M.!',
+                          'Debe adjuntar un escaneado de la Resolución Ministerial.',
                           'warning'
                         );
                         return;
                     }
 
+                    // VALIDAMOS SI SELECCIONO EL ACUERDO
+                    if (!this.acuerdo) {
+                        this.$refs.acuerdo.focus();
+                        Swal.fire(
+                          'Validar!',
+                          'Debe declarar que la información enviada es fidedigna.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    $.each(this.notasCualitativas, function(index, val) {
+                        val.notaNuevaCualitativa = val.notaNuevaCualitativa.toUpperCase();
+                    });
+
+
                     var data = new FormData();
-                    data.append('notas', this.notas);
-                    data.append('notasCualitativas', this.notasCualitativas);
+                    data.append('idInscripcion', this.idInscripcion);
+                    data.append('flujoTipo', this.flujoTipo);
+                    data.append('notas', JSON.stringify(this.notas));
+                    data.append('notasCualitativas', JSON.stringify(this.notasCualitativas));
                     data.append('justificacion', this.justificacion);
                     data.append('archivo', this.archivo);
 
@@ -440,7 +516,9 @@
                 
             },
             computed: {
-                
+                validarValorNota: function(){
+
+                }
             },
             mounted(){
                 

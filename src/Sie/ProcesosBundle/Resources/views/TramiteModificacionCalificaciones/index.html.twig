@@ -41,7 +41,7 @@
                             <label>Código Rude:</label>
                         </div>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" v-model="codigoRude">
+                            <input type="text" class="form-control" v-model="codigoRude" v-on:keyup.13="buscarEstudiante">
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-info" type="button" v-on:click="buscarEstudiante()"> <i class="fa fa-search"></i> Buscar estudiante</button>
@@ -50,6 +50,9 @@
 
                     <div v-cloak>
                         <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
+                        <div v-if="buscando" class="text-center">
+                            <img src="{{asset('img/loading96.gif')}}" alt="">
+                        </div>
                         <div v-if="estudiante != ''">
                             <br>
                             <p class="h5">
@@ -108,20 +111,26 @@
             delimiters: ['${', '}'],
             el: '#app',
             data: {
-                codigoRude: '8073003220081593',
+                // codigoRude: '8073023520101288A',
+                // codigoRude: '8073003220081593',
+                codigoRude: '407300182007718',
                 estudiante: '',
                 respuesta: '',
-                inscripciones: []
+                inscripciones: [],
+                buscando: false
             },
             methods: {
                 buscarEstudiante: function(){
+
+                    this.buscando = true;
                     
                     this.estudiante = '';
                     this.inscripciones = '';
                     this.respuesta = '';
 
                     axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_estudiante', {
-                            codigoRude: this.codigoRude
+                        codigoRude: this.codigoRude,
+                        flujoTipo: '{{ flujoTipo }}'
                     }))
                     .then(response => {
                         console.log(response);
@@ -133,9 +142,12 @@
                         if( response.status == 202){
                             this.respuesta = response.data;
                         }
+
+                        this.buscando = false;
                     })
                     .catch(e => {
                         console.log(e);
+                        this.buscando = false;
                     });
                 }
             },

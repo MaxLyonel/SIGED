@@ -9,7 +9,7 @@ tramite_modificacion_calificaciones_buscar_estudiante:
         expose: true
 
 tramite_modificacion_calificaciones_formulario:
-    path:     /formulario/{idInscripcion}
+    path:     /formulario/{flujoTipo}/{idInscripcion}
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formulario }
 
 tramite_modificacion_calificaciones_formulario_save:
