@@ -172,7 +172,7 @@
                             </div>
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">6.- Evaluación Distrital</h3>
+                                    <h3 class="panel-title">4.- Evaluación Distrital</h3>
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body">
                                     <div class="row">
@@ -199,6 +199,26 @@
                                     </div>
                                     <br>
                                 </div><!-- /.panel-body -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                     <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">5.- Informe Unidad Educativaa</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="table-responsive mb-20">
+                                                        <p id="textDirector">
+                                                            {{textDirector}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
@@ -339,6 +359,7 @@
                         var institucionid={{ id_institucion }};
                         var idespecialidades={{ idespecialidades|raw }};
                         var obstxt=$('#obstxt').val();
+                        var textDirector=$('#textDirector').text();
                         var evaluacion  = "NO";
                         if($('#siprocededep:checked').val())
                         { evaluacion  ="SI";}
@@ -369,6 +390,7 @@
                         fd.append('evaluacion', evaluacion);
                         fd.append('evaluacion2', evaluacion2);
                         fd.append('institucionid', institucionid);
+                        fd.append('textDirector', textDirector);
                         fd.append('id_tramite', {{ id_tramite}});
                         fd.append('obstxt', obstxt);
                         //fd.append('docpdf', $('#adjdocumento')[0]);

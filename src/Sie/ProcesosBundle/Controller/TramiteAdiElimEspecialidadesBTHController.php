@@ -491,11 +491,13 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $tarea   = $flujoproceso->getId();///RECEPCIONA
           $tabla            = 'institucioneducativa';
           $obs              = $request->get('obstxt');
+          $textDirector     = $request->get('textDirector');
           $datos['institucionid'] = $institucionid;
           $datos['select_especialidad'] = explode(",", $request->get('ipt'));
           $datos['evaluacion'] = $evaluacion;
           $datos['obs'] = $obs;
           $datos['imagen'] = $imagen;
+          $datos['textDirector'] = $textDirector;
           $datos = json_encode($datos);
           //ELABORA INFORME
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
@@ -658,7 +660,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             ->setMaxResults('1')
             ->getQuery()
             ->getResult();
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true); //dump($datos);die;
         $documento= empty($datos['imagen'])?'':$datos['imagen'];
         $especialidadarray = array();
         for($i=0;$i<count($datos['select_especialidad']);$i++) {
@@ -679,6 +681,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             'objespecialidades_solicitadas'=>$especialidadarray,
             'id_tramite'=>$id_tramite,
             'idespecialidades'=> json_encode($datos['select_especialidad']),
+            'textDirector'=> json_encode($datos['textDirector']),
             'documento'=>$documento,
             'solicitud'=>$solicitud
         ));
@@ -708,6 +711,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $evaluacion2    = $request->get('evaluacion2');
         $idtramite      = $request->get('id_tramite');
         $obs            = $request->get('obstxt');
+        $textDirector   = $request->get('textDirector');
         //armado de %datos
         $datos['institucionid']         = $institucionid;
         $datos['select_especialidad']   = explode(",", $request->get('ipt'));
@@ -715,7 +719,8 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $datos['evaluacion2']           = $evaluacion2;
         $datos['obs']                   = $obs;
         $datos['imagen']                = $imagen;
-        $datos                          = json_encode($datos);
+        $datos['textDirector']          = $textDirector;
+        $datos                          = json_encode($datos); dump($datos);die;
 
         $tramite        = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($idtramite);
         $flujoproceso   = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 4));

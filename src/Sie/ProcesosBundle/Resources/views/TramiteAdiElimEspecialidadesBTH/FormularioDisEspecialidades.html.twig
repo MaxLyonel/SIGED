@@ -183,7 +183,7 @@
                                             <div class="row">
                                                 <div id="listaespecialidades_adicionar">
                                                     <div class="table-responsive mb-20">
-                                                        <p>
+                                                        <p id="textDirector">
                                                             {{textDirector}}
                                                         </p>
                                                     </div>
@@ -292,6 +292,7 @@
                     if (willDelete) {
                         var institucionid={{ id_institucion }};
                         var idespecialidades={{ idespecialidades|raw }};
+                        var textDirector= $('textDirector').text();
 
                         var obstxt=$('#obstxt').val();
                         var evaluacion  = "";
@@ -315,7 +316,8 @@
                         //fd.append('id_distrito', { { ubicacion['codigo_distrito'] }});
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', institucionid);
-                        fd.append('id_tramite', {{ id_tramite}});
+                        fd.append('textDirector', textDirector);
+                        fd.append('id_tramite', {{ id_tramite}});                        
                         fd.append('obstxt', obstxt);
                         //fd.append('docpdf', $('#adjdocumento')[0]);
                         var docpdf = document.getElementById('adjdocumento');
