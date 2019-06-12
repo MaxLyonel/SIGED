@@ -457,7 +457,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             'textDirector'=> json_encode($datos['textDirector'])
             ));
     }
-     public function  guardasolicitudEspecialidadesDisAction(Request $request){
+     public function  guardasolicitudEspecialidadesDisAction(Request $request){ dump($request);die;
          $datos = array();
          $documento = $request->files->get('docpdf');
         if(!empty($documento)){
@@ -499,6 +499,8 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
           $datos['imagen'] = $imagen;
           $datos['textDirector'] = $textDirector;
           $datos = json_encode($datos);
+          dump($datos);
+          die;
           //ELABORA INFORME
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
         $tarea1   = $flujoproceso->getId();//elaborainfrorme y envia BTH
