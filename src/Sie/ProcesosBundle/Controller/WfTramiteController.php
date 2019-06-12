@@ -45,25 +45,23 @@ class WfTramiteController extends Controller
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
+        $tipo = $request->get('tipo');
+        
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        if($tipo == 2){
+            $data = $this->listaRecibidos($rol,$usuario);
+        }elseif($tipo == 3){
+            $data = $this->listaEnviados($rol,$usuario);
+        }else{
+            $data = $this->listaNuevos();
+        }
         
-        $em = $this->getDoctrine()->getManager();
-        $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
-                ->select('ft')
-                ->where('ft.id > 5')
-                ->andWhere("ft.obs like '%ACTIVO%'")
-                ->getQuery()
-                ->getResult();
-        $data['entities'] = $flujotipo;
-        $data['titulo'] = "Nuevo trámite";
         return $this->render('SieProcesosBundle:WfTramite:index.html.twig', $data);
     }
-    /**
-     * Listado de los tipo de flujos para iniciar un tramite
-     */
+   
     public function listaAction(Request $request)
     {
         
@@ -72,29 +70,36 @@ class WfTramiteController extends Controller
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
+        $tipo = $request->get('tipo');
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
-        $em = $this->getDoctrine()->getManager();
-
-        $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
-                ->select('ft')
-                ->where('ft.id > 5')
-                ->andWhere("ft.obs like '%ACTIVO%'")
-                ->getQuery()
-                ->getResult();
-        //dump($flujotipo);die;
-        $data['entities'] = $flujotipo;
-        $data['titulo'] = "Nuevo trámite";
-        return $this->render('SieProcesosBundle:WfTramite:lista.html.twig', $data);
+        switch ($tipo) {
+            case 1:
+                $data = $this->listaNuevos();
+                break;
+            case 2:
+                $data = $this->listaRecibidos($rol,$usuario);
+                break;
+            case 3:
+                $data = $this->listaEnviados($rol,$usuario);
+                break;
+            case 4:
+                $data = $this->listaConcluidos();
+                break;
+            default:
+                $data = $this->listaNuevos();
+                break;
+        }
+                
+        return $this->render('SieProcesosBundle:WfTramite:contenido.html.twig', $data);
     }
 
     /**
      * Redireccion al formulario de inicio de tramite segun el flujo
      */
-    public function nuevoAction(Request $request,$id)
+    public function nuevoAction(Request $request)
     {
         //dump($id);die;
         $this->session = $request->getSession();
@@ -102,6 +107,7 @@ class WfTramiteController extends Controller
         $idUsuario = $this->session->get('userId');
         $idlugarusuario = $this->session->get('roluserlugarid');
         $rol = $this->session->get('roluser');
+        $id = $request->get('id');
         //validation if the user is logged
         if (!isset($idUsuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -109,7 +115,7 @@ class WfTramiteController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findBy(array('flujoTipo'=>$id,'orden'=>1));
-        //dump($flujoproceso);die;
+
         if($flujoproceso[0]->getRolTipo()->getId()!= 9){  //si no es director
             $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfufp')
                 ->select('wfufp')
@@ -156,58 +162,6 @@ class WfTramiteController extends Controller
     }
 
     /**
-     * Listado de los tramites recibidos
-     */
-    public function recibidosAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $pathSystem = $this->session->get('pathSystem');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $query = $em->getConnection()->prepare("select distinct t.id,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||pm.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla ,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when (ie.id is null and ft.id=6) then 'Institucion Educativa: ' when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||pm.nombre||' '||pm.paterno||' '||pm.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre_tabla,ft.flujo,ft.id as idflujo,case when te.id=3 then pt.proceso_tipo when (te.id=15 or te.id=4)  and (fp.es_evaluacion is false) then ptsig.proceso_tipo when (te.id=15 or te.id=4) and (fp.es_evaluacion is true) then ptc.proceso_tipo  end as proceso_tipo,pt.proceso_tipo as tarea_actual,tt.tramite_tipo,te.tramite_estado,case when te.id = 3 then td.fecha_recepcion else td.fecha_envio end as fecha_estado,te.id as id_estado,td.obs,fp.plazo,case when te.id = 3 then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre||' '||p.paterno||' '||p.materno as nombre
-        from tramite t
-        join tramite_detalle td on cast(t.tramite as int)=td.id
-        left join institucioneducativa ie on t.institucioneducativa_id=ie.id
-        left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
-        left join estudiante e on ei.estudiante_id=e.id
-        left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
-        left join persona pm on mi.persona_id=pm.id
-        left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
-        left join persona pa on ai.persona_id=pa.id
-        join flujo_proceso fp on td.flujo_proceso_id=fp.id
-        left join flujo_proceso fpsig on fp.tarea_sig_id=fpsig.id
-        left join flujo_proceso fpant on fp.tarea_ant_id=fpant.id
-        left join proceso_tipo ptsig on fpsig.proceso_id=ptsig.id
-        join proceso_tipo pt on fp.proceso_id=pt.id
-        left join wf_tarea_compuerta wftc on fp.id=wftc.flujo_proceso_id
-        left join flujo_proceso fpc on fpc.id=wftc.condicion_tarea_siguiente
-        left join proceso_tipo ptc on fpc.proceso_id=ptc.id
-        join tramite_tipo tt on t.tramite_tipo=tt.id
-        join tramite_estado te on td.tramite_estado_id=te.id
-        join flujo_tipo ft on t.flujo_tipo_id = ft.id
-        join usuario u on td.usuario_remitente_id=u.id
-        join persona p on p.id=u.persona_id
-        where ft.id>5 and t.fecha_fin is null and
-        ((fpsig.rol_tipo_id=". $rol ." and (te.id=15 or te.id=4) and fp.es_evaluacion is false) or 
-        (fp.rol_tipo_id=". $rol ." and te.id=3) or 
-        ((select rol_tipo_id from flujo_proceso where id= wftc.condicion_tarea_siguiente)=". $rol ." and (te.id=15 or te.id=4) and fp.es_evaluacion is true and td.valor_evaluacion=wftc.condicion) ) and td.usuario_destinatario_id=".$usuario." 
-        order by ft.flujo,te.tramite_estado,fecha_estado,t.id,proceso_tipo,tt.tramite_tipo,id_estado,td.obs,nombre");
-        $query->execute();
-        $data['entities'] = $query->fetchAll();;
-        $data['titulo'] = "Listado de trámites recibidos";
-        //dump($data);die;
-        return $this->render('SieProcesosBundle:WfTramite:recibidos.html.twig', $data);
-    }
-
-    /**
      * Registro del tramite como recibido
      */
     public function recibidosGuardarAction(Request $request)
@@ -234,7 +188,7 @@ class WfTramiteController extends Controller
             $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
         }
         $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-        //$mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+
         if($mensaje['dato'] == true){
             $request->getSession()
                 ->getFlashBag()
@@ -244,20 +198,20 @@ class WfTramiteController extends Controller
                 ->getFlashBag()
                 ->add('error', $mensaje['msg']);
         }
-        return $this->redirectToRoute('wf_tramite_index');
+        return $this->redirectToRoute('wf_tramite_index',array('tipo'=>2));
 
-        //return $this->render('SieHerramientaBundle:WfTramite:recibidos.html.twig');
     }
 
     /**
      * Redireccion del tramite a su formularios correspondiente
      */
-    public function recibidosEnviarAction(Request $request,$id)
+    public function recibidosEnviarAction(Request $request)
     {
         $this->session = $request->getSession();
         //dump($this->session);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
+        $id = $request->get('id');
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -277,102 +231,22 @@ class WfTramiteController extends Controller
             $request->getSession()
                     ->getFlashBag()
                     ->add('error', "No tiene tuición para este tramite");
-                    return $this->redirectToRoute('wf_tramite_index');
+                    return $this->redirectToRoute('wf_tramite_index',array('tipo'=>2));
         }  
     }
 
     /**
-     * Listado de trámites envidos
-     */
-    public function enviadosAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $pathSystem = $this->session->get('pathSystem');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $query = $em->getConnection()->prepare("select t.id,td.id as id_td,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||pm.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla ,case when (ie.id is not null) then 'Institucion Educativa: '||ie.institucioneducativa when (ie.id is null and ft.id=6) then 'Institucion Educativa:' when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||pm.nombre||' '||pm.paterno||' '||pm.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre_tabla,fp.ruta_reporte,ft.flujo,tt.tramite_tipo,pt.proceso_tipo,te.tramite_estado,td.fecha_envio,td.fecha_recepcion,td.obs,fp.plazo,case when fp.plazo is not null then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre||' '||p.paterno||' '||p.materno as nombre
-            from tramite t
-            join tramite_detalle td on t.id =td.tramite_id
-            left join institucioneducativa ie on t.institucioneducativa_id=ie.id
-            left join wf_solicitud_tramite wft on td.id=wft.tramite_detalle_id
-            left join tramite_detalle td1 on td1.id = wft.tramite_detalle_id
-            left join flujo_proceso fp1 on td1.flujo_proceso_id =fp1.id
-            left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
-            left join estudiante e on ei.estudiante_id=e.id
-            left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
-            left join persona pm on mi.persona_id=pm.id
-            left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
-            left join persona pa on ai.persona_id=pa.id
-            join flujo_proceso fp on td.flujo_proceso_id=fp.id
-            join proceso_tipo pt on fp.proceso_id=pt.id
-            join tramite_tipo tt on t.tramite_tipo=tt.id
-            join tramite_estado te on td.tramite_estado_id=te.id
-            join flujo_tipo ft on t.flujo_tipo_id = ft.id
-            join usuario u on td.usuario_remitente_id=u.id
-            join persona p on p.id=u.persona_id
-            where ft.id>5 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=4)
-            and wft.es_valido is true
-            and td.usuario_remitente_id=". $usuario ." order by ft.flujo ASC,fecha_envio DESC");
-        $query->execute();
-        $data['entities'] = $query->fetchAll();;
-        //dump($data);die;
-        $data['titulo'] = "Listado de trámites enviados";
-        return $this->render('SieProcesosBundle:WfTramite:enviados.html.twig', $data);
-    }
-    
-    /**
-     * Listado de trámites concluidos
-     */
-    public function concluidosAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $pathSystem = $this->session->get('pathSystem');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||p.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
-        from tramite t
-        join tramite_tipo tt on t.tramite_tipo=tt.id
-        join flujo_tipo ft on t.flujo_tipo_id = ft.id
-        left join institucioneducativa ie on t.institucioneducativa_id=ie.id
-        left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
-        left join estudiante e on ei.estudiante_id=e.id
-        left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
-        left join persona p on mi.persona_id=p.id
-        left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
-        left join persona pa on ai.persona_id=pa.id
-        where ft.id>5 and t.fecha_fin is not null 
-        order by ft.flujo,t.id,t.fecha_fin");
-        $query->execute();
-        $data['entities'] = $query->fetchAll();;
-        $data['titulo'] = "Listado de trámites concluidos";
-        return $this->render('SieProcesosBundle:WfTramite:concluidos.html.twig', $data);
-    }
-    /**
      * Impresion de formularios como comprobantes
      */
-    public function reporteFormularioAction(Request $request,$idtramite,$id_td)
+    public function reporteFormularioAction(Request $request)
     {
         $this->session = $request->getSession();
         //dump($this->session);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
+        $idtramite =  $request->get('idtramite');
+        $id_td =  $request->get('id_td');
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -391,7 +265,7 @@ class WfTramiteController extends Controller
             $request->getSession()
                     ->getFlashBag()
                     ->add('error', "La tarea: ". $flujoproceso->getProcesoTipo()->getProceso() ." correspondiente al tramite Nro. ". $id . "no cuenta con un reporte.");
-                    return $this->redirectToRoute('wf_tramite_index');
+                    return $this->redirectToRoute('wf_tramite_index',array('tipo'=>3));
         }
     }
         
@@ -452,10 +326,9 @@ class WfTramiteController extends Controller
     	foreach($usuarios as $u){
             $usuario[$u->getUsuario()->getid()] = $u->getUsuario()->getPersona()->getNombre()." ".$u->getUsuario()->getPersona()->getPaterno()." ".$u->getUsuario()->getPersona()->getMaterno();
         }
-        //dump($usuario);die;
+
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('wf_tramite_recibido_derivar_guardar'))
-            //->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO')))
             ->add('usuario','choice',array('label'=>'Usuario:','required'=>true,'choices'=>$usuario,'empty_value' => 'Seleccione usuario','attr' => array('class' => 'form-control')))
             ->add('idtramite','hidden',array('data'=>$idtramite,'required'=>false))
             ->add('idtd','hidden',array('data'=>$tramiteDetalle->getId(),'required'=>false))
@@ -556,12 +429,137 @@ class WfTramiteController extends Controller
             
         }else{
             $data = $this->listarF($form['proceso'],$form['tramite']);
-            //dump($data);die;
         }
         return $this->render('SieProcesosBundle:WfTramite:flujo.html.twig',$data);
         
     }
+
+     /**
+     * Listado de los tipo de flujos para iniciar un tramite
+     */
+    public function listaNuevos(){
+        $em = $this->getDoctrine()->getManager();
+        $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
+                ->select('ft')
+                ->where('ft.id > 5')
+                ->andWhere("ft.obs like '%ACTIVO%'")
+                ->getQuery()
+                ->getResult();
+
+        $data['entities'] = $flujotipo;
+        $data['titulo'] = "Nuevo trámite";
+        $data['tipo'] = 1;
+        return $data;
+    }
+
+    /**
+     * Listado de los tramites recibidos
+     */
+   
+    public function listaRecibidos($rol,$usuario){
+        $em = $this->getDoctrine()->getManager();
         
+        $query = $em->getConnection()->prepare("select distinct t.id,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||pm.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla ,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when (ie.id is null and ft.id=6) then 'Institucion Educativa: ' when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||pm.nombre||' '||pm.paterno||' '||pm.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre_tabla,ft.flujo,ft.id as idflujo,case when te.id=3 then pt.proceso_tipo when (te.id=15 or te.id=4)  and (fp.es_evaluacion is false) then ptsig.proceso_tipo when (te.id=15 or te.id=4) and (fp.es_evaluacion is true) then ptc.proceso_tipo  end as proceso_tipo,pt.proceso_tipo as tarea_actual,tt.tramite_tipo,te.tramite_estado,case when te.id = 3 then td.fecha_recepcion else td.fecha_envio end as fecha_estado,te.id as id_estado,td.obs,fp.plazo,case when te.id = 3 then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre||' '||p.paterno||' '||p.materno as nombre,fp.ruta_formulario
+        from tramite t
+        join tramite_detalle td on cast(t.tramite as int)=td.id
+        left join institucioneducativa ie on t.institucioneducativa_id=ie.id
+        left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
+        left join estudiante e on ei.estudiante_id=e.id
+        left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
+        left join persona pm on mi.persona_id=pm.id
+        left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
+        left join persona pa on ai.persona_id=pa.id
+        join flujo_proceso fp on td.flujo_proceso_id=fp.id
+        left join flujo_proceso fpsig on fp.tarea_sig_id=fpsig.id
+        left join flujo_proceso fpant on fp.tarea_ant_id=fpant.id
+        left join proceso_tipo ptsig on fpsig.proceso_id=ptsig.id
+        join proceso_tipo pt on fp.proceso_id=pt.id
+        left join wf_tarea_compuerta wftc on fp.id=wftc.flujo_proceso_id
+        left join flujo_proceso fpc on fpc.id=wftc.condicion_tarea_siguiente
+        left join proceso_tipo ptc on fpc.proceso_id=ptc.id
+        join tramite_tipo tt on t.tramite_tipo=tt.id
+        join tramite_estado te on td.tramite_estado_id=te.id
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        join usuario u on td.usuario_remitente_id=u.id
+        join persona p on p.id=u.persona_id
+        where ft.id>5 and t.fecha_fin is null and
+        ((fpsig.rol_tipo_id=". $rol ." and (te.id=15 or te.id=4) and fp.es_evaluacion is false) or 
+        (fp.rol_tipo_id=". $rol ." and te.id=3) or 
+        ((select rol_tipo_id from flujo_proceso where id= wftc.condicion_tarea_siguiente)=". $rol ." and (te.id=15 or te.id=4) and fp.es_evaluacion is true and td.valor_evaluacion=wftc.condicion) ) and td.usuario_destinatario_id=".$usuario." 
+        order by ft.flujo,te.tramite_estado,fecha_estado,t.id,proceso_tipo,tt.tramite_tipo,id_estado,td.obs,nombre");
+        $query->execute();
+        $data['entities'] = $query->fetchAll();
+        $data['titulo'] = "Listado de trámites recibidos";
+        $data['tipo'] = 2;
+
+        return $data;
+    }
+    /**
+     * Listado de trámites envidos
+     */
+    
+    public function listaEnviados($rol,$usuario){
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $query = $em->getConnection()->prepare("select t.id,td.id as id_td,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||pm.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla ,case when (ie.id is not null) then 'Institucion Educativa: '||ie.institucioneducativa when (ie.id is null and ft.id=6) then 'Institucion Educativa:' when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||pm.nombre||' '||pm.paterno||' '||pm.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre_tabla,fp.ruta_reporte,ft.flujo,tt.tramite_tipo,pt.proceso_tipo,te.tramite_estado,td.fecha_envio,td.fecha_recepcion,td.obs,fp.plazo,case when fp.plazo is not null then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre||' '||p.paterno||' '||p.materno as nombre
+            from tramite t
+            join tramite_detalle td on t.id =td.tramite_id
+            left join institucioneducativa ie on t.institucioneducativa_id=ie.id
+            left join wf_solicitud_tramite wft on td.id=wft.tramite_detalle_id
+            left join tramite_detalle td1 on td1.id = wft.tramite_detalle_id
+            left join flujo_proceso fp1 on td1.flujo_proceso_id =fp1.id
+            left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
+            left join estudiante e on ei.estudiante_id=e.id
+            left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
+            left join persona pm on mi.persona_id=pm.id
+            left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
+            left join persona pa on ai.persona_id=pa.id
+            join flujo_proceso fp on td.flujo_proceso_id=fp.id
+            join proceso_tipo pt on fp.proceso_id=pt.id
+            join tramite_tipo tt on t.tramite_tipo=tt.id
+            join tramite_estado te on td.tramite_estado_id=te.id
+            join flujo_tipo ft on t.flujo_tipo_id = ft.id
+            join usuario u on td.usuario_remitente_id=u.id
+            join persona p on p.id=u.persona_id
+            where ft.id>5 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=4)
+            and wft.es_valido is true
+            and td.usuario_remitente_id=". $usuario ." order by ft.flujo ASC,fecha_envio DESC");
+        $query->execute();
+        $data['entities'] = $query->fetchAll();
+        $data['titulo'] = "Listado de trámites enviados";
+        $data['tipo'] = 3;
+
+        return $data;
+    }
+    
+    /**
+     * Listado de trámites concluidos
+     */
+    public function listaConcluidos()
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||p.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
+        from tramite t
+        join tramite_tipo tt on t.tramite_tipo=tt.id
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        left join institucioneducativa ie on t.institucioneducativa_id=ie.id
+        left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
+        left join estudiante e on ei.estudiante_id=e.id
+        left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
+        left join persona p on mi.persona_id=p.id
+        left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
+        left join persona pa on ai.persona_id=pa.id
+        where ft.id>5 and t.fecha_fin is not null 
+        order by ft.flujo,t.id,t.fecha_fin");
+        $query->execute();
+        $data['entities'] = $query->fetchAll();;
+        $data['titulo'] = "Listado de trámites concluidos";
+        $data['tipo'] = 4;
+        return $data;
+    }
+
     /**
      * funcion que lista el flujo de un tramite para el diagrama
      */
