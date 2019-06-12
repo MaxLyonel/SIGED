@@ -14,7 +14,7 @@
 
             	{% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
             	{# SOLO SE PODRA AGREGAR MATERIAS ANTES DEL PRIMER BIMESTRE #}
-				{% if areas.operativo < 1 and areas.areasFaltantes|length > 0 and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3  %}
+				{% if areas.operativo < 3 and areas.areasFaltantes|length > 0 and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3  %}
         			<div class="btn-group" style="width:650px; float:right;">
         			    <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
         			        Agregar Área al estudiante <span class="caret"></span>
@@ -80,14 +80,14 @@
 	});
 
 	var newAreaEstudiante = function(idco,idInscripcion,asignatura){
-	    if(confirm('¿Realmente desea adicionar el área '+asignatura+' al estudiante?\nPresione aceptar para confirmar.')){
+	    // if(confirm('¿Realmente desea adicionar el área '+asignatura+' al estudiante?\nPresione aceptar para confirmar.')){
 	        $.ajax({
 	            type: 'post',
 	            data: ({idco:idco, idInscripcion:idInscripcion}),
 	            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_new') }}",
 	            beforeSend: function () {
 	                $('#mensajeModal').empty();
-	                $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+	                $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Verificando... <img src='{{asset('img/loading-sm.gif')}}'></div>");
 	            },
 	            success: function (data) {
 	                $('#mensajeModal').empty();
@@ -105,7 +105,7 @@
 	                }
 	            }
 	        });
-	    }
+	    // }
 	}
 	
 	function deleteAreaEstudiante(idEstudianteAsignatura, asignatura){

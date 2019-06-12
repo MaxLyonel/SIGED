@@ -120,7 +120,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
     public function newAction(Request $request){
         try {
             $em = $this->getDoctrine()->getManager();
-            
+            $em->getConnection()->beginTransaction();
 
             $idCursoOferta = $request->get('idco');
             $idInscripcion = $request->get('idInscripcion');
@@ -131,7 +131,10 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 'estudianteInscripcion'=>$idInscripcion,
                 'institucioneducativaCursoOferta'=>$idCursoOferta
             ));
+            
             $data = [];
+            $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
+
             if($area){
                 // SI EL ESTUDIANTE YA TIENE EL AREA
                 $data = array(
@@ -143,27 +146,40 @@ class InfoEstudianteAreasEstudianteController extends Controller {
 
                 $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
                 
-                // SI NO TIENE EL AREA, ENTONCES LO AGREGAMOS
-                $nuevaArea = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idInscripcion, $gestion);
 
-                if($nuevaArea){
-                    // SI TODO SE REALIZO CON EXITO
-                    $data = array(
-                        'status'=>200,
-                        'type'=>'success',
-                        'msg'=> 'El área se agregó correctamente.'
-                    );
+                // VERIFICAMOS SI SE DEBE LLENAR NOTAS
+                $llenarNotas = $this->get('notas')->llenarNotasMateriaAntes($idInscripcion, $idCursoOferta);
+                if (count($llenarNotas['cuantitativas']) > 0 or count($llenarNotas['cualitativas']) > 0 ) {
+                    // SI SE TIENE QUE LLENAR NOTAS LE MANDAMOS UNA VISTA DONDE REGISTRE LAS NOTAS
+                    // dump($llenarNotas);die;
+                    return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:completarNotas.html.twig',array(
+                        'areas'=>$areas,
+                        'inscripcion'=>$inscripcion,
+                        'data'=>$llenarNotas
+                    ));
                 }else{
-                    // SI OCURRIO UN ERROR AL AGREGAR EL AREA
-                    $data = array(
-                        'status'=>500,
-                        'type'=>'danger',
-                        'msg'=> 'Ocurrió un error al agregar el área.'
-                    );
+                    // SI NO HAY NOTAS QUE REGSITRAR REGISTRAMOS LA MATERIA AL ESTUDIANTE
+                    $nuevaArea = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idInscripcion, $gestion);
+                    if($nuevaArea){
+                        // SI TODO SE REALIZO CON EXITO
+                        $data = array(
+                            'status'=>200,
+                            'type'=>'success',
+                            'msg'=> 'El área se agregó correctamente.'
+                        );
+
+                    }else{
+                        // SI OCURRIO UN ERROR AL AGREGAR EL AREA
+                        $data = array(
+                            'status'=>500,
+                            'type'=>'danger',
+                            'msg'=> 'Ocurrió un error al agregar el área.'
+                        );
+                    }
                 }
             }
-            
-            $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
+
+            $em->getConnection()->commit();
 
             return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:index.html.twig',array(
                     'areas'=>$areas,
@@ -177,7 +193,77 @@ class InfoEstudianteAreasEstudianteController extends Controller {
     }
 
     /**
-     * FUNCIONES PARA VALIDAR QUE LA MATERIA ESPECIALIZADA TENGA REGISTRADA LA ESPECILIADAD
+     * Funcion para registrar la materia y las notas que faltan
+     * @param  Request  $request [description]
+     * @param  integer  $idIns              [id de inscripcion]
+     * @param  array    $idInscripcion      [array con los ids de inscripcion]
+     * @param  array    $gestion            [array gestiones]
+     * @param  array    $idco               [array ids curso oferta]
+     * @param  array    $idNotaTipo         [array ids de nota tipo]
+     * @param  array    $nota               [array de notas]
+     * @return [view]                       [vista de listado de areas del estudiante]
+     */
+    public function completarNotasAction(Request $request){
+        try {
+
+            $idIns = $request->get('idIns');
+            // OBTENEMOS LOS ARRAYS DE DATOS
+            $idInscripcion = $request->get('idInscripcion');
+            $gestion = $request->get('gestion');
+            $idco = $request->get('idco');
+            $idNotaTipo = $request->get('idNotaTipo');
+            $nota = $request->get('nota');
+
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+
+            for ($i=0; $i < count($idco); $i++) {
+                // OBTENEMOS LA MATERIA SI EXISTIERA
+                $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$idInscripcion[$i], 'institucioneducativaCursoOferta'=>$idco[$i]));
+                if(!$estudianteAsignatura){
+                    // REGISTRO DE LA MATERIA AL ESTUDIANTE
+                    $estudianteAsignatura = $this->get('areasEstudiante')->nuevo($idco[$i], $idInscripcion[$i], $gestion[$i]);
+                }
+                
+                // OBTENEMOS LA NOTA SI EXISTIERA
+                $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$estudianteAsignatura, 'notaTipo'=>$idNotaTipo[$i]));
+                if(!$estudianteNota){
+                    // REGISTRAMOS LA NOTA
+                    $estudianteNota = $this->get('notas')->registrarNota($idNotaTipo[$i], $estudianteAsignatura->getId(), $nota[$i], '');
+                    // SE CALCULA EL PROMEDIO SI CORRESPONDE
+                    $promedio = $this->get('notas')->calcularPromedioBimestral($estudianteAsignatura->getId());
+                    // SE ACTUALIZA EL ESTADO DE MATRICULA SI CORRESPONDE
+                    $actualizarEstadoMatricula = $this->get('notas')->actualizarEstadoMatricula($idIns);
+                }
+            }
+
+            // OBTENEMOS LAS AREAS DEL ESTUDIANTE Y EL REGISTRO DE INSCRIPCION
+            $areas = $this->get('areasEstudiante')->areasEstudiante($idIns);
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns);
+
+            $data = array(
+                'status'=>200,
+                'type'=>'success',
+                'msg'=> 'El área se agregó correctamente.'
+            );
+
+            $em->getConnection()->commit();
+
+            return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:index.html.twig',array(
+                    'areas'=>$areas,
+                    'inscripcion'=>$inscripcion,
+                    'data'=>$data
+            ));
+
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+        }
+    }
+
+
+
+    /**
+     * FUNCIONES PARA VALIDAR QUE LA MATERIA ESPECIALIZADA DEL ESTUDIANTE TENGA REGISTRADA EL NOMBRE DE LA ESPECILIDAD
      */
 
     public function especialidadVerificarAction(Request $request){

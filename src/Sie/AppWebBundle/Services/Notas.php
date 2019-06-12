@@ -2531,4 +2531,87 @@ die;/*
             return new JsonResponse(array('msg'=>'error'));
         }
     }
+
+    /*==========================================================================
+    =             REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS            =
+    ==========================================================================*/
+    
+    /**
+     * [registroNotasParaMateria description]
+     * @param  integer $idco [id curso oferta]
+     * @return array       [datos de las notas cualitativas y cuantitativas que se deben llenar]
+     */
+    public function llenarNotasMateriaAntes($idInscripcion, $idsco){
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $curso = $inscripcion->getInstitucioneducativaCurso();
+        $sie = $curso->getInstitucioneducativa()->getId();
+        $gestion = $curso->getGestionTipo()->getId();
+        $nivel = $curso->getNivelTipo()->getId();
+
+        $operativo = $this->funciones->obtenerOperativo($sie, $gestion);
+
+        $cursosOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('id'=>$idsco));
+        $cont = 0;
+        $cuantitativas = [];
+
+        if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 11)) {
+            foreach ($cursosOferta as $key => $co) {
+
+                $cuantitativas[$cont] = array(
+                    'idco'=>$co->getId(),
+                    'idAsignatura'=>$co->getAsignaturaTipo()->getId(),
+                    'asignatura'=>$co->getAsignaturaTipo()->getAsignatura(),
+                );
+
+                for ($i=1; $i < $operativo; $i++) { 
+                    $cuantitativas[$cont]['notas'][] = array(
+                        'bimestre'=>$i.' Bim',
+                        'idNotaTipo'=>$i,
+                        'nota'=>'',
+                        'notaCualitativa'=>''
+                    );
+                }
+                $cont++;
+            }   
+        }
+
+        $cualitativas = [];
+        // if($gestion < 2019 or ($gestion >= 2019 and $nivel == 11)){
+        //     for ($i=1; $i < $operativo; $i++) {
+        //         $cualitativas[] = array(
+        //             'bimestre'=>$this->literal($i).' Bimestre',
+        //             'idNotaTipo'=>$i,
+        //             'nota'=>'',
+        //             'notaCualitativa'=>''
+        //         );
+        //     }
+        // }
+
+        // if($nivel == 11 and $operativo >= 4){
+        //     $cualitativas[] = array(
+        //         'bimestre'=>'Valoración anual',
+        //         'idNotaTipo'=>18,
+        //         'nota'=>'',
+        //         'notaCualitativa'=>''
+        //     );
+        // }
+
+
+        $data = [
+            'cuantitativas'=>$cuantitativas,
+            'cualitativas'=>$cualitativas,
+            'idInscripcion'=>$idInscripcion,
+            'sie'=>$sie,
+            'gestion'=>$gestion,
+            'nivel'=>$nivel,
+            'operativo'=>$operativo,
+        ];
+
+        return $data;
+    }
+    
+    /*=====  End of  REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS  ======*/
+    
+    
+    
 }
