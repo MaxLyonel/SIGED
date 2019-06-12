@@ -66,11 +66,55 @@ class InfoEstudianteAreasEstudianteController extends Controller {
             // VERIFICAMOS SI EL AREA NO TIENE NOTAS
             $notas = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$idEstudianteAsignatura));
             if($notas){
-                $data = array(
-                    'status'=>500,
-                    'type'=>'warning',
-                    'msg'=> 'No se puede eliminar el área. porque ya cuenta con notas.'
-                );
+                if($this->session->get('roluser') == 8){
+                    // ELIMINAMOS LA MATERIA AUN SI TIENE NOTAS SOLO PARA TECNICO NACIONAL
+
+                    // ELIMINAMOS LA ESPECIALIDAD SI LA MATERIA ES TECNICA ESPECIALIZADA
+                    $codigoAsignatura = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
+                    if($codigoAsignatura == 1039){
+                        $eliminarEspecialidad = $em->createQueryBuilder()
+                                        ->delete('')
+                                        ->from('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico','eiht')
+                                        ->where('eiht.estudianteInscripcion = :idEstudianteInscripcion')
+                                        ->setParameter('idEstudianteInscripcion', $idInscripcion)
+                                        ->getQuery()
+                                        ->getResult();
+                    }
+
+                    // ELIMINAMOS LAS NOTAS
+                    $eliminarNotas = $em->createQueryBuilder()
+                                    ->delete('')
+                                    ->from('SieAppWebBundle:EstudianteNota','en')
+                                    ->where('en.estudianteAsignatura = :idEstudianteAsignatura')
+                                    ->setParameter('idEstudianteAsignatura', $idEstudianteAsignatura)
+                                    ->getQuery()
+                                    ->getResult();
+                    
+
+                    $eliminar = $this->get('areasEstudiante')->delete($idEstudianteAsignatura);
+                    if($eliminar){
+                        $data = array(
+                            'status'=>200,
+                            'type'=>'success',
+                            'msg'=> 'Área  eliminada correctamente.'
+                        );
+                    }else{
+                        $data = array(
+                            'status'=>500,
+                            'type'=>'danger',
+                            'msg'=> 'Error al eliminar el área del estudiante.'
+                        );
+                    }
+
+
+                }else{
+                    // SI EL USUARIO NO ES NACIONAL NO SE PUEDE ELIMINAR
+                    $data = array(
+                        'status'=>500,
+                        'type'=>'warning',
+                        'msg'=> 'No se puede eliminar el área. porque ya cuenta con notas.'
+                    );
+                }
             }else{
 
                 // ELIMINAMOS LA ESPECIALIDAD SI LA MATERIA ES TECNICA ESPECIALIZADA

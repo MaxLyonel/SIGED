@@ -49,7 +49,7 @@
 			                    <td>{{ae.idAsignatura}}</td>
 			                    <td>{{ae.asignatura}}</td>
 			                    <td>
-			                    	{% if (ae.idAsignatura == 1038 or ae.idAsignatura == 1039) and areas.operativo < 1  and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3 %}
+			                    	{% if (ae.idAsignatura == 1038 or ae.idAsignatura == 1039) and areas.operativo < 3  and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3 %}
 			                        	<button onclick="deleteAreaEstudiante({{ae.idEstudianteAsignatura}},new String('{{ae.asignatura}}'))" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar área del estudiante"><i class="fa fa-times"></i></button>            
 			                        {% endif %}
 			                    </td>
