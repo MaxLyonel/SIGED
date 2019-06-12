@@ -133,6 +133,7 @@
                                             {% for cursoasignaturas in arraycursoasignaturas %}
                                             <h5><b>Curso Aceleración</b></h5>
                                             <div class="no-more-tables">
+                                                <input type="hidden" id="iec_id{{loop.index}}" value="{{ cursoasignaturas.curso.iec_id }}">
                                                 <input type="hidden" id="nivel_id{{loop.index}}" value="{{ cursoasignaturas.curso.nivel_id }}">
                                                 <input type="hidden" id="grado_id{{loop.index}}" value="{{ cursoasignaturas.curso.grado_id }}">
                                                 <table class="table table-bordered ">
@@ -322,13 +323,13 @@
             // });
             var curso_asignatura_notas = [];
             $('#tbl_cumano').find('table.tbl_aceleracion tbody').each(function(index, item) {
-                var curso = {sie: $('#sel_sie'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
+                var curso = {sie: $('#sel_sie'+(index+1)).val(), iec_id: $('#iec_id'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
                 var asignaturanotas = [];
                 $(this).find("tr").each(function() {
                     asignaturanotas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
                 });
                 curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
-            });console.log(curso_asignatura_notas);
+            });
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_acelera_save_verify'),
@@ -376,6 +377,7 @@
                         $("#sel_turno"+index).append('<option value="" selected disabled>Buscando...</option>');
                     },
                     success: function (data) {
+                        $("#iec_id"+index).val(data.iec_id);
                         $("#txt_institucioneducativa"+index).text(data.nombre);
                         $("#txt_nivel"+index).text(data.nivel);
                         $("#txt_grado"+index).text(data.grado);

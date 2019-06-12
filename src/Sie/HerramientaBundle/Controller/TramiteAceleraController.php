@@ -17,6 +17,9 @@ use Sie\AppWebBundle\Entity\Tramite;
 use Sie\AppWebBundle\Entity\TramiteDetalle;
 use Sie\AppWebBundle\Entity\WfSolicitudTramite;
 use Sie\AppWebBundle\Entity\Institucioneducativa;
+use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Sie\AppWebBundle\Entity\EstudianteNota;
+use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 
 /**
  * TramiteAceleraController controller.
@@ -441,7 +444,6 @@ class TramiteAceleraController extends Controller
             'paralelo'=>$restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
             'turno'=>$restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
         );
-        ///////////////
         $arrayCursoAsignatura = array();
         for ($i=0; $i < $datos1->grado_cantidad; $i++) {
             if ($nivel_id == 11) {
@@ -498,6 +500,7 @@ class TramiteAceleraController extends Controller
                 ->getQuery();
             $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_id);
             $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_id);
+            $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'gestionTipo' => $this->session->get('currentyear')));
             $arrayCursoAsignatura[] = array(
                 'curso' => array(
                     'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
@@ -506,11 +509,11 @@ class TramiteAceleraController extends Controller
                     // 'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
                     'paralelos'=>$queryParalelo->getResult(),
                     // 'turno_id'=>$turno_id, 'turno'=>$restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
+                    'iec_id'=>($iecurso)?$iecurso->getId():'',
                     'turnos'=>$queryTurno->getResult()),
                 'materiasnotas' => $this->getAsignaturasPerStudent($codigo_sie, $nivel_id, $grado_id, $paralelo_id, $turno_id)
             );
         }
-        ///////////////
         return $this->render('SieHerramientaBundle:TramiteAcelera:verifica.html.twig', array(
             'tramite_id' => $tramite_id,
             'institucioneducativa_id'=>$datos1->institucioneducativa_id,
@@ -524,7 +527,7 @@ class TramiteAceleraController extends Controller
             'solicitud_tutor' => $datos1->solicitud_tutor,
             'informe_comision' => $datos1->informe_comision,
             'acta_supletorio' => $datos2->acta_supletorio,
-            'curso' => $curso,//json_decode($datos2->curso_asignatura_notas)[0]->curso,
+            'curso' => $curso,
             'asignatura_notas' => json_decode($datos2->curso_asignatura_notas)[0]->asignatura_notas,
             'arraycursoasignaturas' => $arrayCursoAsignatura));
     }
@@ -566,27 +569,130 @@ class TramiteAceleraController extends Controller
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
 
-        // $cursoasignaturanota = json_decode($datos['curso_asignatura_notas']);
-        // foreach ($cursoasignaturanota as $curso) {
-        //     dump($curso);
-        // }die;
+        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+            ->select('wfd')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+            ->where('td.tramite='.$datos['tramite_id'])
+            ->andWhere("wfd.esValido=true")
+            ->orderBy("td.flujoProceso")
+            ->getQuery()
+            ->getResult();
+        $datos1 = json_decode($resultDatos[0]->getdatos());
+        $datos2 = json_decode($resultDatos[1]->getdatos());
         // dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
         $result = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             if ($evaluacion == "NO") {
-                $cursoasignaturanota = json_decode($datos['curso_asignatura_notas']);
-                foreach ($cursoasignaturanota as $curso) {
-                    # code...
+                $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                    ->select('wfd')
+                    ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                    ->where('td.tramite='.$datos['tramite_id'])
+                    ->andWhere("wfd.esValido=true")
+                    ->orderBy("td.flujoProceso")
+                    ->getQuery()
+                    ->getResult();
+                $datosn2 = json_decode($resultDatos[1]->getdatos());//MODIFICAR
+                $notas_inscripcion = json_decode($datosn2->curso_asignatura_notas)[0]->asignatura_notas;
+                foreach ($notas_inscripcion as $asignaturanota) {
+                    // Registra estudiante_asignatura en caso de no tener
+                    $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion' =>$datos1->estudiante_ins_id, 'institucioneducativaCursoOferta' => $asignaturanota->ieco_id, 'gestionTipo' => $this->session->get('currentyear')));
+                    if (empty($estudianteAsignatura)) {
+                        $estudianteAsignatura = new EstudianteAsignatura();
+                        $estudianteAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                        $estudianteAsignatura->setFechaRegistro(new \DateTime('now'));
+                        $estudianteAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($datos1->estudiante_ins_id));
+                        $estudianteAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($asignaturanota->ieco_id));
+                        $em->persist($estudianteAsignatura);
+                        $em->flush();
+                    }
+                    // Registra las notas con NotaTipo = 5 "Promedio Final"
+                    $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('notaTipo' => 5, 'estudianteAsignatura' => $estudianteAsignatura));
+                    if (empty($estudianteNota)) {
+                        $estudianteNota = new EstudianteNota();
+                        $estudianteNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+                        $estudianteNota->setEstudianteAsignatura($estudianteAsignatura);
+                        $estudianteNota->setNotaCuantitativa($asignaturanota->nota);
+                        $estudianteNota->setNotaCualitativa('');
+                        $estudianteNota->setRecomendacion('');
+                        $estudianteNota->setUsuarioId($this->session->get('userId'));
+                        $estudianteNota->setFechaRegistro(new \DateTime('now'));
+                        $estudianteNota->setFechaModificacion(new \DateTime('now'));
+                        $estudianteNota->setObs('');
+                        $em->persist($estudianteNota);
+                        $em->flush();
+                    }
                 }
-                //Consultar 
-                // $datos['curso_asignatura_notas'] y ; $datos['notas'];
-                //Aqui debe registrar las notas y realizar la inscripcion
+                // Actualiza el estado de matricula "PROMOVIDO TALENTO EXTRAORDINARIO"
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($datos1->estudiante_ins_id);
+                $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(58));
+                $em->flush();
+
+                // Proceso de aceleración con TALENTO EXTRAORDINARIO
+                $cursoasignaturanota = json_decode($datos['curso_asignatura_notas']);
+                foreach ($cursoasignaturanota as $filacurso) {
+                    //Registrar la inscripcion a la institucion educativa que corresponda por "INSCRITO TALENTO EXTRAORDINARIO"
+                    $estudianteInscripcion = new EstudianteInscripcion();
+                    $estudianteInscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($filacurso->curso->sie));
+                    $estudianteInscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                    $estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+                    $estudianteInscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id));
+                    $estudianteInscripcion->setCodUeProcedenciaId($datos1->institucioneducativa_id);//$this->session->get('ie_id')
+                    $estudianteInscripcion->setObservacion(1);
+                    $estudianteInscripcion->setFechaInscripcion(new \DateTime(date('Y-m-d')));
+                    $estudianteInscripcion->setFechaRegistro(new \DateTime(date('Y-m-d')));
+                    $estudianteInscripcion->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($filacurso->curso->iec_id));
+                    $estudianteInscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(27));
+                    // $estudianteInscripcion->setCodUeProcedenciaId(0);
+                    $em->persist($estudianteInscripcion);
+                    $em->flush();
+                    
+                    //Registra las asignaturas y notas
+                    foreach ($filacurso->asignatura_notas as $asignaturanota) {
+                        // Registra estudiante_asignatura en caso de no tener de aceleración
+                        $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion' =>$estudianteInscripcion, 'institucioneducativaCursoOferta' => $asignaturanota->ieco_id, 'gestionTipo' => $this->session->get('currentyear')));
+                        if (empty($estudianteAsignatura)) {
+                            $estudianteAsignatura = new EstudianteAsignatura();
+                            $estudianteAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                            $estudianteAsignatura->setFechaRegistro(new \DateTime('now'));
+                            $estudianteAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcion));
+                            $estudianteAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($asignaturanota->ieco_id));
+                            $em->persist($estudianteAsignatura);
+                            $em->flush();
+                        }
+                        // Registra las notas con NotaTipo = 5 "Promedio Final" de aceleración
+                        $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('notaTipo' => 5, 'estudianteAsignatura' => $estudianteAsignatura));
+                        if (empty($estudianteNota)) {
+                            $estudianteNota = new EstudianteNota();
+                            $estudianteNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+                            $estudianteNota->setEstudianteAsignatura($estudianteAsignatura);
+                            $estudianteNota->setNotaCuantitativa($asignaturanota->nota);
+                            $estudianteNota->setNotaCualitativa('');
+                            $estudianteNota->setRecomendacion('');
+                            $estudianteNota->setUsuarioId($this->session->get('userId'));
+                            $estudianteNota->setFechaRegistro(new \DateTime('now'));
+                            $estudianteNota->setFechaModificacion(new \DateTime('now'));
+                            $estudianteNota->setObs('');
+                            $em->persist($estudianteNota);
+                            $em->flush();
+                        }
+                    }
+                    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcion);
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(58));
+                    $em->flush();
+                }
+                // Registrar los tramites de recepcion
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 5));
                 $tarea_sig = $flujoproceso->getId();
                 $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario_id, $tarea_sig, $datos['tramite_id']);
                 
+                // Preparado de datos de todas las tareas, para guardar
+                $tareasDatos = array();
+                foreach($resultDatos as $wfd) {
+                    $tdatos = json_decode($wfd->getdatos(),true);
+                    $tareasDatos[] = array('flujoProceso'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getId(), 'datos'=>$tdatos);
+                }
                 // Se registra la última tarea.
-                $resultf = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_sig, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);
+                $resultf = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_sig, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($tareasDatos), $lugarlocalidad_id, $distrito_id);
                 if ($resultf['dato'] == true) {
                     $msg = $resultf['msg'];
                 } else {
@@ -663,9 +769,11 @@ class TramiteAceleraController extends Controller
 
                 $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel);
                 $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado);
+                $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $id, 'nivelTipo' => $nivel, 'gradoTipo' => $grado, 'gestionTipo' => $this->session->get('currentyear')));
                 $nivel_id = ($nivel_tipo)?$nivel_tipo->getId():'';
                 $nombre_nivel = ($nivel_tipo)?$nivel_tipo->getNivel():'';
                 $grado_id = ($grado_tipo)?$grado_tipo->getId():'';
+                $iec_id = ($iecurso)?$iecurso->getId():'';
                 $nombre_grado = ($grado_tipo)?$grado_tipo->getGrado():'';
             } else {
                 $nombreIE = 'No tiene Tuición sobre la Unidad Educativa';
@@ -675,7 +783,7 @@ class TramiteAceleraController extends Controller
         }
         $response = new JsonResponse();
 
-        return $response->setData(array('nombre'=>$nombreIE, 'nivel_id'=>$nivel_id, 'nivel'=>$nombre_nivel, 'grado_id'=>$grado_id, 'grado'=>$nombre_grado, 'paralelo'=>$paralelo, 'turno'=>$turno));
+        return $response->setData(array('nombre'=>$nombreIE, 'nivel_id'=>$nivel_id, 'nivel'=>$nombre_nivel, 'grado_id'=>$grado_id, 'grado'=>$nombre_grado, 'paralelo'=>$paralelo, 'turno'=>$turno, 'iec_id'=>$iec_id));
     }
 
       /**
