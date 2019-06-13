@@ -129,12 +129,21 @@
                                 Estado de matrícula:
                             </div>
                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <select name="estadoGeneral" id="estadoGeneral" class="form-control" required="required">
-                                    <option value=""></option>
-                                    {% for e in estadosGenerales %}
-                                        <option value="{{e.id}}" {% if e.id == inscripcion.estadomatriculaTipo.id %} selected {% endif %} >{{e.estadomatricula}}</option>
-                                    {% endfor %}
-                                </select>
+                                {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+                                    <select name="estadoGeneral" id="estadoGeneral" class="form-control" required="required">
+                                        <option value=""></option>
+                                        {% for e in estadosGenerales %}
+                                            <option value="{{e.id}}" {% if e.id == inscripcion.estadomatriculaTipo.id %} selected {% endif %} >{{e.estadomatricula}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <select name="estadoGeneral" id="estadoGeneral" class="form-control" required="required" disabled="disabled">
+                                        <option value=""></option>
+                                        {% for e in estadosGenerales %}
+                                            <option value="{{e.id}}" {% if e.id == inscripcion.estadomatriculaTipo.id %} selected {% endif %} >{{e.estadomatricula}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
                             </div>
                         </div>
                     {% endif %}
