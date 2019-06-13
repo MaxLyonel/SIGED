@@ -60,7 +60,7 @@
 			    <div id="mensajeModal"></div>
 	    		<div id="mensajeModalRespuesta">
 	    	    	{% if data is defined and data.status != 200 %}
-	    	    		<div class='alert alert-{{ data.type }}'> {{ data.msg }}</div>
+	    	    		<div class='alert alert-{{ data.type }}'> <i class="fa fa-warning"></i> {{ data.msg }}</div>
 	    	    	{% endif %}
 	    	    </div>
             </div>
@@ -76,7 +76,7 @@
 	$(function(){
 		setTimeout(function(){
 			$('#mensajeModalRespuesta').empty();
-		}, 4000);
+		}, 10000);
 	});
 
 	var newAreaEstudiante = function(idco,idInscripcion,asignatura){
