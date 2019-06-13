@@ -35,3 +35,9 @@ tramite_acelera_search_ie:
      defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaIe }
      options:
          expose: true
+
+tramite_acelera_curso:
+     path:    /buscaie/{id}/{nivel}/{grado}/{paralelo}/{turno}
+     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaCurso }
+     options:
+         expose: true

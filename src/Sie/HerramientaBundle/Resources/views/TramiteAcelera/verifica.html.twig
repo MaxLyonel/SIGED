@@ -168,7 +168,7 @@
                                                             <td width="40%">
                                                                 <div class="form-groups">
                                                                     <label for="sel_paralelo{{loop.index}}">Paralelo</label>
-                                                                    <select class="form-control" id="sel_paralelo{{loop.index}}" required>
+                                                                    <select class="form-control" id="sel_paralelo{{loop.index}}" onchange="cargarCurso({{loop.index}})" required>
                                                                         <option value="">Seleccionar...</option>
                                                                         {% for itemp in cursoasignaturas.curso.paralelos %}
                                                                         <option value="{{ itemp.paraleloTipo }}">{{ itemp.paralelo }}</option>
@@ -179,7 +179,7 @@
                                                             <td>
                                                                 <div class="form-groups">
                                                                     <label for="sel_turno{{loop.index}}">Turno</label>
-                                                                    <select class="form-control" id="sel_turno{{loop.index}}" required>
+                                                                    <select class="form-control" id="sel_turno{{loop.index}}" onchange="cargarCurso({{loop.index}})" required>
                                                                         <option value="">Seleccionar...</option>
                                                                         {% for itemt in cursoasignaturas.curso.turnos %}
                                                                         <option value="{{ itemt.turnoTipo }}">{{ itemt.turno }}</option>
@@ -367,8 +367,8 @@
         function institucionEducativa(index) {
             var id = $('#sel_sie'+index).val()
             if (id.length > 7) {
-                nivel = $('#nivel_id'+index).val();
-                grado = $('#grado_id'+index).val();
+                var nivel = $('#nivel_id'+index).val();
+                var grado = $('#grado_id'+index).val();
                 $.ajax({
                     type: 'get',
                     url: Routing.generate('tramite_acelera_search_ie', {'id': id, 'nivel': nivel, 'grado': grado}),
@@ -378,7 +378,7 @@
                     },
                     success: function (data) {
                         $("#iec_id"+index).val(data.iec_id);
-                        $("#txt_institucioneducativa"+index).text(data.nombre);
+                        $("#txt_institucioneducativa"+index).html(data.nombre);
                         $("#txt_nivel"+index).text(data.nivel);
                         $("#txt_grado"+index).text(data.grado);
                         $("#sel_nivel"+index).val(data.nivel_id);
@@ -395,6 +395,28 @@
                         $.each(data.turno, function (i, value) {
                         $("#sel_turno"+index).append('<option value="' + i + '">' + value + '</option>');
                         });
+                    }
+                });
+            }
+        }
+
+        function cargarCurso(index) {
+            var id = $('#sel_sie'+index).val()
+            var nivel = $('#nivel_id'+index).val();
+            var grado = $('#grado_id'+index).val();
+            var paralelo = $("#sel_paralelo"+index).val();
+            var turno = $("#sel_turno"+index).val();
+            if (paralelo != '' && turno != '') {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_acelera_curso', {'id': id, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno}),
+                    success: function (data) {
+                        if (data.iec_id == 0) {
+                            $("#sel_paralelo"+index).val('');
+                            $("#sel_turno"+index).val('');
+                        } else {
+                            $("#iec_id"+index).val(data.iec_id);
+                        }
                     }
                 });
             }
