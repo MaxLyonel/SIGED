@@ -48,7 +48,56 @@ class TramiteAceleraController extends Controller
             return $this->redirect($this->generateUrl('wf_tramite_index'));
         }//dump($request->getSession()->get('pathSystem'));die;
         $institucioneducativa_id = $request->getSession()->get('ie_id');
-        return $this->render('SieHerramientaBundle:TramiteAcelera:nuevo.html.twig', array('institucioneducativa_id' => $institucioneducativa_id, 'flujotipo_id' => $flujotipo_id));
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select td.tramite_detalle_id from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$flujotipo_id);
+        $query->execute();
+        $td = $query->fetch();
+        if (isset($td['tramite_detalle_id'])) {//verifica si el tramite fue devuelto
+            $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td['tramite_detalle_id']);
+            if($tramiteDetalle->getTramiteEstado()->getId() == 4) {
+                $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                    ->select('wfd')
+                    ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                    ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+                    ->where('td.tramite='.$flujotipo_id)
+                    ->andWhere('fp.orden in (1, 4)')
+                    ->andWhere("wfd.esValido=true")
+                    ->orderBy("td.flujoProceso")
+                    ->getQuery()
+                    ->getResult();//dump(json_decode($resultDatos[1]->getdatos())->observacion);die;
+                $datos = json_decode($resultDatos[0]->getdatos());
+                $observacion = json_decode($resultDatos[1]->getdatos())->observacion;
+                $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
+                $estudiante = array();
+                if (!empty($estudiante_result)) {
+                    $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $estudiante_result));
+                    $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
+                    if (!empty($einscripcion_result)) {
+                        $estudianteinscripcion_id = $einscripcion_result->getId();
+                        $institucioneducativa = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa();
+                        $estudiante = array(
+                            'id' => $estudiante_result->getId(),
+                            'nombre' => $estudiante_result->getNombre(),
+                            'paterno' => $estudiante_result->getPaterno(),
+                            'materno' => $estudiante_result->getMaterno(),
+                            'cedula' => $estudiante_result->getCarnetIdentidad(),
+                            'complemento' => $estudiante_result->getComplemento(),
+                            'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento()->format('d/m/Y'),
+                            'estudiante_ins_id' => $estudianteinscripcion_id,
+                            'estudiante_id' => $estudiante_result->getId(),
+                            'institucion_educativa' => $institucioneducativa,
+                            'tipo_talento' => $estudiante_talento->getTalentoTipo(),
+                            'puede_acelerar' => $estudiante_talento->getAcelera()==true?'Si':'No',
+                            'informe' => $estudiante_talento->getInforme()
+                        );
+                    }
+                }
+                return $this->render('SieHerramientaBundle:TramiteAcelera:devolucion.html.twig', array('institucioneducativa_id'=>$institucioneducativa_id, 'tramite_id'=>$flujotipo_id, 'flujotipo_id'=>$datos->flujotipo_id, 'observacion'=>$observacion, 'estudiante'=>$estudiante));
+            }
+        } else {
+            return $this->render('SieHerramientaBundle:TramiteAcelera:nuevo.html.twig', array('institucioneducativa_id' => $institucioneducativa_id, 'flujotipo_id' => $flujotipo_id));
+        }
     }
 
     public function buscaEstudianteAction(Request $request) {
@@ -102,13 +151,13 @@ class TramiteAceleraController extends Controller
                     'materno' => $estudiante_result->getMaterno(),
                     'cedula' => $estudiante_result->getCarnetIdentidad(),
                     'complemento' => $estudiante_result->getComplemento(),
-                    'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento(),
+                    'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento()->format('d/m/Y'),
                     'estudiante_ins_id' => $estudianteinscripcion_id,
                     'estudiante_id' => $estudiante_result->getId(),
                     'institucion_educativa' => $institucioneducativa,
                     'tipo_talento' => $estudiante_talento->getTalentoTipo(),
                     'puede_acelerar' => $estudiante_talento->getAcelera()==true?'Si':'No',
-                    'informe' => $estudiante_talento->getInforme() //"20190411210929.pdf"
+                    'informe' => $estudiante_talento->getInforme()
                 );
             } else {
                 $msg = 'noins';
@@ -170,7 +219,7 @@ class TramiteAceleraController extends Controller
         }
         $observaciones = 'Inicio solicitud de aceleracion educativa';
         $tipotramite_id = $tipotramite->getId();
-        $tramite_id = '';
+        $tramite_id = $request->get('tramite_id')==null?'':$request->get('tramite_id');
         $distrito_id = 0;
         $lugarlocalidad_id = 0;
         $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));//$institucioneducativa_id
@@ -207,61 +256,31 @@ class TramiteAceleraController extends Controller
             ->getSingleResult();
         $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
-        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));
-        //dump($restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId());
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
         $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
         $turno_id = $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
-
-        $objAreasCurrentLevel = array();
-        for ($i=0; $i < $datos->grado_cantidad; $i++) {
-            $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_id);
-            $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_id);
-            // dump($nivel_id, $grado_id);
-            $objAreasCurrentLevel[] = array(
-                'curso' => array(
-                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                    'nivel_id'=>$nivel_id, 'nivel'=>($nivel_tipo)?$nivel_tipo->getNivel():'',//$restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                    'grado_id'=>$grado_id, 'grado'=>($grado_tipo)?$grado_tipo->getGrado():'',//$restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
-                    'turno_id'=>$turno_id, 'turno'=>$restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()),
-                'materiasnotas' => $this->getAsignaturasPerStudent($codigo_sie, $nivel_id, $grado_id, $paralelo_id, $turno_id)
-            );
-            if ($nivel_id == 11) {
-                if ($grado_id == 1) {
-                    $grado_id++;
-                } elseif ($grado_id == 2) {
-                    $nivel_id = 12;
-                    $grado_id = 1;
-                }
-            } elseif ($nivel_id == 12) {
-                if (in_array($grado_id, [1, 2, 3, 4, 5])) {
-                    $grado_id++;
-                } elseif ($grado_id == 6) {
-                    $nivel_id = 13;
-                    $grado_id = 1;
-                }
-            } elseif ($nivel_id == 13) {
-                if (in_array($grado_id, [1, 2, 3, 4, 5])) {
-                    $grado_id++;
-                } elseif ($grado_id == 6) {
-                    $nivel_id = 13;
-                    $grado_id = 1;
-                }
-            }
-        }
-        // dump($objAreasCurrentLevel);die;
+        // dump($restudianteinst);die;
+        $objetoCursoAsignaturas = array(
+            'curso' => array(
+                'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                'nivel_id'=>$nivel_id, 'nivel'=>$restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                'grado_id'=>$grado_id, 'grado'=>$restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                'turno_id'=>$turno_id, 'turno'=>$restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()),
+            'materiasnotas' => $this->getAsignaturasPerStudent($codigo_sie, $nivel_id, $grado_id, $paralelo_id, $turno_id)
+        );
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
         $informe = $datos->informe;
         if ($datos->procede_aceleracion == "SI") {
             return $this->render('SieHerramientaBundle:TramiteAcelera:supletorio.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision,
-            'cursomateriasnotas' => $objAreasCurrentLevel));
+            'cursomateriasnotas' => $objetoCursoAsignaturas));
         } else {
             return $this->render('SieHerramientaBundle:TramiteAcelera:observacion.html.twig', array('tramite_id' => $tramite_id, 'institucioneducativa_id'=>$datos->institucioneducativa_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision,
-            'cursomateriasnotas' => $objAreasCurrentLevel));
+            'cursomateriasnotas' => $objetoCursoAsignaturas));
         }
     }
 
@@ -333,12 +352,11 @@ class TramiteAceleraController extends Controller
             ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
             ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
             ->where('td.tramite='.$tramite_id)
-            ->andWhere('fp.orden IN (1, 4)')
+            ->andWhere('fp.orden IN (1, 3)')
             ->andWhere("wfd.esValido=true")
             ->orderBy("td.flujoProceso")
             ->getQuery()
             ->getResult();
-        // dump($resultDatos);die;
         $datos = json_decode($resultDatos[0]->getdatos());
         if (count($resultDatos)>1){
             $datos2 = json_decode($resultDatos[1]->getdatos());
@@ -367,12 +385,12 @@ class TramiteAceleraController extends Controller
         $rol_id = $request->getSession()->get('roluser');
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($datos['tramite_id']);
 
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
+        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 4));
         $flujo_tipo = $flujoproceso->getFlujoTipo()->getId();
         $tarea_id = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $institucioneducativa_id = $datos['institucioneducativa_id'];
-        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TA'));
+        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'AA'));
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
@@ -424,9 +442,9 @@ class TramiteAceleraController extends Controller
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
 
-        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
         
-        $nivel_grado = json_decode($datos2->curso_asignatura_notas)[0]->curso;
+        $nivel_grado = json_decode($datos2->curso_asignatura_notas)->curso;
 
         $nivel_id = $nivel_grado->nivel_id;
         $grado_id = $nivel_grado->grado_id;
@@ -528,7 +546,7 @@ class TramiteAceleraController extends Controller
             'informe_comision' => $datos1->informe_comision,
             'acta_supletorio' => $datos2->acta_supletorio,
             'curso' => $curso,
-            'asignatura_notas' => json_decode($datos2->curso_asignatura_notas)[0]->asignatura_notas,
+            'asignatura_notas' => json_decode($datos2->curso_asignatura_notas)->asignatura_notas,
             'arraycursoasignaturas' => $arrayCursoAsignatura));
     }
 
@@ -548,9 +566,10 @@ class TramiteAceleraController extends Controller
         $rol_id = $request->getSession()->get('roluser');
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($datos['tramite_id']);
 
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 4));
+        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
         $flujo_tipo = $flujoproceso->getFlujoTipo()->getId();
         $tarea_id = $flujoproceso->getId();
+        
         $tabla = 'institucioneducativa';
         $institucioneducativa_id = $datos['institucioneducativa_id'];
         $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'AA'));
@@ -592,7 +611,7 @@ class TramiteAceleraController extends Controller
                     ->getQuery()
                     ->getResult();
                 $datosn2 = json_decode($resultDatos[1]->getdatos());//MODIFICAR
-                $notas_inscripcion = json_decode($datosn2->curso_asignatura_notas)[0]->asignatura_notas;
+                $notas_inscripcion = json_decode($datosn2->curso_asignatura_notas)->asignatura_notas;
                 foreach ($notas_inscripcion as $asignaturanota) {
                     // Registra estudiante_asignatura en caso de no tener
                     $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion' =>$datos1->estudiante_ins_id, 'institucioneducativaCursoOferta' => $asignaturanota->ieco_id, 'gestionTipo' => $this->session->get('currentyear')));
@@ -627,6 +646,7 @@ class TramiteAceleraController extends Controller
                 $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(58));
                 $em->flush();
 
+                $contador = 1; //Contador de grados de aceleración
                 // Proceso de aceleración con TALENTO EXTRAORDINARIO
                 $cursoasignaturanota = json_decode($datos['curso_asignatura_notas']);
                 foreach ($cursoasignaturanota as $filacurso) {
@@ -637,15 +657,24 @@ class TramiteAceleraController extends Controller
                     $estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
                     $estudianteInscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id));
                     $estudianteInscripcion->setCodUeProcedenciaId($datos1->institucioneducativa_id);//$this->session->get('ie_id')
+                    // $estudianteInscripcion->setObservacionId(1);
                     $estudianteInscripcion->setObservacion(1);
                     $estudianteInscripcion->setFechaInscripcion(new \DateTime(date('Y-m-d')));
                     $estudianteInscripcion->setFechaRegistro(new \DateTime(date('Y-m-d')));
                     $estudianteInscripcion->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($filacurso->curso->iec_id));
                     $estudianteInscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(27));
                     // $estudianteInscripcion->setCodUeProcedenciaId(0);
+                    $estudianteInscripcion->setOperativoId(1);
                     $em->persist($estudianteInscripcion);
                     $em->flush();
                     
+                    if ($contador == $datos1->grado_cantidad) {
+                        $nota_tipo = 1;
+                        $estado_matricula = 4;
+                    } else {
+                        $nota_tipo = 5;
+                        $estado_matricula = 58;
+                    }
                     //Registra las asignaturas y notas
                     foreach ($filacurso->asignatura_notas as $asignaturanota) {
                         // Registra estudiante_asignatura en caso de no tener de aceleración
@@ -660,10 +689,10 @@ class TramiteAceleraController extends Controller
                             $em->flush();
                         }
                         // Registra las notas con NotaTipo = 5 "Promedio Final" de aceleración
-                        $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('notaTipo' => 5, 'estudianteAsignatura' => $estudianteAsignatura));
+                        $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('notaTipo' => $nota_tipo, 'estudianteAsignatura' => $estudianteAsignatura));
                         if (empty($estudianteNota)) {
                             $estudianteNota = new EstudianteNota();
-                            $estudianteNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+                            $estudianteNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($nota_tipo));
                             $estudianteNota->setEstudianteAsignatura($estudianteAsignatura);
                             $estudianteNota->setNotaCuantitativa($asignaturanota->nota);
                             $estudianteNota->setNotaCualitativa('');
@@ -677,8 +706,9 @@ class TramiteAceleraController extends Controller
                         }
                     }
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcion);
-                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(58));
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estado_matricula));
                     $em->flush();
+                    $contador++;
                 }
                 // Registrar los tramites de recepcion
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 5));
@@ -725,6 +755,7 @@ class TramiteAceleraController extends Controller
         $nombre_grado = '';
         $paralelo = array();
         $turno = array();
+        $iec_id = 0;
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
         if ($institucion) {
             if ($aTuicion[0]['get_ue_tuicion']) {
@@ -773,17 +804,41 @@ class TramiteAceleraController extends Controller
                 $nivel_id = ($nivel_tipo)?$nivel_tipo->getId():'';
                 $nombre_nivel = ($nivel_tipo)?$nivel_tipo->getNivel():'';
                 $grado_id = ($grado_tipo)?$grado_tipo->getId():'';
-                $iec_id = ($iecurso)?$iecurso->getId():'';
                 $nombre_grado = ($grado_tipo)?$grado_tipo->getGrado():'';
+                $iec_id = ($iecurso)?$iecurso->getId():'';
             } else {
-                $nombreIE = 'No tiene Tuición sobre la Unidad Educativa';
+                $nombreIE = '<span class="text-danger">No tiene Tuición sobre la Unidad Educativa<span/>';
             }
         } else {
-            $nombreIE = 'No existe Unidad Educativa';
+            $nombreIE = '<span class="text-danger">No existe Unidad Educativa<span/>';
         }
         $response = new JsonResponse();
-
         return $response->setData(array('nombre'=>$nombreIE, 'nivel_id'=>$nivel_id, 'nivel'=>$nombre_nivel, 'grado_id'=>$grado_id, 'grado'=>$nombre_grado, 'paralelo'=>$paralelo, 'turno'=>$turno, 'iec_id'=>$iec_id));
+    }
+
+    public function buscaCursoAction($id, $nivel, $grado, $paralelo, $turno) {
+        $em = $this->getDoctrine()->getManager();
+
+        $nivel_id = 0;
+        $nombre_nivel = '';
+        $grado_id = 0;
+        $nombre_grado = '';
+        $paralelo_id = 0;
+        $turno_id = 0;
+        $nombre_turno = '';
+        $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $id, 'nivelTipo' => $nivel, 'gradoTipo' => $grado, 'paraleloTipo' => $paralelo, 'turnoTipo' => $turno, 'gestionTipo' => $this->session->get('currentyear')));
+        if ($iecurso) {
+            $iec_id = $iecurso->getId();
+            $nivel_id = $iecurso->getNivelTipo()->getId();
+            $nombre_nivel = $iecurso->getNivelTipo()->getNivel();
+            $grado_id = $iecurso->getGradoTipo()->getId();
+            $nombre_grado = $iecurso->getGradoTipo()->getGrado();
+        } else {
+            $iec_id = 0;
+        }
+        $response = new JsonResponse();
+        // return $response->setData(array('nombre'=>$nombreIE, 'nivel_id'=>$nivel_id, 'nivel'=>$nombre_nivel, 'grado_id'=>$grado_id, 'grado'=>$nombre_grado, 'paralelo'=>$paralelo, 'turno'=>$turno, 'iec_id'=>$iecurso->getId()));
+        return $response->setData(array('iec_id'=>$iec_id));
     }
 
       /**

@@ -74,35 +74,34 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row" id="tbl_cumano">
-                                {%for cumano in cursomateriasnotas %}
+                            <div class="row">
                                 <div class="col-md-6">
                                     <h5><b>Curso Inscripción</b></h5>
                                     <div id="no-more-tables">
-                                        {% if cumano.curso is defined %}
-                                        <input type="hidden" id="sel_sie{{loop.index}}" value="{{cumano.curso.codigo_sie}}">
-                                        <input type="hidden" id="sel_nivel{{loop.index}}" value="{{cumano.curso.nivel_id}}">
-                                        <input type="hidden" id="sel_grado{{loop.index}}" value="{{cumano.curso.grado_id}}">
-                                        <input type="hidden" id="sel_paralelo{{loop.index}}" value="{{cumano.curso.paralelo_id}}">
-                                        <input type="hidden" id="sel_turno{{loop.index}}" value="{{cumano.curso.turno_id}}">
+                                        {% if cursomateriasnotas is defined %}
+                                        <input type="hidden" id="sel_sie" value="{{cursomateriasnotas.curso.codigo_sie}}">
+                                        <input type="hidden" id="sel_nivel" value="{{cursomateriasnotas.curso.nivel_id}}">
+                                        <input type="hidden" id="sel_grado" value="{{cursomateriasnotas.curso.grado_id}}">
+                                        <input type="hidden" id="sel_paralelo" value="{{cursomateriasnotas.curso.paralelo_id}}">
+                                        <input type="hidden" id="sel_turno" value="{{cursomateriasnotas.curso.turno_id}}">
                                         <table class="table table-bordered">
                                             <tbody class="text-muted">
                                                 <tr>
                                                     <td width="40%"><b>SIE</b></td>
-                                                    <td>{{ cumano.curso.codigo_sie }}<br>{{ cumano.curso.nombre_sie }}</td>
+                                                    <td>{{ cursomateriasnotas.curso.codigo_sie }}<br>{{ cursomateriasnotas.curso.nombre_sie }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td width="40%"><b>Nivel</b></td>
-                                                    <td>{{ cumano.curso.nivel }}</td>
+                                                    <td>{{ cursomateriasnotas.curso.nivel }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td width="40%"><b>Turno, Grado - Paralelo</b></td>
-                                                    <td>{{ cumano.curso.turno }}, {{ cumano.curso.grado }} - {{ cumano.curso.paralelo }}</td>
+                                                    <td>{{ cursomateriasnotas.curso.turno }}, {{ cursomateriasnotas.curso.grado }} - {{ cursomateriasnotas.curso.paralelo }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         {% endif %}
-                                        <table class="table table-bordered tbl_notas">
+                                        <table class="table table-bordered" id="tbl_notas">
                                             <thead>
                                                 <tr>
                                                     <th class="text-center"><b>No.</b></th>
@@ -111,7 +110,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {%for currentmateria in cumano.materiasnotas %}
+                                                {%for currentmateria in cursomateriasnotas.materiasnotas %}
                                                     <tr>
                                                         <td>{{loop.index}}</td>
                                                         <td><span>{{currentmateria.asignatura}}</span></td>
@@ -125,7 +124,6 @@
                                         </table>
                                     </div>  
                                 </div>
-                                {% endfor %}
                             </div>
                             <br/>
                             <div class="row">
@@ -183,7 +181,7 @@
             return false;
         });
         function mesage(tipo, titulo, msg, estado) {
-            $("#envio").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+            $("#envio").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             if (estado == true) {
@@ -204,51 +202,53 @@
         });
 
         function sendSupletorio() {
-            $("#guardar").attr('disabled', true);            
-            var curso_asignatura_notas = [];
-            $('#tbl_cumano').find('table.tbl_notas tbody').each(function(index, item) {
-                var curso = {sie: $('#sel_sie'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
-                var asignaturanotas = [];
-                $(this).find("tr").each(function() {
-                    asignaturanotas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
-                });
-                curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
+            $("#guardar").attr('disabled', true);
+            var curso = {sie: $('#sel_sie').val(), nivel_id: $('#sel_nivel').val(), grado_id: $('#sel_grado').val(), paralelo_id: $('#sel_paralelo').val(), turno_id: $('#sel_turno').val()};
+            var asignatura_notas = [];
+            $('#tbl_notas tbody').find("tr").each(function() {
+                asignatura_notas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
             });
-            var fd = new FormData();
-            fd.append('tramite_id', $("#tramite_id").val());
-            fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
-            fd.append('curso_asignatura_notas', JSON.stringify(curso_asignatura_notas));
-            var docsup = document.getElementById('acta_supletorio');
-            fd.append('acta_supletorio', docsup.files[0]);
-            $.ajax({
-                type: 'post',
-                url: Routing.generate('tramite_acelera_save_suple'),
-                data: fd,
-                mimeType:"multipart/form-data",
-                contentType: false,
-                cache: false,
-                processData:false,
-                dataType: 'json',
-                beforeSend: function () {
-                    $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
-                },
-                success: function (data) {
-                    $("#envio").empty();
-                    if (data.estado == 200) {
-                        $("#guardar").attr('disabled', true);
-                        clearInput();
-                        $("#tramite_st").val(1);
-                        mesage('info', 'Notificación', data.msg, false);
-                        //location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
-                    } else {
+            if (asignatura_notas.length > 0) {
+                var fd = new FormData();
+                fd.append('tramite_id', $("#tramite_id").val());
+                fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
+                fd.append('curso_asignatura_notas', JSON.stringify({curso: curso, asignatura_notas: asignatura_notas}));
+                var docsup = document.getElementById('acta_supletorio');
+                fd.append('acta_supletorio', docsup.files[0]);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_acelera_save_suple'),
+                    data: fd,
+                    mimeType:"multipart/form-data",
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#envio").empty();
+                        if (data.estado == 200) {
+                            $("#guardar").attr('disabled', true);
+                            clearInput();
+                            $("#tramite_st").val(1);
+                            mesage('info', 'Notificación', data.msg, false);
+                            //location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                        } else {
+                            $("#guardar").attr('disabled', false);
+                            mesage('danger', 'Alerta', data.msg, false);
+                        }
+                    },
+                    error: function (error) {
                         $("#guardar").attr('disabled', false);
-                        mesage('danger', 'Alerta', data.msg, false);
                     }
-                },
-                error: function (error) {
-                    $("#guardar").attr('disabled', false);
-                }
-            });
+                });
+            } else {
+                $("#tramite_st").val(0);
+                $("#modalConfirm").modal('show');
+                mesage('warning', 'Notificación', 'El estudiante no cuenta con inscripción en la gestión actual.', false);
+            }
         }
 
         function closeModal() {

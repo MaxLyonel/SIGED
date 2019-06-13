@@ -22,52 +22,50 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Solicitud de Aceleración</h3>
+                                <h3 class="panel-title">Devolución de Aceleración</h3>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-sm-12 col-md-12">
-                                <form class="form-inline text-center" style="margin-bottom: 8px">
-                                  <div class="form-group"  style="width: 250px">
-                                    <div class="input-group">
-                                      <input type="text" class="form-control" id="rude" placeholder="Buscar por RUDE" autocomplete="off">
-                                      <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                                    </div>
-                                  </div>
-                                  <button type="button" class="btn btn-primary" id="buscar" onclick="searchClick()">Buscar</button>
-                                </form>
+                                <div class="form-group">
+                                    <label for="nombre">Observación Distrital</label>
+                                    <textarea class="form-control" name="" id="" disabled>{{ observacion }}</textarea>
+                                </div>
                             </div>
+                        </div> -->
+                        <div class="form-group">
+                            <label for="observacion" class="text-danger"><b>Observación Distrital</b></label>
+                            <textarea class="form-control" name="observacion" id="observacion" disabled>{{ observacion }}</textarea>
                         </div>
-                        <div id="carga"></div>
                         <hr>
                         <form id="registro" autocomplete="off">
                             <div class="row">
                                 <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="nombre">Nombres</label>
-                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante.nombre }}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="paterno">Paterno</label>
-                                        <input type="text" class="form-control noedit" id="paterno" name="paterno">
+                                        <input type="text" class="form-control noedit" id="paterno" name="paterno" value="{{ estudiante.paterno }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="materno">Materno</label>
-                                        <input type="text" class="form-control noedit" id="materno" name="materno">
+                                        <input type="text" class="form-control noedit" id="materno" name="materno" value="{{ estudiante.materno }}">
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="cedula">Cédula Identidad</label>
-                                                <input type="text" class="form-control noedit" id="cedula" name="cedula">
+                                                <input type="text" class="form-control noedit" id="cedula" name="cedula" value="{{ estudiante.cedula }}">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="complemento">Complemento</label>
-                                                <input type="text" class="form-control noedit" id="complemento" name="complemento">
+                                                <input type="text" class="form-control noedit" id="complemento" name="complemento" value="{{ estudiante.complemento }}">
                                             </div>
                                         </div>
                                     </div>
@@ -75,29 +73,30 @@
                                 <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="fecha_nacimiento">Fecha Nacimiento</label>
-                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                                        <!-- value="{ { estudiante.fecha_nacimiento }}" -->
+                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento }}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="institucion_educativa">Unidad Educativa</label>
-                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
+                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa" value="{{ estudiante.institucion_educativa }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="tipo_talento">Tipo de Talento Extraordinario</label>
-                                        <input type="text" class="form-control noedit" id="tipo_talento" name="tipo_talento" required>
+                                        <input type="text" class="form-control noedit" id="tipo_talento" name="tipo_talento" value="{{ estudiante.tipo_talento }}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="puede_acelerar">¿Puede Acelerar?</label>
-                                        <input type="text" class="form-control noedit" id="puede_acelerar" name="puede_acelerar" required>
+                                        <input type="text" class="form-control noedit" id="puede_acelerar" name="puede_acelerar" value="{{ estudiante.puede_acelerar }}" required>
                                     </div>
                                 </div>                                
                             </div>
                             <hr>                            
                             <div class="row">
                                 <div class="col-sm-6 col-md-6">
-                                    <div class="form-group" id="inf_psico" style="display: none">
+                                    <div class="form-group" id="inf_psico">
                                         <label for="informe">Informe Psicopedagógico</label>
                                         <input type="hidden" class="form-control" id="informe" name="informe">
-                                        <a class="form-control text-primary" role="button" href="" id="url_informe" target="_blank">Documento adjunto</a>
+                                        <a class="form-control text-primary" role="button" href="{{asset('uploads/archivos/flujos/tramite/talento/')}}{{ estudiante.informe }}" id="url_informe" target="_blank">Documento adjunto</a>
                                     </div>
                                     <div class="form-group">
                                         <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
@@ -109,9 +108,10 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
-                                    <input type="hidden" id="estudiante_id" name="estudiante_id">
-                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
+                                    <input type="hidden" id="estudiante_id" name="estudiante_id" value="{{ estudiante.estudiante_id }}">
+                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id" value="{{ estudiante.estudiante_ins_id }}">
                                     <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
+                                    <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
                                     <div class="form-group">
                                         <label for="procede_aceleracion">¿Procede Aceleración?</label>
@@ -191,78 +191,13 @@
                 searchEstudiante();
             }
         });
-        function searchClick() {
-            searchEstudiante();
-        }
-        function searchEstudiante() {
-            $('#inf_psico').css('display', 'none');
-            var rude = $('#rude').val();
-            if (rude != "") {
-                $("#buscar").attr('disabled', true);
-                $.ajax({
-                    type: 'post',
-                    url: Routing.generate('tramite_acelera_search'),
-                    data: {'rude': rude, 'flujotipo_id': $('#flujotipo_id').val()},
-                    beforeSend: function () {
-                        $("#carga").empty();
-                        $("#carga").append('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
-                        clearInput();
-                    },
-                    success: function (data) {
-                        $("#carga").empty();
-                        if (data.msg == 'exito') {
-                            $("#nombre").val(data.estudiante.nombre);
-                            $("#paterno").val(data.estudiante.paterno);
-                            $("#materno").val(data.estudiante.materno);
-                            $("#cedula").val(data.estudiante.cedula);
-                            $("#complemento").val(data.estudiante.complemento);
-                            $("#fecha_nacimiento").val(data.estudiante.fecha_nacimiento);
-                            $("#institucion_educativa").val(data.estudiante.institucion_educativa);
-                            $("#estudiante_id").val(data.estudiante.estudiante_id);
-                            $("#tipo_talento").val(data.estudiante.tipo_talento);
-                            $("#puede_acelerar").val(data.estudiante.puede_acelerar);
-                            $("#url_informe").attr('href', "{{asset('uploads/archivos/flujos/tramite/talento/')}}"+data.estudiante.informe);
-                            $("#informe").val(data.estudiante.informe);
-                            $('#inf_psico').css('display', 'block');
-                            $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
-                        } else if (data.msg == 'notalento') {
-                            mesage('warning', 'Notificación', 'Estudiante no está determinado como talento extraordinario.', true, 0);
-                        } else if (data.msg == 'noregular') {
-                            mesage('warning', 'Notificación', 'Estudiante no está en educación regular.', true, 0);
-                        } else if (data.msg == 'nocurso') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.', true, 0);
-                        } else if (data.msg == 'noins') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito.', true, 0);
-                        } else if (data.msg == 'noest') {
-                            mesage('warning', 'Notificación', 'El estudiante no existe.', true, 0);
-                        } else if (data.msg == 'existe') {
-                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.', false, 0);
-                        }
-                        $("#buscar").attr('disabled', false);
-                    },
-                    error: function (error) {
-                        $("#buscar").attr('disabled', false);
-                    }
-                });
-            } else {
-                $("#carga").empty();
-                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false, 0);
-                $('#rude').focus();
-            }
-        }
-
+        
         function mesage(tipo, titulo, msg, estado, flag) {
-            if(flag == 0) {
-                $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                    '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-            } else {
-                $("#envio").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                    '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-            }
+            $("#envio").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             if (estado == true) {
-                setTimeout(function () { $("#carga").empty(); $("#envio").empty(); }, 3500);
+                setTimeout(function () { $("#envio").empty(); }, 3500);
             }
         }
 
@@ -308,6 +243,7 @@
         function sendTramite() {
             $("#guardar").attr('disabled', true);
             var fd = new FormData();
+            fd.append('tramite_id', $("#tramite_id").val());
             fd.append('estudiante_id', $("#estudiante_id").val());
             fd.append('estudiante_ins_id', $("#estudiante_ins_id").val());
             fd.append('flujotipo_id', $("#flujotipo_id").val());

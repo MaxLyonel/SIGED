@@ -68,11 +68,11 @@ class EstudianteTalentoController extends Controller {
             $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
                 ->select('ie.id, ie.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ie.id = iec.institucioneducativa')
-                ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
+                // ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
                 ->where('ie.id = :codigo')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
-                ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
+                // ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
                 ->setParameter('codigo', $request->getSession()->get('ie_id'))
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
                 ->distinct('ie.id')
