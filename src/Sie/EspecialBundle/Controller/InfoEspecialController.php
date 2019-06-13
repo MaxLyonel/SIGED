@@ -166,7 +166,7 @@ class InfoEspecialController extends Controller{
                 'personalAdmform' => $this->InfoStudentForm('herramienta_especial_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
                 'infoMaestroform' => $this->InfoStudentForm('herramienta_especial_info_maestro_index', 'Maestros',$data)->createView(),
                 'infotStudentform' => $this->InfoStudentForm('info_students_index', 'Estudiantes',$data)->createView(),
-                'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Oferta',$data)->createView(),
+                'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Oferta Educativa',$data)->createView(),
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo',$data)->createView(),
                 'data'=>$dataInfo

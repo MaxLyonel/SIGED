@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="fa fa-table"></i> Creación de Oferta <span>Nueva Oferta</span></h2>
+    <h2><i class="fa fa-table"></i> Creación de Oferta <span>Nueva Oferta Educativa</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
@@ -13,7 +13,7 @@
                 </i>
             </li>
             <li>
-                <a href="{{path('creacioncursos_especial', {'op':'result'})}}">Creación de Oferta</a>
+                <a href="{{path('creacioncursos_especial', {'op':'result'})}}">Creación de Oferta Educativa</a>
                 <i class="fa fa-angle-right">
                 </i>
             </li>
@@ -24,14 +24,14 @@
 <!--/ End page header -->
 <div class="body-content animated fadeIn">
 
-    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta Educativa', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-teal">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        Nueva oferta
+                        Nueva oferta educativa
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -172,11 +172,6 @@
                 }else{
                     $("#divEc").hide();
                 }
-                if(area == 4){
-                    $("#form_educacionCasa").prop('checked', true);
-                }else{
-                    $("#form_educacionCasa").prop('checked', false);
-                }
                 if(area == 2){
                     $('#idparalelo').text("Grupo");
                 }else{
@@ -216,22 +211,31 @@
         function listarGrados() {
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
-             if(nivel== 410 && (area == 6 || area == 7)){
-                $("#divprograma").hide();
-            }else{
-                $("#divprograma").show();
-            }
-            if(nivel== 411 && (area == 6 || area == 7)){
-                $("#divservicio").hide();
-            }else{
+             if(nivel== 410){
                 $("#divservicio").show();
+                $("#divprograma").hide();
             }
-            if(nivel == 410 || nivel == 411 || area == 2){
+            if(nivel== 411){
+                $("#divprograma").show();
+                $("#divservicio").hide();
+            }
+            if(nivel == 410 || nivel == 411){
                 $('#idparalelo').text("Grupo");
+                $("#divgrado").hide();
             }else{
+                $("#divservicio").hide();
+                $("#divprograma").hide();
                 $('#idparalelo').text("Paralelo");
+                $("#divgrado").show();
             }
-
+            if(nivel != 405){
+                $("#divtecnica").hide();
+                $("#divniveltec").hide();
+            }else{
+                $("#divtecnica").show();
+                $("#divniveltec").show();
+            }
+           
             $.ajax({
                 type: 'get',
                 url: Routing.generate('listar_grados_especial', {'nivel':nivel}),
@@ -279,13 +283,14 @@
                 success: function (data) {
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
-                    if(nivel != 411){
+                    if(nivel == 410){
                         $("#form_servicio").append('<option value="">Seleccionar...</option>');
                     }
                     $("#form_programa").append('<option value="">Seleccionar...</option>');    
                     $.each(data.servicios, function (i, value) {
                         $("#form_servicio").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    listarProgramas();
                     dropdown("#form_servicio");
                 }
             });
@@ -309,7 +314,7 @@
                     },
                     success: function (data) {
                         $("#form_programa").empty();
-                        if(nivel != 410){
+                        if(nivel == 411){
                             $("#form_programa").append('<option value="">Seleccionar...</option>');
                         }
                         $.each(data.programas, function (i, value) {
@@ -325,9 +330,9 @@
         function validacion(){
             var area  = $('#form_area').val();
             if((area == 3 || area == 4 || area == 5) && $("#form_educacionCasa").is(':checked')){
-                msg = "¿Está seguro/a de crear una nueva oferta?\n Tome nota que la oferta será creado para:\n -EDUCACIÓN SOCIOCOMUNITARIA EN CASA";
+                msg = "¿Está seguro/a de crear una nueva  educativa?\n Tome nota que la  educativa será creado para:\n -EDUCACIÓN SOCIOCOMUNITARIA EN CASA";
             }else{
-                msg = '¿Está seguro/a de crear una nueva oferta?';
+                msg = '¿Está seguro/a de crear una nueva oferta educativa?';
             }
             
             if(confirm(msg)){
@@ -348,7 +353,7 @@
         $('#form_educacionCasa').change(function() {
             if ($('#form_servicio').val() != 20) {
                 if($(this).is(":checked")) {
-                   var returnVal = confirm("¿Esta seguro(a) de definir la oferta para EDUCACIÓN SOCIOCOMUNITARIA EN CASA?");
+                   var returnVal = confirm("¿Esta seguro(a) de definir la oferta educativa para EDUCACIÓN SOCIOCOMUNITARIA EN CASA?");
                     $(this).attr("checked", returnVal);
                 }
                 $('#form_educacionCasa').val($(this).is(':checked'));
@@ -360,12 +365,14 @@
         });
         function reseteaTodo() {
             var area  = $('#form_area').val();
+            $("#form_nivel").html('<option value="">Seleccionar...</option>');
+            $("#form_grado").html('<option value="">Seleccionar...</option>');
             $("#form_programa").html('<option value="">Seleccionar...</option>');
             $("#form_servicio").html('<option value="">Seleccionar...</option>');
             $("#form_modalidad").val('');
             $(".multiple").prop('checked', false);
             $(".fisicoMotor").prop('checked', false);
-            if(area == 2){
+            if(area == 2 || area == 4 || area == 6 || area == 7){
                 $('#idparalelo').text("Grupo");
             }else{
                 $('#idparalelo').text("Paralelo");
@@ -381,10 +388,12 @@
                 $("#divFisicoMotor").show();
                 $(".fisicoMotor").attr('required', true);
                 $("#form_educacionCasa").prop('checked', true);
+                $("#form_educacionCasa").prop('disabled', true);
             }else{
                 $("#divFisicoMotor").hide();
                 $(".fisicoMotor").removeAttr('required');
                 $("#form_educacionCasa").prop('checked', false);
+                $("#form_educacionCasa").prop('disabled', false);
             }
             if(area == 5){
                 $("#divMultiple").show();

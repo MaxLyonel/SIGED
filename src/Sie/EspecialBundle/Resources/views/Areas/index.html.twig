@@ -358,9 +358,12 @@
         function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, lugar, divResultado) {
             var modalidad_texto = '';
             var modalidad_tipo = 0;
-            if (lugar!=null && lugar=='EDUCACION SOCIOCOMUNITARIA EN CASA') {
+
+            if (lugar!=null) {
                 modalidad_texto = ' (' + lugar + ')';
-                modalidad_tipo = 15;
+                if (lugar.indexOf("EDUCACION SOCIOCOMUNITARIA EN CASA") != -1 || lugar.indexOf("EDUCACIÓN SOCIOCOMUNITARIA EN CASA") != -1){
+                    modalidad_tipo = 15;
+                }
             }
             $('#divResultado').empty();$('#modalidadCasa').css('display', 'none');
             $('#divResultado').val(divResultado);
@@ -384,7 +387,7 @@
                         $('#lugar').val('');
                         $('#modalidadCasa').css('display', 'none');
                     //} else if(lugar.trim() == "EDUCACION EN CASA" || lugar.trim() == "EDUCACIÓN EN CASA"){
-                    } else if(lugar.indexOf("EDUCACION EN CASA") != -1 || lugar.indexOf("EDUCACIÓN EN CASA") != -1){
+                    } else if(lugar.indexOf("EDUCACION SOCIOCOMUNITARIA EN CASA") != -1 || lugar.indexOf("EDUCACIÓN SOCIOCOMUNITARIA EN CASA") != -1){
                         $('#lugar').val(lugar);
                         $('#modalidadCasa').css('display', 'block');
                     }

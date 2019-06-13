@@ -3,7 +3,7 @@
 {% set onlyview = app.session.get('onlyview') %}
 <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="fa fa-table"></i> Creación de Oferta <span>Buscar</span></h2>
+    <h2><i class="fa fa-table"></i> Creación de Oferta Educativa <span>Buscar</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
@@ -13,14 +13,14 @@
                 <i class="fa fa-angle-right">
                 </i>
             </li>
-            <li class="active"><a href="#">Creación de Oferta</a></li>
+            <li class="active"><a href="#">Creación de Oferta Educativa</a></li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
 </div><!-- /.header-content -->
 <!--/ End page header -->
 <div class="body-content animated fadeIn">
 
-    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta Educativa', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
 
     <div class="row">
@@ -89,7 +89,7 @@
                     <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                         <input type="hidden" name="idGestion" value="{{gestion}}">
-                        <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Nueva Oferta</button>
+                        <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Nueva Oferta Educativa</button>
                     </form>
                 {% endif %}
             </div>
@@ -121,7 +121,7 @@
                                     <thead class="cf">
                                         <tr>
                                             <th>Área Esp.</th>
-                                            <th>Oferta</th>
+                                            <th>Oferta Educativa</th>
                                             <th>Grado</th>
                                             <th>Paralelo/Grupo</th>
                                             <th>Programa</th>
@@ -158,7 +158,7 @@
                                     <thead class="cf">
                                         <tr>
                                             <th>Área Esp.</th>
-                                            <th>Oferta</th>
+                                            <th>Oferta Educativa</th>
                                             <th>Grado</th>
                                             <th>Paralelo/Grupo</th>
                                             <th>Programa</th>

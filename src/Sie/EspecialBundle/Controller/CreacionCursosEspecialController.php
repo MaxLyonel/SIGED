@@ -34,11 +34,14 @@ class CreacionCursosEspecialController extends Controller {
 
             $this->session = new Session();
             $tipoSistema = $request->getSession()->get('sysname');
+            //dump($tipoSistema);die;
             switch ($tipoSistema) {
                 case 'REGULAR': $this->session->set('tituloTipo', 'Creación de Cursos');
                                 $this->session->set('layout','layoutRegular.html.twig');break;
                 case 'ALTERNATIVA': $this->session->set('tituloTipo', 'Adición de Áreas y Asignación de Docentes');
                                     $this->session->set('layout','layoutAlternativa.html.twig');break;
+                case 'ALTERNATIVA ESPECIAL': $this->session->set('tituloTipo', 'Creación de Oferta Educativa');
+                                    $this->session->set('layout','layoutEspecialSie.html.twig');break;
                 default:    $this->session->set('tituloTipo', 'Paralelos');
                             $this->session->set('layout','layoutRegular.html.twig');break;
             }
@@ -121,7 +124,7 @@ class CreacionCursosEspecialController extends Controller {
             		JOIN iec.institucioneducativaCurso ie
                     WHERE ie.institucioneducativa = :idInstitucion
                     AND ie.gestionTipo = :gestion
-                    ORDER BY ie.turnoTipo, ie.nivelTipo, ie.gradoTipo, ie.paraleloTipo')
+                    ORDER BY ie.turnoTipo,iec.especialAreaTipo, ie.nivelTipo, ie.gradoTipo, ie.paraleloTipo')
                                 ->setParameter('idInstitucion', $institucion)
                                 ->setParameter('gestion', $gestion);
 
@@ -417,7 +420,7 @@ class CreacionCursosEspecialController extends Controller {
             	$nuevo_curso_sie->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']));
             	$nuevo_curso_sie->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find(0));
                 $nuevo_curso_sie->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find(0));
-                $nuevo_curso_sie->setLugar($lugar);
+                $nuevo_curso_sie->setLugar(mb_strtoupper($lugar,'utf-8'));
             	$em->persist($nuevo_curso_sie);
 
             	$em->flush();
@@ -550,7 +553,7 @@ class CreacionCursosEspecialController extends Controller {
     	}
     	elseif ($area == "3" or $area == "5" ) {
             if($modalidad == 1){
-                $nivelesArray = array(401,402,405,410,411);
+                $nivelesArray = array(401,402,405,410);
             }else{
                 $nivelesArray = array(410);
             }
@@ -720,7 +723,7 @@ class CreacionCursosEspecialController extends Controller {
     		if ($this->session->get('idGestion') < 2019) {
                 $programas = array(13);
             } else {
-                $programas = array(19, 20, 21, 22, 23);
+                $programas = array(19, 20, 21, 22);
             }
         }
     	elseif ($area == "2" and $nivel == "411" and  $grado == "99" ) {
