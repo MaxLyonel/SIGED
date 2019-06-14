@@ -159,6 +159,32 @@
 
 
         <div class="body-content animated fadeIn">
+        {% if estadoOperativo == true %}
+            <div class="alert alert-danger ">
+                <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="pull-left notification-sender text-danger"><strong>{{app.session.get('ie_operativo')}}</strong></li>
+                    </ul>
+                    <p>
+                        <a href="{{path(rutaObservaciones)}}">Ver lista de observaciones</a>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+        {% if estadoOperativo == false and rutaObservaciones %}
+            <div class="alert alert-info ">
+                <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="pull-left notification-sender text-info"><strong>{{rutaObservaciones}}</strong></li>
+                    </ul>
+                    <p>
+                        Puede <strong>GENERAR SU ACTA DE CIERRE DE OPERATIVO</strong>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
         <hr>
         <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
 

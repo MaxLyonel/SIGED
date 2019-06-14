@@ -35,7 +35,8 @@
                     {% else %}
                         <td>{{reg.periodoTipoId}}</td>
                     {% endif %}
-                    {% if (reg.gestionTipo <= '2017' and app.session.get('roluser') != 8 and app.session.get('roluser') != 7) %}
+                    {% if 1 == 1 %}
+                    {# {% if (reg.gestionTipo <= '2017' and app.session.get('roluser') != 8 and app.session.get('roluser') != 7) %} #}
                         <td>
                             <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
                                 <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" title="¡Ver!">                                    
@@ -110,8 +111,14 @@
                                                 <i class="fa fa-pencil-square"></i>
                                             </button>
                                         </form>
-                                    {% elseif ((reg.teid == '7') or (reg.teid == '11')) %} {#7 EN REGULARIZACION INSCRIPCIOENS -11 EN INSCRIPCION!#}
+                                    {% elseif (reg.teid == '11') %} {#11 EN INSCRIPCION!#}
                                         <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'10', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
+                                            <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
+                                                <i class="fa fa-pencil-square"></i>
+                                            </button>
+                                        </form>
+                                    {% elseif (reg.teid == '7') %} {#7 EN REGULARIZACION INSCRIPCIOENS!#}
+                                        <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'7', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
                                             <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
                                                 <i class="fa fa-pencil-square"></i>
                                             </button>

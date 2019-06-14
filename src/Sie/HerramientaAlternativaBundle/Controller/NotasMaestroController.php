@@ -147,6 +147,9 @@ class NotasMaestroController extends Controller {
         try {
             // $this->session->set('ie_per_estado', 2);
             $gestion = $request->get('gestion');
+
+            return $this->redirect($this->generateUrl('herramienta_alter_notas_maestro_index', array('gestion'=>$gestion)));
+
             $idCursoOferta = $request->get('idCursoOferta');
             $idSucursal = $request->get('idSucursal');
             $em = $this->getDoctrine()->getManager();
