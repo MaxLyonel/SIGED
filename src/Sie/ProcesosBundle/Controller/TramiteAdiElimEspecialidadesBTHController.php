@@ -204,7 +204,8 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         return new JsonResponse(array('respuesta' => $respuesta));
     }
     public function guardasolicitudEspecialidadesAction(Request $request){ //dump($request);die;
-
+        $esp=$request->get('ipt');
+        $especia=$esp['select_especialidad'];
         $iddistrito     = $request->get('iddistrito');
         $idinstitucion  = $request->get('institucionid');
         $idsolicitud    = $request->get('idsolicitud');
@@ -213,6 +214,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $textDirector   = $request->get('textDirector');
         $sw             = $request->get('sw');
         $datos          = json_encode($request->get('ipt'));
+
 
         $gestion        =  $request->getSession()->get('currentyear');
         //$datos          = json_decode($ipt);
@@ -260,7 +262,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
          * verificamos el tipo de solicitud Eliminacion de especialidades
          */
         elseif($solicitud == 'Eliminar Especialidades'){
-            $verificaespecialidades=$this->verificaespecialidades();
+            $verificaespecialidades=$this->verificaespecialidades($idinstitucion,$especia,$gestion);
             if($verificaespecialidades== true){
                 $flujoproceso   = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $idflujotipo , 'orden' => 1));
                 $tarea          = $flujoproceso->getId();// Solicita BTH
@@ -291,8 +293,28 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         }
         return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
     }
-    public function verificaespecialidades(){
+    public function verificaespecialidades($sie,$especialida,$gestio){
+       // dump($sie);die;
+        for($i=0;$i<count($especialida);$i++) {
+            $idespe=$especialida[$i];
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->getConnection()->prepare("SELECT count (*) conteo
+                        FROM estudiante_inscripcion a
+                        INNER JOIN estudiante_inscripcion_humnistico_tecnico b ON b.estudiante_inscripcion_id = a.id
+                        INNER JOIN institucioneducativa_curso c ON a.institucioneducativa_curso_id = c.id
+                        where 
+                        c.institucioneducativa_id = $sie  and
+                        c.gestion_tipo_id = $gestio and
+                        b.especialidad_tecnico_humanistico_tipo_id =$idespe");
+            $query->execute();
+            $contador = $query->fetch();
+            if ($contador==0)
+            {
+                return false;
+            }
+        }
         return true;
+
     }
     public function imprimirDirectorAction(Request $request){
         $tramite_id = $request->get('idtramite');
