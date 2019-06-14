@@ -1392,6 +1392,11 @@ class Funciones {
         }
     }
 
+    /**
+     * Servicio para cupos en cursos de educacion especial
+     * Accesos: Vistas y controladores
+     * Autor: Patricia
+     */
     public function getCantidadEstudiantes($infoUe,$estudiantes){
         
         $infoUe = unserialize($infoUe);
