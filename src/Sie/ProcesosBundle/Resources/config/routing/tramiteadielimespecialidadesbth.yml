@@ -15,6 +15,10 @@ tramite_solicitud_bth_formulario_dev:
     path:      /formularioespecialidades
     defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:formularioDirectorEspecialidades" }
 
+tramite_solicitud_adi_elim_bth_imprimeDirector:
+    path:     /bhtadielimimprimeFormulario/
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:imprimirDirector"}
+
 #Distrito
 tramite_especialidades_distrito_bth:
     path:      /solicitusespecialidadesDistritalbth
