@@ -207,7 +207,8 @@ class InfoStudentsController extends Controller {
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
                   'arrDataLibreta'=> $arrDataLibreta,
-                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
+                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+                  'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }
@@ -265,6 +266,34 @@ class InfoStudentsController extends Controller {
             ));
         }
       }
+      
+      if($dataUe['ueducativaInfoId']['areaEspecialId'] == 2 and $dataUe['ueducativaInfoId']['programaId'] == 12) {
+        $inscriptionvisual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $inscriptionvisual->createQueryBuilder('ei')
+          ->select('ei.id as id, iec.id as iecStudentId')
+          ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+          ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iece.institucioneducativaCurso=iec.id')
+          ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+          ->where('ei.estudiante = :id')
+          ->andwhere('iec.gestionTipo = :gestion')
+          ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+          ->andwhere('iece.especialProgramaTipo IN (:prog) or iec.nivelTipo = :nivel')
+          ->setParameter('id', $objStudent->getId())
+          ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+          ->setParameter('mat', array(4,79,80))
+          ->setParameter('prog', array(7,8,9,10,11,14,15,16))
+          ->setParameter('nivel', 405)
+          ->getQuery();
+
+        $inscripcion = $query->getResult();
+
+        if (empty($inscripcion)) {
+          $this->session->getFlashBag()->add('noinscription', 'Estudiante no inscrito, pues debe contar con una inscripcion en algún otro programa');
+            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+                'exist'=>false
+            ));
+        }
+      }
       $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
       $query = $inscription2->createQueryBuilder('ei')
         ->select('ei.id as id, iec.id as iecStudentId')
@@ -277,12 +306,14 @@ class InfoStudentsController extends Controller {
         ->andwhere('ei.estadomatriculaTipo IN (:mat)')
         ->setParameter('id', $objStudent->getId())
         ->setParameter('gestion', $dataUe['requestUser']['gestion'])
-        ->setParameter('mat', array(4,5))
+        ->setParameter('mat', array(4,5,79,78,28))
         //->setParameter('mat2', '5')
         // ->setParameter('ietipo', 1)
         ->getQuery();
 
+
       $selectedInscriptionStudent = $query->getResult();
+      //dump($selectedInscriptionStudent,$dataUe);die;
       if($selectedInscriptionStudent){
         $objInscriptionSpecialNew = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->findOneBy(array(
             'estudianteInscripcion'=>$selectedInscriptionStudent[0]['id']
@@ -445,7 +476,8 @@ class InfoStudentsController extends Controller {
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
                   'arrDataLibreta'=> $arrDataLibreta,
-                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
+                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+                  'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 
@@ -668,7 +700,8 @@ class InfoStudentsController extends Controller {
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
                   'arrDataLibreta'=> $arrDataLibreta,
-                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
+                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+                  'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }
@@ -816,7 +849,8 @@ class InfoStudentsController extends Controller {
                 'ciclo'=>$ciclo,
                 'operativo'=>$operativo,
                 'arrDataLibreta'=> $arrDataLibreta,
-                'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
+                'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+                'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']
                 // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
     ));
 
