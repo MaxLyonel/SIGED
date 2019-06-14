@@ -448,13 +448,13 @@
    };
 
 
-    var doInscriptionsRude = function(data,nroEst,area,programa){
-        //if (area == 2 && ((programa == 14 && nroEst > 4) || (programa == 8 && nroEst > 6) ||  || (programa == 11  && nroEst > 3)){
-        if(area == 2 && ((programa == 14 && nroEst >= 4))|| (programa == 8 && nroEst >= 6) || ((programa == 9 || programa == 15 || programa == 10 || programa == 16) && nroEst >= 7) || (programa == 11  && nroEst >= 3) || (programa == 12  && nroEst >= 8)){
+    var doInscriptionsRude = function(data,cupo,msg){
+        
+        if(cupo == "NO"){
             //alert('El curso para este programa no debe tener más de '+ nroEst + ' estudiantes.');
             $('#modal').empty();
             $('#modal').append('<div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content"><div class="modal-body"><div class="alert alert-warning">'+
-                                                '<strong>Tome nota!</strong> El curso para este programa no debe tener más de <strong>'+ nroEst + ' estudiantes.</strong></div></div>'+
+                                                '<strong>Tome nota!</strong> '+ msg + '</strong></div></div>'+
                                                 '<div class="modal-footer"><button type="button" class="btn btn-danger btn-sm " data-dismiss="modal">Cerrar</button></div></div></div>');
             return false;
         }

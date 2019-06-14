@@ -35,8 +35,10 @@
                 </a>
           </div>#}
           <div class="col-md-12 text-center">
+            {% set cupos = funciones.getCantidadEstudiantes(infoUe,objStudents) %}
+
             {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
-              <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}',{{objStudents|length}},{{ueducativaInfoId.areaEspecialId}},{{ueducativaInfoId.programaId}});" >
+              <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}','{{cupos.cupo}}','{{cupos.msg}}');" >
                   <i class="fa fa-user"></i> Inscripción
               </button>
             {% endif %}
@@ -71,7 +73,7 @@
                         {#init the array info student #}
                         {% set objInfoStudent = [] %}
                         {% for data in objStudents %}
-                          {% set items = {
+                            {% set items = {
 
                                           'id': data.id,
                                           'carnetIdentidad': data.carnetIdentidad,
@@ -83,6 +85,7 @@
 
 
                                           } %}
+                                          
                             {% set jsnInfoStudent = items|json_encode() %}
                             {# set the array student info and convert on json string #}
                             {# set objInfoStudent = objInfoStudent|merge(data) #}
@@ -136,9 +139,7 @@
                                 </td>
                             </tr>
                         {% endfor %}
-
                     </table>
-
                 </div>
                 <!-- /.portlet -->
             </div>

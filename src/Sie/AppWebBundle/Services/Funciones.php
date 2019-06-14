@@ -1392,4 +1392,33 @@ class Funciones {
         }
     }
 
+    public function getCantidadEstudiantes($infoUe,$estudiantes){
+        
+        $infoUe = unserialize($infoUe);
+        $cantidad = 0;
+        $area = $infoUe['ueducativaInfoId']['areaEspecialId'];
+        $programa = $infoUe['ueducativaInfoId']['programaId'];
+        switch($infoUe['ueducativaInfoId']['areaEspecialId']){
+            case 2:
+                foreach($estudiantes as $est ){
+                    if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 78){
+                        $cantidad = $cantidad + 1;
+                    }
+                }
+                if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){
+                    $data['cupo'] = "NO";
+                    $data['msg'] = "El curso para este programa no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
+                }else{
+                    $data['cupo'] = "SI";
+                    $data['msg'] = "El curso cuenta con cupos";
+                }
+                break;
+            default:
+                $data['cupo'] = "SI";
+                $data['msg'] = "El curso cuenta con cupos";
+        }
+        //dump($data);die;
+        return $data;
+
+    }
 }
