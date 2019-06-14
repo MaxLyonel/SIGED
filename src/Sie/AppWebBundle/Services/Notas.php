@@ -1784,7 +1784,7 @@ die;/*
             $nuevo['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
             
             $this->funciones->setLogTransaccion(
-                $updateCualitativa->getId(),
+                $datosNotaCualitativa->getId(),
                 'estudiante_nota_cualitativa',
                 'U',
                 '',
