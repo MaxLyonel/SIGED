@@ -107,9 +107,9 @@ class CursosController extends Controller {
 //        die;
         $dupcursover = $this->verificarcursoduplicado($aInfoUeducativa, $aInfoUeducativa['ueducativaInfoId']['iecId']);
         if ($dupcursover != '-1'){
-            $message = '¡Se ha detectado inconsistencia de datos! Existe un curso duplicado para este Nivel/Especialidad, Etapa/Grado, debe corregir este problema lo antes posivle, consulte con su técnico distrital.';
-            $this->addFlash('errorcursoduplicado', $message);
-            $this->addFlash('idcursodup', $dupcursover);
+            // $message = '¡Se ha detectado inconsistencia de datos! Existe un curso duplicado para este Nivel/Especialidad, Etapa/Grado, debe corregir este problema lo antes posivle, consulte con su técnico distrital.';
+            // $this->addFlash('errorcursoduplicado', $message);
+            // $this->addFlash('idcursodup', $dupcursover);
             //dump($dupcursover); die;
         }
         
