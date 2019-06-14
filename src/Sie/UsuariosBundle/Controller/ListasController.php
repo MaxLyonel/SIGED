@@ -434,7 +434,7 @@ class ListasController extends Controller
                     ON usuario.persona_id = persona.id  
             WHERE    
               (maestro_inscripcion.institucioneducativa_id = '".$this->session->get('ie_id')."') and 
-              (maestro_inscripcion.gestion_tipo_id = '2018') and
+              (maestro_inscripcion.gestion_tipo_id = '". $this->session->get('currentyear') ."') and
               ((maestro_inscripcion.cargo_tipo_id = 1) or (maestro_inscripcion.cargo_tipo_id = 12) or (maestro_inscripcion.cargo_tipo_id = 0))
             GROUP BY
 	      usuario.id, 
