@@ -6,13 +6,13 @@
         }
     </style>
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
+        <h2><i class="fa fa-list animated fadeIn"></i>  Solicitud de Especialidades  <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí12312:</span>
+            <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href={#{{ path('solicitud_bth_index') }}#}>Nueva Solicitud BTH</a>
+                    <a href={#{{ path('solicitud_bth_index') }}#}> Solicitud de Especialidades</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -34,8 +34,8 @@
                             <div class="panel-body">
                                 <div class="row">
                                     {{form_start(form,{'attr':{'id':'formSolicitud'} })}}
-                                    <div class="col-md-4 col-md-offset-4">
-                                        <h3><strong>Adición y eliminación de especialidades</strong></h3>
+                                    <div class="col-md-6 col-md-offset-4">
+                                        <h3><strong>Adición y Eliminación de Especialidades</strong></h3>
                                         {{form_widget(form.solicitud)}}
                                     </div>
                                     {{form_end(form)}}
@@ -235,7 +235,7 @@
                                                             </thead>
                                                             <tbody>
                                                             {% for especialidadlista in objespecialidades_ue %}
-                                                                <tr style="color: #ff6d00 !important;">
+                                                                <tr style="color: black !important;">
                                                                     <td class="text-center">{{loop.index}}</td>
                                                                     <td class="espe" >{{especialidadlista.especialidad}} </td>
                                                                     <td> <input type="checkbox" class="marcado" id="marca_{{loop.index}}" name="marca_{{loop.index}}" data-id="{{especialidadlista.id}}">
@@ -388,6 +388,11 @@
                                     swal("Debe seleccionar al menos una especialidad.");
                                     return false;
                                 }
+                                if(textDirectorEliminar.length ==0){
+                                    swal("Ingresar un informe breve para la solicitud de adición de especialidades");
+                                    return false;
+                                }
+
                                 //var ipt=JSON.stringify(ip);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $.ajax({
@@ -450,16 +455,22 @@
                                 var textDirectorEliminar = $('#textDirectorEliminar').val(); 
                                 var idsolicitud=$('#form_solicitud').val();
                                 var select_especialidad = [];
+                                var cantidadEspecialidades = 0;
                                 $('#especialidades_eliminar tbody').find("tr").each(function() {
                                     $(this).find('td input').each(function() {
                                         if($(this)[0].checked == true) {
                                             select_especialidad.push($(this).data("id"));
                                         }
+                                        cantidadEspecialidades++;
                                     });
                                 });
                                 console.log(select_especialidad);
-                                if(select_especialidad.length== 0) {
-                                    swal("Debe seleccionar al menos una especialidad.");
+                                if(select_especialidad.length== 0 || select_especialidad.length == cantidadEspecialidades  ) {
+                                    swal("Debe seleccionar al menos una especialidad,tome en cuenta que no puede seleccionar todas las especialidades.");
+                                    return false;
+                                }
+                                if(textDirectorEliminar.length ==0){
+                                    swal("Ingresar un informe breve para la solicitud de eliminación de especialidades");
                                     return false;
                                 }
                                 var imagen = '{{ asset("img/loading96.gif") }}';
