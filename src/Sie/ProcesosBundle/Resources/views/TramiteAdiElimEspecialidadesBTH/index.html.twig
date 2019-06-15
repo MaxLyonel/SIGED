@@ -147,23 +147,28 @@
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <p><strong> Informe breve de la adici&oacute;n de la(s) especialidades </strong></p>
-                                                            <textarea id="textDirectorAdicionar" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
-                                                        </div>
-                                                    </div>
+                                                    </div>                                                    
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            </div>                                            
                                         </div><!-- /.panel-body -->
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Informe breve de la adici&oacute;n de la(s) especialidades</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">                                            
+                                             <div class="row">                                                          
+                                               <textarea id="textDirectorAdicionar" class="form-control" rows="6" ></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="pull-right">
+                                                    <button class="btn btn-sm btn-facebook" id="enviarSolicitud_adicionar" title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    {# <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="pruebalupe()"><i class="fa fa-pencil"></i> pruebalupe</button> #}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -247,24 +252,27 @@
                                                     </div>
 
                                                 </div>
-                                            </div>
-                                             <div class="row">
-                                                        <div class="col-md-4">
-                                                            <p><strong> Informe breve de la eliminaci&oacute;n de la(s) especialidades </strong></p>
-                                                            <textarea id="textDirectorEliminar" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
-                                                        </div>
+                                            </div>                                             
+                                        </div>                                        
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Informe breve de la eliminaci&oacute;n de la(s) especialidades</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">                                            
+                                             <div class="row">                                                          
+                                               <textarea id="textDirectorEliminar" class="form-control" rows="6" ></textarea>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="pull-right">
-                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    <button class="btn btn-sm btn-facebook" id="enviarSolicitud_eliminar"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                     {# <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="pruebalupe()"><i class="fa fa-pencil"></i> pruebalupe</button> #}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -388,12 +396,15 @@
                                     swal("Debe seleccionar al menos una especialidad.");
                                     return false;
                                 }
-                                if(textDirectorEliminar.length ==0){
+                                if(textDirectorAdicionar.length ==0){
                                     swal("Ingresar un informe breve para la solicitud de adición de especialidades");
                                     return false;
                                 }
 
                                 //var ipt=JSON.stringify(ip);
+                                
+                                
+                                $('#enviarSolicitud_adicionar').attr("disabled", true);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $.ajax({
                                     type: 'post',
@@ -416,7 +427,7 @@
                                             $(".modal-backdrop ").css("display", "none");
                                             $('#msg').text(data.msg);
                                             $('#recargar').modal('show');
-                                            $(".modal-backdrop ").css("display", "none");
+                                            $(".modal-backdrop ").css("display", "none");  
 
                                         }
                                         else if(data.estado==3 ){
@@ -429,6 +440,7 @@
                                                 '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                                 '- Su Unidad Educativa ya se encuentra registrado como BTH.');
                                         }
+                                        
                                     },
                                     complete: function () {
                                         swal.stopLoading();
@@ -474,6 +486,7 @@
                                     return false;
                                 }
                                 var imagen = '{{ asset("img/loading96.gif") }}';
+                                $('#enviarSolicitud_eliminar').attr('disabled',true);
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
@@ -505,6 +518,7 @@
                                         else {
                                             swal(data.msg);
                                         }
+                                        
                                     },
                                     complete: function () {
                                         swal.stopLoading();
@@ -572,7 +586,7 @@
         $(document).ready(function(){
             $('#form_adicionar_especialidad').hide();
             $('#form_eliminar_especialidad').hide();
-            $('#mensaje').hide();
+            $('#mensaje').hide();            
         });
     </script>
 {% endblock %}

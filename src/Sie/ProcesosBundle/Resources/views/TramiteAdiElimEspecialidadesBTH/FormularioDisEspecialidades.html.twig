@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Solicitud Especialidades - BTH <span>Adición y Eliminación de especialidades </span></h2>
+        <h2><i class="fa fa-list animated fadeIn"></i> Solicitud Especialidades <span>Adición y Eliminación de especialidades </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -181,12 +181,10 @@
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
                                             <div class="row">
-                                                <div id="listaespecialidades_adicionar">
-                                                    <div class="table-responsive mb-20">
-                                                        <textarea id="textDirector">
+                                                <div id="listaespecialidades_adicionar">                      
+                                                    <textarea id="textDirector" class="form-control" rows="6" disabled="true" >
                                                             {{textDirector}}
-                                                        </textarea>
-                                                    </div>
+                                                     </textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -197,7 +195,7 @@
 
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">4.- Evaluación Distrital</h3>
+                                    <h3 class="panel-title">5.- Evaluación Distrital</h3>
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">

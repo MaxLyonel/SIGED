@@ -150,7 +150,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 {% for especialidadlista in objespecialidades_ue %}
-                                                                    <tr style="color: #ff6d00 !important;">
+                                                                    <tr style="color: black !important;">
                                                                         <td class="text-center">{{loop.index}}</td>
                                                                         <td class="espe" >{{especialidadlista.especialidad}} </td>
                                                                         <td> <input type="checkbox" class="marcado" id="marca_{{loop.index}}" name="marca_{{loop.index}}" data-id="{{especialidadlista.id}}">
@@ -166,15 +166,23 @@
                                             </div>
                                         </div>
                                     {% endif %}
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <p><strong> Informe breve de la adici&oacute;n de la(s) especialidades </strong></p>
-                                            <textarea id="textdirector" col="10" style="margin: 0px; width: 800px; height: 122px;"></textarea>
-                                        </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            {% if solicitud == 'Adicionar Especialidades' %}
+                                            <h3 class="panel-title">3.- Informe breve de la adici&oacute;n de la(s) especialidades</h3>
+                                            {% else %}
+                                            <h3 class="panel-title">3.- Informe breve de la elimina&oacute;n de la(s) especialidades</h3>
+                                            {% endif %}   
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">                                            
+                                             <div class="row">                                                          
+                                               <textarea id="textdirector" class="form-control" rows="6" ></textarea>
+                                            </div>
+                                        </div>                                        
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <strong>Documento adjunto</strong><br>
+                                            <strong>Documento adjunto </strong><br>
                                             <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~id_institucion~'/'~'adielimespec/'~ documento )}}" target="_blank">
                                                 <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
                                             </a>
@@ -183,7 +191,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="pull-right">
-                                                <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" id="enviarSolicitud_adicionar" onclick="enviarSolicitudEspecialidadesbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                             </div>
                                         </div>
                                     </div>
@@ -241,9 +249,15 @@
                                 } else {
                                     swal("Debe seleccionar al menos una especialidad.");
                                     return false;
+                                }                              
+
+                                if(textDirector.length ==0){
+                                    swal("Ingresar un informe breve para la solicitud de adición de especialidades");
+                                    return false;
                                 }
                                 //var ipt=JSON.stringify(ip);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
+                                  $('#enviarSolicitud_adicionar').attr("disabled", true);
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
@@ -303,19 +317,27 @@
                                 var institucionid={{ id_institucion }}
                                 var idsolicitud=$('#form_solicitud').val();
                                 var select_especialidad = [];
+                                var cantidadEspecialidades = 0;
                                 $('#especialidades_eliminar tbody').find("tr").each(function() {
                                     $(this).find('td input').each(function() {
                                         if($(this)[0].checked == true) {
                                             select_especialidad.push($(this).data("id"));
                                         }
+                                         cantidadEspecialidades++;
                                     });
                                 });
-                                console.log(select_especialidad);
-                                if(select_especialidad.length== 0) {
-                                    swal("Debe seleccionar al menos una especialidad.");
+                                console.log(select_especialidad);                                
+                                if(select_especialidad.length== 0 || select_especialidad.length == cantidadEspecialidades  ) {
+                                    swal("Debe seleccionar al menos una especialidad,tome en cuenta que no puede seleccionar todas las especialidades.");
+                                    return false;
+                                }
+
+                                 if(textDirector.length ==0){
+                                    swal("Ingresar un informe breve para la solicitud de eliminación de especialidades");
                                     return false;
                                 }
                                 var imagen = '{{ asset("img/loading96.gif") }}';
+                                $('#enviarSolicitud_adicionar').attr("disabled", true);
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('tramite_solicitud_especialidades_bth') }}",
