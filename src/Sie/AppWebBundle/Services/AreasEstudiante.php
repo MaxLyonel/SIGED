@@ -144,10 +144,11 @@ class AreasEstudiante {
 
             $this->em->getConnection()->commit();
 
-            return true;
+            return $newEstudianteAsignatura;
         } catch (Exception $e) {
-            return false;
+            return null;
         }
         
     }
+
 }

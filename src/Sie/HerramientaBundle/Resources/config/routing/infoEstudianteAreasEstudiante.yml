@@ -16,6 +16,12 @@ herramienta_infoEstudianteAreasEstudiante_delete:
     options:
          expose: true
 
+herramienta_infoEstudianteAreasEstudiante_completar_notas:
+    path:     /completarNotas
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:completarNotas"}
+    options:
+         expose: true
+
 herramienta_infoEstudianteAreasEstudiante_especilidad_verificar:
     path:     /especialidad_verificar
     defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:especialidadVerificar"}
