@@ -282,7 +282,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                     $res = 2;//ocurrio error al guardar el trámite
                 }
             }else{
-                $mensaje="Verificar las especialidades a eliminar";
+                $mensaje="Verificar las especialidades a eliminar.";
                 return  new JsonResponse(array('estado' => 5, 'msg' => $mensaje));
             }
         }
@@ -308,7 +308,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                         b.especialidad_tecnico_humanistico_tipo_id =$idespe");
             $query->execute();
             $contador = $query->fetch();
-            if ($contador==0)
+            if ($contador!=0)
             {
                 return false;
             }
