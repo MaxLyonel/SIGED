@@ -1511,8 +1511,8 @@ class SolicitudBTHController extends Controller {
             $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$idtramite,$datos,'',$id_distrito);
 
             if ($evaluacion=='SI') {   //dump($tarea1);die;
-                $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$idtramite);
-                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,$obs,'',$idtramite,$datos,'',$id_distrito);
+               $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$idtramite);
+               $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,$obs,'',$idtramite,$datos,'',$id_distrito);
                 //dump($mensaje);die;
                 /////volcado a la base de datoa
                 /*Recuperamos los datos del tramite*/
@@ -1548,10 +1548,10 @@ class SolicitudBTHController extends Controller {
                                                              FROM institucioneducativa_humanistico_tecnico ieht
                                                              WHERE ieht.institucioneducativa_id=$institucionid");
                     $query->execute();*/
-                    $query = $em->getConnection()->prepare("SELECT grado_tipo_id
-                                                FROM institucioneducativa_humanistico_tecnico ieht  
-                                                WHERE ieht.institucioneducativa_id=$institucionid
-                                                ORDER BY gestion_tipo_id DESC LIMIT 2");
+                    $query = $em->getConnection()->prepare("SELECT *
+                     FROM institucioneducativa_humanistico_tecnico ieht  
+                     WHERE ieht.institucioneducativa_id=$institucionid and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                     ORDER BY gestion_tipo_id DESC LIMIT 1");
                     $query->execute();
                     $ultima_gestion_ue = $query->fetchAll();
                     //RESPALDO DEL ANTERIOR CODIGO
@@ -1576,9 +1576,9 @@ class SolicitudBTHController extends Controller {
                         $estado_grado_tipo = 7;
                         $grado_tipo_id = 3;
                     }*/
-                    if(count($ultima_gestion_ue)==2){
+                    if(count($ultima_gestion_ue)==1){
 
-                        $grado_tipo_id = $ultima_gestion_ue[1]['grado_tipo_id']+1;
+                        $grado_tipo_id = $ultima_gestion_ue[0]['grado_tipo_id']+1;
                         if ($grado_tipo_id == 3 or $grado_tipo_id == 4) {
                             $estado_grado_tipo = 7;
                         } elseif ($grado_tipo_id == 5 or $grado_tipo_id == 6) {
@@ -1592,6 +1592,9 @@ class SolicitudBTHController extends Controller {
                         $estado_grado_tipo = 7;
                         $grado_tipo_id = 3;
                     }
+
+                    //dump($grado_tipo_id);
+                   // dump($estado_grado_tipo);die;
                     /**
                      * Adecuacion: se actualizan los datos de la Unidad Educativa al finalizar el tramite
                      */
