@@ -109,7 +109,7 @@
                                     {# {% if 1==1 %} #}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo > 0 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                        <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
+                                        <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}},'{{infoUe}}');" >
                                             <i class="fa fa-list"></i>
                                         </button>
                                     </div>
@@ -162,10 +162,10 @@
 {% endif %}
 
 <script>
-    var getNotas = function (idInscripcionEspecial) {
+    var getNotas = function (idInscripcionEspecial,infoUe) {
         $.ajax({
             type: 'post',
-            data: ({idInscripcionEspecial: idInscripcionEspecial}),
+            data: ({idInscripcionEspecial: idInscripcionEspecial, infoUe: infoUe}),
             url: "{{ path('especialInfoNotas') }}",
             beforeSend: function () {
                 $('#modal').empty();

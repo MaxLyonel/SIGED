@@ -1,8 +1,8 @@
 {% set onlyview = app.session.get('onlyview') %}
 {% if notas is defined %}
-	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad in [2,3,5]) %} style="width:80%; z-index:99999;" {% endif %}>
+	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad in [2,3,5] and seguimiento == false) %} style="width:80%; z-index:99999;" {% endif %}>
 	    <div class="modal-content" {% if ((notas.gestion < 2019 and discapacidad in [2,3,5]) or discapacidad not in [2,3,5]) %} style="width:900px; margin-left:-100px" {% endif %}>
-	    	<form action="" id="formNotasEspecial" onsubmit="registrarNotasEspecial(); return false">
+	    	<form action="" id="formNotasEspecial" onsubmit="registrarNotasEspecial('{{infoUe}}'); return false">
 	 		<input type="hidden" name="actualizar" value="{{actualizar}}">
 	 		<input type="hidden" name="operativo" value="{{operativo}}">
 	 		<input type="hidden" name="discapacidad" value="{{discapacidad}}">
@@ -105,7 +105,7 @@
 	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
-				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2018 and (discapacidad == 4 or discapacidad == 6 or discapacidad == 7 or (discapacidad == 2 and progserv == 21) or (discapacidad == 1 and progserv in [20,21,22]))) %}
+				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2018 and seguimiento == true) %}
 					<button type="submit" class="btn btn-success">Guardar</button>
 				{% endif %}
 	        </div>
@@ -134,7 +134,7 @@
 		}
 	}
 
-    var registrarNotasEspecial = function(){
+    var registrarNotasEspecial = function(infoUe){
 		//alert('entra');
     	var enviar = validarEnvioNotas();
         if(enviar == true){
@@ -159,6 +159,7 @@
 		        },
 		        success: function (data) {
 		            $('#modal').modal('hide');
+					seeStudents(infoUe);
 		        },
 		        error: function (data) {
 

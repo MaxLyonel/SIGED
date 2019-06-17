@@ -178,7 +178,7 @@ class InfoNotasController extends Controller {
                         $actualizarMatricula = false;
                         $seguimiento = true;
                         if($operativo >= 4 or $gestion < $gestionActual){
-                            $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(48,77)));
+                            $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                         }
                     }
                     
@@ -193,7 +193,19 @@ class InfoNotasController extends Controller {
             }
             // dump($notas);die;
             if($notas){
-                return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad,'progserv'=>$progserv,'seguimiento'=>$seguimiento));
+                return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
+                    'notas'=>$notas,
+                    'inscripcion'=>$inscripcion,
+                    'vista'=>$vista,
+                    'template'=>$template,
+                    'actualizar'=>$actualizarMatricula,
+                    'operativo'=>$operativo,
+                    'estadosMatricula'=>$estadosMatricula,
+                    'discapacidad'=>$discapacidad,
+                    'progserv'=>$progserv,
+                    'seguimiento'=>$seguimiento,
+                    'infoUe'=>$request->get('infoUe')
+                ));
             }else{
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('iesp'=>$inscripcionEspecial, 'notas'=>$notas));
             }
@@ -236,7 +248,7 @@ class InfoNotasController extends Controller {
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
             
-            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2019 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false)){
+            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2019 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula');
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
