@@ -1418,12 +1418,24 @@ class Funciones {
                     $data['msg'] = "El curso cuenta con cupos";
                 }
                 break;
+            case 4:
+                foreach($estudiantes as $est ){
+                    if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 10 and $est['estadomatriculaId'] != 78){
+                        $cantidad = $cantidad + 1;
+                    }
+                }
+                if($cantidad >= 2){
+                    $data['cupo'] = "NO";
+                    $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
+                }else{
+                    $data['cupo'] = "SI";
+                    $data['msg'] = "El curso cuenta con cupos";
+                }
+                break;
             default:
                 $data['cupo'] = "SI";
                 $data['msg'] = "El curso cuenta con cupos";
         }
-        //dump($data);die;
         return $data;
-
     }
 }
