@@ -2555,26 +2555,28 @@ die;/*
         $cursosOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('id'=>$idsco));
         $cont = 0;
         $cuantitativas = [];
+        
+        if($operativo > 1){
+            if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 11)) {
+                foreach ($cursosOferta as $key => $co) {
 
-        if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 11)) {
-            foreach ($cursosOferta as $key => $co) {
-
-                $cuantitativas[$cont] = array(
-                    'idco'=>$co->getId(),
-                    'idAsignatura'=>$co->getAsignaturaTipo()->getId(),
-                    'asignatura'=>$co->getAsignaturaTipo()->getAsignatura(),
-                );
-
-                for ($i=1; $i < $operativo; $i++) { 
-                    $cuantitativas[$cont]['notas'][] = array(
-                        'bimestre'=>$i.' Bim',
-                        'idNotaTipo'=>$i,
-                        'nota'=>'',
-                        'notaCualitativa'=>''
+                    $cuantitativas[$cont] = array(
+                        'idco'=>$co->getId(),
+                        'idAsignatura'=>$co->getAsignaturaTipo()->getId(),
+                        'asignatura'=>$co->getAsignaturaTipo()->getAsignatura(),
                     );
-                }
-                $cont++;
-            }   
+
+                    for ($i=1; $i < $operativo; $i++) { 
+                        $cuantitativas[$cont]['notas'][] = array(
+                            'bimestre'=>$i.' Bim',
+                            'idNotaTipo'=>$i,
+                            'nota'=>'',
+                            'notaCualitativa'=>''
+                        );
+                    }
+                    $cont++;
+                }   
+            }
         }
 
         $cualitativas = [];
