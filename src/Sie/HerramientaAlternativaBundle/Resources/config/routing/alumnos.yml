@@ -46,4 +46,16 @@ herramientalt_ceducativa_curso_duplicado:
     path:     /cursoduplicado
     defaults: { _controller: "SieHerramientaAlternativaBundle:Cursos:cursoduplicado"}
     options:
-         expose: true    
+         expose: true
+         
+herramientalt_get_etapa:
+    path:     /sie_alter/getetapa/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:getEtapa }
+    options:
+         expose: true 
+         
+herramientalt_get_paraleloins:
+    path:     /sie_alter/getParaleloIns/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:getParaleloIns }
+    options:
+         expose: true         

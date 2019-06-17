@@ -35,6 +35,7 @@ class NewSpecialityController extends Controller {
      * the class constructor
      */
     public function __construct() {
+      die('Este modulo esta temporalmente fuera de servicio');
         //init the session values
         $this->session = new Session();
     }
