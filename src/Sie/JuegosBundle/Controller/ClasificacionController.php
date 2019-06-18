@@ -946,9 +946,14 @@ class ClasificacionController extends Controller {
                         $entidadUsuario = $this->buscaEntidadFase($fase,$id_usuario);
                         $entidadUsuarioId =  $entidadUsuario[0]['id'];
                         $estadoEstudianteInscripcion = $this->verificaEstadoInscripcionEstudiante($deportistaEstudianteInscripcion);
+                        $estadoEstudianteInscripcionJuegos = $estudianteInscripcionJuegosEntity->getEsactivo();
                         $nivel = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                         $datosPrueba = $registroController->verificaTipoDisciplinaPrueba($deportistaPrueba);
                         $tipoPruebaParticipacionId = $datosPrueba['idTipoPrueba'];
+                        $estudianteNombre = $estudianteInscripcionJuegosEntity->getEstudianteInscripcion()->getEstudiante()->getNombre();
+                        $estudiantePaterno = $estudianteInscripcionJuegosEntity->getEstudianteInscripcion()->getEstudiante()->getPaterno();
+                        $estudianteMaterno = $estudianteInscripcionJuegosEntity->getEstudianteInscripcion()->getEstudiante()->getMaterno();
+                        $estudianteNombreApellido = $estudianteNombre . ' ' . $estudiantePaterno . ' ' . $estudianteMaterno;
 
                         if($tipoPruebaParticipacionId == 1){
                             $conjunto = true;
@@ -966,90 +971,91 @@ class ClasificacionController extends Controller {
                             $equipoNombre = "";
                         }
 
-                        if($estadoEstudianteInscripcion){
-                            $msg = $reglaController->valEstudianteClasificacionJuegos($deportistaEstudianteInscripcion, $gestionActual, $deportistaPrueba, $faseClasificacion, $equipoId, $id_usuario_lugar, $posicion);
-                            // $msg = $this->validaInscripcionJuegos($deportistaEstudianteInscripcion,$deportistaGestion,$deportistaPrueba,$faseClasificacion,$deportistaNivel,$posicion,$entidadUsuarioId);
-                            
-                            if($msg[0]){
+                        if($estadoEstudianteInscripcionJuegos){
+                            if($estadoEstudianteInscripcion){
+                                $msg = $reglaController->valEstudianteClasificacionJuegos($deportistaEstudianteInscripcion, $gestionActual, $deportistaPrueba, $faseClasificacion, $equipoId, $id_usuario_lugar, $posicion);
+                                // $msg = $this->validaInscripcionJuegos($deportistaEstudianteInscripcion,$deportistaGestion,$deportistaPrueba,$faseClasificacion,$deportistaNivel,$posicion,$entidadUsuarioId);
+                                
+                                if($msg[0]){
 
-                                $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$faseClasificacion);
-                                $entrenadorSave = false;
-                                if(count($entrenadorEntity) > 0){
-                                    $entrenadorSave = true;
-                                    $personaId = $entrenadorEntity["personaId"];
-                                } else {
-                                    $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$fase);
+                                    $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$faseClasificacion);
+                                    $entrenadorSave = false;
                                     if(count($entrenadorEntity) > 0){
                                         $entrenadorSave = true;
                                         $personaId = $entrenadorEntity["personaId"];
                                     } else {
-                                        $entrenadorSave = false;
-                                    }
-                                }
-
-                                $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $deportistaPrueba));
-                                $gestionEntity = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $deportistaGestion));
-                                $faseEntity = $em->getRepository('SieAppWebBundle:JdpFaseTipo')->findOneBy(array('id' => $faseClasificacion));
-                                $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $deportistaEstudianteInscripcion));
-                                $estudianteNombre = $estudianteInscripcionEntity->getEstudiante()->getNombre();
-                                $estudiantePaterno = $estudianteInscripcionEntity->getEstudiante()->getPaterno();
-                                $estudianteMaterno = $estudianteInscripcionEntity->getEstudiante()->getMaterno();
-                                $estudianteNombreApellido = $estudianteNombre . ' ' . $estudiantePaterno . ' ' . $estudianteMaterno;
-                                $estudianteInscripcionJuegos = new JdpEstudianteInscripcionJuegos();
-                                $estudianteInscripcionJuegos->setEstudianteInscripcion($estudianteInscripcionEntity);
-                                $estudianteInscripcionJuegos->setPruebaTipo($pruebaEntity);
-                                $estudianteInscripcionJuegos->setGestionTipo($gestionEntity);
-                                $estudianteInscripcionJuegos->setFaseTipo($faseEntity);
-                                $estudianteInscripcionJuegos->setPosicion($posicion);
-                                $estudianteInscripcionJuegos->setFechaRegistro($fechaActual);
-                                $estudianteInscripcionJuegos->setFechaModificacion($fechaActual);
-                                $estudianteInscripcionJuegos->setUsuarioId($id_usuario);
-                                $em->persist($estudianteInscripcionJuegos);
-
-                                if($equipoId > 0){
-                                    $equipoEstudianteInscripcionJuegos = new JdpEquipoEstudianteInscripcionJuegos();
-                                    $equipoEstudianteInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
-                                    $equipoEstudianteInscripcionJuegos->setEquipoId($equipoId);
-                                    $equipoEstudianteInscripcionJuegos->setEquipoNombre('Equipo'.$equipoId);
-                                    $em->persist($equipoEstudianteInscripcionJuegos);
-                                }
-
-                                if($entrenadorSave){
-                                    if($comisionId == 0){
-                                        if($nivel== 12){
-                                            $comisionId = 139;
+                                        $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$fase);
+                                        if(count($entrenadorEntity) > 0){
+                                            $entrenadorSave = true;
+                                            $personaId = $entrenadorEntity["personaId"];
                                         } else {
-                                            $comisionId = 140;
+                                            $entrenadorSave = false;
                                         }
                                     }
-                                    $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
-                                    $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
-                                    $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
-                                    $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
-                                    $em->persist($personaInscripcionJuegos);
-                                }
 
-                                $em->flush();
-                                $estudianteInscripcionJuegosId = $estudianteInscripcionJuegos->getId();
-                                if ($msgEstudiantesRegistrados == ""){
-                                    $msgEstudiantesRegistrados = $msg[1];
+                                    $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $deportistaPrueba));
+                                    $gestionEntity = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $deportistaGestion));
+                                    $faseEntity = $em->getRepository('SieAppWebBundle:JdpFaseTipo')->findOneBy(array('id' => $faseClasificacion));
+                                    $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $deportistaEstudianteInscripcion));
+                                     $estudianteInscripcionJuegos = new JdpEstudianteInscripcionJuegos();
+                                    $estudianteInscripcionJuegos->setEstudianteInscripcion($estudianteInscripcionEntity);
+                                    $estudianteInscripcionJuegos->setPruebaTipo($pruebaEntity);
+                                    $estudianteInscripcionJuegos->setGestionTipo($gestionEntity);
+                                    $estudianteInscripcionJuegos->setFaseTipo($faseEntity);
+                                    $estudianteInscripcionJuegos->setPosicion($posicion);
+                                    $estudianteInscripcionJuegos->setFechaRegistro($fechaActual);
+                                    $estudianteInscripcionJuegos->setFechaModificacion($fechaActual);
+                                    $estudianteInscripcionJuegos->setUsuarioId($id_usuario);
+                                    $estudianteInscripcionJuegos->setEsactivo(true);
+                                    $em->persist($estudianteInscripcionJuegos);
+
+                                    if($equipoId > 0){
+                                        $equipoEstudianteInscripcionJuegos = new JdpEquipoEstudianteInscripcionJuegos();
+                                        $equipoEstudianteInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
+                                        $equipoEstudianteInscripcionJuegos->setEquipoId($equipoId);
+                                        $equipoEstudianteInscripcionJuegos->setEquipoNombre('Equipo'.$equipoId);
+                                        $em->persist($equipoEstudianteInscripcionJuegos);
+                                    }
+
+                                    if($entrenadorSave){
+                                        if($comisionId == 0){
+                                            if($nivel== 12){
+                                                $comisionId = 139;
+                                            } else {
+                                                $comisionId = 140;
+                                            }
+                                        }
+                                        $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
+                                        $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
+                                        $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
+                                        $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
+                                        $em->persist($personaInscripcionJuegos);
+                                    }
+
+                                    $em->flush();
+                                    $estudianteInscripcionJuegosId = $estudianteInscripcionJuegos->getId();
+                                    if ($msgEstudiantesRegistrados == ""){
+                                        $msgEstudiantesRegistrados = $msg[1];
+                                    } else {
+                                        $msgEstudiantesRegistrados = $msgEstudiantesRegistrados.' - '.$msg[1];
+                                    }
+                                    //array_push($ainscritos,array('id'=>($estudianteInscripcionJuegosId), 'nombre'=>$estudianteNombreApellido, 'posicion'=> $posicion));
+                                    
                                 } else {
-                                    $msgEstudiantesRegistrados = $msgEstudiantesRegistrados.' - '.$msg[1];
+                                    if ($msgEstudiantesObservados == ""){
+                                        $msgEstudiantesObservados = $msg[1];
+                                    } else {
+                                        $msgEstudiantesObservados = $msgEstudiantesObservados.' - '.$msg[1];
+                                    }
                                 }
-                                //array_push($ainscritos,array('id'=>($estudianteInscripcionJuegosId), 'nombre'=>$estudianteNombreApellido, 'posicion'=> $posicion));
-                                
                             } else {
-                                if ($msgEstudiantesObservados == ""){
-                                    $msgEstudiantesObservados = $msg[1];
-                                } else {
-                                    $msgEstudiantesObservados = $msgEstudiantesObservados.' - '.$msg[1];
-                                }
+                                // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "El estudiante ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante"));
+                                $msgEstudiantesObservados = "El estudiante ".$estudianteNombreApellido." ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante";
                             }
                         } else {
                             // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "El estudiante ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante"));
-                            $msgEstudiantesObservados = "El estudiante ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante";
+                            $msgEstudiantesObservados = "El estudiante ".$estudianteNombreApellido." fue reemplazado de acuerdo a solicitud, por lo cual, no puede seguir participando";
                         }
-
                     }
                     // if ($msgEstudiantesRegistrados != ""){
                     //     $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante (".$msgEstudiantesRegistrados.")"));
