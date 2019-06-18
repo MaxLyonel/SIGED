@@ -112,7 +112,11 @@
                                     </td>
                                     {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
                                         <td class="text-center">
+                                            {% if primaria %}
+
+                                            {% else %}
                                             <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                            {% endif %}
                                         </td> 
                                     {% endif %}
                                 </tr>
