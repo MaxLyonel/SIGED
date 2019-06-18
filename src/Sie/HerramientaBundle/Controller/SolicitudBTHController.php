@@ -620,6 +620,27 @@ class SolicitudBTHController extends Controller {
         $inss = $query->getResult();
         $gestion = $inss[0][1];
         //$gestion=2018;//adecuacion a la gestion anterior hasta que pase la etapa de inscripciones
+
+        $query = $em->getConnection()->prepare("SELECT ieht.grado_tipo_id as grado
+                     FROM institucioneducativa_humanistico_tecnico ieht  
+                     WHERE ieht.institucioneducativa_id = $idUE and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                                         and  gestion_tipo_id < $gestion
+                     ORDER BY gestion_tipo_id DESC LIMIT 1");
+        $query->execute();
+        $grado_ue = $query->fetch(); //dump($grado_ue);die;
+
+        if($grado_ue){
+            $grado_reporte = 3;
+        }
+        else
+        {  $grado = $grado_ue['grado'];
+           $grado_reporte = $grado+1;
+           if($grado_reporte == 7){
+                $grado_reporte = 6;
+           }
+        }
+        dump($grado_reporte);die;
+
         $arch = 'FORMULARIO_'.$request->get('idUE').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
