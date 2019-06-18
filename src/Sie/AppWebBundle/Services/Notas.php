@@ -2617,5 +2617,86 @@ die;/*
     /*=====  End of  REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS  ======*/
     
     
+    /*=========================================================================================
+    =            ACTUALIZACION DE ESTADO DE MATRICULA PARA ---- ALTERNATIVA ------            =
+    =========================================================================================*/
+    
+    public function actualizarEstadoMatriculaAlternativa($idInscripcion){
+
+        // ESTADOS:
+        // 5 = PROMOVIDO
+        // 22 = POSTERGADO
+        // 3 = RETIRADO
+        // 6 = NO INCORPORADO
+
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+        // ACTUALIZAR ESTADO DE MATRICULA
+        $materias = $this->em->createQueryBuilder('')
+                    ->select('count(ea)')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion', $inscripcion->getId())
+                    ->getQuery()
+                    ->getSingleResult();
+
+        $notas = $this->em->createQueryBuilder('')
+                    ->select('en')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
+                    ->innerJoin('SieAppWebBundle:EstudianteNota','en','with','en.estudianteAsignatura = ea.id')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion', $inscripcion->getId())
+                    ->getQuery()
+                    ->getResult();
+
+        // SOLO SE REGISTRAN LOS ESTADOS GENERALES A PARTIR DE LA GESTION 2019
+        if ($gestion >= 2019) {
+            if($materias[1] == count($notas)){
+                $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
+                $contadorCeros = 0;
+                $contadorReprobados = 0;
+                $contadorAprobados = 0;
+                foreach ($notas as $n) {
+                    if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; } // PORTERGADO
+                    if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; } // PORTERGADO
+                    if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; } // APROBADO
+                }
+
+                if($contadorCeros == count($notas)){
+                    $nuevoEstado = 6;  // NO INCORPORADO
+                }else{
+                    if($contadorAprobados == count($notas)){
+                        $nuevoEstado = 5; // PROMOVIDO
+                    }else{
+                        if ($contadorCeros > 0) {
+                            $nuevoEstado = 3; // RETIRADO
+                        }else{
+                            $nuevoEstado = 22; // POSTERGADO
+                        }
+                    }
+                }
+
+                $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+                $this->em->flush();
+
+            }else{
+                // SI NO TIENE TODAS LAS NOTAS REGISTRADAS ENTONCES EL ESTUDIANTE ESTARA COMO NO INCORPORADO O RETIRADO
+                if(count($notas)==0){
+                    $nuevoEstado = 6;  // NO INCORPORADO
+                }else{
+                    $nuevoEstado = 3; // RETIRADO
+                }
+                $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+                $this->em->flush();
+            }
+        }
+        
+    }
+    
+    /*=====  End of ACTUALIZACION DE ESTADO DE MATRICULA PARA ---- ALTERNATIVA ------  ======*/
+    
     
 }

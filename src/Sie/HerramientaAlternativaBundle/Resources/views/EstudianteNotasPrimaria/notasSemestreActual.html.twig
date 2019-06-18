@@ -155,8 +155,7 @@
                         <b>Estado de matrícula</b>
                     </div>
                     <div class="col-md-4">
-                        {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
-                          <select id="estadoMatricula" disabled class="form-control">
+                          <select id="estadoMatricula" class="form-control" disabled="disabled">
                               <option value=""></option>
                               {% for em in estadosMatricula %}
                                   {% if inscripcion.estadomatriculaTipo.id == em.id %}
@@ -167,19 +166,6 @@
                                   <option value="{{em.id}}" {{selected}}>{{em.estadomatricula}}</option>
                               {% endfor %}
                           </select>
-                        {% else %}
-                            <select id="estadoMatricula" disabled class="form-control" disabled="disabled">
-                              <option value=""></option>
-                              {% for em in estadosMatricula %}
-                                  {% if inscripcion.estadomatriculaTipo.id == em.id %}
-                                      {% set selected = 'selected' %}
-                                  {% else %}
-                                      {% set selected = '' %}
-                                  {% endif %}
-                                  <option value="{{em.id}}" {{selected}}>{{em.estadomatricula}}</option>
-                              {% endfor %}
-                          </select>
-                        {% endif %}
                     </div>
                 </div>
             {% else %}
@@ -266,12 +252,16 @@ var cambiarEstado = function(nota,clase){
 
     var totalNotas = $('.nota').size();
     if(contadorCeros == totalNotas){ 
-        estado = 3; 
+        estado = 6;
     }else{
         if(contadorAprobados == totalNotas){ 
             estado = 5; 
         }else{
-            estado = 22;
+            if(contadorCeros > 0){ 
+                estado = 3; 
+            }else{
+                estado = 22;
+            }
         }   
     }
     $('#estadoMatricula').val(estado);

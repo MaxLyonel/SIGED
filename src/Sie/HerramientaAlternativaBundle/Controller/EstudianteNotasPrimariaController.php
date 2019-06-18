@@ -293,7 +293,7 @@ class EstudianteNotasPrimariaController extends Controller {
             }
         }
 
-        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4));
+        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4,6));
 
         $em->getConnection()->commit();
         return array(
@@ -521,52 +521,7 @@ class EstudianteNotasPrimariaController extends Controller {
             }
         }
 
-        // ACTUALIZAR ESTADO DE MATRICULA
-        $materias = $em->createQueryBuilder('')
-                    ->select('count(ea)')
-                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
-                    ->where('ei.id = :idInscripcion')
-                    ->setParameter('idInscripcion', $inscripcion->getId())
-                    ->getQuery()
-                    ->getSingleResult();
-
-        $notas = $em->createQueryBuilder('')
-                    ->select('en')
-                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
-                    ->innerJoin('SieAppWebBundle:EstudianteNota','en','with','en.estudianteAsignatura = ea.id')
-                    ->where('ei.id = :idInscripcion')
-                    ->setParameter('idInscripcion', $inscripcion->getId())
-                    ->getQuery()
-                    ->getResult();
-
-        if($materias[1] == count($notas)){
-          $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
-          $contadorCeros = 0;
-          $contadorReprobados = 0;
-          $contadorAprobados = 0;
-          foreach ($notas as $n) {
-            if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; } // PORTERGADO
-            if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; } // PORTERGADO
-            if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; } // APROBADO
-          }  
-
-          if($contadorCeros == count($notas)){
-            $nuevoEstado = 3;
-          }else{
-            if($contadorAprobados == count($notas)){
-              $nuevoEstado = 5;
-            }else{
-              $nuevoEstado = 22;
-            }
-          }
-
-          $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
-          // $em->persist($inscripcion);
-          $em->flush();
-
-        }
+        $this->get('notas')->actualizarEstadoMatriculaAlternativa($idInscripcion);
 
         $response = new JsonResponse();
         return $response->setData(array('msg'=>1));
