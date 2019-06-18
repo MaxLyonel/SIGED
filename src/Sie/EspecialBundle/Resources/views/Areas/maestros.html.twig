@@ -9,6 +9,11 @@
 			</tr>
 		</thead>
 		<tbody>
+			{% if responsable|length > 0 %}
+			<tr>
+				<td colspan="3"><b>Maestro Responsable: </b>{{ responsable }}</td>
+			</tr>
+			{% endif %}
 			{% for mco in maestrosCursoOferta %}
 				<tr>
 					{% if operativo == mco.idNotaTipo or (operativo == 5 and mco.idNotaTipo == 4) %}

@@ -1276,7 +1276,7 @@ class AreasController extends Controller {
 
         // Obtener datos del curso
         $curso = $em->createQueryBuilder()
-                    ->select('ie.id as sie, gt.id as gestion,iec.lugar')
+                    ->select('ie.id as sie, gt.id as gestion,iec.lugar, iec as maestro')
                     ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
                     ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
@@ -1332,9 +1332,9 @@ class AreasController extends Controller {
             }
         }
         if($curso[0]['lugar']){
-            $idcargo = 15;
+            $idcargo = array(0,15);
         }else{
-            $idcargo = 0;
+            $idcargo = array(0);
         }
 
         $maestros = $em->createQueryBuilder()
@@ -1348,7 +1348,7 @@ class AreasController extends Controller {
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
-                        ->andWhere('ct.id = :idcargo')
+                        ->andWhere('ct.id in (:idcargo)')
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
@@ -1357,10 +1357,23 @@ class AreasController extends Controller {
                         ->setParameter('idcargo',$idcargo)
                         ->getQuery()
                         ->getResult();
-
+        $responsable = '';
+        if ($curso[0]['maestro']->getMaestroInscripcionAsesor()!=null) {
+            $maestroResponsable = $em->createQueryBuilder()
+                        ->select('CONCAT(p.nombre, \' \', p.paterno, \' \', p.materno) AS responsable')
+                        ->from('SieAppWebBundle:MaestroInscripcion','mi')
+                        ->innerJoin('SieAppWebBundle:Persona','p','WITH','mi.persona = p.id')
+                        ->where('mi.id = :mins')
+                        ->setParameter('mins',$curso[0]['maestro']->getMaestroInscripcionAsesor()->getId())
+                        ->getQuery()
+                        ->getResult();
+            if ($maestroResponsable) {
+                $responsable = $maestroResponsable[0]['responsable'];
+            }
+        }
         $operativo = $this->operativo($sie,$gestion);
 
-        return $this->render('SieEspecialBundle:Areas:maestros.html.twig',array('maestrosCursoOferta'=>$arrayMaestros, 'maestros'=>$maestros,'ieco'=>$ieco,'operativo'=>$operativo));
+        return $this->render('SieEspecialBundle:Areas:maestros.html.twig',array('maestrosCursoOferta'=>$arrayMaestros, 'maestros'=>$maestros,'ieco'=>$ieco,'operativo'=>$operativo, 'responsable'=>$responsable));
     }
 
     public function maestrosAsignarAction(Request $request){
