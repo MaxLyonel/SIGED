@@ -442,6 +442,7 @@ class ReemplazoController extends Controller {
                         $estudianteInscripcionReemplazoEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionIdRude2));                        
                         $estudianteInscripcionJuegosEntity->setEstudianteInscripcion($estudianteInscripcionReemplazoEntity);
                         $estudianteInscripcionJuegosEntity->setObs('REEMPLAZO DEL ESTUDIANTE '.$rude1.' POR '.$rude2.'');
+                        $estudianteInscripcionJuegosEntity->setFechaModificacion($fechaActual);
                         $em->persist($estudianteInscripcionJuegosEntity);
 
                         $inscripcionJuegosRude1Anterior = $this->getInscripcionJuegosRudeGestionPruebaFase($rude1, $pruebaId, $gestionId, ($faseId-1));
