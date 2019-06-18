@@ -153,7 +153,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
     public function findModulesByCourse($data){
       $qb = $this->getEntityMAnager()->createQueryBuilder();
       $qb
-              ->select('iec.id as iecId, ieco.id as iecoId, smp.id as smpId, smt.id as smtId, smt.modulo as modulo')
+              ->select('iec.id as iecId, ieco.id as iecoId, smp.id as smpId, smt.id as smtId, smt.modulo as modulo, smt.esvigente')
               ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
               ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco', 'WITH', 'iec.id = ieco.insitucioneducativaCurso')
               ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'smp', 'WITH', 'ieco.superiorModuloPeriodo = smp.id')
