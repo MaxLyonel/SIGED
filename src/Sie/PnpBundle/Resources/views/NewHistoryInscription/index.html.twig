@@ -89,7 +89,7 @@
                 url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie,'estadomatriculaTipo': estadomatriculaTipo}),
                 beforeSend: function () {
                     $("#idNotas").empty();
-                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
                 },
                 success: function (data) {
                     $("#idNotas").empty();

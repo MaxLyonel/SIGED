@@ -483,18 +483,7 @@ class EstudianteNotasController extends Controller {
                 }
             }
 
-            // REGISTRO DEL ESTADO GENERAL SI CORRESPONDE
-            // ESTADOS:
-            // 5 = PROMOVIDO
-            // 22 = POSTERGADO
-            // 3 = RETIRADO
-            // 6 = NO INCORPORADO
-
-            if ($estadoGeneral != "") {
-                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-                $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estadoGeneral));
-                $em->flush();
-            }
+            $this->get('notas')->actualizarEstadoMatriculaAlternativa($idInscripcion);
         }
         die;
         return 1;

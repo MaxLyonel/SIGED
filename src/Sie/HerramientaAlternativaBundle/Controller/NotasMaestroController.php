@@ -147,9 +147,6 @@ class NotasMaestroController extends Controller {
         try {
             // $this->session->set('ie_per_estado', 2);
             $gestion = $request->get('gestion');
-
-            return $this->redirect($this->generateUrl('herramienta_alter_notas_maestro_index', array('gestion'=>$gestion)));
-
             $idCursoOferta = $request->get('idCursoOferta');
             $idSucursal = $request->get('idSucursal');
             $em = $this->getDoctrine()->getManager();
@@ -429,62 +426,13 @@ class NotasMaestroController extends Controller {
                             ->getQuery()
                             ->getResult()[0];
 
-                $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso['id']);
-                if($primariaNuevo){
+                // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso['id']);
+                // if($primariaNuevo){
                     for ($i=0; $i < count($idInscripcion); $i++) {
-
-                        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[$i]);
-                        // ACTUALIZAR ESTADO DE MATRICULA
-                        $materias = $em->createQueryBuilder('')
-                                    ->select('count(ea)')
-                                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-                                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
-                                    ->where('ei.id = :idInscripcion')
-                                    ->setParameter('idInscripcion', $idInscripcion[$i])
-                                    ->getQuery()
-                                    ->getSingleResult();
-
-                        $notas = $em->createQueryBuilder('')
-                                    ->select('en')
-                                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-                                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
-                                    ->innerJoin('SieAppWebBundle:EstudianteNota','en','with','en.estudianteAsignatura = ea.id')
-                                    ->where('ei.id = :idInscripcion')
-                                    ->setParameter('idInscripcion', $idInscripcion[$i])
-                                    ->getQuery()
-                                    ->getResult();
-
-                        if($materias[1] == count($notas)){
-                            $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
-                            $contadorCeros = 0;
-                            $contadorReprobados = 0;
-                            $contadorAprobados = 0;
-                            foreach ($notas as $n) {
-                                if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; } // PORTERGADO
-                                if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; } // PORTERGADO
-                                if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; } // APROBADO
-                            }  
-
-                            if($contadorCeros == count($notas)){
-                                $nuevoEstado = 3;
-                            }else{
-                                if($contadorAprobados == count($notas)){
-                                  $nuevoEstado = 5;
-                                }else{
-                                  $nuevoEstado = 22;
-                                }
-                            }
-
-                            $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
-                            // $em->persist($inscripcion);
-                            $em->flush();
-
-                        }
+                        $this->get('notas')->actualizarEstadoMatriculaAlternativa($idInscripcion[$i]);
                     }
-                }
+                // }
             }
-            
-
 
             $em->getConnection()->commit();
 
