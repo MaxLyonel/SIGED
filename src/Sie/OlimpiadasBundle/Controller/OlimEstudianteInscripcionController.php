@@ -951,9 +951,14 @@ class OlimEstudianteInscripcionController extends Controller{
         if( strtotime($dataStart) <= strtotime($today) && strtotime($today) <= strtotime($dataEnd) ){
             //nothing to do
         }else{
-            $message = "No permitido, fecha de inscripción expirada";
-            $this->addFlash('closeInscription', $message);
-            return $this->render('SieOlimpiadasBundle:OlimGrupoProyecto:closeInscription.html.twig');
+            if($this->session->get('roluser')==35){
+              //nothing to do  
+            }else{
+                $message = "No permitido, fecha de inscripción expirada";
+                $this->addFlash('closeInscription', $message);
+                return $this->render('SieOlimpiadasBundle:OlimGrupoProyecto:closeInscription.html.twig');    
+            }
+            
         }
         
 
