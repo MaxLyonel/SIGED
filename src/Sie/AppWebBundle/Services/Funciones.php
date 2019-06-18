@@ -1403,6 +1403,7 @@ class Funciones {
         $cantidad = 0;
         $area = $infoUe['ueducativaInfoId']['areaEspecialId'];
         $programa = $infoUe['ueducativaInfoId']['programaId'];
+        $iecLugar = $infoUe['ueducativaInfo']['iecLugar'];
         switch($infoUe['ueducativaInfoId']['areaEspecialId']){
             case 2:
                 foreach($estudiantes as $est ){
@@ -1418,13 +1419,15 @@ class Funciones {
                     $data['msg'] = "El curso cuenta con cupos";
                 }
                 break;
+            case 3:
             case 4:
+            case 5:
                 foreach($estudiantes as $est ){
                     if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 10 and $est['estadomatriculaId'] != 78){
                         $cantidad = $cantidad + 1;
                     }
                 }
-                if($cantidad >= 2){
+                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
                     $data['cupo'] = "NO";
                     $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
                 }else{

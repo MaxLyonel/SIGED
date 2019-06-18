@@ -3047,6 +3047,7 @@ die;/*
             $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            $observacion = $inscripcion->getInstitucioneducativaCurso()->getLugar();
             $subarea = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()))->getEspecialAreaTipo()->getId();
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             $gestionActual = $this->session->get('currentyear');
@@ -3079,6 +3080,7 @@ die;/*
                 'cualitativas'      =>$arrayCualitativas,
                 'operativo'         =>$operativo,
                 'nivel'             =>$nivel,
+                'observacion'       =>$observacion,
                 'estadoMatricula'   =>$inscripcion->getEstadomatriculaTipo()->getId(),
                 'gestionActual'     =>$this->session->get('currentyear'),
                 'idInscripcion'     =>$idInscripcion,

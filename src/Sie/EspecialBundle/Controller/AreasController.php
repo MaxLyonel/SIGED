@@ -775,7 +775,11 @@ class AreasController extends Controller {
                     $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>$programaServicio);
                 }
             }
-
+            if ($mTipo == 15) {
+                $cargoMaestro = array(0, 15);
+            } else {
+                $cargoMaestro = array(0);
+            }
             $maestros = $em->createQueryBuilder()
                            ->select('mi.id, p.paterno, p.materno, p.nombre, p.carnet')
                            ->from('SieAppWebBundle:MaestroInscripcion','mi')
@@ -787,12 +791,11 @@ class AreasController extends Controller {
                            ->where('ie.id = :idInstitucion')
                            ->andWhere('gt.id = :gestion')
                            ->andWhere('rt.id = :rol')
-                           //->andWhere('ct.id = :cargoTipo')
                            ->andWhere('ct.id in (:cargoTipo)')
                            ->setParameter('idInstitucion',$this->session->get('idInstitucion'))
                            ->setParameter('gestion',$this->session->get('idGestion'))
                            ->setParameter('rol',2)
-                           ->setParameter('cargoTipo',array(0,15))//$mTipo
+                           ->setParameter('cargoTipo',$cargoMaestro)
                            ->orderBy('p.paterno','asc')
                            ->addOrderBy('p.materno','asc')
                            ->addOrderBy('p.nombre','asc')
@@ -1459,7 +1462,8 @@ class AreasController extends Controller {
         $ieresult = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$institucioneducativa, 'institucioneducativaTipo'=>4));
         if ($ieresult) {
             $ieactual = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$this->session->get('ie_id'), 'institucioneducativaTipo'=>4));
-            if ($ieresult->getLeJuridicciongeografica()->getLugarTipoIdDistrito() == $ieactual->getLeJuridicciongeografica()->getLugarTipoIdDistrito()) {
+            //Validación de Distrito comentado
+            // if ($ieresult->getLeJuridicciongeografica()->getLugarTipoIdDistrito() == $ieactual->getLeJuridicciongeografica()->getLugarTipoIdDistrito()) {
                 $query = $em->getConnection()->prepare('SELECT mins.id, pers.nombre, pers.paterno, pers.materno FROM maestro_inscripcion mins
                 INNER JOIN persona pers ON pers.id = mins.persona_id WHERE mins.estadomaestro_id = :estado
                 AND mins.gestion_tipo_id = :gestion AND mins.institucioneducativa_id = :institucioneducativa and cargo_tipo_id=:cargo ORDER BY pers.paterno');
@@ -1474,9 +1478,9 @@ class AreasController extends Controller {
                     $maestrosArray[$maestros[$i]['id']] = $maestros[$i]['paterno'].' '.$maestros[$i]['materno'].' '.$maestros[$i]['nombre'];
                 }
                 $msg = 'exito';
-            } else {
-                $msg = 'nodist';
-            }
+            // } else {
+            //     $msg = 'nodist';
+            // }
         } else {
             $msg = 'noinst';
         }

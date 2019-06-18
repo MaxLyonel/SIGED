@@ -42,7 +42,6 @@ class InfoStudentsController extends Controller {
 //        return $this->render($this->session->get('pathSystem') . ':InfoStudents:index.html.twig', array());
       //get the value to send
       $form = $request->get('form');
-
       $em = $this->getDoctrine()->getManager();
       //find the levels from UE
       //levels gestion -1
@@ -98,7 +97,6 @@ class InfoStudentsController extends Controller {
       $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
       //$objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->getInfoAutorizadaUe($form['sie'], $form['gestion']);die('krlossdfdfdfs');
       $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
-
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:index.html.twig', array(
                   'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                   'sie' => $form['sie'],
