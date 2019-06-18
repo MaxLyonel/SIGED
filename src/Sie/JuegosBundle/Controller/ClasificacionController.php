@@ -2204,6 +2204,7 @@ class ClasificacionController extends Controller {
     public function eliminaPruebaInscripcionAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $respuesta = array('registro'=>false, 'msg_correcto' => "", 'msg_incorrecto' => "");
@@ -2218,6 +2219,8 @@ class ClasificacionController extends Controller {
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $fase = $entityDatos->getFaseTipo()->getId();
                 $estudiante = $entityDatos->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getNombre();
+                $pruebaId = $entityDatos->getPruebaTipo()->getId();
+                $estudianteInscripcionId = $entityDatos->getEstudianteInscripcion()->getId();
 
                 $registroController = new registroController();
                 $registroController->setContainer($this->container);
@@ -2242,20 +2245,28 @@ class ClasificacionController extends Controller {
                 // }                
 
                 if($borrar){
-                    $entityEquipoDatos = $em->getRepository('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos'=>($inscripcion)));
-                    if(count($entityEquipoDatos) > 0){
-                        $em->remove($entityEquipoDatos);
-                    }
-                    $entityEntrenadorDatos = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos'=>($inscripcion)));
-                    if(count($entityEntrenadorDatos) > 0){
-                        $em->remove($entityEntrenadorDatos);
-                    }
-                    $em->remove($entityDatos);
-                    $em->flush();
-                    $em->getConnection()->commit();
-                    // $respuesta = array('0'=>true);
-                    // $this->session->getFlashBag()->set('success', array('title' => 'Eliminado', 'message' => "Estudiante ".$estudiante." eliminado"));
-                    $respuesta = array('registro'=>true, 'msg_correcto' => "Estudiante ".$estudiante." eliminado", 'msg_incorrecto' => "");
+
+                    // $entityDatosFaseSuperior = $this->verificaInscripcionEstudianteGestionDisciplinaFase($estudianteInscripcion,$gestionActual,$pruebaId,($fase+1));
+                    $entityDatosFaseSuperior = $this->verificaInscripcionEstudianteGestionPruebaFase($estudianteInscripcionId,$gestionActual,$pruebaId,($fase+1));
+                    if (!$entityDatosFaseSuperior[0]){
+                        $entityEquipoDatos = $em->getRepository('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos'=>($inscripcion)));
+                        if(count($entityEquipoDatos) > 0){
+                            $em->remove($entityEquipoDatos);
+                        }
+                        $entityEntrenadorDatos = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos'=>($inscripcion)));
+                        if(count($entityEntrenadorDatos) > 0){
+                            $em->remove($entityEntrenadorDatos);
+                        }
+                        $em->remove($entityDatos);
+                        $em->flush();
+                        $em->getConnection()->commit();
+                        // $respuesta = array('0'=>true);
+                        // $this->session->getFlashBag()->set('success', array('title' => 'Eliminado', 'message' => "Estudiante ".$estudiante." eliminado"));
+                        $respuesta = array('registro'=>true, 'msg_correcto' => "Estudiante ".$estudiante." eliminado", 'msg_incorrecto' => "");
+                    } else {
+                        $respuesta = array('registro'=>false, 'msg_correcto' => "", 'msg_incorrecto' => 'No puede eliminarse a '.$estudiante.' (clasificado en la fase '.($fase).')');
+                        // $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Estudiante ".$estudiante." no puede ser eliminado debido a que se encuentra clasificado en la fase ".$fase));
+                    }                    
                 } else {
                     //$this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes"));
                     $respuesta = array('registro'=>false, 'msg_correcto' => "", 'msg_incorrecto' => 'Las listas estan cerradas, no puede eliminar estudiantes');
