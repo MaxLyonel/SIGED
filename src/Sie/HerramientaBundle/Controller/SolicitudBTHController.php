@@ -312,14 +312,22 @@ class SolicitudBTHController extends Controller {
                                                     WHERE ieht.institucioneducativa_id = $institucionid AND ieht.gestion_tipo_id = $gestion");
                 $query->execute();*/
                 $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
-                                                    WHERE ieht.institucioneducativa_id = $institucionid ORDER BY gestion_tipo_id DESC limit 1");
+                WHERE ieht.institucioneducativa_id = $institucionid and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                ORDER BY gestion_tipo_id DESC limit 1");
                 $query->execute();
                 $grado = $query->fetch();
-                if ((int)$grado['grado_tipo_id'] < 6){
-                    $grado = (int)$grado['grado_tipo_id']+1;
-                }else{
+
+                if($grado){
+                     if ((int)$grado['grado_tipo_id'] < 6){                  
+                    $grado = (int)$grado['grado_tipo_id']+1;    
+                    }else{
                     $grado = (int)$grado['grado_tipo_id'];
-                }
+                    }
+                } else{
+                    $grado = 3;
+                } 
+
+               
                 /** Adecuacion a las equivalencias de especialidades */
                 $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
                                                 FROM especialidad_tecnico_humanistico_tipo eth
@@ -386,6 +394,7 @@ class SolicitudBTHController extends Controller {
         }
     }
     public function guardasolicitudAction(Request $request){
+        $datos          = ($request->get('ipt')); //dump($datos);die;
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
         $idsolicitud = $request->get('idsolicitud');
@@ -481,7 +490,7 @@ class SolicitudBTHController extends Controller {
                     $flujoproceso   = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $flujotipo , 'orden' => 1));
                     $tarea          = $flujoproceso->getId();//34 Solicita BTH
                     $tabla          = 'institucioneducativa';
-                    $datos          = ($request->get('ipt'));
+                    $datos          = ($request->get('ipt')); 
                     $id_tipoTramite = $idsolicitud; //Registro Nuevo
                     $idTramite='';
                     $wfTramiteController = new WfTramiteController();
@@ -630,22 +639,22 @@ class SolicitudBTHController extends Controller {
         $grado_ue = $query->fetch(); //dump($grado_ue);die;
 
         if($grado_ue){
-            $grado_reporte = 3;
-        }
-        else
-        {  $grado = $grado_ue['grado'];
+           $grado = $grado_ue['grado'];
            $grado_reporte = $grado+1;
            if($grado_reporte == 7){
                 $grado_reporte = 6;
-           }
+           }           
         }
-        dump($grado_reporte);die;
+        else
+        {  $grado_reporte = 3; 
+        } //dump ($grado_reporte);die;
+        
 
         $arch = 'FORMULARIO_'.$request->get('idUE').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'bth_infoue_v1_gq.rptdesign&idUE='.$idUE.'&gestion='.$gestion.'&idtramite='.$tramite_id.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'bth_infoue_v1_gq.rptdesign&idUE='.$idUE.'&gestion='.$gestion.'&idtramite='.$tramite_id.'&grado='.$grado_reporte.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -775,7 +784,12 @@ class SolicitudBTHController extends Controller {
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
         $informe= $datos[0]['informe'];
-        $documento= $datos[4];
+        if($datos[4]['grado']){
+        $documento= $datos[5];
+        }else{
+        $documento= $datos[4];    
+        }
+        
       ///obtenemos la lista de las especialidades de la unidad educativa
         $institucion_id = $infoUE['institucioneducativa_id'];///revisar
         /// EXTRAER LA ULTIMA GESTION REGISTRADAD COMO BTH ....
@@ -865,6 +879,24 @@ class SolicitudBTHController extends Controller {
         $tipoTramite    = $infoUE['tramite_tipo'];
         $tramite_tipo   = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($tipoTramite)->getTramiteTipo();
         $flujotipo      = $em->getRepository('SieAppWebBundle:Tramite')->find($id_tramite)->getFlujoTipo();
+
+        $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
+                WHERE ieht.institucioneducativa_id = $institucion_id and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                ORDER BY gestion_tipo_id DESC limit 1");
+                $query->execute();
+                $grado = $query->fetch(); //dump($institucion_id);die;
+
+                if($grado){
+                     if ((int)$grado['grado_tipo_id'] < 6){                  
+                    $grado = (int)$grado['grado_tipo_id']+1;    
+                    }else{
+                    $grado = (int)$grado['grado_tipo_id'];
+                    }
+                } else{
+                    $grado = 3;
+                } 
+                  // dump ($grado);die; 
+
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
                     'ieducativa'    => $infoUe,
                     'institucion'   => $institucion,
@@ -882,7 +914,8 @@ class SolicitudBTHController extends Controller {
                     'documento'     =>$documento,
                     'tipoTramite'   =>$tipoTramite,
                     'tramite_tipo'  =>trim($tramite_tipo),
-                    'flujotipo'     => $flujotipo->getId()
+                    'flujotipo'     => $flujotipo->getId(),
+                    'grado'         =>$grado
                 ));
 
     }
@@ -964,7 +997,7 @@ class SolicitudBTHController extends Controller {
         }
      }
 //Distrital
-     public function  VerSolicitudBTHDisAction(Request $request){
+    public function  VerSolicitudBTHDisAction(Request $request){
          $id_tramite = $request->get('id');//ID de Tramite
          $em = $this->getDoctrine()->getManager();
          $query = $em->getConnection()->prepare("select td.*
@@ -1109,6 +1142,24 @@ class SolicitudBTHController extends Controller {
             $especialidadarray[] = array('id' => $especialidad['id'], 'especialidad' => $especialidad['especialidad']);
             $especialidadifno[$i] = $idespecialidad;
         }
+        /*Obtenemos el Grado  al que le corresponde en la presente gestión*/
+            
+        $institucion_id = (int)$institucion->getId();    
+        $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
+                WHERE ieht.institucioneducativa_id = $institucion_id and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                ORDER BY gestion_tipo_id DESC limit 1");
+                $query->execute();
+                $grado = $query->fetch(); //dump($grado);die;
+
+                if($grado){
+                     if ((int)$grado['grado_tipo_id'] < 6){                  
+                    $grado = (int)$grado['grado_tipo_id']+1;    
+                    }else{
+                    $grado = (int)$grado['grado_tipo_id'];
+                    }
+                } else{
+                    $grado = 3;
+                } 
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDis.html.twig',array(
             'ieducativa' => $infoUe,
             'institucion' => $institucion,
@@ -1119,28 +1170,40 @@ class SolicitudBTHController extends Controller {
             //'maestros'=>$maestros,
             'especialidadarray'=>$especialidadarray,
             'informe'=>$informe,
-            'id_tramite'=>$id_tramite
+            'id_tramite'=>$id_tramite,
+            'grado'=>$grado
             ));
-
     }
      public function  guardasolicitudDepAction(Request $request){
         $documento = $request->files->get('docpdf');
+        /*Validacion para que guarde el docuemnto*/
         if(!empty($documento)){
             /*$dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
-            if (!file_exists($dirtmp)) {
-                mkdir($dirtmp, 0777);
-            }else{
-                system('rm -fr ' . $dirtmp.'/*');
+            */
+            $root_bth_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid');
+            //dump($root_bth_path);die;
+            if (!file_exists($root_bth_path)) {
+                mkdir($root_bth_path, 0777);
             }
-
-            //move the file emp to the directory temp
-            $file = $oFile->move($dirtmp, $originalName);*/
-            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
+            $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
+            // $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/adielimespec/';
+            if (!file_exists($destination_path)) {
+                mkdir($destination_path, 0777);
+            }
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
             $imagen='default-2x.pdf';
         }
+
+        /*if(!empty($documento)){            
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
+            $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
+            $documento->move($destination_path, $imagen);
+        }else{
+            $imagen='default-2x.pdf';
+        }*/
+
         $em = $this->getDoctrine()->getManager();
           $id_rol= $this->session->get('roluser');
           $id_usuario= $this->session->get('userId');
@@ -1326,18 +1389,36 @@ class SolicitudBTHController extends Controller {
         $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
         $query->execute();
         $especialidad = $query->fetchAll();
+        /*Obtenemos el grado a cual le corresponde en la presente gestion*/
+        $institucion_id = (int)$institucion->getId();    
+        $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
+                WHERE ieht.institucioneducativa_id = $institucion_id and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                ORDER BY gestion_tipo_id DESC limit 1");
+                $query->execute();
+                $grado = $query->fetch(); //dump($institucion_id);die;
+
+                if($grado){
+                     if ((int)$grado['grado_tipo_id'] < 6){                  
+                    $grado = (int)$grado['grado_tipo_id']+1;    
+                    }else{
+                    $grado = (int)$grado['grado_tipo_id'];
+                    }
+                } else{
+                    $grado = 3;
+                } 
         return $this->render('SieHerramientaBundle:SolicitudBTH:FormularioBTHDis.html.twig',array(
-            'ieducativa' => $infoUe,
-            'institucion' => $institucion,
-            'gestion' => $gestion,
-            'ubicacion' => $ubicacionUe,
-            'director' => $director,
-            'cursos'   => $cursos,
-            'maestros'=>$maestros,
+            'ieducativa'    => $infoUe,
+            'institucion'   => $institucion,
+            'gestion'       => $gestion,
+            'ubicacion'     => $ubicacionUe,
+            'director'      => $director,
+            'cursos'        => $cursos,
+            'maestros'      =>$maestros,
             'especialidadarray'=>$especialidadarray,
-            'informe'=>$informe,
-            'id_tramite'=>$id_tramite,
-            'documento'=>$documento
+            'informe'       =>$informe,
+            'id_tramite'    =>$id_tramite,
+            'documento'     =>$documento,
+            'grado'         =>$grado
         ));
     }
 //Departamental
@@ -1459,10 +1540,15 @@ class SolicitudBTHController extends Controller {
             ->setMaxResults('1')
             ->getQuery()
             ->getResult();
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
-        //dump($datos);die;
+        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true); 
+        //dump($datos);die; 
+        if ($datos[4]['grado']){
+           $documento= empty($datos[5])?'':$datos[5]; 
+        } else{
+            $documento= empty($datos[4])?'':$datos[4];
+        }     
         $informe= $datos[0]['informe'];
-        $documento= empty($datos[4])?'':$datos[4];
+        //$documento= empty($datos[4])?'':$datos[4];
         $especialidadarray = array();
         for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
             $idespecialidad = $datos[2]['select_especialidad'][$i];
@@ -1472,30 +1558,70 @@ class SolicitudBTHController extends Controller {
             $especialidadarray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
             $especialidadifno[$i] = $idespecialidad;
         }
+        /*Obtenemos el grado al que le corresponde*/
+        $institucion_id = (int)$institucion->getId();    
+        $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
+                WHERE ieht.institucioneducativa_id = $institucion_id and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                ORDER BY gestion_tipo_id DESC limit 1");
+                $query->execute();
+                $grado = $query->fetch(); //dump($institucion_id);die;
+
+                if($grado){
+                     if ((int)$grado['grado_tipo_id'] < 6){                  
+                    $grado = (int)$grado['grado_tipo_id']+1;    
+                    }else{
+                    $grado = (int)$grado['grado_tipo_id'];
+                    }
+                } else{
+                    $grado = 3;
+                } 
+
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDep.html.twig',array(
-            'ieducativa' => $infoUe,
-            'institucion' => $institucion,
-            'gestion' => $gestion,
-            'ubicacion' => $ubicacionUe,
-            'director' => $director,
-            'cursos'   => $cursos,
-            'maestros'=>$maestros,
-            'especialidadarray'=>$especialidadarray,
-            'informe'=>$informe,
-            'id_tramite'=>$id_tramite,
-            'documento'=>$documento
+            'ieducativa'    => $infoUe,
+            'institucion'   => $institucion,
+            'gestion'       => $gestion,
+            'ubicacion'     => $ubicacionUe,
+            'director'      => $director,
+            'cursos'        => $cursos,
+            'maestros'      => $maestros,
+            'especialidadarray'=> $especialidadarray,
+            'informe'       => $informe,
+            'id_tramite'    => $id_tramite,
+            'documento'     => $documento,
+            'grado'         => $grado
         ));
 
     }
     public function guardasolicitudDepartamentalAction(Request $request){
         $documento = $request->files->get('docpdf');
+        /*Validacion para que guarde el docuemnto*/
+        if(!empty($documento)){
+            /*$dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
+            */
+            $root_bth_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid');
+            if (!file_exists($root_bth_path)) {
+                mkdir($root_bth_path, 0775);
+            }
+            $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
+            // $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/adielimespec/';
+            if (!file_exists($destination_path)) {
+                mkdir($destination_path, 0775);
+            }
+            $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
+            $documento->move($destination_path, $imagen);
+        }else{
+            $imagen='default-2x.pdf';
+        }
+        /*
         if(!empty($documento)){
             $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
             $imagen='default-2x.pdf';
-        }
+        }*/
+
+
         $em = $this->getDoctrine()->getManager();
         $id_rol         = $this->session->get('roluser');
         $id_usuario     = $this->session->get('userId');
