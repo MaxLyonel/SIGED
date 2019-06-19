@@ -114,7 +114,7 @@
                                 <td>{{ entity.nombre_tabla }}</td>
                                 <td>{{ entity.flujo }}</td>
                                 <td>{{ entity.tramite_tipo }}</td>
-                                <td>{{ entity.obs }}</td>
+                                <td class = "more">{{ entity.obs }}</td>
                                 <td>{{ entity.tarea_actual }}</td>
                                 <td><span class={% if entity.id_estado == 3 %}"label label-warning"{% elseif entity.id_estado == 4 %}"label label-danger" {% else %} "label label-success"{% endif %}>{{ entity.tramite_estado }}</span></td>
                                 <td>{{ entity.fecha_estado|date('d-m-Y') }}</td>
@@ -220,7 +220,7 @@
                                 <td>{{ entity.flujo }}</td>
                                 <td>{{ entity.tramite_tipo }}</td>
                                 <td>{{ entity.proceso_tipo }}</td>
-                                <td>{{ entity.obs }}</td>
+                                <td><spam class = "more">{{ entity.obs }}</spam></td>
                                 <td>{{ entity.tramite_estado }}</td>
                                 <td>{{ entity.fecha_recepcion|date('d-m-Y') }}</td>
                                 <td>{{ entity.plazo }}</td>

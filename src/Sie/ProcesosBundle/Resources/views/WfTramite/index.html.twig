@@ -67,17 +67,54 @@
         </div><!-- /.row -->
     </div>
     <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-    </div><!-- /.modal --> 
+    </div><!-- /.modal -->
+    <div class="modal fade" id="modalObs" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Observación:</h5>
+                </div>
+                <div class="modal-body">
+                    <p id = "obs"></p>  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
     <script>
         $( document ).ready(function() {
-            if({{tipo}} == 2){
+            if({{tipo}} == 2 || {{tipo}} == 3){
                 cargatablas();
+                readmore();
             }
             $(".tooltips").tooltip();
+            
+            
         });
+        function readmore(){
+            var showChar = 30;  // How many characters are shown by default
+            var ellipsestext = "...";
+            var moretext = "Ver más >";
+
+            $('.more').each(function() {
+                var content = $(this).html();
+                if(content.length > showChar) {
+                    var c = content.substr(0, showChar);
+                    var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent">&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#modalObs" onclick="verMas(\'' + content + '\')">' + moretext + '</a></span>';
+                    $(this).html(html);
+                }
+            });
+        }
+        function verMas(observacion){
+            $('#obs').text(observacion);
+        }
+
         $(function() {
             // elementos de la lista
             var menues = $(".nav li"); 
@@ -89,6 +126,16 @@
                 $(this).addClass("active");
             });
         });
+        
+        $(function(){
+            $(".validar").keydown(function(event){
+                //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+        
         function nuevotramite(){
             formData = {tipo: 1};
             $.ajax({
@@ -124,6 +171,7 @@
                     $('#contenido').append(data);
                     cargatablas();
                     $(".tooltips").tooltip();
+                    readmore();
                 },
             });
         }
@@ -144,6 +192,7 @@
                     $('#contenido').append(data);
                     cargatablas();
                     $(".tooltips").tooltip();
+                    readmore();
                 },
             });
         }
