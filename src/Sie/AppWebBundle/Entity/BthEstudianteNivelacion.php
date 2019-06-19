@@ -360,4 +360,88 @@ class BthEstudianteNivelacion
     {
         return $this->especialidadTecnicoHumanistico;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteNotaCualitativa
+     */
+    private $estudianteNotaCualitativa;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo
+     */
+    private $especialidadTecnicoHumanisticoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\AsignaturaTipo
+     */
+    private $asignaturaTipo;
+
+
+    /**
+     * Set estudianteNotaCualitativa
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteNotaCualitativa $estudianteNotaCualitativa
+     * @return BthEstudianteNivelacion
+     */
+    public function setEstudianteNotaCualitativa(\Sie\AppWebBundle\Entity\EstudianteNotaCualitativa $estudianteNotaCualitativa = null)
+    {
+        $this->estudianteNotaCualitativa = $estudianteNotaCualitativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteNotaCualitativa
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteNotaCualitativa 
+     */
+    public function getEstudianteNotaCualitativa()
+    {
+        return $this->estudianteNotaCualitativa;
+    }
+
+    /**
+     * Set especialidadTecnicoHumanisticoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo $especialidadTecnicoHumanisticoTipo
+     * @return BthEstudianteNivelacion
+     */
+    public function setEspecialidadTecnicoHumanisticoTipo(\Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo $especialidadTecnicoHumanisticoTipo = null)
+    {
+        $this->especialidadTecnicoHumanisticoTipo = $especialidadTecnicoHumanisticoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get especialidadTecnicoHumanisticoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo 
+     */
+    public function getEspecialidadTecnicoHumanisticoTipo()
+    {
+        return $this->especialidadTecnicoHumanisticoTipo;
+    }
+
+    /**
+     * Set asignaturaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\AsignaturaTipo $asignaturaTipo
+     * @return BthEstudianteNivelacion
+     */
+    public function setAsignaturaTipo(\Sie\AppWebBundle\Entity\AsignaturaTipo $asignaturaTipo = null)
+    {
+        $this->asignaturaTipo = $asignaturaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignaturaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\AsignaturaTipo 
+     */
+    public function getAsignaturaTipo()
+    {
+        return $this->asignaturaTipo;
+    }
 }
