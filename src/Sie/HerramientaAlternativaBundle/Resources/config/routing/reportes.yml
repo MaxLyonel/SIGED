@@ -150,4 +150,20 @@ sie_alt_lista_operativos:
 
 herramienta_alter_certificados_primaria:
     path:     /siealtcertificados
-    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportCertificadosPrimaria }             
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportCertificadosPrimaria }
+
+herramienta_alter_reporte_primaria_pdf:
+    path:     /reportAlterPrimP/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterPrimariaPdf }
+
+herramienta_alter_reporte_primaria_excel:
+    path:     /reportAlterPrimX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterPrimariaExcel }
+
+herramienta_alter_reporte_primaria_mie_pdf:
+    path:     /reportAlterPrimMieP/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterPrimariaMIEPdf }
+
+herramienta_alter_reporte_primaria_mie_excel:
+    path:     /reportAlterPrimMieX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterPrimariaMIEExcel }

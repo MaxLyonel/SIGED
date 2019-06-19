@@ -239,15 +239,17 @@ class NoteConsultationParentsController extends Controller {
 
         $tuicion = false;
 
-        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-        $query->bindValue(':user_id', $this->session->get('userId'));
-        $query->bindValue(':sie', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId());
-        $query->bindValue(':rolId', $this->session->get('roluser'));
-        $query->execute();
-        $aTuicion = $query->fetchAll();
+        if($this->session->get('sysname') == 'SIGED') {
+            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId());
+            $query->bindValue(':rolId', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetchAll();
 
-        if ($aTuicion[0]['get_ue_tuicion']) {
-            $tuicion = true;
+            if ($aTuicion[0]['get_ue_tuicion']) {
+                $tuicion = true;
+            }
         }
 
         return $this->render('SieRegularBundle:NoteConsultationParents:nota.html.twig', array(

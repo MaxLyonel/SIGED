@@ -138,7 +138,7 @@
                 url: Routing.generate('note_consultation_parents_sie_result'),
                 beforeSend: function () {
                     $("#result").empty();
-                    $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
                 },
                 success: function (data) {
                     $("#result").empty();
@@ -164,7 +164,7 @@
                 url: Routing.generate('note_consultation_parents_sie_nota', {'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie}),
                 beforeSend: function () {
                     $("#idNotas").empty();
-                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
                 },
                 success: function (data) {
                     $("#idNotas").empty();
@@ -190,7 +190,7 @@
                     url: Routing.generate('remove_inscription_sie_remove', {'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'sie': sie}),
                     beforeSend: function () {
                         $("#result").empty();
-                        $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
                     },
                     success: function (data) {
                         return false;

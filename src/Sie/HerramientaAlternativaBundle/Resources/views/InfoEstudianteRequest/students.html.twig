@@ -20,16 +20,39 @@
                     {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'id':'formStudentInscription'} } )}}
                     <table class="table table-bordered table-hover cf">
                         <tr>
+                            <td colspan="6">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                {{form_label(form.level)}}
+                                                {{form_widget(form.level,{'attr':{'onchange':'getEtapa(this.value)'} })}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{form_label(form.etapa)}}
+                                                {{form_widget(form.etapa,{'attr':{'onchange':'getParaleloIns(this.value)'} })}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{form_label(form.paralelo)}}
+                                                {{form_widget(form.paralelo,{'attr':{} })}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id='answerid'></div>
+                            </td>
+                        </tr>
+                        <tr>
                             <input type="hidden" id="formdata_data" name="formdata[data]" value="{{infoUe}}">
-                            <td align="center" class="warning" colspan="4">Estudiantes para Inscribir</br></td>
+                            <td align="center" class="warning" colspan="5">Estudiantes para Inscribir</br></td>
                             <td><input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"></td>
                         </tr>
-                        
                         {% for data in objStudents%}
                             <tr>
                                 <td>{{loop.index}}</td>
                                 <td  align="">{{data.codigoRude}}</td>
                                 <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+                                <td  align="">{{data.estadomatricula}} </td>
                                 <td  align="">{{data.fechaNacimiento |date('d-m-Y')}} <p class='text-green'> </p></td>
                                 {#<td  align="">{{data.codigoRude}}
                                     <select class="form-control"  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][paralelo]">

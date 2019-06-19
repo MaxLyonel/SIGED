@@ -56,7 +56,7 @@
                     {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') %}
                         {% if primaria %}
                             <button type="button" class="btn btn-default" style="float:right" onclick="newEmergente('{{infoUe}}')">
-                                Agregar Área Emergente
+                                Agregar M.I.E.
                             </button>
                         {% endif %}
                         <div class="btn-group" style="width:650px; float:right;">
@@ -92,11 +92,13 @@
                         </thead>
                         <tbody>
                             {% for co in cursoOferta %}
-                                <tr {% if co.esvigente == true %}class="text-strong"{% endif %}>
+                                <tr>
                                     <td class="text-center border-right">{{loop.index}}</td>
                                     <td>{{co.codigo}}</td>
                                     <td>
-                                        <span id="modulo_{{co.smpid}}">{{co.modulo}}</span>
+                                        <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
+                                            {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
+                                        </span>
                                         {% if co.codigo == '415' %}
                                             <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
                                             <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
@@ -112,7 +114,9 @@
                                     </td>
                                     {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
                                         <td class="text-center">
-                                            <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                            {% if (primaria == true and co.codigo == '408') or primaria == false %}
+                                                <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                            {% endif %}
                                         </td> 
                                     {% endif %}
                                 </tr>

@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Solicitudes BTH - Pendientes <span>Solicitud BTH </span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Solicitudes BTH  <span>Solicitud BTH </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -209,7 +209,7 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <strong>Espeialidades Ratificadas</strong>
+                                                    <strong>Especialidades Ratificadas</strong>
                                                 </div>
                                                 <div class="col-md-3">
                                                 </div>
@@ -219,6 +219,17 @@
                                                             <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>  Año de escolaridad a implementar BTH:</strong>
+                                                </div>
+                                                <div class="col-md-3">
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado: {{ grado }} </strong>
                                                 </div>
                                             </div>
                                         </div><!-- /.panel-body -->
@@ -479,7 +490,7 @@
                             }
                         }*/
 
-
+                        ip.push({grado:{{grado}}});
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
                         var fd = new FormData();
@@ -489,7 +500,7 @@
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
                         fd.append('obstxt', obstxt);
-                        fd.append('evaluacion2', evaluacion2);
+                        fd.append('evaluacion2', evaluacion2);                        
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
                         $.ajax({
