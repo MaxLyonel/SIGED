@@ -129,12 +129,21 @@
                                 Estado de matrícula:
                             </div>
                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <select name="estadoGeneral" id="estadoGeneral" class="form-control" required="required" disabled="disabled">
-                                    <option value=""></option>
-                                    {% for e in estadosGenerales %}
-                                        <option value="{{e.id}}" {% if e.id == inscripcion.estadomatriculaTipo.id %} selected {% endif %} >{{e.estadomatricula}}</option>
-                                    {% endfor %}
-                                </select>
+                                {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+                                    <select name="estadoGeneral" id="estadoGeneral" class="form-control" required="required">
+                                        <option value=""></option>
+                                        {% for e in estadosGenerales %}
+                                            <option value="{{e.id}}" {% if e.id == inscripcion.estadomatriculaTipo.id %} selected {% endif %} >{{e.estadomatricula}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <select name="estadoGeneral" id="estadoGeneral" class="form-control" required="required" disabled="disabled">
+                                        <option value=""></option>
+                                        {% for e in estadosGenerales %}
+                                            <option value="{{e.id}}" {% if e.id == inscripcion.estadomatriculaTipo.id %} selected {% endif %} >{{e.estadomatricula}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
                             </div>
                         </div>
                     {% endif %}
@@ -214,30 +223,40 @@
 
     function calcularEstadoGeneral(){
 
-        var estado = 5;
-        var contadorCeros = 0;
-        var contadorAprobados = 0;
+        var totalNotas = 0;
+        var totalCeros = 0;
+        var totalReprobados = 0;
+        var totalAprobados = 0;
+
         $(".nota").each(function (index) {
-            if($(this).val() == 0){ contadorCeros+=1; }
-            if($(this).val() >= 51){ contadorAprobados+=1; }
+
+            var nota = parseInt($(this).val());
+
+            if(nota == 0){
+                totalCeros = totalCeros + 1;
+            }
+            if(nota > 0 && nota < 51){
+                totalReprobados = totalReprobados + 1;
+            }
+            if(nota >= 51){
+                totalAprobados = totalAprobados + 1;
+            }
+
+            totalNotas = totalNotas + 1;
         });
 
-        var totalNotas = $('.nota').size();
-        if(contadorCeros == totalNotas){ 
-            estado = 6;
-        }else{
-            if(contadorAprobados == totalNotas){ 
-                estado = 5; 
-            }else{
-                if(contadorCeros > 0){ 
-                    estado = 3; 
-                }else{
-                    estado = 22;
-                }
-            }   
+        if(totalNotas == totalAprobados){
+            $('#estadoGeneral').val(5);
         }
-
-        $('#estadoGeneral').val(estado);
+        if(totalNotas == totalReprobados || totalReprobados > 0){
+            $('#estadoGeneral').val(22);
+        }
+        if(totalNotas == totalCeros){
+            $('#estadoGeneral').val(6);
+        }
+        if(totalNotas != totalCeros && totalCeros > 0){
+            $('#estadoGeneral').val(3);
+        }
     }
 
     // calcularEstadoGeneral();

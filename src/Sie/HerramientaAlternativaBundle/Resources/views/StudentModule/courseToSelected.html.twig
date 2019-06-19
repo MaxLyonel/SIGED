@@ -64,15 +64,7 @@
                   <tbody>
                     {% for  modules in arrCourseToSelected %}
                     <tr role="row" class="odd">
-                      <td>
-                      {% if modules.esvigente %}
-                      <span class="text-strong text-primary">
-                        {{modules.modulo}} (nuevo)
-                      </span>
-                      {% else %}
-                        {{modules.modulo}}
-                      {% endif %}
-                      </td>
+                      <td>{{modules.modulo}}</td>
                       <td class="dt-body-center">
                         <div class="ckbox ckbox-lilac">
                             <div class="ckbox ckbox-primary">
