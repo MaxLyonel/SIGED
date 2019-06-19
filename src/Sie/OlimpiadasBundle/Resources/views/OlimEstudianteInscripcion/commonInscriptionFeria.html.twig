@@ -1,0 +1,96 @@
+{% if allowInscription %}
+
+
+<div class="row">
+    {% if groupId %}
+    <div class="col-md-12">
+        <p class="lead">Inscripción en <span class="label label-info">{{objGroup.nombre}}</span> </p>
+    </div>
+    {% else %}
+    {% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:show.html.twig' with {'regla': regla} %}
+    {% endif %}
+    
+    
+    
+    <div class="col-md-12">
+        
+        {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
+        <div class="form-body">
+            
+            <div class="row">
+                <div class="col-md-3">
+                    NIVEL:
+                    {{form_widget(form.nivel, {'attr': {'class':'form-control', 'onchange':'getGrados(this.value)'} } )}}
+                </div>
+                <div class="col-md-3">
+                    GRADO:
+                    {{form_widget(form.grado, {'attr': {'class':'form-control', 'onchange':'getTurnosFeria(this.value)'} } )}}
+                </div>
+                <div class="col-md-3">
+                    TURNO:
+                    {{form_widget(form.turno, {'attr': {'class':'form-control', 'onchange':'getParaleloFeria(this.value)'} } )}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    PARALELO<br /><span class="text-primary"><strong>Seleccione entre 1 a 3 paralelos</span></strong>:
+                    {{form_widget(form.paralelo, {'attr': {'class':'form-control js-example-basic-multiple'} } )}}
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <br />
+                    {{form_widget(form.buscar, {'attr': {'class':'btn btn-success', 'onclick':'getStudentsFeria()'} } )}}
+                </div>
+            </div>
+            
+            
+        </div><!-- /.form-body -->
+        <div class="form-footer">
+            <div class="pull-right">
+                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                {#
+                    {{form_widget(form.buscar, {'attr': {'class':'btn btn-danger'} } )}}
+                    #}
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.form-footer -->
+            
+            {{form_end(form)}}
+            
+        </div>
+        
+    </div>
+    
+    
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div id="getStudentsId">
+                
+            </div>
+        </div>
+        
+    </div>
+    
+    {% else %}      
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="alert alert-danger">
+                <strong>Alerta!</strong> No se puede realizar la inscripci&oacute;n, debido a que el equipo ya tiene la cantidad de inscritos permitido.
+            </div>
+        </div>
+    </div>
+    {% endif %}      
+    <script>
+        $().ready(function() {
+            $(".js-example-basic-multiple").select2({
+                placeholder: 'Seleccionar...',
+                allowClear: true,
+                language: {
+                    noResults: function(){
+                        return 'Debe seleccionar el nivel, grado y turno.';
+                    }
+                }
+            });
+        });
+    </script>

@@ -294,6 +294,7 @@ class PersonaController extends Controller
                         $newpersona->setEsVigente('0');
                         $newpersona->setEsvigenteApoderado('0');
                         $newpersona->setCountEdit('0');
+                        $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
                         $em->persist($newpersona);
                         $em->flush();
                     } else {
@@ -306,7 +307,8 @@ class PersonaController extends Controller
                         $persona->setFechaNacimiento($fechaNac);
                         $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($generoTipo));
                         $persona->setCorreo($correo);
-                        $persona->setSegipId('1');                    
+                        $persona->setSegipId('1');   
+                        $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));                 
                         $em->persist($persona);
                         $em->flush();
                     }

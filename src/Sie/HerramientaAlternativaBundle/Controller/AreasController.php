@@ -87,17 +87,20 @@ class AreasController extends Controller {
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             
             $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idAsignatura);
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
-            
-            $ieco = new InstitucioneducativaCursoOferta();
-            $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
-            $ieco->setInsitucioneducativaCurso($curso);
-            $ieco->setSuperiorModuloPeriodo($smp);
-            $ieco->setHorasmes(0);
-            $em->persist($ieco);
-            $em->flush();
+            $codigo = $smp->getSuperiorModuloTipo()->getCodigo();
+            if ($codigo != '415'){
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+                
+                $ieco = new InstitucioneducativaCursoOferta();
+                $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
+                $ieco->setInsitucioneducativaCurso($curso);
+                $ieco->setSuperiorModuloPeriodo($smp);
+                $ieco->setHorasmes(0);
+                $em->persist($ieco);
+                $em->flush();
+                $em->getConnection()->commit();
 
-            $em->getConnection()->commit();
+            }
             // Mostramos nuevamente las areas del curso
             $data = $this->getAreas($infoUe);
             $data['primaria'] = $primaria;
@@ -334,6 +337,99 @@ class AreasController extends Controller {
             }
         }
 
+        // CONSULTA PARA OBTENER EL CODIGO DE ACREDITACION Y DE ESPECIALIDAD
+        // CON LO CUAL SE PUEDE DEFINIR SI ES PRIMARIA O SECUNDARIA , ETC
+        $cursoTipo = $em->createQueryBuilder()
+                        ->select('sat.codigo as codigosat, sest.codigo as codigosest')
+                        ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                        ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo','siep','with','iec.superiorInstitucioneducativaPeriodo = siep.id')
+                        ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion','siea','with','siep.superiorInstitucioneducativaAcreditacion = siea.id')
+                        ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad','sae','with','siea.acreditacionEspecialidad = sae.id')
+                        ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo','sat','with','sae.superiorAcreditacionTipo = sat.id')
+                        ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo','sest','with','sae.superiorEspecialidadTipo = sest.id')
+                        ->where('iec.id = :idCurso')
+                        ->setParameter('idCurso', $iecId)
+                        ->getQuery()
+                        ->getResult();
+
+        // VERIFICAMOS SI EL CURSO ES PRIMARIA  SUPERIOR_ESPECIALIDAD_TIPO 1 Y SPERIOR_ACREDITRACION_TIPO 1 O 2
+        if($cursoTipo[0]['codigosest'] == 1 and ($cursoTipo[0]['codigosat'] == 1 or $cursoTipo[0]['codigosat'] == 2) and $gestion >= 2019){
+            // VERIFICAMOS SI EL CURSO YA TIENE REGISTRADO LA OFERTA CON TODAS LAS MATERIAS INCLUIDO EL EMERGENTE
+            $cursoOferta = $em->createQueryBuilder()
+                            ->select('smt')
+                            ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
+                            ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo','smp','with','ieco.superiorModuloPeriodo = smp.id')
+                            ->innerJoin('SieAppWebBundle:SuperiorModuloTipo','smt','with','smp.superiorModuloTipo = smt.id')
+                            ->where('ieco.insitucioneducativaCurso = :idCurso')
+                            ->setParameter('idCurso', $iecId)
+                            ->getQuery()
+                            ->getResult();
+            $codigosCursoOferta = [];
+            foreach ($cursoOferta as $key => $value) {
+                $codigosCursoOferta[] = $value->getCodigo();
+            }
+
+            // DEFINIMOS LAS MATERIAS OBLIGATORIAS
+            $materiasObligatorias = array(401,402,403,404,415);
+
+            foreach ($materiasObligatorias as $mo) {
+                // VERIFICAMO SI NO TIENE LA MATERIA EN CURSO OFERTA
+                if(!in_array($mo, $codigosCursoOferta)){
+
+                    // OBTENEMOS EL MODULO PERIODO PARA REGISTRARLO EN CURSO OFERTA
+                    $cursoModulo = $em->createQueryBuilder()
+                            ->select('smp')
+                            ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                            ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'siep', 'WITH', 'iec.superiorInstitucioneducativaPeriodo = siep.id')
+                            ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'smp', 'WITH', 'smp.institucioneducativaPeriodo = siep.id')
+                            ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'smt', 'WITH', 'smp.superiorModuloTipo = smt.id')
+                            ->where('iec.id = :idCurso')
+                            ->andWhere('smt.codigo = :codigoModulo')
+                            ->setParameter('idCurso', $iecId)
+                            ->setParameter('codigoModulo', $mo)
+                            ->getQuery()
+                            ->getResult();
+
+                    // SI NO EXISTE LA MATERIA EN EL CURSO Y ADEMAS ES MATERIA EMERGENTE, LO CREAMOS
+                    // SOLO VALIDAMOS LA MATERIA EMERGENTE PORQUE PREVIAMENTE YA SE REGISTRAN LAS DEMAS MATERIAS LINEA 330
+                    if(!$cursoModulo and $mo == 415){
+                        $newSuperiorModuloTipo = new SuperiorModuloTipo();
+                        $newSuperiorModuloTipo->setModulo('MÓDULO EMERGENTE');
+                        $newSuperiorModuloTipo->setObs('');
+                        $newSuperiorModuloTipo->setCodigo('415');
+                        $newSuperiorModuloTipo->setSigla('MIE');
+                        $newSuperiorModuloTipo->setOficial(1);
+                        $newSuperiorModuloTipo->setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
+                        $em->persist($newSuperiorModuloTipo);
+                        $em->flush();
+
+                        $smp = new SuperiorModuloPeriodo();
+                        $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
+                        $smp->setInstitucioneducativaPeriodo($iePeriodo[0]);
+                        $smp->setHorasModulo(0);
+                        $em->persist($smp);
+                        $em->flush();
+
+                        $cursoModulo = $smp;
+
+                    }else{
+                        $cursoModulo = $cursoModulo[0];
+                    }
+
+                    // REGISTRAMOS EL CURSO OFERTA
+                    $ieco = new InstitucioneducativaCursoOferta();
+                    $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
+                    $ieco->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+                    $ieco->setSuperiorModuloPeriodo($cursoModulo);
+                    $ieco->setHorasmes(0);
+                    $em->persist($ieco);
+                    $em->flush();
+
+                }
+            }
+
+        }
+
         // Curso oferta asignaturas del curso
         $cursoOferta = $em->createQueryBuilder()
                 ->select('l.id as smpid, k.modulo, g.id as iecoid, k.codigo as codigo, k.esvigente')
@@ -378,12 +474,14 @@ class AreasController extends Controller {
                 ->andWhere('isuc.periodoTipoId = :periodoId')
                 ->andWhere('isuc.gestionTipo = :gestion')
                 ->andWhere('isuc.institucioneducativa = :institucion')
+                ->andWhere('isuc.id = :sucursal')
                 ->andWhere('smp.id NOT IN (:actuales)')
                 ->setParameter('setId', $setId)
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('periodoId', $periodo)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('institucion', $institucion)
+                ->setParameter('sucursal', $sucursal)
                 ->setParameter('actuales', $actuales)
                 ->getQuery()
                 ->getResult();
@@ -404,11 +502,13 @@ class AreasController extends Controller {
                 ->andWhere('isuc.periodoTipoId = :periodoId')
                 ->andWhere('isuc.gestionTipo = :gestion')
                 ->andWhere('isuc.institucioneducativa = :institucion')
+                ->andWhere('isuc.id = :sucursal')
                 ->setParameter('setId', $setId)
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('periodoId', $periodo)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('institucion', $institucion)
+                ->setParameter('sucursal', $sucursal)
                 ->getQuery()
                 ->getResult();
         }
@@ -544,17 +644,27 @@ class AreasController extends Controller {
         $ieco = $request->get('ieco');
         $idmi = $request->get('idmi');
         $idnt = $request->get('idnt');
-        $horas = $request->get('horas');
-
+        // $horas = $request->get('horas');
+        
         $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();
+        // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();
         for($i=0;$i<count($iecom);$i++){
-            if($horas[$i] == ''){
-                $horasNum = 0;
-            }else{
-                $horasNum = $horas[$i];
-            }
+            $horasNum = 0;
             if($iecom[$i] == 'nuevo' and $idmi[$i] != ''){
+                // $query = $em->getConnection()->prepare('
+                //     INSERT INTO institucioneducativa_curso_oferta_maestro(id,horas_mes,fecha_registro,es_vigente_maestro,maestro_inscripcion_id,nota_tipo_id,institucioneducativa_curso_oferta_id)
+                //     VALUES(:id,:horas_mes, :fecha_registro, :es_vigente_maestro, :maestro_inscripcion_id, :nota_tipo_id, :institucioneducativa_curso_oferta_id)
+                // ');
+                
+                // $query->bindValue(':id', intval('(select max(id) from institucioneducativa_curso_oferta_maestro) + 1'));
+                // $query->bindValue(':horas_mes', $horasNum);
+                // $query->bindValue(':fecha_registro', date('Y-m-d'));
+                // $query->bindValue(':es_vigente_maestro', true);
+                // $query->bindValue(':maestro_inscripcion_id', $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i])->getId());
+                // $query->bindValue(':nota_tipo_id', $em->getRepository('SieAppWebBundle:NotaTipo')->find($idnt[$i])->getId());
+                // $query->bindValue(':institucioneducativa_curso_oferta_id', $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco[$i])->getId());
+                // $query->execute();
+
                 $newCOM = new InstitucioneducativaCursoOfertaMaestro();
                 $newCOM->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco[$i]));
                 $newCOM->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i]));

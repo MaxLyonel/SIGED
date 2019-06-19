@@ -29,3 +29,12 @@ sie_juegos_seguimiento:
 sie_juegos_fixture:
     resource: "@SieJuegosBundle/Resources/config/routing/fixture.yml"
     prefix:   /fixture
+
+sie_juegos_estadistica:
+    resource: "@SieJuegosBundle/Resources/config/routing/estadistica.yml"
+    prefix:   /estadistica
+
+sie_juegos_RegisterPersonStudent:
+    resource: "@SieJuegosBundle/Resources/config/routing/RegisterPersonStudent.yml"
+    prefix:   /person
+

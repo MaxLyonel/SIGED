@@ -91,7 +91,11 @@
             {% endfor %}
         </table>
     {% endif %}
-    <hr>
+    {#<hr>#}
+    <div class="form-group">
+        <label for="justificacionCE">Justificación de cambio de estado</label>
+        <textarea  class="form-control" id="justificacionCE" name="form[justificacionCE]"></textarea>
+    </div>
     <div class="text-center">
         <button type="button" name="button" class="btn btn-green" onclick="saveCambioEstado();">Registrar cambio de estado</button>
     </div>

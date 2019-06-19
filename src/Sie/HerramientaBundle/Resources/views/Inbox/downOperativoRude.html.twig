@@ -1,8 +1,17 @@
 <center>
+
 <div class="">
-    <a target="" href="{{ path('herramienta_inbox_downloadRude', { 'file':file,'datadownload':datadownload } )}}" onclick="return confirm('¿Está seguro de descargar el archivo?, Si no está seguro presione CANCELAR.')"> 
-    	<h3>  <p class="label label-info"> <i class="fa fa-download"></i> ARCHIVO GENERADO</p></h3>
-    </a> 
-    
+    {% if sw %}
+        <a target="" href="{{ path('herramienta_inbox_downloadRude', { 'file':file,'datadownload':datadownload } )}}" onclick="return confirm('¿Está seguro de descargar el archivo?, Si no está seguro presione CANCELAR.')"> 
+            <h3>  <p class="label label-info"> <i class="fa fa-download"></i> ARCHIVO GENERADO</p></h3>
+        </a> 
+    {% else %}
+       {% for flashMessage in app.session.flashbag.get('notidonwloadrude') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+        {% endfor %}    
+    {% endif %}
 </div>	
 </center>

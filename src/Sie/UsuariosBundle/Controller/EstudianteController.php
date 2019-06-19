@@ -100,7 +100,7 @@ class EstudianteController extends Controller
                 $query = "  select * 
                             from estudiante a
                             where 
-                            a.nombre like '%".$form['InputNombre']."%' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
+                            a.nombre like '%".$form['InputNombre']."%' and a.paterno = '' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
             }        
             
             $stmt = $db->prepare($query);
@@ -254,16 +254,16 @@ class EstudianteController extends Controller
                 }
                 //$estudiante->setComplemento('');
                 //added validation segip by krlos
-                // if($form['swValidationSegip']==1){
-                //     $valSegip = 1;
-                //     $messageValSegip = 'SI VALIDADO SEGIP';
-                // }else{
-                //     $valSegip = 0;
-                //     $messageValSegip = 'NO VALIDADO SEGIP';
-                // }
+                if($form['swValidationSegip']==1){
+                    $valSegip = 1;
+                    // $messageValSegip = 'SI VALIDADO SEGIP';
+                }else{
+                    $valSegip = 0;
+                    // $messageValSegip = 'NO VALIDADO SEGIP';
+                }
 
                 $estudiante->setSegipId($valSegip);
-                $estudiante->setObservacion($messageValSegip);
+                // $estudiante->setObservacion($messageValSegip);
                 
                 $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['Expedido']));
                 $em->persist($estudiante);
@@ -276,6 +276,17 @@ class EstudianteController extends Controller
                 $UsuarioGeneracionRude->setDatosCreacion(serialize($aDatosCreacion));
                 $em->persist($UsuarioGeneracionRude);
                 $em->flush();
+
+                $this->get('funciones')->setLogTransaccion(
+                     $estudiante->getId(),
+                     'estudiante',
+                     'C',
+                     '',
+                     $estudiante,
+                     '',
+                     'USUARIOS',
+                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                 );
 
                 $em->getConnection()->commit();
                 return $response->setData(array('error'=>false,'mensaje' => '¡Proceso realizado exitosamente! Código rude generado: '.$codigoRude));

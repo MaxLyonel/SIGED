@@ -1,0 +1,96 @@
+
+
+
+
+<div class="row">
+
+
+        <div class="col-md-12">
+
+            <!-- Start input fields - horizontal form -->
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-sub-heading">
+                    <div class="callout callout-info">
+                        <p class="text"><strong>Resultado de la Busqueda:</br></strong> 
+                        Revise el listado para verificar el estado del archivo subido, los archivos Observado tienen que ser nuevamente subidos, para su respectiva consolidaci&oacute;n
+                    </p></div>
+                </div><!-- /.panel-subheading -->
+                <div class="panel-body no-padding rounded-bottom">
+
+
+                 <small>
+                        <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                            <thead class="">
+                                <tr class="">
+                                    <th>No.</th>
+                                    <th>SIE</th>
+                                    <th>Unidad Educativa</th>
+                                    <th>Bimestre</th>
+                                    <th>Operativo</th>
+
+                                    <th>Gestión</th>
+                                    <th>Distrito</th>
+                                    <th>Fecha Subida</th>
+                                    <th>Estado</th>
+                                    <th>Opci&oacute;n</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entity in ueuploadfiles %}
+                                    <tr>
+                                        <td data-title="No.">{{loop.index}}</td>
+                                        <td data-title="SIE">{{entity.id}}</a></td>
+                                        <td data-title="Unidad Educativa">{{ entity.institucioneducativa }} </td>
+                                        <td data-title="Bimestre" class="text-center"> {{entity.bimestre}}</td>
+                                        <td data-title="Operativo" class="text-center">{{ entity.operativo }}</td>
+
+                                        <td data-title="Gestión" class="text-center">{{ entity.gestion }}</td>
+                                        <td data-title="Distrito" class="text-center">{{ entity.distrito }}</td>
+
+                                        <td data-title="F. Subida." class="text-center">{{ entity.dateUpload |date('d-m-Y') }}</td>
+                                        {%if entity.estadoFile==1%}
+                                            <td data-title="Estado" class='success' ><i class='fa fa-check-square-o'></i> Subido/En espera de consolidación</td>
+                                            <td data-title="Estado" class='success' ></td>
+
+                                        {%else%}
+                                            <td data-title="Estado" class='danger'><i class='fa fa-exclamation-triangle'></i>Archivo Observado</td>
+                                            <td data-title="Estado" class='danger'>
+                                                <form name="form" action="{{path('consolidation_sie_web')}}" method="post" class="tab-content form-horizontal" id="opensiefileIdForm" onsubmit="return true;" target="_blank">                      
+                                                        <div class="form-footer">
+                                                            <div class="pull-right">
+                                                                <button type="submit" id="form_find" name="form[find]" class="btn btn-xs btn-danger" >Subir Archivo</button>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div><!-- /.form-footer -->
+                                                        <input type="hidden" id="form_sie" name="form[sie]" value="{{entity.id}}">
+                                                </form>
+
+
+                                            </td>
+                                        {%endif%}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </small>
+                   
+
+
+
+
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End input fields - horizontal form -->
+
+        </div>
+
+   
+      
+ </div>

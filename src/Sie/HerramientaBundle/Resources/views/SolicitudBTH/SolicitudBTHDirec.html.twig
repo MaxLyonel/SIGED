@@ -21,6 +21,7 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
+    {% if estado == 0 %}
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
@@ -44,7 +45,7 @@
                 </div>
             </div>
         </div>
-    <div class="row" >
+    <div class="row"  >
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title" id="titulo">Formularios </h3>
@@ -447,7 +448,6 @@
             </div><!-- /.panel-body -->
         </div>
     </div>
-
         <div class="modal fade" id="recargar" tabindex="-1" role="dialog" style=" border-radius: 80px;" >
             <div class="modal-dialog " role="document">
                 <div class="modal-content">
@@ -468,6 +468,39 @@
                 </div>
             </div>
         </div>
+    </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"></h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="alert alert-warning ">
+                                            <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                            <div class="notification-info">
+                                                <p>
+                                                    Su Unidad Educativa ya inicio su trámite ó no le corresponde realizar la solicitud para BTH.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <a href="{{ path('wf_tramite_index') }}" class="btn btn-info">Volver</a>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {% endif %}
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -607,7 +640,10 @@
                                     else if(data.estado==2 ){
                                         swal(" Su Unidad Educativa ya se declaró como BTH y por lo tanto debe iniciar su trámite como 'Ratificación', ó  \n" +
                                             " A su Unidada Educativa no le corresponde realizar el trámite de solicitud BTH");
-                                    }else {
+                                    }else if(data.estado == 4){
+                                        swal(data.msg)
+                                    }
+                                    else {
                                         swal('Su formulario no se envío correctamente debido a que: \n' +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO". \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH, ' +
@@ -649,54 +685,6 @@
                             $("#lista_especialidades_ratificacion").find("option").each(function(){
                                 especialidades_id.push(this.value);
                             });
-                            /*if($('#lista_especialidades_ratificacion').val()) {
-                                var verificar1 = false, verificar2 = false;
-                                var caso1 = false, caso2 = false;
-                                $("#lista_especialidades_ratificacion").find('option').each(function () {
-                                    if ($(this).is('[disabled=disabled]')) {
-                                        especialidades_id.push(this.value);
-                                    }
-                                    if (this.value == 41 || this.value == 42) {
-                                        verificar1 = true;
-                                    }
-                                    if (this.value == 64 | this.value == 65) {
-                                        verificar2 = true;
-                                    }
-                                });
-                                var seleccionado = $('#lista_especialidades_ratificacion').val();
-                                if (verificar1) {
-                                    for (var i in seleccionado) {
-                                        if (seleccionado[i] == 41 || seleccionado[i] == 42) {
-                                            especialidades_id.push(seleccionado[i]);
-                                            caso1 = true;
-                                        }
-                                    }
-                                    if (!caso1) {
-                                        swal(" Usted ya se declaro como BTH en esta gestion  o  \n" +
-                                            "Debe seleccionar al menos una especialidad entre TEXTILES Y CONFECCIONES Y TEJIDOS Y TELARES.");
-                                        return false;
-                                    }
-                                }
-                                if (verificar2) {
-                                    for (var i in seleccionado) {
-                                        if (seleccionado[i] == 64 || seleccionado[i] == 65) {
-                                            especialidades_id.push(seleccionado[i]);
-                                            caso2 = true;
-                                        }
-                                    }
-                                    if (!caso2) {
-                                        swal("Usted ya se declaro como BTH en esta gestion  o  \n" +
-                                            "Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
-                                        return false;
-                                    }
-                                }
-                                ip.push({select_especialidad : especialidades_id});
-                                //console.log(especialidades_id);
-                            } else {
-                                swal("Debe seleccionar al menos una especialidad.");
-                                return false;
-                            } //alert(especialidades_id);
-                            console.log('res',especialidades_id);*/
                             ip.push({select_especialidad : especialidades_id});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
@@ -725,8 +713,11 @@
                                     }
                                     else if(data.estado==2 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
-                                    }else {
-                                        swal('Su formulario no se envío correctamente debido a que: \n '   +
+                                    }else if(data.estado == 4){
+                                        swal(data.msg)
+                                    }
+                                    else {
+                                        swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH.');
                                     }
@@ -750,8 +741,5 @@
             $('#form_regularizacion').hide();
             $('#mensaje').hide();
     });
-
-
-
 </script>
 {% endblock %}

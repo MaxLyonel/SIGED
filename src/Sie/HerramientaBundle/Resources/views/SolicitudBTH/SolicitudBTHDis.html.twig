@@ -233,6 +233,11 @@
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
                                             <div class="row">
+                                                <div class="alert alert-warning">
+                                                    <strong>Nota.-</strong> Se recomienda adjuntar el informe a la Dirección Departamental de Educación para la autorización o postergación de la misma. <strong> El archivo no debe superar a los 2MB</strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>¿Solicitud Procedente?</strong>
                                                 </div>
@@ -252,15 +257,17 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8" id="obs">
-                                                    <textarea class="form-control" rows="5" id="obstxt"></textarea>
+                                                    <textarea class="form-control" rows="5" id="obstxt" placeholder="Escriba la observación en caso de caso de devolución."></textarea>
                                                 </div>
                                             </div>
                                             <BR>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="pull-left">
-                                                        {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
-                                                        <input type="file" id="adjdocumento" title="Adjuntar Documento" accept="application/pdf">
+                                                        <label for="adjdocumento">
+                                                            <i class="fa fa-cloud-upload"></i> Adjuntar Informe
+                                                        </label>
+                                                        <input type="file" id="adjdocumento" title="Adjuntar Informe" accept="application/pdf,.doc,.docx">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -289,6 +296,13 @@
                 document.getElementById("informe").checked = true;
             }
             $('#obs').hide();
+            $('#adjdocumento').change(function() {
+                var a=(this.files[0].size);
+                if(a > 2057157) {
+                    swal("El documento adjunto supera a los 2MB");
+                    $('#adjdocumento').val('');
+                };
+            });
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotype1]:checked').val();
@@ -329,7 +343,6 @@
                                 return false;            }
                             var evaluacion  = "NO";
                         }
-
                         if($('#siprocede:checked').val())
                         ip.push({siprocede: 1})
 
@@ -359,7 +372,7 @@
                             contentType: false,
                             cache: false,
                             processData:false,
-                            //dataType : 'json',
+                            dataType : 'json',
                             beforeSend: function () {
                                 swal({
                                     title: "Enviando...",
@@ -368,10 +381,12 @@
                                     buttons: false
                                 });
                             },
-                            success: function (data) {
-                                if (data==1){
+                            success: function (data) { console.log(data);
+                                if (data.estado==1){
                                     swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite}});
                                     location.href = "{{ path('wf_tramite_recibido') }}";
+                                }else if(data.estado == 4){
+                                    swal(data.msg)
                                 }
                                 else{
                                     swal("Su respuesta no se envío correctamente");
@@ -387,5 +402,4 @@
         }
 
     </script>
-
 {% endblock %}

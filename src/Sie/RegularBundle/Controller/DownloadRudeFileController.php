@@ -75,40 +75,69 @@ class DownloadRudeFileController extends Controller{
 	      // dump($request);die;
 	      //get values send
 	      $form = $request->get('form');
-	      $form['id'] = $form['codigoSie'];
+	      // $form['id'] = $form['codigoSie'];
 	      // dump($form);die;
 	      // conver json values to array
 	      // $arrData = json_decode($form['data'],true);
-	      $arrData = $form;
+	      // $jsonData = $form['data'];
+       //    $arrData = json_decode($jsonData,true);
+
+          $arrData['id'] = $form['sie'];
+          $arrData['gestion'] = $form['gestion'];
 	      //to generate the file execute de function
-	      $cabecera = 'R';
-          //get the file to generate the new file
+	     //  $cabecera = 'R';
+      //     //get the file to generate the new file
           $dir = '/archivos/descargas/';
-            //before to donwload file remove the old
-          $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+
+          $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $arrData['id'],
+            'gestion' => $arrData['gestion'],
+          ));
+          // dump($objOperativo);
+          // dump($arrData);
+          
+          $cabecera = 'R';
+          //before to donwload file remove the old
+          $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
           system('rm -fr ' . $dir .$fileRude.'.sie' );      
           system('rm -fr ' . $dir .$fileRude.'.igm' );
 
-	      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
-	      $query->execute();
+          if($objOperativo /*&&  $objOperativo->getBim1()*/){
+            $sw = true;
+            //to generate the file execute de function
+            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
+            $query->execute();
 
-	      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
-	      //decode base64
-	      $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+            $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+            
 
-	      system('rm -fr ' . $dir . $newGenerateFile.'.sie');
-	      exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+            //decode base64
+            $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
 
-	      //name the file
-	     exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
-	     exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
-	     
-	     $form['data'] = json_encode($form);
-	     return $this->render($this->session->get('pathSystem') . ':DownloadRudeFile:downOperativoRude.html.twig', array(
-	        'file' => $newGenerateFile . '.igm ',
-	        'datadownload' => $form['data'],
+            system('rm -fr ' . $dir . $newGenerateFile.'.sie');
+            exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
 
-	     ));
+            //name the file
+           exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
+           exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
+           $dataDownload = array(
+              'file' => $newGenerateFile . '.igm ',
+              'datadownload' => json_encode(array('id'=>$form['sie'],'gestion'=>$form['gestion'])),
+              'sw' => $sw
+            );
+          }else{
+            $message = "Problemas al descargar el archio, el archivo no presetan Inicio de Gestión";
+            $this->addFlash('notidonwloadrude', $message);
+            $sw = false;
+            $dataDownload = array(
+              'sw' => $sw
+            );
+          }   
+          
+      // }   
+
+      
+     return $this->render($this->session->get('pathSystem') . ':DownloadRudeFile:downOperativoRude.html.twig', $dataDownload );
 
     }
 

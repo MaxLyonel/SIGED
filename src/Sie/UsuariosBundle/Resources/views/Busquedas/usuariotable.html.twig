@@ -55,6 +55,7 @@
                                     {% endif %}
                                 </td>   
                                 <td>
+                                    
                                     {% set roles_depu = persona.roles|replace({'"':'','{':'','}':''}) %}
                                     {% set rolesarray = roles_depu|split(',') %}   
 
@@ -68,13 +69,14 @@
                                     {% set rolesarray_cob = roles_depu_cob|split(',') %}
 
                                     {% set roles_sub_sis = persona.subsistema|replace({'{':'','}':''}) %}
-                                    {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','"':''}) %}
-
+                                    {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','",*':'|*','"':''}) %}
+                                    {# {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','"':''}) %} #}
+                                    
                                     {#
                                     {% set roles_sub_sis = persona.subsistema|replace({',"':'|','",':'|',',':'|'}) %}
                                     {% set roles_sub_sis = roles_sub_sis|replace({'"':''}) %}#}
                                     {% set rolesarray_sub_sis = roles_sub_sis|split('|') %}    
-
+                                    {# {{dump(rolesarray_sub_sis)}} #}
                                     {% for i in 0..rolesarray|length-1 %}
                                             {% if rolesarray_est[i] == 'false'%}
                                                 <div class="panel panel-default">

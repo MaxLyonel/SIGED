@@ -254,8 +254,7 @@
                             //$("#form_posicion").attr('disabled', 'true');
                             $("#botonAceptar").attr('disabled', 'true');
                             //$('[name="estudiantes[]"]').attr('disabled',true);
-                            $("#listaParticipante").empty();
-                            $("#listaParticipante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                            $("#listaParticipante").prepend('<div id="load" name="load" style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                         },
                         success: function (data) {
                             $("#form_nivel").removeAttr('disabled');
@@ -266,69 +265,78 @@
                             $('[name="estudiantes[]"]').removeAttr('disabled');
                             $("#listaSeleccionado").empty();
                             chekedOff();
-                            $("#listaParticipante").empty();
-                            if(data.msg_incorrecto != ''){
-                                $("#listaParticipante").append('<div class="alert alert-danger"><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
-                            }
-                            if(data.msg_correcto != ''){
-                                $("#listaParticipante").append('<div class="alert alert-success"><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
-                            }
+                            $("#load").remove();
 
                             var divLista = "";
                             var c = 0;
                             var expanded = "";
-                            if (data.conjunto){         
-                                divLista = '<div class="panel-group rounded shadow" id="accordionlistaParticipante">';                     
-                                $.each(data.registrados, function (i, participante) {                 
-                                    divLista = divLista + '<div class="panel panel-default">';                 
-                                    divLista = divLista + '<div class="panel-heading no-border">';                 
-                                    divLista = divLista + '<h5 class="panel-title">';  
-                                    if(c == 0){
-                                        var expanded = 'aria-expanded="true"';
-                                        var expandedClass = 'in';
-                                    } else {
-                                        var expanded = 'aria-expanded="false" class="collapsed"';
-                                        var expandedClass = '';
-                                    }             
-                                    divLista = divLista + '<a data-toggle="collapse" data-parent="#accordionlistaParticipante" href="#collapse'+i+'" '+expanded+'>Equipo'+i+'</a>';                 
-                                    divLista = divLista + '</h5>';                       
-                                    divLista = divLista + '</div>';     
-                                    divLista = divLista + '<div id="collapse'+i+'" class="panel-collapse collapse '+expandedClass+'" '+expanded+' >';                 
-                                    divLista = divLista + '<div class="panel-body">';                     
-                                    divLista = divLista + '<ul class="list-group no-margin">';                                                    
-                                    $.each(participante, function (j, value) {
-                                        divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
-                                    });                                            
-                                    divLista = divLista + '</ul>';  
-                                    divLista = divLista + '</div>';                               
-                                    divLista = divLista + '</div>';    
-                                    c = c + 1;  
-                                });                             
-                                divLista = divLista + '</div>';  
-                            // var equipos = data.equipos;
-                                $("#listaEquipo").empty();
-                                $("#listaEquipo").append('<select id="equipo" name="equipo" required="required" class="form-control input-sm"></select>');
-                                $("#equipo").empty();
-                                $.each(data.equipos, function (i, value) {
-                                    $("#equipo").append('<option value="' + i + '">' + value + '</option>');
-                                });
-                            } else {
-                                $.each(data.registrados, function (i, participante) {   
-                                    divLista = divLista + '<ul class="list-group no-margin">';                                                    
-                                    $.each(participante, function (j, value) {
-                                        divLista = divLista + '<li id="list' + j + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
-                                    });                                            
-                                    divLista = divLista + '</ul>'; 
-                                });
-                            }                           
-                            $("#listaParticipante").append(divLista);                     
-                            $("#form_posicion").removeAttr('disabled');
-                            $("#form_posicion").focus();
-                            $('#form_posicion').empty();
-                            $("#form_posicion").append('<option value=""></option>');
-                            for (var i in data.posiciones) {
-                                $("#form_posicion").append('<option value="' + data.posiciones[i].id + '">' + data.posiciones[i].posicion + '</option>');
+                            if (data.registrados){
+                                $("#listaParticipante").empty();
+                                if (data.conjunto){         
+                                    divLista = '<div class="panel-group rounded shadow" id="accordionlistaParticipante">';                     
+                                    $.each(data.registrados, function (i, participante) {                 
+                                        divLista = divLista + '<div class="panel panel-default">';                 
+                                        divLista = divLista + '<div class="panel-heading no-border">';                 
+                                        divLista = divLista + '<h5 class="panel-title">';  
+                                        if(c == 0){
+                                            var expanded = 'aria-expanded="true"';
+                                            var expandedClass = 'in';
+                                        } else {
+                                            var expanded = 'aria-expanded="false" class="collapsed"';
+                                            var expandedClass = '';
+                                        }             
+                                        divLista = divLista + '<a data-toggle="collapse" data-parent="#accordionlistaParticipante" href="#collapse'+i+'" '+expanded+'>Equipo'+i+'</a>';                 
+                                        divLista = divLista + '</h5>';                       
+                                        divLista = divLista + '</div>';     
+                                        divLista = divLista + '<div id="collapse'+i+'" class="panel-collapse collapse '+expandedClass+'" '+expanded+' >';                 
+                                        divLista = divLista + '<div class="panel-body">';                     
+                                        divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                        $.each(participante, function (j, value) {
+                                            divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                        });                                            
+                                        divLista = divLista + '</ul>';  
+                                        divLista = divLista + '</div>';                               
+                                        divLista = divLista + '</div>';    
+                                        c = c + 1;  
+                                    });                             
+                                    divLista = divLista + '</div>';  
+                                // var equipos = data.equipos;
+                                    $("#listaEquipo").empty();
+                                    $("#listaEquipo").append('<select id="equipo" name="equipo" required="required" class="form-control input-sm"></select>');
+                                    $("#equipo").empty();
+                                    $.each(data.equipos, function (i, value) {
+                                        $("#equipo").append('<option value="' + i + '">' + value + '</option>');
+                                    });
+                                } else {
+                                    $.each(data.registrados, function (i, participante) {   
+                                        divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                        $.each(participante, function (j, value) {
+                                            divLista = divLista + '<li id="list' + j + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                        });                                            
+                                        divLista = divLista + '</ul>'; 
+                                    });
+                                }                           
+                                $("#listaParticipante").append(divLista);    
+                                $("#form_posicion").removeAttr('disabled');
+                                $("#form_posicion").focus();
+                                $('#form_posicion').empty();
+                                $("#form_posicion").append('<option value=""></option>');
+                                for (var i in data.posiciones) {
+                                    $("#form_posicion").append('<option value="' + data.posiciones[i].id + '">' + data.posiciones[i].posicion + '</option>');
+                                }
                             }
+
+                            if(data.msg_incorrecto){
+                                if(data.msg_incorrecto != ''){
+                                    $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                                }
+                            }
+                            if(data.msg_correcto){
+                                if(data.msg_correcto != ''){
+                                    $("#listaParticipante").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                                }
+                            }
+                            
                         },
                         statusCode: {
                             500: function () {
@@ -354,6 +362,9 @@
 
         var listar_nivel = function (sie) {
             var peticion;
+            
+            var sie =  sie.replace(/[^0-9]/g,'');
+
             if(sie.length>=8){
                 peticion = $.ajax({
                     type: 'POST',
@@ -397,6 +408,7 @@
                             $("#botonLista").removeAttr('disabled');
                         }
                     },
+                    timeout: 5000, // sets timeout to 3 seconds
                     statusCode: {
                         500: function () {
                         },
@@ -405,6 +417,7 @@
                     }
                 });
             } else {
+                $("#form_sie").val(sie);
                 $("#form_nivel").attr('disabled', 'true');
                 $('#form_nivel').empty();
                 $("#form_nivel").append('<option value="">Seleccionar nivel</option>');
@@ -840,6 +853,11 @@
                     beforeSend: function () {
                     },
                     success: function (data) {
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                            }
+                        }
                         var elemento = document.getElementById('list' + es);
                         if(data.registro[0]){
                             elemento.remove();

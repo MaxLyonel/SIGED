@@ -7,6 +7,13 @@
     </div>
     <div class="panel-body no-padding" id="modal-body">
         <div class="alert " style="padding:10px">
+            <h5 class="text-info">Datos de la Institución Educativa</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Código SIE</th><td>{{inscripcion.institucioneducativaCurso.institucioneducativa.id}}</td>
+                    <th>Nombre</th><td>{{inscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td>
+                </tr>
+            </table>
             <h5 class="text-info">Datos del Curso</h5>
             {% if subsistema == 1 or subsistema == 4 %}
             <table class="table table-condensed table-bordered" style="background:#EEEEEE">
@@ -65,13 +72,22 @@
                 {% endif %}
             {% endif %}
 
-            <h5 class="text-info">Datos del Estudiante</h5>
+            <h5 class="text-info">Datos de la/el Estudiante</h5>
             <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                 <tr>
                     <th>Codigo Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
                 </tr>
                 <tr>
-                    <th>Estudiante</th><td style="color:#0086DD"><b>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</b></td>
+                    <th>Estudiante</th><td><strong>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Carnet de Identidad</th><td>{{inscripcion.estudiante.carnetIdentidad}}{% if inscripcion.estudiante.complemento %} - {{inscripcion.estudiante.complemento}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Género</th><td>{{inscripcion.estudiante.generoTipo}}</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Nacimiento</th><td>{{inscripcion.estudiante.fechaNacimiento|date('d-m-Y')}}</td>
                 </tr>
                 <tr>
                     <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>

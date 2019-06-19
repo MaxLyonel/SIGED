@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Maestro</th>
-                <th>Horas/Semana</th>
+                {# <th>Horas/Semana</th> #}
             </tr>
         </thead>
         <tbody>
@@ -21,11 +21,11 @@
                                 {% else %}
                                     {% set selected = '' %}
                                 {% endif %}
-                                <option value="{{m.id}}" {{selected}}>{{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
+                                <option value="{{m.id}}" {{selected}}>{{m.persona.carnet}}{% if m.persona.complemento %}-{{m.persona.complemento}}{% endif %} | {{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td><input type="text" name="horas[]" value="{{mco.horas}}" size="2" class="form-control input-sm" autocomplete="off" maxlength="3" onkeypress="return validarNumero(event)" {% if app.session.get('ie_per_estado') == '0' %}disabled{% endif %}></td>    
+                    {# <td><input type="text" name="horas[]" value="{{mco.horas}}" size="2" class="form-control input-sm" autocomplete="off" maxlength="3" onkeypress="return validarNumero(event)" {% if app.session.get('ie_per_estado') == '0' %}disabled{% endif %}></td>     #}
                 </tr>
             {% endfor %}
         </tbody>

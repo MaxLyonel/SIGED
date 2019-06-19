@@ -140,7 +140,7 @@ sie_herramienta_aca_multigrado:
 
 sie_herramienta_solicitud_bth:
     resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
-    prefix:   /sie/solicitudbth
+    prefix:   /sie/tramite/solicitudbth
 
 
 #sie_herramienta_wf_tramite:
@@ -182,3 +182,23 @@ sie_herramienta_estudianteTrabaja:
 sie_herramienta_nnats:
     resource: "@SieHerramientaBundle/Resources/config/routing/reportesNnats.yml"
     prefix:   /sie/Nnats
+
+sie_herramienta_registro_promotor:
+    resource: "@SieHerramientaBundle/Resources/config/routing/promotor.yml"
+    prefix:   /sie/promotor
+
+sie_herramienta_registro_evento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regevent.yml"
+    prefix:   /sie/regevent
+
+sie_herramienta_registro_resultado:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regresultevent.yml"
+    prefix:   /sie/regresultevent
+
+sie_herramienta_registro_estudiante:
+     resource: "@SieHerramientaBundle/Resources/config/routing/regstudent.yml"
+     prefix:   /sie/regstudent
+
+sie_herramienta_anular_bth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
+     prefix:   /sie/anularbth

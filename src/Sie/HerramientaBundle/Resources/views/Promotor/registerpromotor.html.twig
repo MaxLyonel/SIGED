@@ -1,0 +1,47 @@
+  {% for flashMessage in app.session.flashbag.get('savepromotor') %}
+            <div class="alert alert-{{typeMessage}}" alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>{{ flashMessage }}!</br></strong> 
+            </div>
+  {% endfor %}
+ <div class="table-responsive mb-20">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Promotor</th>
+                        <th>Club</th>
+                        <th colspan="4">Opcines</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for promotor in objPromotor%}
+                    <tr>
+                        <td class="text-center">{{loop.index}}</td>
+                        <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
+                        <td>{{promotor.nombreClub}}</td>
+                        <td align="center">
+                            <button type="button" class="btn-link" onclick="removePromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
+                        
+                            <button type="button" class="btn-link" onclick="editPromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Editar"> <i class="fa fa-edit"></i>  </button>
+                            
+                            <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
+                                <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
+                                <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
+                                <button class="btn btn-xs btn-success" type="submit">Miembros</button>
+                            </form>
+                        
+                            <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
+                                <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
+                                <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
+                                <button class="btn btn-xs btn-success" type="submit">Lectura</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor%}
+                </tbody>
+            </table>
+        </div>
+
+</div><!-- /.panel-body -->         

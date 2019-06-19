@@ -109,6 +109,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
                 $rude = new Rude();
                 $rude->setEstudianteInscripcion($inscripcion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(1));
                 $rude->setFechaRegistro(new \DateTime('now'));
                 $rude->setLugarRegistroRude($direccion);
                 $em->persist($rude);
@@ -742,7 +743,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>true,
                             'property'=>'descripcion',
-                            'required'=>false,
+                            'required'=>true,
                             'data'=>$em->getRepository('SieAppWebBundle:CentroSaludTipo')->findBy(array('id'=>$arrayCentros)),
                             'mapped'=>false
                         ))
@@ -756,7 +757,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                 ;
                             },
                             'empty_value' => 'Seleccionar...',
-                            'required'=>false
+                            'required'=>true
                         ))
                     ->add('seguroSalud', 'choice', array(
                             'choices'=>array(true=>'Si', false=>'No'),
@@ -823,7 +824,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
                             'property'=>'descripcionViviendaOcupa',
-                            'required'=>false
+                            'required'=>true
                         ))
                     // 4.4 ACCESO A INTERNET
                     ->add('accesoInternet', 'entity', array(
@@ -961,7 +962,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             },
                             'multiple'=>true,
                             'property'=>'descripcionMedioTrasnporte',
-                            'required'=>false,
+                            'required'=>true,
                             'data'=>$em->getRepository('SieAppWebBundle:MedioTransporteTipo')->findBy(array('id'=>$arrayMedioTransporte)),
                             'mapped'=>false,
                             'expanded'=>false

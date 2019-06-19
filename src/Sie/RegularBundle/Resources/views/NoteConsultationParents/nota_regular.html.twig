@@ -1,44 +1,141 @@
-{% if notas %}
-    {% set prefijo = 0 %}
-    <h5 class="text-info">Notas</h5> 
-    <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
-        <thead class="cf">
-            <tr>
-                <th>Asignatura</th>
-                {% for cabeceras in cabeceras %}
-                    <th>{{cabeceras.notaAbrev}}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for notas in notas %}
+{% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+    {% if gestion > 2018 %}
+        {% if cualitativo %}
+            <h5 class="text-info">Notas</h5> 
+            <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+                <thead class="cf">
+                    <tr>
+                        <th>Asignatura</th>
+                        {% for cabeceras in cabeceras %}
+                            <th>{{cabeceras.notaAbrev}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>                    
+                    <tr>
+                        <td>
+                            <table class="table table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+                                {% for asig in asignaturasInicial %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{asig.institucioneducativaCursoOferta.asignaturaTipo.asignatura}}</strong>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                        {% for cuali in cualitativo %}
+                            {% if cuali.notaTipo.id != 18 %}
+                                <td>{{cuali.notaCualitativa}}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    {% else %}
+        <h5 class="text-info">Notas</h5> 
+        <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+            <thead class="cf">
                 <tr>
-                    <td><strong>{{notas.asignatura}}</strong></td>
-                    {% for indices in indices %}
-                        <td>{{notas[indices]}}</td>
+                    <th>Asignatura</th>
+                    {% for cabeceras in cabeceras %}
+                        <th>{{cabeceras.notaAbrev}}</th>
                     {% endfor %}
                 </tr>
+            </thead>
+            <tbody>
+                {% for notas in notas %}
+                    <tr>
+                        <td><strong>{{notas.asignatura}}</strong></td>
+                        {% for indices in indices %}
+                            <td>{{notas[indices]}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if cualitativo %}
+            {% set cont = 0 %}
+            {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                <h5 class="text-primary">Informe final:</h5>
+            {% else %}
+                <h5 class="text-info">Valoración cualitativa</h5>
+            {% endif  %}
+            <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
+            {% for cuali in cualitativo %}
+                {% set cont = cont + 1 %}
+                <tr>
+                    <td>
+                        {% if inscripcion.institucioneducativaCurso.nivelTipo.id != 11 %}
+                            <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                        {% endif %}
+                        {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                            {% if cuali.notaTipo.id == 18 %}
+                                {{cuali.notaCualitativa}}
+                            {% endif %}
+                        {% else %}
+                            {{cuali.notaCualitativa}}
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </table>
+        {% endif %}
+    {% endif %}
 {% else %}
-    <div class="alert alert-info">
-        <strong>¡Información!</strong> No se encontraron calificaciones para la presente gestión.
-    </div>
-{% endif %}
-
-{% if cualitativo %}
-    {% set cont = 0 %}
-    <h5 class="text-info">Valoración cualitativa</h5>
-    <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
-    {% for cuali in cualitativo %}
-        {% set cont = cont + 1 %}
-        <tr>
-            <td>
-                <h6 class="text-primary">Bimestre {{cont}}:</h6>
-                {{cuali.notaCualitativa}}
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
+    {% if notas %}
+        <h5 class="text-info">Notas</h5> 
+        <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+            <thead class="cf">
+                <tr>
+                    <th>Asignatura</th>
+                    {% for cabeceras in cabeceras %}
+                        <th>{{cabeceras.notaAbrev}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for notas in notas %}
+                    <tr>
+                        <td><strong>{{notas.asignatura}}</strong></td>
+                        {% for indices in indices %}
+                            <td>{{notas[indices]}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            <strong>¡Información!</strong> No se encontraron calificaciones para la presente gestión.
+        </div>
+    {% endif %}
+    {% if cualitativo %}
+        {% set cont = 0 %}
+        {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+            <h5 class="text-primary">Informe final:</h5>
+        {% else %}
+            <h5 class="text-info">Valoración cualitativa</h5>
+        {% endif  %}
+        <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
+        {% for cuali in cualitativo %}
+            {% set cont = cont + 1 %}
+            <tr>
+                <td>
+                    {% if inscripcion.institucioneducativaCurso.nivelTipo.id != 11 %}
+                        <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                    {% endif %}
+                    {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                        {% if cuali.notaTipo.id == 18 %}
+                            {{cuali.notaCualitativa}}
+                        {% endif %}
+                    {% else %}
+                        {{cuali.notaCualitativa}}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
 {% endif %}

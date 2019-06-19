@@ -100,6 +100,48 @@ class DownloadFileSieController extends Controller {
           $inconsistenciaReviewQa = $query->fetchAll();
 
 
+          
+          $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+
+
+            /***********************************\
+          * *
+          * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
+          * send array => sie, gestion, reglas *
+          * return type of UE *
+          * *
+          \************************************/
+          $form['reglasUE'] = '1,2,3,5';
+          $objAllowUE = $this->getObservationAllowUE($form);
+
+          if ($objAllowUE) {
+            $objObservados = array();
+            $errorValidation = array('ueobservation'=>false);
+            $objObservados = array();
+            
+            $swCtrlMenu = false;
+            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
+            $em->getConnection()->commit();
+
+            // set the ctrol menu with false
+              //get ue data
+              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
+                          'uEducativa'        => $errorValidation,
+                          'objUe'             => $objUe[0],
+                          'objinconsistencia' => $objAllowUE[0],
+                          'form'              => '',
+                          'swvalidation'      => '1',
+                          'swinconsistencia'  => '0',
+                          'flagValidation'    => '0',
+                          'swObservados'      => '',
+                          'ueModular'         => '1',
+                          'validationPersonal' => '0',
+                          'validationRegistroConsolidado' => '0',
+                          'sistemaRegular' => '0'
+              ));
+          }
+          
+
           /***********************************\
           * *
           * Validacion tipo de Unidad Educativa
@@ -107,8 +149,6 @@ class DownloadFileSieController extends Controller {
           * return type of UE *
           * *
           \************************************/
-          $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-          
           if($objUe[0]['tipoUe']!=1){
             $objObservados = array();
             $errorValidation = array('ueobservation'=>false);
@@ -207,39 +247,7 @@ class DownloadFileSieController extends Controller {
               ));
           }
           //second type of UE
-          /***********************************\
-          * *
-          * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
-          * send array => sie, gestion, reglas *
-          * return type of UE *
-          * *
-          \************************************/
-          $form['reglasUE'] = '1,2,3,5';
-          $objAllowUE = $this->getObservationAllowUE($form);
-
-          if ($objAllowUE) {
-            
-            $swCtrlMenu = false;
-            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
-            $em->getConnection()->commit();
-
-            // set the ctrol menu with false
-              //get ue data
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa'        => $errorValidation,
-                          'objUe'             => $objUe[0],
-                          'objinconsistencia' => $objAllowUE[0],
-                          'form'              => '',
-                          'swvalidation'      => '1',
-                          'swinconsistencia'  => '0',
-                          'flagValidation'    => '0',
-                          'swObservados'      => '',
-                          'ueModular'         => '1',
-                          'validationPersonal' => '0',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
-              ));
-          }
+        
 
           // validation UE data
           /***********************************\
@@ -514,8 +522,6 @@ class DownloadFileSieController extends Controller {
                           $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
                           break;
                         case '2':
-                            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_2B_2018('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                          break;
                         case '3':
                         case '4':
                         case '5':
@@ -823,7 +829,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v129.exe';
+        $file = 'instalador_SIGED_SIE_v1291.exe';
 
         //create response to donwload the file
         $response = new Response();
@@ -946,8 +952,8 @@ class DownloadFileSieController extends Controller {
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            // $aBimestre[$operativo]=$aBimestres[$operativo];
-            $aBimestre[$operativo]=$aBimestres[0];
+            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[0];
           }else{ //lt 0 return the same
             // $aBimestre[$operativo]=$aBimestres[$operativo];
             $aBimestre[$operativo]=$aBimestres[0];

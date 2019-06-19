@@ -87,6 +87,7 @@ class DefaultController extends Controller {
             case '172.20.196.9:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
+            case 'localhost:8081':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -286,7 +287,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutProcesos.html.twig';
                 $this->session->set('pathSystem', "SieProcesosBundle");
-                break;
+                break;                
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -469,8 +470,17 @@ class DefaultController extends Controller {
             $user = $this->container->get('security.context')->getToken()->getUser();
             //dump($user);die();
             if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
+
+                // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
+                /*$arrauuseralt = array(4747180,466334,3063920);
+                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and !(in_array($user->getUsername(),$arrauuseralt) )){
+                    $this->session->getFlashBag()->add('errorusuario', 'El sistema esta temporalmente fuera de servicio, por mantenimiento. Disculpe las molestias.');
+                    return $this->redirectToRoute('login');
+                }*/
+
                 //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
                 $this->session->set('userId', $user->getId());
+                
                 if (md5($user->getUsername()) == $user->getPassword()) {
                     return $this->redirect($this->generateUrl('sie_usuarios_reset_login', array('usuarioid' => $user->getId())));
                 }
@@ -715,6 +725,7 @@ class DefaultController extends Controller {
                     }
 
                     if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
+                        //dump($rolselected);die;
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'titulosubsistema' => $this->session->get('sysname'),
@@ -730,6 +741,7 @@ class DefaultController extends Controller {
                     //CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
                     //SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
                     $sesion->set('directorAlternativa', false);
+                    //dump($rolselected);die;
                     if (count($rolselected) == 1) {
                         if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                             $this->session->set('roluser', $rolselected[0]['id']);
@@ -746,6 +758,7 @@ class DefaultController extends Controller {
                                     'institucioneducativaTipo'=>2
                                         ));
                                     if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+
                                         $sesion->set('directorAlternativa', true);
                                     }
 
@@ -759,6 +772,7 @@ class DefaultController extends Controller {
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
                         }
+                        
                         return $this->redirect($this->generateUrl('sie_login_homepage'));
                     }
                     //FIN DE CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
@@ -809,6 +823,11 @@ class DefaultController extends Controller {
     public function sigedrolselectAction(Request $request, $key) {
         $em =  $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
+        //$id_usuario = $this->sesion->get('userId');
+        //dump($sesion);die;
+        if (!$sesion->get('personaId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $rolselected = $this->get('login')->verificarRolesActivos($sesion->get('personaId'),$key);
         //dump($rolselected);
         //die;

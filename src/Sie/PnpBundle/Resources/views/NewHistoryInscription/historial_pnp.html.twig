@@ -34,7 +34,7 @@
             <td>{{data.fech_fin_p}}</td>
             <td>{{data.institucioneducativa_curso_id_raep}} </td>
             <td>{{data.estadomatricula_p}}</td>
-             <td><a role="button" class="btn rounded btn-primary rounded btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': data.institucioneducativa_curso_id_enc_raep~"|"~data.bloque_p~"|"~data.parte_p}) }}" title="Imprimir Consolidado" ></a></td>
+             <td><a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': data.institucioneducativa_curso_id_enc_raep~"|"~data.bloque_p~"|"~data.parte_p}) }}" title="Imprimir Consolidado" ></a></td>
           </tr>
         {% endfor %}
       </tbody>
