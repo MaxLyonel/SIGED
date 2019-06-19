@@ -225,9 +225,6 @@ class TramiteModificacionCalificacionesController extends Controller {
 
 
                 $data = json_encode($data);
-                dump($solicitudes);
-                dump($data);
-                die;
 
                 // OBTENEMOS EL ID DE LA TAREA
                 $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array(
@@ -268,5 +265,21 @@ class TramiteModificacionCalificacionesController extends Controller {
             return $response;
         }
     }
+
+    public function formularioImprimirAction(Request $request){
+        dump($request);
+        $idTramite = $request->get('idtramite');
+        $idTramiteDetalle = $request->get('id_td');
+        dump($idTramite);
+        dump($idTramiteDetalle);
+        die;
+    }
+
+    public function recepcionVerificaDistritoAction(Request $request){
+        $idTramite = $request->get('id');
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find();
+        dump($request);die;
+    }
+    
 
 }
