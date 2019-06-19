@@ -223,19 +223,17 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>Nivel al que se Aplica</strong>
+                                            <div class="col-md-6">
+                                                <strong>  Año de escolaridad a implementar BTH:</strong>
                                             </div>
-                                            <div class="col-md-3">
-                                            </div>
-                                            <div class="col-md-5">
-                                                <strong><span class="label label-primary">Nivel: Secundaria</span></strong>
+                                            <div class="col-md-6">
+                                                <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado:  {{ grado }} </strong>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="pull-right">
-                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    <button class="btn btn-sm btn-facebook" id="enviar_solicitud_bth_nuevo" title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -423,7 +421,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>Curso al que se Aplica</strong>
+                                                <strong>  Año de escolaridad a implementar BTH:</strong>
                                             </div>
                                             <div class="col-md-3">
                                                 <strong><span class="label label-primary">Nivel: Secundaria</span> <span >Grado: {{ grado }}</span> </strong>
@@ -432,7 +430,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="pull-right">
-                                                    <button id="btnenviar" class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    <button id="btnenviar" class="btn btn-sm btn-facebook" id="enviar_solicitud_bth_ratificacion" title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -611,9 +609,10 @@
                                 swal("Debe seleccionar al menos una especialidad.");
                                 return false;
                             }
+                            ip.push({grado:{{grado}}});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
-
+                            $('#enviar_solicitud_bth_nuevo').attr("disabled", true);
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
@@ -686,8 +685,10 @@
                                 especialidades_id.push(this.value);
                             });
                             ip.push({select_especialidad : especialidades_id});
+                            ip.push({grado:{{grado}}});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
+                            $('#enviar_solicitud_bth_ratificacion').attr("disabled", true);
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
