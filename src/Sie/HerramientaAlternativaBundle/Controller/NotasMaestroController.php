@@ -77,11 +77,12 @@ class NotasMaestroController extends Controller {
         // $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($this->session->get('ie_suc_id'));
         // $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find(611764);
         // if($sucursal){
+        // stt.turnoSuperior as turno,
             $asignaturas = $em->createQueryBuilder()
                             ->select('smt.modulo,
                                     ie.id as sie,
                                     ie.institucioneducativa,
-                                    stt.turnoSuperior as turno,
+                                    tt.turno,
                                     iec.id as idCurso,
                                     ieco.id as idCursoOferta,
                                     pt.paralelo,
