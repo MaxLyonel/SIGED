@@ -1360,7 +1360,7 @@ class AreasController extends Controller {
         $responsable = '';
         if ($curso[0]['maestro']->getMaestroInscripcionAsesor()!=null) {
             $maestroResponsable = $em->createQueryBuilder()
-                        ->select('CONCAT(p.nombre, \' \', p.paterno, \' \', p.materno) AS responsable')
+                        ->select('CONCAT(p.paterno, \' \', p.materno, \' \', p.nombre) AS responsable')
                         ->from('SieAppWebBundle:MaestroInscripcion','mi')
                         ->innerJoin('SieAppWebBundle:Persona','p','WITH','mi.persona = p.id')
                         ->where('mi.id = :mins')
