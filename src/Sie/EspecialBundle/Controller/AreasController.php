@@ -775,7 +775,11 @@ class AreasController extends Controller {
                     $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>$programaServicio);
                 }
             }
-
+            if ($mTipo == 15) {
+                $cargoMaestro = array(0, 15);
+            } else {
+                $cargoMaestro = array(0);
+            }
             $maestros = $em->createQueryBuilder()
                            ->select('mi.id, p.paterno, p.materno, p.nombre, p.carnet')
                            ->from('SieAppWebBundle:MaestroInscripcion','mi')
@@ -787,11 +791,11 @@ class AreasController extends Controller {
                            ->where('ie.id = :idInstitucion')
                            ->andWhere('gt.id = :gestion')
                            ->andWhere('rt.id = :rol')
-                           ->andWhere('ct.id = :cargoTipo')
+                           ->andWhere('ct.id in (:cargoTipo)')
                            ->setParameter('idInstitucion',$this->session->get('idInstitucion'))
                            ->setParameter('gestion',$this->session->get('idGestion'))
                            ->setParameter('rol',2)
-                           ->setParameter('cargoTipo',$mTipo)
+                           ->setParameter('cargoTipo',$cargoMaestro)
                            ->orderBy('p.paterno','asc')
                            ->addOrderBy('p.materno','asc')
                            ->addOrderBy('p.nombre','asc')
@@ -1272,7 +1276,7 @@ class AreasController extends Controller {
 
         // Obtener datos del curso
         $curso = $em->createQueryBuilder()
-                    ->select('ie.id as sie, gt.id as gestion,iec.lugar')
+                    ->select('ie.id as sie, gt.id as gestion,iec.lugar, iec as maestro')
                     ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
                     ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
@@ -1328,9 +1332,9 @@ class AreasController extends Controller {
             }
         }
         if($curso[0]['lugar']){
-            $idcargo = 15;
+            $idcargo = array(0,15);
         }else{
-            $idcargo = 0;
+            $idcargo = array(0);
         }
 
         $maestros = $em->createQueryBuilder()
@@ -1344,7 +1348,7 @@ class AreasController extends Controller {
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
-                        ->andWhere('ct.id = :idcargo')
+                        ->andWhere('ct.id in (:idcargo)')
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
@@ -1353,10 +1357,23 @@ class AreasController extends Controller {
                         ->setParameter('idcargo',$idcargo)
                         ->getQuery()
                         ->getResult();
-
+        $responsable = '';
+        if ($curso[0]['maestro']->getMaestroInscripcionAsesor()!=null) {
+            $maestroResponsable = $em->createQueryBuilder()
+                        ->select('CONCAT(p.paterno, \' \', p.materno, \' \', p.nombre) AS responsable')
+                        ->from('SieAppWebBundle:MaestroInscripcion','mi')
+                        ->innerJoin('SieAppWebBundle:Persona','p','WITH','mi.persona = p.id')
+                        ->where('mi.id = :mins')
+                        ->setParameter('mins',$curso[0]['maestro']->getMaestroInscripcionAsesor()->getId())
+                        ->getQuery()
+                        ->getResult();
+            if ($maestroResponsable) {
+                $responsable = $maestroResponsable[0]['responsable'];
+            }
+        }
         $operativo = $this->operativo($sie,$gestion);
 
-        return $this->render('SieEspecialBundle:Areas:maestros.html.twig',array('maestrosCursoOferta'=>$arrayMaestros, 'maestros'=>$maestros,'ieco'=>$ieco,'operativo'=>$operativo));
+        return $this->render('SieEspecialBundle:Areas:maestros.html.twig',array('maestrosCursoOferta'=>$arrayMaestros, 'maestros'=>$maestros,'ieco'=>$ieco,'operativo'=>$operativo, 'responsable'=>$responsable));
     }
 
     public function maestrosAsignarAction(Request $request){
@@ -1458,7 +1475,8 @@ class AreasController extends Controller {
         $ieresult = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$institucioneducativa, 'institucioneducativaTipo'=>4));
         if ($ieresult) {
             $ieactual = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$this->session->get('ie_id'), 'institucioneducativaTipo'=>4));
-            if ($ieresult->getLeJuridicciongeografica()->getLugarTipoIdDistrito() == $ieactual->getLeJuridicciongeografica()->getLugarTipoIdDistrito()) {
+            //Validación de Distrito comentado
+            // if ($ieresult->getLeJuridicciongeografica()->getLugarTipoIdDistrito() == $ieactual->getLeJuridicciongeografica()->getLugarTipoIdDistrito()) {
                 $query = $em->getConnection()->prepare('SELECT mins.id, pers.nombre, pers.paterno, pers.materno FROM maestro_inscripcion mins
                 INNER JOIN persona pers ON pers.id = mins.persona_id WHERE mins.estadomaestro_id = :estado
                 AND mins.gestion_tipo_id = :gestion AND mins.institucioneducativa_id = :institucioneducativa and cargo_tipo_id=:cargo ORDER BY pers.paterno');
@@ -1473,9 +1491,9 @@ class AreasController extends Controller {
                     $maestrosArray[$maestros[$i]['id']] = $maestros[$i]['paterno'].' '.$maestros[$i]['materno'].' '.$maestros[$i]['nombre'];
                 }
                 $msg = 'exito';
-            } else {
-                $msg = 'nodist';
-            }
+            // } else {
+            //     $msg = 'nodist';
+            // }
         } else {
             $msg = 'noinst';
         }
