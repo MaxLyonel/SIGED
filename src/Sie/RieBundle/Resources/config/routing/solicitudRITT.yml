@@ -22,6 +22,10 @@ solicitud_ritt_guarda_tramite_imprime:
     path:     /rittGuardaTramiteNacImprime
     defaults: { _controller: SieRieBundle:SolicitudRITT:guardaTramiteNacImprime }
 
+solicitud_ritt_vista_previa_certificado:
+    path:     /rittVistaPreviaCertificado
+    defaults: { _controller: SieRieBundle:SolicitudRITT:vistaPreviaCertificado }
+
 solicitud_ritt_tramite_obs:
     path:     /rittGuardaTramiteNacObs
     defaults: { _controller: SieRieBundle:SolicitudRITT:TramiteObs }
@@ -29,12 +33,3 @@ solicitud_ritt_tramite_obs:
 solicitud_ritt_lista_concluidos:
     path:     /rittListaTramitesConcluidos
     defaults: { _controller: SieRieBundle:SolicitudRITT:listaTramitesConcluidos }
-
-
-
-
-
-
-
-
-

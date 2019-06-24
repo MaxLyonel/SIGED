@@ -49,3 +49,7 @@ sie_herramienta_solicitud_ritt:
 sie_herramienta_seguimiento_tramite:
     resource: "@SieRieBundle/Resources/config/routing/seguimientoTramite.yml"
     prefix:   /rittsie/seguimientotramite
+
+sie_herramienta_certificado_ritt:
+    resource: "@SieRieBundle/Resources/config/routing/certificado.yml"
+    prefix:   /publico/certificado

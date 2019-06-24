@@ -66,6 +66,9 @@
                                 {% for listaTramites in listaTramites %}
                                     <tr>
                                         <td style="width: 5%">
+                                        <a href="{{path('solicitud_ritt_vista_previa_certificado', {'idRie':listaTramites.codrie,'idTramite ':listaTramites.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Vista previa Certificado">
+                                            <i class="material-icons">open_in_new</i>
+                                        </a>
                                         <a href="{{path('solicitud_ritt_guarda_tramite_imprime', {'idRie':listaTramites.codrie,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Imprimir Certificado">
                                             <i class="material-icons">print</i>
                                         </a>
