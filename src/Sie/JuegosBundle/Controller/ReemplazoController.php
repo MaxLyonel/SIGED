@@ -20,6 +20,7 @@ use Sie\JuegosBundle\Controller\RegisterPersonStudentController as registerPerso
 
 use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos;
 use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos;
+use Sie\AppWebBundle\Entity\JdpPersonaInscripcionJuegos;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
@@ -324,6 +325,7 @@ class ReemplazoController extends Controller {
         $rude2 = $form['rude2'];
         $gestionId = $gestionActual;
         $historial = array();
+        $comisionId = 0;
 
         $inscripcionJuegosRude = $this->getInscripcionJuegosRudeGestionPruebaFase($rude1, $pruebaId, $gestionId, $faseId);
         if(count($inscripcionJuegosRude)>0){
@@ -507,7 +509,7 @@ class ReemplazoController extends Controller {
 
                         if($entrenadorSave){
                             if($comisionId == 0){
-                                if($nivel== 12){
+                                if($nivelId== 12){
                                     $comisionId = 139;
                                 } else {
                                     $comisionId = 140;
