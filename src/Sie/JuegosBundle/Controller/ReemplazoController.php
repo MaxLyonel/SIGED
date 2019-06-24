@@ -572,7 +572,7 @@ class ReemplazoController extends Controller {
             from estudiante as e
             inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-            where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$gestionId." and iec.institucioneducativa_id = ".$institucionEducativaId." and ei.estadomatricula_tipo_id in (4)
+            where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$gestionId." and iec.institucioneducativa_id = ".$institucionEducativaId." and ei.estadomatricula_tipo_id in (4) and iec.nivel_tipo_id in (12,13)
         ");        
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -601,14 +601,10 @@ class ReemplazoController extends Controller {
             from estudiante as e
             inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-            where ei.id = ".$estudianteInscripcionIdRude2.") as e2 on e1.id = e2.id
+            where ei.id = ".$estudianteInscripcionIdRude2.") as e2 on e1.id = e2.id 
         ");        
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
         return $objEntidad;
     }
-
-
-    
-
 }
