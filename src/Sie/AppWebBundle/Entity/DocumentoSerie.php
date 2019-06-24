@@ -51,6 +51,18 @@ class DocumentoSerie
     }
 
     /**
+     * Set id
+     *
+     * @return string 
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        
+        return $this;
+    }
+
+    /**
      * Set esanulado
      *
      * @param boolean $esanulado

@@ -1946,7 +1946,7 @@ class DocumentoController extends Controller {
         $datosEncryptDecode = base64_decode($datos);
         $rsa = new RSA;
         $rsa->loadKey($keyPrivada);
-        $datos = $rsa1->decrypt($datosEncryptDecode);
+        $datos = $rsa->decrypt($datosEncryptDecode);
         // explode("|",$datos)
         return $datos;
     }
