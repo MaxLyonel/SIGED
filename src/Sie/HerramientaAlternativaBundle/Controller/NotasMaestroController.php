@@ -156,13 +156,13 @@ class NotasMaestroController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $curso = $em->createQueryBuilder()
-                        ->select('supet.especialidad,sat.acreditacion,smt.modulo,stt.turnoSuperior, sast.areaSuperior, pt.paralelo, ie.id as sie, ie.institucioneducativa, gt.gestion,
+                        ->select('supet.especialidad,sat.acreditacion,smt.modulo,tt.turno, sast.areaSuperior, pt.paralelo, ie.id as sie, ie.institucioneducativa, gt.gestion,
                                 spt.periodoSuperior, sfat.codigo as idNivel, iec.id as idCurso, spt.id as idPeriodo
                         ')
                         ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
                         ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
                         ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
-                        //->innerJoin('SieAppWebBundle:NivelTipo','nt','with','iec.nivelTipo = nt.id')
+                        ->innerJoin('SieAppWebBundle:TurnoTipo','tt','with','iec.turnoTipo = tt.id')
                         ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','with','iec.paraleloTipo = pt.id')
                         ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
                         ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo','smp','with','ieco.superiorModuloPeriodo = smp.id')
