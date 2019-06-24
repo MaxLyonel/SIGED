@@ -11,3 +11,11 @@ tramite_acelera_save_verify:
     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaVerifica }
     options:
         expose: true
+
+tramite_acelera_nuevo_comprobante:
+    path:     /reporte/solicitud
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:rptSolicitud }
+
+tramite_acelera_supletorio_comprobante:
+    path:     /reporte/supletorio
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:rptSupletorio }
