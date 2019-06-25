@@ -71,8 +71,6 @@
                                 <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
-                            
-                            
 
                             <table class="table table-condensed">
                                 <thead>
@@ -101,11 +99,92 @@
                             <hr>
                             <h5>
                                 <b>Detalle de calificaciones</b>
-                                <a class="btn btn-primary" data-toggle="modal" href='#modal-id' style="float:right; margin-top:-12px;">Agregar calificación</a>
                             </h5>
+                            {% if datos.notas|length > 0 %}
+                                <table class="table table-bordered table-striped table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5">Cuantitativas</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="headtabla">Asignatura</th>
+                                            <th class="headtabla">Periodo</th>
+                                            <th class="headtabla">Calificación actual</th>
+                                            <th class="headtabla">Nueva calificación</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for nota in datos.notas %}
+                                            <tr>
+                                                <td>{{ nota.asignatura }}</td>
+                                                <td>{{ nota.bimestre }}</td>
+                                                <td>{{ nota.nota }}</td>
+                                                <td>
+                                                    {{ nota.notaNueva }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                            <br>
+                            {% if datos.notasCualitativas|length > 0 %}
+                                <table class="table table-bordered table-striped table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="4">Cualitativas</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="headtabla">Periodo</th>
+                                            <th class="headtabla">Valoración actual</th>
+                                            <th class="headtabla">Nueva valoración</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for notaCualitativa in datos.notasCualitativas %}
+                                            <tr>
+                                                <td class="table-cell" style="vertical-align:middle">{{ cualitativa.bimestre }}</td>
+                                                <td>{{ cualitativa.notaCualitativa }}</td>
+                                                <td>
+                                                    {{ cualitativa.notaCualitativaNueva }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>R.A.</h5>
+                                    <a href=""> <b> <i class="fa fa-file-image-o"></i> Ver resolucion administrativa </b></a>
+                                    {# <img src="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ sie ~ '/' ~ datos.archivo.new_name) }}" alt="" width="350px">                                     #}
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Justificativo</h5>
+                                    <p>{{ datos.justificacion }}</p>
+                                </div>
+                            </div>
 
                         </div>
-
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>¿El trámite es procedente?</h5>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="procedente" value="1" v-model="procedente" required>
+                                    Si
+                                </label>
+                                &nbsp;
+                                <label>
+                                    <input type="radio" name="procedente" value="0" v-model="procedente" required>
+                                    No
+                                </label>
+                            </div>
+                            <textarea v-if="procedente == 0" name="obs" id="" cols="30" rows="5" class="form-control" v-model="obs" placeholder="Registre una observación"></textarea>
+                            <button type="button" v-on:click="enviarFormulario" class="btn btn-primary">Enviar</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -125,11 +204,13 @@
             delimiters: ['${', '}'],
             el: '#app',
             data: {
-                archivo: ''
+                procedente: 1,
+                obs: ''
             },
             methods: {
-                setAcuerdo: function(){
-                    this.acuerdo = !this.acuerdo;
+                enviarFormulario: function(){
+                    console.log(this.procedente);
+                    
                 }                
             },
             computed: {
