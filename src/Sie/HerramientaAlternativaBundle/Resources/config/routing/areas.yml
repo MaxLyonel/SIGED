@@ -52,8 +52,8 @@ herramienta_alter_area_emergente_add:
     options:
          expose: true            
 
-herramienta_alter_curso_malla:
-    path:     /mallaaddcurso
-    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:mallaadd }
+herramienta_alter_curso_mallas:
+    path:     /mallasaddcurso
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:mallasAdd }
     options:
         expose: true
