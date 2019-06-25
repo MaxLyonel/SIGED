@@ -302,6 +302,7 @@ class AreasController extends Controller {
         }
 
         if($nivel == 15 || $nivel == 5){
+                            
             $iePeriodo = $em->createQueryBuilder()
                 ->select('g')
                 ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
@@ -340,11 +341,12 @@ class AreasController extends Controller {
                 ->setParameter('codigos', array(401,402,403,404,408))
                 ->getQuery()
                 ->getResult();
-
+            }
             if($modulos) {
                 $em->getConnection()->beginTransaction();
-                try {
-                    foreach ($modulos as $modulo) {      
+                try {    
+                    foreach ($modulos as $modulo) {
+                        //die("abc");        
                         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                         $smp = new SuperiorModuloPeriodo();
                         $smp->setSuperiorModuloTipo($modulo);
