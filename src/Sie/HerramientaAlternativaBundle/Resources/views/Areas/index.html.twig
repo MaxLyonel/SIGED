@@ -91,6 +91,30 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% if tieneCursoOferta is defined %}
+                                {% if tieneCursoOferta == false %}
+                                    <tr id="mallaDiv">
+                                        <td colspan="5">
+                                            <div class="col-md-12 alert alert-warning">
+                                                El curso no tiene módulos asignados, seleccione la malla (Nueva o antigua)
+                                            </div>
+                                            <div class="col-md-12 text-center">
+                                                <form id="mallaForm" name="mallaForm">
+                                                    <div class="col-md-2 col-md-offset-3">
+                                                        Nueva <input type="radio" id="mallaNueva" name="malla" value="1" {% if (mallaActual == 1) %}checked{% endif %} />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        Antigua <input type="radio" id="mallaAntigua" name="malla" value="0" {% if (mallaActual == 0 or mallaActual == null) %}checked{% endif %} />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" onclick="guardarMalla('{{infoUe}}')" class="btn btn-success">Guardar Cambios</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
                             {% for co in cursoOferta %}
                                 <tr>
                                     <td class="text-center border-right">{{loop.index}}</td>
@@ -125,7 +149,7 @@
                     </table>
                 </div>
                 <div id="mensajeModal">
-                    
+                    {% if mensaje is defined %}<div style='text-align:center; color:#5C9FFB'>{{mensaje}}</div>{% endif %}
                 </div>
             </div>
         </div>
@@ -161,6 +185,37 @@
 
                     }
                 }
+            });
+        }
+    };
+
+    var guardarMalla = function(infoUe){
+        if(confirm('¿Está segura/o de cambiar el tipo de malla para este curso?\nPresione aceptar para confirmar.')){
+            mallaId = $('input:radio[name=malla]:checked').val();
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe, mallaId: mallaId}),
+                url: "{{ path('herramienta_alter_curso_malla') }}",
+                beforeSend: function () {
+                    $('#mensajeModal').empty();
+                    $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Asignando malla... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $('#mensajeModal').empty();
+                    $('#modal').empty();
+                    $('#mallaDiv').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function (data) {
+                        $('#mensajeModal').empty();
+                        $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>"+data.mensaje+"</div>");
+                    },
+                },
+                error: function(error) {
+                    $('#mensajeModal').empty();
+                    $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al agregar la malla.</div>");
+                },
             });
         }
     };
