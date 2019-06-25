@@ -33,6 +33,7 @@ class AreasController extends Controller {
     public function indexAction(Request $request) {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $em = $this->getDoctrine()->getManager();
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -40,8 +41,11 @@ class AreasController extends Controller {
         //get the send values
         $infoUe = $request->get('infoUe');
         $arrInfoUe = unserialize($infoUe);
+        $idCurso = $arrInfoUe['ueducativaInfoId']['iecId'];
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
         
-        // dump($arrInfoUe);die;
+        $mallaActual = $curso->getModalidadTipoId();
+        
         // check if the course is PRIMARIA
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe)
           ){
@@ -57,10 +61,102 @@ class AreasController extends Controller {
 
         $data = $this->getAreas($infoUe);
         $data['primaria'] = $primaria;
+        $data['mallaActual'] = $mallaActual;
         
         return $this->render('SieHerramientaAlternativaBundle:Areas:'.$templateToView, $data);
 
         
+    }
+
+    public function mallaaddAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $response = new JsonResponse();
+        $infoUe = $request->get('infoUe');
+        $mallaId = $request->get('mallaId');
+        $malla = $mallaId == 1 ? 'Nueva' : 'Antigua';
+        $gestion = $this->session->get('ie_gestion');
+        $aInfoUeducativa = unserialize($infoUe);
+        $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
+        $mallaActual = $curso->getModalidadTipoId();
+        
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe)
+          ){
+            $primaria = true;
+        }else{
+            $primaria = false;
+        }
+
+        // Mostramos nuevamente las areas del curso
+        $data = $this->getAreas($infoUe);
+        $data['primaria'] = $primaria;
+        $data['mallaActual'] = $mallaActual;
+
+        $db = $em->getConnection();
+        if($mallaId == 1){
+            $query = "select distinct g.id as siepid
+            from superior_facultad_area_tipo a  
+                inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+                        inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+                            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+                                inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+                                    inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id
+					inner join superior_modulo_periodo h on h.institucioneducativa_periodo_id=g.id
+						inner join superior_modulo_tipo i on h.superior_modulo_tipo_id=i.id
+            where f.gestion_tipo_id=2019 and f.institucioneducativa_id=".$this->session->get('ie_id')."
+            and f.sucursal_tipo_id=".$this->session->get('ie_subcea')." and f.periodo_tipo_id=".$this->session->get('ie_per_cod')."
+            and a.codigo = '".$aInfoUeducativa['ueducativaInfoId']['sfatCodigo']."' and b.codigo = '".$aInfoUeducativa['ueducativaInfoId']['setCodigo']."' and d.codigo = '".$aInfoUeducativa['ueducativaInfoId']['satCodigo']."' and i.esvigente = 't' and a.codigo in (18,19,20,21,22,23,24,25)";
+        } else {
+            $query = "select distinct g.id as siepid
+            from superior_facultad_area_tipo a  
+                inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+                        inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+                            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+                                inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+                                    inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id
+					inner join superior_modulo_periodo h on h.institucioneducativa_periodo_id=g.id
+						inner join superior_modulo_tipo i on h.superior_modulo_tipo_id=i.id
+            where f.gestion_tipo_id=2019 and f.institucioneducativa_id=".$this->session->get('ie_id')."
+            and f.sucursal_tipo_id=".$this->session->get('ie_subcea')." and f.periodo_tipo_id=".$this->session->get('ie_per_cod')."
+            and a.codigo = '".$aInfoUeducativa['ueducativaInfoId']['sfatCodigo']."' and b.codigo = '".$aInfoUeducativa['ueducativaInfoId']['setCodigo']."' and d.codigo = '".$aInfoUeducativa['ueducativaInfoId']['satCodigo']."'
+            and e.superior_turno_tipo_id = ".$curso->getTurnoTipo()->getId()." and (i.esvigente = 'f' or i.esvigente is null) and a.codigo in (18,19,20,21,22,23,24,25)";
+        }
+
+        $cursos= $db->prepare($query);
+        $params = array();
+        $cursos->execute($params);
+        $cur = $cursos->fetchAll();
+
+        if(count($cur)<1){
+            $data['mensaje'] = '¡No existe el tipo de malla seleccionada!';
+            return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
+        }
+
+        if(count($cur)>1){
+            $data['mensaje'] = '¡Cuenta con mallas duplicadas, verifique y corrija!';
+            return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
+        }
+        
+        $siep = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($cur[0]['siepid']);
+        try {
+            $curso->setSuperiorInstitucioneducativaPeriodo($siep);
+            $curso->setModalidadTipoId(intval($mallaId));
+            $em->persist($curso);
+            $em->flush();
+            $em->getConnection()->commit();
+            $mallaActual = $curso->getModalidadTipoId();
+            $data = $this->getAreas($infoUe);
+            $data['mensaje'] = 'Asignación de malla correcta: '.$malla;
+            $data['primaria'] = $primaria;
+            $data['mallaActual'] = $mallaActual;
+            return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'));
+        }
     }
 
     public function areasaddAction(Request $request) {
@@ -134,7 +230,7 @@ class AreasController extends Controller {
         }
 
         try {
-            $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
+            $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
             
             $sip = $curso->getSuperiorInstitucioneducativaPeriodo();
 
@@ -198,12 +294,16 @@ class AreasController extends Controller {
     }
 
     public function areasdeleteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
         $infoUe = $request->get('infoUe');
         $coid = $request->get('idco');
         $smpid = $request->get('smpId');
+        $aInfoUeducativa = unserialize($infoUe);
+        $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
+        $mallaActual = $curso->getModalidadTipoId();
         
         // eliminamos el area del curso
-        $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe)
@@ -252,6 +352,7 @@ class AreasController extends Controller {
             // Mostramos nuevamente las areas del curso
             $data = $this->getAreas($infoUe);
             $data['primaria'] = $primaria;
+            $data['mallaActual'] = $mallaActual;
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -277,6 +378,21 @@ class AreasController extends Controller {
         $periodo = $this->session->get('ie_per_cod');
 
         $em = $this->getDoctrine()->getManager();
+
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($iecId);
+
+        if($curso->getModalidadTipoId() == 1) {
+            $nuevamalla = true;
+        } else {
+            $nuevamalla = false;
+        }
+
+        if($nuevamalla == 1) {
+            $turnoId = 10;
+        } else {
+            $turnoId = $curso->getTurnoTipo()->getId();
+        }
+
         $em->getConnection()->beginTransaction();
 
         if($nivel == 15 || $nivel == 5){
@@ -521,6 +637,7 @@ class AreasController extends Controller {
             }
         } else {
             if($actuales){
+                $tieneCursoOferta = true;
                 $curso = $em->createQueryBuilder()                
                 ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
                 ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'sip')
@@ -538,17 +655,24 @@ class AreasController extends Controller {
                 ->andWhere('isuc.institucioneducativa = :institucion')
                 ->andWhere('isuc.id = :sucursal')
                 ->andWhere('smp.id NOT IN (:actuales)')
-                ->setParameter('setId', $setId)
+                ->andWhere('smt.esvigente = :nuevamalla');
+                if($nuevamalla != 1){
+                    $curso = $curso->andWhere('sia.superiorTurnoTipo = :turno')
+                    ->setParameter('turno', $turnoId);
+                }
+                $curso = $curso->setParameter('setId', $setId)
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('periodoId', $periodo)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('institucion', $institucion)
                 ->setParameter('sucursal', $sucursal)
                 ->setParameter('actuales', $actuales)
+                ->setParameter('nuevamalla', $nuevamalla)
                 ->getQuery()
                 ->getResult();
             }
             else{
+                $tieneCursoOferta = false;
                 $curso = $em->createQueryBuilder()
                 ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
                 ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'sip')
@@ -565,12 +689,19 @@ class AreasController extends Controller {
                 ->andWhere('isuc.gestionTipo = :gestion')
                 ->andWhere('isuc.institucioneducativa = :institucion')
                 ->andWhere('isuc.id = :sucursal')
+                ->andWhere('smt.esvigente = :nuevamalla');
+                if($nuevamalla != 1){
+                    $curso = $curso->andWhere('sia.superiorTurnoTipo = :turno')
+                    ->setParameter('turno', $turnoId);
+                }
+                $curso = $curso->andWhere('smt.esvigente = :nuevamalla')
                 ->setParameter('setId', $setId)
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('periodoId', $periodo)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('institucion', $institucion)
                 ->setParameter('sucursal', $sucursal)
+                ->setParameter('nuevamalla', $nuevamalla)
                 ->getQuery()
                 ->getResult();
             }
@@ -608,7 +739,7 @@ class AreasController extends Controller {
 //                ->getResult();
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
         $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
-        return array('cursoOferta' => $cursoOferta, 'asignaturas' => $curso, 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso);
+        return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => $curso, 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso);
     }
 
     public function areamaestroAction(Request $request) {
