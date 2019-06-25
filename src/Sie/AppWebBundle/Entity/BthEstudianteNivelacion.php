@@ -15,14 +15,9 @@ class BthEstudianteNivelacion
     private $id;
 
     /**
-     * @var integer
-     */
-    private $notaCuantitativa;
-
-    /**
      * @var string
      */
-    private $docRespaldo;
+    private $obs;
 
     /**
      * @var \DateTime
@@ -35,19 +30,14 @@ class BthEstudianteNivelacion
     private $fechaModificacion;
 
     /**
-     * @var string
+     * @var \Sie\AppWebBundle\Entity\EstudianteNotaCualitativa
      */
-    private $obs;
+    private $estudianteNotaCualitativa;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
+     * @var \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo
      */
-    private $estudianteInscripcion;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\NivelTipo
-     */
-    private $nivelTipo;
+    private $especialidadTecnicoHumanisticoTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\GradoTipo
@@ -55,24 +45,14 @@ class BthEstudianteNivelacion
     private $gradoTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\NotaTipo
-     */
-    private $notaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Usuario
-     */
-    private $usuario;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\AsignaturaTipo
      */
-    private $asignatura;
+    private $asignaturaTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
      */
-    private $especialidadTecnicoHumanistico;
+    private $estudianteInscripcion;
 
 
     /**
@@ -86,49 +66,26 @@ class BthEstudianteNivelacion
     }
 
     /**
-     * Set notaCuantitativa
+     * Set obs
      *
-     * @param integer $notaCuantitativa
+     * @param string $obs
      * @return BthEstudianteNivelacion
      */
-    public function setNotaCuantitativa($notaCuantitativa)
+    public function setObs($obs)
     {
-        $this->notaCuantitativa = $notaCuantitativa;
+        $this->obs = $obs;
     
         return $this;
     }
 
     /**
-     * Get notaCuantitativa
-     *
-     * @return integer 
-     */
-    public function getNotaCuantitativa()
-    {
-        return $this->notaCuantitativa;
-    }
-
-    /**
-     * Set docRespaldo
-     *
-     * @param string $docRespaldo
-     * @return BthEstudianteNivelacion
-     */
-    public function setDocRespaldo($docRespaldo)
-    {
-        $this->docRespaldo = $docRespaldo;
-    
-        return $this;
-    }
-
-    /**
-     * Get docRespaldo
+     * Get obs
      *
      * @return string 
      */
-    public function getDocRespaldo()
+    public function getObs()
     {
-        return $this->docRespaldo;
+        return $this->obs;
     }
 
     /**
@@ -178,205 +135,6 @@ class BthEstudianteNivelacion
     }
 
     /**
-     * Set obs
-     *
-     * @param string $obs
-     * @return BthEstudianteNivelacion
-     */
-    public function setObs($obs)
-    {
-        $this->obs = $obs;
-    
-        return $this;
-    }
-
-    /**
-     * Get obs
-     *
-     * @return string 
-     */
-    public function getObs()
-    {
-        return $this->obs;
-    }
-
-    /**
-     * Set estudianteInscripcion
-     *
-     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
-     * @return BthEstudianteNivelacion
-     */
-    public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
-    {
-        $this->estudianteInscripcion = $estudianteInscripcion;
-    
-        return $this;
-    }
-
-    /**
-     * Get estudianteInscripcion
-     *
-     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcion 
-     */
-    public function getEstudianteInscripcion()
-    {
-        return $this->estudianteInscripcion;
-    }
-
-    /**
-     * Set nivelTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\NivelTipo $nivelTipo
-     * @return BthEstudianteNivelacion
-     */
-    public function setNivelTipo(\Sie\AppWebBundle\Entity\NivelTipo $nivelTipo = null)
-    {
-        $this->nivelTipo = $nivelTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get nivelTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\NivelTipo 
-     */
-    public function getNivelTipo()
-    {
-        return $this->nivelTipo;
-    }
-
-    /**
-     * Set gradoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\GradoTipo $gradoTipo
-     * @return BthEstudianteNivelacion
-     */
-    public function setGradoTipo(\Sie\AppWebBundle\Entity\GradoTipo $gradoTipo = null)
-    {
-        $this->gradoTipo = $gradoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get gradoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\GradoTipo 
-     */
-    public function getGradoTipo()
-    {
-        return $this->gradoTipo;
-    }
-
-    /**
-     * Set notaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\NotaTipo $notaTipo
-     * @return BthEstudianteNivelacion
-     */
-    public function setNotaTipo(\Sie\AppWebBundle\Entity\NotaTipo $notaTipo = null)
-    {
-        $this->notaTipo = $notaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get notaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\NotaTipo 
-     */
-    public function getNotaTipo()
-    {
-        return $this->notaTipo;
-    }
-
-    /**
-     * Set usuario
-     *
-     * @param \Sie\AppWebBundle\Entity\Usuario $usuario
-     * @return BthEstudianteNivelacion
-     */
-    public function setUsuario(\Sie\AppWebBundle\Entity\Usuario $usuario = null)
-    {
-        $this->usuario = $usuario;
-    
-        return $this;
-    }
-
-    /**
-     * Get usuario
-     *
-     * @return \Sie\AppWebBundle\Entity\Usuario 
-     */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * Set asignatura
-     *
-     * @param \Sie\AppWebBundle\Entity\AsignaturaTipo $asignatura
-     * @return BthEstudianteNivelacion
-     */
-    public function setAsignatura(\Sie\AppWebBundle\Entity\AsignaturaTipo $asignatura = null)
-    {
-        $this->asignatura = $asignatura;
-    
-        return $this;
-    }
-
-    /**
-     * Get asignatura
-     *
-     * @return \Sie\AppWebBundle\Entity\AsignaturaTipo 
-     */
-    public function getAsignatura()
-    {
-        return $this->asignatura;
-    }
-
-    /**
-     * Set especialidadTecnicoHumanistico
-     *
-     * @param \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo $especialidadTecnicoHumanistico
-     * @return BthEstudianteNivelacion
-     */
-    public function setEspecialidadTecnicoHumanistico(\Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo $especialidadTecnicoHumanistico = null)
-    {
-        $this->especialidadTecnicoHumanistico = $especialidadTecnicoHumanistico;
-    
-        return $this;
-    }
-
-    /**
-     * Get especialidadTecnicoHumanistico
-     *
-     * @return \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo 
-     */
-    public function getEspecialidadTecnicoHumanistico()
-    {
-        return $this->especialidadTecnicoHumanistico;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstudianteNotaCualitativa
-     */
-    private $estudianteNotaCualitativa;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo
-     */
-    private $especialidadTecnicoHumanisticoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\AsignaturaTipo
-     */
-    private $asignaturaTipo;
-
-
-    /**
      * Set estudianteNotaCualitativa
      *
      * @param \Sie\AppWebBundle\Entity\EstudianteNotaCualitativa $estudianteNotaCualitativa
@@ -423,6 +181,29 @@ class BthEstudianteNivelacion
     }
 
     /**
+     * Set gradoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GradoTipo $gradoTipo
+     * @return BthEstudianteNivelacion
+     */
+    public function setGradoTipo(\Sie\AppWebBundle\Entity\GradoTipo $gradoTipo = null)
+    {
+        $this->gradoTipo = $gradoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gradoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GradoTipo 
+     */
+    public function getGradoTipo()
+    {
+        return $this->gradoTipo;
+    }
+
+    /**
      * Set asignaturaTipo
      *
      * @param \Sie\AppWebBundle\Entity\AsignaturaTipo $asignaturaTipo
@@ -443,5 +224,28 @@ class BthEstudianteNivelacion
     public function getAsignaturaTipo()
     {
         return $this->asignaturaTipo;
+    }
+
+    /**
+     * Set estudianteInscripcion
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
+     * @return BthEstudianteNivelacion
+     */
+    public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
+    {
+        $this->estudianteInscripcion = $estudianteInscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteInscripcion
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcion 
+     */
+    public function getEstudianteInscripcion()
+    {
+        return $this->estudianteInscripcion;
     }
 }
