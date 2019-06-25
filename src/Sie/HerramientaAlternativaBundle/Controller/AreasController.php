@@ -301,63 +301,62 @@ class AreasController extends Controller {
             $turnoId = $curso->getTurnoTipo()->getId();
         }
 
-        $em->getConnection()->beginTransaction();
-
         if($nivel == 15 || $nivel == 5){
-            try {                
-                $iePeriodo = $em->createQueryBuilder()
-                    ->select('g')
-                    ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
-                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
-                    ->where('h.id = :idCurso')
-                    ->setParameter('idCurso', $iecId)
-                    ->getQuery()
-                    ->getResult();
-                
-                $moduloPeriodo = $em->createQueryBuilder()
-                    ->select('l.codigo')
-                    ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
-                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
-                    ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
-                    ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
-                    ->where('h.id = :idCurso')
-                    ->setParameter('idCurso', $iecId)
-                    ->getQuery()
-                    ->getResult();
-                
-                if($moduloPeriodo) {                    
-                    $modulos = $em->createQueryBuilder()
-                    ->select('l')
-                    ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
-                    ->where('l.codigo IN (:codigos)')
-                    ->andWhere('l.codigo NOT IN (:modulos)')
-                    ->setParameter('codigos', array(401,402,403,404,408))
-                    ->setparameter('modulos', $moduloPeriodo)
-                    ->getQuery()
-                    ->getResult();
-                }else {
-                    $modulos = $em->createQueryBuilder()
-                    ->select('l')
-                    ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
-                    ->where('l.codigo IN (:codigos)')
-                    ->setParameter('codigos', array(401,402,403,404,408))
-                    ->getQuery()
-                    ->getResult();
-                }                
-                
-                foreach ($modulos as $modulo) {
-                    //die("abc");        
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($modulo);
-                    $smp->setInstitucioneducativaPeriodo($iePeriodo[0]);
-                    $smp->setHorasModulo(0);
-                    $em->persist($smp);
-                    $em->flush();
-                }            
-                $em->getConnection()->commit();
-            } catch (Exception $ex) {
-                $em->getConnection()->rollback();
+            $iePeriodo = $em->createQueryBuilder()
+                ->select('g')
+                ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->where('h.id = :idCurso')
+                ->setParameter('idCurso', $iecId)
+                ->getQuery()
+                ->getResult();
+            
+            $moduloPeriodo = $em->createQueryBuilder()
+                ->select('l.codigo')
+                ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
+                ->where('h.id = :idCurso')
+                ->setParameter('idCurso', $iecId)
+                ->getQuery()
+                ->getResult();
+            
+            if($moduloPeriodo) {                    
+                $modulos = $em->createQueryBuilder()
+                ->select('l')
+                ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
+                ->where('l.codigo IN (:codigos)')
+                ->andWhere('l.codigo NOT IN (:modulos)')
+                ->setParameter('codigos', array(401,402,403,404,408))
+                ->setparameter('modulos', $moduloPeriodo)
+                ->getQuery()
+                ->getResult();
+            }else {
+                $modulos = $em->createQueryBuilder()
+                ->select('l')
+                ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
+                ->where('l.codigo IN (:codigos)')
+                ->setParameter('codigos', array(401,402,403,404,408))
+                ->getQuery()
+                ->getResult();
+
+            if($modulos) {
+                $em->getConnection()->beginTransaction();
+                try {
+                    foreach ($modulos as $modulo) {      
+                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                        $smp = new SuperiorModuloPeriodo();
+                        $smp->setSuperiorModuloTipo($modulo);
+                        $smp->setInstitucioneducativaPeriodo($iePeriodo[0]);
+                        $smp->setHorasModulo(0);
+                        $em->persist($smp);
+                        $em->flush();
+                    }            
+                    $em->getConnection()->commit();
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                }
             }
         }
 
