@@ -20,6 +20,7 @@ use Sie\JuegosBundle\Controller\RegisterPersonStudentController as registerPerso
 
 use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos;
 use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos;
+use Sie\AppWebBundle\Entity\JdpPersonaInscripcionJuegos;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
@@ -324,6 +325,7 @@ class ReemplazoController extends Controller {
         $rude2 = $form['rude2'];
         $gestionId = $gestionActual;
         $historial = array();
+        $comisionId = 0;
 
         $inscripcionJuegosRude = $this->getInscripcionJuegosRudeGestionPruebaFase($rude1, $pruebaId, $gestionId, $faseId);
         if(count($inscripcionJuegosRude)>0){
@@ -507,7 +509,7 @@ class ReemplazoController extends Controller {
 
                         if($entrenadorSave){
                             if($comisionId == 0){
-                                if($nivel== 12){
+                                if($nivelId== 12){
                                     $comisionId = 139;
                                 } else {
                                     $comisionId = 140;
@@ -572,7 +574,7 @@ class ReemplazoController extends Controller {
             from estudiante as e
             inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-            where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$gestionId." and iec.institucioneducativa_id = ".$institucionEducativaId." and ei.estadomatricula_tipo_id in (4)
+            where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$gestionId." and iec.institucioneducativa_id = ".$institucionEducativaId." and ei.estadomatricula_tipo_id in (4) and iec.nivel_tipo_id in (12,13)
         ");        
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -601,14 +603,10 @@ class ReemplazoController extends Controller {
             from estudiante as e
             inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-            where ei.id = ".$estudianteInscripcionIdRude2.") as e2 on e1.id = e2.id
+            where ei.id = ".$estudianteInscripcionIdRude2.") as e2 on e1.id = e2.id 
         ");        
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
         return $objEntidad;
     }
-
-
-    
-
 }

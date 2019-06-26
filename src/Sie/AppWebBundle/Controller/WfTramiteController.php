@@ -201,23 +201,26 @@ class WfTramiteController extends Controller
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $idtramite = $id;
-        if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){
-            $t = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'condicion'=>$tramiteDetalle->getValorEvaluacion()));
-            $tarea = $t[0]->getCondicionTareaSiguiente();
-        }else{
-            $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
+        if($tramiteDetalle->getTramiteEstado()->getId() == 15 or $tramiteDetalle->getTramiteEstado()->getId() == 4){ //enviado o devuelto
+            $idtramite = $id;
+            if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){
+                $t = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'condicion'=>$tramiteDetalle->getValorEvaluacion()));
+                $tarea = $t[0]->getCondicionTareaSiguiente();
+            }else{
+                $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
+            }
+            $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+            if($mensaje['dato'] == true){
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('recibido', $mensaje['msg']);
+            }else{
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);
+            }
         }
-        $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-        if($mensaje['dato'] == true){
-            $request->getSession()
-                ->getFlashBag()
-                ->add('recibido', $mensaje['msg']);
-        }else{
-            $request->getSession()
-                ->getFlashBag()
-                ->add('error', $mensaje['msg']);
-        }
+        
         return $this->redirectToRoute('wf_tramite_recibido');
 
         //return $this->render('SieHerramientaBundle:WfTramite:recibidos.html.twig');
@@ -386,7 +389,13 @@ class WfTramiteController extends Controller
         $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
         $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(3);
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        
+        $td = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        if($td->getTramiteEstado()->getId() != 15 and $td->getTramiteEstado()->getId() != 4){ //enviado o devuelto
+            $mensaje['dato'] = false;
+            $mensaje['msg'] = 'Ocurrio un error al recibir el trámite.';
+            return $mensaje;
+        }
+
         $em->getConnection()->beginTransaction();
         try {
             /**
@@ -417,7 +426,7 @@ class WfTramiteController extends Controller
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             $mensaje['dato'] = false;
-            $mensaje['msg'] = 'Ocurrio un error al guardar el trámite.';
+            $mensaje['msg'] = 'Ocurrio un error al recibir el trámite.';
             return $mensaje;
         }
     }
