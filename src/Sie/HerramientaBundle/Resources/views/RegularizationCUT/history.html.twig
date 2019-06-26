@@ -34,6 +34,12 @@
                 <td>NOMBRE(S)</td>
                 <td style="color: #1f326b;">{{student.nombre}}</td>
             </tr>
+            <tr>
+                <td>SIE</td>
+                <td style="color: #1f326b;">{{currentSie}}</td>
+            </tr>
+
+
 
             </tbody>
         </table>
@@ -43,7 +49,8 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center" style="width: 45px" >#</th>
-                                        <th colspan="">Grado</th>
+                                        <th colspan="">Gesti&oacute;n</th>
+                                        <th colspan="">Grado</th>                                        
                                         <th colspan="">Paralelo</th>
                                         <th colspan="">Turno</th>
                                         <th colspan="">Matricula</th>
@@ -55,11 +62,15 @@
                                     {% for history in arrhistory %}	
 	                                    <tr>
 	                                        <td class="text-center">{{loop.index}}</td>
-	                                        <td class="info">{{history.grado}}</td>
+	                                        <td class="info">{{history.gestion}}</td>
+                                            <td class="info">{{history.grado}}</td>                                            
 	                                        <td class="info">{{history.paralelo}}</td>
 	                                        <td class="info">{{history.turno}}</td>
 	                                        <td class="info">{{history.estadoMatricula}}</td>
-	                                        <td class="info"><a href="#" onclick="openRegularizationForm('{{history.estInsId}}')"> Nivelaci&oacute;n</a> </td>
+                                            {% if history.gradoId != 6%}
+	                                            <td class="info"><a href="#" onclick="openRegularizationForm('{{history.estInsId}}','{{currentInscription}}','{{currentSie}}','{{currentGestion}}')"> Nivelaci&oacute;n</a> </td>
+                                            {% endif %}
+
 	                                        
 	                                    </tr>
                                   {% endfor %}
