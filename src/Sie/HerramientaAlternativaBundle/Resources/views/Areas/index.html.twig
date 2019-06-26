@@ -195,7 +195,7 @@
             $.ajax({
                 type: 'post',
                 data: ({infoUe: infoUe, mallaId: mallaId}),
-                url: "{{ path('herramienta_alter_curso_malla') }}",
+                url: "{{ path('herramienta_alter_curso_mallas') }}",
                 beforeSend: function () {
                     $('#mensajeModal').empty();
                     $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Asignando malla... <img src='{{asset('img/loading-sm.gif')}}'></div>");
