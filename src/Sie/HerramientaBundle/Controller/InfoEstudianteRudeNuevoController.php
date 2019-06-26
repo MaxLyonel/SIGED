@@ -527,12 +527,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         ->setParameter('rudeId', $rude->getId())
                         ->getQuery()
                         ->getResult();
-
+        // dump($idiomasHablados);die;
         $idiomasArray = array();
         $cont = 1;
         foreach ($idiomasHablados as $value) {
-            $idioma_aux = $em->getRepository('SieAppWebBundle:IdiomaTipo')->find($value->getHablaTipo()->getId());
-            $idiomasArray[$cont] = $idioma_aux->getId();
+            // $idioma_aux = $em->getRepository('SieAppWebBundle:IdiomaTipo')->find($value->getIdiomaTipo()->getId());
+            $idiomasArray[$cont] = $value->getIdiomaTipo()->getId();//$idioma_aux->getId();
             $cont++;
         }
 
