@@ -527,12 +527,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         ->setParameter('rudeId', $rude->getId())
                         ->getQuery()
                         ->getResult();
-
+        // dump($idiomasHablados);die;
         $idiomasArray = array();
         $cont = 1;
         foreach ($idiomasHablados as $value) {
-            $idioma_aux = $em->getRepository('SieAppWebBundle:IdiomaTipo')->find($value->getHablaTipo()->getId());
-            $idiomasArray[$cont] = $idioma_aux->getId();
+            // $idioma_aux = $em->getRepository('SieAppWebBundle:IdiomaTipo')->find($value->getIdiomaTipo()->getId());
+            $idiomasArray[$cont] = $value->getIdiomaTipo()->getId();//$idioma_aux->getId();
             $cont++;
         }
 
@@ -1737,7 +1737,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'property'=>'ocupacion',
                             'data'=>($datos['ocupacion'] != null)?$em->getReference('SieAppWebBundle:ApoderadoOcupacionTipo', ($datos['ocupacion'])?$datos['ocupacion']:10035):''
                         ))
-                    ->add('obs', 'text', array('required' => true))
+                    ->add('empleo', 'text', array('required' => true))
                     ->add('instruccionTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:InstruccionTipo',
                             'query_builder' => function (EntityRepository $e) use ($rude) {
@@ -2067,7 +2067,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $nuevoApoderadoDatos->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderadoInscripcion));
                 $nuevoApoderadoDatos->setTelefono($form['telefono']);
                 $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($form['ocupacion']));
-                $nuevoApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
+                $nuevoApoderadoDatos->setEmpleo(mb_strtoupper($form['empleo'],'utf-8'));
+                // $nuevoApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
                 $em->persist($nuevoApoderadoDatos);
                 $em->flush();
 
@@ -2079,7 +2080,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $actualizarApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($form['instruccionTipo']));
                     $actualizarApoderadoDatos->setTelefono($form['telefono']);
                     $actualizarApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($form['ocupacion']));
-                    $actualizarApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
+                    $actualizarApoderadoDatos->setEmpleo(mb_strtoupper($form['empleo'],'utf-8'));
+                    // $actualizarApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
                     $em->flush();
 
                     $idApoderadoInscripcionDatos = $actualizarApoderadoDatos->getId();
@@ -2111,14 +2113,21 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
 
         if($tipo == 'tutor'){
+            // APODERADOS QUE TIENE ACTUALMENTE REGSITRADOS EL ESTUDIANTE
             $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
                 'estudianteInscripcion'=>$form['idInscripcion']
             ));
-
             $tiposApoderados = [];
             foreach ($apoderados as $ap) {
                 $tiposApoderados[] = $ap->getApoderadoTipo()->getId();
             }
+
+
+            $catalogo = $this->obtenerCatalogo($rude, 'apoderado_tipo');
+            dump($catalogo);
+            $variable = (in_array(3, $this->obtenerCatalogo($rude, 'apoderado_tipo')))?true:false;
+            dump($variable);
+            // dump($tiposApoderados);die;
 
             // Validacion con quien vive
             $status = 200;
@@ -2143,7 +2152,15 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         }
                         break;
                     case 4: // TUTOR
-                        if(count($tiposApoderados) > 0 and !in_array($this->obtenerCatalogo($rude, 'apoderado_tipo'), $tiposApoderados)){
+                        $apoderadosTutores = $this->obtenerCatalogo($rude, 'apoderado_tipo');
+                        $tieneApoderado = false;
+                        foreach ($apoderadosTutores as $key => $value) {
+                            if (in_array($value, $tiposApoderados )) {
+                                $tieneApoderado = true;
+                            }
+                        }
+
+                        if(!$tieneApoderado){
                             $msg = "Debe registrar datos del tutor";
                             $status = 500;
                         }
