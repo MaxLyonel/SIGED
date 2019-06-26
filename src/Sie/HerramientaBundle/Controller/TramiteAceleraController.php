@@ -68,6 +68,7 @@ class TramiteAceleraController extends Controller
                     ->getResult();//dump(json_decode($resultDatos[1]->getdatos())->observacion);die;
                 $datos = json_decode($resultDatos[0]->getdatos());
                 $observacion = json_decode($resultDatos[1]->getdatos())->observacion;
+                $nuevo_tramite = empty($datos->nuevo_tramite)?'':$datos->nuevo_tramite;
                 $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
                 $estudiante = array();
                 if (!empty($estudiante_result)) {
@@ -93,7 +94,7 @@ class TramiteAceleraController extends Controller
                         );
                     }
                 }
-                return $this->render('SieHerramientaBundle:TramiteAcelera:devolucion.html.twig', array('institucioneducativa_id'=>$institucioneducativa_id, 'tramite_id'=>$flujotipo_id, 'flujotipo_id'=>$datos->flujotipo_id, 'observacion'=>$observacion, 'estudiante'=>$estudiante));
+                return $this->render('SieHerramientaBundle:TramiteAcelera:devolucion.html.twig', array('institucioneducativa_id'=>$institucioneducativa_id, 'tramite_id'=>$flujotipo_id, 'flujotipo_id'=>$datos->flujotipo_id, 'observacion'=>$observacion, 'nuevo_tramite'=>$nuevo_tramite, 'estudiante'=>$estudiante));
             }
         } else {
             return $this->render('SieHerramientaBundle:TramiteAcelera:nuevo.html.twig', array('institucioneducativa_id' => $institucioneducativa_id, 'flujotipo_id' => $flujotipo_id));
@@ -131,15 +132,21 @@ class TramiteAceleraController extends Controller
                     ->orderBy("td.flujoProceso")
                     ->getQuery()
                     ->getResult();
-                $valida = false;
+                $valida = 0;
                 // dump($resultDatos);die;
                 foreach ($resultDatos as $item) {
                     $datos = json_decode($item->getdatos());
                     if ($datos->estudiante_id == $estudiante_result->getId()) {
-                        $valida = true;
+                        if (date('Y') == $item->getFechaRegistro()->format('Y')) {
+                            $valida = 1;
+                            break;
+                        } elseif (date('Y') > $item->getFechaRegistro()->format('Y')) {
+                            $valida = 2;
+                            break;
+                        }
                     }
                 }
-                if ($valida == true) {
+                if ($valida == 1) {
                     return $response->setData(array('msg' => $msg));
                 } else {
                     $msg = "exito";
@@ -157,7 +164,8 @@ class TramiteAceleraController extends Controller
                     'institucion_educativa' => $institucioneducativa,
                     'tipo_talento' => $estudiante_talento->getTalentoTipo(),
                     'puede_acelerar' => $estudiante_talento->getAcelera()==true?'Si':'No',
-                    'informe' => $estudiante_talento->getInforme()
+                    'informe' => $estudiante_talento->getInforme(),
+                    'segundo' => $valida
                 );
             } else {
                 $msg = 'noins';
@@ -178,6 +186,7 @@ class TramiteAceleraController extends Controller
             mkdir($destination_path, 0777, true);
         }
         $cant = count($request->files->get('documento'));
+        $doc_sol = $doc_com = '';
         for($i = 0; $i < $cant; $i++) {
             if($i == 0) {
                 $doc_sol = date('YmdHis').$i.'.'.$request->files->get('documento')[$i]->getClientOriginalExtension();
@@ -200,6 +209,7 @@ class TramiteAceleraController extends Controller
         $datos['flujotipo_id'] = $request->get('flujotipo_id');
         $datos['institucioneducativa_id'] = $request->get('institucioneducativa_id');
         $datos['fecha_solicitud'] = $request->get('fecha_solicitud');
+        $datos['nuevo_tramite'] = $request->get('nuevo_tramite');
         $datos['grado_cantidad'] = $request->get('grado_cantidad');
         $datos['procede_aceleracion'] = $request->get('procede_aceleracion');
         $datos['informe'] = $request->get('informe');

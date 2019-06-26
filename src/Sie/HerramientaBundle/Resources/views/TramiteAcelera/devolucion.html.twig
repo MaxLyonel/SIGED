@@ -103,8 +103,8 @@
                                         <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf,.doc,.docx" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="informe_comision">Informe Comisión Pedagógica</label>
-                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" required>
+                                        <label for="informe_comision">Informe Complementario</label>
+                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" {% if nuevo_tramite == 'SI' %} disabled {% endif %} required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
@@ -113,6 +113,7 @@
                                     <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                                     <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
+                                    <input type="hidden" id="nuevo_tramite" name="nuevo_tramite" value="{{ nuevo_tramite }}">
                                     <div class="form-group">
                                         <label for="procede_aceleracion">¿Procede Aceleración?</label>
                                         <select class="form-control" id="procede_aceleracion" name="procede_aceleracion" onchange="aceleracion()" required>
@@ -185,12 +186,6 @@
             return false;
         });
         $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
-        $('#rude').keypress(function (event) {
-            if (event.keyCode === 10 || event.keyCode === 13) {
-                event.preventDefault();
-                searchEstudiante();
-            }
-        });
         
         function mesage(tipo, titulo, msg, estado, flag) {
             $("#envio").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
@@ -235,6 +230,7 @@
 
         $("#registro").submit(function (event) {
             event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
             $("#modalConfirm").modal('show');
@@ -249,6 +245,7 @@
             fd.append('flujotipo_id', $("#flujotipo_id").val());
             fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
             fd.append('fecha_solicitud', $("#fecha_solicitud").val());
+            fd.append('nuevo_tramite', $("#nuevo_tramite").val());
             fd.append('informe', $("#informe").val());
             var docsol = document.getElementById('solicitud_tutor');
             var doccom = document.getElementById('informe_comision');

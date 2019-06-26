@@ -67,9 +67,13 @@
                                         <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ solicitud_tutor )}}" target="_blank">Documento adjunto</a>
                                     </div>
                                     <div class="form-group">
-                                        <label for="informe_comision">Informe Comisión Pedagógica</label>
+                                        <label for="informe_comision">Informe Complementario</label>
                                         <input type="hidden" class="form-control" id="informe_comision" name="informe_comision" value="{{ informe_comision }}">
+                                        {% if informe_comision|length > 0%}
                                         <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ informe_comision )}}" target="_blank">Documento adjunto</a>
+                                        {% else %}
+                                        <a class="form-control text-danger" role="button">Sin documento</a>
+                                        {% endif %}
                                     </div>
                                 </div>                                
                             </div>
@@ -147,6 +151,7 @@
 
         $("#form_observacion").submit(function (event) {
             event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de registrar la observación del trámite?</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
             $("#modalConfirm").modal('show');
