@@ -392,6 +392,20 @@
                                 </ul>
                             </li>
                         {% endif %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-search"></i></span>
+                                <span class="text">Firma Electrónica</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="collapse nav" id="menu10000">
+                                <li><a href="{{ path('tramite_documento_firma_diploma_humanistico_autorizacion_lista') }}">Autorización</a></li>
+                                {% if (rol8) %}
+                                    <li><a href="{{ path('tramite_documento_firma_lista') }}">Lista Firmas</a></li>
+                                {% endif %}
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>  
                     {% else %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
