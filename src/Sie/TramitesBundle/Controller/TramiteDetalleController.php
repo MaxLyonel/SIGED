@@ -1863,7 +1863,7 @@ class TramiteDetalleController extends Controller {
                                 if ($serieCarton == 'ALT'){
                                     $serCarton = $serieCarton.$documentoTipoSerie;
                                 } else {
-                                    $serCarton = $serieCarton;
+                                    $serCarton = 'ALT'.$documentoTipoSerie.$serieCarton;
                                 }                               
 
                                 $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
