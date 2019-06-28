@@ -1876,8 +1876,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
             // Verificamos si la persona es nueva
             if($form['idPersona'] == 'nuevo' or $form['idPersona'] == 'segip'){
-                // PREGUNTAMOS SI EL CARNET ESTA VACIO
+                // PREGUNTAMOS SI EL CARNET NO ESTA VACIO
                 if($form['carnet'] != ""){
+                    // BUSCAMOS LA PERSONA
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                         'carnet'=>$form['carnet'],
                         'complemento'=>mb_strtoupper($form['complemento'],'utf-8'),
@@ -1935,7 +1936,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $idPersona = $persona->getId();
 
                 }else{
-                    // preguntamos si el carnet esta vacio
+                    // preguntamos si el carnet no esta vacio
                     if($form['carnet'] != ""){
                         // VERIFICAMOS SI EL CARNET YA ESTA OCUPADO
                         $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
@@ -2206,7 +2207,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $form = $this->createFormBuilder($rude)
                     ->add('id', 'hidden')
                     ->add('lugarRegistroRude', 'text', array('required' => true))
-                    ->add('fechaRegistroRude', 'text', array('required' => false, 'data'=>$fecha))             
+                    ->add('fechaRegistroRude', 'text', array('required' => true, 'data'=>$fecha))             
                     ->getForm();
 
         return $form;
