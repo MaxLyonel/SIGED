@@ -589,11 +589,7 @@ class ReglaController extends Controller
                 }
                 break;
             case 3:
-                if($this->session->get('roluserlugarid') == 1){
-                    $institucionId = $entidadUsuarioId;
-                } else {
-                    $institucionId = $this->session->get('roluserlugarid');
-                }  
+                $institucionId = $entidadUsuarioId;
                 break;
             case 4:
                 if($this->session->get('roluserlugarid') == 1){

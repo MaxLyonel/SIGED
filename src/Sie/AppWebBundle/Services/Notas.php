@@ -252,11 +252,28 @@ class Notas{
                 vuelve:
                 if($conArea == true){
                     // Obtenemos las areas o campos del estudiante
+                    // $asignaturas = $this->em->createQueryBuilder()
+                    //             ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    //             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    //             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    //             ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    //             ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
+                    //             ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
+                    //             ->orderBy('at.id','ASC')
+                    //             ->addOrderBy('asit.id','ASC')
+                    //             ->where('ei.id = :idInscripcion')
+                    //             ->setParameter('idInscripcion',$idInscripcion)
+                    //             ->getQuery()
+                    //             ->getResult();
+
+                    // REALIZAMOS LA VUELTA COMPLETA PARA OBTENER LAS MATERIAS CORRECTAS
                     $asignaturas = $this->em->createQueryBuilder()
                                 ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.institucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ieco.insitucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','ea.estudianteInscripcion = ei.id and ea.institucioneducativaCursoOferta = ieco.id')
                                 ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
                                 ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
                                 ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
@@ -268,18 +285,18 @@ class Notas{
                                 ->getResult();
                 }else{
                     // Obtenemos las asigganturas sin areas o campos del estudiante
-                    $asignaturas = $this->em->createQueryBuilder()
-                                ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
-                                ->groupBy('asit.id, asit.asignatura, ea.id')
-                                ->orderBy('asit.id','ASC')
-                                ->where('ei.id = :idInscripcion')
-                                ->setParameter('idInscripcion',$idInscripcion)
-                                ->getQuery()
-                                ->getResult();
+                    // $asignaturas = $this->em->createQueryBuilder()
+                    //             ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    //             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    //             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    //             ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    //             ->groupBy('asit.id, asit.asignatura, ea.id')
+                    //             ->orderBy('asit.id','ASC')
+                    //             ->where('ei.id = :idInscripcion')
+                    //             ->setParameter('idInscripcion',$idInscripcion)
+                    //             ->getQuery()
+                    //             ->getResult();
                 }
 
                 //dump($asignaturas);die;
