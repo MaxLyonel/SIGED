@@ -479,6 +479,7 @@ class AreasController extends Controller {
 //                ->getQuery()
 //                ->getResult();
 // dump($cursoOferta);
+        $tieneCursoOferta = true;
         $actuales = array();
         foreach ($cursoOferta as $co) {
             $actuales[] = $co['smpid'];
