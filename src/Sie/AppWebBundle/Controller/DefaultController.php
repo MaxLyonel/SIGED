@@ -211,6 +211,7 @@ class DefaultController extends Controller {
             case 'especial.local':
             case '172.20.196.9:8010':
             case '172.20.0.53:8010':
+            case '172.20.196.51:81':
                 $sysname = 'ESPECIAL';
                 $sysporlet = '#F44336';//red
                 $sysbutton = true;
@@ -296,6 +297,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SiePnpBundle");
                 break;
             case 'herramienta.local':
+            case '172.20.196.51:82':
                 $sysname = 'Herramienta';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -303,6 +305,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 break;
             case 'siged.local':
+            case '172.20.196.51:83':
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';
                 $sysbutton = true;
