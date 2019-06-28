@@ -113,7 +113,6 @@ class RegularizationCUTController extends Controller{
             // check if the student is in 6t
             // $dataStudentSixth      = $this->get('funciones')->getInscriptionBthByRude($objStudent->getCodigoRude());
             $objStudentInscription = $this->get('funciones')->getInscriptionBthByGestion($form);
-            // dump($objStudentInscription);die;
 
             if($em->getRepository('SieAppWebBundle:BthEstudianteNivelacion')->findOneBy(array('estudianteInscripcion'=>$objStudentInscription[0]['estInsId']))){
                 $message = 'Registro ya realizado para la/el estudiante';
@@ -124,10 +123,17 @@ class RegularizationCUTController extends Controller{
 
                         // VALIDAR SI LA INSCRIPCION CORRESPONDE A UN SIE AUTORIZADO
                         $sie = $objStudentInscription[0]['sie'];
+                        $gestion = $objStudentInscription[0]['gestion'];
                         
-                        $siesAutorizados = array(80730032);
 
-                        if(in_array($sie, $siesAutorizados)){
+                        $sieAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
+                            'institucioneducativa'=>$sie,
+                            'gestionTipoId'=>$gestion,
+                            'institucioneducativaHumanisticoTecnicoTipo'=>1, // plena
+                            'esimpreso'=>true
+                        ));
+
+                        if($sieAutorizado){
 
                             // check if the user has permissions
                             $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
