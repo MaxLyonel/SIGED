@@ -784,10 +784,10 @@ class SolicitudBTHController extends Controller {
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
         $informe= $datos[0]['informe'];
-        if($datos[4]['grado']){
-        $documento= $datos[5];
+        if (!empty($datos[4]['grado'])){
+            $documento= empty($datos[5])?'':$datos[5];         
         }else{
-        $documento= $datos[4];    
+            $documento= empty($datos[4])?'':$datos[4];           
         }
         
       ///obtenemos la lista de las especialidades de la unidad educativa
@@ -1174,7 +1174,7 @@ class SolicitudBTHController extends Controller {
             'grado'=>$grado
             ));
     }
-     public function  guardasolicitudDepAction(Request $request){
+    public function guardasolicitudDepAction(Request $request){
         $documento = $request->files->get('docpdf');
         /*Validacion para que guarde el docuemnto*/
         if(!empty($documento)){
@@ -1375,7 +1375,11 @@ class SolicitudBTHController extends Controller {
          * EL DEPARTAMENTO YA NO ENVIA UN INFORME EN CASO DE DEVOLUCION)
          */
          $informe= $datos[0]['informe'];
-         $documento= empty($datos[4])?'':$datos[4];
+          if (!empty($datos[4]['grado'])){
+                $documento= empty($datos[5])?'':$datos[5]; 
+            } else{
+                $documento= empty($datos[4])?'':$datos[4];
+            }
          $especialidadarray = array();
          for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
              $idespecialidad = $datos[2]['select_especialidad'][$i];
@@ -1542,7 +1546,7 @@ class SolicitudBTHController extends Controller {
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true); 
         //dump($datos);die; 
-        if ($datos[4]['grado']){
+        if (!empty($datos[4]['grado'])){
            $documento= empty($datos[5])?'':$datos[5]; 
         } else{
             $documento= empty($datos[4])?'':$datos[4];
