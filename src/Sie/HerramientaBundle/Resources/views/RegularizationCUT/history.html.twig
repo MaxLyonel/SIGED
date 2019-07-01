@@ -62,11 +62,11 @@
                         <td class="info">{{history.paralelo}}</td>
                         <td class="info">{{history.turno}}</td>
                         <td class="info">{{history.estadoMatricula}}</td>
-                        {% if history.gradoId != 6%}
-                            <td class="info"><a href="#" onclick="openRegularizationForm('{{history.estInsId}}','{{currentInscription}}','{{currentSie}}','{{currentGestion}}')"> Nivelaci&oacute;n</a> </td>
-                        {% endif %}
-
-                        
+                        <td class="info">
+                            {% if history.gradoId != 6 and history.estadoMatriculaId != 11 %}
+                                <a href="#" onclick="openRegularizationForm('{{history.estInsId}}','{{currentInscription}}','{{currentSie}}','{{currentGestion}}')"> Nivelaci&oacute;n</a>
+                            {% endif %}
+                        </td>
                     </tr>
               {% endfor %}
                 </tbody>
