@@ -538,6 +538,8 @@
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
+                                <li><a href="{{path('sie_alt_submenu_alterprimaria')}}">Reportes Alternativa Primaria </a></li>
+
                             </ul>
                         </li>
                         <li class="submenu">
@@ -562,7 +564,7 @@
                             <ul>
                                 <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-
+                                <li><a href="{{path('sie_alt_submenu_alterprimaria')}}">Reportes Alternativa Primaria </a></li>
                                 {% if (app.session.get('ie_id') != -1) %}
 
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
