@@ -1,0 +1,529 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    
+    <style type="text/css">
+        .jupper{
+            text-transform: uppercase;
+        }
+        [v-cloak]{
+            display: none;
+        }
+        .estudiante{
+            padding: 10px;
+            background: #EEEEEE;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        input[type='text']{
+            /* background: #000000; */
+        }
+        .select-nota:hover{
+            border-color: #ABBDC9;
+            background: #EAFBF1;
+            color: #009900;
+        }
+        .seleccionado{
+            background: #B8F1CA !important;
+        }
+        .headtabla{
+            background: #717171 !important;
+            color: #FFFFFF;
+            border-bottom: none !important;
+        }
+        .check{
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        }
+        h5{
+            font-weight: bold;
+        }
+    </style>
+    
+    <div id="app">
+    <div v-cloak>
+        <div class="header-content">
+            <h2><i class="fa fa-table animated fadeIn"></i> Solicitud de Modificaciòn y Adiciòn de Calificaciones <span></span></h2>
+            <div class="breadcrumb-wrapper hidden-xs">
+                <span class="label">Usted esta aquí:</span>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-home"></i>
+                        <a href={{ path('tramite_modificacion_calificaciones_index') }}>Solicitud Modificación/Adición de calificaciones</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li class="active">Formulario</li>
+                </ol>
+            </div><!-- /.breadcrumb-wrapper -->
+        </div><!-- /.header-content -->
+        <div class="body-content animated fadeIn">
+        
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Solicitud </h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="text-center">
+                                <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
+                                <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
+                            </div>
+                            
+                            
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr><th colspan="2"><h5>Datos Estudiante</h5></th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><th>Código Rude</th><td>{{estudiante.codigoRude}}</td></tr>
+                                    <tr><th>Nombre completo</th><td>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</td></tr>
+                                </tbody>
+                            </table>
+                            <br>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><th>Código SIE</th><td>{{ inscripcion.institucioneducativaCurso.institucioneducativa.id }}</td></tr>
+                                    <tr><th>Unidad Educativa</th><td>{{ inscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa }}</td></tr>
+                                    <tr><th>Nivel</th><td>{{ inscripcion.institucioneducativaCurso.nivelTipo.nivel }}</td></tr>
+                                    <tr><th>Grado</th><td>{{ inscripcion.institucioneducativaCurso.gradoTipo.grado }}</td></tr>
+                                    <tr><th>Paralelo</th><td>{{ inscripcion.institucioneducativaCurso.paraleloTipo.paralelo }}</td></tr>
+                                    <tr><th>Turno</th><td>{{ inscripcion.institucioneducativaCurso.turnoTipo.turno }}</td></tr>
+                                    <tr><th>Gestión</th><td>{{ inscripcion.institucioneducativaCurso.gestionTipo.gestion }}</td></tr>
+                                </tbody>
+                            </table>
+                            <hr>
+                            <h5>
+                                <b>Detalle de calificaciones</b>
+                                <a class="btn btn-primary" data-toggle="modal" href='#modal-id' style="float:right; margin-top:-12px;">Agregar calificación</a>
+                            </h5>
+                            <div v-if="notas.length > 0 || notasCualitativas.length > 0">
+                                <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5">Cuantitativas</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="headtabla">Asignatura</th>
+                                            <th class="headtabla">Periodo</th>
+                                            <th class="headtabla">Calificación actual</th>
+                                            <th class="headtabla">Nueva calificación</th>
+                                            <th class="headtabla"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(nota, pos) in notas">
+                                            <td>${nota.asignatura}</td>
+                                            <td>${nota.bimestre}</td>
+                                            <td>${nota.nota}</td>
+                                            <td>
+                                                <input type="text" class="form-control input-sm" style="width:50px;" v-model.number="nota.notaNueva" v-on:keypress="validarNota" v-on:keyup="validarValorNota(nota)" maxlength="3">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-xs" v-on:click="eliminarNota(nota)"> <i class="fa fa-remove"></i>  </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <table v-if="notasCualitativas.length > 0" class="table table-bordered table-striped table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="4">Cualitativas</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="headtabla">Periodo</th>
+                                            <th class="headtabla">Valoración actual</th>
+                                            <th class="headtabla">Nueva valoración</th>
+                                            <th class="headtabla"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(cualitativa, pos) in notasCualitativas">
+                                            <td class="table-cell" style="vertical-align:middle">${cualitativa.bimestre}</td>
+                                            <td>${cualitativa.notaCualitativa}</td>
+                                            <td>
+                                                <textarea  class="form-control input-sm jupper" cols="17" rows="4" v-model="cualitativa.notaNuevaCualitativa" v-on:keypress="validarNotaCualitativa();"></textarea>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-xs" v-on:click="eliminarNotaCualitativa(cualitativa)"> <i class="fa fa-remove"></i>  </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        <h5><b>Justificación de la solicitud</b></h5>
+                                        <textarea v-model="justificacion" id="" rows="4" class="form-control jupper" ref="justificacion"></textarea>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        <h5>Adjuntar Resolución Ministerial</h5>
+                                        <input type="file" name="image" @change="getImage" accept="image/*" class="form-control">  
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <hr>
+                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 check">
+                                        <div class="ckbox ckbox-primary">
+                                            <input id="acuerdo" type="checkbox" @change="setAcuerdo" ref="acuerdo">
+                                            <label for="acuerdo"> Yo {{app.user.persona.nombre}} {{app.user.persona.paterno}}, declaro que la información presentada es fidedigna.</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
+                                        <a href="" class="btn btn-default">Cancelar</a>
+                                        <button v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div v-else>
+                                <div class="alert alert-info">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Agregar calificación" ->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+        <div class="modal modal-primary fade" id="modal-id">
+            <div class="modal-dialog" {% if data.tipoNota == 'Trimestre' %} style="width:70%" {% endif %} >
+                <div class="modal-content">
+                    <div class="modal-header ">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Seleccione la calificación que desea adicionar y/o modificar</h4>
+                    </div>
+                    <div class="modal-body">
+                        {# <div class="alert alert-info" style="font-weight:bold">  <span style="font-size: 1.3em;"><i class="fa fa-info-circle"></i> Importante: </span> Este módulo ya permite realizar la solicitud de adición como modificación de calificaciones</div> #}
+                        <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i> Si observa alguna inconsistencia de datos, como ser duplicado de materias o de notas, informe esta situación a las instancias correspondientes antes de realizar la solicitud, para evitar posibles problemas al procesar la solicitud</div>
+                        <h4>Cuantitativos <small> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small> </h4>
+                        <table class="table table-bordered" id="tablaNotas" style="background:#FFFFFF">
+                            <thead>
+                                <tr>
+                                    <th><small>Área</small></th>
+                                    {% for n in data.titulosNotas %}
+                                        <th align="center"><small>{{n.titulo}}</small></th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in data.cuantitativas %}
+                                    <tr>
+                                        <td data-title="Área">
+                                            <small>{{a.asignatura}}</small>
+                                        </td>
+                                        {% for n in a.notas %}
+                                            <td id="{{n.idFila}}" align="center" data-title="{{n.bimestre}}" v-on:click="agregarNota(new String('{{n.idEstudianteNota}}'),new String('{{a.asignatura}}'),new String('{{n.bimestre}}'),new String('{{n.nota}}'),new String('{{n.id}}'),{{n.idFila}},{{n.idNotaTipo}},{{n.idEstudianteAsignatura}})" {% if n.idNotaTipo in [5,6,7,8,9,11] %} style="font-weight: bold; background:#DDDDDD" {% else %} class="select-nota" style="cursor:pointer" {% endif %}  v-bind:style="" >
+                                                {% if data.nivel == 11 or data.nivel == 1 or data.nivel == 403 %}
+                                                    <small>{{n.nota}}</small>
+                                                {% else %}
+                                                    {{n.nota}}
+                                                {% endif %}
+                                                &nbsp;
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                {% if data.gestion >= 2019 and data.cualitativas|length > 0 and data.nivel != 11 and data.tipoSubsistema != 4 %}
+                                    <tr>
+                                        <td align="center" colspan="5">PROMEDIO ANUAL</td>
+                                        {% for c in data.cualitativas %}
+                                            <td align="center">
+                                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}" >
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        {% if data.gestion < 2019 or (data.gestion >= 2019 and data.nivel == 11) %}
+                            <h4>Cualitativos <small> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+                            {% if data.cualitativas is not empty %}
+                                <table class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
+                                    <thead>
+                                    <tr class="cf">
+                                        <th>Periodo</th>
+                                        <th>Valoración</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for c in data.cualitativas %}
+                                        <tr>
+                                            <td data-title="Área">{{c.notaTipo}}</td>
+                                            <td id="{{c.idFila}}" align="center" class="select-nota" style="cursor:pointer" v-on:click="agregarNotaCualitativa(new String('{{c.idEstudianteNotaCualitativa}}'),{{inscripcion.id}},{{c.idNotaTipo}},{{c.idFila}},new String('{{c.notaCualitativa}}'),new String('{{c.notaCuantitativa}}'),new String('{{c.notaTipo}}'),new String('{{c.idEstudianteNotaCualitativa}}'))">
+                                                {{c.notaCualitativa}}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                No tiene valoraciones cualitativas...
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum sint quaerat, iusto. Quisquam magnam quae nisi voluptatem fugiat eos mollitia, quaerat quas deserunt aliquid sapiente eaque autem, eligendi excepturi et cumque. Obcaecati placeat unde accusantium error soluta officiis qui animi libero. Omnis delectus a accusamus magni, repudiandae debitis architecto eius?
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                idInscripcion: '{{idInscripcion}}',
+                flujoTipo: '{{flujoTipo}}',
+                notas: [],
+                filas: [],
+                notasCualitativas: [],
+                filasCualitativas: [],
+                justificacion: '',
+                archivo: '',
+                acuerdo: false
+            },
+            methods: {
+                agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura){
+                    if (idNotaTipo != 5) {
+                        var nuevaNota = {
+                            idEstudianteNota: idEstudianteNota,
+                            asignatura: asignatura,
+                            bimestre: bimestre,
+                            nota: nota,
+                            notaNueva: '',
+                            idNota: idNota,
+                            idFila: idFila,
+                            idNotaTipo: idNotaTipo,
+                            idEstudianteAsignatura: idEstudianteAsignatura
+                        }
+
+                        var index = this.filas.indexOf(idFila);
+
+                        if(index == -1){
+                            this.notas.push(nuevaNota);
+                            this.filas.push(idFila);
+                            $('#'+idFila).addClass('seleccionado');
+                        }else{
+                            Swal.fire(
+                              'Aviso!',
+                              'La calificación ya fue seleccionada',
+                              'warning'
+                            )
+                        }
+                    }
+                },
+                eliminarNota: function(row){
+                    // this.notas.splice(pos,1);
+                    var index = this.notas.indexOf(row);
+                    this.notas.splice(index, 1);
+                    var index1 = this.filas.indexOf(row.idFila);
+                    this.filas.splice(index1,1);
+
+                    $('#'+row.idFila).removeClass('seleccionado');
+                    console.log(this.filas);
+                },
+                validarNota: function(event){
+                    var k = event.charCode || event.keyCode;
+                    if ((k < 48 || k > 57) //NUmeros
+                        && (k != 13) //ENTER
+                        && (k != 8) //retroceso
+                        && (k != 9) //tab
+                    ){
+                        event.preventDefault();
+                        return false;
+                    }
+                },
+                validarValorNota: function(nota){
+                    // if(nota.notaNueva == ""){ nota.notaNueva = 0; }
+                    if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                    if(nota.notaNueva > 100){ nota.notaNueva = 100; }
+
+                    if(nota.notaNueva != "" && nota.notaNueva != 0){
+                        nota.notaNueva = Math.round(nota.notaNueva);
+                    }
+                },
+                agregarNotaCualitativa: function(idEstudianteNotaCualitativa,idInscripcion,idNotaTipo,idFila,notaCualitativa,notaCuantitativa,notaTipo,idEstudianteNotaCualitativa){
+                    var nuevaNotaCualitativa = {
+                        idEstudianteNotaCualitativa: idEstudianteNotaCualitativa,
+                        idInscripcion: idInscripcion,
+                        idNotaTipo: idNotaTipo,
+                        idFila: idFila,
+                        notaCualitativa: notaCualitativa,
+                        notaCuantitativa: notaCuantitativa,
+                        bimestre: notaTipo,
+                        notaNuevaCualitativa: ''
+                    }
+
+                    var index = this.filasCualitativas.indexOf(idFila);
+
+                    if(index == -1){
+                        this.notasCualitativas.push(nuevaNotaCualitativa);
+                        this.filasCualitativas.push(idFila);
+                        $('#'+idFila).addClass('seleccionado');
+                    }else{
+                        Swal.fire(
+                          'Aviso!',
+                          'La valoración ya fue seleccionada',
+                          'warning'
+                        )
+                    }
+                },
+                eliminarNotaCualitativa: function(row){
+                    // this.notas.splice(pos,1);
+                    var index = this.notasCualitativas.indexOf(row);
+                    this.notasCualitativas.splice(index, 1);
+                    var index1 = this.filasCualitativas.indexOf(row.idFila);
+                    this.filasCualitativas.splice(index1,1);
+
+                    $('#'+row.idFila).removeClass('seleccionado');
+                    console.log(this.filas);
+                },
+                validarNotaCualitativa: function(){
+                    var key = window.event;
+                    var k = key.charCode || key.keyCode;
+                    if ((k < 48 || k > 57) //NUmeros
+                        && (k != 13) //ENTER
+                        && (k != 8) //retroceso
+                        && (k != 9) //tab
+                    )
+                    return false;
+                },
+                getImage: function(event){
+                    this.archivo = event.target.files[0];
+                },
+                setAcuerdo: function(){
+                    this.acuerdo = !this.acuerdo;
+                },
+                enviarSolicitud: function(){
+                    // VALIDAR NOTAS
+                    var notasValidas = true;
+                    $.each(this.notas, function(index, val) {
+                        if(val.notaNueva == '' || val.notaNueva == 0){
+                            notasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasValidas){
+                        Swal.fire(
+                          'Completar calificación!',
+                          'Las calificaciones no pueden ser vacias o tener valor cero.',
+                          'warning'
+                        );
+                        return;
+                    }
+                    
+                    // VALIDAR NOTAS CUALITATIVAS
+                    var notasCualitativasValidas = true;
+                    var cualitativaMensaje = '';
+                    $.each(this.notasCualitativas, function(index, val) {
+                        if(val.notaNuevaCualitativa.trim() == ''){
+                            cualitativaMensaje = 'Las valoraciones no pueden estar vacias.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+
+                        if(val.notaNuevaCualitativa.trim().length < 15){
+                            cualitativaMensaje = 'Las valoraciones deben tener al menos 15 caracteres.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasCualitativasValidas){
+                        Swal.fire(
+                          'Completar valoración!',
+                          cualitativaMensaje,
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA LLENADO EL JUSTIFICATIVO
+                    if (this.justificacion.trim().length == 0) {
+                        this.$refs.justificacion.focus();
+                        Swal.fire(
+                          'Justificar!',
+                          'Debe justificar el motivo por el que esta realizando la solicitud.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DE LA RESOLUCION ADMINISTRATIVA
+                    if (typeof this.archivo != 'object') {
+                        Swal.fire(
+                          'Adjuntar R.M.!',
+                          'Debe adjuntar un escaneado de la Resolución Ministerial.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS SI SELECCIONO EL ACUERDO
+                    if (!this.acuerdo) {
+                        this.$refs.acuerdo.focus();
+                        Swal.fire(
+                          'Validar!',
+                          'Debe declarar que la información enviada es fidedigna.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    $.each(this.notasCualitativas, function(index, val) {
+                        val.notaNuevaCualitativa = val.notaNuevaCualitativa.toUpperCase();
+                    });
+
+
+                    var data = new FormData();
+                    data.append('idInscripcion', this.idInscripcion);
+                    data.append('flujoTipo', this.flujoTipo);
+                    data.append('notas', JSON.stringify(this.notas));
+                    data.append('notasCualitativas', JSON.stringify(this.notasCualitativas));
+                    data.append('justificacion', this.justificacion);
+                    data.append('archivo', this.archivo);
+
+                    axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                }
+                
+            },
+            computed: {
+                validarValorNota: function(){
+
+                }
+            },
+            mounted(){
+                
+            }
+        });
+
+    </script>
+{% endblock %}
