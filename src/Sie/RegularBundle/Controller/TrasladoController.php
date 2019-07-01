@@ -131,13 +131,14 @@ class TrasladoController extends Controller {
 
 
           if($inscriptionOfStudent[0]['nivelTipo']==11 || $inscriptionOfStudent[0]['nivelTipo']==1){
-              reset($objNota);
-              while ($val = current($objNota)) {
-                if($val['notaCualitativa']){
-                  $bolNote = true;
-                }
-                  next($objNota);
-              }
+              // reset($objNota);
+              // while ($val = current($objNota)) {
+              //   if($val['notaCualitativa']){
+              //     $bolNote = true;
+              //   }
+              //     next($objNota);
+              // }
+              $bolNote = true;
             }else{
               //validate if the student has notas
               reset($objNota);

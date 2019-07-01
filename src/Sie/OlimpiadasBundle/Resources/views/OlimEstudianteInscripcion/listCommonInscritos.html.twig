@@ -24,7 +24,9 @@
                         <th>Teléfono</th>
                         <th>Correo Electrónico</th>
                         <th>Discapacidad</th>
-                        <th>Acción</th>
+                        {% if app.session.get('roluser') == 35 %}
+                            <th>Acción</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 {% for inscrito in inscritos %}
@@ -39,17 +41,19 @@
                         <td>{{inscrito.telefono_estudiante}}</td>
                         <td>{{inscrito.correo_estudiante}}</td>
                         <td>{{inscrito.discapacidad}}</td>
-                        <td>
-                            <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
-                                <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">
-                                <input type="hidden" name="form[materiaId]" id="form_materiaId" value="{{materiaId}}">
-                                <input type="hidden" name="form[nivelId]" id="form_nivelId" value="{{nivelId}}">
-                                <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
-                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
-                                <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
-                                <button type="button" class="btn btn-teal btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-trash"></i> Eliminar</button>
-                            </form>
-                        </td>
+                        {% if app.session.get('roluser') == 35 %}
+                            <td>
+                                <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
+                                    <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">
+                                    <input type="hidden" name="form[materiaId]" id="form_materiaId" value="{{materiaId}}">
+                                    <input type="hidden" name="form[nivelId]" id="form_nivelId" value="{{nivelId}}">
+                                    <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
+                                    <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
+                                    <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
+                                    <button type="button" class="btn btn-teal btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-trash"></i> Eliminar</button>
+                                </form>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </table>

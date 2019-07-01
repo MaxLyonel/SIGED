@@ -537,7 +537,7 @@ class ReconocimientosaberesController extends Controller
                     FROM 
                       estudiante e
                       INNER JOIN pnp_reconocimiento_saberes rs ON e.id = rs.estudiante_id
-                      where rs.homologado=true $where and  fecha_homologacion BETWEEN '$inicio'AND '$fin'  
+                      where rs.homologado=true $where and  fecha_homologacion BETWEEN '$inicio 00:00:00' AND '$fin 23:59:59' 
 order by fecha_homologacion
                       ";
         
@@ -629,7 +629,7 @@ SELECT
                     FROM 
                       estudiante e
                       INNER JOIN pnp_reconocimiento_saberes rs ON e.id = rs.estudiante_id
-                      where rs.homologado=true  and  fecha_homologacion BETWEEN '$inicio'AND '$fin'  
+                      where rs.homologado=true  and  fecha_homologacion BETWEEN '$inicio 00:00:00'AND '$fin 23:59:59'  
 order by fecha_homologacion) as t1 
 GROUP BY depto,curso_nombre) as t2
 GROUP BY depto
