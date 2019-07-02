@@ -1723,11 +1723,7 @@ die;/*
             $anterior['notaTipo'] = $datosNota->getNotaTipo()->getId();
             $anterior['notaCuantitativa'] = $datosNota->getNotaCuantitativa();
             $anterior['notaCualitativa'] = $datosNota->getNotaCualitativa();
-<<<<<<< HEAD
-            $anterior['fechaModificacion'] =  ($datosNota->getFechaModificacion())? $datosNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
             $anterior['fechaModificacion'] = ($datosNota->getFechaModificacion())?$datosNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
             $datosNota->setNotaCuantitativa($notaCuantitativa);
             $datosNota->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
@@ -1742,11 +1738,7 @@ die;/*
             $nuevo['notaTipo'] = $datosNota->getNotaTipo()->getId();
             $nuevo['notaCuantitativa'] = $datosNota->getNotaCuantitativa();
             $nuevo['notaCualitativa'] = $datosNota->getNotaCualitativa();
-<<<<<<< HEAD
-            $nuevo['fechaModificacion'] =  ($datosNota->getFechaModificacion())? $datosNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
             $nuevo['fechaModificacion'] = ($datosNota->getFechaModificacion())?$datosNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
             
             $this->funciones->setLogTransaccion(
                 $datosNota->getId(),
@@ -1813,11 +1805,7 @@ die;/*
             $anterior['id'] = $datosNotaCualitativa->getId();
             $anterior['notaTipo'] = $datosNotaCualitativa->getNotaTipo()->getId();
             $anterior['notaCualitativa'] = $datosNotaCualitativa->getNotaCualitativa();
-<<<<<<< HEAD
-            $anterior['fechaModificacion'] =  ($datosNotaCualitativa->getFechaModificacion())? $datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-=======
             $anterior['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
             $datosNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
             $datosNotaCualitativa->setUsuarioId($this->session->get('userId'));
@@ -1830,11 +1818,7 @@ die;/*
             $nuevo['id'] = $datosNotaCualitativa->getId();
             $nuevo['notaTipo'] = $datosNotaCualitativa->getNotaTipo()->getId();
             $nuevo['notaCualitativa'] = $datosNotaCualitativa->getNotaCualitativa();
-<<<<<<< HEAD
-            $nuevo['fechaModificacion'] =  ($datosNotaCualitativa->getFechaModificacion())? $datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-=======
             $nuevo['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
             
             $this->funciones->setLogTransaccion(
                 $updateCualitativa->getId(),
@@ -2228,11 +2212,7 @@ die;/*
                             $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                             $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                             $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-<<<<<<< HEAD
-                            $anterior['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
                             $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -2250,11 +2230,7 @@ die;/*
                             $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                             $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                             $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-<<<<<<< HEAD
-                            $nuevo['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
                             $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
                             
                             $this->funciones->setLogTransaccion(
                                 $updateNota->getId(),
@@ -2319,13 +2295,7 @@ die;/*
                             $anterior['id'] = $updateCualitativa->getId();
                             $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                             $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-<<<<<<< HEAD
-                            $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
-                            $anterior['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-
-=======
                             $anterior['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
                             $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                             $updateCualitativa->setUsuarioId($this->session->get('userId'));
@@ -2338,12 +2308,8 @@ die;/*
                             $nuevo['id'] = $updateCualitativa->getId();
                             $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                             $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-<<<<<<< HEAD
-                            $nuevo['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-=======
                             $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
                             $nuevo['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
                             
                             $this->funciones->setLogTransaccion(
                                 $updateCualitativa->getId(),
@@ -2413,11 +2379,7 @@ die;/*
                                 $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                                 $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-<<<<<<< HEAD
-                                $anterior['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
                                 $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
                                 if($nivel == 11 or $nivel == 1 or $nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -2435,11 +2397,7 @@ die;/*
                                 $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                                 $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-<<<<<<< HEAD
-                                $nuevo['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
                                 $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateNota->getId(),
@@ -2502,11 +2460,7 @@ die;/*
                                 $anterior['id'] = $updateNota->getId();
                                 $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-<<<<<<< HEAD
-                                $anterior['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
                                 $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
@@ -2518,12 +2472,7 @@ die;/*
                                 $nuevo['id'] = $updateNota->getId();
                                 $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-<<<<<<< HEAD
-                                $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
-                                $nuevo['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
-=======
                                 $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateNota->getId(),
@@ -2584,11 +2533,7 @@ die;/*
                                 $anterior['id'] = $updateCualitativa->getId();
                                 $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-<<<<<<< HEAD
-                                $anterior['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-=======
                                 $anterior['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
 
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
@@ -2601,11 +2546,7 @@ die;/*
                                 $nuevo['id'] = $updateCualitativa->getId();
                                 $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-<<<<<<< HEAD
-                                $nuevo['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-=======
                                 $nuevo['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
->>>>>>> devsiged
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateCualitativa->getId(),
