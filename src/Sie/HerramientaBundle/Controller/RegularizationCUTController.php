@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\BthEstudianteNivelacion;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
-// use Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo;
 
 /**
  * Author: krlos Pacha C. <pckrlos@cgmail.com>
