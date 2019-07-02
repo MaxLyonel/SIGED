@@ -299,7 +299,8 @@ class TramiteModificacionCalificacionesController extends Controller {
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($datos['idInscripcion']);
         $estudiante = $inscripcion->getEstudiante();
         $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-        dump($datos);
+        // dump($datos);
+        // dump($idTramite);
         // die;
         // dump($request);die;
 
@@ -307,9 +308,15 @@ class TramiteModificacionCalificacionesController extends Controller {
             'inscripcion'=>$inscripcion,
             'estudiante'=>$estudiante,
             'datos'=>$datos,
-            'sie'=>$sie
+            'sie'=>$sie,
+            'idtramite'=>$idTramite
         ));
     }
     
+
+    public function derivaDistritoAction(Request $request){
+        dump($request->get('procedente'));
+        dump($request);die;
+    }
 
 }

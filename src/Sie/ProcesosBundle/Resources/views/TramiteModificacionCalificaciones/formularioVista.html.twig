@@ -204,14 +204,32 @@
             delimiters: ['${', '}'],
             el: '#app',
             data: {
+                // idTramite: '{{ idtramite }}',
                 procedente: 1,
                 obs: ''
             },
             methods: {
                 enviarFormulario: function(){
-                    console.log(this.procedente);
-                    
-                }                
+                    if (this.procedente == 0 && this.obs == '') {
+                        Swal.fire(
+                            'Observación!',
+                            'Debe especificar el motivo por el cual la solicitud no procede.',
+                            'warning'
+                        );
+                        return;
+                    }
+                    axios.post(Routing.generate('tramite_modificacion_calificaciones_deriva_distrito', { 
+                        idTramite: '{{idtramite}}',
+                        procedente: this.procedente,
+                        obs: this.obs
+                    }))
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                }
             },
             computed: {
             },
