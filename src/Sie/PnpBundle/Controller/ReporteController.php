@@ -536,7 +536,125 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
             'plan'=>$plan,
             ));
 }
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+public function reporte_graduadosAction(Request $request){
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    $userId = $this->session->get('userId');
+    $roluser = $this->session->get('roluser');
+     if(!$userId){
+            return $this->redirectToRoute('logout');
+        }
+    $query = "
+               SELECT lt.lugar as lugar
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+        }
 
+        $lugar_usuario=strtoupper($lugar_usuario);
+        switch ($lugar_usuario) {
+            case 'CHUQUISACA':{$nombre_lugar="CHUQUISACA";$lugar_tipo_id=31654;$ie=80480300;}break;
+            case 'LA PAZ':{$nombre_lugar="LA PAZ";$lugar_tipo_id=31655;$ie=80730794;}break;
+            case 'COCHABAMBA':{$nombre_lugar="COCHABAMBA";$lugar_tipo_id=31656;$ie=80980569;}break;
+            case 'ORURO':{$nombre_lugar="ORURO";$lugar_tipo_id=31657;$ie=81230297;}break;
+            case 'POTOSI':{$nombre_lugar="POTOSI";$lugar_tipo_id=31658;$ie=81480201;}break;
+            case 'TARIJA':{$nombre_lugar="TARIJA";$lugar_tipo_id=31659;$ie=81730264;}break;
+            case 'SANTA CRUZ':{$nombre_lugar="SANTA CRUZ";$lugar_tipo_id=31660;$ie=81981501;}break;
+            case 'BENI':{$nombre_lugar="BENI";$lugar_tipo_id=31661;$ie=82230130;}break;
+            case 'PANDO':{$nombre_lugar="PANDO";$lugar_tipo_id=31662;$ie=82480050;}break;
+            default:
+                $lugar_tipo_id=1;$nombre_lugar="Bolivia";$ie=0;
+                break;
+        }
+        $inicio=$fin="";$opc=0;
+        if($request->getMethod()=="POST") { 
+        /////datos    
+            $lugar_tipo_id=$request->get("lugar_tipo_id");
+            $inicio=$request->get("inicio");
+            $fin=$request->get("fin");
+            $opc=$request->get("opc");
+            if($lugar_tipo_id==1){$select="dep"; $where="";}else {$select="mun"; $where="and id_dep=$lugar_tipo_id";}
+            $where2="";
+            if($opc==0)$where2="and esactivo = true";if($opc==1)$where2="and esactivo = false";
+            $query = "
+               SELECT $select as nombre,
+                SUM(CASE WHEN bloque = 1 and parte = 1 THEN 1 ELSE 0 END    ) as b1p1,
+                SUM(CASE WHEN bloque = 1 and parte = 2 THEN 1 ELSE 0 END    ) as b1p2,
+                SUM(CASE WHEN bloque = 2 and parte = 1 THEN 1 ELSE 0 END    ) as b2p1,
+                SUM(CASE WHEN bloque = 2 and parte = 2 THEN 1 ELSE 0 END    ) as b2p2,
+                SUM(CASE WHEN parte = 14 THEN 1 ELSE 0 END  ) as aes1,
+                SUM(CASE WHEN parte = 15 THEN 1 ELSE 0 END  ) as aes2,
+                SUM(CASE WHEN parte = 16 THEN 1 ELSE 0 END  ) as aas1,
+                SUM(CASE WHEN parte = 17 THEN 1 ELSE 0 END  ) as aas2,
+                SUM(CASE WHEN (bloque = 1 and parte = 1) or parte = 14 THEN 1 ELSE 0 END    ) as seg,
+                SUM(CASE WHEN (bloque = 1 and parte = 2) or parte = 15 THEN 1 ELSE 0 END    ) as ter,
+                SUM(CASE WHEN (bloque = 2 and parte = 1) or parte = 16 THEN 1 ELSE 0 END    ) as qui,
+                SUM(CASE WHEN (bloque = 2 and parte = 2) or parte = 17 THEN 1 ELSE 0 END    ) as sex
+                from vw_pnp_reporte
+                where 
+                fecha_fin  BETWEEN '$inicio' AND '$fin'
+                and estadomatricula_tipo_id=62 
+                $where $where2
+                group by $select
+                order by $select";
+                $stmt = $db->prepare($query);
+                $params = array();
+                $stmt->execute($params);
+                $po = $stmt->fetchAll();
+                $filas = array();
+                $datos_filas = array();
+                $b1p1=$b1p2=$b2p1=$b2p2=$aes1=$aes2=$aas1=$aas2=$seg=$ter=$qui=$sex=0;
+                foreach ($po as $p) {
+                    $datos_filas["nombre"] = $p["nombre"];
+                    $datos_filas["b1p1"] = $p["b1p1"];$b1p1+= $p["b1p1"];
+                    $datos_filas["b1p2"] = $p["b1p2"];$b1p2+= $p["b1p2"];
+                    $datos_filas["b2p1"] = $p["b2p1"];$b2p1+= $p["b2p1"];
+                    $datos_filas["b2p2"] = $p["b2p2"];$b2p2+= $p["b2p2"];
+                    $datos_filas["aes1"] = $p["aes1"];$aes1+= $p["aes1"];
+                    $datos_filas["aes2"] = $p["aes2"];$aes2+= $p["aes2"];
+                    $datos_filas["aas1"] = $p["aas1"];$aas1+= $p["aas1"];
+                    $datos_filas["aas2"] = $p["aas2"];$aas2+= $p["aas2"];
+                    $datos_filas["seg"] = $p["seg"];$seg+= $p["seg"];
+                    $datos_filas["ter"] = $p["ter"];$ter+= $p["ter"];
+                    $datos_filas["qui"] = $p["qui"];$qui+= $p["qui"];
+                    $datos_filas["sex"] = $p["sex"];$sex+= $p["sex"];
+                    $filas[] = $datos_filas;
+                }
+                $datos_filas["nombre"] = "Total";
+                $datos_filas["b1p1"] = $b1p1;
+                $datos_filas["b1p2"] = $b1p2;
+                $datos_filas["b2p1"] = $b2p1;
+                $datos_filas["b2p2"] = $b2p2;
+                $datos_filas["aes1"] = $aes1;
+                $datos_filas["aes2"] = $aes2;
+                $datos_filas["aas1"] = $aas1;
+                $datos_filas["aas2"] = $aas2;
+                $datos_filas["seg"] = $seg;
+                $datos_filas["ter"] = $ter;
+                $datos_filas["qui"] = $qui;
+                $datos_filas["sex"] = $sex;
+                $filas[] = $datos_filas;
+            }
+     return $this->render('SiePnpBundle:Reporte:reporte_graduados.html.twig',
+        array('nombre_lugar'=>$nombre_lugar,
+            'lugar_tipo_id'=>$lugar_tipo_id, 
+            'inicio'=>$inicio, 
+            'fin'=>$fin,
+            'opc'=>$opc,
+            'filas'=>$filas,
+            'roluser'=>$roluser,
+            ));
+}
 
 
 /////////////////////////////////busquedas//////////////////////

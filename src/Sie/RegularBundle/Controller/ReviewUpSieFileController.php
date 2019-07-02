@@ -61,14 +61,39 @@ class ReviewUpSieFileController extends Controller{
         // create db c onexion
         $em = $this->getDoctrine()->getManager();
         //get the lost emp files
-        // $bimestre = $form['operativo']-1;
-        // $query = $em->getConnection()->prepare("select * from sp_verifica_archivos_emp('" . $form['gestion'] . "',' ','" . $form['distrito'] . "',' ','" . $bimestre . "') ;");
+        $bimestre = $form['operativo']-1;
+        // $query = $em->getConnection()->prepare("select * from sp_verifica_archivos_emp('" . $form['gestion'] . "','','" . $form['distrito'] . "','','" . $bimestre . "') ;");
         // $query->execute();
         //get all files to the distrito selected
         $objUeUploadFiles = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getFilesUploadByDistritoAndOperativo($form);
+        $arrUeUploadFiles = array();
+        reset($objUeUploadFiles);
+        while (($arrData = current($objUeUploadFiles)) !== FALSE) {
+
+            if($bimestre == 0){
+                $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                'gestion'=>$arrData['gestion'],
+                'unidadEducativa'=>$arrData['id'],
+                ));
+            }else{
+                $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                'gestion'=>$arrData['gestion'],
+                'unidadEducativa'=>$arrData['id'],
+                'bim'.$arrData['bimestre']=>$arrData['bimestre'],
+                ));
+            }
+
+            if($objInfoConsolidation){
+                $arrData['statusInfoConsolidation'] = true;    
+            }else{
+                $arrData['statusInfoConsolidation'] = false;    
+            }
+            $arrUeUploadFiles[] = $arrData;   
+            next($objUeUploadFiles);
+        }
         
         return $this->render('SieRegularBundle:ReviewUpSieFile:find.html.twig', array(
-                'ueuploadfiles' => $objUeUploadFiles,
+                'ueuploadfiles' => $arrUeUploadFiles,
             ));    
     }
 
