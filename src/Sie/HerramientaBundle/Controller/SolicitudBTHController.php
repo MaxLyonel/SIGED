@@ -493,14 +493,14 @@ class SolicitudBTHController extends Controller {
                     $datos          = ($request->get('ipt')); 
                     $id_tipoTramite = $idsolicitud; //Registro Nuevo
                     $idTramite='';
-                    $wfTramiteController = new WfTramiteController();
-                    $wfTramiteController->setContainer($this->container);
+                    //$wfTramiteController = new WfTramiteController();
+                    //$this->get('wftramite')->setContainer($this->container);                                        
                     if($sw == 0){//primer envio de solicitud
-                        $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
+                        $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
                     }
                     else{//se hizo la devolucion por el distrital
                         $idTramite = $request->get('id_tramite');
-                        $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
+                        $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
                     }
                     if ($mensaje['dato']==true){
                         $res = 1;
@@ -545,8 +545,8 @@ class SolicitudBTHController extends Controller {
                         $tabla = 'institucioneducativa';
                         $id_tipoTramite = $idsolicitud;//Ratificacion
                         $idTramite = '';
-                        $wfTramiteController = new WfTramiteController();
-                        $wfTramiteController->setContainer($this->container);
+                        //$wfTramiteController = new WfTramiteController();
+                        //$this->get('wftramite')->setContainer($this->container);
                         $datos = ($request->get('ipt')); //dump ($datos);DIE;
                         /***
                          * Adecuacion para obtener el usuario del director.
@@ -565,10 +565,10 @@ class SolicitudBTHController extends Controller {
                             return false;
                         }
                         if ($sw == 0) {//primer envio de solicitud como ratificacion
-                            $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', $id_tipoTramite, '', $idTramite, $datos, '', $id_distrito);
+                            $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', $id_tipoTramite, '', $idTramite, $datos, '', $id_distrito);
                         } else {// se hizo la devolucion de tramite de ratificacion por el distrital
                             $idTramite = $request->get('id_tramite');
-                            $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', '', $idTramite, $datos, '', $id_distrito);
+                            $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', '', $idTramite, $datos, '', $id_distrito);
                             //dump($mensaje);die;
                         }
                         if ($mensaje['dato']==true){
@@ -1224,15 +1224,15 @@ class SolicitudBTHController extends Controller {
           //ELABORA INFORME
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
         $tarea1   = $flujoproceso->getId();//elaborainfrorme y envia BTH
-        $wfTramiteController = new WfTramiteController();
-        $wfTramiteController->setContainer($this->container);
+        //$wfTramiteController = new WfTramiteController();
+        //$this->get('wftramite')->setContainer($this->container);
           try{
-              $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
+              $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
               if ($evaluacion=='SI'){
                   /*dump($id_usuario);dump($tarea1);dump($id_tramite);dump($id_rol);dump($flujotipo);
                   dump($tabla);dump($datos);dump($id_distrito);die;*/
-                  $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
-                  $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
+                  $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
+                  $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
               }
               if ($mensaje['dato']==true){
                   $res = 1;
@@ -1655,15 +1655,15 @@ class SolicitudBTHController extends Controller {
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 5));
         $tarea1   = $flujoproceso->getId();//elaborainfrorme y envia BTH DEPARTAMENTO - ORDEN 5
         $tabla          = 'institucioneducativa';
-        $wfTramiteController = new WfTramiteController();
-        $wfTramiteController->setContainer($this->container);
+        //$wfTramiteController = new WfTramiteController();
+        //$this->get('wftramite')->setContainer($this->container);
 
         try{
-            $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$idtramite,$datos,'',$id_distrito);
+            $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$idtramite,$datos,'',$id_distrito);
 
             if ($evaluacion=='SI') {   //dump($tarea1);die;
-               $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$idtramite);
-               $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,$obs,'',$idtramite,$datos,'',$id_distrito);
+               $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea1,$idtramite);
+               $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,$obs,'',$idtramite,$datos,'',$id_distrito);
                 //dump($mensaje);die;
                 /////volcado a la base de datoa
                 /*Recuperamos los datos del tramite*/
@@ -1780,7 +1780,7 @@ class SolicitudBTHController extends Controller {
                         $entity->setInstitucioneducativa($ue);
                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                         $entity->setGestionTipo($gestiontipo);
-                        $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
+                        -$entity->setFechaRegistro(new \DateTime('now'));                      
                         $em->persist($entity);
                         $em->flush();
                     }
@@ -1874,7 +1874,7 @@ class SolicitudBTHController extends Controller {
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                             $entity->setGestionTipo($gestiontipo);
-                            $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
+                            $entity->setFechaRegistro(new \DateTime(date('now')));
                             $em->persist($entity);
                             $em->flush();
                         }
@@ -1930,7 +1930,7 @@ class SolicitudBTHController extends Controller {
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                             $entity->setGestionTipo($gestiontipo);
-                            $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')) );
+                            $entity->setFechaRegistro(new \DateTime('now'));
                             $em->persist($entity);
                             $em->flush();
                         }
@@ -1942,8 +1942,8 @@ class SolicitudBTHController extends Controller {
 
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 6));
                 $tarea2   = $flujoproceso->getId();//6 realiza observacion
-                $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
-                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
+                $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
+                $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
                 /**
                  * Al dar como respuesta NO se elimina el registro de la UE de la tabla InstitucioneducativaHumanisticoTecnico y
                  * no se registran las especialidades

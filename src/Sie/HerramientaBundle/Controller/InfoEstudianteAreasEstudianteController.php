@@ -170,15 +170,16 @@ class InfoEstudianteAreasEstudianteController extends Controller {
             $idInscripcion = $request->get('idInscripcion');
 
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+            
+            $data = [];
+            $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
 
+            // VERIFICAMOS SI LA MATERIA QUE SE QUIERE AGREGAR YA ESTA ASIGNADA AL ESTUDIANTE
             $area = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
                 'estudianteInscripcion'=>$idInscripcion,
                 'institucioneducativaCursoOferta'=>$idCursoOferta
             ));
             
-            $data = [];
-            $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
-
             if($area){
                 // SI EL ESTUDIANTE YA TIENE EL AREA
                 $data = array(
@@ -188,18 +189,41 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 );
             }else{
 
+                $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
                 $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-                
+                $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
+                $idAsignatura = $cursoOferta->getAsignaturaTipo()->getId();
+
+                // VERIFICAMOS SI LA MATERIA ES ESPECIALIZADA
+                $registrarEspecialidad = false;
+                $especialidadesUe = [];
+                if ($idAsignatura == 1039) {
+                    $registrarEspecialidad = true;
+                    $especialidadesUnidadEducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array(
+                        'institucioneducativa'=>$sie,
+                        'gestionTipo'=>$gestion
+                    ));
+                    foreach ($especialidadesUnidadEducativa as $e) {
+                        $especialidadesUe[] = array(
+                            'ueespid'=>$e->getId().'_'.$idCursoOferta,
+                            'especialidad'=>$e->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad()
+                        );
+                    }
+                }
 
                 // VERIFICAMOS SI SE DEBE LLENAR NOTAS
                 $llenarNotas = $this->get('notas')->llenarNotasMateriaAntes($idInscripcion, $idCursoOferta);
-                if (count($llenarNotas['cuantitativas']) > 0 or count($llenarNotas['cualitativas']) > 0 ) {
+
+                if ((count($llenarNotas['cuantitativas']) > 0 or count($llenarNotas['cualitativas']) > 0 ) or $registrarEspecialidad ){
                     // SI SE TIENE QUE LLENAR NOTAS LE MANDAMOS UNA VISTA DONDE REGISTRE LAS NOTAS
                     // dump($llenarNotas);die;
                     return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:completarNotas.html.twig',array(
                         'areas'=>$areas,
                         'inscripcion'=>$inscripcion,
-                        'data'=>$llenarNotas
+                        'data'=>$llenarNotas,
+                        'registrarEspecialidad'=>$registrarEspecialidad,
+                        'especialidadesUe'=>$especialidadesUe,
+                        'idCursoOferta'=>$idCursoOferta
                     ));
                 }else{
                     // SI NO HAY NOTAS QUE REGSITRAR REGISTRAMOS LA MATERIA AL ESTUDIANTE
@@ -211,6 +235,8 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                             'type'=>'success',
                             'msg'=> 'El área se agregó correctamente.'
                         );
+
+                        $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
 
                     }else{
                         // SI OCURRIO UN ERROR AL AGREGAR EL AREA
@@ -258,32 +284,82 @@ class InfoEstudianteAreasEstudianteController extends Controller {
             $idNotaTipo = $request->get('idNotaTipo');
             $nota = $request->get('nota');
 
+            $idieeht = $request->get('idieeht');
+
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
 
-            for ($i=0; $i < count($idco); $i++) {
-                // OBTENEMOS LA MATERIA SI EXISTIERA
-                $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$idInscripcion[$i], 'institucioneducativaCursoOferta'=>$idco[$i]));
-                if(!$estudianteAsignatura){
-                    // REGISTRO DE LA MATERIA AL ESTUDIANTE
-                    $estudianteAsignatura = $this->get('areasEstudiante')->nuevo($idco[$i], $idInscripcion[$i], $gestion[$i]);
+            // dump($idieeht);
+
+            // dump($idco);
+            
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns);
+
+            // VERIFICAMOS SI EXISTE LA ESPECIALIDAD PARA REGISTRARLO
+            if (isset($idieeht)) {
+                $data = explode('_', $idieeht);
+
+                $idieeht = $data[0];
+                $idCursoOferta = $data[1];
+
+                $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+                // REGSITRAMOS LA MATERIA ESPECIALIZADA AL ESTUDIANTE
+                $estudianteAsignatura = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idIns, $gestion);
+
+                // VERIFICAMOS SI YA TIENE REGISTRADO LA ESPECIALIDAD
+                $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array(
+                    'estudianteInscripcion'=>$idIns
+                ));
+
+                // ELIMINAMOS LAS ESPECIALIDADES REGISTRADAS AL ESTUDIANTE
+                if($especialidadEstudiante){
+                    $eliminar = $em->createQueryBuilder()
+                                ->delete('')
+                                ->from('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico','eiht')
+                                ->where('eiht.estudianteInscripcion = :idInscripcion')
+                                ->setParameter('idInscripcion', $idIns)
+                                ->getQuery()
+                                ->getResult();
                 }
-                
-                // OBTENEMOS LA NOTA SI EXISTIERA
-                $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$estudianteAsignatura, 'notaTipo'=>$idNotaTipo[$i]));
-                if(!$estudianteNota){
-                    // REGISTRAMOS LA NOTA
-                    $estudianteNota = $this->get('notas')->registrarNota($idNotaTipo[$i], $estudianteAsignatura->getId(), $nota[$i], '');
-                    // SE CALCULA EL PROMEDIO SI CORRESPONDE
-                    $promedio = $this->get('notas')->calcularPromedioBimestral($estudianteAsignatura->getId());
-                    // SE ACTUALIZA EL ESTADO DE MATRICULA SI CORRESPONDE
-                    $actualizarEstadoMatricula = $this->get('notas')->actualizarEstadoMatricula($idIns);
+
+                // REGISTRAMOS LA NUEVA ESPECIALIDAD                    
+                $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($idieeht);
+
+                $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
+                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns));
+                $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
+                $especialidadEstudiante->setHoras(0);
+                $em->persist($especialidadEstudiante);
+                $em->flush();
+            }
+
+            // VERIFICAMOS SI EXISTEN MATERIAS POR REGISTRAR
+            if (isset($idco)) {
+                for ($i=0; $i < count($idco); $i++) {
+                    // OBTENEMOS LA MATERIA SI EXISTIERA
+                    $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$idInscripcion[$i], 'institucioneducativaCursoOferta'=>$idco[$i]));
+                    if(!$estudianteAsignatura){
+                        // REGISTRO DE LA MATERIA AL ESTUDIANTE
+                        $estudianteAsignatura = $this->get('areasEstudiante')->nuevo($idco[$i], $idInscripcion[$i], $gestion[$i]);
+                    }
+                    
+                    // OBTENEMOS LA NOTA SI EXISTIERA
+                    $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$estudianteAsignatura, 'notaTipo'=>$idNotaTipo[$i]));
+                    if(!$estudianteNota){
+                        // REGISTRAMOS LA NOTA
+                        $estudianteNota = $this->get('notas')->registrarNota($idNotaTipo[$i], $estudianteAsignatura->getId(), $nota[$i], '');
+                        // SE CALCULA EL PROMEDIO SI CORRESPONDE
+                        $promedio = $this->get('notas')->calcularPromedioBimestral($estudianteAsignatura->getId());
+                        // SE ACTUALIZA EL ESTADO DE MATRICULA SI CORRESPONDE
+                        $actualizarEstadoMatricula = $this->get('notas')->actualizarEstadoMatricula($idIns);
+                    }
                 }
             }
 
             // OBTENEMOS LAS AREAS DEL ESTUDIANTE Y EL REGISTRO DE INSCRIPCION
             $areas = $this->get('areasEstudiante')->areasEstudiante($idIns);
-            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns);
 
             $data = array(
                 'status'=>200,

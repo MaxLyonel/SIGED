@@ -1,0 +1,55 @@
+#Directro
+tramite_especialidades_bth:
+    path:      /
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index" }
+
+tramite_solicitud_especialidades_bth:
+    path:      /solicitudEspecialidadesBTH
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidades" }
+
+tramite_validar_solicitud_especialidades_bth:
+    path:      /verifica
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:validariniciosolicitudespecialidadesbth" }
+
+tramite_solicitud_bth_formulario_dev:
+    path:      /formularioespecialidades
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:formularioDirectorEspecialidades" }
+
+tramite_solicitud_adi_elim_bth_imprimeDirector:
+    path:     /bhtadielimimprimeFormulario/
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:imprimirDirector"}
+
+#Distrito
+tramite_especialidades_distrito_bth:
+    path:      /solicitusespecialidadesDistritalbth
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:VerSolicitudEspecialidadBTHDis" }
+
+tramite_solicitud_especialidades_bth_Dis:
+    path:      /solicitudEspecialidadesBTHDis
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidadesDis" }
+
+tramite_solicitud_especialidades_bth_formularioDis_dev:
+    path:      /formularioespecialidades_dis
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:formularioDistritoEspecialidades" }
+
+
+
+#Departamental
+VerSolicitudEspecialidadesBTHDep:
+    path:      /VersolicitudEspecialidadesBTHDep
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:VerSolicitudEspecialidadesBTHDep" }
+
+tramite_solicitud_especialidades_bth_Dep:
+    path:      /solicitudEspecialidadesBTHDep
+    defaults: { _controller: "SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:guardasolicitudEspecialidadesDep" }
+
+
+
+
+
+
+
+
+
+
+

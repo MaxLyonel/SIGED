@@ -22,5 +22,5 @@ regularizacion_cut_registerNivelation:
          expose: true
 
 regularizacion_cut_listHistory:
-    path:     /listHistory/{codigoRude}
+    path:     /listHistory/{form}
     defaults: { _controller: SieHerramientaBundle:RegularizationCUT:listHistory}         

@@ -1046,10 +1046,15 @@ class Funciones {
         }
     }
 
-    public function getSpeciality(){
+    public function getSpeciality($data){
            $query = $this->em->createQueryBuilder()
                     ->select('esp')
-                    ->from('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'esp')
+                    ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico', 'ieeth')
+                    ->innerjoin('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
+                    ->where('ieeth.institucioneducativa = :currentSie')
+                    ->andwhere('ieeth.gestionTipo = :currentGestion')
+                    ->setParameter('currentSie',$data['currentSie'])
+                    ->setParameter('currentGestion',$data['currentGestion'])
                     ->orderBy('esp.id', 'ASC')
                     ->getQuery();
          
@@ -1107,6 +1112,43 @@ class Funciones {
                 ->setParameter('idTipo',1)
                 ->setParameter('levels',array(6))
                 ->setParameter('level', 13)
+                ->orderBy('iec.gestionTipo', 'ASC')
+                ->addorderBy('ei.fechaInscripcion', 'ASC')
+                ->getQuery();
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
+
+  /**
+     * get the stutdents inscription - the record
+     * @param type $id
+     * @return \Sie\AppWebBundle\Controller\Exception
+     */
+    public function getInscriptionBthByGestion($data) {
+
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento', 'ei.id as estInsId')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('it = :idTipo')
+                ->andWhere('iec.gestionTipo = :gestion')
+                ->setParameter('id', $data['codigoRude'])
+                ->setParameter('idTipo',1)
+                ->setParameter('gestion',$data['gestion'])
                 ->orderBy('iec.gestionTipo', 'ASC')
                 ->addorderBy('ei.fechaInscripcion', 'ASC')
                 ->getQuery();

@@ -182,7 +182,9 @@ class Notas{
                                                             'nota'=>$an['notaCuantitativa'],
                                                             'notaCualitativa'=>$an['notaCualitativa'],
                                                             'idNotaTipo'=>$an['idNotaTipo'],
-                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                            'bimestre'=> $this->literal($tn[$i])['abrev'],
+                                                            'idFila'=>$an['id'].''.$tn[$i]
                                                         );
                                     $existe = 'si';
                                     break;
@@ -197,7 +199,9 @@ class Notas{
                                                             'nota'=>0,
                                                             'notaCualitativa'=>'',
                                                             'idNotaTipo'=>$tn[$i],
-                                                            'idEstudianteAsignatura'=>$a['estAsigId']
+                                                            'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                            'bimestre'=> $this->literal($tn[$i])['abrev'],
+                                                            'idFila'=>$an['id'].''.$tn[$i]
                                                         );
                             }
                         }
@@ -212,7 +216,9 @@ class Notas{
                                                             'nota'=>$an['notaCuantitativa'],
                                                             'notaCualitativa'=>$an['notaCualitativa'],
                                                             'idNotaTipo'=>$an['idNotaTipo'],
-                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                            'bimestre'=>$this->literal($tn[$i]['abrev']),
+                                                            'idFila'=>$a['id'].''.$tn[$i]
                                                         );
                                     $existe = 'si';
                                     break;
@@ -227,7 +233,9 @@ class Notas{
                                                             'nota'=>0,
                                                             'notaCualitativa'=>'',
                                                             'idNotaTipo'=>$i,
-                                                            'idEstudianteAsignatura'=>$a['estAsigId']
+                                                            'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                            'bimestre'=>$this->literal($tn[$i]['abrev']),
+                                                            'idFila'=>$a['id'].''.$tn[$i]
                                                         );
                             }
                         }
@@ -299,7 +307,7 @@ class Notas{
                     //             ->getResult();
                 }
 
-                //dump($asignaturas);die;
+                // dump($asignaturas);die;
 
                 $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
 
@@ -429,7 +437,9 @@ class Notas{
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$valorNota,
                                                             'idNotaTipo'=>$an['idNotaTipo'],
-                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                            'bimestre'=>$an['notaTipo'],
+                                                            'idFila'=>$a['asignaturaId'].''.$i
                                                         );
                                     $existe = 'si';
                                     break;
@@ -448,7 +458,9 @@ class Notas{
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>$valorNota,
                                                             'idNotaTipo'=>$i,
-                                                            'idEstudianteAsignatura'=>$a['estAsigId']
+                                                            'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                            'bimestre'=>$this->literal($i)['titulo'],
+                                                            'idFila'=>$a['asignaturaId'].''.$i
                                                         );
                             }
                         }
@@ -467,7 +479,9 @@ class Notas{
                                                                 'idEstudianteNota'=>$an['idNota'],
                                                                 'nota'=>$an['notaCuantitativa'],
                                                                 'idNotaTipo'=>$an['idNotaTipo'],
-                                                                'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                                                'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                                'bimestre'=>$an['notaTipo'],
+                                                                'idFila'=>$a['asignaturaId'].'5'
                                                             );
                                     $existe = 'si';
                                     break;
@@ -480,7 +494,9 @@ class Notas{
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>'',
                                                             'idNotaTipo'=>5,
-                                                            'idEstudianteAsignatura'=>$a['estAsigId']
+                                                            'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                            'bimestre'=>'Promedio',
+                                                            'idFila'=>$a['asignaturaId'].'5'
                                                         );
                             }
                         }
@@ -500,6 +516,18 @@ class Notas{
                 $tipo = 'Bimestre';
             }
 
+            /*
+            * Recorremos el array generado de las notas y recuperamos los titulos de las notas, para la tabla
+            */
+            $titulos_notas = array();
+            if(count($notasArray)>0){
+                $titulos = $notasArray[0]['notas'];
+                for($i=0;$i<count($titulos);$i++){
+                    $titulos_notas[] = array('titulo'=>$titulos[$i]['bimestre']);
+                }
+            }
+
+
             //notas cualitativas
             $arrayCualitativas = array();
 
@@ -517,7 +545,8 @@ class Notas{
                                                              'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                              'notaCualitativa'=>$c->getNotaCualitativa(),
                                                              'notaCuantitativa'=>0,
-                                                             'notaTipo'=>$c->getNotaTipo()->getNotaTipo()
+                                                             'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
+                                                             'idFila'=>$idInscripcion.''.$i
                                                             );
                                 $existe = true;
                                 if($c->getNotaCualitativa() == ""){
@@ -532,7 +561,8 @@ class Notas{
                                                          'idNotaTipo'=>$i,
                                                          'notaCualitativa'=>'',
                                                          'notaCuantitativa'=>'',
-                                                         'notaTipo'=>$this->literal($i).' '.$tipoNota
+                                                         'notaTipo'=>$this->literal($i),
+                                                         'idFila'=>$idInscripcion.''.$i
                                                         );
                             $existe = true;
                         }
@@ -550,7 +580,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
-                                                         'notaTipo'=>$c->getNotaTipo()->getNotaTipo()
+                                                         'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
+                                                         'idFila'=>$idInscripcion.'18'
                                                         );
                             $existe = true;
                             if($c->getNotaCualitativa() == ""){
@@ -565,7 +596,8 @@ class Notas{
                                                      'idNotaTipo'=>18,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal(18).' '.$tipoNota
+                                                     'notaTipo'=>$this->literal(18),
+                                                     'idFila'=>$idInscripcion.'18'
                                                     );
                         $existe = true;
                     }
@@ -598,7 +630,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
-                                                         'notaTipo'=>$c->getNotaTipo()->getNotaTipo()
+                                                         'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
+                                                         'idFila'=>$idInscripcion.''.$i
                                                         );
                             $existe = true;
                             if($c->getNotaCualitativa() == ""){
@@ -613,7 +646,8 @@ class Notas{
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i).' '.$tipoNot
+                                                     'notaTipo'=>$this->literal($i),
+                                                     'idFila'=>$idInscripcion.''.$i
                                                     );
                         $existe = true;
                     }
@@ -631,7 +665,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
-                                                         'notaTipo'=>$c->getNotaTipo()->getNotaTipo()
+                                                         'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
+                                                         'idFila'=>$idInscripcion.'5'
                                                         );
                             $existe = true;
                             if($c->getNotaCualitativa() == ""){
@@ -646,7 +681,8 @@ class Notas{
                                                      'idNotaTipo'=>5,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>'Promedio anual'
+                                                     'notaTipo'=>'Promedio anual',
+                                                     'idFila'=>$idInscripcion.'5'
                                                     );
                         $existe = true;
                     }
@@ -667,7 +703,8 @@ class Notas{
                 'tipoNota'=>$tipo,
                 'estadosPermitidos'=>$estadosPermitidos,
                 'cantidadFaltantes'=>$cantidadFaltantes,
-                'tipoSubsistema'=>$tipoSubsistema
+                'tipoSubsistema'=>$tipoSubsistema,
+                'titulosNotas'=>$titulos_notas
             );
         } catch (Exception $e) {
             return null;
@@ -774,7 +811,14 @@ class Notas{
         );
     }
 
-    public function literal($num){
+    public function literal($idNota){
+        $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
+        $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
+        
+        return $bim;
+    }
+
+    public function literalNum($num){
         switch ($num) {
             case '1': $lit = 'Primer'; break;
             case '2': $lit = 'Segundo'; break;
@@ -2043,7 +2087,7 @@ die;/*
                                                  'idEstudianteNotaCualitativa'=>'nuevo',
                                                  'idNotaTipo'=>18,
                                                  'notaCualitativa'=>'',
-                                                 'notaTipo'=>$this->literal(18).' '.$tipoNota
+                                                 'notaTipo'=>$this->literal(18)
                                                 );
                     $existe = true;
                 }
@@ -2070,7 +2114,7 @@ die;/*
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i).' '.$tipoNota
+                                                     'notaTipo'=>$this->literal($i)
                                                     );
                         $existe = true;
                     }
@@ -2252,7 +2296,7 @@ die;/*
                             $arrayNotaCualitativa['notaCuantitativa'] = $newCualitativa->getNotaCuantitativa();
                             $arrayNotaCualitativa['notaCualitativa'] = $newCualitativa->getNotaCualitativa();
                             $arrayNotaCualitativa['fechaRegistro'] = $newCualitativa->getFechaRegistro()->format('d-m-Y');
-                            $arrayNotaCualitativa['fechaModificacion'] = $newCualitativa->getFechaModificacion()->format('d-m-Y');
+                            $arrayNotaCualitativa['fechaModificacion'] =  ($newCualitativa->getFechaModificacion())? $newCualitativa->getFechaModificacion()->format('d-m-Y'):'';
                             
                             $this->funciones->setLogTransaccion(
                                 $newCualitativa->getId(),
