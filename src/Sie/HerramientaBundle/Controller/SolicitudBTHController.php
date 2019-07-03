@@ -1780,7 +1780,7 @@ class SolicitudBTHController extends Controller {
                         $entity->setInstitucioneducativa($ue);
                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                         $entity->setGestionTipo($gestiontipo);
-                        $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
+                        -$entity->setFechaRegistro(new \DateTime('now'));                      
                         $em->persist($entity);
                         $em->flush();
                     }
@@ -1874,7 +1874,7 @@ class SolicitudBTHController extends Controller {
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                             $entity->setGestionTipo($gestiontipo);
-                            $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
+                            $entity->setFechaRegistro(new \DateTime(date('now')));
                             $em->persist($entity);
                             $em->flush();
                         }
@@ -1930,7 +1930,7 @@ class SolicitudBTHController extends Controller {
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                             $entity->setGestionTipo($gestiontipo);
-                            $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')) );
+                            $entity->setFechaRegistro(new \DateTime('now'));
                             $em->persist($entity);
                             $em->flush();
                         }
