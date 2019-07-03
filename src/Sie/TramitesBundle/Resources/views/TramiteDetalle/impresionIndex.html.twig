@@ -16,9 +16,10 @@
                         <div class="pull-right">
                             <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
                             <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Generar Certificado" disabled="true" />
-                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_impresion_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir Acta</a>
-                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_impresion_certificado_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir sin CI</a>
-                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_impresion_certificado_ci_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir con CI</a>
+                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_impresion_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Acta</a>
+                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_impresion_certificado_pdf', {'info': datosBusqueda}) }}" target="_blank">Cert. sin CI</a>
+                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_impresion_certificado_ci_pdf', {'info': datosBusqueda}) }}" target="_blank">Cert. con CI</a>
+                            <a class="btn btn-success" href="{{ path('tramite_detalle_certificado_tecnico_impresion_certificado_firma_pdf', {'info': datosBusqueda}) }}" target="_blank">Cert. con Firma</a>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -58,7 +59,7 @@
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         {% if firmaHabilitada %}
                                             Firma:
-                                            <select class="form-control" name="firma" id="firma" onchange="validarFormImpresion(this)">
+                                            <select class="form-control" name="firma" id="firma" onchange="validarFormImpresion(this)" required="required">
                                                 <option value="">Seleccione la persona que firmara</option>
                                                 {% for firma in listaFirma %}
                                                     <option value="{{ firma.documento_firma_id|base64_encode }}">{{firma.nombre}} {{firma.paterno}} {{firma.materno}}</option>

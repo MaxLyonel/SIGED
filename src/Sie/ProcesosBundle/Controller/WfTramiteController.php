@@ -181,26 +181,28 @@ class WfTramiteController extends Controller
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $idtramite = $id;
-        if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){
-            $t = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'condicion'=>$tramiteDetalle->getValorEvaluacion()));
-            $tarea = $t[0]->getCondicionTareaSiguiente();
-        }else{
-            $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
-        }
-        $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
 
-        if($mensaje['dato'] == true){
-            $request->getSession()
-                ->getFlashBag()
-                ->add('recibido', $mensaje['msg']);
-        }else{
-            $request->getSession()
-                ->getFlashBag()
-                ->add('error', $mensaje['msg']);
+        if($tramiteDetalle->getTramiteEstado()->getId() == 15 or $tramiteDetalle->getTramiteEstado()->getId() == 4){ //enviado o devuelto
+            $idtramite = $id;
+            if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){
+                $t = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'condicion'=>$tramiteDetalle->getValorEvaluacion()));
+                $tarea = $t[0]->getCondicionTareaSiguiente();
+            }else{
+                $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
+            }
+            $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+            if($mensaje['dato'] == true){
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('recibido', $mensaje['msg']);
+            }else{
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);
+            }
         }
-        return $this->redirectToRoute('wf_tramite_index',array('tipo'=>2));
-
+        
+        return $this->redirectToRoute('wf_tramite_recibido');
     }
 
     /**

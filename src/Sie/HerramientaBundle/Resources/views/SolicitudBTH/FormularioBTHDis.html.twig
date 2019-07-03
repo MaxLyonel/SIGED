@@ -213,43 +213,38 @@
                                                 </div>
                                             </div><!-- /.panel-body -->
                                      </div>
-                                        <div class="panel panel-primary">
-                                                <div class="panel-heading">
-                                                    <h3 class="panel-title">5.- Especialidad</h3>
-                                                </div><!-- /.panel-heading -->
-                                             <div class="panel-body">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <strong>Seleccionar las especialidades</strong>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="form-control" multiple  >
-                                                            {% for especialidadarray in especialidadarray %}
-                                                                <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                             </div>
-                                        </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                          <h3 class="panel-title">5.- Especialidad</h3>
+                                        </div><!-- /.panel-heading -->
+                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <strong>Seleccionar Curso al que se Aplica</strong>
+                                                    <strong>Seleccionar las especialidades</strong>
                                                 </div>
                                                 <div class="col-md-3">
-
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
+                                                    <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="form-control" multiple  >
+                                                        {% for especialidadarray in especialidadarray %}
+                                                            <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
+                                                        {% endfor %}
+                                                    </select>
                                                 </div>
                                             </div>
-
-
-                                        </div><!-- /.panel-body -->
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>  Año de escolaridad a implementar BTH:</strong>
+                                                </div>
+                                                <div class="col-md-3">
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado: {{ grado }} </strong>
+                                                </div>
+                                            </div>
+                                         </div>
                                     </div>
-
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">6.- Evaluación Distrital</h3>
@@ -405,7 +400,7 @@
                             return false;}
 
 
-
+                        ip.push({grado:{{grado}}});
                         var ipt=JSON.stringify(ip);
 
                         var imagen = '{{ asset("img/loading96.gif") }}';
@@ -415,7 +410,7 @@
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
-                        fd.append('obstxt', obstxt);
+                        fd.append('obstxt', obstxt);                        
                         //fd.append('docpdf', $('#adjdocumento')[0]);
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);

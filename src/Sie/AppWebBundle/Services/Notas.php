@@ -260,11 +260,28 @@ class Notas{
                 vuelve:
                 if($conArea == true){
                     // Obtenemos las areas o campos del estudiante
+                    // $asignaturas = $this->em->createQueryBuilder()
+                    //             ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    //             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    //             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    //             ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    //             ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
+                    //             ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
+                    //             ->orderBy('at.id','ASC')
+                    //             ->addOrderBy('asit.id','ASC')
+                    //             ->where('ei.id = :idInscripcion')
+                    //             ->setParameter('idInscripcion',$idInscripcion)
+                    //             ->getQuery()
+                    //             ->getResult();
+
+                    // REALIZAMOS LA VUELTA COMPLETA PARA OBTENER LAS MATERIAS CORRECTAS
                     $asignaturas = $this->em->createQueryBuilder()
                                 ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.institucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ieco.insitucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','ea.estudianteInscripcion = ei.id and ea.institucioneducativaCursoOferta = ieco.id')
                                 ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
                                 ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
                                 ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
@@ -276,18 +293,18 @@ class Notas{
                                 ->getResult();
                 }else{
                     // Obtenemos las asigganturas sin areas o campos del estudiante
-                    $asignaturas = $this->em->createQueryBuilder()
-                                ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
-                                ->groupBy('asit.id, asit.asignatura, ea.id')
-                                ->orderBy('asit.id','ASC')
-                                ->where('ei.id = :idInscripcion')
-                                ->setParameter('idInscripcion',$idInscripcion)
-                                ->getQuery()
-                                ->getResult();
+                    // $asignaturas = $this->em->createQueryBuilder()
+                    //             ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    //             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    //             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    //             ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    //             ->groupBy('asit.id, asit.asignatura, ea.id')
+                    //             ->orderBy('asit.id','ASC')
+                    //             ->where('ei.id = :idInscripcion')
+                    //             ->setParameter('idInscripcion',$idInscripcion)
+                    //             ->getQuery()
+                    //             ->getResult();
                 }
 
                 // dump($asignaturas);die;
@@ -303,7 +320,7 @@ class Notas{
                 $nuevaArea = false;
                 foreach ($cursoOferta as $co) {
                     // LA MATERIA TECNICA GENERAL Y ESPECILIZADA NO SE AGREGAN AUTOMATICAMENTE A TODOS LOS ESTUDIANTES A PARTIR DE LA GESTION 2019
-                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039) or ($gestion >= 2019 and $nivel != 13 ))) {
+                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039) or ($gestion >= 2019 and $nivel != 13) or ($gestion >= 2019 and $nivel == 13 and $grado<3))) {
 
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
@@ -1821,7 +1838,7 @@ die;/*
             $nuevo['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
             
             $this->funciones->setLogTransaccion(
-                $updateCualitativa->getId(),
+                $datosNotaCualitativa->getId(),
                 'estudiante_nota_cualitativa',
                 'U',
                 '',
@@ -2571,9 +2588,88 @@ die;/*
         }
     }
 
-    public function literalnota($idNota){
-        $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
-        $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
-        return $bim;
+    /*==========================================================================
+    =             REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS            =
+    ==========================================================================*/
+    
+    /**
+     * [registroNotasParaMateria description]
+     * @param  integer $idco [id curso oferta]
+     * @return array       [datos de las notas cualitativas y cuantitativas que se deben llenar]
+     */
+    public function llenarNotasMateriaAntes($idInscripcion, $idsco){
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $curso = $inscripcion->getInstitucioneducativaCurso();
+        $sie = $curso->getInstitucioneducativa()->getId();
+        $gestion = $curso->getGestionTipo()->getId();
+        $nivel = $curso->getNivelTipo()->getId();
+
+        $operativo = $this->funciones->obtenerOperativo($sie, $gestion);
+
+        $cursosOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('id'=>$idsco));
+        $cont = 0;
+        $cuantitativas = [];
+        
+        if($operativo > 1){
+            if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 11)) {
+                foreach ($cursosOferta as $key => $co) {
+
+                    $cuantitativas[$cont] = array(
+                        'idco'=>$co->getId(),
+                        'idAsignatura'=>$co->getAsignaturaTipo()->getId(),
+                        'asignatura'=>$co->getAsignaturaTipo()->getAsignatura(),
+                    );
+
+                    for ($i=1; $i < $operativo; $i++) { 
+                        $cuantitativas[$cont]['notas'][] = array(
+                            'bimestre'=>$i.' Bim',
+                            'idNotaTipo'=>$i,
+                            'nota'=>'',
+                            'notaCualitativa'=>''
+                        );
+                    }
+                    $cont++;
+                }   
+            }
+        }
+
+        $cualitativas = [];
+        // if($gestion < 2019 or ($gestion >= 2019 and $nivel == 11)){
+        //     for ($i=1; $i < $operativo; $i++) {
+        //         $cualitativas[] = array(
+        //             'bimestre'=>$this->literal($i).' Bimestre',
+        //             'idNotaTipo'=>$i,
+        //             'nota'=>'',
+        //             'notaCualitativa'=>''
+        //         );
+        //     }
+        // }
+
+        // if($nivel == 11 and $operativo >= 4){
+        //     $cualitativas[] = array(
+        //         'bimestre'=>'Valoración anual',
+        //         'idNotaTipo'=>18,
+        //         'nota'=>'',
+        //         'notaCualitativa'=>''
+        //     );
+        // }
+
+
+        $data = [
+            'cuantitativas'=>$cuantitativas,
+            'cualitativas'=>$cualitativas,
+            'idInscripcion'=>$idInscripcion,
+            'sie'=>$sie,
+            'gestion'=>$gestion,
+            'nivel'=>$nivel,
+            'operativo'=>$operativo,
+        ];
+
+        return $data;
     }
+    
+    /*=====  End of  REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS  ======*/
+    
+    
+    
 }
