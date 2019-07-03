@@ -190,7 +190,7 @@ class WfTramiteController extends Controller
             }else{
                 $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
             }
-            $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+            $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
             if($mensaje['dato'] == true){
                 $request->getSession()
                     ->getFlashBag()
@@ -202,7 +202,7 @@ class WfTramiteController extends Controller
             }
         }
         
-        return $this->redirectToRoute('wf_tramite_recibido');
+        return $this->redirectToRoute('wf_tramite_index',array('tipo'=>2));
     }
 
     /**
