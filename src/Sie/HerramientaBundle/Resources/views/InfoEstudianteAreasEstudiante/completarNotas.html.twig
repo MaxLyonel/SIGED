@@ -1,3 +1,8 @@
+<style type="text/css">
+	.jupper{
+		text-transform: uppercase;
+	}
+</style>
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
     	<form id="formNotas" onsubmit="completarNotas(); return false;">
@@ -34,13 +39,14 @@
 	        			</div>
 	    			{% endif %}
 
-	            	<h5 class="text-lilac">Completar notas</h5>
+	            	<h5 class="text-lilac">Completar información</h5>
 					<div class="clearfix"></div>
-	            	<div class="alert alert-info">
-	            		<i class="fa fa-info-circle"></i> Para poder agregar el área, primero debe completar las calificaciones.
-	            	</div>
 
 					{% if data.cuantitativas|length > 0 %}
+						{# <div class="alert alert-info">
+							<i class="fa fa-info-circle"></i> Para poder agregar el área, debe completar las calificaciones.
+						</div> #}
+						<h5><b>Registrar calificaciones</b></h5>
 		            	<table class="table table-bordered">
 		            		<thead>
 		            			<tr>
@@ -53,7 +59,9 @@
 		            		<tbody>
 		            			{% for cuantitativa in data.cuantitativas %}
 									<tr>
-										<td>{{ cuantitativa.asignatura }}</td>
+										<td>
+											{{ cuantitativa.asignatura }}
+										</td>
 										{% for nota in cuantitativa.notas %}
 											<td>
 												<input type="hidden" name="idInscripcion[]" value="{{data.idInscripcion}}">
@@ -71,6 +79,23 @@
 								{% endfor %}
 		            		</tbody>
 		            	</table>
+	            	{% endif %}
+
+	            	{% if registrarEspecialidad %}
+	            		{# <div class="alert alert-info">
+	            			<i class="fa fa-info-circle"></i> Para poder agregar el área, debe seleccionar una especialidad.
+	            		</div> #}
+	            		<br>
+	            		<h5><b>Seleccionar la especialidad del estudiante:</b></h5>
+	            		
+		            			<select name="idieeht" id="" class="form-control jupper" required="required">
+		            				<option value="">Seleccionar...</option>
+		            				{% for e in especialidadesUe %}
+		            					<option value="{{e.ueespid}}">{{e.especialidad}}</option>
+		            				{% endfor %}
+		            			</select>
+	            			
+	            		<br>
 	            	{% endif %}
 
 					<div id="mensajeModal"></div>
