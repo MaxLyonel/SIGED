@@ -225,9 +225,6 @@ class TramiteModificacionCalificacionesController extends Controller {
 
 
                 $data = json_encode($data);
-                dump($solicitudes);
-                dump($data);
-                die;
 
                 // OBTENEMOS EL ID DE LA TAREA
                 $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array(
@@ -267,6 +264,59 @@ class TramiteModificacionCalificacionesController extends Controller {
             $response->setStatusCode(500);
             return $response;
         }
+    }
+
+    public function formularioImprimirAction(Request $request){
+        dump($request);
+        $idTramite = $request->get('idtramite');
+        $idTramiteDetalle = $request->get('id_td');
+        dump($idTramite);
+        dump($idTramiteDetalle);
+        die;
+    }
+
+    public function recepcionVerificaDistritoAction(Request $request){
+        $idTramite = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite'=>$tramite->getId()));
+        // dump($tramiteDetalle);die;
+        $tramiteDetalle = $em->createQueryBuilder()
+                            ->select('td.id idTramiteDetalle, te.tramiteEstado, wf.datos')
+                            ->from('SieAppWebBundle:Tramite','t')
+                            ->innerJoin('SieAppWebBundle:TramiteDetalle','td','with','td.tramite = t.id')
+                            ->innerJoin('SieAppWebBundle:TramiteEstado','te','with','td.tramiteEstado = te.id')
+                            ->innerJoin('SieAppWebBundle:WfSolicitudTramite','wf','with','wf.tramiteDetalle = td.id')
+                            ->where('t.id = :idTramite')
+                            ->orderBy('td.id','DESC')
+                            ->setMaxResults(1)
+                            ->setParameter('idTramite', $idTramite)
+                            ->getQuery()
+                            ->getResult();
+
+        $datos = json_decode($tramiteDetalle[0]['datos'],true);
+        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($datos['idInscripcion']);
+        $estudiante = $inscripcion->getEstudiante();
+        $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        // dump($datos);
+        // dump($idTramite);
+        // die;
+        // dump($request);die;
+
+        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formularioVista.html.twig', array(
+            'inscripcion'=>$inscripcion,
+            'estudiante'=>$estudiante,
+            'datos'=>$datos,
+            'sie'=>$sie,
+            'idtramite'=>$idTramite
+        ));
+    }
+    
+
+    public function derivaDistritoAction(Request $request){
+        dump($request->get('procedente'));
+        dump($request);die;
     }
 
 }

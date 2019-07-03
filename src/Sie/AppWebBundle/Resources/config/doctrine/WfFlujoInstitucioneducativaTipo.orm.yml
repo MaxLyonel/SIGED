@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\WfFlujoInstitucioneducativaTipo:
+    type: entity
+    table: wf_flujo_institucioneducativa_tipo
+    indexes:
+        IDX_60EF69334080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+        IDX_60EF6933FE1D168D:
+            columns:
+                - flujo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        flujoTipo:
+            targetEntity: FlujoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -18,6 +18,7 @@ use Sie\AppWebBundle\Entity\Tramite;
 use Sie\AppWebBundle\Entity\TramiteDetalle;
 use Sie\AppWebBundle\Entity\WfSolicitudTramite;
 use Sie\AppWebBundle\Entity\WfUsuarioFlujoProceso;
+use Sie\AppWebBundle\Entity\WfFlujoInstitucioneducativaTipo;
 
 /**
  * WfTramite controller.
@@ -56,7 +57,7 @@ class WfTramiteController extends Controller
         }elseif($tipo == 3){
             $data = $this->listaEnviados($rol,$usuario);
         }else{
-            $data = $this->listaNuevos();
+            $data = $this->listaNuevos($pathSystem);
         }
         
         return $this->render('SieProcesosBundle:WfTramite:index.html.twig', $data);
@@ -77,7 +78,7 @@ class WfTramiteController extends Controller
         }
         switch ($tipo) {
             case 1:
-                $data = $this->listaNuevos();
+                $data = $this->listaNuevos($pathSystem);
                 break;
             case 2:
                 $data = $this->listaRecibidos($rol,$usuario);
@@ -89,7 +90,7 @@ class WfTramiteController extends Controller
                 $data = $this->listaConcluidos();
                 break;
             default:
-                $data = $this->listaNuevos();
+                $data = $this->listaNuevos($pathSystem);
                 break;
         }
                 
@@ -189,7 +190,7 @@ class WfTramiteController extends Controller
             }else{
                 $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
             }
-            $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+            $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
             if($mensaje['dato'] == true){
                 $request->getSession()
                     ->getFlashBag()
@@ -201,7 +202,7 @@ class WfTramiteController extends Controller
             }
         }
         
-        return $this->redirectToRoute('wf_tramite_recibido');
+        return $this->redirectToRoute('wf_tramite_index',array('tipo'=>2));
     }
 
     /**
@@ -439,11 +440,38 @@ class WfTramiteController extends Controller
      /**
      * Listado de los tipo de flujos para iniciar un tramite
      */
-    public function listaNuevos(){
+    public function listaNuevos($pathSystem){
+
         $em = $this->getDoctrine()->getManager();
+        $iet = 0;
+        switch ($pathSystem){
+            case 'SieRegularBundle':
+            case 'SieHerramientaBundle':
+                $iet = 1;
+                break;
+            case 'SieHerramientaAlternativaBundle':
+                $iet = 2;
+                break;
+            case 'SiePermanenteBundle':
+                $iet = 5;
+                break;
+            case 'SieEspecialBundle':
+                $iet = 4;
+                break;
+            case 'SieDgesttlaBundle':
+                $iet = 1;
+                break;
+            case 'SiePnpBundle':
+                $iet = 10;
+                break;
+            case 'SieRieBundle':
+                $iet = 9;
+                break;
+        }
         $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
                 ->select('ft')
-                ->where('ft.id > 5')
+                ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
+                ->where('wf.institucioneducativaTipo =' . $iet)
                 ->andWhere("ft.obs like '%ACTIVO%'")
                 ->getQuery()
                 ->getResult();
