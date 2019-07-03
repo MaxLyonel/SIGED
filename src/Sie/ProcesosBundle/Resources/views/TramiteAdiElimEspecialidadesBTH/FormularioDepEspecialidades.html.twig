@@ -1,0 +1,475 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Solicitud Especialidades <span>Adición y Eliminación de especialidades </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Solicitud Especialidades</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    {% set iedu = ieducativa[0] %}
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"> Nro. Trámite: <strong>{{ id_tramite}}</strong>  - Formulario de Solicitud Adición y Eliminación de Especialidades </h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">1.- Información General</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Código RUE</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Unidad Educativa</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {{ id_institucion }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {{ iedu.institucioneducativa }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">2.- Información de la(s) especialidad con las que cuenta la Unidad Educativa</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="table-responsive mb-20">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="text-center">#</th>
+                                                                <th>Especialidad</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for especialidad in objespecialidades_ue %}
+                                                                <tr>
+                                                                    <td class="text-center">{{loop.index}}</td>
+                                                                    <td>{{especialidad.especialidad}} </td>
+                                                                </tr>
+                                                            {% endfor%}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {% if solicitud == 'Adicionar Especialidades' %}
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Especialidades Solicitadas</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="table-responsive mb-20">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="text-center">#</th>
+                                                                <th>Especialidad</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for especialidad in objespecialidades_solicitadas %}
+                                                                <tr>
+                                                                    <td class="text-center">{{loop.index}}</td>
+                                                                    <td>{{especialidad.especialidad}} </td>
+                                                                </tr>
+                                                            {% endfor%}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">3.- Especialidades Solicitadas para eliminar</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div id="listaespecialidades_adicionar">
+                                                        <div class="table-responsive mb-20">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="text-center">#</th>
+                                                                    <th>Especialidad</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for especialidad in objespecialidades_solicitadas %}
+                                                                    <tr>
+                                                                        <td class="text-center">{{loop.index}}</td>
+                                                                        <td>{{especialidad.especialidad}} </td>
+                                                                    </tr>
+                                                                {% endfor%}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">4.- Evaluación Distrital</h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>¿Solicitud Procedente?</strong>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="rdio rdio-theme circle">
+                                                <input id="siprocededis" type="radio" name="radiotype2"  checked = true disabled>
+                                                <label for="siprocedesis"><strong>Si</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Documento adjunto</strong>
+                                        </div>
+                                        <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~id_institucion~'/'~'bth/'~ documento )}}" target="_blank">
+                                            <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
+                                        </a>
+                                    </div>
+                                    <br>
+                                </div><!-- /.panel-body -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                     <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">5.- Informe Unidad Educativaa</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="listaespecialidades_adicionar">
+                                                    <div class="table-responsive mb-20">                   
+                                                        <textarea id="textDirector" class="form-control" rows="6" disabled="true" >
+                                                            {{textDirector}}
+                                                        </textarea> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">7.- Evaluación Departamental </h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="alert alert-warning">
+                                                <strong>Nota.-</strong> Se recomienda adjuntar el informe de aprobación al Sistema de Información Educativa de las unidades educativas Técnico Humanísticas Plenas. <br>
+                                                <strong> El archivo no debe superar a los 2MB</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>¿Autoriza la solicitud?</strong>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="rdio rdio-theme circle">
+                                                <input id="siprocededep" type="radio" name="radiotypedep" value="si"  onclick="muestraobs()" checked  >
+                                                <label for="siprocededep"><strong>Si</strong></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="rdio rdio-theme circle">
+                                                <input id="noprocededep" type="radio" name="radiotypedep" value="no" onclick="muestraobs()">
+                                                <label for="noprocededep"><strong>No</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" id="documento">
+                                        <div class="col-md-6">
+                                            <div class="pull-left">
+                                                <label for="adjdocumento">
+                                                    <i class="fa fa-cloud-upload"></i> Adjuntar Informe
+                                                </label>
+                                                <input type="file" id="adjdocumento" title="Adjuntar Informe" accept="application/pdf,.doc,.docx">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" id="NOBTH" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <strong>¿Desea hacer la devolución del trámite al Técnico SIE Distrital correspondiente, para su corrección? </strong>
+                                            </div>
+                                        </div>
+                                        <div class="row" >
+                                            <div class="col-md-2">
+                                                <div class="rdio rdio-theme circle">
+                                                    <input id="sidevolucion" type="radio" name="radiotypedevolucion" value="si" onclick="muestraobs2()" checked>
+                                                    <label for="sidevolucion"><strong>Si</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="rdio rdio-theme circle">
+                                                    <input id="nodevolucion" type="radio" name="radiotypedevolucion" value="no" onclick="muestraobs2()" >
+                                                    <label for="nodevolucion"><strong>No</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8" id="obs" style="display: none">
+                                                <textarea class="form-control" rows="5" id="obstxt" placeholder="Escriba la observación en caso de caso de devolución."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" id="nota" style="display: none">
+                                        <div class="alert alert-danger">
+                                            <strong>Nota.-</strong> Al cancelar el támite de la Unidad Educativa: {{ iedu.institucioneducativa }} <strong>NO</strong>  se  autorizará la solicitud.
+                                        </div>
+                                    </div>
+                                    <div id="autoriza_bth" >
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="pull-right">
+                                            <button class="btn btn-sm btn-facebook" id="btn_accion" title="Finalizar Solicitud" onclick="verificaenviarsolicitudespecialidades()"><i class="fa fa-pencil"></i> Finalizar Solicitud</button>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+
+        $(document).ready(function(){
+            $('#NOBTH').hide();
+            $('#adjdocumento').change(function() {
+                var a=(this.files[0].size);
+                if(a > 2057157) {
+                    swal("El documento adjunto supera a los 2MB");
+                    $('#adjdocumento').val('');
+                };
+            });
+        });
+        function verificaenviarsolicitudespecialidades() {
+            var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+            var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+            if(respuesta == 'no' && respuesta2 == 'no' ){
+                var msj = '{{ id_tramite }}';
+                if(confirm('Al seleccionar la opción NO en ambas preguntas, el trámite será cancelado.¿Esta seguro de cancelar el tramite: '+ msj +'?')){
+                    finalizarSolicitusespecialidades();
+                    //return true;
+                }else{
+                    return false;
+                }
+            }
+            finalizarSolicitusespecialidades();
+        }
+        function finalizarSolicitusespecialidades() {
+            swal({
+                title: "¿Está Segura/o de enviar la respuesta a la solicitud?",
+                text: "La información llenada será enviada a la instancia correspondiente.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Continuar"],
+            })
+                .then(function(willDelete)  {
+                    if (willDelete) {
+                        var institucionid={{ id_institucion }};
+                        var idespecialidades={{ idespecialidades|raw }};
+                        var obstxt=$('#obstxt').val();
+                        //var textDirector=$('#textDirector').text();
+                        var evaluacion  = "NO";
+                        if($('#siprocededep:checked').val())
+                        { evaluacion  ="SI";}
+                        //evaluacion 2
+                        var evaluacion2  = "NO";
+                        if($('#sidevolucion:checked').val())
+                        { evaluacion2  ="SI";}
+
+                        var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+                        var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+                        if(respuesta == 'si'){
+                            if($('#adjdocumento').val()=="")
+                            {swal("Debe adjuntar su informe de respuesta.");
+                                return false;}
+                        }
+                        //validacion para la observacion
+                        if(respuesta2 == 'si' && respuesta == 'no' ){
+                            if(obstxt == ''){
+                                swal("Debe introducir alguna observación");
+                                return false;}
+                        }
+
+
+                        var imagen = '{{ asset("img/loading96.gif") }}';
+                        var fd = new FormData();
+                        fd.append('ipt',[idespecialidades]);
+                        //fd.append('id_distrito', { { ubicacion['codigo_distrito'] }});
+                        fd.append('evaluacion', evaluacion);
+                        fd.append('evaluacion2', evaluacion2);
+                        fd.append('institucionid', institucionid);
+                        fd.append('textDirector', '{{textDirector}}');
+                        fd.append('id_tramite', {{ id_tramite}});
+                        fd.append('obstxt', obstxt);
+                        //fd.append('docpdf', $('#adjdocumento')[0]);
+                        var docpdf = document.getElementById('adjdocumento');
+                        fd.append('docpdf', docpdf.files[0]);
+                        $.ajax({
+                            type: 'post',
+                            url: "{{ path('tramite_solicitud_especialidades_bth_Dep') }}",
+                            data: fd, //{ipt: ipt, id_distrito: { ubicacion['codigo_distrito'] }}, evaluacion: evaluacion,institucionid:{ institucion.id }}, id_tramite:{ id_tramite}}, obstxt:obstxt },
+                            mimeType:"multipart/form-data",
+                            contentType: false,
+                            cache: false,
+                            processData:false,
+                            dataType : 'json',
+                            before: function () {
+                                swal({
+                                    title: "Enviando...",
+                                    text: "Espere un momento por favor",
+                                    icon: imagen,
+                                    buttons: false
+                                });
+                            },
+                            success: function (data) {console.log(data.msg);
+                                if (data.estado==1){
+                                    swal("Su respuesta se ha enviado con éxito Muchas gracias");
+                                    //location.href = "{{ path('wf_tramite_index') }}";
+                                    location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                                }
+                                else if(data.estado == 2){
+                                    swal(data.msg)
+                                }
+                                else{
+                                    swal("Su respuesta no se envío correctamente");
+                                }
+                            },
+                            complete: function () {
+                                swal.stopLoading();
+                                swal.close();
+                            }
+                        });
+                    }
+                });
+
+        }
+        function muestraobs(){
+            var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+            var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+            if(respuesta=='si'){
+                $('#NOBTH').hide();
+                $('#autoriza_bth').show();
+                $('#documento').show();
+                $('#btn_accion').prop('title','Finalizar Solicitud');
+                $('#nota').hide();
+            }else {
+                $('#NOBTH').show();
+                $('#obs').show(2000);
+                $('#documento').hide();
+                $('#btn_accion').prop('title','Enviar Solicitud');
+
+                if(respuesta2=='no'){
+                    $('#obs').hide();
+                    $('#nota').show();
+                }
+            }
+        }
+        function muestraobs2(){
+            var respuesta=$('input:radio[name=radiotypedevolucion]:checked').val();
+            if(respuesta=='si'){
+                $('#obs').show(2000);
+                $('#btn_accion').prop('title','Finalizar Solicitud');
+                $('#nota').hide();
+            }else {
+                $('#obs').hide();
+                $('#btn_accion').prop('title','Enviar Solicitud');
+                $('#nota').show();
+            }
+        }
+
+
+    </script>
+
+{% endblock %}

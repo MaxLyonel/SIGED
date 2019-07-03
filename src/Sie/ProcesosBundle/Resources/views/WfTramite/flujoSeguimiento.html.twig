@@ -1,0 +1,96 @@
+<div class="panel-body">
+	<div class="form-group">
+        {{ form_start(form,{ 'attr': {'id':'form_seguimiento'} } ) }}
+    		<label class="col-sm-2">Trámite:</label>
+            <div class="col-sm-3">
+                {{ form_widget(form.proceso) }}
+            </div>
+            <label class="col-sm-2">Nro. de Trámite:</label>
+            <div class="col-sm-3">
+                {{ form_widget(form.tramite) }}
+            </div>
+        {{ form_end(form) }}
+        <div class="form-group">                        
+            <button id="buscar" class="btn btn-primary">Buscar</button>    
+        </div>
+    </div>
+    <div id="flujo">
+    </div>
+</div><!-- /.panel-body -->
+
+<script src="{{ asset('webprocesos/raphael-min.js') }}"></script>
+<script src="{{ asset('webprocesos/flowchart-latest.js') }}"></script>
+<script type="text/javascript" charset="utf-8" >
+    $('#ver').click(function(){
+        $('#detalle').show();
+    });
+
+    $('#buscar').click(function(){
+        if ($('#form_proceso').val()==""){ alert('Seleccione un proceso'); return false; }
+        if ($('#form_tramite').val()==""){ alert('Ingrese un número de trámite'); return false; }
+        formData = $('#form_seguimiento').serialize();
+        $.ajax({
+            type: 'GET',
+            url: "{{path('wf_tramite_seguimiento_verflujo')}}",
+            data: formData,
+            beforeSend: function () {
+                $('#flujo').empty();
+                $('#flujo').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $('#flujo').empty();
+                $('#flujo').append(data);
+                var btn = document.getElementById("run"),
+                cd = document.getElementById("code"),
+                chart;
+                var code = cd.value;
+                if (chart) {
+                    chart.clean();
+                }
+                chart = flowchart.parse(code);
+                chart.drawSVG('canvas', {
+                    // 'x': 30,
+                    // 'y': 50,
+                    'line-width': 3,
+                    'maxWidth': 5,//ensures the flowcharts fits within a certian width
+                    'line-length': 20,
+                    'text-margin': 10,
+                    'font-size': 12,
+                    'font': 'normal',
+                    'font-family': 'Helvetica',
+                    'font-weight': 'normal',
+                    'font-color': 'black',
+                    'line-color': 'black',
+                    'element-color': 'black',
+                    'fill': 'white',
+                    'yes-text': 'SI',
+                    'no-text': 'NO',
+                    'arrow-end': 'block',
+                    'scale': 1,
+                    'symbols': {
+                        'start': {
+                            'font-color': 'black',
+                            'element-color': 'black',
+                            'fill': 'black'
+                        },
+                        'end':{
+                            'class': 'end-element'
+                        }
+                    },
+                    'flowstate' : {
+                        'inicio' : { 'fill' : '#D7D7D7','font-color' : 'black', 'font-size' : 12},
+                        'past' : { 'fill' : 'white','font-color' : 'black', 'font-size' : 12},
+                        //'current' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
+                        'current' : {'fill' : '#8BF3FE', 'font-color' : '#1B5583', 'font-weight' : 'bold'},
+                        'future' : { 'fill' : '#FFFF99'},
+                        'request' : { 'fill' : 'blue'},
+                        'invalid': {'fill' : '#444444'},
+                        'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'SI', 'no-text' : 'NO' },
+                        'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'NO', 'no-text' : 'SI' }
+                    }
+                });
+            },
+        }); 
+    });
+   
+</script>
