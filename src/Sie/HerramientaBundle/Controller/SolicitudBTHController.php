@@ -383,15 +383,34 @@ class SolicitudBTHController extends Controller {
             $query->execute();
             $cant_alumnos = $query->fetchAll(); //dump($cant_alumnos);die;
             $cantidad_est=count($cant_alumnos)>0? $cant_alumnos[0]['est']:0;
-            if ($cantidad_est==0){
+            $verificarue= $this->validaUE($id_Institucion,$gestion); //dump($verificarue);die;
+            if ($cantidad_est==0 or $verificarue == 0){
                 $tramite_iniciado=1;
             }else{
                 $tramite_iniciado=0;
             }
+            //dump($tramite_iniciado);die;
             return $tramite_iniciado;
         }else{
             return $tramite_iniciado;
         }
+    }
+    public function validaUE($id_Institucion,$gestion){
+        $em = $this->getDoctrine()->getManager();
+      $query = $em->getConnection()->prepare("SELECT ieht.grado_tipo_id as grado
+                     FROM institucioneducativa_humanistico_tecnico ieht  
+                     WHERE ieht.institucioneducativa_id = $id_Institucion and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                                         and  gestion_tipo_id < $gestion 
+                     ORDER BY gestion_tipo_id DESC LIMIT 1 ");
+            $query->execute();
+            $ue_verificada = $query->fetchAll();  //dump($ue_verificada);die;
+            if($ue_verificada){
+               $ue_verificada = 1; //SI corresponde segun su institucioneducativa_humanistico_tecnico_tipo_id   
+            }else{
+                $ue_verificada = 0; //NO corresponde segun su institucioneducativa_humanistico_tecnico_tipo_id   
+            }
+            return $ue_verificada;
+            
     }
     public function guardasolicitudAction(Request $request){
         $datos          = ($request->get('ipt')); //dump($datos);die;
@@ -414,7 +433,7 @@ class SolicitudBTHController extends Controller {
                                                 ORDER BY 1");
             $query->execute();
             $ue_bth = $query->fetchAll();
-            $es_plena=$ue_bth[0]['cantidad_ue_plena'];
+            $es_plena=$ue_bth[0]['cantidad_ue_plena']; dump($es_plena);die;
             /**
              * Verificicacion de que la UE inicio un tramite
              */
