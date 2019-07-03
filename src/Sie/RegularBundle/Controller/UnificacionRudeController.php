@@ -32,8 +32,83 @@ class UnificacionRudeController extends Controller {
         $em = $this->getDoctrine()->getManager();
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+        
+        if($request->getMethod() == 'POST' and $rol == 10){
+            $form = $request->get('form');
+            //dump($form);die;
+            if($form['idRegla'] == 8){
+                $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rude']));
+                if(!$student){
+                    $mensaje = 'Rudes no encontrados para unificar.';
+                    $this->addFlash('notihistory', $message);
+                    $vala = '';
+                    $valb = '';
+                }else{
+                    $students = $em->createQueryBuilder()
+                                ->select('DISTINCT e.codigoRude')
+                                ->from('SieAppWebBundle:Estudiante','e')
+                                ->where('e.paterno = :paterno')
+                                ->andWhere('e.materno = :materno')
+                                ->andWhere('e.nombre = :nombre')
+                                ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+                                ->setParameter('paterno', $student->getPaterno())
+                                ->setParameter('materno', $student->getMaterno())
+                                ->setParameter('nombre', $student->getNombre())
+                                ->setParameter('fechaNacimiento', $student->getFechaNacimiento())
+                                ->getQuery()
+                                ->getResult();
+                    if(count($students)<=1){
+                        $message = 'No existen dos rudes para Unificar.';
+                        $this->addFlash('notihistory', $message);            
+                        $vala = '';
+                        $valb = '';
+                    }else{
+                        $vala = $students[0]['codigoRude'];
+                        $valb = $students[1]['codigoRude'];
+                    }
+                }
+            }elseif($form['idRegla'] == 26){
+                $rude = explode("|", $form['rude']);
+                $studenta = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$rude[0]));
+                $studentb = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$rude[1]));
+                if($studenta and $studentb){
+                    $vala = $rude[0];
+                    $valb = $rude[1];
+                }elseif($studenta){
+                    $vala = $rude[0];
+                    $valb = '';
+                    $message = 'El código rude: '.$rude[1].' no existe.';
+                    $this->addFlash('notihistory', $message);            
+                }elseif($studentb){
+                    $vala = '';
+                    $valb = $rude[1];
+                    $message = 'El código rude: '.$rude[0].' no existe.';
+                    $this->addFlash('notihistory', $message);            
+                }else{
+                    $vala = '';
+                    $valb = '';
+                    $message = 'Los códigos rude: '.$rude[0].' y '. $rude[1] .' no existen.';
+                    $this->addFlash('notihistory', $message);            
+                }
+            }else{
+                $message = 'Inconsistencia no encontrada.';
+                $this->addFlash('notihistory', $message);            
+                $vala = '';
+                $valb = '';
+            }
+            $onoffcalidad = 't';
+        }elseif($rol == 8 or $rol == 7){
+            $vala = '';
+            $valb = '';
+            $onoffcalidad = 'f';
+        }else{
+            $vala = '';
+            $valb = '';
+            $onoffcalidad = 't';
         }
         $sesion = $request->getSession();
         //$sesion->set('procesocalidadid', '0');
@@ -41,9 +116,9 @@ class UnificacionRudeController extends Controller {
         //$sesion->set('procesocalidadgestion', '0'); 
         
         return $this->render($this->session->get('pathSystem').':UnificacionRude:index.html.twig', array(
-                    'vala' => '',
-                    'valb' => '',
-                    'onoffcalidad' => 'f'
+                    'vala' => $vala,
+                    'valb' => $valb,
+                    'onoffcalidad' => $onoffcalidad
             ));
     }
     
@@ -77,7 +152,7 @@ class UnificacionRudeController extends Controller {
             ));*/
     }
     
-    public function unificarverhistorialAction($rudea, $rudeb) {
+    public function unificarverhistorialAction($rudea, $rudeb, $onoffcalidad) {
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -88,12 +163,11 @@ class UnificacionRudeController extends Controller {
         if ($this->session->get('roluser') == 8){
             $val = 0;
         }
-       
         //*******VERIFICANDO QUE LOS RUDES NO SEAN EL MISMO
         $rudea = trim($rudea);
         $rudeb = trim($rudeb);
         if ($rudea == $rudeb) {
-            $message = 'El códigos rudes deben ser distintos.';            
+            $message = 'Los códigos rudes deben ser distintos.';            
             $this->addFlash('notihistory', $message);            
             return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
         }
@@ -126,7 +200,10 @@ class UnificacionRudeController extends Controller {
                 && (trim($studenta->getfechaNacimiento()->format('Y-m-d')) == trim($studentb->getfechaNacimiento()->format('Y-m-d')))
             ) {
             $validado = 1;
-        } else {
+        }elseif($onoffcalidad == "t") {
+            $validado = 1;
+        }
+        else {
             $validado = 0;
             $message = 'Los datos personales no son los mismo.';
             $this->addFlash('validacionerror', $message);  
@@ -184,7 +261,7 @@ class UnificacionRudeController extends Controller {
             $countDipb = count($dataInscriptionJsonVerDipb);
 
             if (($countDipa > 0) && ($countDipb > 0)) {
-                $message = 'Ambos rudes cuentan con tramine de diplomas.';
+                $message = 'Ambos rudes cuentan con tramite de diplomas, por lo que no pueden ser unificados.';
                 $this->addFlash('notihistory', $message);            
                 return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
             } else {
@@ -227,7 +304,7 @@ class UnificacionRudeController extends Controller {
                     $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en juegos como el rude correcto.'); 
                     return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
                 }
-                if (($countJuea == 0) && ($countJueb > 0)) {
+                if (($countJueb == 0) && ($countJuea > 0)) {
                     $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en juegos como el rude correcto.'); 
                     return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
                 }
@@ -262,12 +339,43 @@ class UnificacionRudeController extends Controller {
                     $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en olimpiadas como el rude correcto.'); 
                     return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
                 }
-                if (($countOlma == 0) && ($countOlmb > 0)) {
+                if (($countOlmb == 0) && ($countOlma > 0)) {
                     $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en olimpiadas como el rude correcto.'); 
                     return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
                 }
             }
             //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN OLIMPIADAS
+
+            //*******VERIFICANDO QUE ALGUNO DE LOS RUDES NO TENGA DATOS EN BACHILER DESTACADO
+            $bachilerda = $em->createQueryBuilder()->select('e')
+                                ->from('SieAppWebBundle:EstudianteDestacado','e')
+                                ->where('e.codigoRude = :rude')
+                                ->setParameter('rude', $rudea)
+                                ->getQuery()
+                                ->getResult();
+
+            $bachilerdb = $em->createQueryBuilder()->select('e')
+                                ->from('SieAppWebBundle:EstudianteDestacado','e')
+                                ->where('e.codigoRude = :rude')
+                                ->setParameter('rude', $rudeb)
+                                ->getQuery()
+                                ->getResult();
+            
+            if ( count($bachilerda) > 0 && count($bachilerdb) > 0 ) {
+                $message = 'Ambos rudes cuentan con historial en Bachiller Destacado, por lo que no pueden unificarse';
+                $this->addFlash('notihistory', $message);            
+                return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+            } else {
+                if ( count($bachilerda) == 0 && count($bachilerdb) > 0 ) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en Bachiller Destacado como el rude correcto.'); 
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
+                }
+                if ( count($bachilerda) > 0 && count($bachilerdb) == 0 ) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en Bachiller Destacado como el rude correcto.'); 
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
+                }
+            }
+            //*******FIN VERIFICANDO QUE ALGUNO DE LOS RUDES NO TENGA DATOS EN BACHILER DESTACADO
         }
 
         $dataInscriptionaR = array();
@@ -335,6 +443,7 @@ class UnificacionRudeController extends Controller {
     }
     
     public function unificarvercorincAction($rudecor, $rudeinc) {
+        //dump($rudecor,$rudeinc);die;
         $em = $this->getDoctrine()->getManager();        
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -493,27 +602,24 @@ class UnificacionRudeController extends Controller {
         }
 
         if ($validado == '0'){
-            if (($maxInc != '0') && ($maxCor != '0'))
-                    {
-                    if ($maxanioCor < $maxanioInc){
-                        $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
-                        $this->addFlash('notihistory', $message);
-                        $validado = 0;
-                    } else {
-                        $validado = 1;
-                    }
+            if (($maxInc != '0') && ($maxCor != '0')){
+                if ($maxanioCor < $maxanioInc){
+                    $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
+                    $this->addFlash('notihistory', $message);
+                    $validado = 0;
+                } else {
+                    $validado = 1;
                 }
+            }
         }   
 
         return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistorialescorinc.html.twig', array(                   
                     'validado' => $validado,
-
                     'studentCorr' => $studentCorr,
                     'dataInscriptionCorrR' => $dataInscriptionCorrR,
                     'dataInscriptionCorrA' => $dataInscriptionCorrA,
                     'dataInscriptionCorrE' => $dataInscriptionCorrE,
                     'dataInscriptionCorrP' => $dataInscriptionCorrP,
-
                     'studentIncc' => $studentIncc,
                     'dataInscriptionInccR' => $dataInscriptionInccR,
                     'dataInscriptionInccA' => $dataInscriptionInccA,
@@ -529,7 +635,7 @@ class UnificacionRudeController extends Controller {
         //SELECCION DE REGISTROS  
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-
+        
         $studentinc = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudeinc));
         $studentcor = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudecor));
         $inscripinco = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('estudiante' => $studentinc), array('fechaInscripcion'=>'DESC'));
@@ -633,30 +739,57 @@ class UnificacionRudeController extends Controller {
             $em->remove($studentinc);
             $em->flush();
 
+            //****PARA EL PROCESO DE CALIDAD******//
+            $valproceso = $em->createQueryBuilder()
+                                ->select('v')
+                                ->from('SieAppWebBundle:ValidacionProceso','v')
+                                ->where('v.esActivo is false')
+                                ->where('v.validacionReglaTipo = 8 and v.solucionTipoId = 2 and (v.llave = :llave1 or v.llave = :llave2)')
+                                ->orWhere('v.validacionReglaTipo = 26 and v.solucionTipoId = 0 and (v.llave = :llave3 or v.llave = :llave4)')
+                                ->setParameter('llave1', $rudecor)
+                                ->setParameter('llave2', $rudeinc)
+                                ->setParameter('llave3', $rudecor.'|'.$rudeinc)
+                                ->setParameter('llave4', $rudeinc.'|'.$rudecor)
+                                ->getQuery()
+                                ->getResult();
+            
+            if($valproceso){
+                foreach($valproceso as $v){
+                    $v->setEsActivo(true);
+                    $em->flush();
+                }
+                $gestion = $valproceso[0]->getGestionTipo()->getId();
+            }else{
+                $geston = $inscripcorr[0]->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            }
+
+            $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');
+            $query->bindValue(':tipo', '2');
+            $query->bindValue(':rude', $rudecor);
+            $query->bindValue(':param', '');
+            $query->bindValue(':gestion', $gestion);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            //****FIN DEL PROCESO DE CALIDAD******//
+            
+            /*** PARA EL BONO JUANCITOPINTO***/
+            $bonojuancitopinto = $em->createQueryBuilder()
+                                ->select('b')
+                                ->from('SieAppWebBundle:BonojuancitoEstudianteValidacion','b')
+                                ->where('b.codigoRude = :rude')
+                                ->setParameter('rude', $rudeinc)
+                                ->getQuery()
+                                ->getResult();
+
+            if($bonojuancitopinto){
+                foreach($bonojuancitopinto as $b){
+                    $b->setObs(json_encode(array('id_unificacion'=>$ur->getId(),'obs'=>mb_strtoupper('UNIFICACION RUDE', 'UTF-8'))));
+                    $em->flush();
+                }
+            }
+            /*** FIN DEL BONO JUANCITOPINTO***/
             //COMMIT DE TODA LA TRANSACCION
             $em->getConnection()->commit();
-            
-            //******PARA EL PROCESO DE CALIDAD
-            /*if ($sesion->get('procesocalidadid') != '0' ){
-                $valproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($sesion->get('procesocalidadid'));
-                $valproceso->setEsActivo('true');
-                $em->persist($valproceso);
-                $em->flush();
-            }
-            if ($sesion->get('procesocalidadid')  == '0'){
-                //$sesion->set('procesocalidadid', $form['idProceso']);
-                //$sesion->set('procesocalidadrude', $query[0]->getLlave());
-                //$sesion->set('procesocalidadgestion', $form['gestion']);                  
-                
-                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');
-                $query->bindValue(':tipo', '2');
-                $query->bindValue(':rude', $sesion->get('procesocalidadrude'));
-                $query->bindValue(':param', '');
-                $query->bindValue(':gestion', $sesion->get('procesocalidadgestion'));
-                $query->execute();
-                $resultado = $query->fetchAll();
-            }*/
-            //******PARA EL PROCESO DE CALIDAD
             
             $studentCorr = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudecor));            
 
@@ -684,8 +817,12 @@ class UnificacionRudeController extends Controller {
                     break;
                 }
             }
+            $msg = "</br>";
+            if($valproceso){
+                $msg = "La inconsistencia de Calidad fué subsanada.</br>";
+            }
                                     
-            $this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente. Historial del rude :' . $rudecor);
+            $this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.'. $msg .' Historial del rude :' . $rudecor);
             return $this->render($this->session->get('pathSystem') . ':UnificacionRude:result.html.twig', array(                    
                     'studentCorr' => $studentCorr,
                     'dataInscriptionCorrR' => $dataInscriptionCorrR,

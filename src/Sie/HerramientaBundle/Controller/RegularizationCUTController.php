@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\BthEstudianteNivelacion;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
-// use Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo;
 
 /**
  * Author: krlos Pacha C. <pckrlos@cgmail.com>
@@ -123,9 +122,8 @@ class RegularizationCUTController extends Controller{
                     $sie = $objStudentInscription[0]['sie'];
                     $gestion = $objStudentInscription[0]['gestion'];
                     
-
                     $sieAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
-                        'institucioneducativa'=>$sie,
+                        'institucioneducativaId'=>$sie,
                         'gestionTipoId'=>$gestion,
                         'institucioneducativaHumanisticoTecnicoTipo'=>1, // plena
                         'esimpreso'=>true
@@ -189,6 +187,7 @@ class RegularizationCUTController extends Controller{
             $swError = false;
 
         }
+
         // dump($objStudent);die;
         // dump($form);die;
 
