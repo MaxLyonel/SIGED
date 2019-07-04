@@ -1754,6 +1754,94 @@ class ReporteController extends Controller {
                 ));  
             }            
         }        
+    }
+
+    /**
+     * Pagina Inicial - Información General - Institutos Tecnicos
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function informacionGeneralInstitutosTecnicosAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $idUsuario = $this->session->get('userId');
+        $gestionProcesada = $gestionActual;
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $codigoArea = $request->get('codigo');
+            $rolUsuario = $request->get('rol');
+        } else {
+            $codigoArea = 0;
+            $rolUsuario = 0;
+        }
+
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+
+        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
+        //dump($entidad);die;
+        $subEntidades = $this->buscaSubEntidadInstitutosTecnicosAreaRol($codigoArea,$rolUsuario);
+        //dump($subEntidades);die;
+        $entityEstadistica = $this->buscaEstadisticaInstitutosTecnicosAreaRol($codigoArea,$rolUsuario);
+        //dump($subEntidades);die;
+       
+        $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos",$gestionActual,12,"chartContainerTecnicoTecnologico");
+        $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun área",$gestionProcesada,1,"chartContainerArea");
+        $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos según Dependencia",$gestionActual,12,"chartContainerDependencia");
+        
+        $link = true;
+        if ($rolUsuario == 7){
+            $link = false;
+        }
+
+        if ($entidad != '' and $subEntidades != ''){
+            return $this->render('SieAppWebBundle:Reporte:institutosTecnicosTecnologicos.html.twig', array(
+                'infoEntidad'=>$entidad,
+                'infoSubEntidad'=>$subEntidades, 
+                'infoEstadistica'=>$entityEstadistica,
+                'datoGraficoInstitutos'=>$chartTecnicosTecnologicos,
+                'datoGraficoArea'=>$chartArea,
+                'datoGraficoDependencia'=>$chartDependencia,
+                'gestion'=>$gestionProcesada,
+                'link'=>$link,
+                'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
+                'form' => $defaultController->createLoginForm()->createView()
+            ));    
+        } else {
+            if ($entidad != ''){
+                return $this->render('SieAppWebBundle:Reporte:institutosTecnicosTecnologicos.html.twig', array(
+                    'infoEntidad'=>$entidad, 
+                    'infoEstadistica'=>$entityEstadistica,
+                    'datoGraficoInstitutos'=>$chartTecnicosTecnologicos,
+                    'datoGraficoArea'=>$chartArea,
+                    'datoGraficoDependencia'=>$chartDependencia,
+                    'gestion'=>$gestionProcesada,
+                    'link'=>$link,
+                    'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
+                    'form' => $defaultController->createLoginForm()->createView()
+                ));  
+            } else {
+                return $this->render('SieAppWebBundle:Reporte:institutosTecnicosTecnologicos.html.twig', array(
+                    'infoSubEntidad'=>$subEntidades, 
+                    'infoEstadistica'=>$entityEstadistica,                    
+                    'datoGraficoInstitutos'=>$chartTecnicosTecnologicos,
+                    'datoGraficoArea'=>$chartArea,
+                    'datoGraficoDependencia'=>$chartDependencia,
+                    'gestion'=>$gestionProcesada,
+                    'link'=>$link,
+                    'mensaje'=>'$("#modal-bootstrap-tour").modal("Efectivos");',
+                    'form' => $defaultController->createLoginForm()->createView()
+                ));  
+            }            
+        }        
     }  
 
 
@@ -2056,6 +2144,103 @@ class ReporteController extends Controller {
                 where orgcurricular_id = 1 and estadoinstitucion_id = 10 and institucioneducativa_id not in (1,2,3,4,5,6,7,8,9) 
                 group by departamento_codigo, departamento
                 order by departamento_codigo, departamento
+            ");    
+        } 
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll(); 
+        if (count($objEntidad)>0 and $rol != 9 and $rol != 5){
+            return $objEntidad;
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Busca el nombre de las entidades pertenecienten a un pais, departamento, distrito en funcion al tipo de rol
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function buscaSubEntidadInstitutosTecnicosAreaRol($area,$rol) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $gestionProcesada = $gestionActual;
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+            SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar as nombre, 7 as rolUsuario, coalesce(count(inst.id),0) as cantidad
+            FROM institucioneducativa AS inst
+            INNER JOIN jurisdiccion_geografica AS jurg ON inst.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+            WHERE inst.institucioneducativa_tipo_id IN (7,8,9) 
+            AND inst.estadoinstitucion_tipo_id = 10
+            AND inst.institucioneducativa_acreditacion_tipo_id = 2
+            group by lt4.codigo, lt4.lugar
+            order by lt4.codigo, lt4.lugar"); 
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {                 
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                    select 'Unidad Educativa' as nombreArea, institucioneducativa_id as codigo, institucioneducativa_id::varchar||' - '||institucioneducativa  as nombre, 9 as rolUsuario
+                    , coalesce(count(institucioneducativa_id),0) as cantidad
+                    from vm_instituciones_educativas 
+                    where orgcurricular_id = 1 and estadoinstitucion_id = 10 and institucioneducativa_id not in (1,2,3,4,5,6,7,8,9) and distrito_codigo = '".$area."'
+                    group by institucioneducativa_id, institucioneducativa
+                    order by institucioneducativa_id, institucioneducativa
+                ");  
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+            select 'Instituto Tecnico y/o Tecnologico' as nombreArea, inst.id as codigo, inst.id::varchar||' - '||inst.institucioneducativa  as nombre, 9 as rolUsuario , coalesce(count(inst.id),0) as cantidad
+            FROM institucioneducativa AS inst
+            INNER JOIN jurisdiccion_geografica AS jurg ON inst.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+            WHERE inst.institucioneducativa_tipo_id IN (7,8,9) 
+            AND inst.estadoinstitucion_tipo_id = 10
+            AND inst.institucioneducativa_acreditacion_tipo_id = 2
+            AND lt4.codigo = '". $area ."'
+            group by inst.id, institucioneducativa
+            order by inst.id, institucioneducativa");  
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                
+            SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar as nombre, 7 as rolUsuario, coalesce(count(inst.id),0) as cantidad
+            FROM institucioneducativa AS inst
+            INNER JOIN jurisdiccion_geografica AS jurg ON inst.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+            WHERE inst.institucioneducativa_tipo_id IN (7,8,9) 
+            AND inst.estadoinstitucion_tipo_id = 10
+            AND inst.institucioneducativa_acreditacion_tipo_id = 2
+            group by lt4.codigo, lt4.lugar
+            order by lt4.codigo, lt4.lugar
             ");    
         } 
 
@@ -2421,6 +2606,111 @@ class ReporteController extends Controller {
         }
     }
 
+    /**
+     * Busca el detalle de institutos en funcion al tipo de rol
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function buscaEstadisticaInstitutosTecnicosAreaRol($area,$rol) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $gestionProcesada = $gestionActual;
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+        select
+        sum(case ie.dependencia_tipo_id when 1 then 1 when 5 then 1 else 0 end) as cant_fiscal,
+        sum(case ie.dependencia_tipo_id when 2 then 1 else 0 end) as cant_convenio,
+        sum(case ie.dependencia_tipo_id when 3 then 1 else 0 end) as cant_privada,
+        sum(case ie.dependencia_tipo_id when 1 then 1 when 2 then 1 when 3 then 1 else 0 end) as cant_dependencia,
+        sum(case lt.area2001 when 'R' then 1 else 0 end) as cant_rural,
+        sum(case lt.area2001 when 'U' then 1 else 0 end) as cant_urbana,
+        sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
+        sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
+        sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
+        sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
+        FROM institucioneducativa AS ie
+        INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
+        LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+        WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
+        AND ie.estadoinstitucion_tipo_id = 10
+        AND ie.institucioneducativa_acreditacion_tipo_id = 2"); 
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {
+            
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+            select 
+            sum(case ie.dependencia_tipo_id when 1 then 1 when 5 then 1 else 0 end) as cant_fiscal,
+            sum(case ie.dependencia_tipo_id when 2 then 1 else 0 end) as cant_convenio,
+            sum(case ie.dependencia_tipo_id when 3 then 1 else 0 end) as cant_privada,
+            sum(case ie.dependencia_tipo_id when 1 then 1 when 2 then 1 when 3 then 1 else 0 end) as cant_dependencia,
+            sum(case lt.area2001 when 'R' then 1 else 0 end) as cant_rural,
+            sum(case lt.area2001 when 'U' then 1 else 0 end) as cant_urbana,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
+            sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
+            sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
+            FROM institucioneducativa AS ie
+            INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+            WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 2
+            AND lt4.codigo='". $area ."'");  
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {            
+            $queryEntidad = $em->getConnection()->prepare("   
+            select 
+            sum(case ie.dependencia_tipo_id when 1 then 1 when 5 then 1 else 0 end) as cant_fiscal,
+            sum(case ie.dependencia_tipo_id when 2 then 1 else 0 end) as cant_convenio,
+            sum(case ie.dependencia_tipo_id when 3 then 1 else 0 end) as cant_privada,
+            sum(case ie.dependencia_tipo_id when 1 then 1 when 2 then 1 when 3 then 1 else 0 end) as cant_dependencia,
+            sum(case lt.area2001 when 'R' then 1 else 0 end) as cant_rural,
+            sum(case lt.area2001 when 'U' then 1 else 0 end) as cant_urbana,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
+            sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
+            sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
+            FROM institucioneducativa AS ie
+            INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 2");    
+        } 
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad[0];
+        } else {
+            return '';
+        }
+    }
 
     /**
      * Busca las unidades educativas en funcion al tipo de rol
@@ -2771,6 +3061,10 @@ class ReporteController extends Controller {
                 $datosTemp = "{name: 'Fiscal o Estatal', y: ".round(((100*$entity['cant_fiscal'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_fiscal']."}, {name: 'Convenio', y: ".round(((100*$entity['cant_convenio'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_convenio']."}, {name: 'Privada', y: ".round(((100*$entity['cant_privada'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_privada']."},";
                 $pointLabel = "Unidades Educativas";
                 break;
+            case 12:                
+                $datosTemp = "{name: 'Fiscal o Estatal', y: ".round(((100*$entity['cant_fiscal'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_fiscal']."}, {name: 'Convenio', y: ".round(((100*$entity['cant_convenio'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_convenio']."}, {name: 'Privada', y: ".round(((100*$entity['cant_privada'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_privada']."},";
+                $pointLabel = "Institutos Técnicos y/o Tecnológicos";
+                break;
             default:
                 $datosTemp = "";
                 break;
@@ -2930,6 +3224,10 @@ class ReporteController extends Controller {
                 $datosTemp = "{name: 'Inicial', y: ".round(((100*$entity['cant_ini'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_ini']."}, {name: 'Inicial y Primaria', y: ".round(((100*$entity['cant_ini_pri'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_ini_pri']."}, {name: 'Inicial y Secundaria', y: ".round(((100*$entity['cant_ini_sec'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_ini_sec']."}, {name: 'Inicial, Primaria y Secundaria', y: ".round(((100*$entity['cant_ini_pri_sec'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_ini_pri_sec']."}, {name: 'Primaria', y: ".round(((100*$entity['cant_pri'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_pri']."}, {name: 'Primaria y Secundaria', y: ".round(((100*$entity['cant_pri_sec'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_pri_sec']."}, {name: 'Secundaria', y: ".round(((100*$entity['cant_sec'])/(($entity['cant_nivel']==0) ? 1:$entity['cant_nivel'])),1).", label: ".$entity['cant_sec']."},";
                 $pointLabel = "Unidades Educativas";
                 break;
+            case 12:
+                $datosTemp = "{name: 'Técnicos', y: ".round(((100*$entity['cant_tecnica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnica']."}, {name: 'Tecnológicos', y: ".round(((100*$entity['cant_tecnologica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnologica']."}, {name: 'Técnico Tecnológicos', y: ".round(((100*$entity['cant_tt'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tt']."},";
+                $pointLabel = "Institutos";
+                break;
             default:
                 $datosTemp = "";
                 $pointLabel = "";
@@ -2975,7 +3273,7 @@ class ReporteController extends Controller {
                         pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'
                     },
                     series: [{
-                        name: 'Nivel de Estudio',
+                        name: 'Técnicos y/o Tecnológicos',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
@@ -5207,16 +5505,21 @@ class ReporteController extends Controller {
         
         $datosTemp = "";
         $subTotal = 0;
-        foreach ($entity['dato'] as $key => $dato) {
-            $porcentaje = 0;
-            if ($key == 0){
-                $subTotal = $dato['cantidad'];
-            } else {
-                $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
-                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+        if ($nombreLabel == 1){
+            $nombreLabel = 'Institutos Técnicos y/o Tecnológicos';
+            $datosTemp = "{name: 'Rural', y: ".round(((100*$entity['cant_rural'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_rural']."}, {name: 'Urbana', y: ".round(((100*$entity['cant_urbana'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_urbana']."},";
+        }else{
+            foreach ($entity['dato'] as $key => $dato) {
+                $porcentaje = 0;
+                if ($key == 0){
+                    $subTotal = $dato['cantidad'];
+                } else {
+                    $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
+                    $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                }
             }
-        }                   
-
+        }
+        
         $datos = "   
             function ".$contenedor."Load() {
                  $('#".$contenedor."').highcharts({
@@ -5252,7 +5555,7 @@ class ReporteController extends Controller {
                         pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$nombreLabel."</b> del total<br/>'
                     },
                     series: [{
-                        name: '".$entity['tipo']."',
+                        name: 'Área',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
