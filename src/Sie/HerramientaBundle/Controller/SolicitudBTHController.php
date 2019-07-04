@@ -1799,7 +1799,7 @@ class SolicitudBTHController extends Controller {
                         $entity->setInstitucioneducativa($ue);
                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                         $entity->setGestionTipo($gestiontipo);
-                        -$entity->setFechaRegistro(new \DateTime('now'));                      
+                        $entity->setFechaRegistro(new \DateTime('now'));                      
                         $em->persist($entity);
                         $em->flush();
                     }
