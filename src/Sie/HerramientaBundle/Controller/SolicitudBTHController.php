@@ -433,7 +433,7 @@ class SolicitudBTHController extends Controller {
                                                 ORDER BY 1");
             $query->execute();
             $ue_bth = $query->fetchAll();
-            $es_plena=$ue_bth[0]['cantidad_ue_plena']; dump($es_plena);die;
+            $es_plena=$ue_bth[0]['cantidad_ue_plena']; //dump($es_plena);die;
             /**
              * Verificicacion de que la UE inicio un tramite
              */
@@ -1799,7 +1799,7 @@ class SolicitudBTHController extends Controller {
                         $entity->setInstitucioneducativa($ue);
                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                         $entity->setGestionTipo($gestiontipo);
-                        -$entity->setFechaRegistro(new \DateTime('now'));                      
+                        $entity->setFechaRegistro(new \DateTime('now'));                      
                         $em->persist($entity);
                         $em->flush();
                     }

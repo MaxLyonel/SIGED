@@ -91,6 +91,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $form= $this->createFormBuilder()
                 ->add('solicitud', 'choice', array('required' => true, 'choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
                 ->getForm();
+               $estado =  $this->validainicioTramite($id_Institucion,$gestion);//dump($estado);die;
             return $this->render('SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index.html.twig',array( 'form' => $form->createView(),
                 'id_institucion'=>$id_Institucion,
                 'idflujo'=>$request->get('id'),
@@ -98,10 +99,24 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                 'objespecialidades_ue'=>$especialidades_ue,
                 'ieducativa'=>$infoUe,
                 'iddistrito'=> $infoUe_distrito['codigo_distrito'],
-                //'estado'=>$verificarinicioTramite
-                'estado'=>0
+                'estado'=>$estado                
             ));
         }
+    }
+    public function validainicioTramite($id_institucion,$gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT count(institucioneducativa_humanistico_tecnico.id) as cantidad FROM institucioneducativa_humanistico_tecnico 
+            WHERE institucioneducativa_humanistico_tecnico_tipo_id  = 1 and grado_tipo_id in (5,6)
+            and institucioneducativa_id = $id_institucion AND gestion_tipo_id = $gestion");
+        $query->execute();
+        $valida_ue = $query->fetch();
+        if((int)$valida_ue['cantidad']==0){
+            $estado = 1; // La Unidad Educativa es plena para los grados(5-6) y puede hacer la solicitud
+        }else{
+            $estado = 0; // La Unidad Educativa no plena para los grados(5-6) y no puede hacer la solicitud
+        }
+        
+        return $estado;
     }
     public function obtieneinforue($id_institucion,$gestion){
         $em = $this->getDoctrine()->getManager();
@@ -282,7 +297,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                     $res = 2;//ocurrio error al guardar el trámite
                 }
             }else{
-                $mensaje="Verificar las especialidades a eliminar.";
+                $mensaje="No puede eliminar la(s) especialidades ya que cuenta con información registrada.";
                 return  new JsonResponse(array('estado' => 5, 'msg' => $mensaje));
             }
         }
