@@ -297,7 +297,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                     $res = 2;//ocurrio error al guardar el trámite
                 }
             }else{
-                $mensaje="Verificar las especialidades a eliminar.";
+                $mensaje="No puede eliminar la(s) especialidades ya que cuenta con información registrada.";
                 return  new JsonResponse(array('estado' => 5, 'msg' => $mensaje));
             }
         }
