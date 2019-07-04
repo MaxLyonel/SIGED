@@ -522,7 +522,7 @@
                             success: function (data) {
                                 if (data==1){
                                     swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }});
-                                    location.href = "{{ path('wf_tramite_index') }}";
+                                    location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
                                 }
                                 else{
                                     swal("Su formulario no se envío correctamente");

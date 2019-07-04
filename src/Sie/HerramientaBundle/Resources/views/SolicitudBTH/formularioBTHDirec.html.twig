@@ -350,8 +350,8 @@
                                     success: function (data) {
                                         //console.log(data);
                                         if (data.estado ==1 ){
-                                            swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_index') }}";
+                                            swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );                                           
+                                            location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                                         }
                                         else if(data.estado ==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
@@ -416,7 +416,8 @@
                                         console.log(data);
                                         if (data.estado==1){
                                             swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_index') }}";
+                                            location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                                            
                                         }
                                         else if(data.estado==3 ){
                                             swal("Debe iniciar su trámite como 'Registro Nuevo'");
