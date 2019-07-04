@@ -277,6 +277,12 @@ class WFTramite {
         $tramiteestado = $this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(3);
         $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         
+        $verifica = $this->verificaUsuarioRemitente($usuario,$flujoproceso,$tramite);
+        if($verifica == false){
+            $mensaje['dato'] = false;
+            $mensaje['msg'] = 'El usuario: ' . $usuario->getPersona()->getNombre() .' '. $usuario->getPersona()->getPaterno() .' '. $usuario->getPersona()->getMaterno(). ', no corresponde para recibir la tarea <strong>'. $flujoproceso->getProceso()->getProcesoTipo() . '</strong>.';
+            return $mensaje;
+        }
         $this->em->getConnection()->beginTransaction();
         try {
             /**
@@ -540,6 +546,89 @@ class WFTramite {
         $ubicacionUe = $query->getSingleResult();
 
         return $ubicacionUe;
+    }
+
+    /**
+     * funcion que verifica usuario remitente
+     */
+
+    public function verificaUsuarioRemitente($usuario,$flujoproceso,$tramite)
+    {
+        $nivel = $flujoproceso->getRolTipo()->getLugarNivelTipo();
+
+        if($tramite->getInstitucioneducativa()){
+            $institucioneducativa = $tramite->getInstitucioneducativa();
+        }elseif($tramite->getEstudianteInscripcion()){
+            $institucioneducativa = $tramite->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getInstitucioneducativa();
+        }elseif($tramite->getMaestroInscripcion()){
+            $institucioneducativa = $tramite->getMaestroInscripcion()->getInstitucioneducativa();
+        }elseif($tramite->getApoderadoInscripcion()){
+            $institucioneducativa = $tramite->getApoderadoInscripcion()->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getInstitucioneducativa();
+        }else{
+            $institucioneducativa = null;
+        }
+        //Obtenemos lugar tipo de la tarea en funcion al tramite
+        if ($institucioneducativa){
+            $lugar_tipo_distrito = $institucioneducativa->getleJuridicciongeografica()->getLugarTipoIdDistrito();
+        }else{
+            $wfdatos = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = td.flujoProceso')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("fp.orden=1")
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
+            $lugar_tipo_distrito = $wfdatos[0]->getLugarTipoDistritoId();
+        }
+        
+        $lt = $this->em->getRepository('SieAppWebBundle:LugarTipo')->find($lugar_tipo_distrito);
+        $lugar_tipo_departamento = $lt->getLugarTipo()->getId();
+
+        switch ($nivel->getId()) {
+            case 7:   // Distrito
+                $lugarTipoId = $lugar_tipo_distrito;                
+                break;
+            case 6:   // Departamento
+            case 8:
+                $lugarTipoId = $lugar_tipo_departamento;
+                break;
+            case 0://nivel nacional
+                if($flujoproceso->getRolTipo()->getId() == 8){ // si es tecnico nacional
+                    $lugarTipoId = 1;
+                }
+                break;
+        }
+
+        if($flujoproceso->getRolTipo()->getId() == 9 ){ //director
+            $uRemitente = $this->em->getRepository('SieAppWebBundle:MaestroInscripcion')->createQueryBuilder('mi')
+                        ->select('u')
+                        ->innerJoin('SieAppWebBundle:Usuario','u','with','mi.persona = u.persona')
+                        ->where('mi.institucioneducativa = '. $institucioneducativa->getId())
+                        ->andWhere('mi.gestionTipo = '. (new \DateTime())->format('Y'))   
+                        ->andWhere("mi.cargoTipo in (1,12)")
+                        ->andWhere("mi.esVigenteAdministrativo=true")
+                        ->andWhere("u.esactivo=true")
+                        ->andWhere("u.id=". $usuario->getId())
+                        ->getQuery()
+                        ->getResult();
+         }else{
+            $uRemitente = $this->em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfu')
+                        ->select('wfu')
+                        ->where('wfu.usuario = '. $usuario->getId())
+                        ->andWhere('wfu.flujoProceso = '. $flujoproceso->getId())   
+                        ->andWhere("wfu.esactivo=true")
+                        ->andWhere("wfu.lugarTipoId=". $lugarTipoId)
+                        ->getQuery()
+                        ->getResult();
+        }
+        if ($uRemitente){
+            $valida = true;
+        }else{
+            $valida = false;
+        }
+        return $valida;
     }
 
 }
