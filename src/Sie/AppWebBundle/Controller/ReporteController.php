@@ -1793,12 +1793,18 @@ class ReporteController extends Controller {
         $entityEstadistica = $this->buscaEstadisticaInstitutosTecnicosAreaRol($codigoArea,$rolUsuario);
         //dump($subEntidades);die;
        
-        $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos",$gestionActual,12,"chartContainerTecnicoTecnologico");
-        $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun área",$gestionProcesada,1,"chartContainerArea");
-        $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos según Dependencia",$gestionActual,12,"chartContainerDependencia");
-        
+        if($rolUsuario <> 9){
+            $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos",$gestionActual,12,"chartContainerTecnicoTecnologico");
+            $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun área",$gestionProcesada,1,"chartContainerArea");
+            $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos según Dependencia",$gestionActual,12,"chartContainerDependencia");
+        }else{
+            $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Carreras y/o Cursos",$gestionActual,13,"chartContainerTecnicoTecnologico");
+            $chartArea = '';
+            $chartDependencia = '';
+        }
+
         $link = true;
-        if ($rolUsuario == 7){
+        if ($rolUsuario == 9){
             $link = false;
         }
 
@@ -2174,7 +2180,10 @@ class ReporteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $queryEntidad = $em->getConnection()->prepare("
+        if($rol == 8 or $rol == 0) // Tecnico Nacional
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                
             SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar as nombre, 7 as rolUsuario, coalesce(count(inst.id),0) as cantidad
             FROM institucioneducativa AS inst
             INNER JOIN jurisdiccion_geografica AS jurg ON inst.le_juridicciongeografica_id = jurg.id
@@ -2187,24 +2196,10 @@ class ReporteController extends Controller {
             AND inst.estadoinstitucion_tipo_id = 10
             AND inst.institucioneducativa_acreditacion_tipo_id = 2
             group by lt4.codigo, lt4.lugar
-            order by lt4.codigo, lt4.lugar"); 
-
-        if($rol == 9 or $rol == 5) // Director o Administrativo
-        {                 
-        }  
-
-        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
-        {
-            $queryEntidad = $em->getConnection()->prepare("
-                    select 'Unidad Educativa' as nombreArea, institucioneducativa_id as codigo, institucioneducativa_id::varchar||' - '||institucioneducativa  as nombre, 9 as rolUsuario
-                    , coalesce(count(institucioneducativa_id),0) as cantidad
-                    from vm_instituciones_educativas 
-                    where orgcurricular_id = 1 and estadoinstitucion_id = 10 and institucioneducativa_id not in (1,2,3,4,5,6,7,8,9) and distrito_codigo = '".$area."'
-                    group by institucioneducativa_id, institucioneducativa
-                    order by institucioneducativa_id, institucioneducativa
-                ");  
-        }  
-
+            order by lt4.codigo, lt4.lugar
+            ");    
+        }
+        
         if($rol == 7) // Tecnico Departamental
         {
             $queryEntidad = $em->getConnection()->prepare("
@@ -2223,30 +2218,24 @@ class ReporteController extends Controller {
             group by inst.id, institucioneducativa
             order by inst.id, institucioneducativa");  
         } 
-
-        if($rol == 8 or $rol == 20) // Tecnico Nacional
-        {
+        
+        if($rol == 9) // Director o Administrativo
+        {   
             $queryEntidad = $em->getConnection()->prepare("
-                
-            SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar as nombre, 7 as rolUsuario, coalesce(count(inst.id),0) as cantidad
+            select 'Instituto Tecnico y/o Tecnologico' as nombreArea, inst.id as codigo, inst.id::varchar||' - '||inst.institucioneducativa  as nombre, 9 as rolUsuario, 1 as cantidad
             FROM institucioneducativa AS inst
-            INNER JOIN jurisdiccion_geografica AS jurg ON inst.le_juridicciongeografica_id = jurg.id
-            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
-            LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
-            WHERE inst.institucioneducativa_tipo_id IN (7,8,9) 
-            AND inst.estadoinstitucion_tipo_id = 10
-            AND inst.institucioneducativa_acreditacion_tipo_id = 2
-            group by lt4.codigo, lt4.lugar
-            order by lt4.codigo, lt4.lugar
-            ");    
-        } 
+            WHERE inst.id = ". $area);
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+        }  
+
+        
 
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll(); 
-        if (count($objEntidad)>0 and $rol != 9 and $rol != 5){
+        if (count($objEntidad)>0){
             return $objEntidad;
         } else {
             return '';
@@ -2624,34 +2613,27 @@ class ReporteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $queryEntidad = $em->getConnection()->prepare("
-        select
-        sum(case ie.dependencia_tipo_id when 1 then 1 when 5 then 1 else 0 end) as cant_fiscal,
-        sum(case ie.dependencia_tipo_id when 2 then 1 else 0 end) as cant_convenio,
-        sum(case ie.dependencia_tipo_id when 3 then 1 else 0 end) as cant_privada,
-        sum(case ie.dependencia_tipo_id when 1 then 1 when 2 then 1 when 3 then 1 else 0 end) as cant_dependencia,
-        sum(case lt.area2001 when 'R' then 1 else 0 end) as cant_rural,
-        sum(case lt.area2001 when 'U' then 1 else 0 end) as cant_urbana,
-        sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
-        sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
-        sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
-        sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
-        FROM institucioneducativa AS ie
-        INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
-        LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
-        WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
-        AND ie.estadoinstitucion_tipo_id = 10
-        AND ie.institucioneducativa_acreditacion_tipo_id = 2"); 
-
-        if($rol == 9 or $rol == 5) // Director o Administrativo
-        {
-            
-        }  
-
-        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
-        {
-            
-        }  
+        if($rol == 8 or $rol == 0) // Tecnico Nacional
+        {            
+            $queryEntidad = $em->getConnection()->prepare("   
+            select 
+            sum(case ie.dependencia_tipo_id when 1 then 1 when 5 then 1 else 0 end) as cant_fiscal,
+            sum(case ie.dependencia_tipo_id when 2 then 1 else 0 end) as cant_convenio,
+            sum(case ie.dependencia_tipo_id when 3 then 1 else 0 end) as cant_privada,
+            sum(case ie.dependencia_tipo_id when 1 then 1 when 2 then 1 when 3 then 1 else 0 end) as cant_dependencia,
+            sum(case lt.area2001 when 'R' then 1 else 0 end) as cant_rural,
+            sum(case lt.area2001 when 'U' then 1 else 0 end) as cant_urbana,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
+            sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
+            sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
+            FROM institucioneducativa AS ie
+            INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 2");    
+        } 
 
         if($rol == 7) // Tecnico Departamental
         {
@@ -2680,27 +2662,24 @@ class ReporteController extends Controller {
             AND lt4.codigo='". $area ."'");  
         } 
 
-        if($rol == 8 or $rol == 20) // Tecnico Nacional
-        {            
-            $queryEntidad = $em->getConnection()->prepare("   
-            select 
-            sum(case ie.dependencia_tipo_id when 1 then 1 when 5 then 1 else 0 end) as cant_fiscal,
-            sum(case ie.dependencia_tipo_id when 2 then 1 else 0 end) as cant_convenio,
-            sum(case ie.dependencia_tipo_id when 3 then 1 else 0 end) as cant_privada,
-            sum(case ie.dependencia_tipo_id when 1 then 1 when 2 then 1 when 3 then 1 else 0 end) as cant_dependencia,
-            sum(case lt.area2001 when 'R' then 1 else 0 end) as cant_rural,
-            sum(case lt.area2001 when 'U' then 1 else 0 end) as cant_urbana,
-            sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
-            sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
-            sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
-            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
-            FROM institucioneducativa AS ie
-            INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
-            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
-            WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
-            AND ie.estadoinstitucion_tipo_id = 10
-            AND ie.institucioneducativa_acreditacion_tipo_id = 2");    
-        } 
+        if($rol == 9 ) // Por instituto
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+            SELECT
+            sum(case area.id when 200 then 1 else 0 end) as cant_cursos,
+            sum(case when area.id <> 200 then 1 else 0 end) as cant_carreras,
+            count(*) as cant_total
+            FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
+            INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
+            INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
+            INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id
+            WHERE instituto.id = ". $area ."  AND autorizado.es_vigente is true"); 
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            
+        }  
 
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll(); 
@@ -3199,6 +3178,7 @@ class ReporteController extends Controller {
      * @return chart
      */
     public function chartDonut3dInformacionGeneral($entity,$titulo,$subTitulo,$tipoReporte,$contenedor) {
+        $nameseries = 'Nivel de Estudio';
         switch ($tipoReporte) {
             case 1:
                 $datosTemp = "{name: 'No Incorporados', y: ".round(((100*$entity['cant_no_incorporado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_no_incorporado']."}, {name: 'Retiros Abandono', y: ".round(((100*$entity['cant_retiro_abandono'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_abandono']."}, {name: 'Retiros Traslado', y: ".round(((100*$entity['cant_retiro_traslado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_traslado']."}, {name: 'Retiros', y: ".round(((100*$entity['cant_retiro'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro']."}, {name: 'Retiros Doble Promoción', y: ".round(((100*$entity['cant_retiro_doble_promocion'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_doble_promocion']."}, {name: 'Efectivos', y: ".round(((100*$entity['cant_efectivo'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_efectivo']."},";
@@ -3227,6 +3207,12 @@ class ReporteController extends Controller {
             case 12:
                 $datosTemp = "{name: 'Técnicos', y: ".round(((100*$entity['cant_tecnica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnica']."}, {name: 'Tecnológicos', y: ".round(((100*$entity['cant_tecnologica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnologica']."}, {name: 'Técnico Tecnológicos', y: ".round(((100*$entity['cant_tt'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tt']."},";
                 $pointLabel = "Institutos";
+                $nameseries = 'Técnicos y/o Tecnológicos';
+                break;
+            case 13:
+                $datosTemp = "{name: 'Carreras', y: ".round(((100*$entity['cant_carreras'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_carreras']."}, {name: 'Cursos', y: ".round(((100*$entity['cant_cursos'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_cursos']."},";
+                $pointLabel = "";
+                $nameseries = 'Carreras y/o Cursos';
                 break;
             default:
                 $datosTemp = "";
@@ -3273,7 +3259,7 @@ class ReporteController extends Controller {
                         pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'
                     },
                     series: [{
-                        name: 'Técnicos y/o Tecnológicos',
+                        name: '". $nameseries ."',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
