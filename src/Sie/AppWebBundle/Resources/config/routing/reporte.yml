@@ -98,4 +98,14 @@ reporte_adultos_index:
     path:     /adultos
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex }
 
+reporte_superior_directorio_itts:
+    path:     /directorio/itts/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioItts }
 
+reporte_superior_directorio_itts_busqueda:
+    path:     /directorio/itts/busqueda/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsBusquedaSuperior }
+
+reporte_superior_directorio_itts_detalle:
+    path:     /directorio/itts/detalle/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsDetalleSuperior }

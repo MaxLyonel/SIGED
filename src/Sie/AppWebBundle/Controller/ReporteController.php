@@ -6192,5 +6192,148 @@ class ReporteController extends Controller {
         return $response;
     }
 
+    /**
+     * Página Directorio de Institutos Técnicos y Tecnológicos
+     * AFiengo
+     * @param Request $request
+     * @return type
+     */
+    public function directorioIttsAction(Request $request) {  
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
 
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+
+        $em = $this->getDoctrine()->getManager();
+        $entityDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => 0));
+        $arrayDependencia = [1,2,3];
+
+        return $this->render('SieAppWebBundle:Reporte:directorioItts.html.twig', array(
+            'infoEntidad'=>'',
+            'form' => $defaultController->createLoginForm()->createView(),
+            'formBusqueda' => $this->creaFormularioBusquedaInstituto('reporte_superior_directorio_itts_busqueda','',$entityDepartamento, $arrayDependencia)->createView()
+        ));
+    }
+
+    private function creaFormularioBusquedaInstituto($routing, $ue, $entityDepartamento, $arrayDependencia) {
+        $entityDependencia = ['1'=>'Fiscal', '2'=>'Convenio', '3'=>'Privado'];
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('itt', 'text', array('label' => 'Código RITT o Nombre del Instituto', 'required' => false, 'attr' => array('value' => $ue, 'class' => 'form-control no-border-left', 'placeholder' => 'Código RITT o Nombre del Instituto', 'style' => 'text-transform:uppercase')))
+            ->add('departamento', 'entity', array('label' => 'Departamento.', 'empty_value' => 'Todos', 'data' => $entityDepartamento, 'required' => false, 'attr' => array('class' => 'form-control mb-20'), 'class' => 'Sie\AppWebBundle\Entity\DepartamentoTipo',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('dt')
+                            ->orderBy('dt.id', 'ASC')
+                            ->where('dt.id != :codDepartamento')
+                            ->setParameter('codDepartamento', 0);
+                },
+            ))
+            ->add('dependencia', 'choice', ['choices' => $entityDependencia, 'data' => $arrayDependencia, 'multiple' => true, 'expanded' => true])
+            ->add('submit', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-success')))
+            ->getForm();
+        return $form;
+    }
+
+    /**
+     * Pagina Unidades Educativas en funcion a criterios de búsqueda
+     * AFiengo
+     * @param Request $request
+     * @return type
+     */
+    public function directorioIttsBusquedaSuperiorAction(Request $request) {  
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+
+        $request = $this->getRequest();
+        $this->route_anterior = $request->get('_route');
+        $this->var_anterior = $request->query->all();
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $form = $request->get('form');
+            if ($form) {
+                $codigoDepartamento = $form['departamento'];
+                if ($codigoDepartamento == "") {
+                    $codigoDepartamento = 0;
+                }
+                $textUnidadEducativa = $form['itt'];
+                $dependencia = isset($form['dependencia']) ? $form['dependencia'] : array();
+                $dependenciaList = "";
+                for($i = 0; $i < count($dependencia); $i++) {
+                    if($dependenciaList==""){
+                        $dependenciaList = $dependencia[$i];
+                    } else {
+                        $dependenciaList = $dependenciaList.",".$dependencia[$i];
+                    }
+                }
+                if($dependenciaList==""){
+                    $dependenciaList = "1,2,3";
+                }
+
+                $em = $this->getDoctrine()->getManager();
+                $query = $em->getConnection()->prepare("
+                    select ie.id as codigo, ie.institucioneducativa as institucioneducativa, det.dependencia, eit.id as estadoinstitucion_id, eit.estadoinstitucion, dep.lugar as departamento, jg.direccion as direccion
+                    , oct.orgcurricula as orgcurricular, loc.lugar as localidad, can.lugar as canton, sec.lugar as seccion
+                    , pro.lugar as provincia, jg.zona
+                    from institucioneducativa as ie
+                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                    inner join ( SELECT id,codigo,lugar,lugar_tipo_id,area2001 AS area FROM lugar_tipo WHERE lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    inner join dependencia_tipo as det on det.id = ie.dependencia_tipo_id
+                    inner join estadoinstitucion_tipo as eit on eit.id = ie.estadoinstitucion_tipo_id
+                    inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id                    
+                    where ie.institucioneducativa_acreditacion_tipo_id = 2 
+                    and (cast(ie.id as varchar) = replace('".$textUnidadEducativa."',' ','%') or ie.institucioneducativa like '%'||replace(UPPER('".$textUnidadEducativa."'),' ','%')||'%')
+                    and (case ".$codigoDepartamento." when 0 then dep.codigo != '0' else dep.codigo = '".$codigoDepartamento."' end)
+                    and det.id in (".$dependenciaList.")
+                    order by orgcurricular, departamento, estadoinstitucion, seccion
+                ");
+                $query->execute();
+                $entityInstitucionEducativa = $query->fetchAll();
+
+                $infoBusqueda = serialize(array(
+                    'unidadeducativa' => $textUnidadEducativa,
+                    'departamento' => $codigoDepartamento,
+                    'dependencia' => $dependencia
+                ));
+            }  else {   
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Formulario enviado de forma incorrecta, intente nuevamente'));
+                return $this->redirectToRoute('reporte_regular_directorio_institucioneducativa');
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar información, intente nuevamente'));
+            return $this->redirectToRoute('reporte_regular_directorio_institucioneducativa');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entityDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $codigoDepartamento ));
+
+
+        return $this->render('SieAppWebBundle:Reporte:directorioIttSuperior.html.twig', array(
+            'infoEntidad' => '',
+            'infoBusqueda' => $infoBusqueda,
+            'entityBusqueda'=> $entityInstitucionEducativa,
+            'form' => $defaultController->createLoginForm()->createView(),
+            'dependencia' => $dependencia,
+            'formBusqueda' => $this->creaFormularioBusquedaInstituto('reporte_superior_directorio_itts_busqueda',$textUnidadEducativa, $entityDepartamento, $dependencia)->createView()
+        ));
+    }
 }
