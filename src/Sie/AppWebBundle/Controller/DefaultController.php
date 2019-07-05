@@ -87,7 +87,7 @@ class DefaultController extends Controller {
             case '172.20.196.9:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
-            case 'localhost:8081':
+            case 'alternativa.local':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -282,11 +282,11 @@ class DefaultController extends Controller {
                 //$sysbutton = true;
                 //$layout = 'layoutHerramientaAlternativa.html.twig';
                 //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                $sysname = 'Procesos';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutProcesos.html.twig';
-                $this->session->set('pathSystem', "SieProcesosBundle");
+                $sysname = 'JUEGOS';
+                $sysporlet = 'jdp';
+                $sysbutton = false;
+                $layout = 'layoutJuegos.html.twig';
+                $this->session->set('pathSystem', "SieJuegosBundle");
                 break;                
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
@@ -375,6 +375,20 @@ class DefaultController extends Controller {
             case 'sigee.sie.gob.bo':
                 $this->session->set('pathSystem', "SieGisBundle");
                 return $this->render('SieGisBundle:Default:index.html.twig');
+                break;
+            case 'sigeeeee.sie.gob.bo':
+                $sysname = 'Herramienta';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                break;
+            case 'alternativaaa.sie.gob.bo':
+                $sysname = 'Herramienta Alternativa';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramientaAlternativa.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
         }
 

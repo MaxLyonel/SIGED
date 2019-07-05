@@ -45,7 +45,7 @@
                 <div class="col-xs-6">
                     <h4>
                         <label class="glyphicon glyphicon-barcode required" for="form_codigoRude"> Código Rude</label></h4>
-                    {% if  onoffcalidad == 'v' %}    
+                    {% if  onoffcalidad == 't' %}    
                         <input id="form_codigoRudea" name="form[codigoRudea]" required="required" style="text-transform:uppercase" maxlength="20" class="form-control" type="text" value="{{vala}}" readonly>                                            
                     {% else %}    
                         <input id="form_codigoRudea" name="form[codigoRudea]" required="required" style="text-transform:uppercase" maxlength="20" class="form-control" type="text" value="{{vala}}">                                            
@@ -54,12 +54,13 @@
                 <div class="col-xs-6">
                     <h4>
                         <label class="glyphicon glyphicon-barcode required" for="form_codigoRude"> Código Rude</label></h4>
-                    {% if  onoffcalidad == 'v' %}    
+                    {% if  onoffcalidad == 't' %}    
                         <input id="form_codigoRudeb" name="form[codigoRudeb]" required="required" style="text-transform:uppercase" maxlength="20" class="form-control" type="text" value="{{valb}}" readonly>                                            
                     {% else %}    
                         <input id="form_codigoRudeb" name="form[codigoRudeb]" required="required" style="text-transform:uppercase" maxlength="20" class="form-control" type="text" value="{{valb}}">                                            
                     {% endif %}                    
-                </div>                
+                </div>
+                <input type="hidden" id="form_onoffcalidad" name="form[onoffcalidad]" value="{{onoffcalidad}}">              
             </div>
             <HR>
             <div class="row">                    
@@ -102,10 +103,14 @@
         var verhistorialunificar = function () {
             rudea = $("#form_codigoRudea").val();
             rudeb = $("#form_codigoRudeb").val();
-            //alert(rudea);
+            onoffcalidad = $("#form_onoffcalidad").val();
+            if(rudea == '' || rudeb == ''){
+                alert('Se requieren dos códigos rude para unificar');
+                return false;
+            }
             $.ajax({
                 type: 'get',
-                url: Routing.generate('unificacion_ver_historial', {'rudea': rudea, 'rudeb': rudeb}),
+                url: Routing.generate('unificacion_ver_historial', {'rudea': rudea, 'rudeb': rudeb,'onoffcalidad': onoffcalidad }),
                 beforeSend: function () {
                     $("#result").empty();
                     $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');

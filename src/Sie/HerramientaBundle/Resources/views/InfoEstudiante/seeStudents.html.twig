@@ -212,7 +212,7 @@
                                     {% endif %}
 
                                     {# REGISTRO DE NOTAS #}
-                                    {% if app.session.get('acceso_total') %}
+                                    {% if app.session.get('acceso_total') or app.session.get('roluser') == 8 %}
                                         {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear')) %}
                                             {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
                                             {% if gestion >= 2019 and nivel == 13 and grado >= 5 %}
@@ -235,7 +235,7 @@
                                     {% endif %}
 
                                     {# IMPRESION DE LIBRETA #}
-                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
+                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir or app.session.get('roluser') == 8 %}
                                         {% if (gestion == app.session.get('currentyear')) or (gestion < app.session.get('currentyear') and data.estadomatriculaId != 4) %}
                                             <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                               <i class="fa fa-archive" style="color:#FFFFFF"></i>

@@ -287,11 +287,20 @@ class ConsolidationSieController extends Controller {
                 ////////////////////////////////////////////////////////////////////new new by krlos
                 // //make the temp dir name
                 $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
+
+                if (is_readable($this->get('kernel')->getRootDir() . '/../web/empfiles')) {
+                    
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                }
+                //check if the file exist to create the same
                 if (!file_exists($dirtmp)) {
                     mkdir($dirtmp, 0770);
                 }else{
                   system('rm -fr ' . $dirtmp.'/*');
                 }
+
 
                 //move the file emp to the directory temp
                 $file = $oFile->move($dirtmp, $originalName);

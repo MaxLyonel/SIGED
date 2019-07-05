@@ -52,6 +52,7 @@
                                         <th class="text-center" style="min-width:5px">No.</th>
                                         <th>Operativo</th>
                                         <th>Departamento</th>
+                                        <th>Cod. Distrito</th>
                                         <th>Distrito</th>
                                         <th>Gestión</th>
                                         <th>Fecha Actual</th>
@@ -68,6 +69,7 @@
                                         <th class="text-center" style="min-width:5px">No.</th>
                                         <th>Operativo</th>
                                         <th>Departamento</th>
+                                        <th>Cod. Distrito</th>
                                         <th>Distrito</th>
                                         <th>Gestión</th>
                                         <th>Fecha Actual</th>
@@ -85,6 +87,7 @@
                                             <td class="text-center" style="min-width:5px">{{ loop.index }}</td>
                                             <td>{{ entity.operativoTipo.operativo }}</td>
                                             <td>{{ entity.distritoTipo.departamentoTipo.departamento }}</td>
+                                            <td>{{ entity.distritoTipo.id }}</td>
                                             <td>{{ entity.distritoTipo.distrito }}</td>
                                             <td>{{ entity.gestionTipo.id }}</td>
                                             <td>{{ "now"|date('d-m-Y') }}</td>

@@ -167,5 +167,58 @@ class EstudianteInscripcionJuegosRepository extends EntityRepository
         ;
         return $qb->getQuery()->getResult();
     }
+
+	/**
+     * get la lista de registros  de un estudiante por inscripcion y gestion
+     * @param type $distrito
+     * @param type $gestion
+     * @param type $nivel
+     * @param type $disciplina
+     * @param type $prueba
+     * @param type $genero
+     * @return return object of students per course
+     */
+    public function getListInscriptionStudentPerGestion($estudianteInscripcionId, $gestion) {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        
+        $qb
+                ->select("ft.id as fase, ie.id as ue, ie.institucioneducativa as institucioneducativa, e.id, lt6.lugar as distrito, ct.id as circunscripcion, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, prt.id as pruebaId, prt.prueba, dit.id as disciplinaId, dit.disciplina, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno,ptp.pais,ltd.lugar,ltp.lugar, e.localidadNac, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, eij.id as eInsJueId, coalesce(eeij.equipoId,0) as equipoId, coalesce(eeij.equipoNombre,'') as equipoNombre, ppt.id as pruebaTipoId, ppt.disciplinaParticipacion as pruebaTipo, coalesce(eij.posicion,0) as posicion")
+                ->from('SieAppWebBundle:JdpEstudianteInscripcionJuegos', 'eij')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = eij.estudianteInscripcion')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->leftjoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante = e.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'iec.nivelTipo = nt.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'iec.gradoTipo = gt.id')
+                ->leftJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'iec.paraleloTipo = pt.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'iec.turnoTipo = tt.id')
+                ->leftjoin('SieAppWebBundle:PaisTipo', 'ptp', 'WITH', 'e.paisTipo = ptp.id')
+                ->leftjoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'e.lugarNacTipo = ltd.id')
+                ->leftjoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'e.lugarProvNacTipo = ltp.id')
+                ->leftjoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'ei.estadomatriculaTipo = emt.id')
+                ->leftjoin('SieAppWebBundle:JdpFaseTipo', 'ft', 'WITH', 'ft.id = eij.faseTipo')
+                ->leftjoin('SieAppWebBundle:JdpPruebaTipo', 'prt', 'WITH', 'prt.id = eij.pruebaTipo')
+                ->leftJoin('SieAppWebBundle:JdpPruebaParticipacionTipo','ppt','WITH','ppt.id = prt.pruebaParticipacionTipo')
+                ->leftjoin('SieAppWebBundle:JdpDisciplinaTipo', 'dit', 'WITH', 'dit.id = prt.disciplinaTipo')
+                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica') 
+                ->leftjoin('SieAppWebBundle:CircunscripcionTipo', 'ct', 'WITH', 'ct.id = jg.circunscripcionTipo')       
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
+                ->leftJoin('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos','eeij','WITH','eeij.estudianteInscripcionJuegos = eij.id')
+                ->where('eij.gestionTipo = :gestion')
+                ->andwhere('ei.id = :inscripcion')              
+                ->setParameter('gestion', $gestion)
+                ->setParameter('inscripcion', $estudianteInscripcionId)
+                ->orderBy('ie.id, dit.id, prt.id, g.id, ft.id, e.paterno, e.materno, e.nombre')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }
 

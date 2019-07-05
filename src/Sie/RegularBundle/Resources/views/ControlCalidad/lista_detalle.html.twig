@@ -36,7 +36,7 @@
         <div class="portlet-body">
             <div class="panel-body panel-primary">
                 <div id="no-more-tables" class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover cf dataTable">
+                    <table class="table table-bordered table-hover cf dataTable">
                         <thead class="cf">
                             <tr>
                                 <th>No.</th>
@@ -112,11 +112,13 @@
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>
                                             {% elseif detalle.solucionTipoId == 2 %}
+                                                {# {{dump(detalle)}} #}
                                                 <form action="{{path('unificacion_index_calidad')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
                                                     <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
                                                     <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
                                                     <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>
                                             {% endif %}
