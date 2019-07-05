@@ -154,6 +154,12 @@ class WFTramite {
         $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         $this->em->getConnection()->beginTransaction();
+
+        if($tramiteDetalle->getUsuarioRemitente()->getId() == $usuario){
+            $mensaje['dato'] = false;
+            $mensaje['msg'] = '¡Error, tramite no enviado pues el usuario remitente no corresponde.!';
+            return $mensaje;
+        }
         try {
             /**
             * asigana usuario destinatario
