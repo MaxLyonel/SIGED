@@ -357,9 +357,6 @@ class WFTramite {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
             $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
             $tramite->setTramite($tramiteDetalle->getTramiteDetalle()->getId());
-            //dump($tramite,$tramiteDetalle);die;
-            $this->em->persist($tramite);
-            $this->em->flush();
             $this->em->remove($tramiteDetalle);
             $this->em->flush();
             //dump($tramite);die;
