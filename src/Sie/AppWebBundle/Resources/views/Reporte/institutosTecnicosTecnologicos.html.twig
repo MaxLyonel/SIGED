@@ -44,7 +44,6 @@
                     <!--/ End widget newsletter -->
                 </div>
             </div><!-- /.row -->
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="page-content">
@@ -72,23 +71,9 @@
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
                             </div>  
                             <div class="pull-right">
-                            {% if 1 == 2 %}
-                                {% if ingresaAdmin == 1 %}
-                                    <button id="tour-13" onclick="document.forms['formEstadisticaRegularPdfTemp'].submit();" title="Descargar en formato PDF" class="btn btn-primary">
-                                        <i class="fa fa-file-pdf-o"></i>
-                                    </button>
-                                {% endif %} 
-                                <button id="tour-13" onclick="document.forms['formEstadisticaRegularPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button id="tour-14" onclick="document.forms['formEstadisticaRegularXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                <button id="tour-14" onclick="document.forms['formEstadisticaRegularInstitucionEducativaListaXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-lilac">
                                     <i class="fa fa-file-excel-o"></i>
                                 </button>
-                            {% endif %}
-                            <button id="tour-14" onclick="document.forms['formEstadisticaRegularInstitucionEducativaListaXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-lilac">
-                                <i class="fa fa-file-excel-o"></i>
-                            </button>
-                            
                             </div>     
                             <div class="clearfix"></div>
                         </div>
@@ -104,14 +89,14 @@
                         </div><!-- /.panel-heading -->
                         <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body"> 
                             {% if infoEstadistica is defined %}
-                                <span class="text-primary pull-right"><b>{{(infoEstadistica['cant_total'])|number_format(0, ',', '.')}}</b></span><span class="text-primary"><b>Total</b></span>
+                                <span class="text-primary pull-right"><b>{{(infoEstadistica['cant_total'])|number_format(0, ',', '.')}}</b></span><span class="text-primary"><b>{% if link %} Total {% else %} Total Carreras y/o Cursos {% endif %}</b></span>
                                 <div class="progress progress-xs">
                                     <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                     </div>
                                 </div><!-- /.progress -->   
                             {% endif %}       
-                            {% set contadorColor = 0 %}      
-                            {% for data in infoSubEntidad%}
+                            {% set contadorColor = 0 %} 
+                            {% for data in infoSubEntidad %}
                                 {% set cantidad = data.cantidad %}  
                                 {% set total = infoEstadistica['cant_total'] %} 
                                 {% set porcentaje = (cantidad*100)/(total)%} 
@@ -136,11 +121,11 @@
                                     <a class="text-inverse" style="text-decoration:none;">
                                         <span class="pull-right" style="width:50px; text-align:right"><b></b></span><span class="">{{nombre}}</span>
                                     </a>    
-                                    <div class="progress progress-xs">
+                                    {# <div class="progress progress-xs">
                                         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%">
                                             
                                         </div>
-                                    </div><!-- /.progress -->
+                                    </div><!-- /.progress --> #}
                                 {% endif %}
                             {% endfor %}
                         </div><!-- /.panel-body -->
@@ -202,6 +187,7 @@
                         </div>
                     </div>
                 </div>
+                {% if link %}
                 <div class="row">                                       
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
@@ -261,30 +247,9 @@
                         </div>
                     </div>
                 </div> 
+                {% endif %}
             </div>        
         </div>
-        {# <div class="row">
-            <div class="alert alert-info">
-                <span class="alert-icon"><i class="fa fa-info"></i></span>
-                <div class="notification-info">
-                    <ul class="clearfix notification-meta">
-                        
-                        <li class="pull-left notification-sender"><span><a>Nivel educativo: </a></span> Se refiere a la estructura del subsistema de educación regular, que comprende a los niveles: i) Inicial en familia comunitaria; ii) Primaria comunitaria vocacional; y, iii) Secundaria comunitaria productiva. </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Unidad Educativa Fiscal o Estatal: </a></span> Instituciones financiadas y administradas por el Estado. Por tanto, son gratuitas. </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Unidad Educativa de Convenio: </a></span> Instituciones financiadas por privados y el Estado, pero administradas por privados. Por lo tanto, no son necesariamente gratuitas. </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Unidad Educativa Privada: </a></span> Instituciones financiadas y administradas por privados. Por tanto, no son de carácter gratuito.&emsp; </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                    </ul>
-                </div>
-            </div> 
-        </div> #}
     </div>
     <!--/ END ADDITIONAL ELEMENT -->
     <script>
@@ -296,8 +261,6 @@
                     thousandsSep: '.'
                 }
             });
-
-            
             {% autoescape %}
                 {% if mensaje is defined %}
                     {{ mensaje|raw }}   
@@ -307,7 +270,6 @@
             {% autoescape %}
                 {{ datoGraficoInstitutos|raw }}
             {% endautoescape %}
-
             {% autoescape %}
                 {{ datoGraficoArea|raw }}
             {% endautoescape %}
@@ -315,11 +277,12 @@
                 {{ datoGraficoDependencia|raw }}
             {% endautoescape %}
 
-
             $(function () {
-                chartContainerTecnicoTecnologicoLoad();                 
-                chartContainerAreaLoad(); 
-                chartContainerDependenciaLoad(); 
+                chartContainerTecnicoTecnologicoLoad();
+                {% if link %} 
+                    chartContainerAreaLoad(); 
+                    chartContainerDependenciaLoad(); 
+                {% endif %}
             });  
 
             function seeGraphic (infoTipo,infoCodigo,infoRol) {
