@@ -22,6 +22,12 @@ tramite_modificacion_calificaciones_formulario_imprimir:
     path:     /formularioImprimir
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioImprimir }
 
+tramite_modificacion_calificaciones_formulario_obtener_datos:
+    path:     /formularioObtenerDatos
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioObtenerDatos }
+    options:
+        expose: true
+
 # DISTRITO
 
 tramite_modificacion_calificaciones_recepcion_verifica_distrito:

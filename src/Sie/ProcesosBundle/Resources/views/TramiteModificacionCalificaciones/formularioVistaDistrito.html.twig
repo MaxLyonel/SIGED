@@ -183,13 +183,13 @@
                                 </label>
                             </div>
                             <textarea v-if="procedente == 0" name="obs" id="" cols="30" rows="5" class="form-control" v-model="obs" placeholder="Registre una observación"></textarea>
+                            <br>
                             <button type="button" v-on:click="enviarFormulario" class="btn btn-primary">Enviar</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     </div>
 {% endblock %}
@@ -217,6 +217,8 @@
                             'warning'
                         );
                         return;
+                    }else if(this.procedente == 1){
+                        this.obs = '';
                     }
                     axios.post(Routing.generate('tramite_modificacion_calificaciones_deriva_distrito', { 
                         idTramite: '{{idtramite}}',
