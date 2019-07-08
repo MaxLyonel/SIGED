@@ -130,7 +130,7 @@ class WfTramiteController extends Controller
                 ->getQuery()
                 ->getResult();
             if($wfusuario){
-                return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));
+                return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id,'tipo'=>'idflujo'));
             }else{
                 $request->getSession()
                         ->getFlashBag()
@@ -146,7 +146,7 @@ class WfTramiteController extends Controller
                 $query->execute();
                 $aTuicion = $query->fetchAll();
                 if ($aTuicion[0]['get_ue_tuicion']) {
-                    return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));  
+                    return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id,'tipo'=>'idflujo'));  
                 }else{
                     $request->getSession()
                             ->getFlashBag()
@@ -215,6 +215,7 @@ class WfTramiteController extends Controller
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $id = $request->get('id');
+        //dump($id);die;
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -229,7 +230,8 @@ class WfTramiteController extends Controller
         //dump($flujoproceso);die;
         //Verificamos si tiene competencia
         if($rol == $flujoproceso->getRolTipo()->getId()){
-            return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId()));
+            //dump($flujoproceso->getRutaFormulario());die;
+            return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId(),'tipo'=>'idtramite'));
         }else{
             $request->getSession()
                     ->getFlashBag()

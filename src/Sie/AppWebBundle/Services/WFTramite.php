@@ -153,13 +153,14 @@ class WFTramite {
         $usuario = $this->em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
         $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $this->em->getConnection()->beginTransaction();
-
-        if( $usuario and $tramiteDetalle->getUsuarioRemitente()->getId() == $usuario){
+        
+        if( !$usuario or $tramiteDetalle->getUsuarioRemitente()->getId() != $usuario->getId()){
             $mensaje['dato'] = false;
             $mensaje['msg'] = '¡Error, tramite no enviado pues el usuario remitente no corresponde.!';
             return $mensaje;
         }
+
+        $this->em->getConnection()->beginTransaction();
         try {
             /**
             * asigana usuario destinatario
@@ -273,7 +274,7 @@ class WFTramite {
     }
 
     /**
-     * funcion q guarda un tramite como recibido
+     * funcion que guarda un tramite como recibido
      */
     public function guardarTramiteRecibido($usuario,$tarea,$idtramite)
     {
@@ -286,7 +287,7 @@ class WFTramite {
         $verifica = $this->verificaUsuarioRemitente($usuario,$flujoproceso,$tramite);
         if($verifica == false){
             $mensaje['dato'] = false;
-            $mensaje['msg'] = 'El usuario: ' . $usuario->getPersona()->getNombre() .' '. $usuario->getPersona()->getPaterno() .' '. $usuario->getPersona()->getMaterno(). ', no corresponde para recibir la tarea <strong>'. $flujoproceso->getProceso()->getProcesoTipo() . '</strong>.';
+            $mensaje['msg'] = 'El usuario, no corresponde para recibir la tarea <strong>'. $flujoproceso->getProceso()->getProcesoTipo() . '</strong>.';
             return $mensaje;
         }
         $this->em->getConnection()->beginTransaction();
@@ -323,43 +324,71 @@ class WFTramite {
             return $mensaje;
         }
     }
-
+    
+    /**
+     * funcion que elimina tramite nuevo
+     */
     public function eliminarTramiteNuevo($idtramite)
     {
-
-        $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $wfSolicitudTramite = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findOneBy(array('tramiteDetalle'=>$tramiteDetalle->getId()));
-        $this->em->remove($wfSolicitudTramite);
-        $this->em->remove($tramiteDetalle);
-        $this->em->remove($tramite);
-        $this->em->flush();
-        return true;
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+            $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+            $wfSolicitudTramite = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findOneBy(array('tramiteDetalle'=>$tramiteDetalle->getId()));
+            $this->em->remove($wfSolicitudTramite);
+            $this->em->remove($tramiteDetalle);
+            $this->em->remove($tramite);
+            $this->em->flush();
+            $this->em->getConnection()->commit();
+            return true;
+        } catch (Exception $ex) {
+            $this->em->getConnection()->rollback();
+            return false;
+        }
     }
+    
+    /**
+    * funcion que elimina tramite recibido
+    */
     public function eliminarTramiteRecibido($idtramite)
     {
-        $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $tramite->setTramite($tramiteDetalle->getTramiteDetalle()->getId());
-        $this->em->flush();
-        $this->em->remove($tramiteDetalle);
-        $this->em->flush();
-        return true;
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+            $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+            $tramite->setTramite($tramiteDetalle->getTramiteDetalle()->getId());
+            $this->em->remove($tramiteDetalle);
+            $this->em->flush();
+            //dump($tramite);die;
+            $this->em->getConnection()->commit();
+            return true;
+            
+        } catch (Exception $ex) {
+            $this->em->getConnection()->rollback();
+            return false;
+        }
+        
     }
 
+    /**
+    * funcion que elimina tramite enviado
+    */
     public function eliminarTramteEnviado($idtramite,$idusuario)
     {
-        $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $tramiteDetalle->setValorEvaluacion(null);
-        $tramiteDetalle->setUsuarioDestinatario($this->em->getRepository('SieAppWebBundle:Usuario')->find($idusuario));
-        $tramiteDetalle->setObs(null);
-        $tramiteDetalle->setFechaEnvio(null);
-        $tramiteDetalle->setTramiteEstado($this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(3));
-        $this->em->flush();
-        $query = $this->em->getConnection()->prepare("delete from wf_solicitud_tramite where tramite_detalle_id =". $tramiteDetalle->getId());
-        $query->execute();
-        $wfDatos = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+                
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+            $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+            $tramiteDetalle->setValorEvaluacion(null);
+            $tramiteDetalle->setUsuarioDestinatario($this->em->getRepository('SieAppWebBundle:Usuario')->find($idusuario));
+            $tramiteDetalle->setObs(null);
+            $tramiteDetalle->setFechaEnvio(null);
+            $tramiteDetalle->setTramiteEstado($this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(3));
+            $this->em->flush();
+            $query = $this->em->getConnection()->prepare("delete from wf_solicitud_tramite where tramite_detalle_id =". $tramiteDetalle->getId());
+            $query->execute();
+            $wfDatos = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
                     ->select('wf')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
                     ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
@@ -369,11 +398,18 @@ class WFTramite {
                     ->andwhere('wf.esValido =false')
                     ->getQuery()
                     ->getResult();
-        if($wfDatos){
-            $wfDatos[0]->setEsValido(true);
-            $wfDatos[0]->setFechaModificacion(null);
+            if($wfDatos){
+                $wfDatos[0]->setEsValido(true);
+                $wfDatos[0]->setFechaModificacion(null);
+            }
+
+            $this->em->getConnection()->commit();
+            return true;
+        } catch (Exception $ex) {
+            $this->em->getConnection()->rollback();
+            return false;
         }
-        return true;
+        
     }
 
     /**
@@ -560,6 +596,10 @@ class WFTramite {
 
     public function verificaUsuarioRemitente($usuario,$flujoproceso,$tramite)
     {
+        if (!$usuario or !$flujoproceso or !$tramite){
+            $valida = false;
+            return $valida; 
+        }
         $nivel = $flujoproceso->getRolTipo()->getLugarNivelTipo();
 
         if($tramite->getInstitucioneducativa()){
