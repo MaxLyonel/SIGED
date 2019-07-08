@@ -18,6 +18,10 @@ reporte_regular_informacion_general_unidad_educativa_lista_print_xls:
     path:     /informacion/general/regular/unidad/educativa/lista/print/xls
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativaListaPrintXls }
 
+reporte_informacion_general_ritt_lista_print_xls:
+    path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintXls }
+
 reporte_regular_informacion_general_chart:
     path:     /informacion/general/regular/chart
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularChart }

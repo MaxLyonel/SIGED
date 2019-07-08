@@ -3903,8 +3903,50 @@ class ReporteController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    
-//    ================================================================================================================================
+
+/**
+     * Imprime reporte listado de institutos tecnicos en formato EXCEL
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function informacionGeneralInstitutosTecnicosListaPrintXlsAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = $request->get('codigo');
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_InstitucionesEducativas_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionInstitucionEducativa_v1_rcm.rptdesign&__format=xls'));  
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    //    ================================================================================================================================
 //    ALTERNATIVA
 //    ================================================================================================================================
     public function alternativaAction(Request $request){

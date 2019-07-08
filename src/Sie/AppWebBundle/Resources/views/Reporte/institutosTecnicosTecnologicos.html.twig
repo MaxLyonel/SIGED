@@ -71,7 +71,7 @@
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
                             </div>  
                             <div class="pull-right">
-                                <button id="tour-14" onclick="document.forms['formEstadisticaRegularInstitucionEducativaListaXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-lilac">
+                                <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-lilac">
                                     <i class="fa fa-file-excel-o"></i>
                                 </button>
                             </div>     
@@ -133,26 +133,13 @@
                         </div>
                     </div>
                 </div>  
-
-                <form name="formEstadisticaRegularInstitucionEducativaListaXls" id="formEstadisticaRegularXls" role="form" action="{{ path('reporte_regular_informacion_general_unidad_educativa_lista_print_xls') }}" method="POST">  
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
-                </form>   
-
-
-                <form name="formEstadisticaRegularPdf" id="formEstadisticaRegularPdf" role="form" action="{{ path('reporte_regular_informacion_general_print_pdf') }}" method="POST">  
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
-                </form> 
-                {% if ingresaAdmin == 1 %} 
-                    <form name="formEstadisticaRegularPdfTemp" id="formEstadisticaRegularPdfTemp" role="form" action="{{ path('reporte_regular_informacion_general_print_pdf_temp') }}" method="POST">  
+                {% if link %}
+                    <form name="formEstadisticaInstitutosTecnicostecnologicosXls" id="formEstadisticaRittXls" role="form" action="{{ path('reporte_informacion_general_ritt_lista_print_xls') }}" method="POST">  
                         <input type="hidden" name="gestion" value="{{ gestion }}" />
                         <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
-                        <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
-                    </form>                     
-                {% endif %}                    
+                        <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
+                    </form>   
+                {% endif %}
             {% endif %}
             
             <div id="tour-7" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">     
