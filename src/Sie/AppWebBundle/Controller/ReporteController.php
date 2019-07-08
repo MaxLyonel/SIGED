@@ -6207,7 +6207,7 @@ class ReporteController extends Controller {
     }
 
     private function creaFormularioBusquedaInstituto($routing, $ue, $entityDepartamento, $arrayDependencia) {
-        $entityDependencia = ['1'=>'Fiscal', '2'=>'Convenio', '3'=>'Privado'];
+        $entityDependencia = ['1'=>'Fiscal', '2'=>'Convenio', '3'=>'Privada'];
 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
@@ -6296,24 +6296,23 @@ class ReporteController extends Controller {
                 $entityInstitucionEducativa = $query->fetchAll();
 
                 $infoBusqueda = serialize(array(
-                    'unidadeducativa' => $textUnidadEducativa,
+                    'itt' => $textUnidadEducativa,
                     'departamento' => $codigoDepartamento,
                     'dependencia' => $dependencia
                 ));
             }  else {   
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Formulario enviado de forma incorrecta, intente nuevamente'));
-                return $this->redirectToRoute('reporte_regular_directorio_institucioneducativa');
+                return $this->redirectToRoute('reporte_superior_directorio_itts');
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar información, intente nuevamente'));
-            return $this->redirectToRoute('reporte_regular_directorio_institucioneducativa');
+            return $this->redirectToRoute('reporte_superior_directorio_itts');
         }
 
         $em = $this->getDoctrine()->getManager();
         $entityDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $codigoDepartamento ));
 
-
-        return $this->render('SieAppWebBundle:Reporte:directorioIttSuperior.html.twig', array(
+        return $this->render('SieAppWebBundle:Reporte:directorioIttsSuperior.html.twig', array(
             'infoEntidad' => '',
             'infoBusqueda' => $infoBusqueda,
             'entityBusqueda'=> $entityInstitucionEducativa,
@@ -6322,4 +6321,138 @@ class ReporteController extends Controller {
             'formBusqueda' => $this->creaFormularioBusquedaInstituto('reporte_superior_directorio_itts_busqueda',$textUnidadEducativa, $entityDepartamento, $dependencia)->createView()
         ));
     }
+
+    /**
+     * Pagina de instituto seleccionado
+     * AFiengo
+     * @param Request $request
+     * @return type
+     */
+    public function directorioIttsDetalleSuperiorAction(Request $request) {  
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+
+        $em = $this->getDoctrine()->getManager();
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */            
+            $infoBusqueda = $request->get('infoBusqueda');
+            $ritt = $request->get('ritt');
+            
+            $ainfoBusqueda = unserialize($infoBusqueda);
+            //get the values throght the infoUe
+            $unidadEducativaText = $ainfoBusqueda['itt'];
+            $departamentoId = $ainfoBusqueda['departamento'];
+            $dependenciaArrayId = $ainfoBusqueda['dependencia'];
+            $dependenciaList = "";
+            for($i = 0; $i < count($dependenciaArrayId); $i++) {
+                if($dependenciaList==""){
+                    $dependenciaList = $dependenciaArrayId[$i];
+                } else {
+                    $dependenciaList = $dependenciaList.",".$dependenciaArrayId[$i];
+                }
+            }
+
+            $entityDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoId ));
+            
+            $query = $em->getConnection()->prepare("
+                select distinct ie.id as codigo, ie.institucioneducativa as institucioneducativa, det.dependencia, eit.id as estadoinstitucion_id, eit.estadoinstitucion, dep.lugar as departamento, jg.direccion as direccion
+                , 'Educación '||oct.orgcurricula as orgcurricular, loc.lugar as localidad, can.lugar as canton, sec.lugar as seccion
+                , pro.lugar as provincia, jg.zona, jg.cordx, jg.cordy, loc.area, ien.nivel_autorizado
+                from institucioneducativa as ie
+                inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                inner join ( SELECT id,codigo,lugar,lugar_tipo_id,area2001 AS area FROM lugar_tipo WHERE lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                inner join ( SELECT id,codigo,lugar,lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                inner join dependencia_tipo as det on det.id = ie.dependencia_tipo_id
+                inner join estadoinstitucion_tipo as eit on eit.id = ie.estadoinstitucion_tipo_id
+                inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                left join (
+                    select string_agg(distinct nt1.nivel,', ') as nivel_autorizado, institucioneducativa_id
+                    from institucioneducativa_nivel_autorizado as iena1
+                    left join nivel_tipo as nt1 on nt1.id = iena1.nivel_tipo_id
+                    where iena1.institucioneducativa_id = ".$ritt."  
+                    group by iena1.institucioneducativa_id
+                ) as ien on ien.institucioneducativa_id = ie.id
+                where ie.institucioneducativa_acreditacion_tipo_id = 2 and ie.id = ".$ritt." 
+                and (case ".$departamentoId." when 0 then dep.codigo != '0' else dep.codigo = '".$departamentoId."' end)
+                and det.id in (".$dependenciaList.")            
+                order by orgcurricular, departamento, estadoinstitucion, seccion
+            ");
+
+            $query->execute();
+            $entityInstitucionEducativa = $query->fetchAll();
+
+            if(count($entityInstitucionEducativa) > 0){
+                $carrerasCursos = $this->listadoOfertaAcademica($ritt);
+            } else {
+                $carrerasCursos = array();
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar información, intente nuevamente'));            
+        }
+
+        return $this->render('SieAppWebBundle:Reporte:directorioIttsDetalleSuperior.html.twig', array(
+            'infoEntidad'=>'',
+            'entityUnidadEducativa'=> $entityInstitucionEducativa,
+            'carrerasCursos' => $carrerasCursos,
+            'form' => $defaultController->createLoginForm()->createView(),
+            'formBusqueda' => $this->creaFormularioBusquedaInstituto('reporte_superior_directorio_itts_busqueda',$unidadEducativaText,$entityDepartamento, $dependenciaArrayId)->createView()
+        ));
+    }
+
+    /***
+     * Obtiene un array con datos del listado de carreras y/o cursos autorizados
+     */
+    public function listadoOfertaAcademica($ritt){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "SELECT autorizado.id AS id, carrera.id AS idcarrera, carrera.nombre AS carr 
+                    FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
+                    INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
+                    INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
+                    INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id
+                    WHERE instituto.id = '".$ritt."' ORDER BY carr ASC";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params); 
+        $listado = $stmt->fetchAll();
+
+        $list = array();                                  
+        foreach($listado as $li){
+            $query = $em->createQuery('SELECT a
+                                         FROM SieAppWebBundle:TtecResolucionCarrera a 
+                                        WHERE a.ttecInstitucioneducativaCarreraAutorizada = :idCaAutorizada 
+                                     ORDER BY a.fecha DESC');                       
+            $query->setParameter('idCaAutorizada', $li['id']);
+            $query->setMaxResults(1);
+            $resolucion = $query->getResult();   
+
+            $list[] = array(
+                'id' => $li['id'],
+                'idcarrera' => $li['idcarrera'],
+                'carrera' => $li['carr'],
+                'idresolucion' => ($resolucion) ? $resolucion[0]->getId():"0",
+                'resolucion' => ($resolucion) ? $resolucion[0]->getNumero():" ",
+                'fecharesol' => ($resolucion) ? $resolucion[0]->getFecha():" ",
+                'nivelformacion' => ($resolucion) ? $resolucion[0]->getNivelTipo()->getNivel():" ",
+                'tiempoestudio' => ($resolucion) ? $resolucion[0]->getTiempoEstudio():" ",
+                'regimen' =>  ($resolucion) ? $resolucion[0]->getTtecRegimenEstudioTipo()->getRegimenEstudio():" ",
+                'cargahoraria' => ($resolucion) ? $resolucion[0]->getCargaHoraria():" ",
+                'operacion' => ($resolucion) ? $resolucion[0]->getOperacion():" "
+            );
+        }                                    
+        return $list;
+    }  
 }
