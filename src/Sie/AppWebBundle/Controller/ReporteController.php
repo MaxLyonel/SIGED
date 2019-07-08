@@ -3933,13 +3933,14 @@ class ReporteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_InstitucionesEducativas_'.date('YmdHis').'.xls';
+        $arch = 'MinEdu_InstitutosTecnicosTecnologicos_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-type', 'application/xlsx');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionInstitucionEducativa_v1_rcm.rptdesign&__format=xls'));  
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionInstitutosTecnicos_v1_pvc.rptdesign&__format=xlsx&codigo='.$codigoArea));  
+        
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
