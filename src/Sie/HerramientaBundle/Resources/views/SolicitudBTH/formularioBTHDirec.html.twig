@@ -370,7 +370,7 @@
                             }
                         });
                     break;
-                case 'Ratificación': //Ratificacion
+                case 'Ratificación': //Ratificacion                      
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -392,8 +392,7 @@
                                 $("#lista_select_especialidad").find("option").each(function(){
                                     especialidades_id.push(this.value);
                                 });
-                                ip.push({"select_especialidad" : especialidades_id});
-                                ip.push({"grado":grado});
+                                ip.push({"select_especialidad" : especialidades_id});                                
                                 var obstxt=$('#obstxt').val();
                                 ip.push({grado:{{grado}}});
                                 var ipt=JSON.stringify(ip);

@@ -1243,8 +1243,8 @@ class SolicitudBTHController extends Controller {
           //ELABORA INFORME
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
         $tarea1   = $flujoproceso->getId();//elaborainfrorme y envia BTH
-        //$wfTramiteController = new WfTramiteController();
-        //$this->get('wftramite')->setContainer($this->container);
+        $res = 1;
+        $msg = "";
           try{
               $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
               if ($mensaje['dato']==true){
@@ -1252,7 +1252,7 @@ class SolicitudBTHController extends Controller {
                   {                      
                       $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite); 
                           if($mensaje['dato']==true){
-                            $mensaje = $this->get('wftramite')->guardarTramiteEnviado(45454545,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
+                            $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
                             if($mensaje['dato']==true){
                                 $res =1;
                             }else{
@@ -1262,10 +1262,8 @@ class SolicitudBTHController extends Controller {
                             $mensaje=$mensaje['msg'];
                             $res = 4;
                             }
-                          }else{
-                            
+                          }else{                            
                             $respuesta = $this->get('wftramite')->eliminarTramteEnviado($id_tramite,$id_usuario);
-                           
                             $mensaje=$mensaje['msg'];
                             $res = 4;
                           }
@@ -1277,7 +1275,7 @@ class SolicitudBTHController extends Controller {
           }
           catch (Exception $exceptione){
               $res = 0;
-          }         
+          }
          return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
       }
     public function FormularioBTHDisAction(Request $request){
@@ -1687,7 +1685,8 @@ class SolicitudBTHController extends Controller {
         $tabla          = 'institucioneducativa';
         //$wfTramiteController = new WfTramiteController();
         //$this->get('wftramite')->setContainer($this->container);
-
+        $res = 1;
+        $msg = "";
         try {
             $mensaje = $this->get('wftramite')->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$idtramite,$datos,'',$id_distrito);
             if($mensaje['dato'] == true) {
@@ -1770,7 +1769,7 @@ class SolicitudBTHController extends Controller {
                                     $entity->setInstitucioneducativa($ue);
                                     $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                                     $entity->setGestionTipo($gestiontipo);
-                                    $entity->setFechaRegistro(new \DateTime('now'));                      
+                                    $entity->setFechaRegistro(new \DateTime(date('Y-m-d')));                      
                                     $em->persist($entity);
                                     $em->flush();
                                 }
@@ -1829,7 +1828,7 @@ class SolicitudBTHController extends Controller {
                                         $entity->setInstitucioneducativa($ue);
                                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                                         $entity->setGestionTipo($gestiontipo);
-                                        $entity->setFechaRegistro(new \DateTime(date('now')));
+                                        $entity->setFechaRegistro(new \DateTime(date('Y-m-d')));
                                         $em->persist($entity);
                                         $em->flush();
                                     }
@@ -1860,7 +1859,6 @@ class SolicitudBTHController extends Controller {
                                     $em->persist($institucionBth);
                                     $em->flush();                       
                                     for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
-                                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_especialidad_tecnico_humanistico');")->execute();
                                         $entity = new InstitucioneducativaEspecialidadTecnicoHumanistico();
                                         $idespecialidad = $datos[2]['select_especialidad'][$i];
                                         $espe = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($idespecialidad);
@@ -1869,7 +1867,7 @@ class SolicitudBTHController extends Controller {
                                         $entity->setInstitucioneducativa($ue);
                                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                                         $entity->setGestionTipo($gestiontipo);
-                                        $entity->setFechaRegistro(new \DateTime('now'));
+                                        $entity->setFechaRegistro(new \DateTime(date('Y-m-d')));
                                         $em->persist($entity);
                                         $em->flush();
                                     }
@@ -1880,16 +1878,17 @@ class SolicitudBTHController extends Controller {
                         } else {
                             $respuesta = $this->get('wftramite')->eliminarTramiteRecibido($idtramite);
                             $respuesta = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$id_usuario);
-                            $mensaje = $mensaje['msg'];
+                            $msg = $mensaje['msg'];
                             $res = 4;
                         }
                     } else {
                         $respuesta = $this->get('wftramite')->eliminarTramiteEnviado($id_tramite,$id_usuario);
-                        $mensaje = $mensaje['msg'];
+                        $msg = $mensaje['msg'];
                         $res = 4;
                     }                   
-                } else {
-                    // si la evaluacion es NO
+                } else { 
+                    // si la evaluacion es NO   
+
                     $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 6));
                     $tarea2   = $flujoproceso->getId();//6 realiza observacion
                     $mensaje = $this->get('wftramite')->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
@@ -1905,27 +1904,32 @@ class SolicitudBTHController extends Controller {
                                     $em->flush();
                                 }
                             }
+                            $msg = $mensaje['msg'];
                         } else {
                             $respuesta = $this->get('wftramite')->eliminarTramiteRecibido($id_tramite);
                             $respuesta = $this->get('wftramite')->eliminarTramiteEnviado($id_tramite,$id_usuario);
-                            $mensaje = $mensaje['msg'];
+                            $msg = $mensaje['msg'];
                             $res = 4;   
                         }
                     } else {
                         $respuesta = $this->get('wftramite')->eliminarTramiteEnviado($id_tramite,$id_usuario);
-                        $mensaje = $mensaje['msg'];
+                        $msg = $mensaje['msg'];
                         $res = 4;
-                    }
+                    }                    
                 }
-                $res = 1;
+                
+                
             } else {
                 //si existe error en el primer guardar tramite
-                $mensaje = $mensaje['msg'];
+                $msg = $mensaje['msg'];
                 $res = 4;
             }
         } catch (Exception $exceptione){
             $res = 0;
         }
-        return new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
+        //
+
+        //dump($res);die;
+        return new JsonResponse(array('estado' => $res, 'msg' => $msg));
     }
 }
