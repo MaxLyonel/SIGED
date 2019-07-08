@@ -398,7 +398,7 @@
                                     swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite}});
                                     location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
                                 }else if(data.estado == 4){
-                                    swal(data.msg)
+                                    swal(data.msg);
                                 }
                                 else{
                                     swal("Su respuesta no se envío correctamente");

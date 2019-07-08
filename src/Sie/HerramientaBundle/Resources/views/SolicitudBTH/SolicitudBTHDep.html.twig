@@ -508,6 +508,7 @@
                             url: "{{ path('solicitud_bth_guarda_Dep') }}",
                             data: fd,
                             mimeType:"multipart/form-data",
+                            dataType : 'json',
                             contentType: false,
                             cache: false,
                             processData:false,
@@ -519,13 +520,15 @@
                                     buttons: false
                                 });
                             },
-                            success: function (data) {
-                                if (data==1){
+                            success: function (data) {console.log(data);
+                                if (data.estado=='1'){
                                     swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }});
                                     location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                                }else if(data.estado == 4){
+                                    swal(data.msg);
                                 }
                                 else{
-                                    swal("Su formulario no se envío correctamente");
+                                    swal("Su respuesta no se envío correctamente");
                                 }
                             },
                             complete: function () {
