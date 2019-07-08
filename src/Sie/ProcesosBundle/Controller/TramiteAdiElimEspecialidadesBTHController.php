@@ -89,7 +89,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $especialidades_ue = $this->obtieneespecialidaes($id_Institucion,$gestion);
             $infoUe_distrito = $this->obtieneinforue($id_Institucion,$gestion);
             $form= $this->createFormBuilder()
-                ->add('solicitud', 'choice', array('required' => true, 'choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
+                ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...','choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
                 ->getForm();
                $estado =  $this->validainicioTramite($id_Institucion,$gestion);//dump($estado);die;
             return $this->render('SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index.html.twig',array( 'form' => $form->createView(),
