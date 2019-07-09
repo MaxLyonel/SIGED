@@ -39,8 +39,17 @@
                                         {{form_widget(form.solicitud)}}
                                     </div>
                                     {{form_end(form)}}
-                                </div>
+                                </div>                                
                             </div><!-- /.panel-body -->
+                            <div class="row"> 
+                                    <div class="alert alert-success ">
+                                        <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                        <div class="notification-info">             
+                                            <p> <b>Nota.-</b> Solo las Unidades Educativas aprobadas como Plenas podrán iniciar el trámite de "Adición  y Eliminación de Especialidades".                                                
+                                            </p>                                            
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -171,6 +180,16 @@
                         </div>
                     </div>
                     <div class="row" id="form_eliminar_especialidad" style="display: none">
+                        <div> 
+                            <div class="alert alert-warning ">
+                                <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                <div class="notification-info">             
+                                    <p>
+                                        Tome en cuenta que para la eliminación de la(s) especialidades,ninguna debe contener información registrada. 
+                                    </p>                                            
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="panel">
                                 <div class="panel-body">
@@ -308,15 +327,15 @@
                                     <div class="alert alert-warning ">
                                         <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                                         <div class="notification-info">
-                                            {% if estado == 1 %}
+                                            {# {% if estado == 1 %} #}
                                             <p>
                                                 Su Unidad Educativa no es plena.
                                             </p>
-                                            {% elseif estado == 2 %}
+                                            {# {% elseif estado == 2 %}
                                                 <p>
                                                     Su Unidad Educativa ya inicio su trámite ó no le corresponde realizar la solicitud.
                                                 </p>
-                                            {% endif %}
+                                            {% endif %} #}
                                         </div>
                                     </div>
                                 </div>

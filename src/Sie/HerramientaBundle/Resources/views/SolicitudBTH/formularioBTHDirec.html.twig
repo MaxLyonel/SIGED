@@ -350,8 +350,8 @@
                                     success: function (data) {
                                         //console.log(data);
                                         if (data.estado ==1 ){
-                                            swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_recibido') }}";
+                                            swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );                                           
+                                            location.href = "{{ path('wf_tramite_index') }}";
                                         }
                                         else if(data.estado ==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
@@ -370,7 +370,7 @@
                             }
                         });
                     break;
-                case 'Ratificación': //Ratificacion
+                case 'Ratificación': //Ratificacion                      
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -392,8 +392,7 @@
                                 $("#lista_select_especialidad").find("option").each(function(){
                                     especialidades_id.push(this.value);
                                 });
-                                ip.push({"select_especialidad" : especialidades_id});
-                                ip.push({"grado":grado});
+                                ip.push({"select_especialidad" : especialidades_id});                                
                                 var obstxt=$('#obstxt').val();
                                 ip.push({grado:{{grado}}});
                                 var ipt=JSON.stringify(ip);
@@ -416,7 +415,8 @@
                                         console.log(data);
                                         if (data.estado==1){
                                             swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_recibido') }}";
+                                            location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                                            
                                         }
                                         else if(data.estado==3 ){
                                             swal("Debe iniciar su trámite como 'Registro Nuevo'");

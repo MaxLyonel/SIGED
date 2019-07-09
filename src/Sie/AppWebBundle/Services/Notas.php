@@ -459,7 +459,7 @@ class Notas{
                                                             'nota'=>$valorNota,
                                                             'idNotaTipo'=>$i,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
-                                                            'bimestre'=>$this->literalnota($i)['titulo'],
+                                                            'bimestre'=>$this->literal($i)['titulo'],
                                                             'idFila'=>$a['asignaturaId'].''.$i
                                                         );
                             }
@@ -561,7 +561,7 @@ class Notas{
                                                          'idNotaTipo'=>$i,
                                                          'notaCualitativa'=>'',
                                                          'notaCuantitativa'=>'',
-                                                         'notaTipo'=>$this->literal($i).' '.$tipoNota,
+                                                         'notaTipo'=>$this->literal($i),
                                                          'idFila'=>$idInscripcion.''.$i
                                                         );
                             $existe = true;
@@ -596,7 +596,7 @@ class Notas{
                                                      'idNotaTipo'=>18,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal(18).' '.$tipoNota,
+                                                     'notaTipo'=>$this->literal(18),
                                                      'idFila'=>$idInscripcion.'18'
                                                     );
                         $existe = true;
@@ -646,7 +646,7 @@ class Notas{
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i).' '.$tipoNot,
+                                                     'notaTipo'=>$this->literal($i),
                                                      'idFila'=>$idInscripcion.''.$i
                                                     );
                         $existe = true;
@@ -811,7 +811,14 @@ class Notas{
         );
     }
 
-    public function literal($num){
+    public function literal($idNota){
+        $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
+        $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
+        
+        return $bim;
+    }
+
+    public function literalNum($num){
         switch ($num) {
             case '1': $lit = 'Primer'; break;
             case '2': $lit = 'Segundo'; break;
@@ -2080,7 +2087,7 @@ die;/*
                                                  'idEstudianteNotaCualitativa'=>'nuevo',
                                                  'idNotaTipo'=>18,
                                                  'notaCualitativa'=>'',
-                                                 'notaTipo'=>$this->literal(18).' '.$tipoNota
+                                                 'notaTipo'=>$this->literal(18)
                                                 );
                     $existe = true;
                 }
@@ -2107,7 +2114,7 @@ die;/*
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i).' '.$tipoNota
+                                                     'notaTipo'=>$this->literal($i)
                                                     );
                         $existe = true;
                     }
