@@ -1552,6 +1552,7 @@ class TramiteDetalleController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function certTecImpresionCertificadoFirmaPdfAction(Request $request) {
+        set_time_limit(1000);
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
@@ -1587,6 +1588,8 @@ class TramiteDetalleController extends Controller {
             $especialidad = $form['especialidad'];
             $nivel = $form['nivel'];
 
+            $institucionEducativaEntity = $this->getInstitucionEducativaLugar($sie);
+
             switch ($nivel) {
                 case 1:
                     $n = 6;
@@ -1603,12 +1606,21 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
             switch ($nivel) {
                 case 1:
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                    if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                    } else {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                    }
                     break;
                 case 2:
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                    if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                    } else {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+                    }
                     break;
                 case 3:
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_medio_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
@@ -1625,6 +1637,35 @@ class TramiteDetalleController extends Controller {
         }
     }
 
+
+    //********************************************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que detalla el lugar geográfico de la institucion educativa
+    // PARAMETROS: por POST  institucionId
+    // AUTOR: RCANAVIRI
+    //********************************************************************************************************************************
+    public function getInstitucionEducativaLugar($institucionId){            
+        $em = $this->getDoctrine()->getManager();
+        $entity = $this->getDoctrine()->getRepository('SieAppWebBundle:Institucioneducativa');
+        $query = $entity->createQueryBuilder('ie') 
+            ->select('ie.id as institucioneducativa_id, ie.institucioneducativa, lt6.id as distrito_id, lt6.codigo as distrito_codigo, lt6.lugar as distrito, lt5.id as departamento_id, lt5.codigo as departamento_codigo, lt5.lugar as departamento')            
+            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')      
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
+            ->where('ie.id = :codInstitucion')
+            ->setParameter('codInstitucion', $institucionId)
+            ->getQuery();
+        $entity = $query->getResult();
+        if (count($entity) > 0){
+            return $entity[0]; 
+        } else {
+            return array(); 
+        } 
+    }
 
 
     //****************************************************************************************************
