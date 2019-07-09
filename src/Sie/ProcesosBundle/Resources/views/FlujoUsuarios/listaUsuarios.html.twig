@@ -298,7 +298,7 @@
         }
         
         $.ajax({
-            type: 'get',
+            type: 'post',
             url: "{{path('flujousuarios_guardar_usuarios')}}",
             data: $('#form_usuarios').serialize(),
             beforeSend: function () {
