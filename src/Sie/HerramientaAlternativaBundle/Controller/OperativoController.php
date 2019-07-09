@@ -96,7 +96,7 @@ class OperativoController extends Controller {
                         ->andWhere('oc.gestionTipo = ' . $gestion)
                         ->getQuery()
                         ->getResult();
-                
+                    
                 }else{
                     $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                         ->select('oc')
@@ -112,7 +112,9 @@ class OperativoController extends Controller {
                         $datos = json_decode($o->getObs(),true);
                         foreach ($datos as $d){
                             $ies = json_decode($d,true)['ies'];
-                            $iesArray[] =$ies;
+                            if($ies){
+                                $iesArray[] =$ies;
+                            }
                         }
                     }
                 }
@@ -202,7 +204,9 @@ class OperativoController extends Controller {
                         $datos = json_decode($o->getObs(),true);
                             foreach ($datos as $d){
                                 $ies = json_decode($d,true)['ies'];
-                                $iesArray[] =$ies;
+                                if($ies){
+                                    $iesArray[] =$ies;
+                                }
                             }
                         }
                 }
