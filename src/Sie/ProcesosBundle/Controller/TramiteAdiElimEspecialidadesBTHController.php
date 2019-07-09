@@ -89,7 +89,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $especialidades_ue = $this->obtieneespecialidaes($id_Institucion,$gestion);
             $infoUe_distrito = $this->obtieneinforue($id_Institucion,$gestion);
             $form= $this->createFormBuilder()
-                ->add('solicitud', 'choice', array('required' => true, 'choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
+                ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...','choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
                 ->getForm();
                $estado =  $this->validainicioTramite($id_Institucion,$gestion);//dump($estado);die;
             return $this->render('SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index.html.twig',array( 'form' => $form->createView(),
@@ -276,7 +276,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         /**
          * verificamos el tipo de solicitud Eliminacion de especialidades
          */
-        elseif($solicitud == 'Eliminar Especialidades'){
+        elseif($solicitud == 'Eliminar Especialidades'){ //dump ($idinstitucion,$especia,$gestion);
             $verificaespecialidades=$this->verificaespecialidades($idinstitucion,$especia,$gestion);
             if($verificaespecialidades== true){
                 $flujoproceso   = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $idflujotipo , 'orden' => 1));
@@ -309,7 +309,6 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
     }
     public function verificaespecialidades($sie,$especialida,$gestio){
-       // dump($sie);die;
         for($i=0;$i<count($especialida);$i++) {
             $idespe=$especialida[$i];
             $em = $this->getDoctrine()->getManager();
@@ -323,13 +322,12 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
                         b.especialidad_tecnico_humanistico_tipo_id =$idespe");
             $query->execute();
             $contador = $query->fetch();
-            if ($contador!=0)
+            if ($contador['conteo']!=0)
             {
                 return false;
             }
         }
         return true;
-
     }
     public function imprimirDirectorAction(Request $request){
         $tramite_id = $request->get('idtramite');
