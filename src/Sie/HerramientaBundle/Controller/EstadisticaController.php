@@ -194,7 +194,7 @@ class EstadisticaController extends Controller {
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');;
         $gestionProcesada = $gestionActual;
         
-        $chartDependencia = $chartController->chartColumn($entityEstadistica[2],"Unidades Educativas según Dependencia",$gestionProcesada,"Unidades Educativas","chartContainerDependencia");
+        $chartDependencia = $chartController->chartPie($entityEstadistica[2],"Unidades Educativas según Dependencia",$gestionProcesada,"Unidades Educativas","chartContainerDependencia");
         $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[3],"Unidades Educativas según Área Geográfica",$gestionProcesada,"Unidades Educativas","chartContainerArea");
         
         $link = true;
