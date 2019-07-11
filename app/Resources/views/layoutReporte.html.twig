@@ -354,7 +354,7 @@
                 <!--/ End left navigation -  profile shortcut -->
 
                 <!-- Start left navigation - menu -->
-                <ul id="tour-4" class="sidebar-menu">                                        
+                <ul id="tour-4" class="sidebar-menu">                           
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -362,19 +362,41 @@
                             <span class="arrow open fa-angle-double-down"></span>
                         </a>
                         <ul>
-                            <li>
-                                <a href="{{path('reporte_regular_index')}}">
-                                    <span class="text">Estadística Matrícula Educativa</span>
-                                    <span class="label label-danger pull-right">Nuevo</span>
-                                    <span class="selected"></span>
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="text">Matricula Educativa</span>
+                                    <span class="arrow open fa-angle-double-down"></span>
                                 </a>
+                                <ul>                                        
+                                    <li>
+                                        <a href="{{path('reporte_regular_index')}}">Estadística General</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_bth_matricula_index')}}">Bachiller Técnico Humanístico</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_modular_matricula_index')}}">Modular</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                         <ul>
-                            <li>
-                                <a href="{{path('reporte_regular_informacion_general_unidad_educativa')}}">
-                                    <span class="text">Estadística Unidad Educativa</span>
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="text">Unidades Educativas</span>
+                                    <span class="arrow open fa-angle-double-down"></span>
                                 </a>
+                                <ul>                                        
+                                    <li>
+                                        <a href="{{path('reporte_regular_informacion_general_unidad_educativa')}}">Estadística General</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_bth_unidadeducativa_index')}}">Bachiller Técnico Humanístico</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_modular_unidadeducativa_index')}}">Modular</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
