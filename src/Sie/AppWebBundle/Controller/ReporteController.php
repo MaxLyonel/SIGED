@@ -1531,7 +1531,7 @@ class ReporteController extends Controller {
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol(0,0);
+        $entidad = $this->buscaEntidadRol(0,0,1);
         $subEntidades = $this->buscaSubEntidadRol(0,0);
         $entityEstadistica = $this->buscaEstadisticaAreaRol(0,0);
         //$entityEstadisticaUE = $this->buscaEstadisticaUERol(0,0);
@@ -1597,7 +1597,7 @@ class ReporteController extends Controller {
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
+        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario,1);
         $subEntidades = $this->buscaSubEntidadRol($codigoArea,$rolUsuario);
         $entityEstadistica = $this->buscaEstadisticaAreaRol($codigoArea,$rolUsuario);
         //$entityEstadisticaUE = $this->buscaEstadisticaUERol($codigoArea,$rolUsuario);
@@ -1698,7 +1698,7 @@ class ReporteController extends Controller {
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
+        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario,1);
         $subEntidades = $this->buscaSubEntidadRegularInstitucionEducativaAreaRol($codigoArea,$rolUsuario);
         $entityEstadistica = $this->buscaEstadisticaRegularInstitucionEducativaAreaRol($codigoArea,$rolUsuario);
         //$entityEstadisticaUE = $this->buscaEstadisticaUERol($codigoArea,$rolUsuario);
@@ -1786,21 +1786,26 @@ class ReporteController extends Controller {
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
+        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario,9);
         //dump($entidad);die;
         $subEntidades = $this->buscaSubEntidadInstitutosTecnicosAreaRol($codigoArea,$rolUsuario);
         //dump($subEntidades);die;
         $entityEstadistica = $this->buscaEstadisticaInstitutosTecnicosAreaRol($codigoArea,$rolUsuario);
-        //dump($subEntidades);die;
-       
+        //dump($entityEstadistica);die;
+        $entityEstadisticaCarreras = $this->buscaEstadisticaCarrerasInstitutosTecnicosAreaRol($codigoArea,$rolUsuario,$entityEstadistica['cant_total']?$entityEstadistica['cant_total']:0);
+        //dump($entityEstadisticaCarreras);die;
         if($rolUsuario <> 9){
             $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos",$gestionActual,12,"chartContainerTecnicoTecnologico");
-            $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun área",$gestionProcesada,1,"chartContainerArea");
+            $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun Área Geográfica",$gestionProcesada,1,"chartContainerArea");
             $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos según Dependencia",$gestionActual,12,"chartContainerDependencia");
+            $chartSede = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun Sede",$gestionProcesada,2,"chartContainerSede");
+            $chartCarreras = $this->chartColumnInformacionGeneral($entityEstadisticaCarreras,"Frecuencia de Carreras segun los Institutos Técnicos y/o Tecnológicos",$gestionActual,13,"chartContainerCarreras");
         }else{
             $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Carreras y/o Cursos",$gestionActual,13,"chartContainerTecnicoTecnologico");
             $chartArea = '';
             $chartDependencia = '';
+            $chartSede = '';
+            $chartCarreras = '';
         }
 
         $link = true;
@@ -1816,6 +1821,8 @@ class ReporteController extends Controller {
                 'datoGraficoInstitutos'=>$chartTecnicosTecnologicos,
                 'datoGraficoArea'=>$chartArea,
                 'datoGraficoDependencia'=>$chartDependencia,
+                'datoGraficoSede'=>$chartSede,
+                'datoGraficoCarreras'=>$chartCarreras,
                 'gestion'=>$gestionProcesada,
                 'link'=>$link,
                 'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
@@ -1829,6 +1836,8 @@ class ReporteController extends Controller {
                     'datoGraficoInstitutos'=>$chartTecnicosTecnologicos,
                     'datoGraficoArea'=>$chartArea,
                     'datoGraficoDependencia'=>$chartDependencia,
+                    'datoGraficoSede'=>$chartSede,
+                    'datoGraficoCarreras'=>$chartCarreras,
                     'gestion'=>$gestionProcesada,
                     'link'=>$link,
                     'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
@@ -1841,6 +1850,8 @@ class ReporteController extends Controller {
                     'datoGraficoInstitutos'=>$chartTecnicosTecnologicos,
                     'datoGraficoArea'=>$chartArea,
                     'datoGraficoDependencia'=>$chartDependencia,
+                    'datoGraficoSede'=>$chartSede,
+                    'datoGraficoCarreras'=>$chartCarreras,
                     'gestion'=>$gestionProcesada,
                     'link'=>$link,
                     'mensaje'=>'$("#modal-bootstrap-tour").modal("Efectivos");',
@@ -1874,7 +1885,7 @@ class ReporteController extends Controller {
         $codigoArea = $request->get('codigo');
         $rolUsuario = $request->get('rol');
 
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
+        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario,1);
         $entityEstadistica = $this->buscaEstadisticaAreaRol($codigoArea,$rolUsuario);
 
         $titulo = "";
@@ -1910,7 +1921,7 @@ class ReporteController extends Controller {
      * @param Request $request
      * @return type
      */
-    public function buscaEntidadRol($codigo,$rol) {
+    public function buscaEntidadRol($codigo,$rol,$ieTipo) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1930,8 +1941,15 @@ class ReporteController extends Controller {
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
+            if($ieTipo==1){
+                $tipo = "U.E.";
+            }elseif($ieTipo == 9){
+                $tipo = "I.T.";
+            }elseif($ieTipo == 4){
+                $tipo = "C.E.E.";
+            }
             $queryEntidad = $em->getConnection()->prepare("
-                select ie.id as id, 'U.E.: '|| cast(ie.id as varchar) ||' - '|| ie.institucioneducativa as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from institucioneducativa as ie
+                select ie.id as id, '". $tipo .": '|| cast(ie.id as varchar) ||' - '|| ie.institucioneducativa as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from institucioneducativa as ie
                 left join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 where ie.id = ".$codigo."
             "); 
@@ -2163,8 +2181,8 @@ class ReporteController extends Controller {
     }
 
     /**
-     * Busca el nombre de las entidades pertenecienten a un pais, departamento, distrito en funcion al tipo de rol
-     * Jurlan
+     * Busca el nombre de las entidades pertenecienten a un pais, departamento, funcion al tipo de rol
+     * Pvargas
      * @param Request $request
      * @return type
      */
@@ -2626,8 +2644,11 @@ class ReporteController extends Controller {
             sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
             sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
             sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
-            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
-            FROM institucioneducativa AS ie
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total,
+            sum(case when s.institucioneducativa_id=s.sede then 1 else 0 end) as cant_sede,
+            sum(case when s.institucioneducativa_id<>s.sede then 1 else 0 end) as cant_subsede
+            FROM ttec_institucioneducativa_sede s
+            INNER JOIN institucioneducativa AS ie on s.institucioneducativa_id=ie.id
             INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
             LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
             WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
@@ -2648,8 +2669,11 @@ class ReporteController extends Controller {
             sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
             sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
             sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
-            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total
-            FROM institucioneducativa AS ie
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total,
+            sum(case when s.institucioneducativa_id=s.sede then 1 else 0 end) as cant_sede,
+            sum(case when s.institucioneducativa_id<>s.sede then 1 else 0 end) as cant_subsede
+            FROM ttec_institucioneducativa_sede s
+            INNER JOIN institucioneducativa AS ie on s.institucioneducativa_id=ie.id
             INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
             LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
             LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
@@ -2660,7 +2684,7 @@ class ReporteController extends Controller {
             AND ie.estadoinstitucion_tipo_id = 10
             AND ie.institucioneducativa_acreditacion_tipo_id = 2
             AND lt4.codigo='". $area ."'");  
-        } 
+            } 
 
         if($rol == 9 ) // Por instituto
         {
@@ -2689,6 +2713,81 @@ class ReporteController extends Controller {
         } else {
             return '';
         }
+    }
+
+    /**
+     * Busca el detalle de frecuencia de carreras de institutos en funcion al tipo de rol
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function buscaEstadisticaCarrerasInstitutosTecnicosAreaRol($area,$rol,$total) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $gestionProcesada = $gestionActual;
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+        $objEntidad = array();
+
+        if($rol == 8 or $rol == 0) // Tecnico Nacional
+        {            
+            $queryEntidad = $em->getConnection()->prepare("   
+            select ct.nombre,count(*) as cantidad
+            FROM ttec_institucioneducativa_sede s
+            inner join institucioneducativa AS ie on s.institucioneducativa_id=ie.id
+            INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            inner join ttec_institucioneducativa_carrera_autorizada ieca on ie.id=ieca.institucioneducativa_id
+            inner join ttec_carrera_tipo ct on ct.id=ieca.ttec_carrera_tipo_id
+            WHERE ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 2
+            AND ct.ttec_area_formacion_tipo_id <> 200
+            group by ct.id,ct.nombre
+            order by count(*) desc
+            limit 10");    
+        } 
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+            select ct.nombre,count(*) as cantidad
+            FROM ttec_institucioneducativa_sede s
+            inner join institucioneducativa AS ie on s.institucioneducativa_id=ie.id
+            INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
+            LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+            inner join ttec_institucioneducativa_carrera_autorizada ieca on ie.id=ieca.institucioneducativa_id
+            inner join ttec_carrera_tipo ct on ct.id=ieca.ttec_carrera_tipo_id
+            WHERE ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 2
+            AND ct.ttec_area_formacion_tipo_id <> 200
+            AND lt4.codigo='". $area ."'
+            group by ct.id,ct.nombre
+            order by count(*) desc
+            limit 10
+            ");  
+        } 
+        if($rol != 9) // Tecnico Departamental
+        {
+            $queryEntidad->execute();
+            $objEntidad = $queryEntidad->fetchAll(); 
+        }
+        if (count($objEntidad)>0){
+            foreach($objEntidad as $key=>$value){
+                $objEntidad[$key]['total'] = $total;
+            }
+         
+        }
+
+        return $objEntidad;
     }
 
     /**
@@ -3019,30 +3118,61 @@ class ReporteController extends Controller {
                 //$datosTemp = "{name: 'No Incorporados', y: ".round(((100*$entity['cant_no_incorporado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_no_incorporado']."}, {name: 'Retiros Abandono', y: ".round(((100*$entity['cant_retiro_abandono'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_abandono']."}, {name: 'Retiros Traslado', y: ".round(((100*$entity['cant_retiro_traslado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_traslado']."}, {name: 'Retiros', y: ".round(((100*$entity['cant_retiro'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro']."}, {name: 'Retiros Doble Promoción', y: ".round(((100*$entity['cant_retiro_doble_promocion'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_doble_promocion']."}, {name: 'Efectivos', y: ".round(((100*$entity['total_matricula'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['total_matricula']."},";
                 $datosTemp = "{name: 'Total Inscritos', y: ".(($entity['total_inscrito']==0)?0:100).", label: '".number_format($entity['total_inscrito'], 0, ',', '.')."'}, {name: 'No Incorporados', y: ".round(((100*$entity['cant_no_incorporado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_no_incorporado']."}, {name: 'Retiros por Abandono', y: ".round(((100*$entity['cant_retiro_abandono'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_abandono']."}, {name: 'Retiros por Traslado', y: ".round(((100*$entity['cant_retiro_traslado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_traslado']."}, {name: 'Efectivos', y: ".round(((100*$entity['cant_efectivo'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_efectivo']."},";
                 $pointLabel = "Estudiantes";
+                $name = 'Dependencia';
                 break;
             case 2:
                 $datosTemp = "{name: 'Total Efectivos', y: ".(($entity['cant_efectivo']==0)?0:100).", label: ".$entity['cant_efectivo']."}, {name: 'Inicial', y: ".round(((100*$entity['cant_inicial'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_inicial']."}, {name: 'Primaria', y: ".round(((100*$entity['cant_primaria'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_primaria']."}, {name: 'Secundaria', y: ".round(((100*$entity['cant_secundaria'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_secundaria']."},";
                 $pointLabel = "Estudiantes";
+                $name = 'Dependencia';
                 break;
             case 3:
                 $datosTemp = "{name: 'Total Efectivos', y: ".(($entity['cant_efectivo']==0)?0:100).", label: ".$entity['cant_efectivo']."}, {name: 'Masculino', y: ".round(((100*$entity['cant_masculino'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_masculino']."}, {name: 'Femenino', y: ".round(((100*$entity['cant_femenino'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_femenino']."},";
                 $pointLabel = "Estudiantes";
+                $name = 'Dependencia';
                 break;
             case 4:
                 $datosTemp = "{name: 'Total Efectivos', y: ".(($entity['cant_efectivo']==0)?0:100).", label: ".$entity['cant_efectivo']."}, {name: 'Urbano', y: ".round(((100*$entity['cant_urbano'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_urbano']."}, {name: 'Rural', y: ".round(((100*$entity['cant_rural'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_rural']."},";
                 $pointLabel = "Estudiantes";
+                $name = 'Dependencia';
                 break;
             case 5:
                 $datosTemp = "{name: 'Fiscal o Estatal', y: ".round(((100*$entity['cant_publica'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_publica']."}, {name: 'Convenio', y: ".round(((100*$entity['cant_convenio'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_convenio']."}, {name: 'Privada', y: ".round(((100*$entity['cant_privada'])/(($entity['cant_efectivo']==0) ? 1:$entity['cant_efectivo'])),1).", label: ".$entity['cant_privada']."},";
                 $pointLabel = "Estudiantes";
+                $name = 'Dependencia';
                 break;
             case 11:                
                 $datosTemp = "{name: 'Fiscal o Estatal', y: ".round(((100*$entity['cant_fiscal'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_fiscal']."}, {name: 'Convenio', y: ".round(((100*$entity['cant_convenio'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_convenio']."}, {name: 'Privada', y: ".round(((100*$entity['cant_privada'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_privada']."},";
                 $pointLabel = "Unidades Educativas";
+                $name = 'Dependencia';
                 break;
             case 12:                
                 $datosTemp = "{name: 'Fiscal o Estatal', y: ".round(((100*$entity['cant_fiscal'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_fiscal']."}, {name: 'Convenio', y: ".round(((100*$entity['cant_convenio'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_convenio']."}, {name: 'Privada', y: ".round(((100*$entity['cant_privada'])/(($entity['cant_dependencia']==0) ? 1:$entity['cant_dependencia'])),1).", label: ".$entity['cant_privada']."},";
                 $pointLabel = "Institutos Técnicos y/o Tecnológicos";
+                $name = 'Dependencia';
+                break;
+            case 13:
+                $datosTemp = "";
+                foreach($entity as $dato){
+                    $datosTemp = $datosTemp . "{name: '". $dato['nombre'] ."', y: ".round(((100*$dato['cantidad'])/(($dato['total']==0) ? 1:$dato['total'])),1).", label: ".$dato['cantidad']."},";    
+                }
+                $pointLabel = "Institutos";
+                $name = 'Carrera';
+                break;
+            case 14:
+                $datosTemp = "";
+                foreach($entity as $dato){
+                    $datosTemp = $datosTemp . "{name: '". $dato['detalle'] ."', y: ".round(((100*$dato['cantidad'])/(($dato['total']==0) ? 1:$dato['total'])),1).", label: ".$dato['cantidad']."},";    
+                }
+                $pointLabel = "Centros";
+                $name = 'Dependencia';
+                break;
+            case 15:
+                $datosTemp = "";
+                foreach($entity as $dato){
+                    $datosTemp = $datosTemp . "{name: '". $dato['detalle'] ."', y: ".round(((100*$dato['cantidad'])/(($dato['total']==0) ? 1:$dato['total'])),1).", label: ".$dato['cantidad']."},";    
+                }
+                $pointLabel = "Centros";
+                $name = 'Área de Atención';
                 break;
             default:
                 $datosTemp = "";
@@ -3067,8 +3197,10 @@ class ReporteController extends Controller {
                     yAxis: {
                         title: {
                             text: ''
+                        },
+                        labels: {
+                            format: '{value} %'
                         }
-
                     },
                     legend: {
                         enabled: false
@@ -3088,7 +3220,7 @@ class ReporteController extends Controller {
                     },
 
                     series: [{
-                        name: 'Dependencia',
+                        name: '". $name ."',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
@@ -3213,6 +3345,14 @@ class ReporteController extends Controller {
                 $datosTemp = "{name: 'Carreras', y: ".round(((100*$entity['cant_carreras'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_carreras']."}, {name: 'Cursos', y: ".round(((100*$entity['cant_cursos'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_cursos']."},";
                 $pointLabel = "";
                 $nameseries = 'Carreras y/o Cursos';
+                break;
+            case 14:
+                $datosTemp = "";
+                foreach($entity as $e){
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                $pointLabel = "Centros";
+                $nameseries = 'Ámbito de Educación';
                 break;
             default:
                 $datosTemp = "";
@@ -3764,7 +3904,7 @@ class ReporteController extends Controller {
 
         $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
@@ -3944,6 +4084,47 @@ class ReporteController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    /**
+     * Imprime reporte listado de institutos tecnicos en formato PDF
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function informacionGeneralInstitutosTecnicosListaPrintPdfAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = $request->get('codigo');
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_InstitutosTecnicosTecnologicos_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionInstitutosTecnicos_v1_pvc.rptdesign&&__format=pdf&codigo='.$codigoArea));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
     //    ================================================================================================================================
 //    ALTERNATIVA
 //    ================================================================================================================================
@@ -4006,7 +4187,7 @@ class ReporteController extends Controller {
         $entityGestionSelecionado = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
 
 
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
+        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario,1);
         $subEntidades = $this->buscaSubEntidadRol($codigoArea,$rolUsuario);
         $entityEstadistica = $this->buscaSubidaArchivosAreaRol($codigoArea,$rolUsuario,$gestion);
 
@@ -4739,7 +4920,7 @@ class ReporteController extends Controller {
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol($codigo,$rol);
+        $entidad = $this->buscaEntidadRol($codigo,$rol,1);
         $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol);
 
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area de atencion, 4:modalidad  
@@ -4812,7 +4993,7 @@ class ReporteController extends Controller {
 
     /**
      * Pagina Inicial - Instituciones Educativas - Nacional - Educacion Especial
-     * rcanaviri
+     * rcanaviri-(edit-Pvargas)
      * @param Request $request
      * @return type
      */
@@ -4837,24 +5018,23 @@ class ReporteController extends Controller {
             $codigo = 0;
 			$rol = 0;	
 		}
-
+        //dump($codigo);die;
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol($codigo,$rol);
+        $entidad = $this->buscaEntidadRol($codigo,$rol,4);
         $subEntidades = $this->buscaSubEntidadRolEspecialInstitucionEducativa($codigo,$rol);
-        
-        // devuelve un array con los diferentes tipos de reportes 2:dependencia 
-        $entityEstadistica = $this->buscaEstadisticaEspecialInstitucionEducativaAreaRol($codigo,$rol); 
+        $entityEstadistica = $this->buscaEstadisticaEspecialInstitucionEducativaAreaRol($codigo,$rol);
 
+        //dump($subEntidades,$entityEstadistica);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
-            foreach ($subEntidades as $key => $dato) {
+            /* foreach ($subEntidades as $key => $dato) {
                 if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){             
                     $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
                 } else {          
                     $subEntidades[$key]['total_general'] = 0;
                 } 
-            }
+            } */
         } else {
             $subEntidades = null;
         }
@@ -4864,7 +5044,10 @@ class ReporteController extends Controller {
             $link = false;
         }
         
-        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Centro de Educación Especial según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+        $chartAmbito = $this->chartDonut3dInformacionGeneral($entityEstadistica[4],"Centros de Educación Especial segun Ámbito de Educación",$gestionActual,14,"chartContainerAmbito");
+        $chartArea = $this->chartPie($entityEstadistica[2],"Centros de Educación Especial segun Área Geográfica",$gestionActual,3,"chartContainerArea");
+        $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica[1],"Centros de Educación Especial según Dependencia",$gestionActual,14,"chartContainerDependencia");
+        $chartDiscapacidad = $this->chartColumnInformacionGeneral($entityEstadistica[3]," Centros de Educación Especial según Áreas de Atención",$gestionActual,15,"chartContainerDiscapacidad");
         
         if($rol == 0){
             $mensaje = '$("#modal-bootstrap-tour").modal("show");';
@@ -4876,8 +5059,12 @@ class ReporteController extends Controller {
         if(count($subEntidades)>0 and isset($subEntidades)){
             return $this->render('SieAppWebBundle:Reporte:institucionEducativaEspecial.html.twig', array(
                 'infoEntidad'=>$entidad,
-                'infoSubEntidad'=>$subEntidades, 
+                'infoSubEntidad'=>$subEntidades,
+                'infoEstadistica'=>$entityEstadistica,
+                'datoGraficoAmbito'=>$chartAmbito,
+                'datoGraficoArea'=>$chartArea,
                 'datoGraficoDependencia'=>$chartDependencia,
+                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
                 'mensaje'=>$mensaje,
                 'gestion'=>$gestionActual,
                 'fechaEstadistica'=>$fechaEstadistica,
@@ -4887,7 +5074,10 @@ class ReporteController extends Controller {
         } else {
             return $this->render('SieAppWebBundle:Reporte:institucionEducativaEspecial.html.twig', array(
                 'infoEntidad'=>$entidad,
+                'datoGraficoAmbito'=>$chartAmbito,
+                'datoGraficoArea'=>$chartArea,
                 'datoGraficoDependencia'=>$chartDependencia,
+                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
                 'mensaje'=>$mensaje,
                 'gestion'=>$gestionActual,
                 'fechaEstadistica'=>$fechaEstadistica,
@@ -4897,14 +5087,12 @@ class ReporteController extends Controller {
         }
     }
 
-
-
     /**
-     * Busca el detalle de centros de educacion especial en funcion al tipo de rol - Educacion Especial
-     * Jurlan
-     * @param Request $request
-     * @return type
-     */
+    * * Busca el detalle de centros de educacion especial en funcion al tipo de rol - Educacion Especial
+    * Pvargas
+    * @param Request $request
+    * @return type
+    */
     public function buscaEstadisticaEspecialInstitucionEducativaAreaRol($codigo,$rol) {
         /*
          * Define la zona horaria y halla la fecha actual
@@ -4912,253 +5100,167 @@ class ReporteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
-        //$gestionActual = 2016;
+        $gestionProcesada = $gestionActual;
 
         $em = $this->getDoctrine()->getManager();
 
-        $queryEntidad = $em->getConnection()->prepare("
-            with tabla as (                
-                select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
-                FROM institucioneducativa ie
-                INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
-                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
-                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
-                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
-                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
-                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
-                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
-                INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
-                INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
-                INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
-                INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id
-                /* 
-                LEFT JOIN ( SELECT DISTINCT ON (a.institucioneducativa_id) a.id,
-                        a.institucioneducativa_id,
-                        b.carnet AS ci_director,
-                        (((b.paterno::text || ' '::text) || b.materno::text) || ' '::text) || b.nombre::text AS director,
-                        a.cargo_tipo_id AS item_director,
-                        b.celular AS celular_director,
-                        a.ref AS referencia_telefono
-                    FROM maestro_inscripcion a
-                        JOIN persona b ON a.persona_id = b.id
-                    WHERE (a.gestion_tipo_id IN ( SELECT max(maestro_inscripcion.gestion_tipo_id) AS gestion_tipo_id
-                            FROM maestro_inscripcion
-                            WHERE (maestro_inscripcion.cargo_tipo_id = ANY (ARRAY[1, 12])) AND maestro_inscripcion.es_vigente_administrativo = true)) AND (a.cargo_tipo_id = ANY (ARRAY[1, 12])) AND a.es_vigente_administrativo = true
-                    ORDER BY a.institucioneducativa_id, a.id DESC
-                ) dir ON ie.id = dir.institucioneducativa_id
-                LEFT JOIN (select ieaea.institucioneducativa_id,
-                    string_agg(DISTINCT eat.id::character varying::text, ','::text) AS niveles_id,
-                    string_agg(DISTINCT eat.area_especial::text, ', '::text) AS niveles
-                    from institucioneducativa_area_especial_autorizado as ieaea
-                    inner join especial_area_tipo as eat on eat.id = ieaea.especial_area_tipo_id
-                    where eat.id <> 99
-                    group by ieaea.institucioneducativa_id 
-                ) iena ON iena.institucioneducativa_id = ie.id
-                LEFT JOIN ( 
-                    SELECT string_agg(vv.turno_id::character varying::text, '-'::text ORDER BY vv.turno_id) AS turno_id,
-                        string_agg(vv.turno, '-'::text ORDER BY vv.turno_id) AS turno,
-                        vv.institucioneducativa_id
-                    FROM ( SELECT v.turno,
-                                    CASE v.turno
-                                        WHEN 'M'::text THEN 1
-                                        WHEN 'T'::text THEN 2
-                                        WHEN 'N'::text THEN 3
-                                        ELSE 0
-                                    END AS turno_id,
-                                v.institucioneducativa_id
-                            FROM ( 
-                            
-                        select distinct iec2.institucioneducativa_id
-                        , unnest(string_to_array(string_agg(DISTINCT
-                                            CASE tt1.abrv
-                                                WHEN 'MTN'::text THEN 'M-T-N'::character varying
-                                                WHEN '.'::text THEN ''::character varying
-                                                WHEN 'MN'::text THEN 'M-N'::character varying
-                                                ELSE tt1.abrv
-                                            END::text, '-'::text), '-'::text, ''::text)) AS turno
-                        from institucioneducativa_curso as iec2 
-                        inner join (
-                                    select distinct on (ie1.id) 
-                                    ie1.id, iec1.gestion_tipo_id
-                                    from institucioneducativa as ie1
-                                    inner join institucioneducativa_curso as iec1 on iec1.institucioneducativa_id = ie1.id
-                                    inner join turno_tipo tt1 ON tt1.id = iec1.turno_tipo_id
-                                    where ie1.orgcurricular_tipo_id = 2 and ie1.id not in (1,2,3,4,5,6,7,8,9)
-                                    order by ie1.id, tt1.abrv, iec1.gestion_tipo_id desc
-                                    ) as ieg on ieg.id = iec2.institucioneducativa_id and ieg.gestion_tipo_id = iec2.gestion_tipo_id
-                                    inner join turno_tipo tt1 ON tt1.id = iec2.turno_tipo_id
-                                    group by iec2.institucioneducativa_id
-                                ) v
-                            GROUP BY v.institucioneducativa_id, v.turno
-                            ORDER BY
-                                    CASE v.turno
-                                        WHEN 'M'::text THEN 1
-                                        WHEN 'T'::text THEN 2
-                                        WHEN 'N'::text THEN 3
-                                        ELSE 0
-                                    END) vv
-                    GROUP BY vv.institucioneducativa_id
-                ) iet ON iet.institucioneducativa_id = ie.id
-                LEFT JOIN ( SELECT DISTINCT ON (ies1.institucioneducativa_id) ies1.institucioneducativa_id,
-                        ies1.gestion_tipo_id,
-                        ies1.telefono1,
-                        ies1.telefono2,
-                        ies1.fax,
-                        ies1.email
-                    FROM institucioneducativa_sucursal ies1
-                    INNER JOIN institucioneducativa as ie1 on ie1.id = ies1.institucioneducativa_id
-                    WHERE ie1.orgcurricular_tipo_id = 2
-                    ORDER BY ies1.institucioneducativa_id, ies1.gestion_tipo_id DESC, ies1.id DESC
-                ) ies ON ies.institucioneducativa_id = ie.id
-                */
-            WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4
-            group by dt.id, dt.dependencia
-            )   
-
-            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-            group by dt.id, dt.dependencia
-            
-            order by tipo_id, id
-             
-        "); 
-
-        if($rol == 9 or $rol == 5) // Director o Administrativo
-        {
+        if($rol == 8 or $rol == 20 or $rol == 0) // Tecnico Nacional
+        {            
             $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (                
-                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
-                    FROM institucioneducativa ie
-                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
-                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
-                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
-                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
-                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
-                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and ie.id = ".$codigo."
-                    group by dt.id, dt.dependencia
-                )   
-
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
+            with tabla as (
+                select ie.id,ie.institucioneducativa,ie.dependencia_tipo_id,dt.dependencia,case WHEN lt.area2001 ='R' then 'RURAL'ELSE 'URBANA'END as area2001,eat.id as especial_area_tipo_id,eat.area_especial
+                FROM institucioneducativa ie
+                INNER JOIN jurisdiccion_geografica jurg ON ie.le_juridicciongeografica_id = jurg.id
+                inner JOIN lugar_tipo lt ON lt.id = jurg.lugar_tipo_id_localidad
+                inner join distrito_tipo ddt on ddt.id=jurg.distrito_tipo_id
+                inner join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
+                inner join institucioneducativa_area_especial_autorizado ieae on ieae.institucioneducativa_id=ie.id
+                inner join especial_area_tipo eat on eat.id=ieae.especial_area_tipo_id
+                WHERE ie.institucioneducativa_tipo_id =4
+                AND ie.estadoinstitucion_tipo_id = 10
+                AND ie.institucioneducativa_acreditacion_tipo_id = 1
+                )
+               
+                select 1 as tipo_id, 'Dependencia' as tipo_nombre,dependencia as detalle,count(DISTINCT id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                GROUP BY dependencia_tipo_id,dependencia
                 
-                order by tipo_id, id
-            ");     
-        }  
-
-        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
-        {
-            $queryEntidad = $em->getConnection()->prepare("    
-                with tabla as (                
-                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
-                    FROM institucioneducativa ie
-                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
-                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
-                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
-                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
-                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
-                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and dis.codigo = '".$codigo."'
-                    group by dt.id, dt.dependencia
-                )   
-
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
+                UNION ALL
+                select 2 as tipo_id, 'Area' as tipo_nombre,area2001 as detalle,count(DISTINCT id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                GROUP BY area2001
                 
-                order by tipo_id, id
-            ");  
-        }  
+                UNION ALL
+                select 3 as tipo_id, 'Atencion' as tipo_nombre,area_especial as detalle,count(id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                where especial_area_tipo_id<>99
+                GROUP BY area_especial
+                
+                UNION ALL
+                select 4 as tipo_id, 'Ambito' as tipo_nombre,a.area_especial as detalle,count(a.id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from
+                (select id,array_to_string(array_agg( DISTINCT case WHEN especial_area_tipo_id in(1,2,3,4,5,10,99) then 'DISCAPACIDAD' else area_especial end) ,',') as area_especial
+                    FROM tabla
+                    GROUP BY id)a
+                GROUP BY a.area_especial
+                
+                ORDER BY 1,2,3
+               
+            ");    
+        } 
 
         if($rol == 7) // Tecnico Departamental
         {
-            $queryEntidad = $em->getConnection()->prepare("                
-                with tabla as (                
-                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
-                    FROM institucioneducativa ie
-                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
-                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
-                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
-                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
-                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
-                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and dep.codigo = '".$codigo."'
-                    group by dt.id, dt.dependencia
-                )   
-
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
+            $queryEntidad = $em->getConnection()->prepare("
+            with tabla as (
+                select ie.id,ie.institucioneducativa,ie.dependencia_tipo_id,dt.dependencia,case WHEN lt.area2001 ='R' then 'RURAL'ELSE 'URBANA'END as area2001,eat.id as especial_area_tipo_id,eat.area_especial
+                FROM institucioneducativa ie
+                INNER JOIN jurisdiccion_geografica jurg ON ie.le_juridicciongeografica_id = jurg.id
+                inner JOIN lugar_tipo lt ON lt.id = jurg.lugar_tipo_id_localidad
+                inner join distrito_tipo ddt on ddt.id=jurg.distrito_tipo_id
+                inner join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
+                inner join institucioneducativa_area_especial_autorizado ieae on ieae.institucioneducativa_id=ie.id
+                inner join especial_area_tipo eat on eat.id=ieae.especial_area_tipo_id
+                WHERE ie.institucioneducativa_tipo_id =4
+                AND ie.estadoinstitucion_tipo_id = 10
+                AND ie.institucioneducativa_acreditacion_tipo_id = 1
+                AND ddt.departamento_tipo_id = ". $codigo ."
+                )
+            
+                select 1 as tipo_id, 'Dependencia' as tipo_nombre,dependencia as detalle,count(DISTINCT id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                GROUP BY dependencia_tipo_id,dependencia
                 
-                order by tipo_id, id
+                UNION ALL
+                select 2 as tipo_id, 'Area' as tipo_nombre,area2001 as detalle,count(DISTINCT id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                GROUP BY area2001
+                
+                UNION ALL
+                select 3 as tipo_id, 'Atencion' as tipo_nombre,area_especial as detalle,count(id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                where especial_area_tipo_id<>99
+                GROUP BY area_especial
+                
+                UNION ALL
+                select 4 as tipo_id, 'Ambito' as tipo_nombre,a.area_especial as detalle,count(a.id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from
+                (select id,array_to_string(array_agg( DISTINCT case WHEN especial_area_tipo_id in(1,2,3,4,5,10,99) then 'DISCAPACIDAD' else area_especial end) ,',') as area_especial
+                    FROM tabla
+                    GROUP BY id)a
+                GROUP BY a.area_especial
+                
+                ORDER BY 1,2,3
             ");  
         } 
-
-        if($rol == 8 or $rol == 20) // Tecnico Nacional
-        {            
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
             $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (                
-                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
-                    FROM institucioneducativa ie
-                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
-                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
-                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
-                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
-                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
-                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
-                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4
-                    group by dt.id, dt.dependencia
-                )   
+            with tabla as (
+                select ie.id,ie.institucioneducativa,ie.dependencia_tipo_id,dt.dependencia,case WHEN lt.area2001 ='R' then 'RURAL'ELSE 'URBANA'END as area2001,eat.id as especial_area_tipo_id,eat.area_especial
+                FROM institucioneducativa ie
+                INNER JOIN jurisdiccion_geografica jurg ON ie.le_juridicciongeografica_id = jurg.id
+                inner JOIN lugar_tipo lt ON lt.id = jurg.lugar_tipo_id_localidad
+                inner join distrito_tipo ddt on ddt.id=jurg.distrito_tipo_id
+                inner join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
+                inner join institucioneducativa_area_especial_autorizado ieae on ieae.institucioneducativa_id=ie.id
+                inner join especial_area_tipo eat on eat.id=ieae.especial_area_tipo_id
+                WHERE ie.institucioneducativa_tipo_id =4
+                AND ie.estadoinstitucion_tipo_id = 10
+                AND ie.institucioneducativa_acreditacion_tipo_id = 1
+                AND ddt.id = ". $codigo ."
+                )
 
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
+                select 1 as tipo_id, 'Dependencia' as tipo_nombre,dependencia as detalle,count(DISTINCT id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                GROUP BY dependencia_tipo_id,dependencia
                 
-                order by tipo_id, id
-            ");    
-        } 
+                UNION ALL
+                select 2 as tipo_id, 'Area' as tipo_nombre,area2001 as detalle,count(DISTINCT id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                GROUP BY area2001
+                
+                UNION ALL
+                select 3 as tipo_id, 'Atencion' as tipo_nombre,area_especial as detalle,count(id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from tabla
+                where especial_area_tipo_id<>99
+                GROUP BY area_especial
+                
+                UNION ALL
+                select 4 as tipo_id, 'Ambito' as tipo_nombre,a.area_especial as detalle,count(a.id) as cantidad,(select count(DISTINCT id) as total
+                from tabla)
+                from
+                (select id,array_to_string(array_agg( DISTINCT case WHEN especial_area_tipo_id in(1,2,3,4,5,10,99) then 'DISCAPACIDAD' else area_especial end) ,',') as area_especial
+                    FROM tabla
+                    GROUP BY id)a
+                GROUP BY a.area_especial
+                
+                ORDER BY 1,2,3
+            ");  
+        }  
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {
+        }       
 
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll(); 
 
         $aDato = array();
-
+        
         foreach ($objEntidad as $key => $dato) {
-            $aDato[$dato['tipo_id']]['tipo'] = $dato['tipo_nombre'];
-            if (isset($aDato[$dato['tipo_id']]['dato'][0]['cantidad'])){
-                $cantidadParcial = $aDato[$dato['tipo_id']]['dato'][0]['cantidad'] + $dato['cantidad'];
-            } else {
-                $cantidadParcial = $dato['cantidad'];
-            }    
-            $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total', 'cantidad'=>$cantidadParcial);    
-            $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad']);  
+            $aDato[$dato['tipo_id']][]= $dato;
         }
         return $aDato;
     }
@@ -5532,9 +5634,21 @@ class ReporteController extends Controller {
         $datosTemp = "";
         $subTotal = 0;
         if ($nombreLabel == 1){
-            $nombreLabel = 'Institutos Técnicos y/o Tecnológicos';
+            $nombreLabel = 'Institutos';
             $datosTemp = "{name: 'Rural', y: ".round(((100*$entity['cant_rural'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_rural']."}, {name: 'Urbana', y: ".round(((100*$entity['cant_urbana'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_urbana']."},";
+            $name = 'Área Geográfica';
+        }elseif($nombreLabel == 2){
+            $nombreLabel = 'Institutos';
+            $datosTemp = "{name: 'Sede', y: ".round(((100*$entity['cant_sede'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_sede']."}, {name: 'Subsede', y: ".round(((100*$entity['cant_subsede'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_subsede']."},";
+            $name = 'Sede/Subsede';
+        }elseif($nombreLabel == 3){
+            $nombreLabel = 'Centros';
+            foreach($entity as $e){
+                $datosTemp = $datosTemp . "{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";
+            }
+            $name = 'Área Geográfica';
         }else{
+            $name = 'Sexo';
             foreach ($entity['dato'] as $key => $dato) {
                 $porcentaje = 0;
                 if ($key == 0){
@@ -5581,7 +5695,7 @@ class ReporteController extends Controller {
                         pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$nombreLabel."</b> del total<br/>'
                     },
                     series: [{
-                        name: 'Área',
+                        name: '". $name ."',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
@@ -6127,7 +6241,8 @@ class ReporteController extends Controller {
 
         
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionCentros_Especial_v1_pvc.rptdesign&__format=pdf&codigo='.$codigoArea));
+        /*  $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {              
@@ -6141,12 +6256,12 @@ class ReporteController extends Controller {
         if($rol == 7) // Tecnico Departamental
         { 
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Departamental_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
-        } 
+        }  
 
-        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        if($rol == 8 or $rol == 20 or $rol  == 0) // Tecnico Nacional
         {  
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
-        } 
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionCentros_Especial_v1_pvc.rptdesign&__format=pdf&codigo='.$codigoArea));
+        } */
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -6184,15 +6299,16 @@ class ReporteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionCentros_Especial_v1_pvc.rptdesign&__format=xlsx&codigo='.$codigoArea));
 
-        if($rol == 9 or $rol == 5) // Director o Administrativo
+       /*  if($rol == 9 or $rol == 5) // Director o Administrativo
         {              
         }  
 
@@ -6209,7 +6325,7 @@ class ReporteController extends Controller {
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {  
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
-        } 
+        }  */
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');

@@ -71,17 +71,20 @@
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
                             </div>  
                             <div class="pull-right">
-                                <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosXls'].submit();" title="Descargarrrrr Instituciones Educativas en formato EXCEL" class="btn btn-lilac">
+                                <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosPdf'].submit();" title="Descargar Instituciones Educativas en formato PDF" class="btn btn-danger">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-success">
                                     <i class="fa fa-file-excel-o"></i>
                                 </button>
-                            </div>     
+                            </div>
                             <div class="clearfix"></div>
                         </div>
                     </div>                    
                     <div id="tour-8" class="panel shadow">
                         <div class="panel-heading">
                             <div id="tour-12" class="pull-left">
-                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Institutos Técnicos y/o Tecnológicos {% if infoSubEntidad is defined and link %}por {{infoSubEntidad[0]['nombrearea']}}{%endif%}</h3>
+                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Institutos Técnicos y/o Tecnológicos {% if infoSubEntidad is defined and infoEntidad.rolactual == 0  %} por {{infoSubEntidad[0]['nombrearea']}} {% elseif infoEntidad.rolactual == 7 %} por {{infoEntidad.nombre}} {% endif %}</h3>
                             </div>   
                             <div class="pull-right"> 
                             </div>                          
@@ -99,12 +102,12 @@
                             {% for data in infoSubEntidad %}
                                 {% set cantidad = data.cantidad %}  
                                 {% set total = infoEstadistica['cant_total'] %} 
-                                {% set porcentaje = (cantidad*100)/(total)%} 
+                                {% set porcentaje = (cantidad * 100)/(total) %} 
                                 {% set id = data.codigo %}
                                 {% set nombre = data.nombre %} 
                                 {% set rol = data.rolusuario %}  
                                 {% if link %}                               
-                                    <form name="form" role="form" action="{{ path('reporte_regular_informacion_general_institutos_tecnicos') }}" method="POST"> 
+                                    <form name="form" role="form" action="{{ path('reporte_informacion_general_institutos_tecnicos') }}" method="POST"> 
                                         <input type="hidden" name="codigo" value="{{id}}" />
                                         <input type="hidden" name="rol" value="{{rol}}" />
                                         <button type="submit" id="submit{{id}}" style="display:none;"></button>
@@ -134,11 +137,16 @@
                     </div>
                 </div>  
                 {% if link %}
+                    <form name="formEstadisticaInstitutosTecnicostecnologicosPdf" id="formEstadisticaRittPdf" role="form" action="{{ path('reporte_informacion_general_ritt_lista_print_pdf') }}" method="POST">  
+                        <input type="hidden" name="gestion" value="{{ gestion }}" />
+                        <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                        <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
+                    </form>
                     <form name="formEstadisticaInstitutosTecnicostecnologicosXls" id="formEstadisticaRittXls" role="form" action="{{ path('reporte_informacion_general_ritt_lista_print_xls') }}" method="POST">  
                         <input type="hidden" name="gestion" value="{{ gestion }}" />
                         <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
                         <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
-                    </form>   
+                    </form>  
                 {% endif %}
             {% endif %}
             
@@ -233,7 +241,66 @@
                             </div><!-- /.panel-body -->
                         </div>
                     </div>
-                </div> 
+                </div>
+                <div class="row">                                       
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <!--<div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Unidades Educativas- Nivel de Estudio</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                        <i class="fa fa-angle-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(2,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
+                                        <i class='fa fa-circle-o'></i>
+                                    </button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            -->
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">         
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div id="chartContainerSede" style="height:300px;"> </div> 
+                                    </div>   
+                                    
+                                </div>                            
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">                   
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <!--
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-map'></i> Unidades Educativas - Dependencia</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                        <i class="fa fa-angle-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(5,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
+                                        <i class='fa fa-bar-chart'></i>
+                                    </button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            -->
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">    
+                                    <div id="chartContainerCarreras" style="height: 300px;"> </div> 
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
                 {% endif %}
             </div>        
         </div>
@@ -263,12 +330,20 @@
             {% autoescape %}
                 {{ datoGraficoDependencia|raw }}
             {% endautoescape %}
+            {% autoescape %}
+                {{ datoGraficoSede|raw }}
+            {% endautoescape %}
+            {% autoescape %}
+                {{ datoGraficoCarreras|raw }}
+            {% endautoescape %}
 
             $(function () {
                 chartContainerTecnicoTecnologicoLoad();
                 {% if link %} 
                     chartContainerAreaLoad(); 
-                    chartContainerDependenciaLoad(); 
+                    chartContainerDependenciaLoad();
+                    chartContainerSedeLoad(); 
+                    chartContainerCarrerasLoad(); 
                 {% endif %}
             });  
 

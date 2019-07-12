@@ -10,7 +10,7 @@ reporte_regular_informacion_general_unidad_educativa:
     path:     /informacion/general/regular/unidad/educativa
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativa }
 
-reporte_regular_informacion_general_institutos_tecnicos:
+reporte_informacion_general_institutos_tecnicos:
     path:     /informacion/general/institutos/tecnicos
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicos }
 
@@ -21,6 +21,10 @@ reporte_regular_informacion_general_unidad_educativa_lista_print_xls:
 reporte_informacion_general_ritt_lista_print_xls:
     path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/xls
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintXls }
+
+reporte_informacion_general_ritt_lista_print_pdf:
+    path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintPdf }
 
 reporte_regular_informacion_general_chart:
     path:     /informacion/general/regular/chart
