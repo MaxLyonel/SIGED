@@ -57,13 +57,27 @@
             </div><!-- /.breadcrumb-wrapper -->
         </div><!-- /.header-content -->
         <div class="body-content animated fadeIn">
-        
-            <div class="panel panel-primary">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Observación(es)</h3>
+                </div>
+                <div class="panel-body">
+                    <div v-if="observacionDistrito != ''">
+                        <h5>
+                            <ul><li>${ observacionDistrito }</li></ul>
+                        </h5>
+                        <div class="text-right">
+                            <button class="btn btn-default" onclick="document.getElementById('formulario').style.display = 'block'"> <i class="fa fa-edit"></i> Actualizar formulario </button>
+                        </div>
+                    </div>
+                    <p v-else> <img src="{{asset('img/loading-sm.gif')}}" alt=""> &nbsp; Cargando ... </p>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="formulario" {# style="display:none" #}>
                 <div class="panel-heading">
                     <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Solicitud </h3>
                 </div>
                 <div class="panel-body">
-
                     <div class="row">
 
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -71,8 +85,6 @@
                                 <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
-                            
-                            
 
                             <table class="table table-condensed">
                                 <thead>
@@ -165,8 +177,11 @@
                                         <textarea v-model="justificacion" id="" rows="4" class="form-control jupper" ref="justificacion"></textarea>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h5>Adjuntar Resolución Ministerial</h5>
-                                        <input type="file" name="image" @change="getImage" accept="image/*" class="form-control">  
+                                        <h5>Resolución Administrativa</h5>
+                                        <a v-bind:href="archivoUrl">Ver R.A.</a>
+                                        <div class="text-center">
+                                            <input type="file" name="image" @change="getImage" accept="image/*" class="form-control">  
+                                        </div>
                                     </div>
                                 </div>
 
@@ -184,12 +199,10 @@
                                     </div>
                                 </div>
 
-
                             </div>
                             <div v-else>
-                                <div class="alert alert-info">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                    <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Agregar calificación" ->
+                                <div class="alert alert-info text-center">
+                                    <img src="{{asset('img/loading-sm.gif')}}" alt=""> &nbsp; <b>Cargando ...</b>
                                 </div>
                             </div>
                         </div>
@@ -296,6 +309,7 @@
             delimiters: ['${', '}'],
             el: '#app',
             data: {
+                idTramite: '{{idTramite}}',
                 idInscripcion: '{{idInscripcion}}',
                 flujoTipo: '{{flujoTipo}}',
                 notas: [],
@@ -304,7 +318,9 @@
                 filasCualitativas: [],
                 justificacion: '',
                 archivo: '',
-                acuerdo: false
+                acuerdo: false,
+                archivoUrl: '',
+                observacionDistrito: ''
             },
             methods: {
                 agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura){
@@ -473,14 +489,14 @@
                     }
 
                     // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DE LA RESOLUCION ADMINISTRATIVA
-                    if (typeof this.archivo != 'object') {
-                        Swal.fire(
-                          'Adjuntar R.M.!',
-                          'Debe adjuntar un escaneado de la Resolución Ministerial.',
-                          'warning'
-                        );
-                        return;
-                    }
+                    // if (typeof this.archivo != 'object') {
+                    //     Swal.fire(
+                    //       'Adjuntar R.M.!',
+                    //       'Debe adjuntar un escaneado de la Resolución Administrativa.',
+                    //       'warning'
+                    //     );
+                    //     return;
+                    // }
 
                     // VALIDAMOS SI SELECCIONO EL ACUERDO
                     if (!this.acuerdo) {
@@ -505,6 +521,7 @@
                     data.append('notasCualitativas', JSON.stringify(this.notasCualitativas));
                     data.append('justificacion', this.justificacion);
                     data.append('archivo', this.archivo);
+                    data.append('idTramite', this.idTramite);
 
                     axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
                     .then(response => {
@@ -517,22 +534,47 @@
                 
             },
             mounted: function(){
-                this.justificacion = 'hola';
-                console.log('{{dataPrev}}');
-                console.log('---------------------');
-                this.notas.push({
-                            idEstudianteNota: 12133,
-                            asignatura: 'otro',
-                            bimestre: 1,
-                            nota: 23,
-                            notaNueva: '',
-                            idNota: 1343,
-                            idFila: 3324,
-                            idNotaTipo: 233,
-                            idEstudianteAsignatura: 12123
+                axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_obtener_datos', {idTramite: this.idTramite}))
+                    .then(response => {
+                        // console.log(response.data);
+                        this.notas = response.data.notas;
+                        this.notasCualitativas = response.data.notasCualitativas;
+                        this.justificacion = response.data.justificacion;
+                        this.archivoAnterior = response.data.file_url;
+
+                        this.observacionDistrito = response.data.obs;
+
+                        this.archivoUrl = response.data.archivoUrl;
+
+                        let vm = this;
+                        $.each(this.notas, function(index, val) {
+                            vm.filas.push(val.idFila);
+                            $('#'+val.idFila).addClass('seleccionado');
                         });
-                console.log(JSON.parse(JSON.stringify('{{dataPrev}}')));
-                // console.log(JSON.parse('{{dataPrev}}'));
+                        $.each(this.notasCualitativas, function(index, val) {
+                            vm.filasCualitativas.push(val.idFila);
+                            $('#'+val.idFila).addClass('seleccionado');
+                        });
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                // this.justificacion = 'hola';
+                // console.log('{{dataPrev}}');
+                // console.log('---------------------');
+                // this.notas.push({
+                //             idEstudianteNota: 12133,
+                //             asignatura: 'otro',
+                //             bimestre: 1,
+                //             nota: 23,
+                //             notaNueva: '',
+                //             idNota: 1343,
+                //             idFila: 3324,
+                //             idNotaTipo: 233,
+                //             idEstudianteAsignatura: 12123
+                //         });
+                // console.log(JSON.parse(JSON.stringify('{{dataPrev}}')));
+                // // console.log(JSON.parse('{{dataPrev}}'));
             }
         });
 

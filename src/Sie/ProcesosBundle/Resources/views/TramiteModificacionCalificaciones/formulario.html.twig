@@ -165,7 +165,7 @@
                                         <textarea v-model="justificacion" id="" rows="4" class="form-control jupper" ref="justificacion"></textarea>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h5>Adjuntar Resolución Ministerial</h5>
+                                        <h5>Adjuntar Resolución Administrativa</h5>
                                         <input type="file" name="image" @change="getImage" accept="image/*" class="form-control">  
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                     </div>
                                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
                                         <a href="" class="btn btn-default">Cancelar</a>
-                                        <button v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
+                                        <button v-on:click="enviarSolicitud()" type="button" class="btn btn-success" :disabled="acuerdo">Enviar solicitud</button>
                                     </div>
                                 </div>
 
@@ -476,7 +476,7 @@
                     if (typeof this.archivo != 'object') {
                         Swal.fire(
                           'Adjuntar R.M.!',
-                          'Debe adjuntar un escaneado de la Resolución Ministerial.',
+                          'Debe adjuntar un escaneado de la Resolución Administrativa.',
                           'warning'
                         );
                         return;
