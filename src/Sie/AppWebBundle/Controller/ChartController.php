@@ -30,483 +30,6 @@ class ChartController extends Controller {
 
 
     /**
-     * Pagina Inicial - Información General - Educacion Regular
-     * Jurlan
-     * @param Request $request
-     * @return type
-     */
-    public function informacionGeneralRegularAction(Request $request) {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
-        //$gestionActual = 2016;
-        $idUsuario = $this->session->get('userId');
-
-        if ($request->isMethod('POST')) {
-            /*
-             * Recupera datos del formulario
-             */
-            $codigoArea = $request->get('codigo');
-            $rolUsuario = $request->get('rol');
-        } else {
-            $codigoArea = 0;
-            $rolUsuario = 0;
-        }
-
-        $defaultController = new DefaultCont();
-        $defaultController->setContainer($this->container);
-
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
-        $subEntidades = $this->buscaSubEntidadRol($codigoArea,$rolUsuario);
-        $entityEstadistica = $this->buscaEstadisticaAreaRol($codigoArea,$rolUsuario);
-        //$entityEstadisticaUE = $this->buscaEstadisticaUERol($codigoArea,$rolUsuario);
-        //$entityEstadisticaEE = $this->buscaEstadisticaEERol($codigoArea,$rolUsuario);
-        
-        $fechaEstadisticaRegular = $this->buscaFechaVistaMaterializadaRegular($gestionProcesada);
-       
-        $chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
-        $chartNivel = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionProcesada,2,"chartContainerEfectivoNivel");
-        $chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-        $chartGenero = $this->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionProcesada,3,"chartContainerEfectivoGenero");
-        $chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-        $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionProcesada,5,"chartContainerEfectivoDependencia");
-        
-        if ($entidad != '' and $subEntidades != ''){
-            return $this->render('SieAppWebBundle:Reporte:matriculaEducativaRegular.html.twig', array(
-                'infoEntidad'=>$entidad,
-                'infoSubEntidad'=>$subEntidades, 
-                'infoEstadistica'=>$entityEstadistica,
-                //'infoEstadisticaUE'=>$entityEstadisticaUE,
-                //'infoEstadisticaEE'=>$entityEstadisticaEE,
-                'datoGraficoMatricula'=>$chartMatricula,
-                'datoGraficoNivel'=>$chartNivel,
-                'datoGraficoNivelGrado'=>$chartNivelGrado,
-                'datoGraficoGenero'=>$chartGenero,
-                'datoGraficoArea'=>$chartArea,
-                'datoGraficoDependencia'=>$chartDependencia,
-                'gestion'=>$gestionProcesada,
-                'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
-                'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                'form' => $defaultController->createLoginForm()->createView()
-            ));    
-        } else {
-            if ($entidad != ''){
-                return $this->render('SieAppWebBundle:Reporte:matriculaEducativaRegular.html.twig', array(
-                    'infoEntidad'=>$entidad, 
-                    'infoEstadistica'=>$entityEstadistica,
-                    'datoGraficoMatricula'=>$chartMatricula,
-                    'datoGraficoNivel'=>$chartNivel,
-                    'datoGraficoNivelGrado'=>$chartNivelGrado,
-                    'datoGraficoGenero'=>$chartGenero,
-                    'datoGraficoArea'=>$chartArea,
-                    'datoGraficoDependencia'=>$chartDependencia,
-                    'gestion'=>$gestionProcesada,
-                    'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
-                    'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                    'form' => $defaultController->createLoginForm()->createView()
-                ));  
-            } else {
-                return $this->render('SieAppWebBundle:Reporte:matriculaEducativaRegular.html.twig', array(
-                    'infoSubEntidad'=>$subEntidades, 
-                    'infoEstadistica'=>$entityEstadistica,
-                    'infoEstadisticaUE'=>$entityEstadisticaUE,
-                    'infoEstadisticaEE'=>$entityEstadisticaEE,
-                    'datoGraficoMatricula'=>$chartMatricula,
-                    'datoGraficoNivel'=>$chartNivel,
-                    'datoGraficoNivelGrado'=>$chartNivelGrado,
-                    'datoGraficoGenero'=>$chartGenero,
-                    'datoGraficoArea'=>$chartArea,
-                    'datoGraficoDependencia'=>$chartDependencia,
-                    'gestion'=>$gestionProcesada,
-                    'mensaje'=>'$("#modal-bootstrap-tour").modal("Efectivos");',
-                    'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                    'form' => $defaultController->createLoginForm()->createView()
-                ));  
-            }            
-        }        
-    }  
-
-    /**
-     * Pagina Inicial - Información General - Educacion Regular
-     * Jurlan
-     * @param Request $request
-     * @return type
-     */
-    public function informacionGeneralRegularInstitucionEducativaAction(Request $request) {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
-        //$gestionActual = 2016;
-        $idUsuario = $this->session->get('userId');
-
-        if ($request->isMethod('POST')) {
-            /*
-             * Recupera datos del formulario
-             */
-            $codigoArea = $request->get('codigo');
-            $rolUsuario = $request->get('rol');
-        } else {
-            $codigoArea = 0;
-            $rolUsuario = 0;
-        }
-
-        $defaultController = new DefaultCont();
-        $defaultController->setContainer($this->container);
-
-        $entidad = $this->buscaEntidadRol($codigoArea,$rolUsuario);
-        $subEntidades = $this->buscaSubEntidadRegularInstitucionEducativaAreaRol($codigoArea,$rolUsuario);
-        $entityEstadistica = $this->buscaEstadisticaRegularInstitucionEducativaAreaRol($codigoArea,$rolUsuario);
-        //$entityEstadisticaUE = $this->buscaEstadisticaUERol($codigoArea,$rolUsuario);
-        //$entityEstadisticaEE = $this->buscaEstadisticaEERol($codigoArea,$rolUsuario);
-        
-        $fechaEstadisticaRegular = $this->buscaFechaVistaMaterializadaRegularInstitucionEducativa($gestionProcesada);
-       
-        $chartNivel = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Unidades Educativas según Nivel de Estudio",$gestionProcesada,11,"chartContainerInstitucionNivel");
-        $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Unidades Educativas según Dependencia",$gestionProcesada,11,"chartContainerInstitucionDependencia");
-
-        $link = true;
-        if ($rolUsuario == 10){
-            $link = false;
-        }
-
-        if ($entidad != '' and $subEntidades != ''){
-            return $this->render('SieAppWebBundle:Reporte:institucionEducativaRegular.html.twig', array(
-                'infoEntidad'=>$entidad,
-                'infoSubEntidad'=>$subEntidades, 
-                'infoEstadistica'=>$entityEstadistica,
-                'datoGraficoNivel'=>$chartNivel,
-                'datoGraficoDependencia'=>$chartDependencia,
-                'gestion'=>$gestionProcesada,
-                'link'=>$link,
-                'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
-                'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                'form' => $defaultController->createLoginForm()->createView()
-            ));    
-        } else {
-            if ($entidad != ''){
-                return $this->render('SieAppWebBundle:Reporte:institucionEducativaRegular.html.twig', array(
-                    'infoEntidad'=>$entidad, 
-                    'infoEstadistica'=>$entityEstadistica,
-                    'datoGraficoNivel'=>$chartNivel,
-                    'datoGraficoDependencia'=>$chartDependencia,
-                    'gestion'=>$gestionProcesada,
-                     'link'=>$link,
-                    'mensaje'=>'$("#modal-bootstrap-tour").modal("hide");',
-                    'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                    'form' => $defaultController->createLoginForm()->createView()
-                ));  
-            } else {
-                return $this->render('SieAppWebBundle:Reporte:institucionEducativaRegular.html.twig', array(
-                    'infoSubEntidad'=>$subEntidades, 
-                    'infoEstadistica'=>$entityEstadistica,                    
-                    'datoGraficoNivel'=>$chartNivel,
-                    'datoGraficoDependencia'=>$chartDependencia,
-                    'gestion'=>$gestionProcesada,
-                    'link'=>$link,
-                    'mensaje'=>'$("#modal-bootstrap-tour").modal("Efectivos");',
-                    'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                    'form' => $defaultController->createLoginForm()->createView()
-                ));  
-            }            
-        }        
-    }  
-
-
-
-    /**
-     * Busca el detalle de estudiantes en funcion al tipo de rol - Educacion Especial
-     * Jurlan
-     * @param Request $request
-     * @return type
-     */
-    public function buscaEstadisticaEspecialAreaRol($area,$rol) {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y') - 1;
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
-        //$gestionActual = 2016;
-
-        $em = $this->getDoctrine()->getManager();
-
-        $queryEntidad = $em->getConnection()->prepare("
-            with tabla as (
-                SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                FROM estudiante AS e
-                INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                WHERE
-                iec.gestion_tipo_id IN (".$gestionActual.") AND
-                ie.institucioneducativa_tipo_id = 4
-                GROUP BY
-                eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-            ) 
-            
-            select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-            group by gt.id, gt.genero
-            
-            union all
-            
-            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-            group by dt.id, dt.dependencia
-            
-            union all
-            
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-            group by eat.id, eat.area_especial
-            
-            union all
-            
-            select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            group by t.modalidad_id, t.modalidad
-            
-            order by tipo_id, id
-             
-        "); 
-
-        if($rol == 9 or $rol == 5) // Director o Administrativo
-        {
-            $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND ie.id = ".$area."
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
-            ");     
-        }  
-
-        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
-        {
-            $queryEntidad = $em->getConnection()->prepare("    
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-                    left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt5.codigo = '".$area."'
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
-            ");  
-        }  
-
-        if($rol == 7) // Tecnico Departamental
-        {
-            $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-                    left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
-                    left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
-                    left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
-                    left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
-                    left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt4.codigo = '".$area."'
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
-            ");  
-        } 
-
-        if($rol == 8 or $rol == 20) // Tecnico Nacional
-        {            
-            $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND
-                    ie.institucioneducativa_tipo_id = 4
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
-            ");    
-        } 
-
-        $queryEntidad->execute();
-        $objEntidad = $queryEntidad->fetchAll(); 
-
-        $aDato = array();
-
-        foreach ($objEntidad as $key => $dato) {
-            $aDato[$dato['tipo_id']]['tipo'] = $dato['tipo_nombre'];
-            if (isset($aDato[$dato['tipo_id']]['dato'][0]['cantidad'])){
-                $cantidadParcial = $aDato[$dato['tipo_id']]['dato'][0]['cantidad'] + $dato['cantidad'];
-            } else {
-                $cantidadParcial = $dato['cantidad'];
-            }    
-            $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total', 'cantidad'=>$cantidadParcial);    
-            $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad']);  
-        }
-        return $aDato;
-    }
-
-    /**
      * Funcion que retorna el Reporte Grafico Donut 3d Chart - Higcharts
      * Jurlan
      * @param Request $entity
@@ -789,129 +312,277 @@ class ChartController extends Controller {
     }
 
 
+    public function chartDonutInformacionGeneralNivelGrado($entity,$titulo,$subTitulo,$tipoReporte,$contenedor) {
+        //dump($entity);die;
+        $aData = array();
+        foreach ($entity['dato'] as $key => $dato) {
+            if ($key != 0) {
+                $aData[$dato['detalle']][$dato['subdetalle']] = $dato['cantidad'];
+            }
+        }
+        $data = "";
+        $categoria = "";
+        $cantidad = 0;
+        $subCategoria = "";
+        $subCantidad = 0;
+        $subPorcentaje = 0;
+        $total = $entity['dato'][0]['cantidad'];
+        $count = 1;
+        foreach ($aData as $key => $nivel) {
+            $nombre = $key;
+            if ($categoria == "") {
+                $categoria = "'".$key."'";
+            } else {
+                $categoria = $categoria . ",'" . $key . "'";
+            }
+
+            $cantidad = 0;
+            foreach ($nivel as $key => $dato) {
+
+                $cantidad = $cantidad + $dato;
+                $porcentaje = round(($dato*100)/($total), 1);
+          //      dump($porcentaje);die;
+                if ($subCategoria == "") {
+                    $subCategoria = "'" . $key . "'";
+                } else {
+                    $subCategoria = $subCategoria . ",'" . $key . "'";
+                }
+                if ($subPorcentaje == "") {
+                    $subPorcentaje = $porcentaje;
+                } else {
+                    $subPorcentaje = $subPorcentaje . "," . $porcentaje;
+                }
+                if ($subCantidad == "") {
+                    $subCantidad = $dato;
+                } else {
+                    $subCantidad = $subCantidad . "," . $dato;
+                }
+            }
+
+            if ($data == "") {
+                $data = "{
+                            y: " . $cantidad . ", 
+                            color: colors[".$count."], 
+                            drilldown: {
+                                name: '" . $nombre . "',
+                                labels:[" . $subCategoria . "],
+                                categories: [" . $subCantidad . "],
+                                data: [" . $subPorcentaje . "]
+                            }
+                        }";
+            } else {
+                $data = $data.",{
+                            y: " . $cantidad . ", 
+                            color: colors[".$count."],  
+                            drilldown: {
+                                name: '" . $nombre . "',
+                                labels:[" . $subCategoria . "],
+                                categories: [" . $subCantidad . "],
+                                data: [" . $subPorcentaje . "]
+                            }
+                        }";
+            }
+            $subCategoria = "";
+            $subCantidad = "";
+            $subPorcentaje = "";
+            $count++;
+        }
+
+        $datos = " 
+            function ".$contenedor."Load() {
+
+                var colors = ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
+                
+                categories = [".$categoria."],            
+                data = [".$data."],
+                nivelData = [],
+                gradoData = [],
+                i,
+                j,
+                dataLen = data.length,
+                drillDataLen,
+                brightness;
+
+                for (i = 0; i < dataLen; i += 1) {
+
+                    nivelData.push({
+                        name: categories[i],
+                        y: data[i].y,
+                        label: data[i].y,
+                        color: data[i].color
+                    });
+
+                    drillDataLen = data[i].drilldown.data.length;
+                    for (j = 0; j < drillDataLen; j += 1) {
+                        brightness = 0.2 - (j / drillDataLen) / 5;
+                        gradoData.push({
+                            label: data[i].drilldown.categories[j],
+                            y: data[i].drilldown.data[j],
+                            name: data[i].drilldown.labels[j],
+                            color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                        });
+                    }
+                }
+
+                $('#".$contenedor."').highcharts({                    
+                    chart: {
+                        type: 'pie'
+                    },
+                    colors: ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
+                    title: {
+                        text: '".$titulo."'
+                    },
+                    subtitle: {
+                        text: '".$subTitulo."'
+                    },
+                    yAxis: {
+                        title: {
+                            text: ''
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false,
+                            center: ['50%', '50%']
+                        }
+                    },
+                    tooltip: {
+                        //valueSuffix: '%',
+                        shared: true,
+                        useHTML: true,
+                        headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} Participantes</b> del total<br/>'
+                    },
+                    series: [{
+                        name: 'Etapa/Acreditación',
+                        data: nivelData,
+                        size: '60%',
+                        dataLabels: {
+                            formatter: function () {
+                                return this.y > 0 ? this.point.name : null;
+                            },
+                            color: '#ffffff',
+                            distance: -30
+                        }
+                    }, {
+                        name: 'Cantidad',
+                        data: gradoData,
+                        size: '80%',
+                        innerSize: '60%',
+                        dataLabels: {
+                            formatter: function () {
+                                return this.y > 0 ? '' + this.point.name + ' - ' + (this.point.label).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + ' (' + this.y + '%)' : null;
+                            }
+                        }
+                    }]
+
+                });
+            }
+        ";
+      //  dump($datos);die;
+        return $datos;
+    }
+
+
     /**
-     * Imprime reportes estadisticos segun el tipo de rol en formato PDF - Educación Especial
+     * Busca el nombre de la entidad en funcion al tipo de rol
      * Jurlan
      * @param Request $request
      * @return type
      */
-    public function informacionGeneralEspecialPrintPdfAction(Request $request) {
+    public function buscaEntidadRol($codigo,$rol) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-
-        if ($request->isMethod('POST')) {
-            /*
-             * Recupera datos del formulario
-             */
-            $gestion = $request->get('gestion');
-            $codigoArea = base64_decode($request->get('codigo'));
-            $rol = $request->get('rol');
-        } else {
-            $gestion = $gestionActual;
-            $codigoArea = 0;
-            $rol = 0;
-        }
+        //$gestionActual = 2016;
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
-        $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        
-        // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
+        $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, lt.lugar as nombre, 0 as rolActual, -16.2256989 as cordx, -68.0441409 as cordy from lugar_tipo as lt 
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 0 and lugar_tipo_id = 0
+            "); 
+
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
-        {              
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select ie.id as id, 'U.E.: '|| cast(ie.id as varchar) ||' - '|| ie.institucioneducativa as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from institucioneducativa as ie
+                left join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                where ie.id = ".$codigo."
+            "); 
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select ie.id, ie.id||' - '||ie.institucioneducativa as nombre from usuario_rol as ur
+                    inner join usuario as u on u.id = ur.usuario_id
+                    inner join persona as p on p.id = u.persona_id
+                    inner join maestro_inscripcion as mi on mi.persona_id = p.id
+                    inner join institucioneducativa as ie on ie.id = mi.institucioneducativa_id
+                    where ur.usuario_id = ".$usuario." and ur.rol_tipo_id = ".$rol ." and mi.gestion_tipo_id = ".$gestionActual." and mi.es_vigente_administrativo = 1
+                ");      
+            */  
         }  
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Distrital_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&coddis='.$codigoArea));
-        }  
-
-        if($rol == 7) // Tecnico Departamental
-        { 
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Departamental_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&coddep='.$codigoArea));
-        } 
-
-        if($rol == 8 or $rol == 20) // Tecnico Nacional
-        {  
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
-        } 
-
-        $response->setStatusCode(200);
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-        return $response;
-    }
-
-    /**
-     * Imprime reportes estadisticos segun el tipo de rol en formato EXCEL - Educación Especial
-     * Jurlan
-     * @param Request $request
-     * @return type
-     */
-    public function informacionGeneralEspecialPrintXlsAction(Request $request) {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
-
-        if ($request->isMethod('POST')) {
+            $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, 'DISTRITO: '||lt.lugar as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from lugar_tipo as lt 
+                left join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 7 and lt.codigo not in ('1000','2000','3000','4000','5000','6000','7000','8000','9000')
+            "); 
             /*
-             * Recupera datos del formulario
-             */
-            $gestion = $request->get('gestion');
-            $codigoArea = base64_decode($request->get('codigo'));
-            $rol = $request->get('rol');
-        } else {
-            $gestion = $gestionActual;
-            $codigoArea = 0;
-            $rol = 0;
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
-        $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.ms-excel');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-
-        // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Nacional_v1_rcm.rptdesign&__format=xls&gestion='.$gestion));
-
-        if($rol == 9 or $rol == 5) // Director o Administrativo
-        {              
-        }  
-
-        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
-        {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Distrital_v1_rcm.rptdesign&__format=xls&gestion='.$gestion.'&coddis='.$codigoArea));
+            $queryEntidad = $em->getConnection()->prepare("
+                    select lt.id, lt.lugar as nombre from usuario as u 
+                    inner join usuario_rol as ur on ur.usuario_id = u.id
+                    inner join lugar_tipo as lt on lt.id = ur.lugar_tipo_id
+                    where u.id = ".$usuario." and rol_tipo_id = ".$rol."
+                ");     
+            */
         }  
 
         if($rol == 7) // Tecnico Departamental
-        { 
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Departamental_v1_rcm.rptdesign&__format=xls&gestion='.$gestion.'&coddep='.$codigoArea));
+        {   
+            $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, 'Departamento: '||lt.lugar as nombre, ".$rol." as rolActual, -16.2256989 as cordx, -68.0441409 as cordy from lugar_tipo as lt 
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 1
+            "); 
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select lt.codigo as id, lt.lugar as nombre from usuario as u 
+                    inner join usuario_rol as ur on ur.usuario_id = u.id
+                    inner join lugar_tipo as lt on lt.id = ur.lugar_tipo_id
+                    where u.id = ".$usuario." and rol_tipo_id = ".$rol."
+                ");    
+            */ 
         } 
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
-        {  
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Nacional_v1_rcm.rptdesign&__format=xls&gestion='.$gestion));
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, lt.lugar as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from lugar_tipo as lt 
+                left join jurisdiccion_geografica as jg on jg.lugar_tipo_id_localidad = lt.id
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 0 and lugar_tipo_id = 0
+            ");   
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select lt.codigo as id, lt.lugar as nombre from usuario as u 
+                    inner join usuario_rol as ur on ur.usuario_id = u.id
+                    inner join lugar_tipo as lt on lt.id = ur.lugar_tipo_id
+                    where u.id = ".$usuario." and rol_tipo_id = ".$rol ."
+                ");    
+            */
         } 
 
-        $response->setStatusCode(200);
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-        return $response;
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll(); 
+        if (count($objEntidad)>0){
+            return $objEntidad[0];
+        } else {
+            return '';
+        }
     }
+
 }
