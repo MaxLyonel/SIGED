@@ -722,7 +722,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         if(!empty($documento)){
             /*$dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
             */
-            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/adielimespec/';
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/addremovespeciality/';
             if (!file_exists($destination_path)) {
                 mkdir($destination_path, 0777);
             }
