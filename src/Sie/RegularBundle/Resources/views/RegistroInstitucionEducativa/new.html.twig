@@ -443,5 +443,13 @@
                 }
             });
         }
+
+        function setConvenio(dependencia_id){
+            if(dependencia_id == 1 || dependencia_id == 5) {
+                $('#form_convenioTipo option[value=0]').prop('selected', true);
+            } else {
+                $('#form_convenioTipo option[value=""]').prop('selected', true);
+            }
+        }
     </script>
 {% endblock %}
