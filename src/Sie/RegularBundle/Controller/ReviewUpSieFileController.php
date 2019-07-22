@@ -36,7 +36,7 @@ class ReviewUpSieFileController extends Controller{
     }
 
     public function distritoform(){
-        $arrOperativos = array('Seleccionar','inicio','1er Bim','2do Bim','3ro Bim','4to Bim');
+        $arrOperativos = array(99=>'Seleccionar',1=>'inicio',2=>'1er Bim',3=>'2do Bim',4=>'3ro Bim',5=>'4to Bim',0=>'Rude');
          $form = $this->createFormBuilder()
             // ->add('data', 'hidden', array('data'=>$data))
             ->add('find','button',array('label'=>'buscar', 'attr'=>array('class'=>'btn btn-success mr-5', 'onclick'=> 'findSieFiles()') ))
@@ -76,11 +76,16 @@ class ReviewUpSieFileController extends Controller{
                 'unidadEducativa'=>$arrData['id'],
                 ));
             }else{
-                $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-                'gestion'=>$arrData['gestion'],
-                'unidadEducativa'=>$arrData['id'],
-                'bim'.$arrData['bimestre']=>$arrData['bimestre'],
-                ));
+                if($bimestre == -1){
+                    //things todo after to consolidation of file
+                    $objInfoConsolidation = false;
+                }else{
+                    $objInfoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                    'gestion'=>$arrData['gestion'],
+                    'unidadEducativa'=>$arrData['id'],
+                    'bim'.$arrData['bimestre']=>$arrData['bimestre'],
+                    ));
+                }
             }
 
             if($objInfoConsolidation){
