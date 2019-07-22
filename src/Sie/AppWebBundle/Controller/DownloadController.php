@@ -1089,7 +1089,18 @@ class DownloadController extends Controller {
         //then send the headers to foce download the zip file
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $archivo));
-        $response->setContent(file_get_contents($directorio) . $archivo);
+
+        $options = array(
+            'http'=>array(
+                'method'=>"GET",
+                'header'=>"Accept-language: en\r\n",
+                "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+            )
+        );            
+        $context = stream_context_create($options);
+
+        $response->setContent(file_get_contents($directorio, false, $context) . $archivo);
         $response->headers->set('Pragma', "no-cache");
         $response->headers->set('Expires', "0");
         $response->headers->set('Content-Transfer-Encoding', "binary");
@@ -1132,7 +1143,18 @@ class DownloadController extends Controller {
         //then send the headers to foce download the zip file
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $archivo));
-        $response->setContent(file_get_contents($directorio) . $archivo);
+
+        $options = array(
+            'http'=>array(
+                'method'=>"GET",
+                'header'=>"Accept-language: en\r\n",
+                "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+            )
+        );            
+        $context = stream_context_create($options);
+
+        $response->setContent(file_get_contents($directorio, false, $context) . $archivo);
         $response->headers->set('Pragma', "no-cache");
         $response->headers->set('Expires', "0");
         $response->headers->set('Content-Transfer-Encoding', "binary");
