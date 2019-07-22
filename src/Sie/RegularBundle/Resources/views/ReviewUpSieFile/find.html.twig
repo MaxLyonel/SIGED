@@ -32,9 +32,8 @@
                                     <th>No.</th>
                                     <th>SIE</th>
                                     <th>Unidad Educativa</th>
-                                    <th>Bimestre</th>
-                                    <th>Operativo</th>
-
+                                    {# <th>Bimestre</th> #}
+                                    <th>Operativo</th>                                    
                                     <th>Gestión</th>
                                     <th>Distrito</th>
                                     <th>Fecha Subida</th>
@@ -48,9 +47,8 @@
                                         <td data-title="No.">{{loop.index}}</td>
                                         <td data-title="SIE">{{entity.id}}</a></td>
                                         <td data-title="Unidad Educativa">{{ entity.institucioneducativa }} </td>
-                                        <td data-title="Bimestre" class="text-center"> {{entity.bimestre}}</td>
-                                        <td data-title="Operativo" class="text-center">{{ entity.operativo }}</td>
-
+                                        {#<td data-title="Bimestre" class="text-center">{{entity.bimestre}}</td> #}
+                                        <td data-title="Operativo" class="text-center">{{operativos[entity.operativo]}}</td>
                                         <td data-title="Gestión" class="text-center">{{ entity.gestion }}</td>
                                         <td data-title="Distrito" class="text-center">{{ entity.distrito }}</td>
 

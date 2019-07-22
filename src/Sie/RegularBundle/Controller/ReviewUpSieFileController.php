@@ -15,11 +15,13 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
 class ReviewUpSieFileController extends Controller{
     public $session;
+    public $arrOperativos;
      /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->arrOperativos = array(99=>'Seleccionar',1=>'Inicio',2=>'1er Bim',3=>'2do Bim',4=>'3ro Bim',5=>'4to Bim',0=>'Rude');
     }
 
     public function indexAction(Request $request){
@@ -36,12 +38,12 @@ class ReviewUpSieFileController extends Controller{
     }
 
     public function distritoform(){
-        $arrOperativos = array(99=>'Seleccionar',1=>'inicio',2=>'1er Bim',3=>'2do Bim',4=>'3ro Bim',5=>'4to Bim',0=>'Rude');
+        
          $form = $this->createFormBuilder()
             // ->add('data', 'hidden', array('data'=>$data))
             ->add('find','button',array('label'=>'buscar', 'attr'=>array('class'=>'btn btn-success mr-5', 'onclick'=> 'findSieFiles()') ))
             ->add('distrito', 'text', array('label' => 'Distrito', 'attr' => array('maxlength' => 4, 'class' => 'form-control popovers','placeholder'=>'Introduzca Distrito')))
-            ->add('operativo', 'choice', array('label' => 'Operativo', 'choices' => $arrOperativos ,'attr' => array( 'class' => 'form-control','placeholder'=>'Introduzca Distrito')))
+            ->add('operativo', 'choice', array('label' => 'Operativo', 'choices' => $this->arrOperativos ,'attr' => array( 'class' => 'form-control','placeholder'=>'Introduzca Distrito')))
             ->add('gestion', 'hidden', array('data' => $this->session->get('currentyear')  ) )
             ->getForm();    
         return $form;
@@ -99,6 +101,7 @@ class ReviewUpSieFileController extends Controller{
         
         return $this->render('SieRegularBundle:ReviewUpSieFile:find.html.twig', array(
                 'ueuploadfiles' => $arrUeUploadFiles,
+                'operativos' => $this->arrOperativos
             ));    
     }
 
