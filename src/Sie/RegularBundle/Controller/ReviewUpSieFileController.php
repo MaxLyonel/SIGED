@@ -98,10 +98,14 @@ class ReviewUpSieFileController extends Controller{
             $arrUeUploadFiles[] = $arrData;   
             next($objUeUploadFiles);
         }
-        
+        //get distrito data 
+        $objDistrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($form['distrito']);
+
         return $this->render('SieRegularBundle:ReviewUpSieFile:find.html.twig', array(
                 'ueuploadfiles' => $arrUeUploadFiles,
-                'operativos' => $this->arrOperativos
+                'operativos' => $this->arrOperativos,
+                'dataDistrito' => $objDistrito
+
             ));    
     }
 
