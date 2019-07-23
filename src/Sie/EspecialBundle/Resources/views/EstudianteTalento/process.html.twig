@@ -86,10 +86,28 @@
                                 </div>
                                 <div class="col-md-12 col-sm-12 text-center">
                                     <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <button type="button" class="btn btn-danger" onclick="cancelForm()">Cancelar</button>
                                 </div>
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalNotificacion" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notificación</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <h5>¿Está seguro(a) de posponer el adjuntado del Informe Psicopedagógico?</h5>
+                    <div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="redirect()">Aceptar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -183,10 +201,9 @@
                     if (data.estado == 200) {
                         clearInput();
                         $("#tramite_st").val(1);
-                        mesage('info', data.msg);
+                        message('info', data.msg);
                     } else {
-                        console.log(data.msg);
-                        mesage('warning', 'No se pudo guardar los datos. Cierre la ventana flotante e intente de nuevo.');
+                        message('warning', 'No se pudo guardar los datos. Cierre la ventana flotante e intente de nuevo.');
                         $("#actualiza").attr('disabled', true);
                     }
                 },
@@ -203,8 +220,16 @@
             }
         }
 
-        function mesage(tipo, msg) {
+        function message(tipo, msg) {
             $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">'+ msg +' </div>');
+        }
+
+        function cancelForm() {
+            $("#modalNotificacion").modal('show');
+        }
+
+        function redirect() {
+            location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
         }
     </script>
 {% endblock %}

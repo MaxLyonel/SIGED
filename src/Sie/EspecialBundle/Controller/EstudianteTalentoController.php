@@ -128,7 +128,7 @@ class EstudianteTalentoController extends Controller {
                     'materno' => $estudiante_result->getMaterno(),
                     'cedula' => $estudiante_result->getCarnetIdentidad(),
                     'complemento' => $estudiante_result->getComplemento(),
-                    'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento(),
+                    'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento()->format('d/m/Y'),
                     'estudiante_ins_id' => $estudianteinscripcion_id,
                     'estudiante_id' => $estudiante_result->getId(),
                     'institucion_educativa' => $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
@@ -149,6 +149,7 @@ class EstudianteTalentoController extends Controller {
         // $em->getConnection()->beginTransaction();
         
         $datos = $request->get('solicitud');
+        $datos['fecha_solicitud'] = date('d/m/Y');//dump($datos);die;
         $usuario_id = $request->getSession()->get('userId');
         $rol_id = $request->getSession()->get('roluser');
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 1));
@@ -174,12 +175,20 @@ class EstudianteTalentoController extends Controller {
         $result = $this->get('wftramite')->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             $msg = $result['msg'];
+            $tramite_id = $result['idtramite'];
+            $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 2));
+            $tarea_sig = $flujoproceso->getId();
+            $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario_id, $tarea_sig, $tramite_id);
+            if ($mensaje['dato'] == true) {
+                $msg = $mensaje['msg'];
+            }
         } else {
             $estado = 500;
+            $tramite_id = '';
             $msg = $result['msg'];
         }
         // $em->getConnection()->commit();
-        return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        return $response->setData(array('estado' => $estado, 'msg' => $msg, 'tramite' => $tramite_id));
     }
 
     public function upreportAction(Request $request) {

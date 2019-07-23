@@ -34,26 +34,16 @@
                                         <label for="rude">Código RUDE</label>
                                         <input type="text" class="form-control noedit" id="rude" name="rude" value="{{ rude }}" disabled>
                                     </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="nombre">Nombre del Estudiante</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante }}" disabled>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="procede_aceleracion">¿Procede Aceleración?</label>
-                                                <input type="text" class="form-control noedit" id="procede_aceleracion" name="procede_aceleracion" value="{{ procede_aceleracion }}" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="grado_cantidad">Grados a Acelerar</label>
-                                                <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" value="{{ grado_cantidad }}" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div class="col-sm-6 col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
                                     <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                                     <div class="form-group">
@@ -61,11 +51,15 @@
                                         <input type="hidden" class="form-control" id="informe" name="informe" value="{{ informe }}">
                                         <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/talento/'~ informe )}}" target="_blank">Documento adjunto</a>
                                     </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
                                         <input type="hidden" class="form-control" id="solicitud_tutor" name="solicitud_tutor" value="{{ solicitud_tutor }}">
                                         <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ solicitud_tutor )}}" target="_blank">Documento adjunto</a>
                                     </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="informe_comision">Informe Complementario</label>
                                         <input type="hidden" class="form-control" id="informe_comision" name="informe_comision" value="{{ informe_comision }}">
@@ -75,7 +69,33 @@
                                         <a class="form-control text-danger" role="button">Sin documento</a>
                                         {% endif %}
                                     </div>
-                                </div>                                
+                                </div>
+                            </div>
+                            <div class="row">
+                                {# <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="procede_aceleracion">¿Procede Aceleración?</label>
+                                        <input type="text" class="form-control noedit" id="procede_aceleracion" name="procede_aceleracion" value="{{ procede_aceleracion }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_cantidad">Grados a Acelerar</label>
+                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" value="{{ grado_cantidad }}" disabled>
+                                    </div>
+                                </div> #}
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_acelerar"><b>Grados a Acelerar</b></label><br>
+                                        <span>{{ grado_acelerar }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_inscripcion"><b>Inscrito en la Gestión Actual</b></label><br>
+                                        <span>{{ grado_inscripcion }}</span>
+                                    </div>
+                                </div>
                             </div>
                             <hr>
                             <div class="row">

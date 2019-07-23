@@ -27,84 +27,130 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <!-- <div class="row">
-                            <div class="col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="nombre">Observación Distrital</label>
-                                    <textarea class="form-control" name="" id="" disabled>{{ observacion }}</textarea>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="form-group">
                             <label for="observacion" class="text-danger"><b>Observación Distrital</b></label>
                             <textarea class="form-control" name="observacion" id="observacion" disabled>{{ observacion }}</textarea>
                         </div>
                         <hr>
                         <form id="registro" autocomplete="off">
+                            <h4>Datos del estudiante</h4>
                             <div class="row">
-                                <div class="col-sm-6 col-md-6">
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="nombre">Nombres</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante.nombre }}" required>
                                     </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="paterno">Paterno</label>
                                         <input type="text" class="form-control noedit" id="paterno" name="paterno" value="{{ estudiante.paterno }}">
                                     </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="materno">Materno</label>
                                         <input type="text" class="form-control noedit" id="materno" name="materno" value="{{ estudiante.materno }}">
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label for="cedula">Cédula Identidad</label>
-                                                <input type="text" class="form-control noedit" id="cedula" name="cedula" value="{{ estudiante.cedula }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="complemento">Complemento</label>
-                                                <input type="text" class="form-control noedit" id="complemento" name="complemento" value="{{ estudiante.complemento }}">
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="cedula">Cédula de Identidad</label>
+                                        <input type="text" class="form-control noedit" id="cedula" name="cedula" value="{{ estudiante.cedula }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="complemento">Complemento</label>
+                                        <input type="text" class="form-control noedit" id="complemento" name="complemento" value="{{ estudiante.complemento }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <h4>Datos de Inscripción</h4>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="codigo_sie">Código SIE</label>
+                                        <input type="text" class="form-control noedit" id="codigo_sie" name="codigo_sie" value="{{ inscripcion.codigo_sie }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
-                                        <!-- value="{ { estudiante.fecha_nacimiento }}" -->
-                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento }}" required>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="institucion_educativa">Unidad Educativa</label>
-                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa" value="{{ estudiante.institucion_educativa }}">
+                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa" value="{{ inscripcion.nombre_sie }}">
                                     </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="nivel">Nivel</label>
+                                        <input type="text" class="form-control noedit" id="nivel" name="nivel" value="{{ inscripcion.nivel }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="grado">Grado</label>
+                                        <input type="text" class="form-control noedit" id="grado" name="grado" value="{{ inscripcion.grado }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="paralelo">Paralelo</label>
+                                        <input type="text" class="form-control noedit" id="paralelo" name="paralelo" value="{{ inscripcion.paralelo }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="turno">Turno</label>
+                                        <input type="text" class="form-control noedit" id="turno" name="turno" value="{{ inscripcion.turno }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <h4>Datos de Talento Extraordinario</h4>
+                            <div class="row">
+                                <div class="col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <label for="tipo_talento">Tipo de Talento Extraordinario</label>
-                                        <input type="text" class="form-control noedit" id="tipo_talento" name="tipo_talento" value="{{ estudiante.tipo_talento }}" required>
+                                        <input type="text" class="form-control noedit" id="tipo_talento" name="tipo_talento" value="{{ talento.tipo_talento }}">
                                     </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <label for="puede_acelerar">¿Puede Acelerar?</label>
-                                        <input type="text" class="form-control noedit" id="puede_acelerar" name="puede_acelerar" value="{{ estudiante.puede_acelerar }}" required>
+                                        <input type="text" class="form-control noedit" id="puede_acelerar" name="puede_acelerar" value="{{ talento.puede_acelerar }}">
                                     </div>
-                                </div>                                
-                            </div>
-                            <hr>                            
-                            <div class="row">
-                                <div class="col-sm-6 col-md-6">
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="centro_tramite">Tramitó en Centro Educativo</label>
+                                        <input type="text" class="form-control noedit" id="centro_tramite" name="centro_tramite" value="{{ talento.centro_tramite }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
                                     <div class="form-group" id="inf_psico">
                                         <label for="informe">Informe Psicopedagógico</label>
                                         <input type="hidden" class="form-control" id="informe" name="informe">
-                                        <a class="form-control text-primary" role="button" href="{{asset('uploads/archivos/flujos/tramite/talento/')}}{{ estudiante.informe }}" id="url_informe" target="_blank">Documento adjunto</a>
+                                        <a class="form-control text-primary" role="button" href="{{asset('uploads/archivos/flujos/tramite/talento/')}}{{ talento.informe }}" id="url_informe" target="_blank">Documento adjunto</a>
                                     </div>
+                                </div>
+                            </div>
+                            <h4>Datos de Solicitud</h4>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
                                         <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf,.doc,.docx" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="informe_comision">Informe Complementario</label>
-                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" {% if nuevo_tramite == 'SI' %} disabled {% endif %} required>
+                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" {% if primer_tramite == 'SI' %} disabled {% endif %} required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
@@ -113,25 +159,23 @@
                                     <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                                     <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
-                                    <input type="hidden" id="nuevo_tramite" name="nuevo_tramite" value="{{ nuevo_tramite }}">
+                                    <input type="hidden" id="primer_tramite" name="primer_tramite" value="{{ primer_tramite }}">
                                     <div class="form-group">
-                                        <label for="procede_aceleracion">¿Procede Aceleración?</label>
-                                        <select class="form-control" id="procede_aceleracion" name="procede_aceleracion" onchange="aceleracion()" required>
+                                        <label for="grado_cantidad">Hasta que Grado va Acelerar</label>
+                                        <select class="form-control" id="grado_cantidad" name="grado_cantidad" onchange="selectGrado()" required>
                                             <option value="" disabled selected>Seleccione...</option>
-                                            <option value="SI">Si</option>
-                                            <option value="NO">No</option>
+                                            {% for grado in grados %}
+                                            {% if grado.nivel == 13 and grado.id == 6 %}
+                                            <option value="{{grado.cantidad}}" data-id="{{grado.id}}" disabled style="color: white">{{grado.grado}}</option>
+                                            {% else %}
+                                            <option value="{{grado.cantidad}}" data-id="{{grado.id}}">{{grado.grado}}</option>
+                                            {% endif %}
+                                            {% endfor %}
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="grado_cantidad">Grados a Acelerar</label>
-                                        <input type="number" min="1" max="6" maxlength="1" minlength="1" class="form-control numericsss" id="grado_cantidad" name="grado_cantidad" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fecha_solicitud">Fecha Solicitud</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control noedit" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" required>
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                        </div>
+                                        <b>Grados a Acelerar: </b><span id="grado_acelerar"></span> <br>
+                                        <b>Inscrito en la Gestión Actual: </b><span id="grado_inscripcion"></span>
                                     </div>
                                 </div>
                             </div>
@@ -185,14 +229,21 @@
         $('.noedit').keydown(function() {
             return false;
         });
-        $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
         
         function mesage(tipo, titulo, msg, estado, flag) {
-            $("#envio").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            if(flag == 0) {
+                $("#carga").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                    '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            } else if(flag == 2) {
+                $("#mensaje").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' + msg +' </div>');
+            } else {
+                $("#envio").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                    '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            }
             if (estado == true) {
-                setTimeout(function () { $("#envio").empty(); }, 3500);
+                setTimeout(function () { $("#carga").empty(); $("#envio").empty(); }, 3500);
             }
         }
 
@@ -208,29 +259,40 @@
             $("#estudiante_ins_id").val('');
             $("#tipo_talento").val('');
             $("#puede_acelerar").val('');
+            $("#centro_tramite").val('');
             
+            $("#codigo_sie").val('');
+            $("#institucion_educativa").val('');
+            $("#nivel").val('');
+            $("#grado").val('');
+            $("#paralelo").val('');
+            $("#turno").val('');
+
             $("#solicitud_tutor").val('');
             $("#informe_comision").val('');
             $("#grado_cantidad").val('');
             $("#procede_aceleracion").val('');
-            $("#fecha_solicitud").val('');
             $("#informe").val('');
             $("#url_informe").attr('href', '');
         }
 
-        function aceleracion() {
-            if ($("#procede_aceleracion").val()=="NO") {
-                $('#grado_cantidad').val(0);
-                $('#grado_cantidad').attr('disabled', true);
-            } else {
-                $('#grado_cantidad').val('');
-                $('#grado_cantidad').attr('disabled', false);
-            }
+        function selectGrado() {
+            $("#grado_acelerar").text('');
+            $("#grado_inscripcion").text('');
+            var siguiente = ($("#grado_cantidad").val()*1)+1;
+            $("#grado_cantidad").find('option').each(function(index, item) {
+                if (siguiente == item.value) {
+                    $("#grado_inscripcion").text(item.text);
+                    return false;
+                } else if(item.value != '') {
+                    $("#grado_acelerar").append(item.text + ', ');
+                }
+            });
         }
 
         $("#registro").submit(function (event) {
             event.preventDefault();
-            $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
+            $("#envio").html('<h5>¿Está seguro(a) de reiniciar el trámite con la información ingresada?</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
             $("#modalConfirm").modal('show');
@@ -244,15 +306,17 @@
             fd.append('estudiante_ins_id', $("#estudiante_ins_id").val());
             fd.append('flujotipo_id', $("#flujotipo_id").val());
             fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
-            fd.append('fecha_solicitud', $("#fecha_solicitud").val());
-            fd.append('nuevo_tramite', $("#nuevo_tramite").val());
+            fd.append('primer_tramite', $("#primer_tramite").val());
             fd.append('informe', $("#informe").val());
             var docsol = document.getElementById('solicitud_tutor');
             var doccom = document.getElementById('informe_comision');
             fd.append("documento[]", docsol.files[0]);
             fd.append("documento[]", doccom.files[0]);
-            fd.append('grado_cantidad', $("#grado_cantidad").val());
-            fd.append('procede_aceleracion', $("#procede_aceleracion").val());
+            fd.append('procede_aceleracion', $("#puede_acelerar").val());
+            fd.append('grado_cantidad', (($("#grado_cantidad").val()*1)+1));
+            fd.append('grado_acelerar', $("#grado_acelerar").text());
+            fd.append('grado_inscripcion', $("#grado_inscripcion").text());
+            fd.append('devolucion', 1);
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_acelera_save_new'),
@@ -271,8 +335,8 @@
                         $("#guardar").attr('disabled', true);
                         clearInput();
                         $("#tramite_st").val(1);
+                        // $("#tramite_id").val(data.tramite);
                         mesage('info', 'Notificación', data.msg, false, 1);
-                        //location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
                         mesage('danger', 'Alerta', data.msg, false, 1);
                         $("#guardar").attr('disabled', false);
@@ -287,7 +351,9 @@
         function closeModal() {
             $("#modalConfirm").modal('hide');
             if ($("#tramite_st").val() == 1) {
-                location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+                var url = '{{ path("tramite_acelera_supletorio", {"id": "idtramite"}) }}'; 
+                location.href = url.replace("idtramite", $('#tramite_id').val());
+                // location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
             }
         }
     </script>

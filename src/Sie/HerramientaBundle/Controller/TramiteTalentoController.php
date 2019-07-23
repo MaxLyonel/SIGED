@@ -77,6 +77,6 @@ class TramiteTalentoController extends Controller
             $msg = $result['msg'];
         }
         // $em->getConnection()->commit();
-        return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        return $response->setData(array('estado' => $estado, 'msg' => $msg, 'tramite' => ''));
     }
 }

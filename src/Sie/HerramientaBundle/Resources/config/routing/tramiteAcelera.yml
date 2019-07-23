@@ -8,6 +8,12 @@ tramite_acelera_search:
     options:
         expose: true
 
+tramite_acelera_asignaturas:
+     path:    /obtiene/{sie}/{nivel}/{grado}/{paralelo}/{turno}/{cantidad}
+     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:getAsignaturas }
+     options:
+         expose: true
+
 tramite_acelera_save_new:
     path:     /guardar
     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaNuevo }
@@ -33,6 +39,12 @@ tramite_acelera_save_obs:
 tramite_acelera_search_ie:
      path:    /buscaie/{id}/{nivel}/{grado}
      defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaIe }
+     options:
+         expose: true
+
+tramite_acelera_verify_ie:
+     path:    /verificaie/{sie}
+     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:verificaIe }
      options:
          expose: true
 
