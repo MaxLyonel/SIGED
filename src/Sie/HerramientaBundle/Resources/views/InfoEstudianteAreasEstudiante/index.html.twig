@@ -1,0 +1,141 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Adición y Eliminación de Áreas / Estudiante</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+            	{% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
+            	{# SOLO SE PODRA AGREGAR MATERIAS ANTES DEL PRIMER BIMESTRE #}
+				{% if areas.operativo < 3 and areas.areasFaltantes|length > 0 and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3  %}
+        			<div class="btn-group" style="width:650px; float:right;">
+        			    <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+        			        Agregar Área al estudiante <span class="caret"></span>
+        			    </button>
+        			    <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+        			        {% if areas.areasFaltantes|length > 0 %}
+        			            {% for af in areas.areasFaltantes %}
+        			                <li><button onclick="newAreaEstudiante({{af.idCursoOferta}},{{inscripcion.id}},new String('{{af.asignatura}}'))" class="btn-link">{{af.idAsignatura}} - {{af.asignatura}}</button></li>
+        			            {% endfor %}
+        			        {% else %}
+        			            <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+        			        {% endif %}
+        			    </ul>
+        			</div>
+    			{% endif %}
+
+            	<h5 class="text-lilac">Áreas actuales del Estudiante</h5>
+
+			    <table class="table table-striped">
+			        <thead>
+			            <tr>
+			                <th class="text-center border-right">#</th>
+			                <th>Código</th>
+			                <th>Área</th>
+			                <th class="text-center">Eliminar</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            {% for ae in areas.areasEstudiante %}
+			                <tr>
+			                    <td>{{loop.index}}</td>
+			                    <td>{{ae.idAsignatura}}</td>
+			                    <td>{{ae.asignatura}}</td>
+			                    <td>
+			                    	{% if (ae.idAsignatura == 1038 or ae.idAsignatura == 1039) and areas.operativo < 3  and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3 %}
+			                        	<button onclick="deleteAreaEstudiante({{ae.idEstudianteAsignatura}},new String('{{ae.asignatura}}'))" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar área del estudiante"><i class="fa fa-times"></i></button>            
+			                        {% endif %}
+			                    </td>
+			                </tr>
+			            {% endfor %}
+			        </tbody>
+			    </table>
+			    <div id="mensajeModal"></div>
+	    		<div id="mensajeModalRespuesta">
+	    	    	{% if data is defined and data.status != 200 %}
+	    	    		<div class='alert alert-{{ data.type }}'> <i class="fa fa-warning"></i> {{ data.msg }}</div>
+	    	    	{% endif %}
+	    	    </div>
+            </div>
+            <div class="panel-footer text-right">
+            	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+	$(function(){
+		setTimeout(function(){
+			$('#mensajeModalRespuesta').empty();
+		}, 10000);
+	});
+
+	var newAreaEstudiante = function(idco,idInscripcion,asignatura){
+	    // if(confirm('¿Realmente desea adicionar el área '+asignatura+' al estudiante?\nPresione aceptar para confirmar.')){
+	        $.ajax({
+	            type: 'post',
+	            data: ({idco:idco, idInscripcion:idInscripcion}),
+	            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_new') }}",
+	            beforeSend: function () {
+	                $('#mensajeModal').empty();
+	                $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Verificando... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+	            },
+	            success: function (data) {
+	                $('#mensajeModal').empty();
+	                $('#modal').empty();
+	                $('#modal').append(data);
+	                $('[data-toggle="tooltip"]').tooltip();
+	            },
+	            statusCode: {
+	                500: function () {
+	                    $('#mensajeModal').empty();
+	                    $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrio un error al agregar el área !!!</div>");
+	                },
+	                404: function () {
+
+	                }
+	            }
+	        });
+	    // }
+	}
+	
+	function deleteAreaEstudiante(idEstudianteAsignatura, asignatura){
+	    if(confirm('¿Esta seguro(a) de eliminar el área de '+ asignatura +' del estudiante?\nPresione aceptar para confirmar.')){
+	        $.ajax({
+	            type: 'post',
+	            data: ({idEstudianteAsignatura:idEstudianteAsignatura}),
+	            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_delete') }}",
+	            beforeSend: function () {
+	                $('#mensajeModal').empty();
+	                $('#mensajeModal').append("<div style='text-align:center; color:#FB3A6D'>Eliminando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+	            },
+	            success: function (data) {
+	                $('#mensajeModal').empty();
+	                $('#modal').empty();
+	                $('#modal').append(data);
+	                $('[data-toggle="tooltip"]').tooltip();
+	            },
+	            statusCode: {
+	                500: function () {
+	                    $('#mensajeModal').empty();
+	                    $('#mensajeModal').append("<div class='alert alert-danger'>¡¡¡Ocurrio un error al eliminar el área !!!</div>");
+	                    //setTimeout("$('#mensajeModal').empty()",5000);
+	                },
+	                404: function () {
+
+	                }
+	            }
+	        });
+	    }
+	}
+
+</script>

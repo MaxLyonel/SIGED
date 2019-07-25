@@ -1,4 +1,4 @@
-{% extends 'layoutRegular.html.twig' %}
+    {% extends 'layoutRegular.html.twig' %}
 
 {% block contentoption %}
     <div class="row">
@@ -116,6 +116,19 @@
                                             <tr>
                                                 <td>Cuenta:</td>
                                                 <td>{{ app.session.get('cuentauser') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                        
+                                                        {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
+                                                        {{form_widget(formOperativoRude.sie)}}
+                                                        {{form_widget(formOperativoRude.downOperativoRude)}}
+                                                        {{form_end(formOperativoRude)}}
+                                                    
+                                                    <div id="downoperativoId">
+                                                            
+                                                    </div>
+                                                </td>
                                             </tr>
                                     </table>
                                 </div>
@@ -298,3 +311,32 @@
             </script>
         {% endif %}
     {% endblock %}
+
+    {% block javascripts %}
+    {{parent()}}
+    <script>
+        var downOperativoRudeup = function(){
+            var formData = $('#downOperativoRudeId').serialize();
+
+            $.ajax({
+                    type: 'post',
+                    url: Routing.generate('downloadrudefile_downoperativorude'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#downoperativoId").empty();
+                        $("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                    },
+                    success: function (data) {
+                        $("#downoperativoId").empty();
+                        $("#downoperativoId").html(data);
+                    },
+                    error: function (data) {
+                        $("#downoperativoId").empty();
+                        $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                    }
+                });
+            };
+    </script>
+    {% endblock %}
+
+

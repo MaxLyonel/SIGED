@@ -31,11 +31,17 @@
     .btn-wizard{
         display: inline-block;
         padding: 5px 14px;
-        background-color: #fff;
+        /* background-color: #fff; */
         border: 1px solid #ddd;
         border-radius: 15px;
-        color: #34495e;
+        /* color: #34495e; */
         float: right;
+        background-color: #7BB841 !important;
+        color: #FFFFFF !important;
+    }
+
+    .btn-wizard:hover{
+        background-color: #8CD24A !important;
     }
 
     .pager button:hover{
@@ -50,13 +56,16 @@
     }
     .block-print{
         /* border: 1px dashed #EE0EE0; */
-        color: #CCCCCC;
+        color: #53874C;
+        font-weight: bold;
         text-align: center;
         padding: 10px;
-        border-left: 10px solid #E9E9E9;
+        border-left: 2px solid #E9E9E9;
+        background: #C9EFD1;
+        min-height: 50px;
     }
     .block-print:hover{
-        color: #4590E5;
+        /* color: #71B666; */
         /* cursor: pointer; */
     }
     .close{
@@ -109,6 +118,17 @@
         margin-top: 10px;
         margin-bottom: 10px;
     }
+
+    .validar:invalid {
+        height: 0px !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        display: flex !important;
+    }
+
+    .validar:invalid[multiple] {
+        margin-top: 15px !important;
+    }
 </style>
 <div class="modal-dialog" style="width: 1000px">
     <div class="modal-content">
@@ -132,7 +152,7 @@
                         <!-- Start tabs heading -->
                         <div class="panel-heading no-padding col-md-3">
                             <ul class="nav nav-tabs">
-                                <li class="active">
+                                <li {% if rude.registroFinalizado is null or rude.registroFinalizado == 0 %}  class="active" {% endif %}>
                                     <a id="paso1" href="#tab1" data-toggle="tab" aria-expanded="true">
                                         <i class="fa fa-home"></i>
                                         <div>
@@ -141,7 +161,7 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 1 %} class="disabled" {% endif %}>
+                                <li {% if rude.registroFinalizado == 1 %} class="active" {% endif %} {% if rude.registroFinalizado < 1 %} class="disabled" {% endif %} >
                                     <a id="paso2" href="#tab2" {% if rude.registroFinalizado >= 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-file"></i>
                                         <div>
@@ -150,7 +170,7 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 2 %} class="disabled" {% endif %}>
+                                <li {% if rude.registroFinalizado == 2 %} class="active" {% endif %} {% if rude.registroFinalizado < 2 %} class="disabled" {% endif %}>
                                     <a id="paso3" href="#tab3" {% if rude.registroFinalizado >= 2 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-check-circle"></i>
                                         <div>
@@ -159,7 +179,7 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
+                                <li {% if rude.registroFinalizado == 3 %} class="active" {% endif %} {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
                                     <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-check-circle"></i>
                                         <div>
@@ -168,7 +188,7 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 4 %} class="disabled" {% endif %}>
+                                <li {% if rude.registroFinalizado == 4 %} class="active" {% endif %} {% if rude.registroFinalizado < 4 %} class="disabled" {% endif %}>
                                     <a id="paso5" href="#tab5" {% if rude.registroFinalizado >= 4 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-print"></i>
                                         <div>
@@ -183,7 +203,7 @@
 
                         <!-- Start tabs content -->
                         <div class="panel-body col-md-9 tab-content">
-                            <div class="tab-pane fade inner-all active in" id="tab1">
+                            <div {% if rude.registroFinalizado == 0 or rude.registroFinalizado is null %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab1">
 
                                 <fieldset class="fieldset">
                                     <legend class="legend">I. DATOS DE LA UNIDAD EDUCATIVA</legend>
@@ -438,14 +458,14 @@
 
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
-                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                {# <li class="previous"><a href="#" onclick="prev();">Anterior</a></li> #}
                                                 <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
                                 </fieldset>
                             </div>
-                            <div class="tab-pane fade inner-all" id="tab2">
+                            <div {% if rude.registroFinalizado == 1 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %}  id="tab2">
                                 <fieldset class="fieldset">
                                     <legend class="legend">III. DIRECCIÓN ACTUAL DE LA O EL ESTUDIANTE</legend>
                                     <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
@@ -516,7 +536,7 @@
                                     </form>
                                 </fieldset>
                             </div>
-                            <div class="tab-pane fade inner-all" id="tab3">
+                            <div {% if rude.registroFinalizado == 2 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab3">
                                 <fieldset class="fieldset">
                                     <legend class="legend">IV. ASPECTOS SOCIOECONOMICOS DE LA O EL ESTUDIANTE</legend>
                                     <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
@@ -526,7 +546,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.1.1. ¿Cúal es el idioma en el que aprendio a hablar en su niñez?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.idiomaNines, {'attr':{'class':'form-control'} }) }}
+                                                {{ form_widget(formSocioeconomico.idiomaNines, {'attr':{'class':'form-control validar'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -535,7 +555,7 @@
                                         <div class="row form-group">
                                             <div class="col-md-4 col-sm-4">
                                                 <small>a) Más frecuente (*)</small>
-                                                {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                             <div class="col-md-4 col-sm-4">
                                                 <small>b) Medianamente frecuente</small>
@@ -549,7 +569,7 @@
                                         <div class="form-group">
                                             <label class="col-md-6">4.1.3. ¿Pertenece a alguna nación, pueblo indigena originario campesino o afroboliviano?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.nacionOriginariaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.nacionOriginariaTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -567,7 +587,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.2.2. El año pasado, por problemas de salud, ¿acudió o se atendió en...?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -622,7 +642,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.3.6. La vivienda que ocupa el hogar es:</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.viviendaOcupaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.viviendaOcupaTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                         </div>
 
@@ -635,14 +655,14 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.1. El estudiante accesde a internet en:</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <fieldset id="fieldsetInternet">
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.4.2. ¿Con que frecuencia usa internet?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                    {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -664,26 +684,26 @@
                                                 <div class="col-md-6"></div>
                                                 <div class="col-md-6">
                                                     <p>Marque los meses que trabajo</p>
-                                                    {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.5.2. En la pasada gestión ¿En que actividad trabajó el estudiante?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                     {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper','placeholder':'Especificar otra actividad','autocomplete':'off'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.5.3. ¿En que turno trabajó el estudiante?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.5.4. ¿Con que frecuencia trabajó?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.frecuenciaTrabajoTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                    {{ form_widget(formSocioeconomico.frecuenciaTrabajoTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
@@ -691,7 +711,7 @@
                                                 <div class="col-md-6 col-sm-6">
                                                     {{ form_widget(formSocioeconomico.respuestaPago, {'attr':{'class':'radioTipoPago'} }) }}
                                                     <fieldset id="fieldsetTipoPago">
-                                                        {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                        {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                     </fieldset>
                                                 </div>
                                             </div>
@@ -705,14 +725,14 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.6.1 Generalmente ¿Como llega el estudiante a la unidad educativa?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                 {{ form_widget(formSocioeconomico.medioTransporteOtro, {'attr':{'class':'form-control jupper','placeholder':'ESPECIFIQUE OTRO MEDIO DE TRANSPORTE', 'autocomplete':'off'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.6.2 Segun el medio de transporte señalado, ¿Cuál es el tiempo máximo que demora el estudiante desde su vivienda hasta la Unidad Educativa?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.tiempoTransporte, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.tiempoTransporte, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -727,14 +747,16 @@
                                                 {{ form_widget(formSocioeconomico.tieneAbandono, {'attr':{'class':'radioAbandono'} }) }}
                                             </div>
                                         </div>
-                                        <div class="row form-group">
-                                            <label class="col-md-6">4.7.2 ¿Cuál o cuáles fueron las razones de abandono escolar?</label>
-                                            <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
-                                                {{ form_widget(formSocioeconomico.abandonoOtro, {'attr':{'class':'form-control jupper', 'data-placeholder':'ESPECIFIQUE OTRO MOTIVO DE ABANDONO', 'autocomplete':'off'} }) }}
-                                                <br>
+                                        <fieldset id="fieldsetAbandono">
+                                            <div class="row form-group">
+                                                <label class="col-md-6">4.7.2 ¿Cuál o cuáles fueron las razones de abandono escolar?</label>
+                                                <div class="col-md-6 col-sm-6">
+                                                    {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.abandonoOtro, {'attr':{'class':'form-control jupper', 'data-placeholder':'ESPECIFIQUE OTRO MOTIVO DE ABANDONO', 'autocomplete':'off'} }) }}
+                                                    <br>
+                                                </div>
                                             </div>
-                                        </div>                                    
+                                        </fieldset>                               
 
                                         {{ form_widget(formSocioeconomico) }}
 
@@ -747,7 +769,7 @@
                                     </form>
                                 </fieldset>                                
                             </div>
-                            <div class="tab-pane fade inner-all" id="tab4">
+                            <div {% if rude.registroFinalizado == 3 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab4">
                                 <fieldset class="fieldset">
                                     <legend class="legend">V. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</legend>
                                     <form id="formConQuienVive">
@@ -895,7 +917,7 @@
                                                                     <div class="form-group row" id="p_filaOtroOcupacion">
                                                                         <label class="col-md-6">Especificar otra ocupación</label>
                                                                         <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.obs, {'id':'p_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
+                                                                            {{ form_widget(formPadre.empleo, {'id':'p_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
@@ -1072,7 +1094,7 @@
                                                                     <div class="form-group row" id="m_filaOtroOcupacion">
                                                                         <label class="col-md-6">Especificar otra ocupación</label>
                                                                         <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.obs, {'id':'m_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
+                                                                            {{ form_widget(formMadre.empleo, {'id':'m_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
@@ -1250,7 +1272,7 @@
                                                                     <div class="form-group row" id="t_filaOtroOcupacion">
                                                                         <label class="col-md-6">Especificar otra ocupación</label>
                                                                         <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.obs, {'id':'t_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
+                                                                            {{ form_widget(formTutor.empleo, {'id':'t_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
@@ -1331,17 +1353,17 @@
                                     </div>
                                 {# </div> #}
                             </div>
-                            <div class="tab-pane fade inner-all" id="tab5">
+                            <div {% if rude.registroFinalizado >= 4 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab5">
                                 <fieldset class="fieldset">
                                     <legend class="legend">VI. FINALIZAR REGISTRO RUDE</legend>
                                     <div class="ml-10">
                                         <div class="row">
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
                                                 <form id="formLugar" onsubmit="saveFormLugar(); return false;" method="post">
                                                     <div class="form-group row">
                                                         <label class="col-md-6">Lugar de registro</label>
                                                         <div class="col-md-6 col-sm-6">
-                                                            {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper','readonly':'readonly'} }) }}
+                                                            {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
@@ -1353,16 +1375,18 @@
                                                     <hr>
                                                     <div class="no-bg">
                                                         <ul class="pager wizard no-margin">
-                                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y finalizar</button></li>
+                                                            <li class="next"><button class="btn-wizard" type="submit">Guardar cambios</button></li>
                                                         </ul>
                                                     </div>
                                                     {{ form_widget(formLugar) }}
                                                 </form>
                                             </div>
-                                            <div id="btnImprimir" class="col-md-4">
+                                            
+                                            <div id="btnImprimir" class="col-md-12" {% if rude.registroFinalizado < 5 %} style="display:none" {% else %} style="display:block" {% endif %}>
+                                                <br>
                                                 <div class="block-print">
-                                                    <p>Ahora ya puede imprimir el Formulario RUDE</p>
-                                                    <a class="btn btn-info" style="padding:20px" href="{{path('download_rude', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
+                                                    <p>Imprimir Formulario RUDE del estudiante</p>
+                                                    <a class="btn btn-success" style="padding:20px" href="{{path('download_rude', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
                                                         <i class="fa fa-print" style="font-size:40px" ></i><br>Imprimir
                                                     </a>
                                                 </div>
@@ -1370,7 +1394,7 @@
                                         </div>
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
-                                                <li class="next"><button class="btn-wizard" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+                                                {# <li class="next"><button class="btn-wizard" data-dismiss="modal" aria-hidden="true">Cerrar</button></li> #}
                                             </ul>
                                         </div>
                                     </div>
@@ -1478,6 +1502,8 @@
     $('#form_tiempoTransporte').chosen({width: "100%"});
     $('#form_abandono').chosen({width: "100%"});
 
+    $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+
     $(".readonly").keydown(function(e){
         e.preventDefault();
     });
@@ -1519,12 +1545,22 @@
             $('#form_accesoInternet').val([4]);
             $('#fieldsetInternet').attr('disabled','disabled');
             $('#form_accesoInternet').trigger("chosen:updated");
+
             $('#form_frecuenciaUsoInternetTipo').val('');
-            $('#form_frecuenciaUsoInternetTipo').prop('disabled', true).trigger("chosen:updated");
+            // $('#form_frecuenciaUsoInternetTipo').removeAttr('required');
+            $('#form_frecuenciaUsoInternetTipo').attr('disabled', 'disabled');
+            $('#form_frecuenciaUsoInternetTipo').trigger("chosen:updated");
+
+            console.log('no requerido');
         }else{
             $('#fieldsetInternet').removeAttr('disabled');
-            $('#form_frecuenciaUsoInternetTipo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_frecuenciaUsoInternetTipo').removeAttr('disabled');
+            $('#form_frecuenciaUsoInternetTipo').attr('required','required');
+            $('#form_frecuenciaUsoInternetTipo').trigger("chosen:updated");
+            console.log('requerido');
         }
+
+        // $.validator.setDefaults({ ignore: ":hidden:not(select)" });
     }
 
     $('#form_accesoInternet').on('change',function(e){
@@ -1552,9 +1588,13 @@
             $('#form_recibioTipoPago').prop('disabled', true).trigger("chosen:updated");
         }else{
             $('#fieldsetTrabajo').removeAttr('disabled');
+            $('#form_mesesTrabajados').attr('required','required');
             $('#form_mesesTrabajados').prop('disabled', false).trigger("chosen:updated");
+            $('#form_actividades').attr('required','required');
             $('#form_actividades').prop('disabled', false).trigger("chosen:updated");
+            $('#form_turnosTrabajo').attr('required','required');
             $('#form_turnosTrabajo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_frecuenciaTrabajoTipo').attr('required','required');
             $('#form_frecuenciaTrabajoTipo').prop('disabled', false).trigger("chosen:updated");
             $('#form_recibioTipoPago').prop('disabled', false).trigger("chosen:updated");
         }
@@ -1591,6 +1631,7 @@
             $('#form_recibioTipoPago').prop('disabled', true).trigger("chosen:updated");
         }else{
             $('#fieldsetTipoPago').removeAttr('disabled');
+            $('#form_recibioTipoPago').attr('required', 'required');
             $('#form_recibioTipoPago').prop('disabled', false).trigger("chosen:updated");
         }
     }
@@ -1620,12 +1661,17 @@
     // VALIDAR ABANDONO
     function validarAbandono(){
         if(!$('#form_tieneAbandono_0').is(':checked')){
+            $('#fieldsetAbandono').attr('disabled','disabled');
             $('#form_abandono').val([]);
             $('#form_abandonoOtro').val('');
             $('#form_abandonoOtro').attr('disabled', 'disabled');
             $('#form_abandono').prop('disabled', true).trigger("chosen:updated");
         }else{
+            $('#fieldsetAbandono').removeAttr('disabled');
+            $('#form_abandono').removeAttr('disabled');
             $('#form_abandonoOtro').removeAttr('disabled');
+            $('#form_abandono').attr('required', 'required');
+            // $('#form_abandonoOtro').attr('required', 'required');
             $('#form_abandono').prop('disabled', false).trigger("chosen:updated");
         }
     }
@@ -2043,10 +2089,11 @@
             type: 'post',
             data: data,
             beforeSend: function(){
-                console.log('enviando')
+                $('#btnImprimir').fadeOut('slow');
             },
             success: function(data){
-                
+                $('#btnImprimir').fadeIn('slow');
+                $('#btnImprimir').fadeIn('slow');
             },
             error: function(){
 

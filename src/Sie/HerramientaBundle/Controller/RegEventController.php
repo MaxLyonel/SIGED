@@ -22,7 +22,7 @@ class RegEventController extends Controller
             $id_gestion = $arrDataUe['gestionTipo'];
             $id_cdl_club_lectura=$form['cdlId'];
         }else{
-            $id_Intitucion    = $this->session->get('ie_id');
+            $id_Intitucion    = $request->get('id_Intitucion');
             $id_gestion       = $this->session->get('currentyear');
             $id_cdl_club_lectura     = $request->get('id_club');
         }

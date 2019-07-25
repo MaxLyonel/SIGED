@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{path('regevent',{id_club:id_club})}}">Registro de Lecturas</a>
+                    <a role="button" onclick="redirectlecturas()">Registro de Lecturas</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
@@ -16,6 +16,10 @@
                 </li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
+        <form name="redlec" action="{{path('regevent')}}" method="post">
+            <input type="hidden" name="id_club" value="{{id_club}}">
+            <input type="hidden" name="id_Intitucion" value="{{id_Intitucion}}">
+        </form>
     </div>
     <div class="body-content animated fadeIn">
         <div class="row">
@@ -79,7 +83,7 @@
                                                         <input type="hidden" name="gestion" value="{{id_gestion}}">
                                                         <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el resultado!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
                                                     </form>
-                                                    <button onclick="verFotos({{listaresultado.id}})" class="btn-link"> <i class="fa fa-eye text-warning " ></i>  Ver imágenes  </button>
+                                                    <button onclick="verFotos({{listaresultado.id}},{{ id_Intitucion }})" class="btn-link"> <i class="fa fa-eye text-warning " ></i>  Ver imágenes  </button>
                                                     <button class="btn-link" onclick="showModalImg({{listaresultado.id}})"><i class="fa fa-plus text-success">   </i>   Agregar imágenes</button>
                                                 </td>
                                             </tr>
@@ -138,6 +142,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <input type="hidden" name="cantidad" id="cantidad" value="1">
+                                <input type="hidden" name="id_Intitucion" id="id_Intitucion" value="{{ id_Intitucion }}">
                                 <input type="hidden" name="id_resultado_imagen" id="id_resultado_imagen">
                                     <div id="tabla_imagenes">
                                         <a role="button" onclick="agregarImagen()" class="btn-link"><i class="fa fa-plus-square"></i> Nuevo </a>
@@ -251,6 +256,7 @@
                 "<td><input type='text' class='form-Control' id='nombreimagen1' name='nombreimagen1' required ></td>\n" +
                 "<td><input type='file' class='form-Control' id='adjdocumento1' name='adjdocumento1' data-title='Adjuntar Imagen' accept='image/*' required></td>\n" +
                 "</tr>");
+            $("#guardar_imagen").attr('disabled', false);
             $('#modal_imagenes').modal('show');
         }
         function eliminarimagen(i) {
@@ -292,12 +298,12 @@
                 }
             });
         });
-        function verFotos(id){
+        function verFotos(id,id_Intitucion){
             $('#modalFotos').modal('show');
             $.ajax({
                 url: "{{ path('regresultevent_fotos') }}",
                 type: 'post',
-                data: {id: id},
+                data: {id: id,id_Intitucion:id_Intitucion},
                 beforeSend: function(){
                     $('#fotosBody').html('Cargando...');
                 },
@@ -334,6 +340,9 @@
                         }
                     });
                 });
+        }
+        function  redirectlecturas() {
+            document.redlec.submit();
         }
     </script>
 {% endblock %}

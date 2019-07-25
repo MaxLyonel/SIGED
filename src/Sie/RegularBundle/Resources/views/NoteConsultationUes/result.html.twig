@@ -70,9 +70,23 @@
                                     <td data-title="turno">{{ data.turno|e }} </td>
                                     <td data-title="Estudiantes" class="text-center">{{data.students|e}}</td>
                                     <td data-title="Opción" class="text-center">
+                                        
+                                        {% set arrdoublesdataue = [80980381, 60900047 ]  %}
+                                        {% if  gestionSelected == 2018 and  unidadEducativa.id in arrdoublesdataue %}
+                                            {% if data.nivelId != 11 %}
+                                                <a class="btn btn-link" href="{{ path('donwload_boletinPromoPerUeNewVersion', {'version':1,'ue':data.id,'nivel':data.nivelId,'ciclo':data.cicloId,'grado':data.gradoId,'paralelo':data.paraleloId,'turno':data.turnoId,'gestion':gestionSelected, 'itemsUe':itemsUe } )}}">
+                                                    <i class="fa fa-download"></i> Boletín Centralizador (1)
+                                                </a></br>
+                                                <a class="btn btn-link" href="{{ path('donwload_boletinPromoPerUeNewVersion', {'version':2,'ue':data.id,'nivel':data.nivelId,'ciclo':data.cicloId,'grado':data.gradoId,'paralelo':data.paraleloId,'turno':data.turnoId,'gestion':gestionSelected, 'itemsUe':itemsUe } )}}">
+                                                    <i class="fa fa-download"></i> Boletín Centralizador (2)
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
                                         <a class="btn btn-link" href="{{ path('donwload_boletinPromoPerUe', {'ue':data.id,'nivel':data.nivelId,'ciclo':data.cicloId,'grado':data.gradoId,'paralelo':data.paraleloId,'turno':data.turnoId,'gestion':gestionSelected, 'itemsUe':itemsUe } )}}">
                                             <i class="fa fa-download"></i> Boletín Centralizador
                                         </a>
+                                        {% endif %}
+                                        
                                     </td>
 
                                     <td data-title="Opción" class="text-center">

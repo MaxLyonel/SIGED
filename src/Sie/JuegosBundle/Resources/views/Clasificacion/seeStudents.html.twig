@@ -1,5 +1,6 @@
 {% if exist == true %}
-    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div class="panel panel-primary shadow">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -19,11 +20,15 @@
                     <li>{{ genero }}</li>
                 </ol>
                 <!-- Start datatable -->
-                <table id="datatable-estudiantes" class="table table-striped table-success">
+                {# set the array student info and convert on json string #}
+                <table id="datatable" name="datatable" class="table table-striped table-default" style="padding-left: 0px; padding-right: 0px;">
                     <thead>
                         <tr>                            
-                            <th data-class="expand">#</th>
-                            <th>Entidad</th>
+                            <th data-class="expand" style="width: 30px">#</th>                         
+                            <th>Entidad</th>  
+                            {% if conjunto %}                       
+                                <th>Equipo</th>
+                            {% endif %}
                             <th>C.I.</th>
                             <th>Código Rude</th>
                             <th>Estudiante</th>
@@ -32,9 +37,8 @@
                     </thead>
                     <tbody>
                         {#init the array info student #}
-                        {% set objInfoStudent = [] %}
-                        {% for data in objStudents%}
-                            {# set the array student info and convert on json string #}
+                        {% for data in objStudents %}
+                            {% set objInfoStudent = [] %}
                             {% set objInfoStudent = objInfoStudent|merge(data) %}
                             {% set jsnInfoStudent = objInfoStudent|json_encode() %}
                             {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
@@ -44,15 +48,16 @@
                             {% set ue = data.ue %}         
                             {% set institucioneducativa = data.institucioneducativa %}         
                             {% set distrito = data.distrito %}          
-                            {% set circunscripcion = data.circunscripcion %}       
+                            {% set circunscripcion = data.circunscripcion %}    
+                            {% set equipoNombre = data.equipoNombre %}       
                             {% if data.complemento == "" %}
                                 {% set ci = data.carnetIdentidad %}
                             {% else %}
                                 {% set ci = data.carnetIdentidad~'-'~data.complemento%}
                             {% endif %}
                             <tr>
-                                <td align="">{{loop.index}}</td>
-                                <td align="">
+                                <td>{{loop.index}}</td>
+                                <td>
                                     {% if fase == 1 %}
                                         {{ue}} - {{institucioneducativa}}
                                     {% endif %}
@@ -63,9 +68,12 @@
                                         {{ue}} - {{institucioneducativa}}
                                     {% endif %}
                                 </td>
-                                <td align="">{{ci}}</td>
-                                <td align="">{{rude}}</td>
-                                <td align="">{{nombre}}</td>
+                                {% if conjunto %}                                    
+                                    <td>{{equipoNombre}}</td>
+                                {% endif %}
+                                <td>{{ci}}</td>
+                                <td>{{rude}}</td>
+                                <td>{{nombre}}</td>
                                 <td>
                                     <div class="ckbox ckbox-primary">
                                         <input id="id{{data.eInsJueId}}" name="estudiantes[]" type="checkbox" value="{{data.eInsJueId}}" onclick="setDeportistas(this,'{{nombre|replace({"'":"&#39;"})}}')">
@@ -79,11 +87,14 @@
                         <tr>
                             <tr>                            
                                 <th data-class="expand">#</th>
-                                <th>Entidad</th>
+                                <th>Entidad</th>  
+                                {% if conjunto %}                       
+                                    <th>Equipo</th>
+                                {% endif %}
                                 <th>C.I.</th>
                                 <th>Código Rude</th>
                                 <th>Estudiante</th>
-                                <th style="min-width: 50px">&nbsp;</th>
+                                <th>&nbsp;</th>
                             </tr>
                         </tr>
                     </tfoot>
@@ -96,7 +107,7 @@
             </div><!-- /.panel-body -->
         </div>                    
     </div>      
-    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel panel-primary shadow">
                 <div class="panel-heading">
@@ -110,7 +121,7 @@
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
 
-                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class':'form-horizontal form-bordered', 'onsubmit':'return habilitarBotonSubmit()'} } )}}
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class':'form-horizontal form-bordered'} } )}}
                         {{form_widget(form.fase)}}
                         <div class="form-group">
                             <div class="row">
@@ -129,15 +140,15 @@
                                     <div id="listaDeportistas"></div>
                                 </div>
                             </div>
-                        </div>  
+                        </div>               
+                    {{form_end(form)}} 
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12">
-                                    {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-default col-sm-12' } } ) }}
+                                    <button type="button" name="form_submit" id="form_submit" class="btn btn-success col-md-12" disabled="true" onclick="return submit()">Registrar</button>
                                 </div>
                             </div>
-                        </div>              
-                    {{form_end(form)}} 
+                        </div> 
                 </div><!-- /.panel-body -->
             </div>  
         </div>
@@ -154,21 +165,77 @@
                 <div class="panel-body">
                     <ul class="list-unstyled list-real-estate">
                         <div id="listaInscritos">
-                            {% for data in objDeportistasFase%}
-                                {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
-                                {% set codigo = data.eInsJueId %} 
-                                {% set posicion = data.posicion %} 
-                                <li id="list{{codigo}}" class="list-group-item">PUESTO {{posicion}} - {{nombre}}<div class="pull-right"><a href="#" onclick="getEliminarInscripcion({{codigo}});"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>
-                            {%endfor%}
+                            <div class="panel-group rounded shadow" id="accordionlistaParticipante">
+                                {% if conjunto %}   
+                                    {% set c = 0 %} 
+                                    {% set divLista = "" %} 
+                                    {% set expanded = "" %} 
+
+                                    {% for equipoKey, dataEquipo in registrados %}
+                                        {% if c == 0 %}                       
+                                            {% set expanded = 'aria-expanded="true"' %} 
+                                            {% set expandedClass = 'in' %} 
+                                        {% else %}  
+                                            {% set expanded = 'aria-expanded="false" class="collapsed"' %} 
+                                            {% set expandedClass = '' %} 
+                                        {% endif %}
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading no-border">
+                                                <div class="pull-left">
+                                                    <h5 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordionlistaParticipante" href="#collapse{{equipoKey}}" {{expanded}}>Equipo{{equipoKey}}</a>
+                                                    </h5>   
+                                                </div> 
+                                                <div class="pull-right">
+                                                    <button id="equipo{{equipoKey}}" type="button" class="btn btn-lg btn-primary label-xsmall" data-toggle="modal" data-target=".bs-example-modal-table" onclick="openRegisterCouch('{{dataEquipo.option}}','{{equipoKey}}');" >
+                                                        {{dataEquipo.entrenador}}
+                                                    </button>                
+                                                </div>     
+                                                <div class="clearfix"></div>
+                                            </div> 
+                                            <div id="collapse{{equipoKey}}" class="panel-collapse collapse {{expandedClass}}" {{expanded}} >       
+                                                <div class="panel-body"> 
+                                                    <ul class="list-group no-margin">                                   
+                                                    {% set c = 0 %}   
+                                                    {% for inscripcionKey, dataNombre in dataEquipo %}
+                                                        {% set codigo = inscripcionKey %}     
+                                                        {% if inscripcionKey != "option" and inscripcionKey != "entrenador" %}   
+                                                            <li id="list{{inscripcionKey}}" class="list-group-item no-padding">{{dataNombre}}<div class="pull-right"><a href="#" onclick="getEliminarInscripcion('{{inscripcionKey}}');"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>
+                                                        {% endif %}                                                                                                        
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>    
+                                            </div>
+                                        </div>       
+                                        {% set c = c + 1 %} 
+                                    {% endfor %}
+                                {% else %}
+                                    <ul class="list-group no-margin">
+                                        {% for equipoKey, dataEquipo in registrados %}
+                                            <li id="list{{equipoKey}}" class="list-group-item">{{dataEquipo.estudiante}}
+                                                <div class="pull-right">
+                                                    <button id="equipo{{dataEquipo.option}}" type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="openRegisterCouch('{{dataEquipo.option}}','{{dataEquipo.option}}');" >
+                                                        {{dataEquipo.entrenador}}
+                                                    </button> 
+                                                    <a href="#" onclick="getEliminarInscripcion('{{equipoKey}}');">
+                                                        <span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
                         </div> 
                     </ul>
                 </div><!-- /.panel-body -->
             </div>
         </div>                          
-    </div> 
+    </div>                  
+</div> 
+
     <!-- /.row -->
 {% else %}
-
     <div class="row">
         <div class="col-md-12">
             {% for flashMessage in app.session.flashbag.get('warninsueall') %}
@@ -182,29 +249,151 @@
     </div>
 {% endif %}
 
-<script>
-    function getEliminarInscripcion(es) {  
+<script type="text/javascript">
+
+    var nombreBoton = "";
+
+    var lookForPerson = function(){
+        var carnet = $('#form_carnet').val();
+        
+        if(carnet != '' && !isNaN(carnet)){
+
+           var formData = $('#formLookForPersonId').serialize();
+
+            $.ajax({
+                        type: 'post',
+                        url: Routing.generate('RegisterPersonStudent_find_person'),
+                        data: formData,
+                        beforeSend: function () {
+                           
+                            $('#idPersonData').empty();
+                            $("#idPersonData").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        },
+                         success: function (data) {
+                            $('#idPersonData').empty();
+                            $('#idPersonData').append(data);
+                        },
+                        timeout: 5000, // sets timeout to 5 seconds
+                    });
+        }else{
+            alert('El campo Carnet de Identidad es requerido y/o el formato no es el apropiado');
+            return false;
+        }//end if
+
+    };
+
+    var openRegisterCouch = function(jsondata,eq){
         $.ajax({
-            type: 'get',
-            url: Routing.generate('sie_juegos_eliminacion_clasificacion_deportista', {'inscripcion': parseInt(es)}),
+            type: 'post',
+            url: Routing.generate('RegisterPersonStudent_open_register'),
+            data: {'jsondata':jsondata},
             beforeSend: function () {
+                $('#modal').empty();
             },
             success: function (data) {
-                dep = document.getElementById('list' + es);   
-                if (dep){        
-                    $.each(data.aregistro, function (i, value) {
-                        padre = dep.parentNode;
-                        padre.removeChild(dep);
-                    });
-                }
-            }
+                $('#modal').empty();
+                $('#modal').append(data);
+                nombreBoton = "equipo"+eq;
+            },
+            timeout: 5000, // sets timeout to 5 seconds
         });
+    };
+
+    var registerPerson = function(){
+        
+        var formData = $('#idFormPersonToRegister').serialize()
+        // $('#modal').modal('hide');
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('RegisterPersonStudent_register_person_json'),
+            data: formData,
+            beforeSend: function () {
+                $('#idPersonData').empty();
+                $("#idPersonData").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+             success: function (data) {
+                // $('#form_carnet').val('');
+                // $('#form_complemento').val('');
+                $('#modal').empty();
+                $('#modal').modal('hide');
+                //$('#idPersonData').append(data);
+                $('#'+nombreBoton).text(data.entrenador);   
+                
+                if(data.msg_incorrecto){
+                    if(data.msg_incorrecto != ''){
+                        $("#listaInscritos").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                    }
+                }
+
+                if(data.msg_correcto){
+                    if(data.msg_correcto != ''){
+                        $("#listaInscritos").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                    }
+                }
+            },
+            timeout: 5000, // sets timeout to 5 seconds
+        });
+    };
+
+    var getEliminarInscripcion = function (es) {  
+        elemento = document.getElementById('list' + es);   
+        var r = confirm("¿ Desea eliminar el estudiante seleccionado ?");
+        if (r == true) {    
+            peticion = $.ajax({
+                type: 'POST',
+                url: "{{ path('sie_juegos_eliminacion_clasificacion_deportista')}}",
+                data: {'inscripcion': es},
+                beforeSend: function () {
+                    // $("#list"+ es).attr('disabled', 'true');  
+                },
+                success: function (data) {
+                    if(data.msg_incorrecto){
+                        if(data.msg_incorrecto != ''){
+                            $("#listaInscritos").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                        }
+                    }
+
+                    if(data.msg_correcto){
+                        if(data.msg_correcto != ''){
+                            $("#listaInscritos").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_correcto+'</div>');
+                        }
+                    }
+                    
+                    if(data.registro){
+                        elemento.remove();
+                    } 
+
+                    return true;
+                },
+                timeout: 5000, // sets timeout to 5 seconds
+                statusCode: {
+                    500: function () {
+                        return false;
+                    },
+                    404: function () {
+                        return false;
+                    }
+                }
+            });
+        } else {
+            return false;
+        }
     }
 
-    function setDeportistas(es,des) {
+    var setDeportistas = function (es,des) {
         var deportistas = document.getElementsByName('deportistas[]');
         var botonAceptar = document.getElementById('form_submit');
-        habilitarBotonSubmit();
+        
+        if($('[name="estudiantes[]"]').length > 0){    
+            if(botonAceptar){                
+                $("#form_submit").removeAttr('disabled');
+            }  
+        } else {   
+            if(botonAceptar){
+                $("#form_submit").attr('disabled', 'true');
+            }    
+        }
+
         if(es.checked){
             $("#listaDeportistas").append('<div class="ckbox ckbox-lilac circle"><input type="checkbox" checked="chequed" id="idd' + es.value + '" name="deportistas[]" value="' + es.value + '" /><label id="lbd' + es.value + '" for="idd' + es.value + '">' + des + '</label></div>');          
             botonAceptar.disabled = false;       
@@ -222,28 +411,158 @@
         }  
     }
 
-    function habilitarBotonSubmit(){
-            var estudiantes = document.getElementsByName('estudiantes[]');
-            var botonAceptar = document.getElementById('form_submit');     
-            var cant = 0;
-            for (var i=0; i < estudiantes.length; i++){
-                if(estudiantes[i].checked == true){
-                    cant = 1;
-                }
-            }           
-            if(cant == 1){    
-                if(botonAceptar){
-                    botonAceptar.disabled = false; 
-                    botonAceptar.className = "btn btn-success col-sm-12 btn-slidedown";
-                }  
-                return true;
-            } else {   
-                if(botonAceptar){
-                    botonAceptar.className = "btn btn-default col-sm-12";
-                    botonAceptar.disabled = true; 
-                }    
-                return false;  
+    var habilitarBotonSubmit = function (){
+        var selecionados = $('[name="estudiantes[]"]');
+        var botonAceptar = document.getElementById('form_submit');
+        var deportistas = new Array();
+        //var posicion = $("#form_posicion").val();
+
+        selecionados.each(function (){
+            deportistas.push(this.value);
+        });
+
+        var cant = 0;
+        for (var i=0; i < deportistas.length; i++){
+            if(deportistas[i].checked == true){
+                cant = 1;
             }
         }
+                   
+        if($('[name="estudiantes[]"]').length > 0){    
+            if(botonAceptar){                
+                $("#form_submit").removeAttr('disabled');
+            }  
+        } else {   
+            if(botonAceptar){
+                $("#form_submit").attr('disabled', 'true');
+            }    
+        }
+        return true;
+    }
+
+    var chekedOff = function () {
+        $('input[type=checkbox]').attr('checked',false);
+    };
+    
+    var submit = function (){
+        var selecionados = $('[name="deportistas[]"]');
+        var fase = $("#form_fase").val();
+        var posicion = $("#form_posicion").val();
+        var botonAceptar = document.getElementById('form_submit');
+        var deportistas = new Array();
+        //var posicion = $("#form_posicion").val();
+
+        selecionados.each(function (){
+            deportistas.push(this.value);
+        });        
+
+        if($('[name="estudiantes[]"]').length > 0){
+            var r = confirm("¿ Desea registrar a los "+ $('[name="deportistas[]"]').length +" estudiantes seleccionados ?");
+            if (r == true) {   
+                peticion = $.ajax({
+                    type: 'POST',
+                    url: "{{ path('sie_juegos_clasificacion_lista_deportistas_registro')}}",
+                    data: {'deportistas': deportistas, 'fase': fase, 'posicion': posicion},
+                    beforeSend: function () {
+                        $("#listaInscritos").prepend('<div id="load" name="load" style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        $("#form_submit").attr('disabled', 'true');
+                        $("#listaDeportistas").empty();
+                        chekedOff();
+                    },
+                    success: function (data) {
+                        // for (var i in data.niveles) {
+                        //    $("#form_nivel").append('<option value="' + data.niveles[i].id + '">' + data.niveles[i].nivel + '</option>');
+                        // }
+                        // $("#form_submit").removeAttr('disabled');
+
+                        if(data.registrados){
+                            // for (var i in data.registrados) {
+                            //    $("#listaInscritos").prepend('<li id="list' + data.registrados[i].id + '" class="list-group-item">PUESTO ' + data.registrados[i].posicion + ' - ' + data.registrados[i].nombre + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(' + data.registrados[i].id + ');"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>');
+                            // }
+                            $("#listaInscritos").empty();
+                            var divLista = "";
+                            var c = 0;
+                            var expanded = "";
+                            if (data.conjunto){         
+                                divLista = '<div class="panel-group rounded shadow" id="accordionlistaParticipante">';                     
+                                $.each(data.registrados, function (i, participante) {                 
+                                    divLista = divLista + '<div class="panel panel-default">';                 
+                                    divLista = divLista + '<div class="panel-heading no-border">';            
+                                    divLista = divLista + '<div class="pull-left">';                  
+                                    divLista = divLista + '<h5 class="panel-title">';  
+                                    if(c == 0){
+                                        var expanded = 'aria-expanded="true"';
+                                        var expandedClass = 'in';
+                                    } else {
+                                        var expanded = 'aria-expanded="false" class="collapsed"';
+                                        var expandedClass = '';
+                                    }      
+                                    divLista = divLista + '<a data-toggle="collapse" data-parent="#accordionlistaParticipante" href="#collapse'+i+'" '+expanded+'>Equipo'+i+'</a>';                 
+                                    divLista = divLista + '</h5>';                       
+                                    divLista = divLista + '</div>';                      
+                                    divLista = divLista + '<div class="pull-right">';                       
+                                    divLista = divLista + '<button id="equipo'+i+'" type="button" class="btn btn-lg btn-primary label-xsmall" data-toggle="modal" data-target=".bs-example-modal-table" onclick="openRegisterCouch(&#39;'+participante.option+'&#39;,&#39;'+i+'&#39;);" >';                                      
+                                    divLista = divLista + '<i class="fa fa-edit"></i>'+participante.entrenador+''; 
+                                    divLista = divLista + '</button>';                                       
+                                    divLista = divLista + '</div>';                                       
+                                    divLista = divLista + '<div class="clearfix"></div>';                     
+                                    divLista = divLista + '</div>';     
+                                    divLista = divLista + '<div id="collapse'+i+'" class="panel-collapse collapse '+expandedClass+'" '+expanded+' >';                 
+                                    divLista = divLista + '<div class="panel-body">';                     
+                                    divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                    $.each(participante, function (j, value) {
+                                        if (j != "option" && j != "entrenador" ){
+                                            divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                        }
+                                    });                                            
+                                    divLista = divLista + '</ul>';  
+                                    divLista = divLista + '</div>';                               
+                                    divLista = divLista + '</div>';    
+                                    c = c + 1;  
+                                });                             
+                                divLista = divLista + '</div>'; 
+                            } else {
+                                divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                $.each(data.registrados, function (i, participante) {
+                                    divLista = divLista + '<li id="list' + i + '" class="list-group-item">' + participante.estudiante + '<div class="pull-right"><button id="equipo' + participante.option + '" type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="openRegisterCouch(&#39;' + participante.option + '&#39;,&#39;' + participante.option + '&#39;);" >' + participante.entrenador + '</button> <a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                });                                            
+                                divLista = divLista + '</ul>'; 
+                            } 
+                            
+                            $("#listaInscritos").append(divLista); 
+                        }
+
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $("#listaInscritos").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                            }
+                        }
+                        if(data.msg_correcto){
+                            if(data.msg_correcto != ''){
+                                $("#listaInscritos").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                            }
+                        }
+
+                        $("#load").remove();
+
+                        return true;
+                    },
+                    statusCode: {
+                        500: function () {
+                            return false;
+                        },
+                        404: function () {
+                            return false;
+                        }
+                    }
+                });
+            } else {
+                return false;
+            }
+        } else {
+            alert("Debe seleccionar una prueba y un estudiante como mínimo");
+            return false;
+        }
+    }
 </script>
 

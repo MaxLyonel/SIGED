@@ -94,4 +94,10 @@ reporte_adultos_index:
     path:     /adultos
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex }
 
+reporte_diversa_index:
+    path:     /diversa
+    defaults: { _controller: SieHerramientaAlternativaBundle:EstadisticasDiversa:diversaIndex }
 
+reporte_permanente_index:
+    path:     /permanente
+    defaults: { _controller: SiePermanenteBundle:EstadisticasPermanente:permanenteIndex }

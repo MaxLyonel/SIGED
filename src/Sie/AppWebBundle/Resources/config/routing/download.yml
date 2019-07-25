@@ -80,6 +80,10 @@ donwload_boletinPromoPerUe:
     path: /boletinPromoPerUe/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
     defaults: { _controller: SieAppWebBundle:Download:boletinPromoPerUe }
 
+donwload_boletinPromoPerUeNewVersion:
+    path: /boletinPromoPerUe/{version}/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
+    defaults: { _controller: SieAppWebBundle:Download:boletinPromoPerUeNewVersion }    
+
 donwload_listMaestrosPerUe:
     path: /listMaestrosPerUe/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
     defaults: { _controller: SieAppWebBundle:Download:listMaestrosPerUe }

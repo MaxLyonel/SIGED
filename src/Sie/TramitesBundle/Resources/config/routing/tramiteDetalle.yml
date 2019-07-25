@@ -56,6 +56,10 @@ tramite_detalle_certificado_tecnico_impresion_certificado_ci_pdf:
     path:     /certificado/tecnico/impresion/certificado/ci/pdf
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionCertificadoCiPdf }
 
+tramite_detalle_certificado_tecnico_impresion_certificado_firma_pdf:
+    path:     /certificado/tecnico/impresion/certificado/firma/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionCertificadoFirmaPdf }
+
 tramite_detalle_certificado_tecnico_impresion_guarda:
     path:     /certificado/tecnico/impresion/guarda
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionGuarda }

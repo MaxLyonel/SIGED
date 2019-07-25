@@ -81,30 +81,31 @@
             </div>
         </div>
     </div>
-            
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->    
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-<script>
-            $(document).ready( function(){
-                $(".tooltips").tooltip();
-            });
+    <script>
+        $(document).ready( function(){
+            $(".tooltips").tooltip();
+        });
 
-            function verificarRegularizacion(){
-                var myText = '¡AVISO IMPORTANTE! ¡LEA CON ATENCIÓN!\nLa habilitación de regularización permitira al director modificar datos del ultimo operativo realizado por el CEA,\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de conceder este acceso?\nSi no esta seguro de este mensaje presione CANCELAR.';
-                if(!confirm(myText)){
-                    return false;
-                }
-            };
+        function verificarRegularizacion(){
+            var myText = '¡AVISO IMPORTANTE! ¡LEA CON ATENCIÓN!\nLa habilitación de regularización permitira al director modificar datos del ultimo operativo realizado por el CEA,\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de conceder este acceso?\nSi no esta seguro de este mensaje presione CANCELAR.';
+            if(!confirm(myText)){
+                return false;
+            }
+        };
 
-            function verificarSiguienteOperativo(){
-                var myText = '¡AVISO IMPORTANTE! !LEA CON ATENCIÓN!\nLa habilitación del siguiente operativo cerrara toda regularización para el CEA,\ny solo los tec SIE podran realizar ediciones futuras segun normativa vigente.\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de habilitar el siguiente operativo para este centro?\nSi no esta seguro de este mensaje presione CANCELAR.';
-                if(!confirm(myText)){
-                    return false;
-                }
-            };
-    function buscarceaspendientes()
-        {
+        function verificarSiguienteOperativo(){
+            var myText = '¡AVISO IMPORTANTE! !LEA CON ATENCIÓN!\nLa habilitación del siguiente operativo cerrara toda regularización para el CEA,\ny solo los tec SIE podran realizar ediciones futuras segun normativa vigente.\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de habilitar el siguiente operativo para este centro?\nSi no esta seguro de este mensaje presione CANCELAR.';
+            if(!confirm(myText)){
+                return false;
+            }
+        };
+    
+        function buscarceaspendientes(){
             //alert('{{rol}}');
             if('{{rol}}'== 8)
             {
@@ -210,7 +211,23 @@
                 } );
             };
 
-
-        </script>
+        function verObservaciones(ie,suc,gestion,periodo,periodo_estado){
+            var formData = {ie:ie,suc:suc,gestion:gestion,periodo:periodo,periodo_estado:periodo_estado};
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_ges_sub_sem_panel_operativos_observaciones')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    cargatablas1();
+                },
+            });
+        }
+    </script>
 
 {% endblock %}

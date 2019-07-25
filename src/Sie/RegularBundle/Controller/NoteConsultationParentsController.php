@@ -220,19 +220,37 @@ class NoteConsultationParentsController extends Controller {
         }
 
         $sufijo = '_cuant';
+        $asignaturasInicial = array();
         if($inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 11){
+            if ($gestion >= 2019) {
+                $asignaturasInicial = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $inscripcionid), array('id' => 'ASC'));
+            }
             $sufijo = '_cual';
         }
 
         $indicesArray = array();
         foreach ($cabeceraArray as $key => $value) {
-
             $indicesArray[$key] = strtolower($value->getNotaAbrev().$sufijo);
         }
 
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
         $cuali = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion' => $inscripcionid), array('notaTipo' => 'ASC'));
+
+        $tuicion = false;
+
+        if($this->session->get('sysname') == 'SIGED') {
+            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId());
+            $query->bindValue(':rolId', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetchAll();
+
+            if ($aTuicion[0]['get_ue_tuicion']) {
+                $tuicion = true;
+            }
+        }
 
         return $this->render('SieRegularBundle:NoteConsultationParents:nota.html.twig', array(
             'cabeceras' => $cabeceraArray,
@@ -242,7 +260,10 @@ class NoteConsultationParentsController extends Controller {
             'inscripcion' => $inscripcion,
             'gestion' => $gestion,
             'subsistema' => $subsistema,
-            'cualitativo' => $cuali
+            'cualitativo' => $cuali,
+            'asignaturasInicial' => $asignaturasInicial,
+            'setNotasForm' => $this->setNotasForm(array())->createView(),
+            'tuicion' => $tuicion
         ));
     }
     /*

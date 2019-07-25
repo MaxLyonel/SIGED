@@ -26,7 +26,11 @@ class RegResultEventController extends Controller
 
     }
     public function indexAction(Request $request)
-    {   $id_Intitucion = $this->session->get('idInstitucion');
+    {
+        $id_Intitucion = $this->session->get('ie_id');
+        if($id_Intitucion == -1){
+            $id_Intitucion = $request->get('idInstitucion');
+        }
         $id_gestion = $this->session->get('currentyear');
         $id_evento = $request->get('idEvento');  //dump($id_evento);die; // id de evento
         $club = $request->get('club');// id de evento
@@ -98,6 +102,7 @@ class RegResultEventController extends Controller
     }
     public function registerimagenAction(Request $request ){ //dump($request);die;
         $cantidad = $request->get('cantidad'); //dump($cantidad);die;
+        $id_Intitucion = $request->get('id_Intitucion');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try{
@@ -105,7 +110,7 @@ class RegResultEventController extends Controller
                 $titulo = $request->get('nombreimagen' . $i);
                 $documento = $request->files->get('adjdocumento'. $i);
                 if ($documento) {
-                    $destination_path = 'uploads/club/'. $this->session->get('ie_id').'/lectura/';
+                    $destination_path = 'uploads/club/'.$id_Intitucion.'/lectura/';
                     $imagen = date('YmdHis').$i.'.'.$documento->getClientOriginalExtension();
                     $documento->move($destination_path, $imagen);
                     $productoimg = new CdlProductoimagen();
@@ -128,11 +133,11 @@ class RegResultEventController extends Controller
     }
 
     public function fotosAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
         $id = $request->get('id');
+        $id_Intitucion = $request->get('id_Intitucion');
         $fotos= $this->listFotos($id);
         return $this->render('SieHerramientaBundle:RegResultEvent:imagenes.html.twig', array(
-            'fotos'=>$fotos,'idinstitucion'=>$this->session->get('ie_id'),'id_resultado'=>$id,
+            'fotos'=>$fotos,'idinstitucion'=>$id_Intitucion,'id_resultado'=>$id,
         ));
     }
     public function deletefotosAction(Request $request){

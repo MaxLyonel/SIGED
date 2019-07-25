@@ -209,7 +209,7 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <strong>Seleccionar las especialidades</strong>
+                                                    <strong>Especialidades</strong>
                                                 </div>
                                                 <div class="col-md-3">
 
@@ -223,7 +223,18 @@
 
                                                 </div>
                                             </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>  Año de escolaridad a implementar BTH:</strong>
+                                                </div>
+                                                <div class="col-md-3">
 
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado: {{ grado }} </strong>
+                                                </div>
+                                            </div>
                                         </div><!-- /.panel-body -->
                                     </div>
 
@@ -234,7 +245,7 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="alert alert-warning">
-                                                    <strong>Nota.-</strong> Se recomienda adjuntar el informe a la Dirección Departamental de Educación para la autorización o postergación de la misma.
+                                                    <strong>Nota.-</strong> Se recomienda adjuntar el informe a la Dirección Departamental de Educación para la autorización o postergación de la misma. <strong> El archivo no debe superar a los 2MB</strong>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -296,6 +307,13 @@
                 document.getElementById("informe").checked = true;
             }
             $('#obs').hide();
+            $('#adjdocumento').change(function() {
+                var a=(this.files[0].size);
+                if(a > 2057157) {
+                    swal("El documento adjunto supera a los 2MB");
+                    $('#adjdocumento').val('');
+                };
+            });
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotype1]:checked').val();
@@ -345,6 +363,7 @@
                         if($('#adjdocumento').val()=="")
                         {swal("Debe adjuntar su informe.");
                         return false;}
+                        ip.push({grado:{{grado}}});
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
                         var fd = new FormData();
@@ -353,7 +372,7 @@
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
-                        fd.append('obstxt', obstxt);
+                        fd.append('obstxt', obstxt);                       
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
                         fd.append('sw',0);
@@ -377,7 +396,9 @@
                             success: function (data) { console.log(data);
                                 if (data.estado==1){
                                     swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite}});
-                                    location.href = "{{ path('wf_tramite_recibido') }}";
+                                    location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                                }else if(data.estado == 4){
+                                    swal(data.msg);
                                 }
                                 else{
                                     swal("Su respuesta no se envío correctamente");
@@ -391,5 +412,6 @@
                     }
                 });
         }
+
     </script>
 {% endblock %}

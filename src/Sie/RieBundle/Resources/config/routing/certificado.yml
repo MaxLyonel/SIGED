@@ -1,0 +1,5 @@
+ritt_verificar_certificado_qr:
+    path:   /qr/{qr}
+    defaults:   { _controller: SieRieBundle:SolicitudRITT:verificarCertificado }
+    requirements:
+        qr:  ^[a-zA-Z0-9\s\/\+\=]{1,2000}$
