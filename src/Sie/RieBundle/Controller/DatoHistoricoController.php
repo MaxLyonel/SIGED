@@ -236,7 +236,6 @@ class DatoHistoricoController extends Controller {
     public function upFileToServer($archivo){
 
         $dirfile = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/';
-        dump($dirfile);die;
         move_uploaded_file($archivo['form']['tmp_name']['archivo'],$dirfile.$archivo['form']['name']['archivo']);
 
         return $archivo['form']['name']['archivo'];
