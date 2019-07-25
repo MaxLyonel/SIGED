@@ -186,10 +186,10 @@ class DatoHistoricoController extends Controller {
             $historico->setDescripcion($form['descripcion']);
             $historico->setDatoAdicional(($form['datoAdicional'])?$form['datoAdicional']:NULL);
             $historico->setFechaModificacion(new \DateTime('now'));
-
             //Validando el archivo
             if($request->files->get('form')['archivo']){
-                if($historico->getArchivo() != ''){
+                //dump($this->get('kernel')->getRootDir());die;
+                if($historico->getArchivo() != '' and is_readable($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo())  ){
                     unlink($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo());    
                 }  
                 // $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
@@ -216,7 +216,7 @@ class DatoHistoricoController extends Controller {
         try{        
             $em = $this->getDoctrine()->getManager();
             $historico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($request->get('idhistorico'));
-            if($historico->getArchivo() != ''){
+            if($historico->getArchivo() != '' and is_readable($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo())){
                 // unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
                 unlink($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo());    
             }             
@@ -236,6 +236,7 @@ class DatoHistoricoController extends Controller {
     public function upFileToServer($archivo){
 
         $dirfile = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/';
+        dump($dirfile);die;
         move_uploaded_file($archivo['form']['tmp_name']['archivo'],$dirfile.$archivo['form']['name']['archivo']);
 
         return $archivo['form']['name']['archivo'];
