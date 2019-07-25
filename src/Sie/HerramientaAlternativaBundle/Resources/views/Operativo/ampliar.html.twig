@@ -93,7 +93,7 @@
                                             <td>{{ "now"|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaInicio.date|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaFin.date|date('d-m-Y') }}</td>
-                                            <td>{{ entity.usuarioRegistro.persona.nombre }}</td>
+                                            <td>{{ entity.usuarioRegistro.persona.nombre }} {{ entity.usuarioRegistro.persona.paterno }} {{ entity.usuarioRegistro.persona.materno }}</td>
                                             <td class="text-center" style="min-width:5px">{{ nro[entity.id] }}</td>
                                             <td class="text-center" style="min-width:3px">
                                                 <a class="btn btn-success btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Ceas del operativo" onclick="verCeas({{entity.id}})">
