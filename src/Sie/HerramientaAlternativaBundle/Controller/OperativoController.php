@@ -84,7 +84,7 @@ class OperativoController extends Controller {
         }else{
             $distrito = $form['distrito'];
         }
-
+        //dump($distrito,$rol,$form);die;
         switch($form['operativo']){
             case 1: //INSCRIPCIONES PRIMER SEMENSTRE
                 if($rol == 8 or $rol == 7){

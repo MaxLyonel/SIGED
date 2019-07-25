@@ -398,19 +398,23 @@ class SolicitudBTHController extends Controller {
     public function validaUE($id_Institucion,$gestion){
         $em = $this->getDoctrine()->getManager();
       $query = $em->getConnection()->prepare("SELECT ieht.grado_tipo_id as grado
-                     FROM institucioneducativa_humanistico_tecnico ieht  
+                     FROM institucioneducativa_humanistico_tecnico ieht
                      WHERE ieht.institucioneducativa_id = $id_Institucion and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
-                                         and  gestion_tipo_id < $gestion 
+                                         and  gestion_tipo_id < $gestion
                      ORDER BY gestion_tipo_id DESC LIMIT 1 ");
             $query->execute();
             $ue_verificada = $query->fetchAll();  //dump($ue_verificada);die;
-            if($ue_verificada){
-               $ue_verificada = 1; //SI corresponde segun su institucioneducativa_humanistico_tecnico_tipo_id   
+            $query = $em->getConnection()->prepare("select count(*)as cantidad_ue FROM institucioneducativa_humanistico_tecnico WHERE institucioneducativa_id = $id_Institucion");
+            $query->execute();
+            $cantidada_ue = $query->fetchAll();  //dump($cantidada_ue[0]['cantidad_ue']);die;
+            $ueNueva = (int)$cantidada_ue[0]['cantidad_ue'];
+            if($ue_verificada or ($ueNueva == 0) ){
+               $ue_verificada = 1; //SI corresponde segun su institucioneducativa_humanistico_tecnico_tipo_id o la UE nunca fue BTH
             }else{
-                $ue_verificada = 0; //NO corresponde segun su institucioneducativa_humanistico_tecnico_tipo_id   
+                $ue_verificada = 0; //NO corresponde segun su institucioneducativa_humanistico_tecnico_tipo_id
             }
             return $ue_verificada;
-            
+
     }
     public function guardasolicitudAction(Request $request){
         $datos          = ($request->get('ipt')); //dump($datos);die;
