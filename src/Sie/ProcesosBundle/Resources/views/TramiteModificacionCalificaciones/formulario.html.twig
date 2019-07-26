@@ -1,4 +1,4 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
 {% block contentoption %}
     
     <style type="text/css">
@@ -180,7 +180,7 @@
                                     </div>
                                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
                                         <a href="" class="btn btn-default">Cancelar</a>
-                                        <button v-on:click="enviarSolicitud()" type="button" class="btn btn-success" :disabled="acuerdo">Enviar solicitud</button>
+                                        <button v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
                                     </div>
                                 </div>
 
@@ -508,10 +508,14 @@
 
                     axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
                     .then(response => {
-                        console.log(response);
+                        window.location.href = "{{path('wf_tramite_index')}}";
                     })
                     .catch(e => {
-                        console.log(e);
+                        Swal.fire(
+                          'Error!',
+                          e,
+                          'danger'
+                        );
                     });
                 }
                 

@@ -402,6 +402,10 @@ class TramiteModificacionCalificacionesController extends Controller {
         return $response;
     }
 
+    /*=========================================================
+    =            RECEPCION Y VERIFICACION DESTRITO            =
+    =========================================================*/
+    
     public function recepcionVerificaDistritoAction(Request $request){
         $idTramite = $request->get('id');
         $em = $this->getDoctrine()->getManager();
@@ -409,7 +413,7 @@ class TramiteModificacionCalificacionesController extends Controller {
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite'=>$tramite->getId()));
         // dump($tramiteDetalle);die;
         $tramiteDetalle = $em->createQueryBuilder()
-                            ->select('td.id idTramiteDetalle, te.tramiteEstado, wf.datos')
+                            ->select('td.id idTramiteDetalle, te.tramiteEstado, wf.datos, td.obs')
                             ->from('SieAppWebBundle:Tramite','t')
                             ->innerJoin('SieAppWebBundle:TramiteDetalle','td','with','td.tramite = t.id')
                             ->innerJoin('SieAppWebBundle:TramiteEstado','te','with','td.tramiteEstado = te.id')
@@ -436,7 +440,8 @@ class TramiteModificacionCalificacionesController extends Controller {
             'estudiante'=>$estudiante,
             'datos'=>$datos,
             'sie'=>$sie,
-            'idtramite'=>$idTramite
+            'idtramite'=>$idTramite,
+            'obs'=>$tramiteDetalle[0]['obs']
         ));
     }    
 
@@ -490,7 +495,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 $tarea->getId(),
                 'institucioneducativa',
                 $sie,
-                '',
+                $obs,
                 $varevaluacion,
                 $idTramite,
                 $datos,
@@ -508,5 +513,188 @@ class TramiteModificacionCalificacionesController extends Controller {
             $em->getConnection()->rollback();
         }
     }
+    
+    /*=====  End of RECEPCION Y VERIFICACION DESTRITO  ======*/
+    
+
+
+    /*=============================================================
+    =            RECEPCION Y VERIFICACION DEPARTAMENTO            =
+    =============================================================*/
+    
+    public function recepcionVerificaDepartamentoAction(Request $request){
+        $idTramite = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite'=>$tramite->getId()));
+        $tramiteDetalle = $em->createQueryBuilder()
+                            ->select('td.id idTramiteDetalle, te.tramiteEstado, wf.datos')
+                            ->from('SieAppWebBundle:Tramite','t')
+                            ->innerJoin('SieAppWebBundle:TramiteDetalle','td','with','td.tramite = t.id')
+                            ->innerJoin('SieAppWebBundle:TramiteEstado','te','with','td.tramiteEstado = te.id')
+                            ->innerJoin('SieAppWebBundle:WfSolicitudTramite','wf','with','wf.tramiteDetalle = td.id')
+                            ->where('t.id = :idTramite')
+                            ->orderBy('td.id','DESC')
+                            ->setMaxResults(1)
+                            ->setParameter('idTramite', $idTramite)
+                            ->getQuery()
+                            ->getResult();
+
+        $datos = json_decode($tramiteDetalle[0]['datos'],true);
+        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($datos['idInscripcion']);
+        $estudiante = $inscripcion->getEstudiante();
+        $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+
+        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaDepartamento.html.twig', array(
+            'inscripcion'=>$inscripcion,
+            'estudiante'=>$estudiante,
+            'datos'=>$datos,
+            'sie'=>$sie,
+            'idtramite'=>$idTramite
+        ));
+    }
+
+    public function derivaDepartamentoAction(Request $request){
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+
+            $idTramite = $request->get('idTramite');
+            $procedente = $request->get('procedente');
+            $observarTramite = $request->get('observarTramite');
+            $obs = $request->get('obs');
+
+            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+            $flujoTipo = $tramite->getFlujoTipo()->getId();
+            $sie = $tramite->getInstitucioneducativa()->getId();
+            $gestion = $tramite->getGestionId();
+
+            // OBTENEMOS EL ID DE LA TAREA
+            $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array(
+                'flujoTipo'=>$flujoTipo,
+                'orden'=>3
+            ));
+
+            $tramiteDetalle = $em->createQueryBuilder()
+                                ->select('td.id idTramiteDetalle, te.tramiteEstado, wf.datos')
+                                ->from('SieAppWebBundle:Tramite','t')
+                                ->innerJoin('SieAppWebBundle:TramiteDetalle','td','with','td.tramite = t.id')
+                                ->innerJoin('SieAppWebBundle:TramiteEstado','te','with','td.tramiteEstado = te.id')
+                                ->innerJoin('SieAppWebBundle:WfSolicitudTramite','wf','with','wf.tramiteDetalle = td.id')
+                                ->where('t.id = :idTramite')
+                                ->orderBy('td.id','DESC')
+                                ->setMaxResults(1)
+                                ->setParameter('idTramite', $idTramite)
+                                ->getQuery()
+                                ->getResult();
+
+            $datos = json_decode($tramiteDetalle[0]['datos'],true);
+            $datos['procedente'] = $procedente;
+            $datos['obs'] = $obs;
+            $datos = json_encode($datos);
+
+            $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+
+            $varevaluacion = ($procedente == 1)?'SI':'NO';
+
+            // REGISTRAMOS LA PRIMERA TAREA
+            $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                        $this->session->get('userId'),
+                        $this->session->get('roluser'),
+                        $flujoTipo,
+                        $tarea->getId(),
+                        'institucioneducativa',
+                        $sie,
+                        '',
+                        $varevaluacion,
+                        $idTramite,
+                        $datos,
+                        '',
+                        $lugarTipo['lugarTipoIdDistrito']
+                    );
+
+            // VERIFICAMOS SI EL TRAMITE ES PROCEDENTE PARA DETERMINAR LA SIGUIENTE TAREA
+            if ($procedente == 1) {
+                // RECEPCIONAMOS NUEVAMENTE EL TRAMITE PARA MODIFICAR LAS NOTAS EN EL SISTEMA
+                $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array(
+                    'flujoTipo'=>$flujoTipo,
+                    'orden'=>4
+                ));
+
+                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                            $this->session->get('userId'),
+                            $tarea->getId(),
+                            $idTramite
+                        );
+
+                /*----------  REGISTRAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
+
+                // public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
+                
+
+
+                /*----------  --------------------------------------------  ----------*/
+
+
+                // ENVIAMOS EL TRAMITE PARA FINALIZAR EL TRAMITE
+                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                            $this->session->get('userId'),
+                            $this->session->get('roluser'),
+                            $flujoTipo,
+                            $tarea->getId(),
+                            'institucioneducativa',
+                            $sie,
+                            '',
+                            '',
+                            $idTramite,
+                            $datos,
+                            '',
+                            $lugarTipo['lugarTipoIdDistrito']
+                        );
+            }else{
+                // RECEPCIONAMOS NUEVAMENTE EL TRAMITE PARA OBSERVARLO
+                $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array(
+                    'flujoTipo'=>$flujoTipo,
+                    'orden'=>5
+                ));
+
+                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                            $this->session->get('userId'),
+                            $tarea->getId(),
+                            $idTramite
+                        );
+
+                $observarTramite = ($observarTramite == 1)?'SI':'NO';
+
+                // ENVIAMOS EL TRAMITE PARA FINALIZAR EL TRAMITE
+                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                            $this->session->get('userId'),
+                            $this->session->get('roluser'),
+                            $flujoTipo,
+                            $tarea->getId(),
+                            'institucioneducativa',
+                            $sie,
+                            $obs,
+                            $observarTramite,
+                            $idTramite,
+                            $datos,
+                            '',
+                            $lugarTipo['lugarTipoIdDistrito']
+                        );   
+            }
+
+            $em->getConnection()->commit();
+
+            $response = new JsonResponse();
+
+            return $response;
+
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+        }
+    }
+    
+    /*=====  End of RECEPCION Y VERIFICACION DEPARTAMENTO  ======*/
 
 }

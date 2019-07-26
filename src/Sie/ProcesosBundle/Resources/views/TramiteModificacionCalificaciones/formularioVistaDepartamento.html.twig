@@ -28,7 +28,7 @@
         }
         .headtabla{
             background: #717171 !important;
-            color: #FFFFFF;
+            color: #FFFFFF; 
             border-bottom: none !important;
         }
         .check{
@@ -184,7 +184,19 @@
                             </div>
                             <div v-if="procedente == 0">
                                 <h5>Observación</h5>
-                                <textarea name="obs" id="" cols="30" rows="5" class="form-control" v-model="obs" placeholder="Registre una observación"></textarea>
+                                <textarea name="obs" id="" cols="30" rows="5" class="form-control" v-model="obs" placeholder="Registre la observación del trámite"></textarea>
+                                <h5>¿Qué desea hacer con el trámite?</h5>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="observarTramite" value="1" v-model="observarTramite" required>
+                                        Devolver al distrito
+                                    </label>
+                                    &nbsp;
+                                    <label>
+                                        <input type="radio" name="observarTramite" value="0" v-model="observarTramite" required>
+                                        Finalizar trámite
+                                    </label>
+                                </div>
                             </div>
                             <br>
                             <button type="button" v-on:click="enviarFormulario" class="btn btn-primary">Enviar</button>
@@ -209,10 +221,14 @@
             data: {
                 // idTramite: '{{ idtramite }}',
                 procedente: 1,
+                observarTramite: 1,
                 obs: ''
             },
             methods: {
                 enviarFormulario: function(){
+                    var titulo = '';
+                    var texto = '';
+                    // VALIDAMOS SI EL TRAMITE ES PROCEDENTE, DEBE LLENAR LA OBSERVACION
                     if (this.procedente == 0 && this.obs == '') {
                         Swal.fire(
                             'Observación!',
@@ -222,18 +238,43 @@
                         return;
                     }else if(this.procedente == 1){
                         this.obs = '';
+                        titulo = 'Aprobar y finalizar trámite';
+                        texto = '¿Esta seguro de aprobar y finalizar el trámite?, presione el boton aceptar para confirmar.'
+                    }else{
+                        if (this.observarTramite == 0) {
+                            titulo = 'Devolver al distrito';
+                            texto = '¿Esta seguro de devolver el tramite al distrito? Presione el boton aceptar para confirmar.';
+                        }else{
+                            titulo = 'Finalizar trámite';
+                            texto = '¿Esta seguro de finalizar el trámite? Presione aceptar para confirmar.'
+                        }
                     }
-                    axios.post(Routing.generate('tramite_modificacion_calificaciones_deriva_distrito', { 
-                        idTramite: '{{idtramite}}',
-                        procedente: this.procedente,
-                        obs: this.obs
-                    }))
-                    .then(response => {
-                        console.log(response);
+
+                    Swal.fire({
+                        title: titulo,
+                        text: texto,
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Aceptar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            axios.post(Routing.generate('tramite_modificacion_calificaciones_deriva_departamento', { 
+                                idTramite: '{{idtramite}}',
+                                procedente: this.procedente,
+                                observarTramite: this.observarTramite,
+                                obs: this.obs
+                            }))
+                            .then(response => {
+                                console.log(response);
+                            })
+                            .catch(e => {
+                                console.log(e);
+                            });
+                        }
                     })
-                    .catch(e => {
-                        console.log(e);
-                    });
                 }
             },
             computed: {

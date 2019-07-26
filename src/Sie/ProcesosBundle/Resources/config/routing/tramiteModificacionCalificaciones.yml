@@ -39,3 +39,15 @@ tramite_modificacion_calificaciones_deriva_distrito:
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDistrito }
     options:
         expose: true
+
+# DEPARTAMENTO
+
+tramite_modificacion_calificaciones_recepcion_verifica_departamento:
+    path:     /recepcionaVerificaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:recepcionVerificaDepartamento }
+
+tramite_modificacion_calificaciones_deriva_departamento:
+    path:     /derivaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDepartamento }
+    options:
+        expose: true

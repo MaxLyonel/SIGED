@@ -1,4 +1,4 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
 {% block contentoption %}
     
     <style type="text/css">
@@ -57,7 +57,7 @@
             </div><!-- /.breadcrumb-wrapper -->
         </div><!-- /.header-content -->
         <div class="body-content animated fadeIn">
-            <div class="panel panel-warning">
+            {# <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h3 class="panel-title">Observación(es)</h3>
                 </div>
@@ -72,7 +72,7 @@
                     </div>
                     <p v-else> <img src="{{asset('img/loading-sm.gif')}}" alt=""> &nbsp; Cargando ... </p>
                 </div>
-            </div>
+            </div> #}
             <div class="panel panel-primary" id="formulario" {# style="display:none" #}>
                 <div class="panel-heading">
                     <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Solicitud </h3>
