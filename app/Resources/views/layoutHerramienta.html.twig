@@ -538,20 +538,14 @@
                             <ul>
                                 <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
                             </ul>
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
                         </li>
                     {% endif %}
-                    {% if  app.session.get('roluser') in [8,20]   %}
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Club de Lectura</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
+                    
 
                     {#
                         <li class="submenu">
