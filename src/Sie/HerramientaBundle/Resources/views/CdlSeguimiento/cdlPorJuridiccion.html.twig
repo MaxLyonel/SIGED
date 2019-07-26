@@ -1,0 +1,102 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i>Seguimiento:<span> Club de lectura</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('cdlseguimiento')}}">Seguimiento</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            {% if app.session.flashBag.has('exito') %}
+                <div class="alert alert-success">
+                    {% for msg in app.session.flashBag.get('exito') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if app.session.flashBag.has('error') %}
+                <div class="alert alert-danger">
+                    {% for msg in app.session.flashBag.get('error') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div id="mensaje"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Jurisdicción:
+                                {% if data is not empty %}
+                                    <strong>{% if data.0.rolusuario == 0 %} Unidad Educativa-{{data.0.jurisdiccion}}{% else %}{{data.0.jurisdiccion}}{% endif %}</strong>
+                                {% endif %}
+                            </h3>
+                        </div>
+                        <div class="pull-right">
+                            <h3 class="panel-title">
+                            </h3>
+                        </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="panel-body panel-primary">
+                        <div class="col-sm-6">
+                        <div class="panel stat-right no-margin no-box-shadow">
+                            <div class="panel-body">
+                                <h4 class="no-margin">Unidades Educativas con Clubs de Lectura</h4>
+                                <p class="text-muted">
+                                    {% if data is not empty %}
+                                        {% if data.0.rolusuario == 0 %} Unidad Educativa-{{data.0.jurisdiccion}}{% else %}Por {{data.0.nombrearea}}{% endif %}
+                                    {% else %}
+                                        No existen Clubs de Lectura registrados
+                                    {% endif %}
+                                </p>
+                                {% for data in data %}
+                                    {% if data.rolusuario != 0 %}
+                                        {% set porcentaje = (data.cantidad * 100) / (data.total) %}
+                                        <form name="form" role="form" action="{{ path('cdl_seguimiento_porjurisdiccion') }}" method="POST"> 
+                                            <input type="hidden" name="codigo" value="{{data.codigo}}" />
+                                            <input type="hidden" name="rol" value="{{data.rolusuario}}" />
+                                            <button type="submit" id="submit{{loop.index}}" style="display:none;"></button>
+                                            <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{loop.index}}').click();">
+                                                <span class="pull-right" style="width:50px; text-align:right"><b>({{data.cantidad}}/{{data.total}})</b></span><span class="">{{data.nombre}}</span>
+                                            </a>    
+                                            <div class="progress progress-xs">
+                                                <div class="progress-bar progress-bar-teal" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%"></div>
+                                            </div><!-- /.progress -->
+                                        </form> 
+                                    {% else %}
+                                        <span>{{loop.index}}- {{data.nombre}}</span> </br>
+                                    {% endif %}
+                                {% endfor %}
+                            </div><!-- /.panel-body -->
+                            <div class="panel-footer">
+                            </div>
+                        </div><!-- /.panel -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{% endblock %}
