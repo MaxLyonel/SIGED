@@ -124,11 +124,11 @@ class DatoHistoricoController extends Controller {
      */
     public function createAction(Request $request){
         $form = $request->get('form');
-        $maximo = 3 * (1024 * 1024);
+        $maximo = 3.5 * (1024 * 1024);
         $size = $_FILES['form']['size']['archivo'];
         //dump($_FILES,$size,$maximo);die;
         if($size > $maximo){
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3 megas.');
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3.5 megas.');
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
         }
         try {
@@ -184,11 +184,11 @@ class DatoHistoricoController extends Controller {
      */
      public function updateAction(Request $request){
         $form = $request->get('form');
-        $maximo = 3 * (1024 * 1024);
+        $maximo = 3.5 * (1024 * 1024);
         $size = $_FILES['form']['size']['archivo'];
         //dump($size,$maximo);die;
         if($size > $maximo){
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3 megas');
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3.5 megas');
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
         }
         try {
