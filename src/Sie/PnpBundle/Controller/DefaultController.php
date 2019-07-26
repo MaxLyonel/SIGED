@@ -3686,7 +3686,8 @@ ciclo_tipo_id, grado_tipo_id
                 $datos_filas["provincia_id"] = $p["provincia_id"];
                 $datos_filas["lugar"] = $p["lugar"];
                 $datos_filas["lugar_id"] = $p["lugar_id"];
-                $datos_filas["localidad"] = $p["localidad"];
+                $datos_filas["localidad"] = str_replace("'","",$p["localidad"]);
+                //$datos_filas["localidad"] = $p["localidad"];
                 if(isset($opciones[1])){
                     $usu=$em->getRepository('SieAppWebBundle:Usuario')->findOneById(intval($opciones[1]));
                     $datos_filas["usu_c"] = $usu->getUsername();
@@ -3726,7 +3727,8 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filas["provincia_id"] = $p["provincia_id"];
             $datos_filas["lugar"] = $p["lugar"];
             $datos_filas["lugar_id"] = $p["lugar_id"];
-            $datos_filas["localidad"] = $p["localidad"];
+            $datos_filas["localidad"] = str_replace("'","",$p["localidad"]);
+            //$datos_filas["localidad"] = $p["localidad"];
             //////de obs ver quien creo el curso y quien lo cerro
             $cadena = $p["obs"];
             $opciones = explode("-", $cadena);
@@ -5279,7 +5281,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $estudiante->setFolio('');
             //$estudiante->setSangreTipoId($this->getDoctrine()->getRepository('SieAppWebBundle:SangreTipo')->find($persona->getSangreTipo())->getId());
             $estudiante->setIdiomaMaternoId('0');
-            $estudiante->setSegipId($persona->getSegipId());
+            $estudiante->setSegipId('1');
             $estudiante->setComplemento($persona->getComplemento());
             $estudiante->setBolean(false);
             $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                            
@@ -5626,6 +5628,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
 
                         //idiomas
                         $idiomas = array();
+                        $idioma_frecuencia = array();
                             $query = "
                         SELECT it.id,it.idioma
                         FROM rude r
@@ -5765,7 +5768,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         $em->persist($newrudeidioma);
                         $em->flush();
                         //IDIOMA FRECUENCIA 
-                        foreach ($idioma_frecuencia as $p) {
+                        foreach ($idioma_frecuencia as $p) { //error 1
                             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
                             $query->execute();
                             $newrudeidioma = new RudeIdioma();

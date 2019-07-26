@@ -359,3 +359,7 @@ sie_app_web_downloadrudefile:
 sie_regular_promedio_calidad:
     resource: "@SieRegularBundle/Resources/config/routing/promedioCalidad.yml"
     prefix:   /sie/promedioCalidad
+
+sie_regular_review_up_sie_file:
+    resource: "@SieRegularBundle/Resources/config/routing/ReviewUpSieFile.yml"
+    prefix:   /sie/reviewupsiefile

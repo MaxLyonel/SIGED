@@ -81,9 +81,7 @@ class RegisterPersonStudentController extends Controller{
 
         return $response->setData(array(
                 'niveles' => $this->getNivelUnidadEducativa($sie,$gestionActual),
-            	));
-        
-
+            	)); 
     }
 
     private function getNivelUnidadEducativa($institucionEducativaId, $gestionId){
@@ -575,10 +573,11 @@ class RegisterPersonStudentController extends Controller{
     public function findPersonAction(Request $request){
     	//get the values send
     	$arrForm =  $request->get('form');
-    	// dump($arrForm);die;
-    	// dump($arrForm);die;
+        // dump($arrForm);die;
+        $arrInscripcion = json_decode($arrForm['jsonIdInscription'],true);
     	$carnet = $arrForm['carnet'];
     	$complemento =  $arrForm['complemento'];
+        $inscripcionJuegosId =  $arrInscripcion[0];
     	//create db conexion 
     	$em = $this->getDoctrine()->getManager();
     	$arrConditionSql = array(
@@ -592,12 +591,16 @@ class RegisterPersonStudentController extends Controller{
         // $showOptionRegister = sizeof($arrCouchs)>0?false:true;
         $showOptionRegister = true;
     	$arrData = array();
-    	$objPerson  = array();
+        $objPerson  = array();
+        $arrayComision =  array();
     	if($showOptionRegister){
 			$objPerson = $em->getRepository('SieAppWebBundle:Persona')->findOneBy($arrConditionSql);
-			if($objPerson){
+			if($objPerson){        
+                $objEstudianteInscripcionJuegos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('id'=>$inscripcionJuegosId));
+                $nivelId = $objEstudianteInscripcionJuegos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
+                $arrayComision = $this->getComisionNivel($nivelId);
 				$arrData['personId']=$objPerson->getId();
-				$arrData['comisionTipoId']=140;
+				// $arrData['comisionTipoId']=140;
 				$arrData['form']= $arrForm;
 			// dump(json_encode($arrData));die;
 			}else{
@@ -612,23 +615,45 @@ class RegisterPersonStudentController extends Controller{
 
 		return $this->render('SieJuegosBundle:RegisterPersonStudent:personData.html.twig',array(
 			'dataPerson' => $objPerson,
-			'form'=>$this->formFindPerson(json_encode($arrData))->createView()
+			'form'=>$this->formFindPerson(json_encode($arrData), $arrayComision)->createView()
 		));   	    
     	
     }
 
 
-    private function formFindPerson($jsonData){
+    private function formFindPerson($jsonData, $arrayComision){
 
 
     	return $this->createFormBuilder()
-    			->add('dataToRegister','hidden',array('attr'=>array('value'=>$jsonData)))
-    			->add('find', 'button', array('label'=>'Registrar', 'attr'=>array('onclick'=>'registerPerson()', 'class'=>'btn btn-info text-center btn-block')))
+                ->add('dataToRegister','hidden',array('attr'=>array('value'=>$jsonData)))
+                ->add('comision','choice',
+                      array('label' => 'Comisión',
+                            'choices' => ($arrayComision),
+                            'attr' => array('class' => 'form-control col-lg-6 col-md-6 col-sm-6')))
+    			->add('find', 'button', array('label'=>'Registrar', 'attr'=>array('onclick'=>'registerPerson()', 'class'=>'btn btn-info text-center btn-block col-lg-6 col-md-6 col-sm-6')))
             	->getForm();
 
     }
 
 
+
+    /**
+     * busca la comision ppor nivel
+     * @param type $nivelId
+     * @param type $generoId
+     * return list of pruebas
+     */
+    public function getComisionNivel($nivelId) {
+        $comision = array();
+        if ($nivelId == 12) {
+            // $comision = array('139' => 'Acompañante Entrenador', '12' => 'Acompañante Maestro', '13' => 'Acompañante Padre de Familia', '102' => 'Acompañante Delegado');
+            $comision = array('139' => 'Acompañante Entrenador');
+        } else {
+            // $comision = array('140' => 'Acompañante Entrenador', '141' => 'Acompañante Maestro', '142' => 'Acompañante Padre de Familia', '143' => 'Acompañante Delegado');
+            $comision = array('140' => 'Acompañante Entrenador');
+        }
+        return $comision;              
+    }
 
 
     public function registerPersonAction(Request $request){
@@ -696,9 +721,10 @@ class RegisterPersonStudentController extends Controller{
 
     	$arrForm = json_decode($form['dataToRegister'],true);
     	
-// dump($arrForm);die;
     	$personId = $arrForm['personId'];
-    	$comisionTipoId = $arrForm['comisionTipoId'];
+    	// $comisionTipoId = $arrForm['comisionTipoId'];
+        // dump($form['comision']);die;
+    	$comisionTipoId = $form['comision'];
     	$arrIdInscription = json_decode($arrForm['form']['jsonIdInscription'],true);
     	
         $em = $this->getDoctrine()->getManager();
@@ -721,12 +747,12 @@ class RegisterPersonStudentController extends Controller{
 			$query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('jdp_persona_inscripcion_juegos');");
         	$query->execute();            
             foreach ($arrIdInscription as $key => $value) {
-                $objJdpPersonaInscripcion = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos' => $value));
+                $objJdpPersonaInscripcion = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos' => $value, 'comisionTipo'=> $comisionTipoId));
                 if(count($objJdpPersonaInscripcion) <= 0){
                     $objJdpPersonaInscripcion =  new JdpPersonaInscripcionJuegos();
                     $objJdpPersonaInscripcion->setEstudianteInscripcionJuegos($em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->find($value));
                     $objJdpPersonaInscripcion->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionTipoId));
-                }   
+                } 
                 $objJdpPersonaInscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personId)); 			
     			$em->persist($objJdpPersonaInscripcion);
     			$em->flush();

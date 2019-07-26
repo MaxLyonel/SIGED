@@ -91,6 +91,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->andwhere('d.codigo = :satCodigo')
                 ->andwhere('h.paraleloTipo = :paralelo')
                 ->andwhere('h.turnoTipo = :turno')
+                ->andwhere('i.estadomatriculaTipo = :matriculaTipo')
 
                 ->setParameter('sie', $ie_id)
                 ->setParameter('gestion', $ie_gestion)
@@ -101,6 +102,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('paralelo', $paralelo)
                 ->setParameter('turno', $turno)
+                ->setParameter('matriculaTipo', 5)
 
                 ->orderBy('j.paterno, j.materno, j.nombre')
         ;//dump($qb->getQuery()->getSQL());die;
@@ -162,6 +164,186 @@ class InstitucioneducativaCursoRepository extends EntityRepository
       ;
       return $qb->getQuery()->getResult();
     }
+
+/*
+SELECT s2_.codigo AS codigo3, s2_.especialidad AS especialidad4
+FROM superior_facultad_area_tipo s1_ 
+INNER JOIN superior_especialidad_tipo s2_ ON (s1_.id = s2_.superior_facultad_area_tipo_id) 
+INNER JOIN superior_acreditacion_especialidad s7_ ON (s2_.id = s7_.superior_especialidad_tipo_id) 
+INNER JOIN superior_institucioneducativa_acreditacion s8_ ON (s8_.acreditacion_especialidad_id = s7_.id) 
+INNER JOIN institucioneducativa_sucursal i6_ ON (s8_.institucioneducativa_sucursal_id = i6_.id) 
+INNER JOIN superior_institucioneducativa_periodo s9_ ON (s9_.superior_institucioneducativa_acreditacion_id = s8_.id) 
+INNER JOIN institucioneducativa_curso i0_ ON (i0_.superior_institucioneducativa_periodo_id = s9_.id) 
+WHERE i0_.institucioneducativa_id = 20680003 AND i0_.gestion_tipo_id = 2019 AND i6_.sucursal_tipo_id = 0 AND i6_.periodo_tipo_id = 2 
+and s1_.codigo = 15 --and s2_.codigo in (1,2)
+GROUP BY s2_.codigo, s2_.especialidad
+ORDER BY 1
+
+*/
+     public function getLevelPerSieGestionSubceaPeriodo($data) {
+        
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+                ->select('b.codigo, b.especialidad')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad = c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->where('h.institucioneducativa = :sie')
+                ->andwhere('h.gestionTipo = :gestion')
+                ->andwhere('f.sucursalTipo = :sucursal')
+                ->andwhere('f.periodoTipoId = :periodo')
+                ->andwhere('a.codigo = :sfatCodigo')
+                ->groupBy('b.codigo, b.especialidad ')
+                ->orderBy('b.codigo')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('sucursal', $data['sucursal'])
+                ->setParameter('periodo', $data['periodo'])
+                ->setParameter('sfatCodigo', 15)
+        ;   
+        return $qb->getQuery()->getResult();
+    }
+
+     public function getEtapaPerSieGestionSubceaPeriodo($data) {
+        
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+                ->select('d.codigo,d.acreditacion ')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo = d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad = c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->where('h.institucioneducativa = :sie')
+                ->andwhere('h.gestionTipo = :gestion')
+                ->andwhere('f.sucursalTipo = :sucursal')
+                ->andwhere('f.periodoTipoId = :periodo')
+                ->andwhere('a.codigo = :sfatCodigo')
+                ->andwhere('b.codigo = :levelId')
+                ->groupBy('d.codigo,d.acreditacion ')
+                ->orderBy('d.codigo')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('sucursal', $data['sucursal'])
+                ->setParameter('periodo', $data['periodo'])
+                ->setParameter('sfatCodigo', 15)
+                ->setParameter('levelId', $data['levelId'])
+        ;   
+        return $qb->getQuery()->getResult();
+    }
+
+
+     public function getParaleloPerSieGestionSubceaPeriodo($data) {
+        
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+                ->select('p.id,p.paralelo ')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo = d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad = c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->innerJoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'h.paraleloTipo = p.id')
+                ->innerJoin('SieAppWebBundle:TurnoTipo', 'q', 'WITH', 'h.turnoTipo  = q.id')
+                ->where('h.institucioneducativa = :sie')
+                ->andwhere('h.gestionTipo = :gestion')
+                ->andwhere('f.sucursalTipo = :sucursal')
+                ->andwhere('f.periodoTipoId = :periodo')
+                ->andwhere('a.codigo = :sfatCodigo')
+                ->andwhere('b.codigo = :levelId')
+                ->andwhere('d.codigo = :etapaId')
+                ->groupBy('p.id,p.paralelo')
+                ->orderBy('p.id')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('sucursal', $data['sucursal'])
+                ->setParameter('periodo', $data['periodo'])
+                ->setParameter('sfatCodigo', 15)
+                ->setParameter('levelId', $data['levelId'])
+                ->setParameter('etapaId', $data['etapaId'])
+        ;   
+        // dump($qb->getQuery()->getSQL());
+        return $qb->getQuery()->getResult();
+    }
+
+     public function getInstEduCursoPerSieGestionSubceaPeriodoParalelo($data) {
+        
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+                ->select('h.id')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo = d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad = c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->innerJoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'h.paraleloTipo = p.id')
+                ->innerJoin('SieAppWebBundle:TurnoTipo', 'q', 'WITH', 'h.turnoTipo  = q.id')
+                ->where('h.institucioneducativa = :sie')
+                ->andwhere('h.gestionTipo = :gestion')
+                ->andwhere('f.sucursalTipo = :sucursal')
+                ->andwhere('f.periodoTipoId = :periodo')
+                ->andwhere('a.codigo = :sfatCodigo')
+                ->andwhere('b.codigo = :levelId')
+                ->andwhere('d.codigo = :etapaId')
+                ->andwhere('h.paraleloTipo = :paraleloId')
+                // ->groupBy('p.id,p.paralelo')
+                ->orderBy('h.id')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('sucursal', $data['sucursal'])
+                ->setParameter('periodo', $data['periodo'])
+                ->setParameter('sfatCodigo', 15)
+                ->setParameter('levelId', $data['levelId'])
+                ->setParameter('etapaId', $data['etapaId'])
+                ->setParameter('paraleloId', $data['paraleloId'])
+        ;   
+        // dump($qb->getQuery()->getSQL());
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getCurrentStudentInscriptionOnAlt($data){
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+                ->select('i')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
+                ->where('i.estudiante = :studentId')
+                ->andwhere('i.estadomatriculaTipo = :matriculaTipo')
+                ->andwhere('h.gestionTipo = :gestion')
+                ->andwhere('a.codigo = :sfatCodigo')
+                ->setParameter('studentId', $data['estudianteId'])
+                ->setParameter('matriculaTipo', 4)
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('sfatCodigo', 15)
+                
+        ;   
+        // dump($qb->getQuery()->getSQL());
+        return $qb->getQuery()->getResult();
+
+    }
+
+
+    
 
 
 
