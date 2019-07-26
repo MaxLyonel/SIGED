@@ -104,7 +104,7 @@ class CdlSeguimientoController extends Controller
         $roluserlugarid = $this->session->get('roluserlugarid');
         $gestion = $this->session->get('currentyear');
 
-        //dump($request);die;
+        
         if ($request->isMethod('POST')) {
             $codigo = $request->get('codigo');
 			$rol = $request->get('rol');
@@ -113,13 +113,15 @@ class CdlSeguimientoController extends Controller
             if($rol == 9){
                 $codigo = $this->session->get('ie_id');
             }else{
+                
                 $codigo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($roluserlugarid)->getCodigo();
+                //dump($codigo);die;
             }
 		}
 
         $em = $this->getDoctrine()->getManager();
         
-        if($rol == 8){
+        if($rol == 8 or $rol == 20){
             $query = $em->getConnection()->prepare("SELECT 'NACIONAL' AS jurisdiccion,'Departamento' as nombreArea, lt1.codigo as codigo, lt1.lugar  as nombre,COUNT(DISTINCT ie.id) as cantidad, 7 as rolUsuario, (SELECT COUNT(*) as total
             FROM institucioneducativa ie
             JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id AND ies.gestion_tipo_id=". $gestion ."
