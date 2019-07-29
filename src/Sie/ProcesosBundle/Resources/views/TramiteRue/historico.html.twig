@@ -7,10 +7,10 @@
                 <div class="panel-heading no-padding">
                     <ul class="nav nav-tabs nav-pills">
                         {% for d in datos %}
-                            <li class={% if d.flujoProceso == 39 %}"active" {% else %} ""{% endif %}>
+                            <li class={% if d.flujoProceso == 45 %}"active" {% else %} ""{% endif %}>
                                 <a href="#{{d.flujoProceso}}" data-toggle="tab" aria-expanded="false">
                                     <div>
-                                        <span class="text-strong">Paso {{d.flujoProceso}}</span>
+                                        <span class="text-strong">{{d.tarea}}</span>
                                     </div>
                                 </a>
                             </li>
@@ -23,9 +23,8 @@
                 <div class="panel-body">
                     <form action="#" class="tab-content form-horizontal">
                         {% for d in datos %}
-                            <div class={% if d.flujoProceso == 39 %}"tab-pane fade in active inner-all" {% else %} "tab-pane fade inner-all"{% endif %} id="{{d.flujoProceso}}">
-                                {{d.flujoProceso}}
-                                {% if d.flujoProceso == 39 %}
+                            <div class={% if d.flujoProceso == 45 %}"tab-pane fade in active inner-all" {% else %} "tab-pane fade inner-all"{% endif %} id="{{d.flujoProceso}}">
+                                {% if d.flujoProceso == 45 %}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
@@ -110,7 +109,7 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                {% if d.flujoProceso == 40 %}
+                                {% if d.flujoProceso == 46 %}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
@@ -146,7 +145,7 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                {% if d.flujoProceso == 41 %}
+                                {% if d.flujoProceso == 47 %}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
@@ -805,7 +804,7 @@
             </div><!-- /.panel-body -->
         </div><!-- /.panel-primary -->
     {% endif %}
-    {% if d.flujoProceso == 42 %}
+    {% if d.flujoProceso == 48 %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -873,7 +872,7 @@
             </div><!-- /.panel-body -->
         </div><!-- /.panel-primary -->
     {% endif %}
-    {% if d.flujoProceso == 44 %}
+    {% if d.flujoProceso == 50 %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -960,7 +959,7 @@
             </div><!-- /.panel-body -->
         </div><!-- /.panel-primary -->
     {% endif %}
-    {% if d.flujoProceso == 47 %}
+    {% if d.flujoProceso == 51 %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -1301,7 +1300,7 @@
             </div><!-- /.panel-body -->
         </div><!-- /.panel-primary -->
     {% endif %}
-    {% if d.flujoProceso == 48 %}
+    {% if d.flujoProceso == 54 %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">

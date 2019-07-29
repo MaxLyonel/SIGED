@@ -22,9 +22,13 @@ sie_procesos_flujoseguimiento:
     resource: "@SieProcesosBundle/Resources/config/routing/seguimiento.yml"
     prefix:   /flujoseguimiento
 
+# sie_procesos_tramite_rue:
+#     resource: "@SieProcesosBundle/Resources/config/routing/tramiterue.yml"
+#     prefix:   /tramiterue
+
 sie_procesos_tramite_rue:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiterue.yml"
-    prefix:   /tramiterue
+    prefix:   /sie/tramite/tramiterue
 
 sie_procesos_flujousuarios:
     resource: "@SieProcesosBundle/Resources/config/routing/usuarios.yml"
@@ -41,5 +45,5 @@ sie_procesos_wf_tramite:
 
 sie_procesos_tramite_modificacion_calificaciones:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificaciones.yml"
-    prefix:   /tramitemodificacionCalificaciones
+    prefix:   /sie/tramite/tramitemodificacionCalificaciones
 
