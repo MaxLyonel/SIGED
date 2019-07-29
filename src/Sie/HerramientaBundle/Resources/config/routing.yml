@@ -215,3 +215,7 @@ sie_herramienta_anular_bth:
      resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
      prefix:   /sie/anularbth
 
+sie_herramienta_reactivar_bth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/reactivarBTH.yml"
+     prefix:   /sie/reactivarbth
+

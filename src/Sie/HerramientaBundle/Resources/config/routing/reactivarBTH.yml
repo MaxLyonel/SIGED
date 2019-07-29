@@ -1,0 +1,11 @@
+reactivarbth_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ReactivarBTH:index }
+
+reactivarbth_buscar:
+    path:     /buscaTramiteBTH
+    defaults: { _controller: SieHerramientaBundle:ReactivarBTH:buscaTramiteBTH }
+
+    
+
+
