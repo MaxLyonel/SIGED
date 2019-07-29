@@ -677,4 +677,37 @@ class WFTramite {
         return $valida;
     }
 
+    public function obtieneTarea($id, $tipo)
+    {
+        //tipo
+        // idflujo
+        // idtramite
+        $tarea = array();
+        
+        if(is_numeric($id) and $tipo<>''){
+            if($tipo == 'idtramite'){
+                $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($id);
+                $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+                $flujoProceso = $tramiteDetalle->getFlujoProceso();
+            }elseif($tipo == 'idflujo'){
+                $flujoProceso = $this->em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo'=>$id,'orden'=>1));
+            }
+            if(isset($tramite) or isset($flujoProceso)){
+                if($flujoProceso->getEsEvaluacion()==true){
+                    $tarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->createQueryBuilder('wtc')
+                        ->select('fp.id as tarea_actual, wtc.condicionTareaSiguiente as tarea_siguiente, wtc.condicion')
+                        ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.id = wtc.flujoProceso')
+                        ->where('fp.id = '. $flujoProceso->getId())
+                        ->getQuery()
+                        ->getResult();
+                }else{
+                    $tarea ['tarea_actual']= $flujoProceso->getId();
+                    $tarea ['tarea_siguiente']= $flujoProceso->getTareaSigId();
+                }
+            }
+
+        }
+        return $tarea;
+    }
+
 }

@@ -169,7 +169,7 @@
                 success: function (data) {
                     $('#contenido').empty();
                     $('#contenido').append(data);
-                    cargatablas();
+                    cargatablas(2);
                     $(".tooltips").tooltip();
                     readmore();
                 },
@@ -190,7 +190,7 @@
                 success: function (data) {
                     $('#contenido').empty();
                     $('#contenido').append(data);
-                    cargatablas();
+                    cargatablas(3);
                     $(".tooltips").tooltip();
                     readmore();
                 },
@@ -211,7 +211,7 @@
                 success: function (data) {
                     $('#contenido').empty();
                     $('#contenido').append(data);
-                    cargatablas();
+                    cargatablas(4);
                     $(".tooltips").tooltip();
                 },
             });
@@ -244,13 +244,40 @@
             } );
 
             // DataTable
-            var table = $('#table').DataTable( {
+            if(identif == 3){
+                var table = $('#table').DataTable( {
+                    "columnDefs": [
+                            { "type": "date", "targets": [10] }
+                        ],
+                    "order": [[ 10, "desc" ]],
+                    }
+                );             
+            }else if(identif == 2){
+                var table = $('#table').DataTable( {
+                    "columnDefs": [
+                            { "type": "date", "targets": [8] }
+                        ],
+                    "order": [[ 8, "desc" ]],
+                    }
+                );             
+            }else if(identif == 4){
+                var table = $('#table').DataTable( {
+                    "columnDefs": [
+                            { "type": "date", "targets": [6] }
+                        ],
+                    "order": [[ 6, "desc" ]],
+                    }
+                );             
+            }else{
+                var table = $('#table').DataTable( {
                     "order": [[ 0, "asc" ]],
                     "columnDefs": [
                         { "orderable": false, "targets": [8,7,6,5] }
-                    ],
-                }
-            );
+                        ],
+                    }
+                );
+            }
+            
 
             // Apply the search
             table.columns().every( function () {
