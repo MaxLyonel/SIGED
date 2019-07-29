@@ -47,7 +47,6 @@ class WfTramiteController extends Controller
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
         $tipo = $request->get('tipo');
-        
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -556,7 +555,7 @@ class WfTramiteController extends Controller
             join persona p on p.id=u.persona_id
             where ft.id>5 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=4)
             and wft.es_valido is true
-            and td.usuario_remitente_id=". $usuario ." order by ft.flujo ASC,fecha_envio DESC");
+            and td.usuario_remitente_id=". $usuario ." order by fecha_envio DESC");
         $query->execute();
         $data['entities'] = $query->fetchAll();
         $data['titulo'] = "Listado de trámites enviados";
