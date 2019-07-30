@@ -200,9 +200,24 @@ class SolicitudBTHController extends Controller {
                     return $this->redirectToRoute('solicitud_bth_formulario',array('iUE'=>$iUE,'id_tramite'=>$request->get('id')));
                 }
             }else{
-                $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.obs='BTH'");
+
+                $query = $em->getConnection()->prepare("SELECT * from tramite tr
+                                                    WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
+                                                    AND tr.tramite_tipo = 31
+                                                    AND tr.gestion_id = $gestion");
+                $query->execute();
+                $tramite_ue = $query->fetchAll(); 
+                // dump($tramite_ue);die;
+                if($tramite_ue){
+                    $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.id=27");
+                }else{
+                    $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.obs='BTH'");
+                }
+                
                 $query->execute();
                 $tramite_tipo = $query->fetchAll();
+                
+                
                 $tramite_tipoArray = array();
                 for ($i = 0; $i < count($tramite_tipo); $i++) {
                     $tramite_tipoArray[$tramite_tipo[$i]['id']] = trim($tramite_tipo[$i]['tramite_tipo']);
@@ -362,6 +377,7 @@ class SolicitudBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
                                                     WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
+                                                    AND tr.tramite_tipo <> 31
                                                     AND tr.gestion_id = $gestion");
         $query->execute();
         $tramite_ue = $query->fetchAll(); //dump($tramite_ue);die;
