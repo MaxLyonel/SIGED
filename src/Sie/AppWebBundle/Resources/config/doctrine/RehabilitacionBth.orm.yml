@@ -1,0 +1,62 @@
+Sie\AppWebBundle\Entity\RehabilitacionBth:
+    type: entity
+    table: rehabilitacion_bth
+    indexes:
+        IDX_84382A2B820C2849:
+            columns:
+                - tramite_id
+        IDX_84382A2B74757A46:
+            columns:
+                - institucioneducativa_humanistico_tecnico_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        adjunto:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    manyToOne:
+        tramite:
+            targetEntity: Tramite
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaHumanisticoTecnico:
+            targetEntity: InstitucioneducativaHumanisticoTecnico
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_humanistico_tecnico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
