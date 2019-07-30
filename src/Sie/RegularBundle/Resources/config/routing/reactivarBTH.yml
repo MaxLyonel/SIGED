@@ -1,0 +1,14 @@
+reactivarbth_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ReactivarBTH:index }
+
+reactivarbth_buscar_nuevo:
+    path:     /buscaTramiteBTH
+    defaults: { _controller: SieRegularBundle:ReactivarBTH:buscaTramiteBTH }
+
+reactivarbth_buscar_nuevo_guardar:
+    path:     /buscaTramiteBTH/guardar
+    defaults: { _controller: SieRegularBundle:ReactivarBTH:buscaTramiteBTHGuardar }
+    
+
+

@@ -1,0 +1,105 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Reactivar trámite BTH
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Buscar</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div id="mensaje"></div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel rounded panel panel-icon panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Buscar Trámite/SIE</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body no-padding">
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id': 'form_tramite'} } )}}    
+                    <div class="form-body">
+                        <div class="form-group">
+                            {{form_label(form.nroTramite)}}
+                            {{ form_widget(form.nroTramite) }}
+                            {# <label class="control-label">Nro.</label>
+                            <input type="text" class="form-control rounded" name="nroTramite" id="sie" style="text-transform: uppercase" maxlength="8" autocomplete="off" required> #}
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="pull-right">
+                            {{ form_widget(form.buscar) }}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                {{form_end(form)}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12" id="contenido" >
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function buscarTramite(){
+            var  formData = {nroTramite: $('#form_nroTramite').val()};
+            $.ajax({
+                type: 'post',
+                url: "{{path('reactivarbth_buscar_nuevo')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#contenido').empty();
+                    $("#contenido").append('<div style="text-align:center">Buscando...<img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    if (data.msg){
+                        console.log(data);
+                        $('#contenido').empty();
+                        $('#contenido').append('<div class="alert alert-danger alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+data.msg+'</div>');
+                    }else{
+                        $('#contenido').empty();
+                        $('#contenido').append(data);
+                        $( document ).ready(function() {
+                            $(".tooltips").tooltip();
+                            cargatablas();
+                        });
+                    }
+                }
+            });
+            
+        }
+    </script>
+{% endblock %}
