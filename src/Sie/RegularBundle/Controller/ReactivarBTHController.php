@@ -17,6 +17,7 @@ use Sie\AppWebBundle\Entity\RehabilitacionBth;
 
 
 
+
 /**
  * ChangeMatricula controller.
  *
@@ -34,6 +35,13 @@ class ReactivarBTHController extends Controller {
     }
     public function indexAction (Request $request) {
 
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $form = $this->createFormBuilder()
             ->add('nroTramite', 'text', array('label' => 'Nro.', 'required' => true, 'attr' => array('class' => 'form-control')))
             ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary','onclick'=>'buscarTramite()')))
@@ -58,7 +66,6 @@ class ReactivarBTHController extends Controller {
                     ->getResult();
         //dump($tramite);die;
         if ($tramite){
-            
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('reactivarbth_buscar_nuevo_guardar'))
                 ->add('idtramite', 'hidden', array('data' => $tramite[0]->getId()))
@@ -93,7 +100,7 @@ class ReactivarBTHController extends Controller {
         
         $form = $request->get('form');
         $documento = $request->files->get('form')['adjunto'];
-        
+
         /*Validacion para que guarde el docuemnto*/
         if(!empty($documento)){
             $root_bth_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$form['codsie'];
@@ -128,20 +135,23 @@ class ReactivarBTHController extends Controller {
             $rehabilitacionBth->setAdjunto($imagen);
             $rehabilitacionBth->setTramite($tramite);
             $rehabilitacionBth->setInstitucioneducativaHumanisticoTecnico($ieht);
+            $rehabilitacionBth->setUsuarioRegistroId($id_usuario);
             $em->persist($rehabilitacionBth);
             $em->flush();
-
+            
+            //Modificacion tabla institucioneducativa_humanistico_tecnico
             $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
             $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
             $ieht->setFechaModificacion(new \DateTime(date('Y-m-d')));
             $em->flush();
 
+            //Modificacion tipo de tramite a Regularizacion en tramite
             $tramite->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find(31));
             $em->flush();
 
             $em->getConnection()->commit();
 
-            $this->get('session')->getFlashBag()->add('success', 'El tramite fué reactivado, la unidad Educativa puede volver a iniciar un nuevo trámite.');
+            $this->get('session')->getFlashBag()->add('success', 'El tramite fué reactivado, la Unidad Educativa puede volver a iniciar un nuevo trámite como Registro Nuevo.');
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error al reactivar el trámite, vuelva a intentar.');

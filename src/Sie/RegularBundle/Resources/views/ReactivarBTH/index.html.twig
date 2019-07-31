@@ -72,6 +72,19 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        $(document).on('change','input[type="file"]',function(){
+	        // this.files[0].size recupera el tamaño del archivo
+	        // alert(this.files[0].size);
+        	var fileName = this.files[0].name;
+	        var fileSize = this.files[0].size;
+            var sizePermitido = 3 * (1024 * 1024)
+            
+        	if(fileSize > sizePermitido){
+    	    	alert('El archivo no debe superar los 3MB');
+	    	    this.value = '';
+    		    this.files[0].name = '';
+        	}
+        });
         function buscarTramite(){
             var  formData = {nroTramite: $('#form_nroTramite').val()};
             $.ajax({
@@ -101,5 +114,6 @@
             });
             
         }
+
     </script>
 {% endblock %}
