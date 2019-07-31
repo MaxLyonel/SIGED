@@ -227,7 +227,15 @@
                                                 <strong>  Año de escolaridad a implementar BTH:</strong>
                                             </div>
                                             <div class="col-md-6">
-                                                <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado:  {{ grado }} </strong>
+                                                <strong> <span class="label label-primary"> Grado Sugerido</span> :  {{ grado }} </strong>
+                                                </br>
+                                                <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado: </strong>
+                                                <select id="form_grado" name="form[grado]" required="required" class="form-control" >
+                                                    <option value="" selected="selected">seleccionar...</option>
+                                                    {% for keygrado, selectGrado in grados %}
+                                                        <option value="{{ keygrado }}">{{ selectGrado }}</option>
+                                                    {% endfor %}
+                                                </select>                                                
                                             </div>
                                         </div>
                                         <div class="row">
@@ -420,12 +428,23 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <strong>  Año de escolaridad a implementar BTH:</strong>
                                             </div>
-                                            <div class="col-md-3">
-                                                <strong><span class="label label-primary">Nivel: Secundaria</span> <span >Grado: {{ grado }}</span> </strong>
+                                            
+                                            <div class="col-md-6">
+                                                <strong> <span class="label label-primary"> Grado Sugerido</span> :  {{ grado }} </strong>
+                                                </br>
+                                                <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado: </strong>
+                                                <select id="form_grado" name="form[grado]" required="required" class="form-control" >
+                                                    <option value="" selected="selected">seleccionar...</option>
+                                                    {% for keygrado, selectGrado in grados %}
+                                                        <option value="{{ keygrado }}">{{ selectGrado }}</option>
+                                                    {% endfor %}
+                                                </select>                                                
                                             </div>
+                                        
+
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -581,6 +600,8 @@
         * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
         var solicitud=$('#form_solicitud :selected').text();
+        var gradoSelected = $('#form_grado').val();
+        
         switch (true){
             case (solicitud == 'Registro Nuevo'): //Registro Nuevo
                 swal({
@@ -609,7 +630,8 @@
                                 swal("Debe seleccionar al menos una especialidad.");
                                 return false;
                             }
-                            ip.push({grado:{{grado}}});
+                            /*ip.push({grado:{{grado}}});*/
+                            ip.push({grado:gradoSelected});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $('#enviar_solicitud_bth_nuevo').attr("disabled", true);

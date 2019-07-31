@@ -213,7 +213,7 @@ class SolicitudBTHController extends Controller {
                 }else{
                     $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.obs='BTH'");
                 }
-                
+
                 $query->execute();
                 $tramite_tipo = $query->fetchAll();
                 
@@ -350,6 +350,27 @@ class SolicitudBTHController extends Controller {
                                                 ORDER BY 2");
                 $query->execute();
                 $especialidad = $query->fetchAll();
+                
+                //get all course of the UE 
+                $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+                $query = $entity->createQueryBuilder('iec')
+                        ->select('(iec.gradoTipo)')
+                        ->where('iec.institucioneducativa = :sie')
+                        ->andWhere('iec.nivelTipo = :idnivel')
+                        ->andwhere('iec.gestionTipo = :gestion')
+                        ->setParameter('sie', $institucion->getId())
+                        ->setParameter('idnivel', 13)
+                        ->setParameter('gestion', $gestion)
+                        ->distinct()
+                        ->orderBy('iec.gradoTipo', 'ASC')
+                        ->getQuery();
+                $objGrados = $query->getResult();
+                $arrGrados = array();
+                foreach ($objGrados as $data) {
+                    $arrGrados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
+                }
+                // dump($arrGrados);die;
+
                 $form= $this->createFormBuilder()
                     ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'cargarFormularioSolicitud()')))
                     ->getForm();
@@ -361,6 +382,7 @@ class SolicitudBTHController extends Controller {
                     'cursos'        => $cursos,
                     'maestros'      => $maestros,
                     'especialidad'  => $especialidad,
+                    'grados'        => $arrGrados,
                     'grado'         => $grado,
                     'idflujo'=>$request->get('id'),
                     'estado'=>$verificarinicioTramite
@@ -457,9 +479,10 @@ class SolicitudBTHController extends Controller {
             /**
              * Verificicacion de que la UE inicio un tramite
              */
-            $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
+             $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
                                                     WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
-                                                    AND tr.gestion_id = $gestion");
+                                                    AND tr.tramite_tipo <> 31
+                                                    AND tr.gestion_id = $gestion");            
             $query->execute();
             $tramite_ue = $query->fetchAll();
             $tramite_iniciado=$tramite_ue[0]['cantidad_tramite_bth'];
@@ -636,16 +659,29 @@ class SolicitudBTHController extends Controller {
         if ($res == 1 and (int)$sw == 0) {
             $institucioneducativa = $em->getRepository('SieAppWebBundle:InstitucionEducativa')->find($id_Institucion);
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_humanistico_tecnico');")->execute();
-            $entity = new InstitucioneducativaHumanisticoTecnico();
-            $entity->setGestionTipoId($this->session->get('currentyear'));
-            $entity->setInstitucioneducativaId($id_Institucion);
-            $entity->setInstitucioneducativa($institucioneducativa->getInstitucioneducativa());
-            $entity->setEsimpreso(false);
-            $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));//3
-            $entity->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
-            $entity->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));//7
-            $em->persist($entity);
-            $em->flush();
+
+            $entity = $em->getRepository('SieAppWebBundle:RehabilitacionBth');
+            $query = $entity->createQueryBuilder('rbth')
+                    ->select('(rbth)')
+                    ->where('rbth.institucioneducativaId = :sie')
+                    ->andwhere('rbth.fechaFin IS NULL')
+                    ->setParameter('sie', $id_Institucion)
+                    ->getQuery();
+            $objrbth = $query->getResult();
+
+            if(!$objrbth){
+                $entity = new InstitucioneducativaHumanisticoTecnico();
+                $entity->setGestionTipoId($this->session->get('currentyear'));
+                $entity->setInstitucioneducativaId($id_Institucion);
+                $entity->setInstitucioneducativa($institucioneducativa->getInstitucioneducativa());
+                $entity->setEsimpreso(false);
+                $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));//3
+                $entity->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
+                $entity->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));//7
+                $em->persist($entity);
+                $em->flush();
+            }
+
         }
         if(isset($mensaje['msg'])){
             $mensaje = $mensaje['msg'];
