@@ -128,6 +128,9 @@ class ReactivarBTHController extends Controller {
             $rehabilitacionBth->setAdjunto($imagen);
             $rehabilitacionBth->setTramite($tramite);
             $rehabilitacionBth->setInstitucioneducativaHumanisticoTecnico($ieht);
+            $rehabilitacionBth->setUsuarioRegistroId($id_usuario);
+            $rehabilitacionBth->setInstitucioneducativaId($ieht->getInstitucioneducativaId());
+            
             $em->persist($rehabilitacionBth);
             $em->flush();
 
