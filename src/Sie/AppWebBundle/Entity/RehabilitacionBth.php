@@ -192,4 +192,88 @@ class RehabilitacionBth
     {
         return $this->institucioneducativaHumanisticoTecnico;
     }
+    /**
+     * @var integer
+     */
+    private $usuarioRegistroId;
+
+    /**
+     * @var integer
+     */
+    private $institucioneducativaId;
+
+    /**
+     * @var integer
+     */
+    private $usuarioModificaId;
+
+
+    /**
+     * Set usuarioRegistroId
+     *
+     * @param integer $usuarioRegistroId
+     * @return RehabilitacionBth
+     */
+    public function setUsuarioRegistroId($usuarioRegistroId)
+    {
+        $this->usuarioRegistroId = $usuarioRegistroId;
+    
+        return $this;
+    }
+
+    /**
+     * Get usuarioRegistroId
+     *
+     * @return integer 
+     */
+    public function getUsuarioRegistroId()
+    {
+        return $this->usuarioRegistroId;
+    }
+
+    /**
+     * Set institucioneducativaId
+     *
+     * @param integer $institucioneducativaId
+     * @return RehabilitacionBth
+     */
+    public function setInstitucioneducativaId($institucioneducativaId)
+    {
+        $this->institucioneducativaId = $institucioneducativaId;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaId
+     *
+     * @return integer 
+     */
+    public function getInstitucioneducativaId()
+    {
+        return $this->institucioneducativaId;
+    }
+
+    /**
+     * Set usuarioModificaId
+     *
+     * @param integer $usuarioModificaId
+     * @return RehabilitacionBth
+     */
+    public function setUsuarioModificaId($usuarioModificaId)
+    {
+        $this->usuarioModificaId = $usuarioModificaId;
+    
+        return $this;
+    }
+
+    /**
+     * Get usuarioModificaId
+     *
+     * @return integer 
+     */
+    public function getUsuarioModificaId()
+    {
+        return $this->usuarioModificaId;
+    }
 }

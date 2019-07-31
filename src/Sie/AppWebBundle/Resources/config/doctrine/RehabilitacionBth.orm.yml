@@ -40,6 +40,24 @@ Sie\AppWebBundle\Entity\RehabilitacionBth:
             length: 150
             fixed: false
             comment: ''
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        usuarioModificaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modifica_id
     manyToOne:
         tramite:
             targetEntity: Tramite
