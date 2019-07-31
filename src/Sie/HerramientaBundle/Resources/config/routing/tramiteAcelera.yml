@@ -53,3 +53,7 @@ tramite_acelera_curso:
      defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaCurso }
      options:
          expose: true
+
+tramite_acelera_reporte:
+    path:     /acta/supletorio
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:rptActaSupletorio }
