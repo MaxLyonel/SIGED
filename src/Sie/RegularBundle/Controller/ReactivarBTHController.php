@@ -43,7 +43,7 @@ class ReactivarBTHController extends Controller {
         }
         
         $form = $this->createFormBuilder()
-            ->add('nroTramite', 'text', array('label' => 'Nro.', 'required' => true, 'attr' => array('class' => 'form-control')))
+            ->add('nro', 'text', array('label' => 'Nro.', 'required' => true, 'attr' => array('class' => 'form-control')))
             ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary','onclick'=>'buscarTramite()')))
             ->getForm();
         return $this->render('SieRegularBundle:ReactivarBTH:index.html.twig',array(
@@ -53,7 +53,7 @@ class ReactivarBTHController extends Controller {
     }
     public function buscaTramiteBTHAction(Request $request){
         
-        $id = $request->get('nroTramite');
+        $id = $request->get('nro');
         $em = $this->getDoctrine()->getManager();
         $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
         if($ie){
@@ -95,7 +95,7 @@ class ReactivarBTHController extends Controller {
                     }else{
                         //$tr = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$id,'flujoTipo'=>6),array('id'=>'DESC'),1);
                         $tr = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
-                            ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo')
+                            ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId')
                             ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = t.institucioneducativa')
                             ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico', 'h', 'WITH', 'ie.id = h.institucioneducativaId')
@@ -110,6 +110,13 @@ class ReactivarBTHController extends Controller {
                             ->getQuery()
                             ->getResult();
                         //dump($tr);die;
+                        if($tr[0]['tramiteTipoId'] == 31){
+                            $response = new JsonResponse();    
+                            $msg = 'La Unidad Educativa ya rehabilito su trámite para BTH.';
+                            return $response->setData(array(
+                                'msg' => $msg,
+                            ));    
+                        }
                         $form = $this->createFormBuilder()
                             ->setAction($this->generateUrl('reactivarbth_buscar_nuevo_guardar'))
                             ->add('idtramite', 'hidden', array('data' => $tr[0]['id']))
@@ -125,7 +132,12 @@ class ReactivarBTHController extends Controller {
                         ));
             
                     }
-                }                
+                }else{
+                    $response = new JsonResponse();    
+                    return $response->setData(array(
+                        'msg' => 'El Nro. de Trámite o Código SIE son incorrectos para la rehabilitacion.',
+                    ));    
+                }
             }else{
                 $response = new JsonResponse();    
                 return $response->setData(array(
