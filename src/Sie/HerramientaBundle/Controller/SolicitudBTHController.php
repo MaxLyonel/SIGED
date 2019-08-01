@@ -686,7 +686,7 @@ class SolicitudBTHController extends Controller {
     // function to find UE-s with RehabilitacionBth
     private function getUeRehabilitation($data){
         // create db conexion
-        $em = $this->getDoctrine()->getManager()
+        $em = $this->getDoctrine()->getManager();
          // find if UE has RehabilitacionBth data
          $entity = $em->getRepository('SieAppWebBundle:RehabilitacionBth');
             $query = $entity->createQueryBuilder('rbth')
