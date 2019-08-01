@@ -15,19 +15,23 @@
                             <th>Código SIE</th>
                             <th>Unidad Educativa</th>
                             <th>Tipo de Trámite</th>
+                            <th>Fecha de inicio de Trámite</th>
                             <th>Fecha de Finalización</th>
                             <th>Grado aprobado</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{{tramite.id}}</td>
-                            <td>{{tramite.institucioneducativa.id}}</td>
-                            <td>{{tramite.institucioneducativa.institucioneducativa}}</td>
-                            <td>{{tramite.tramiteTipo.tramiteTipo}}</td>
-                            <td>{{tramite.fechaFin|date('d-m-Y')}}</td>
-                            <td></td>
-                        </tr>
+                        {% for t in tramite %}
+                            <tr>
+                                <td>{{t.id}}</td>
+                                <td>{{t.codsie}}</td>
+                                <td>{{t.institucioneducativa}}</td>
+                                <td>{{t.tramiteTipo}}</td>
+                                <td>{{t.fechaRegistro|date('d-m-Y')}}</td>
+                                <td>{{t.fechaFin|date('d-m-Y')}}</td>
+                                <td>{{t.grado}}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
