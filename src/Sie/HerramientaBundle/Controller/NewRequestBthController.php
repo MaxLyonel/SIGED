@@ -39,20 +39,23 @@ class NewRequestBthController extends Controller{
 	public function __construct() {		
         $this->session = new Session();
 	}
+
     public function indexAction(Request $request){
+        // get the send data
     	$id_Institucion =  $request->getSession()->get('ie_id');
         $gestion =  $request->getSession()->get('currentyear');
         $flujotipo = 6;//$request->get('id');
-
+        // validate if the ue has tramite
         $verificarinicioTramite = $this->verificatramite($id_Institucion,$gestion,$flujotipo);
         
 
         $em = $this->getDoctrine()->getManager();
-            $query = $em->getConnection()->prepare("select td.*
-                                                from tramite t
-                                                join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$flujotipo);
-            $query->execute();
-            $td = $query->fetchAll();
+        $query = $em->getConnection()->prepare("select td.*
+                                            from tramite t
+                                            join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$flujotipo);
+        $query->execute();
+        $td = $query->fetchAll();
+
             if (isset($td[0]['tramite_detalle_id'])){
                 $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
                 if($tramiteDetalle->getTramiteEstado()->getId()== 4){
@@ -61,27 +64,8 @@ class NewRequestBthController extends Controller{
                 }
             }else{
 
-                $query = $em->getConnection()->prepare("SELECT * from tramite tr
-                                                    WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
-                                                    AND tr.tramite_tipo = 31
-                                                    AND tr.gestion_id = $gestion");
-                $query->execute();
-                $tramite_ue = $query->fetchAll(); 
-                // dump($tramite_ue);die;
-                if($tramite_ue){
-                    $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.id=27");
-                }else{
-                    $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.obs='BTH'");
-                }
+               
 
-                $query->execute();
-                $tramite_tipo = $query->fetchAll();
-                
-                
-                $tramite_tipoArray = array();
-                for ($i = 0; $i < count($tramite_tipo); $i++) {
-                    $tramite_tipoArray[$tramite_tipo[$i]['id']] = trim($tramite_tipo[$i]['tramite_tipo']);
-                }
                 //Informacion de la U.E. y del director
                 $institucion = $request->getSession()->get('ie_id');
                 $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
@@ -103,48 +87,8 @@ class NewRequestBthController extends Controller{
                     ->setParameter('gestion', $inss)
                     ->getQuery();
                 $infoUe = $query->getResult();
-                $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
-                $query = $repository->createQueryBuilder('jg')
-                    ->select('lt4.codigo AS codigo_departamento,
-                        lt4.lugar AS departamento,
-                        lt3.codigo AS codigo_provincia,
-                        lt3.lugar AS provincia,
-                        lt2.codigo AS codigo_seccion,
-                        lt2.lugar AS seccion,
-                        lt1.codigo AS codigo_canton,
-                        lt1.lugar AS canton,
-                        lt.codigo AS codigo_localidad,
-                        lt.lugar AS localidad,
-                        dist.id AS codigo_distrito,
-                        dist.distrito,
-                        orgt.orgcurricula,
-                        dept.dependencia,
-                        jg.id AS codigo_le,
-                        inst.id,
-                        inst.institucioneducativa,
-                        lt.area2001,
-                        estt.estadoinstitucion,
-                        inss.direccion,
-                        jg.direccion,
-                        jg.zona,
-                        jg.lugarTipoIdDistrito')
-                    ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
-                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
-                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
-                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
-                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
-                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
-                    ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
-                    ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
-                    ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
-                    ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
-                    ->join('SieAppWebBundle:DependenciaTipo', 'dept', 'WITH', 'inst.dependenciaTipo = dept.id')
-                    ->where('inst.id = :idInstitucion')
-                    ->andWhere('inss.gestionTipo in (:gestion)')
-                    ->setParameter('idInstitucion', $institucion)
-                    ->setParameter('gestion', $inss)
-                    ->getQuery();
-                $ubicacionUe = $query->getSingleResult();
+               
+                $ubicacionUe = $this->getJurisdiccionGeograficaUE($inss,$institucion);
                 /*
                  * obtenemos datos de la unidad educativa
                  */
@@ -186,21 +130,21 @@ class NewRequestBthController extends Controller{
                 /*$query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht
                                                     WHERE ieht.institucioneducativa_id = $institucionid AND ieht.gestion_tipo_id = $gestion");
                 $query->execute();*/
-                $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
-                WHERE ieht.institucioneducativa_id = $institucionid and gestion_tipo_id = 2018 and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
-                ORDER BY gestion_tipo_id DESC limit 1");
-                $query->execute();
-                $grado = $query->fetch();
+                // $query = $em->getConnection()->prepare("SELECT ieht.institucioneducativa_id,ieht.grado_tipo_id FROM institucioneducativa_humanistico_tecnico ieht 
+                // WHERE ieht.institucioneducativa_id = $institucionid and gestion_tipo_id = 2018 and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
+                // ORDER BY gestion_tipo_id DESC limit 1");
+                // $query->execute();
+                // $grado = $query->fetch();
 
-                if($grado){
-                     if ((int)$grado['grado_tipo_id'] < 6){                  
-                    $grado = (int)$grado['grado_tipo_id']+1;    
-                    }else{
-                    $grado = (int)$grado['grado_tipo_id'];
-                    }
-                } else{
-                    $grado = 3;
-                } 
+                // if($grado){
+                //      if ((int)$grado['grado_tipo_id'] < 6){                  
+                //     $grado = (int)$grado['grado_tipo_id']+1;    
+                //     }else{
+                //     $grado = (int)$grado['grado_tipo_id'];
+                //     }
+                // } else{
+                //     $grado = 3;
+                // } 
 
                
                 /** Adecuacion a las equivalencias de especialidades */
@@ -218,22 +162,21 @@ class NewRequestBthController extends Controller{
                         ->where('iec.institucioneducativa = :sie')
                         ->andWhere('iec.nivelTipo = :idnivel')
                         ->andwhere('iec.gestionTipo = :gestion')
+                        ->andWhere('iec.gradoTipo in (:arrgrados)')
                         ->setParameter('sie', $institucion->getId())
                         ->setParameter('idnivel', 13)
                         ->setParameter('gestion', $gestion)
+                        ->setParameter('arrgrados', array(3,4,5,6))
                         ->distinct()
                         ->orderBy('iec.gradoTipo', 'ASC')
                         ->getQuery();
+                        // dump($query->getSQL());die;
                 $objGrados = $query->getResult();
                 $arrGrados = array();
                 foreach ($objGrados as $data) {
                     $arrGrados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
                 }
-                // dump($arrGrados);die;
-
-                $form= $this->createFormBuilder()
-                    ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'cargarFormularioSolicitud()')))
-                    ->getForm();
+                
                  return $this->render('SieHerramientaBundle:NewRequestBth:index.html.twig', array(
                  							'ieducativa'	=> $infoUe,
 							                'institucion'   => $institucion,
@@ -244,7 +187,7 @@ class NewRequestBthController extends Controller{
 							                'maestros'      => $maestros,
 							                'especialidad'  => $especialidad,
 							                'grados'        => $arrGrados,
-							                'grado'         => $grado,
+							                // 'grado'         => $grado,
 							                'idflujo'=>$request->get('id'),
 							                'estado'=>$verificarinicioTramite
 							         ));   
@@ -294,6 +237,53 @@ class NewRequestBthController extends Controller{
         }else{
             return $tramite_iniciado;
         }
+    }
+
+    private function getJurisdiccionGeograficaUE($inss, $institucion){
+        $em = $this->getDoctrine()->getManager();
+        
+        $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
+          $query = $repository->createQueryBuilder('jg')
+                    ->select('lt4.codigo AS codigo_departamento,
+                        lt4.lugar AS departamento,
+                        lt3.codigo AS codigo_provincia,
+                        lt3.lugar AS provincia,
+                        lt2.codigo AS codigo_seccion,
+                        lt2.lugar AS seccion,
+                        lt1.codigo AS codigo_canton,
+                        lt1.lugar AS canton,
+                        lt.codigo AS codigo_localidad,
+                        lt.lugar AS localidad,
+                        dist.id AS codigo_distrito,
+                        dist.distrito,
+                        orgt.orgcurricula,
+                        dept.dependencia,
+                        jg.id AS codigo_le,
+                        inst.id,
+                        inst.institucioneducativa,
+                        lt.area2001,
+                        estt.estadoinstitucion,
+                        inss.direccion,
+                        jg.direccion,
+                        jg.zona,
+                        jg.lugarTipoIdDistrito')
+                    ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
+                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
+                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
+                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
+                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
+                    ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
+                    ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
+                    ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
+                    ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
+                    ->join('SieAppWebBundle:DependenciaTipo', 'dept', 'WITH', 'inst.dependenciaTipo = dept.id')
+                    ->where('inst.id = :idInstitucion')
+                    ->andWhere('inss.gestionTipo in (:gestion)')
+                    ->setParameter('idInstitucion', $institucion)
+                    ->setParameter('gestion', $inss)
+                    ->getQuery();
+        return $query->getSingleResult();
     }
 
 }
