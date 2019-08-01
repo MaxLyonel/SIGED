@@ -56,35 +56,49 @@ class ReactivarBTHController extends Controller {
         $nroTramite = $request->get('nroTramite');
         $em = $this->getDoctrine()->getManager();
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
-                    ->select('t')
+                    ->select('t,r')
+                    ->leftJoin('SieAppWebBundle:RehabilitacionBth', 'r', 'WITH', 'r.institucioneducativaId = t.institucioneducativa') 
                     ->where('t.id = :id or t.institucioneducativa = :id')
                     ->andwhere('t.tramiteTipo IN (:tipo)')
                     ->andwhere('t.fechaFin is not null')
                     ->setParameter('id', $nroTramite)
-                    ->setParameter('tipo', array(27,28))
+                    ->setParameter('tipo', array(27,28,31))
+                    ->orderBy('t.fechaRegistro')
                     ->getQuery()
                     ->getResult();
         //dump($tramite);die;
         if ($tramite){
-            $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('reactivarbth_buscar_nuevo_guardar'))
-                ->add('idtramite', 'hidden', array('data' => $tramite[0]->getId()))
-                ->add('codsie', 'hidden', array('data' => $tramite[0]->getInstitucioneducativa()->getId()))
-                ->add('obs', 'textarea', array('label' => 'Observación', 'required' => true, 'attr' => array('class' => 'form-control','style'=>'text-transform:uppercase;')))
-                ->add('adjunto', 'file', array('label' => 'Adjuntar respaldo', 'attr' => array('title'=>"Adjuntar Respaldo",'accept'=>"application/pdf,.doc,.docx")))
-                ->add('guardar', 'submit', array('label' => 'Reactivar Trámite', 'attr' => array('class' => 'btn btn-primary')))
-                ->getForm();
+            if(count($tramite) > 2){
+                $response = new JsonResponse();    
+                return $response->setData(array(
+                    'msg' => 'La Unidad Educativa ya fue reactivada para su tramite BTH, y ya inicio un nuevo su trámite.',
+                ));    
+            }
+            if($tramite[0]->getTramiteTipo()->getId() == 31 or $tramite[1]){
+                $response = new JsonResponse();    
+                return $response->setData(array(
+                    'msg' => 'La Unidad Educativa ya fue reactivada para su tramite BTH. Y puede iniciar nuevamente su trámite',
+                ));    
+            }else{
+                $form = $this->createFormBuilder()
+                    ->setAction($this->generateUrl('reactivarbth_buscar_nuevo_guardar'))
+                    ->add('idtramite', 'hidden', array('data' => $tramite[0]->getId()))
+                    ->add('codsie', 'hidden', array('data' => $tramite[0]->getInstitucioneducativa()->getId()))
+                    ->add('obs', 'textarea', array('label' => 'Observación', 'required' => true, 'attr' => array('class' => 'form-control','style'=>'text-transform:uppercase;')))
+                    ->add('adjunto', 'file', array('label' => 'Adjuntar respaldo', 'attr' => array('title'=>"Adjuntar Respaldo",'accept'=>"application/pdf,.doc,.docx")))
+                    ->add('guardar', 'submit', array('label' => 'Reactivar Trámite', 'attr' => array('class' => 'btn btn-primary')))
+                    ->getForm();
 
-            return $this->render('SieRegularBundle:ReactivarBTH:reactivarBthGuardar.html.twig',array(
-                'formDatos' => $form->createView(),
-                'tramite'=> $tramite[0],
-                )
-            );
-
+                return $this->render('SieRegularBundle:ReactivarBTH:reactivarBthGuardar.html.twig',array(
+                    'formDatos' => $form->createView(),
+                    'tramite'=> $tramite[0],
+                    )
+                );
+            }
         }else{
             $response = new JsonResponse();    
             return $response->setData(array(
-                    'msg' => 'El Nro. de trámite/código SIE son incorrectos.',
+                    'msg' => 'El Nro. de Trámite o Código SIE son incorrectos para la rehabilitacion.',
             ));
         }
     }
