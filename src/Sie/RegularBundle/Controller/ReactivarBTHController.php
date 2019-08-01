@@ -82,17 +82,17 @@ class ReactivarBTHController extends Controller {
             //dump($tramites);die;
             if($tramites){
                 if($tramites[0]['cantidad'] > 0){
-                    if($tramites[0]['pendientes'] > 0){
+                    if($tramites[0]['pendientes'] > 0){ //TIENE PENDIENTES
                         $response = new JsonResponse();    
                         if($tramites[0]['cantidad'] == 1){
                             $msg = 'La Unidad Educativa tiene un trámite BTH pendiente. Finalize su trámite para poder rehabilitar BTH';
                         }else{
-                            $msg = 'La Unidad Educativa ya rehabilito su trámite para BTH. Finalize su último trámite para poder rehabilitar nuevamente';
+                            $msg = 'La Unidad Educativa ya rehabilitó su trámite para BTH. Finalize su último trámite para poder rehabilitar nuevamente';
                         }
                         return $response->setData(array(
                             'msg' => $msg,
                         ));    
-                    }else{
+                    }else{ //NO TIENE TRAMITES PENDIENTES
                         //$tr = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$id,'flujoTipo'=>6),array('id'=>'DESC'),1);
                         $tr = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
                             ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId')
@@ -112,7 +112,7 @@ class ReactivarBTHController extends Controller {
                         //dump($tr);die;
                         if($tr[0]['tramiteTipoId'] == 31){
                             $response = new JsonResponse();    
-                            $msg = 'La Unidad Educativa ya rehabilito su trámite para BTH.';
+                            $msg = 'La Unidad Educativa ya rehabilitó su trámite para BTH.';
                             return $response->setData(array(
                                 'msg' => $msg,
                             ));    

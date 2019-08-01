@@ -20,13 +20,13 @@
             {% for flashMessage in app.session.flashbag.get('error') %}
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    <strong><i class='glyphicon glyphicon-exclamation-sign'></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
             {% for flashMessage in app.session.flashbag.get('success') %}
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    <strong><i class='glyphicon glyphicon-ok-sign'></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
         </div>
@@ -99,7 +99,7 @@
                         $('#contenido').empty();
                         $('#contenido').append('<div class="alert alert-danger alert-dismissible" role="alert">'+
                         '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
-                        '<strong><i class="fa fa-linux"></i></strong>'+data.msg+'</div>');
+                        '<strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong>'+data.msg+'</div>');
                     }else{
                         $('#contenido').empty();
                         $('#contenido').append(data);
