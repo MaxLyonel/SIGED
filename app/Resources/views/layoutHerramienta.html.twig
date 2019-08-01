@@ -538,9 +538,14 @@
                             <ul>
                                 <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
                             </ul>
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
                         </li>
                     {% endif %}
-
+                    
 
                     {#
                         <li class="submenu">

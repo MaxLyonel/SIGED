@@ -760,7 +760,7 @@ class UnificacionRudeController extends Controller {
                 }
                 $gestion = $valproceso[0]->getGestionTipo()->getId();
             }else{
-                $geston = $inscripcorr[0]->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+                $gestion = $inscripcorr[0]->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             }
 
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');

@@ -1,0 +1,15 @@
+cdlseguimiento:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:index }
+
+cdl_seguimiento_porsie:
+    path:  /cdlporsie
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:cdlPorSie }
+
+cdl_seguimiento_porsie_lista:
+    path:  /cdlporsielista
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:cdlPorSieLista }
+
+cdl_seguimiento_porjurisdiccion:
+    path:  /cdlporjurisdiccion
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:cdlPorJurisdiccion }

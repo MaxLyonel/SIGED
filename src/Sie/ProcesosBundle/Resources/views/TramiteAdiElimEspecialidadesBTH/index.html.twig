@@ -412,10 +412,7 @@
                                     swal("Ingresar un informe breve para la solicitud de adición de especialidades");
                                     return false;
                                 }
-
-                                //var ipt=JSON.stringify(ip);
-                                
-                                
+                                textDirectorAdicionar = textDirectorAdicionar.replace(/[\n\t\r]/g,"").trim();
                                 $('#enviarSolicitud_adicionar').attr("disabled", true);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $.ajax({
@@ -439,7 +436,7 @@
                                             $(".modal-backdrop ").css("display", "none");
                                             $('#msg').text(data.msg);
                                             $('#recargar').modal('show');
-                                            $(".modal-backdrop ").css("display", "none");  
+                                            $(".modal-backdrop ").css("display", "none");
 
                                         }
                                         else if(data.estado==3 ){
@@ -452,7 +449,7 @@
                                                 '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                                 '- Su Unidad Educativa ya se encuentra registrado como BTH.');
                                         }
-                                        
+
                                     },
                                     complete: function () {
                                         swal.stopLoading();
@@ -497,6 +494,7 @@
                                     swal("Ingresar un informe breve para la solicitud de eliminación de especialidades");
                                     return false;
                                 }
+                                textDirectorEliminar = textDirectorEliminar.replace(/[\n\t\r]/g,"").trim();
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $('#enviarSolicitud_eliminar').attr('disabled',true);
                                 $.ajax({
@@ -530,7 +528,7 @@
                                         else {
                                             swal(data.msg);
                                         }
-                                        
+
                                     },
                                     complete: function () {
                                         swal.stopLoading();
@@ -598,7 +596,7 @@
         $(document).ready(function(){
             $('#form_adicionar_especialidad').hide();
             $('#form_eliminar_especialidad').hide();
-            $('#mensaje').hide();            
+            $('#mensaje').hide();
         });
     </script>
 {% endblock %}

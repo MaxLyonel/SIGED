@@ -470,6 +470,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             ->getQuery()
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $textoDirector = str_replace(array("\r", "\n"), "",  $datos['textDirector']);
 
         $especialidadarray = array();
         for($i=0;$i<count($datos['select_especialidad']);$i++) {
@@ -489,7 +490,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             'id_tramite'=>$id_tramite,
             'solicitud'=>$solicitud,
             'idespecialidades'=> json_encode($datos['select_especialidad']),
-            'textDirector'=> $datos['textDirector']
+            'textDirector'=> trim($textoDirector)
             ));
     }
     public function  guardasolicitudEspecialidadesDisAction(Request $request){ //dump($request);die;
@@ -620,6 +621,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
              ->getQuery()
              ->getResult();
          $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);// dump($datos);die;
+         $textoDirector = str_replace(array("\r", "\n"), "",  $datos['textDirector']);
 
          $especialidadarray = array();
          for($i=0;$i<count($datos['select_especialidad']);$i++) {
@@ -641,7 +643,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
              'id_tramite'=>$id_tramite,
              'solicitud'=>$solicitud,
              'idespecialidades'=> json_encode($datos['select_especialidad']),
-             'textDirector'=>$datos['textDirector']
+             'textDirector'=>trim($textoDirector)
          ));
     }
 //Departamental
@@ -690,6 +692,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             ->getQuery()
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true); //dump($datos);die;
+        $textoDirector = str_replace(array("\r", "\n"), "",  $datos['textDirector']);
         $documento= empty($datos['imagen'])?'':$datos['imagen'];
         $especialidadarray = array();
         for($i=0;$i<count($datos['select_especialidad']);$i++) {
@@ -710,7 +713,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             'objespecialidades_solicitadas'=>$especialidadarray,
             'id_tramite'=>$id_tramite,
             'idespecialidades'=> json_encode($datos['select_especialidad']),
-            'textDirector'=> $datos['textDirector'],
+            'textDirector'=> trim($textoDirector),
             'documento'=>$documento,
             'solicitud'=>$solicitud
         ));
@@ -722,7 +725,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         if(!empty($documento)){
             /*$dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
             */
-            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/adielimespec/';
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/addremovespeciality/';
             if (!file_exists($destination_path)) {
                 mkdir($destination_path, 0777);
             }

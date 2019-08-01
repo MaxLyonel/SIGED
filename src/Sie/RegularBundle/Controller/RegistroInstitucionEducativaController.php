@@ -44,7 +44,6 @@ class RegistroInstitucionEducativaController extends Controller {
 
         $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->find(intval($lugar->getCodigo()));
 
-
         $bjpValidacion = $em->getRepository('SieAppWebBundle:BjpValidacionueProcesoApertura')->findBy(array('distritoTipo' => intval($lugar->getCodigo()), 'gestionTipo' => $gestion));
 
         $finProcApertura = false;
@@ -204,7 +203,7 @@ class RegistroInstitucionEducativaController extends Controller {
                         FROM SieAppWebBundle:NivelTipo tn
 						WHERE tn.id in (:id)
 						ORDER BY tn.id ASC'
-                    )->setParameter('id', array(11, 12, 13));
+                    )->setParameter('id', array(12, 13));
             $niveles = $query->getResult();
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
@@ -229,7 +228,7 @@ class RegistroInstitucionEducativaController extends Controller {
                         FROM SieAppWebBundle:NivelTipo tn
 						WHERE tn.id in (:id)
 						ORDER BY tn.id ASC'
-                    )->setParameter('id', array(11, 12, 13));
+                    )->setParameter('id', array(11, 12));
             $niveles = $query->getResult();
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
@@ -241,7 +240,9 @@ class RegistroInstitucionEducativaController extends Controller {
             $query = $em->createQuery(
                     'SELECT DISTINCT ta.id,ta.areaEspecial
                         FROM SieAppWebBundle:EspecialAreaTipo ta
-                        ORDER BY ta.id');
+                        WHERE ta.id NOT IN (:areas)
+                        ORDER BY ta.id'
+                    )->setParameter('areas', array(99));
             $areas = $query->getResult();
             $areasArray = array();
             for ($i = 0; $i < count($areas); $i++) {
@@ -257,14 +258,13 @@ class RegistroInstitucionEducativaController extends Controller {
             $tiposacreditacionArray[$c->getId()] = $c->getInstitucioneducativaAcreditacion();
         }
 
-        $query = $em->createQuery('SELECT jat FROM SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo jat WHERE jat.id <> :tipo')
-                ->setParameter('tipo', 1);
+        $query = $em->createQuery('SELECT jat FROM SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo jat WHERE jat.id = :tipo')
+                ->setParameter('tipo', 0);
         $tiposacreditacionle = $query->getResult();
         $tiposacreditacionleArray = array();
         foreach ($tiposacreditacionle as $c) {
             $tiposacreditacionleArray[$c->getId()] = $c->getJurisdiccionGeograficaAcreditacion();
         }
-
 
         $query = $em->createQuery('SELECT iet FROM SieAppWebBundle:InstitucioneducativaTipo iet WHERE iet.id = :idtie')
                 ->setParameter('idtie', $InstitucioneducativaTipoId);
@@ -272,6 +272,42 @@ class RegistroInstitucionEducativaController extends Controller {
         $tiposieArray = array();
         foreach ($tiposie as $c) {
             $tiposieArray[$c->getId()] = $c->getDescripcion();
+        }
+        
+        $query = $em->createQuery(
+            'SELECT DISTINCT a.id,a.dependencia
+                FROM SieAppWebBundle:DependenciaTipo a
+                WHERE a.id in (:id)
+                ORDER BY a.id ASC'
+            )->setParameter('id', array(1, 2));
+        $dependencias = $query->getResult();
+        $dependenciasArray = array();
+        for ($i = 0; $i < count($dependencias); $i++) {
+            $dependenciasArray[$dependencias[$i]['id']] = $dependencias[$i]['dependencia'];
+        }
+
+        $query = $em->createQuery(
+            'SELECT DISTINCT a.id,a.estadoinstitucion
+                FROM SieAppWebBundle:EstadoinstitucionTipo a
+                WHERE a.id in (:id)
+                ORDER BY a.id ASC'
+            )->setParameter('id', array(10));
+        $estados = $query->getResult();
+        $estadosArray = array();
+        for ($i = 0; $i < count($estados); $i++) {
+            $estadosArray[$estados[$i]['id']] = $estados[$i]['estadoinstitucion'];
+        }
+
+        $query = $em->createQuery(
+            'SELECT DISTINCT a.id,a.convenio
+                FROM SieAppWebBundle:ConvenioTipo a
+                WHERE a.id not in (:id)
+                ORDER BY a.id ASC'
+            )->setParameter('id', array(99));
+        $convenio = $query->getResult();
+        $convenioArray = array();
+        for ($i = 0; $i < count($convenio); $i++) {
+            $convenioArray[$convenio[$i]['id']] = $convenio[$i]['convenio'];
         }
 
         $prov = array();
@@ -283,13 +319,16 @@ class RegistroInstitucionEducativaController extends Controller {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('bjp_rue_create'))
                 ->add('institucionEducativa', 'text', array('label' => 'Nombre Institución Educativa', 'required' => true, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
-                ->add('telefono', 'text', array('label' => 'Nro. de Teléfono', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('telefono', 'text', array('label' => 'Nro. de Teléfono', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
-                ->add('dependenciaTipo', 'entity', array('label' => 'Dependencia', 'required' => true, 'class' => 'SieAppWebBundle:DependenciaTipo', 'property' => 'dependencia', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('convenioTipo', 'entity', array('label' => 'Convenio', 'required' => true, 'class' => 'SieAppWebBundle:ConvenioTipo', 'property' => 'convenio', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                ->add('dependenciaTipo', 'choice', array('label' => 'Dependencia', 'required' => true, 'choices' => $dependenciasArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'setConvenio(this.value)')))
+                ->add('estadoInstitucionTipo', 'choice', array('label' => 'Estado', 'required' => true, 'choices' => $estadosArray, 'attr' => array('class' => 'form-control')))
+                ->add('convenioTipo', 'choice', array('label' => 'Convenio', 'required' => true, 'choices' => $convenioArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                // ->add('dependenciaTipo', 'entity', array('label' => 'Dependencia', 'required' => true, 'class' => 'SieAppWebBundle:DependenciaTipo', 'property' => 'dependencia', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                // ->add('convenioTipo', 'entity', array('label' => 'Convenio', 'required' => true, 'class' => 'SieAppWebBundle:ConvenioTipo', 'property' => 'convenio', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('tipoAcreditacion', 'choice', array('label' => 'Acreditación Tipo', 'required' => true, 'choices' => $tiposacreditacionArray, 'attr' => array('class' => 'form-control')))
                 ->add('tipoAcreditacionle', 'choice', array('label' => 'Acreditación Tipo', 'required' => true, 'choices' => $tiposacreditacionleArray, 'attr' => array('class' => 'form-control')))
-                ->add('estadoInstitucionTipo', 'entity', array('label' => 'Estado', 'required' => true, 'class' => 'SieAppWebBundle:EstadoinstitucionTipo', 'property' => 'estadoinstitucion', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                // ->add('estadoInstitucionTipo', 'entity', array('label' => 'Estado', 'required' => true, 'class' => 'SieAppWebBundle:EstadoinstitucionTipo', 'property' => 'estadoinstitucion', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('institucionEducativaTipo', 'choice', array('label' => 'Tipo', 'disabled' => false, 'choices' => $tiposieArray, 'attr' => array('class' => 'form-control')))
                 ->add('obsRue', 'text', array('label' => 'Observaciones', 'required' => false, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
                 ->add('desUeAntes', 'text', array('label' => 'Nombre anterior', 'required' => false, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
@@ -317,7 +356,6 @@ class RegistroInstitucionEducativaController extends Controller {
     }
 
     public function createAction(Request $request) {
-        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $em->getConnection()->beginTransaction();
@@ -507,7 +545,7 @@ class RegistroInstitucionEducativaController extends Controller {
                         FROM SieAppWebBundle:NivelTipo tn
 						WHERE tn.id in (:id)
 						ORDER BY tn.id ASC'
-                    )->setParameter('id', array(11, 12, 13));
+                    )->setParameter('id', array(12, 13));
             $niveles = $query->getResult();
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
@@ -559,7 +597,7 @@ class RegistroInstitucionEducativaController extends Controller {
                         FROM SieAppWebBundle:NivelTipo tn
 						WHERE tn.id in (:id)
 						ORDER BY tn.id ASC'
-                    )->setParameter('id', array(11, 12, 13));
+                    )->setParameter('id', array(11, 12));
             $niveles = $query->getResult();
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
@@ -606,15 +644,63 @@ class RegistroInstitucionEducativaController extends Controller {
             }
         }
 
+        $query = $em->createQuery(
+            'SELECT DISTINCT a.id,a.dependencia
+                FROM SieAppWebBundle:DependenciaTipo a
+                WHERE a.id in (:id)
+                ORDER BY a.id ASC'
+            )->setParameter('id', array(1, 2));
+        $dependencias = $query->getResult();
+        $dependenciasArray = array();
+        for ($i = 0; $i < count($dependencias); $i++) {
+            $dependenciasArray[$dependencias[$i]['id']] = $dependencias[$i]['dependencia'];
+        }
+
+        $query = $em->createQuery(
+            'SELECT DISTINCT a.id,a.estadoinstitucion
+                FROM SieAppWebBundle:EstadoinstitucionTipo a
+                WHERE a.id in (:id)
+                ORDER BY a.id ASC'
+            )->setParameter('id', array(10));
+        $estados = $query->getResult();
+        $estadosArray = array();
+        for ($i = 0; $i < count($estados); $i++) {
+            $estadosArray[$estados[$i]['id']] = $estados[$i]['estadoinstitucion'];
+        }
+
+        $query = $em->createQuery(
+            'SELECT DISTINCT a.id,a.convenio
+                FROM SieAppWebBundle:ConvenioTipo a
+                WHERE a.id not in (:id)
+                ORDER BY a.id ASC'
+            )->setParameter('id', array(99));
+        $convenio = $query->getResult();
+        $convenioArray = array();
+        for ($i = 0; $i < count($convenio); $i++) {
+            $convenioArray[$convenio[$i]['id']] = $convenio[$i]['convenio'];
+        }
+
+        $query = $em->createQuery('SELECT iet FROM SieAppWebBundle:InstitucioneducativaTipo iet WHERE iet.id = :idtie')
+                ->setParameter('idtie', $entity->getInstitucioneducativaTipo()->getId());
+        $tiposie = $query->getResult();
+        $tiposieArray = array();
+        foreach ($tiposie as $c) {
+            $tiposieArray[$c->getId()] = $c->getDescripcion();
+        }
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('bjp_rue_update'))
                 ->add('idRue', 'hidden', array('data' => $entity->getId()))
                 ->add('rue', 'text', array('label' => 'Código RUE', 'data' => $entity->getId(), 'disabled' => true, 'attr' => array('class' => 'form-control')))
                 ->add('institucionEducativa', 'text', array('label' => 'Nombre', 'data' => $entity->getInstitucioneducativa(), 'required' => false, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('dependenciaTipo', 'entity', array('label' => 'Dependencia', 'class' => 'SieAppWebBundle:DependenciaTipo', 'property' => 'dependencia', 'data' => $em->getReference('SieAppWebBundle:DependenciaTipo', $entity->getDependenciaTipo()->getId()), 'required' => true, 'attr' => array('class' => 'form-control')))
-                ->add('convenioTipo', 'entity', array('label' => 'Convenio', 'required' => false, 'class' => 'SieAppWebBundle:ConvenioTipo', 'property' => 'convenio', 'data' => $em->getReference('SieAppWebBundle:ConvenioTipo', $entity->getConvenioTipo()->getId()), 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('estadoTipo', 'entity', array('label' => 'Estado', 'class' => 'SieAppWebBundle:EstadoinstitucionTipo', 'property' => 'estadoinstitucion', 'data' => $em->getReference('SieAppWebBundle:EstadoinstitucionTipo', $entity->getEstadoinstitucionTipo()->getId()), 'required' => true, 'attr' => array('class' => 'form-control')))
-                ->add('institucionTipo', 'entity', array('label' => 'Tipo', 'disabled' => false, 'class' => 'SieAppWebBundle:InstitucioneducativaTipo', 'property' => 'descripcion', 'data' => $em->getReference('SieAppWebBundle:InstitucioneducativaTipo', $entity->getInstitucioneducativaTipo()->getId()), 'required' => true, 'attr' => array('class' => 'form-control')))
+                ->add('dependenciaTipo', 'choice', array('label' => 'Dependencia', 'required' => true, 'choices' => $dependenciasArray, 'data' => $entity->getDependenciaTipo()->getId(), 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'setConvenio(this.value)')))
+                ->add('estadoInstitucionTipo', 'choice', array('label' => 'Estado', 'required' => true, 'choices' => $estadosArray, 'data' => $entity->getEstadoinstitucionTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('convenioTipo', 'choice', array('label' => 'Convenio', 'required' => true, 'choices' => $convenioArray, 'data' => $entity->getConvenioTipo()->getId(), 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                // ->add('dependenciaTipo', 'entity', array('label' => 'Dependencia', 'class' => 'SieAppWebBundle:DependenciaTipo', 'property' => 'dependencia', 'data' => $em->getReference('SieAppWebBundle:DependenciaTipo', $entity->getDependenciaTipo()->getId()), 'required' => true, 'attr' => array('class' => 'form-control')))
+                // ->add('convenioTipo', 'entity', array('label' => 'Convenio', 'required' => false, 'class' => 'SieAppWebBundle:ConvenioTipo', 'property' => 'convenio', 'data' => $em->getReference('SieAppWebBundle:ConvenioTipo', $entity->getConvenioTipo()->getId()), 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                // ->add('estadoTipo', 'entity', array('label' => 'Estado', 'class' => 'SieAppWebBundle:EstadoinstitucionTipo', 'property' => 'estadoinstitucion', 'data' => $em->getReference('SieAppWebBundle:EstadoinstitucionTipo', $entity->getEstadoinstitucionTipo()->getId()), 'required' => true, 'attr' => array('class' => 'form-control')))
+                // ->add('institucionTipo', 'entity', array('label' => 'Tipo', 'disabled' => false, 'class' => 'SieAppWebBundle:InstitucioneducativaTipo', 'property' => 'descripcion', 'data' => $em->getReference('SieAppWebBundle:InstitucioneducativaTipo', $entity->getInstitucioneducativaTipo()->getId()), 'required' => true, 'attr' => array('class' => 'form-control')))
+                ->add('institucionEducativaTipo', 'choice', array('label' => 'Tipo', 'disabled' => false, 'choices' => $tiposieArray, 'attr' => array('class' => 'form-control')))
                 ->add('obsRue', 'text', array('label' => 'Observaciones', 'data' => $entity->getObsRue(), 'required' => false, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
                 ->add('desUeAntes', 'text', array('label' => 'Nombre anterior', 'data' => $entity->getDesUeAntes(), 'required' => false, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
                 ->add('leJuridicciongeograficaId', 'text', array('label' => 'Código LE', 'required' => true, 'data' => $entity->getLeJuridicciongeografica()->getId(), 'pattern' => '[0-9]{8,17}', 'max_length' => '8', 'disabled' => true, 'attr' => array('class' => 'form-control')))
@@ -629,12 +715,12 @@ class RegistroInstitucionEducativaController extends Controller {
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
 
 
-        if ($entity->getInstitucioneducativaTipo()->getId() == 4) {
-            $form->add('areaEspecialTipo', 'choice', array('label' => 'Areas de especial', 'choices' => $areasArray, 'required' => true, 'data' => $areasInstitucionArray, 'multiple' => true, 'expanded' => true, 'attr' => array('class' => 'form-control')));
-            $form->add('nivelTipo', 'choice', array('label' => 'Niveles', 'choices' => $nivelesArray, 'required' => true, 'multiple' => true, 'expanded' => true, 'data' => $nivelesInstitucionArray, 'attr' => array('class' => 'form-control')));
-        } elseif ($entity->getInstitucioneducativaTipo()->getId() == 1 or $entity->getInstitucioneducativaTipo()->getId() == 2) {
-            $form->add('nivelTipo', 'choice', array('label' => 'Niveles', 'choices' => $nivelesArray, 'required' => true, 'multiple' => true, 'expanded' => true, 'data' => $nivelesInstitucionArray, 'attr' => array('class' => 'form-control')));
-        }
+        // if ($entity->getInstitucioneducativaTipo()->getId() == 4) {
+        //     $form->add('areaEspecialTipo', 'choice', array('label' => 'Areas de especial', 'choices' => $areasArray, 'required' => true, 'data' => $areasInstitucionArray, 'multiple' => true, 'expanded' => true, 'attr' => array('class' => 'form-control')));
+        //     $form->add('nivelTipo', 'choice', array('label' => 'Niveles', 'choices' => $nivelesArray, 'required' => true, 'multiple' => true, 'expanded' => true, 'data' => $nivelesInstitucionArray, 'attr' => array('class' => 'form-control')));
+        // } elseif ($entity->getInstitucioneducativaTipo()->getId() == 1 or $entity->getInstitucioneducativaTipo()->getId() == 2) {
+        //     $form->add('nivelTipo', 'choice', array('label' => 'Niveles', 'choices' => $nivelesArray, 'required' => true, 'multiple' => true, 'expanded' => true, 'data' => $nivelesInstitucionArray, 'attr' => array('class' => 'form-control')));
+        // }
 
 
 //         $form->getForm();
@@ -700,76 +786,76 @@ class RegistroInstitucionEducativaController extends Controller {
         $entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
         $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
         $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
-        $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
-        $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucionTipo']));
+        $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoInstitucionTipo']));
+        $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucionEducativaTipo']));
         $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
         $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
         $em->persist($entity);
         $em->flush();
 
 
-        if ($form['institucionTipo'] == 1 or $form['institucionTipo'] == 2) {
-            //elimina los niveles
-            $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-            foreach ($niveles as $nivel) {
-                $em->remove($nivel);
-            }
-            $em->flush();
+//         if ($form['institucionTipo'] == 1 or $form['institucionTipo'] == 2) {
+//             //elimina los niveles
+//             $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+//             foreach ($niveles as $nivel) {
+//                 $em->remove($nivel);
+//             }
+//             $em->flush();
 
-            //adiciona niveles nuevos
-            $niveles = $form['nivelTipo'];
+//             //adiciona niveles nuevos
+//             $niveles = $form['nivelTipo'];
 
-            for ($i = 0; $i < count($niveles); $i++) {
+//             for ($i = 0; $i < count($niveles); $i++) {
 
-                $nivel = new InstitucioneducativaNivelAutorizado();
-                $nivel->setFechaRegistro(new \DateTime('now'));
-                $nivel->setGestionTipoId($this->session->get('currentyear'));
-                $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
-                $nivel->setInstitucioneducativa($entity);
-                $em->persist($nivel);
-            }
-            $em->flush();
-        } elseif ($form['institucionTipo'] == 4) {
-            //elimina las areas
-            $areas = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-            foreach ($areas as $area) {
-                $em->remove($area);
-            }
-            $em->flush();
+//                 $nivel = new InstitucioneducativaNivelAutorizado();
+//                 $nivel->setFechaRegistro(new \DateTime('now'));
+//                 $nivel->setGestionTipoId($this->session->get('currentyear'));
+//                 $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
+//                 $nivel->setInstitucioneducativa($entity);
+//                 $em->persist($nivel);
+//             }
+//             $em->flush();
+//         } elseif ($form['institucionTipo'] == 4) {
+//             //elimina las areas
+//             $areas = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+//             foreach ($areas as $area) {
+//                 $em->remove($area);
+//             }
+//             $em->flush();
 
-            //adiciona areas nuevas
-            $areas = $form['areaEspecialTipo'];
-//     		dump($areas);die;
-            for ($i = 0; $i < count($areas); $i++) {
+//             //adiciona areas nuevas
+//             $areas = $form['areaEspecialTipo'];
+// //     		dump($areas);die;
+//             for ($i = 0; $i < count($areas); $i++) {
 
-                $area = new InstitucioneducativaAreaEspecialAutorizado();
-                $area->setFechaRegistro(new \DateTime('now'));
-                $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
-                $area->setInstitucioneducativa($entity);
-                $em->persist($area);
-            }
-            $em->flush();
-            //elimina los niveles
-            $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-            foreach ($niveles as $nivel) {
-                $em->remove($nivel);
-            }
-            $em->flush();
+//                 $area = new InstitucioneducativaAreaEspecialAutorizado();
+//                 $area->setFechaRegistro(new \DateTime('now'));
+//                 $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
+//                 $area->setInstitucioneducativa($entity);
+//                 $em->persist($area);
+//             }
+//             $em->flush();
+//             //elimina los niveles
+//             $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+//             foreach ($niveles as $nivel) {
+//                 $em->remove($nivel);
+//             }
+//             $em->flush();
 
-            //adiciona niveles nuevos
-            $niveles = $form['nivelTipo'];
+//             //adiciona niveles nuevos
+//             $niveles = $form['nivelTipo'];
 
-            for ($i = 0; $i < count($niveles); $i++) {
+//             for ($i = 0; $i < count($niveles); $i++) {
 
-                $nivel = new InstitucioneducativaNivelAutorizado();
-                $nivel->setFechaRegistro(new \DateTime('now'));
-                $nivel->setGestionTipoId($this->session->get('currentyear'));
-                $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
-                $nivel->setInstitucioneducativa($entity);
-                $em->persist($nivel);
-            }
-            $em->flush();
-        }
+//                 $nivel = new InstitucioneducativaNivelAutorizado();
+//                 $nivel->setFechaRegistro(new \DateTime('now'));
+//                 $nivel->setGestionTipoId($this->session->get('currentyear'));
+//                 $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
+//                 $nivel->setInstitucioneducativa($entity);
+//                 $em->persist($nivel);
+//             }
+//             $em->flush();
+//         }
 
         $this->get('session')->getFlashBag()->add('mensaje', 'La institución educativa fue actualizada correctamente: ' . $form['idRue'] .' - '. mb_strtoupper($form['institucionEducativa'], 'utf-8'));
 

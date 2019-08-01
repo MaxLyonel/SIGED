@@ -207,6 +207,11 @@ sie_herramienta_registro_estudiante:
      resource: "@SieHerramientaBundle/Resources/config/routing/regstudent.yml"
      prefix:   /sie/regstudent
 
+sie_herramienta_cdl_seguimiento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/cdlseguimiento.yml"
+    prefix:   /sie/cdlseguimiento
+
 sie_herramienta_anular_bth:
      resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
      prefix:   /sie/anularbth
+
