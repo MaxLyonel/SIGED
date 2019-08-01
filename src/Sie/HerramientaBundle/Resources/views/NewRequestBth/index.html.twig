@@ -413,7 +413,7 @@
                                 swal("Debe seleccionar al menos una especialidad.");
                                 return false;
                             }
-                            /*ip.push({grado:{{grado}}});*/
+                            
                             ip.push({grado:gradoSelected});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
@@ -490,7 +490,7 @@
                                 especialidades_id.push(this.value);
                             });
                             ip.push({select_especialidad : especialidades_id});
-                            ip.push({grado:{{grado}}});
+                            ip.push({grado:gradoSelected});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $('#enviar_solicitud_bth_ratificacion').attr("disabled", true);
