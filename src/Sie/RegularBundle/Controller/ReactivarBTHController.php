@@ -43,7 +43,7 @@ class ReactivarBTHController extends Controller {
         }
         
         $form = $this->createFormBuilder()
-            ->add('nroTramite', 'text', array('label' => 'Nro.', 'required' => true, 'attr' => array('class' => 'form-control')))
+            ->add('nro', 'text', array('label' => 'Nro.', 'required' => true, 'attr' => array('class' => 'form-control')))
             ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary','onclick'=>'buscarTramite()')))
             ->getForm();
         return $this->render('SieRegularBundle:ReactivarBTH:index.html.twig',array(
@@ -53,53 +53,102 @@ class ReactivarBTHController extends Controller {
     }
     public function buscaTramiteBTHAction(Request $request){
         
-        $nroTramite = $request->get('nroTramite');
+        $id = $request->get('nro');
         $em = $this->getDoctrine()->getManager();
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
-                    ->select('t,r')
-                    ->leftJoin('SieAppWebBundle:RehabilitacionBth', 'r', 'WITH', 'r.institucioneducativaId = t.institucioneducativa') 
-                    ->where('t.id = :id or t.institucioneducativa = :id')
+        $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
+        if($ie){
+            $idInstitucion = $ie->getId();
+        }else{
+            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id'=>$id,'flujoTipo'=>6));
+            if($tramite){
+                $idInstitucion = $tramite->getInstitucioneducativa()->getId();
+            }else{
+                $idInstitucion = null;
+            }
+        }
+        
+        if ($idInstitucion){
+            $tramites = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
+                    ->select('SUM(CASE WHEN t.fechaFin IS NULL THEN 1 ELSE 0 END) AS pendientes, SUM(CASE WHEN t.fechaFin IS NOT NULL THEN 1 ELSE 0 END) AS concluidos,COUNT(t.institucioneducativa) AS cantidad')
+                    ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = t.institucioneducativa')
+                    ->where('t.institucioneducativa = :id')
                     ->andwhere('t.tramiteTipo IN (:tipo)')
-                    ->andwhere('t.fechaFin is not null')
-                    ->setParameter('id', $nroTramite)
+                    ->andwhere('t.flujoTipo = 6')
+                    ->groupBy('ie.id')
+                    ->setParameter('id', $idInstitucion)
                     ->setParameter('tipo', array(27,28,31))
-                    ->orderBy('t.fechaRegistro')
                     ->getQuery()
                     ->getResult();
-        //dump($tramite);die;
-        if ($tramite){
-            if(count($tramite) > 2){
-                $response = new JsonResponse();    
-                return $response->setData(array(
-                    'msg' => 'La Unidad Educativa ya fue reactivada para su tramite BTH, y ya inicio un nuevo su trámite.',
-                ));    
-            }
-            if($tramite[0]->getTramiteTipo()->getId() == 31 or $tramite[1]){
-                $response = new JsonResponse();    
-                return $response->setData(array(
-                    'msg' => 'La Unidad Educativa ya fue reactivada para su tramite BTH. Y puede iniciar nuevamente su trámite',
-                ));    
-            }else{
-                $form = $this->createFormBuilder()
-                    ->setAction($this->generateUrl('reactivarbth_buscar_nuevo_guardar'))
-                    ->add('idtramite', 'hidden', array('data' => $tramite[0]->getId()))
-                    ->add('codsie', 'hidden', array('data' => $tramite[0]->getInstitucioneducativa()->getId()))
-                    ->add('obs', 'textarea', array('label' => 'Observación', 'required' => true, 'attr' => array('class' => 'form-control','style'=>'text-transform:uppercase;')))
-                    ->add('adjunto', 'file', array('label' => 'Adjuntar respaldo', 'attr' => array('title'=>"Adjuntar Respaldo",'accept'=>"application/pdf,.doc,.docx")))
-                    ->add('guardar', 'submit', array('label' => 'Reactivar Trámite', 'attr' => array('class' => 'btn btn-primary')))
-                    ->getForm();
+            //dump($tramites);die;
+            if($tramites){
+                if($tramites[0]['cantidad'] > 0){
+                    if($tramites[0]['pendientes'] > 0){
+                        $response = new JsonResponse();    
+                        if($tramites[0]['cantidad'] == 1){
+                            $msg = 'La Unidad Educativa tiene un trámite BTH pendiente. Finalize su trámite para poder rehabilitar BTH';
+                        }else{
+                            $msg = 'La Unidad Educativa ya rehabilito su trámite para BTH. Finalize su último trámite para poder rehabilitar nuevamente';
+                        }
+                        return $response->setData(array(
+                            'msg' => $msg,
+                        ));    
+                    }else{
+                        //$tr = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$id,'flujoTipo'=>6),array('id'=>'DESC'),1);
+                        $tr = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
+                            ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId')
+                            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = t.institucioneducativa')
+                            ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                            ->innerJoin('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico', 'h', 'WITH', 'ie.id = h.institucioneducativaId')
+                            ->innerJoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'g.id = h.gradoTipo')
+                            ->where('t.institucioneducativa = :id')
+                            ->andwhere('t.tramiteTipo IN (:tipo)')
+                            ->andwhere('h.gestionTipoId = (select max(h1.gestionTipoId) from SieAppWebBundle:InstitucioneducativaHumanisticoTecnico h1 where h1.institucioneducativaId=' . $idInstitucion.')')
+                            ->andwhere('t.flujoTipo = 6')
+                            ->orderBy('t.id','DESC')
+                            ->setParameter('id', $idInstitucion)
+                            ->setParameter('tipo', array(27,28,31))
+                            ->getQuery()
+                            ->getResult();
+                        //dump($tr);die;
+                        if($tr[0]['tramiteTipoId'] == 31){
+                            $response = new JsonResponse();    
+                            $msg = 'La Unidad Educativa ya rehabilito su trámite para BTH.';
+                            return $response->setData(array(
+                                'msg' => $msg,
+                            ));    
+                        }
+                        $form = $this->createFormBuilder()
+                            ->setAction($this->generateUrl('reactivarbth_buscar_nuevo_guardar'))
+                            ->add('idtramite', 'hidden', array('data' => $tr[0]['id']))
+                            ->add('codsie', 'hidden', array('data' => $tr[0]['codsie']))
+                            ->add('obs', 'textarea', array('label' => 'Observación', 'required' => true, 'attr' => array('class' => 'form-control','style'=>'text-transform:uppercase;')))
+                            ->add('adjunto', 'file', array('label' => 'Adjuntar respaldo', 'attr' => array('title'=>"Adjuntar Respaldo",'accept'=>"application/pdf,.doc,.docx")))
+                            ->add('guardar', 'submit', array('label' => 'Reactivar Trámite', 'attr' => array('class' => 'btn btn-primary')))
+                            ->getForm();
 
-                return $this->render('SieRegularBundle:ReactivarBTH:reactivarBthGuardar.html.twig',array(
-                    'formDatos' => $form->createView(),
-                    'tramite'=> $tramite[0],
-                    )
-                );
+                        return $this->render('SieRegularBundle:ReactivarBTH:reactivarBthGuardar.html.twig',array(
+                                'formDatos' => $form->createView(),
+                                'tramite'=> $tr,
+                        ));
+            
+                    }
+                }else{
+                    $response = new JsonResponse();    
+                    return $response->setData(array(
+                        'msg' => 'El Nro. de Trámite o Código SIE son incorrectos para la rehabilitacion.',
+                    ));    
+                }
+            }else{
+                $response = new JsonResponse();    
+                return $response->setData(array(
+                    'msg' => 'El Nro. de Trámite o Código SIE son incorrectos para la rehabilitacion.',
+                ));    
             }
         }else{
             $response = new JsonResponse();    
             return $response->setData(array(
-                    'msg' => 'El Nro. de Trámite o Código SIE son incorrectos para la rehabilitacion.',
-            ));
+                'msg' => 'El Nro. de Trámite o Código SIE son incorrectos para la rehabilitacion.',
+            ));    
         }
     }
 

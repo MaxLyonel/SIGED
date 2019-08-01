@@ -48,10 +48,8 @@
                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id': 'form_tramite'} } )}}    
                     <div class="form-body">
                         <div class="form-group">
-                            {{form_label(form.nroTramite)}}
-                            {{ form_widget(form.nroTramite) }}
-                            {# <label class="control-label">Nro.</label>
-                            <input type="text" class="form-control rounded" name="nroTramite" id="sie" style="text-transform: uppercase" maxlength="8" autocomplete="off" required> #}
+                            {{form_label(form.nro)}}
+                            {{ form_widget(form.nro) }}
                         </div>
                     </div>
                     <div class="form-footer">
@@ -86,7 +84,7 @@
         	}
         });
         function buscarTramite(){
-            var  formData = {nroTramite: $('#form_nroTramite').val()};
+            var  formData = {nro: $('#form_nro').val()};
             $.ajax({
                 type: 'post',
                 url: "{{path('reactivarbth_buscar_nuevo')}}",
