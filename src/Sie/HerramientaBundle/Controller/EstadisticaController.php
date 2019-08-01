@@ -1114,5 +1114,130 @@ class EstadisticaController extends Controller {
         return $aDato;
     }
 
+    /**
+     * Imprime reportes estadisticos segun el tipo de rol en formato PDF - BTH
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function bthUnidadEducativaPdfAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
 
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&codigo='.$codigoArea));
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {              
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_distrital_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&codigo='.$codigoArea));
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        { 
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_departamental_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&codigo='.$codigoArea));
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {  
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&codigo='.$codigoArea));
+        } 
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+    /**
+     * Imprime reportes estadisticos segun el tipo de rol en formato XLSX - BTH
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function bthUnidadEducativaXlsxAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_nacional_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {              
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_distrital_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        { 
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_departamental_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {  
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_nacional_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
+        } 
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

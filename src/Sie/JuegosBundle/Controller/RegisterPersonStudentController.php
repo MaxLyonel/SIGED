@@ -109,8 +109,8 @@ class RegisterPersonStudentController extends Controller{
     	$response = new JsonResponse();
 
     	return $response->setData(array(
-                'generos' => $this->getGeneroUnidadEducativa($sie,$gestionActual,$nivel),
-            ));
+            'generos' => $this->getGeneroUnidadEducativa($sie,$gestionActual,$nivel),
+        ));
     }
 
     private function getGeneroUnidadEducativa($institucionEducativaId, $gestionId, $nivelId){
@@ -540,23 +540,75 @@ class RegisterPersonStudentController extends Controller{
         return $obj;
     }
 
-
- 
-
     public function openRegisterAction(Request $request){
     	// get the send values
     	$jsonData = base64_decode($request->get('jsondata'));
-    	// $arrData = json_decode($jsonData,true);
+    	$arrData = json_decode($jsonData,true);
     	//$arrCouchs = $this->getTheCouch(json_decode($jsonData,true));
     	// $showOptionRegister = sizeof($arrCouchs)>0?false:true;
+        //dump($arrData[0]);die;
+        //dump(json_decode($jsonData,true));die;
+        $arrCouchs = $this->getComisionInscripcion(json_decode($jsonData,true));
+        //dump($arrCouchs);die;
         $showOptionRegister = true;
     	return $this->render('SieJuegosBundle:RegisterPersonStudent:openRegister.html.twig',array(
     		'jsondata' => $jsonData,
+            'dataComision' => $arrCouchs,
     		'showOptionRegister' => $showOptionRegister,
     		'form'=>$this->formOpenRegister($jsonData)->createView(),
 
     	));
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los comisionados de un estudiante o equipo en particular
+    // PARAMETROS: institucionEducativaId, gestionId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************    
+    private function getComisionInscripcion($arrData){
+        $em = $this->getDoctrine()->getManager();        
+        $queryEntidad = $em->getConnection()->prepare("
+            select string_agg(cast(pij.id as varchar), ',') as ids, eij.posicion, coalesce(eeij.equipo_id,0) as equipo, p.nombre, p.paterno, p.materno, p.carnet, p.complemento, ct.comision from jdp_estudiante_inscripcion_juegos as eij 
+            inner join jdp_persona_inscripcion_juegos as pij on pij.estudiante_inscripcion_juegos_id = eij.id
+            inner join persona as p on p.id = pij.persona_id
+            inner join jdp_comision_tipo as ct on ct.id = pij.comision_tipo_id
+            left join jdp_equipo_estudiante_inscripcion_juegos as eeij on eeij.estudiante_inscripcion_juegos_id = eij.id
+            where eij.id in (".implode(",", $arrData).")
+            group by eij.posicion, coalesce(eeij.equipo_id,0), p.nombre, p.paterno, p.materno, p.carnet, p.complemento, ct.comision
+        ");
+        $queryEntidad->execute();
+        $objInscritos = $queryEntidad->fetchAll();
+
+        // $entity = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos');
+        // $query = $entity->createQueryBuilder('jdppij')
+        //         ->select('jdppij')      
+        //         ->where('jdppij.estudianteInscripcionJuegos IN (:eijId)')
+        //         ->setParameter('eijId', $arrData)
+        //         ->getQuery();                
+        // $objInscritos = $query->getResult();
+
+        $arrCouchs = array();
+        $arrIdInscription = array();
+        if(sizeof($objInscritos)>0){
+	        foreach ($objInscritos as $key => $value) {	        	
+	        	$arrayId=$value["ids"];
+		        $jsonIdInscription = json_encode($arrIdInscription);
+	        	$jsonPersonaInscripcionJuegosId=json_encode(explode(",", $value["ids"]));
+	        	if($value){
+		        	$arrCouchs[$key]['carnet'] = $value["carnet"];
+		        	$arrCouchs[$key]['complemento'] = $value["complemento"];
+		        	$arrCouchs[$key]['paterno'] = $value["paterno"];
+		        	$arrCouchs[$key]['materno'] = $value["materno"];
+		        	$arrCouchs[$key]['nombre'] = $value["nombre"];
+		        	$arrCouchs[$key]['comision'] = $value["comision"];
+		        	$arrCouchs[$key]['idRemove'] = base64_encode($jsonPersonaInscripcionJuegosId);
+	        	}   	
+	        }
+        }
+        return $arrCouchs;
+    }
+
 
     private function formOpenRegister($jsonData){
     	
@@ -629,6 +681,8 @@ class RegisterPersonStudentController extends Controller{
                 ->add('comision','choice',
                       array('label' => 'Comisión',
                             'choices' => ($arrayComision),
+                            'required' => true,
+                            'empty_value' => 'Seleccionar Comisión',
                             'attr' => array('class' => 'form-control col-lg-6 col-md-6 col-sm-6')))
     			->add('find', 'button', array('label'=>'Registrar', 'attr'=>array('onclick'=>'registerPerson()', 'class'=>'btn btn-info text-center btn-block col-lg-6 col-md-6 col-sm-6')))
             	->getForm();
@@ -646,11 +700,11 @@ class RegisterPersonStudentController extends Controller{
     public function getComisionNivel($nivelId) {
         $comision = array();
         if ($nivelId == 12) {
-            // $comision = array('139' => 'Acompañante Entrenador', '12' => 'Acompañante Maestro', '13' => 'Acompañante Padre de Familia', '102' => 'Acompañante Delegado');
-            $comision = array('139' => 'Acompañante Entrenador');
+            $comision = array('139' => 'Acompañante Entrenador', '12' => 'Acompañante Maestro', '13' => 'Acompañante Padre de Familia', '102' => 'Acompañante Delegado');
+            // $comision = array('139' => 'Acompañante Entrenador');
         } else {
-            // $comision = array('140' => 'Acompañante Entrenador', '141' => 'Acompañante Maestro', '142' => 'Acompañante Padre de Familia', '143' => 'Acompañante Delegado');
-            $comision = array('140' => 'Acompañante Entrenador');
+            $comision = array('140' => 'Acompañante Entrenador', '141' => 'Acompañante Maestro', '142' => 'Acompañante Padre de Familia', '143' => 'Acompañante Delegado');
+            // $comision = array('140' => 'Acompañante Entrenador');
         }
         return $comision;              
     }
@@ -663,7 +717,7 @@ class RegisterPersonStudentController extends Controller{
 
     	$arrForm = json_decode($form['dataToRegister'],true);
     	
-// dump($arrForm);die;
+        // dump($arrForm);die;
     	$personId = $arrForm['personId'];
     	$comisionTipoId = $arrForm['comisionTipoId'];
     	$arrIdInscription = json_decode($arrForm['form']['jsonIdInscription'],true);
@@ -715,6 +769,9 @@ class RegisterPersonStudentController extends Controller{
 
 
     public function registerPersonJsonAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
     	// dump($request);die;
     	//get the send values
     	$form = $request->get('form');
@@ -742,35 +799,55 @@ class RegisterPersonStudentController extends Controller{
     	// $arrLoadInfo = json_decode($form['dataToRegister'],true);
     	// $arrData = json_decode($arrLoadInfo['form']['comisionJuegos'],true);
     
-    	//create db conexino
+        //create db conexino
+        
+        $reglaController = new reglaController();
+        $reglaController->setContainer($this->container);
+          
+        $arrCouchs = $this->getComisionInscripcion($arrIdInscription);
+
+        $arrayEntrenador = $arrCouchs;
+        //dump($arrayEntrenador);die;
+
     	try {
 			$query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('jdp_persona_inscripcion_juegos');");
-        	$query->execute();            
-            foreach ($arrIdInscription as $key => $value) {
-                $objJdpPersonaInscripcion = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos' => $value, 'comisionTipo'=> $comisionTipoId));
-                if(count($objJdpPersonaInscripcion) <= 0){
-                    $objJdpPersonaInscripcion =  new JdpPersonaInscripcionJuegos();
-                    $objJdpPersonaInscripcion->setEstudianteInscripcionJuegos($em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->find($value));
-                    $objJdpPersonaInscripcion->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionTipoId));
-                } 
-                $objJdpPersonaInscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personId)); 			
-    			$em->persist($objJdpPersonaInscripcion);
-    			$em->flush();
-    		    			# code...
-    		}  
+            $query->execute();      
+
+            $estudianteInscripcionJuegosEntity = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->find($arrIdInscription[0]);
+            $faseId = $estudianteInscripcionJuegosEntity->getFaseTipo()->getId();
+            $pruebaId = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getId();
+            $reglaPrueba = $reglaController->getPruebaRegla($gestionActual,$faseId,$pruebaId);
+
+            if(count($arrCouchs) < $reglaPrueba->getComisionCupoPresentacion()){
+                foreach ($arrIdInscription as $key => $value) {
+                    $estudianteInscripcionJuegosEntity = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->find($value);                        
+                    $objJdpPersonaInscripcion = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos' => $value, 'comisionTipo'=> $comisionTipoId));
+                    if(count($objJdpPersonaInscripcion) <= 0){
+                        $objJdpPersonaInscripcion =  new JdpPersonaInscripcionJuegos();
+                        $objJdpPersonaInscripcion->setEstudianteInscripcionJuegos($estudianteInscripcionJuegosEntity);
+                        $objJdpPersonaInscripcion->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionTipoId));
+                    } 
+                    $objJdpPersonaInscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personId)); 			
+                    $em->persist($objJdpPersonaInscripcion);
+                    $em->flush();
+                                # code...
+                }  
+                $arrayEntrenador = $this->getComisionInscripcion($arrIdInscription);
+                $arrTransactionData = array('entrenador' => $arrayEntrenador, 'msg_correcto' => 'Datos registrados correctamente', 'msg_incorrecto' => '' );
+            } else {
+                $arrTransactionData = array('entrenador' => $arrayEntrenador, 'msg_correcto' => '', 'msg_incorrecto' => 'Datos no registrados, no cuenta con mas cupo' );
+            }
     		// $arrTransactionData = array(
     		// 	'message'=>'Datos registrados correctamente...',
     		// 	'alertType'=>'success',
     		// );
-            $arrTransactionData = array('entrenador' => $entrenador, 'msg_correcto' => 'Datos registrados correctamente', 'msg_incorrecto' => '' );
-
     	
     	} catch (Exception $e) {
     		// $arrTransactionData = array(
     		// 	'message'=>'Error en reporte'.$e,
     		// 	'alertType'=>'danger',
     		// );
-            $arrTransactionData = array('entrenador' => $entrenador, 'msg_correcto' => '', 'msg_incorrecto' => 'Error, intene nuevamente' );
+            $arrTransactionData = array('entrenador' => $arrayEntrenador, 'msg_correcto' => '', 'msg_incorrecto' => 'Error, intene nuevamente' );
     	}
 
         $response = new JsonResponse();
@@ -780,7 +857,7 @@ class RegisterPersonStudentController extends Controller{
     	// 	'transactionData' => $arrTransactionData,
     	// ));
     }
-
+   
 
     public function showCouchAction(Request $request){
     	//get the send datas
@@ -850,9 +927,10 @@ class RegisterPersonStudentController extends Controller{
 
             $repositoryVerInsPru = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
             $queryVerInsPru = $repositoryVerInsPru->createQueryBuilder('eij')
-                ->select('distinct eeij.equipoId as equipoId, eeij.equipoNombre as equipoNombre, p.id as personaId, p.nombre, p.paterno, p.materno')
+                ->select('distinct eeij.equipoId as equipoId, eeij.equipoNombre as equipoNombre, p.id as personaId, p.nombre, p.paterno, p.materno, ct.id as comisionId, ct.comision')
                 ->innerJoin('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos','eeij','WITH','eeij.estudianteInscripcionJuegos = eij.id')
                 ->innerJoin('SieAppWebBundle:JdpPersonaInscripcionJuegos','pij','WITH','pij.estudianteInscripcionJuegos = eij.id')
+                ->innerJoin('SieAppWebBundle:JdpComisionTipo','ct','WITH','ct.id = pij.comisionTipo')
                 ->innerJoin('SieAppWebBundle:Persona','p','WITH','p.id = pij.persona')
                 ->where('eeij.equipoId = :codEquipo')
                 ->andwhere('eij.faseTipo = :codFase')
@@ -868,7 +946,7 @@ class RegisterPersonStudentController extends Controller{
         
         //dump($verInsPru);die;
         if (count($verInsPru) > 0){
-            return $verInsPru[0];
+            return $verInsPru;
         } else {
             return array();
         }
@@ -880,20 +958,22 @@ class RegisterPersonStudentController extends Controller{
     	$jsonIdRemove = base64_decode($request->get('jsonIdRemove'));
     	$arrIdRemove = json_decode($jsonIdRemove, true);
     	$em = $this->getDoctrine()->getManager();
-
+        
     	try {
 	    	foreach ($arrIdRemove as $key => $value) {
 	    		# code...
 	    		$objJdpPersonaInscripcionJuegos = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->find($value);
 	    		$em->remove($objJdpPersonaInscripcionJuegos);
 	    		$em->flush();
-	    	}
-	    	die('correct');
-	    	return array('error'=>false, 'meesage'=>'correct');
-    		
+            }
+            $arrTransactionData = array('msg_correcto' => 'Persona eliminada', 'msg_incorrecto' => '' );
+	    	  		
     	} catch (Exception $e) {
-    		die('error code');
-    	}
+    		$arrTransactionData = array('msg_correcto' => '', 'msg_incorrecto' => 'Error, intene nuevamente' );
+        }
+
+        $response = new JsonResponse();
+        return $response->setData($arrTransactionData); 
     }
 
 

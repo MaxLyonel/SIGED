@@ -300,7 +300,10 @@
     };
 
     var registerPerson = function(){
-        
+        if($("#form_comision").val() == ""){
+            alert("Debe seleccionar la comisión en la cual se registrará la persona");
+            return false;
+        }
         var formData = $('#idFormPersonToRegister').serialize()
         // $('#modal').modal('hide');
         $.ajax({
@@ -308,31 +311,69 @@
             url: Routing.generate('RegisterPersonStudent_register_person_json'),
             data: formData,
             beforeSend: function () {
-                $('#idPersonData').empty();
-                $("#idPersonData").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                // $('#idPersonData').empty();
+                // $("#idPersonData").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
             },
              success: function (data) {
                 // $('#form_carnet').val('');
                 // $('#form_complemento').val('');
-                $('#modal').empty();
-                $('#modal').modal('hide');
+                //$('#modal').empty();
+                $('#tablecouch > tbody').empty();
+                //$('#modal').modal('hide');
                 //$('#idPersonData').append(data);
-                $('#'+nombreBoton).text(data.entrenador);   
+                //$('#'+nombreBoton).text(data.entrenador);   
+                $.each(data.entrenador, function(i, item){
+                    var row = "<tr id='row"+i+"'><td>"+item.carnet+"</td><td>"+item.complemento+"</td><td>"+item.paterno+"</td><td>"+item.materno+"</td><td>"+item.nombre+"</td><td>"+item.comision+"</td><td><button type='button' class='btn btn-danger' data-toggle='modal' data-target='.bs-example-modal-form' onclick='removeCouch(\""+item.idRemove+"\","+i+");' ><i class='fa fa-remove'></i></button></td></tr>";
+                    $('#tablecouch > tbody').append(row);
+                });               
                 
                 if(data.msg_incorrecto){
                     if(data.msg_incorrecto != ''){
-                        $("#listaInscritos").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                        $("#idPersonData").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
                     }
                 }
 
                 if(data.msg_correcto){
                     if(data.msg_correcto != ''){
-                        $("#listaInscritos").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                        $("#idPersonData").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
                     }
                 }
             },
-            timeout: 5000, // sets timeout to 5 seconds
+            timeout: 25000, // sets timeout to 5 seconds
         });
+    };
+
+    var removeCouch = function(jsonIdRemove, row){
+        if(confirm('esta seguro de eliminar?')){
+             $.ajax({
+                type: 'post',
+                url: Routing.generate('RegisterPersonStudent_remove_couch'),
+                data: {'jsonIdRemove':jsonIdRemove},
+                beforeSend: function () {
+                    $('#row'+row).prop("disabled", true);
+                },
+                 success: function (data) {
+                    $('#row'+row).prop("disabled", false);
+                    $('#row'+row).remove();             
+                
+                    if(data.msg_incorrecto){
+                        if(data.msg_incorrecto != ''){
+                            $("#idPersonData").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                        }
+                    }
+    
+                    if(data.msg_correcto){
+                        if(data.msg_correcto != ''){
+                            $("#idPersonData").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                        }
+                    }
+                },
+            });
+             return true;
+        }else{
+            return false;
+        }
+
     };
 
     var getEliminarInscripcion = function (es) {  
