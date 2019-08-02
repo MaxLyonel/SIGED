@@ -95,11 +95,12 @@ class ReactivarBTHController extends Controller {
                     }else{ //NO TIENE TRAMITES PENDIENTES
                         //$tr = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$id,'flujoTipo'=>6),array('id'=>'DESC'),1);
                         $tr = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
-                            ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId')
+                            ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId,f.id as flujoTipoId')
                             ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = t.institucioneducativa')
                             ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico', 'h', 'WITH', 'ie.id = h.institucioneducativaId')
                             ->innerJoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'g.id = h.gradoTipo')
+                            ->innerJoin('SieAppWebBundle:FlujoTipo', 'f', 'WITH', 'f.id = t.flujoTipo')
                             ->where('t.institucioneducativa = :id')
                             ->andwhere('t.tramiteTipo IN (:tipo)')
                             ->andwhere('h.gestionTipoId = (select max(h1.gestionTipoId) from SieAppWebBundle:InstitucioneducativaHumanisticoTecnico h1 where h1.institucioneducativaId=' . $idInstitucion.')')
@@ -122,7 +123,7 @@ class ReactivarBTHController extends Controller {
                             ->add('idtramite', 'hidden', array('data' => $tr[0]['id']))
                             ->add('codsie', 'hidden', array('data' => $tr[0]['codsie']))
                             ->add('obs', 'textarea', array('label' => 'Observación', 'required' => true, 'attr' => array('class' => 'form-control','style'=>'text-transform:uppercase;')))
-                            ->add('adjunto', 'file', array('label' => 'Adjuntar respaldo', 'attr' => array('title'=>"Adjuntar Respaldo",'accept'=>"application/pdf,.doc,.docx")))
+                            ->add('adjunto', 'file', array('label' => 'Adjuntar respaldo (Máximo permitido 3M)', 'attr' => array('title'=>"Adjuntar Respaldo",'accept'=>"application/pdf,.doc,.docx")))
                             ->add('guardar', 'submit', array('label' => 'Reactivar Trámite', 'attr' => array('class' => 'btn btn-primary')))
                             ->getForm();
 
