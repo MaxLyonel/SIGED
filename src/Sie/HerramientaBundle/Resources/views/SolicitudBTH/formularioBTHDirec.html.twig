@@ -216,17 +216,28 @@
                                                 </div>
                                                 <div class="col-md-5">
                                                     {% if (tramite_tipo == 'Registro Nuevo')  %} {#tramite Nuevo#}
-                                                        <select  id="select_especialidade" name="select_especialidade[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                            {% for especialidad in especialidadlista %}
+                                                        <select  id="select_especialidade_n" name="select_especialidade_n[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                            {% for especialidad in especialidad_adicionar %}
                                                                 <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                             {% endfor %}
                                                         </select>
-                                                    {% else %}{#tramite Ratificacion#}
-                                                    <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" class="chosen-select" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
+                                                        <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" class="chosen-select" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
                                                             <option value="{{ especialidadarray.id }}" disabled="disabled" >{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
-                                                    </select>
+                                                        </select>
+
+                                                    {% else %}{#tramite Ratificacion#}
+                                                        <select  id="select_especialidade_r" name="select_especialidade_r[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                            {% for especialidad in especialidad_adicionar %}
+                                                                <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" class="chosen-select" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
+                                                        {% for especialidadarray in especialidadarray %}
+                                                            <option value="{{ especialidadarray.id }}" disabled="disabled" >{{ especialidadarray.especialidad }}</option>
+                                                        {% endfor %}
+                                                        </select>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -236,7 +247,14 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado:  {{ grado }} </strong>
+                                                    <select id="form_grado" name="form[grado]" required="required" class="form-control" >
+                                                    <option value="" selected="selected">seleccionar...</option>
+                                                    {% for keygrado, selectGrado in grados %}
+                                                        <option value="{{ keygrado }}">{{ selectGrado }}</option>
+                                                    {% endfor %}
+                                                </select>
                                                 </div>
+
                                             </div>
                                             <br>
                                             <div class="row">
@@ -321,16 +339,18 @@
                             if (willDelete) {
                                 var institucionid={{ institucion.id }};
                                 var ip = [];
+                                var gradoSelected = $('#form_grado').val();
+                                
                                 if($('#informe:checked').val())
                                     ip.push({ informe : 1});
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
-                                if($('#select_especialidade').val())
-                                    ip.push({select_especialidad : $('#select_especialidade').val()});
+                                if($('#select_especialidade_n').val())
+                                    ip.push({select_especialidad : $('#select_especialidade_n').val()});
                                 else
                                 {swal("Debe seleccionar al menos una especialidad."); return false;}
                                 var obstxt=$('#obstxt').val();
-                                ip.push({grado:{{grado}}});
+                                ip.push({grado:gradoSelected});
                                 var ipt=JSON.stringify(ip);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $('#enviarSolicitud_bth').attr("disabled", true);
@@ -370,7 +390,7 @@
                             }
                         });
                     break;
-                case 'Ratificación': //Ratificacion                      
+                case 'Ratificación': //Ratificacion
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -384,17 +404,22 @@
                                 var institucionid={{ institucion.id }}
                                 var tipoTramite={{ tipoTramite }}
                                 var ip = [];
+                                var gradoSelected = $('#form_grado').val();
+                                
                                 if($('#informe:checked').val())
                                     ip.push({ informe : 1});
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
                                 var especialidades_id = [];
-                                $("#lista_select_especialidad").find("option").each(function(){
-                                    especialidades_id.push(this.value);
-                                });
-                                ip.push({"select_especialidad" : especialidades_id});                                
+                                if($('#select_especialidade_r').val())
+                                    ip.push({select_especialidad : $('#select_especialidade_r').val()});
+                                else
+                                {swal("Debe seleccionar al menos una especialidad."); return false;}
+
+                                
+                                //ip.push({"select_especialidad" : especialidades_id});
                                 var obstxt=$('#obstxt').val();
-                                ip.push({grado:{{grado}}});
+                                ip.push({grado:gradoSelected});
                                 var ipt=JSON.stringify(ip);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $('#enviarSolicitud_bth').attr("disabled", true);

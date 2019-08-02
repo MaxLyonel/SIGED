@@ -213,6 +213,12 @@
                                                 <strong>Seleccionar las especialidades</strong>
                                             </div>
                                             <div class="col-md-3">
+                                                <ul> 
+                                                    {% for especialidad in especialidad_actual %}
+                                                        <li value="{{ especialidad.id }}">{{ especialidad.especialidad }}</li>
+                                                    {% endfor %}
+                                                </ul> 
+                                                
                                             </div>
                                             <div class="col-md-5">
                                                 <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
@@ -235,7 +241,7 @@
                                                     {% for keygrado, selectGrado in grados %}
                                                         <option value="{{ keygrado }}">{{ selectGrado }}</option>
                                                     {% endfor %}
-                                                </select>                                                
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -422,6 +428,15 @@
                                             </div>
                                             <div class="col-md-3">
                                             </div>
+                                            
+                                            <div class="col-md-5">
+                                                
+                                                <select data-placeholder="Seleccionar especialidad"  id="select_especialidad_r" name="select_especialidad_r[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                    {% for especialidad in especialidad %}
+                                                        <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                             <div class="col-md-5" id="second-chose">
                                                 <select data-placeholder="Seleccionar especialidad" id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="" multiple="" style="display: none;" >
                                                 </select>
@@ -431,19 +446,19 @@
                                             <div class="col-md-6">
                                                 <strong>  Año de escolaridad a implementar BTH:</strong>
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <strong> <span class="label label-primary"> Grado Sugerido</span> :  {{ grado }} </strong>
                                                 </br>
                                                 <strong> <span class="label label-primary"> Nivel: Secundario</span> Grado: </strong>
-                                                <select id="form_grado" name="form[grado]" required="required" class="form-control" >
+                                                <select id="form_grado_ratificacion" name="form[grado]" required="required" class="form-control" >
                                                     <option value="" selected="selected">seleccionar...</option>
                                                     {% for keygrado, selectGrado in grados %}
                                                         <option value="{{ keygrado }}">{{ selectGrado }}</option>
                                                     {% endfor %}
-                                                </select>                                                
+                                                </select>
                                             </div>
-                                        
+
 
                                         </div>
                                         <div class="row">
@@ -600,7 +615,7 @@
         * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
         var solicitud=$('#form_solicitud :selected').text();
-        var gradoSelected = $('#form_grado').val();
+        
         
         switch (true){
             case (solicitud == 'Registro Nuevo'): //Registro Nuevo
@@ -616,6 +631,7 @@
                     .then(function(willDelete)  {
                         if (willDelete) {
                             var institucionid={{ institucion.id }}
+                            var gradoSelected = $('#form_grado').val();
                             var ip = [];
                             if($('#informe:checked').val())
                                 ip.push({ informe : 1});
@@ -630,7 +646,7 @@
                                 swal("Debe seleccionar al menos una especialidad.");
                                 return false;
                             }
-                            /*ip.push({grado:{{grado}}});*/
+                            
                             ip.push({grado:gradoSelected});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
@@ -694,6 +710,8 @@
                     .then(function(willDelete)  {
                         if (willDelete) {
                             var institucionid={{ institucion.id }}
+                            var gradoSelected = $('#form_grado_ratificacion').val();
+                            
                             var ip = [];
                             if($('#informeregularizacion:checked').val())
                                 ip.push({ informe : 1});
@@ -703,11 +721,18 @@
                             };
                             ip.push({institucionid : institucionid});
                             var especialidades_id = [];
-                            $("#lista_especialidades_ratificacion").find("option").each(function(){
-                                especialidades_id.push(this.value);
-                            });
-                            ip.push({select_especialidad : especialidades_id});
-                            ip.push({grado:{{grado}}});
+                            
+                            
+                            if($('#select_especialidad_r').val()) {
+                                ip.push({select_especialidad : $('#select_especialidad_r').val()});
+                            } else {
+                                swal("Debe seleccionar al menos una especialidad.");
+                                return false;
+                            }
+
+                            //ip.push({select_especialidad : especialidades_id});
+                            ip.push({grado:gradoSelected});
+                            
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $('#enviar_solicitud_bth_ratificacion').attr("disabled", true);

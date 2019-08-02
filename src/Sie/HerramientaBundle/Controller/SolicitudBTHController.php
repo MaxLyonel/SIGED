@@ -345,30 +345,40 @@ class SolicitudBTHController extends Controller {
                
                 /** Adecuacion a las equivalencias de especialidades */
                 $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
-                                                FROM especialidad_tecnico_humanistico_tipo eth
-                                                WHERE eth.es_vigente is TRUE
+                                                FROM institucioneducativa_especialidad_tecnico_humanistico a
+                                                INNER JOIN especialidad_tecnico_humanistico_tipo eth on a.especialidad_tecnico_humanistico_tipo_id =eth.id
+                                                WHERE eth.es_vigente is TRUE and institucioneducativa_id = $id_Institucion and gestion_tipo_id = $gestion
                                                 ORDER BY 2");
                 $query->execute();
-                $especialidad = $query->fetchAll();
-                
+                $especialidad_actual = $query->fetchAll(); //dump($especialidad);die;
+                $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$id_Institucion));
+                if(!$objrehabilitationbth){
+                    $gestion = 2018;
+                }
+
+                $especialidades_adicionar=$this->obtieneespecialidadesrestantes($id_Institucion,$gestion);
+               
                 //get all course of the UE 
                 $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-                $query = $entity->createQueryBuilder('iec')
-                        ->select('(iec.gradoTipo)')
-                        ->where('iec.institucioneducativa = :sie')
-                        ->andWhere('iec.nivelTipo = :idnivel')
-                        ->andwhere('iec.gestionTipo = :gestion')
-                        ->setParameter('sie', $institucion->getId())
-                        ->setParameter('idnivel', 13)
-                        ->setParameter('gestion', $gestion)
-                        ->distinct()
-                        ->orderBy('iec.gradoTipo', 'ASC')
-                        ->getQuery();
-                $objGrados = $query->getResult();
-                $arrGrados = array();
-                foreach ($objGrados as $data) {
-                    $arrGrados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
-                }
+               $query = $entity->createQueryBuilder('iec')
+                       ->select('(iec.gradoTipo)')
+                       ->where('iec.institucioneducativa = :sie')
+                       ->andWhere('iec.nivelTipo = :idnivel')
+                       ->andwhere('iec.gestionTipo = :gestion')
+                       ->andWhere('iec.gradoTipo in (:arrgrados)')
+                       ->setParameter('sie', $institucion->getId())
+                       ->setParameter('idnivel', 13)
+                       ->setParameter('gestion', $gestion)
+                       ->setParameter('arrgrados', array(3,4,5,6))
+                       ->distinct()
+                       ->orderBy('iec.gradoTipo', 'ASC')
+                       ->getQuery();
+                       // dump($query->getSQL());die;
+               $objGrados = $query->getResult();
+               $arrGrados = array();
+               foreach ($objGrados as $data) {
+                   $arrGrados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
+               }
                 // dump($arrGrados);die;
 
                 $form= $this->createFormBuilder()
@@ -381,7 +391,8 @@ class SolicitudBTHController extends Controller {
                     'director'      => $director,
                     'cursos'        => $cursos,
                     'maestros'      => $maestros,
-                    'especialidad'  => $especialidad,
+                    'especialidad'  => $especialidades_adicionar,
+                    'especialidad_actual'  => $especialidad_actual,
                     'grados'        => $arrGrados,
                     'grado'         => $grado,
                     'idflujo'=>$request->get('id'),
@@ -390,6 +401,21 @@ class SolicitudBTHController extends Controller {
             }
 
 
+    }
+
+    public function obtieneespecialidadesrestantes($id_institucion,$gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
+                     FROM especialidad_tecnico_humanistico_tipo eth
+                     WHERE eth.es_vigente is TRUE AND eth.id NOT in         
+                        (SELECT espt.id
+                    FROM institucioneducativa_especialidad_tecnico_humanistico ieth
+                    INNER JOIN especialidad_tecnico_humanistico_tipo espt ON ieth.especialidad_tecnico_humanistico_tipo_id = espt.id
+                    WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion
+                    )ORDER BY 1");
+        $query->execute();
+        $especialidades_restantes = $query->fetchAll();
+        return $especialidades_restantes;
     }
 
     public function verificatramite($id_Institucion,$gestion,$flujotipo){
@@ -467,15 +493,21 @@ class SolicitudBTHController extends Controller {
             /**
              * Adecuacion solo para que todas las unidades-BTH puedan realizar su regularizacion
              */
-            $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht
+            $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$id_Institucion));
+            if($objrehabilitationbth){
+                $es_plena = 0;
+            }else {
+                $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht
                                                 INNER JOIN institucioneducativa  ie on ieht.institucioneducativa_id=ie.id 
                                                 INNER JOIN institucioneducativa_nivel_autorizado iena ON iena.institucioneducativa_id = ieht.institucioneducativa_id  
-                                                WHERE ieht.institucioneducativa_id=$id_Institucion AND ie.institucioneducativa_tipo_id=1 AND ie.estadoinstitucion_tipo_id=10 AND iena.nivel_tipo_id = 13                                                
+                                                WHERE ieht.institucioneducativa_id=$id_Institucion AND ie.institucioneducativa_tipo_id=1 AND ie.estadoinstitucion_tipo_id=10 AND iena.nivel_tipo_id = 13
                                                 AND ieht.institucioneducativa_humanistico_tecnico_tipo_id in (1,7)
                                                 ORDER BY 1");
-            $query->execute();
-            $ue_bth = $query->fetchAll();
-            $es_plena=$ue_bth[0]['cantidad_ue_plena']; //dump($es_plena);die;
+                $query->execute();
+                $ue_bth = $query->fetchAll();
+                $es_plena=$ue_bth[0]['cantidad_ue_plena']; 
+            }
+            
             /**
              * Verificicacion de que la UE inicio un tramite
              */
@@ -488,17 +520,28 @@ class SolicitudBTHController extends Controller {
             $tramite_iniciado=$tramite_ue[0]['cantidad_tramite_bth'];
         } else{//tramite devuelto
             $tramite_iniciado=0;
-            $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht  
-                                                WHERE ieht.institucioneducativa_id=$id_Institucion 
-                                                ORDER BY 1");
-            $query->execute();
-            $ue_bth = $query->fetchAll();
-            $es_plena=$ue_bth[0]['cantidad_ue_plena'];
-            if($es_plena>=1){
-                $es_plena=1;
-            }else{
+
+            $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$id_Institucion));
+            if($objrehabilitationbth){
                 $es_plena=0;
+            }else{
+
+                $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht  
+                                                    WHERE ieht.institucioneducativa_id=$id_Institucion 
+                                                    ORDER BY 1");
+                $query->execute();
+                $ue_bth = $query->fetchAll();
+                $es_plena=$ue_bth[0]['cantidad_ue_plena'];
+                if($es_plena>=1){
+                    $es_plena=1;
+                }else{
+                    $es_plena=0;
+                }
             }
+
+
+
+
         }
          /**
          * verificamos el tipo de solicitud 45 tramite nuevo
@@ -872,22 +915,29 @@ class SolicitudBTHController extends Controller {
         }else{
             $documento= empty($datos[4])?'':$datos[4];
         }
-        
-      ///obtenemos la lista de las especialidades de la unidad educativa
+        ///obtenemos la lista de las especialidades de la unidad educativa
         $institucion_id = $infoUE['institucioneducativa_id'];///revisar
-        /// EXTRAER LA ULTIMA GESTION REGISTRADAD COMO BTH ....
-        $query = $em->getConnection()->prepare("SELECT gestion_tipo_id as gestion
-                                                FROM institucioneducativa_humanistico_tecnico ieht  
-                                                WHERE ieht.institucioneducativa_id=$institucion_id
-                                                ORDER BY gestion_tipo_id DESC LIMIT 2");
-        $query->execute();
-        $ultima_gestion_ue = $query->fetchAll();
+        $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$institucion_id));
+        if($objrehabilitationbth){
+            $gestion_especialidades = 2019;
+        }else{
 
-        if(count($ultima_gestion_ue)==2){
-            $gestion_especialidades = $ultima_gestion_ue[1]['gestion'];
-        } else{
-            $gestion_especialidades = $ultima_gestion_ue[0]['gestion'];
+        
+            /// EXTRAER LA ULTIMA GESTION REGISTRADAD COMO BTH ....
+            $query = $em->getConnection()->prepare("SELECT gestion_tipo_id as gestion
+                                                    FROM institucioneducativa_humanistico_tecnico ieht  
+                                                    WHERE ieht.institucioneducativa_id=$institucion_id
+                                                    ORDER BY gestion_tipo_id DESC LIMIT 2");
+            $query->execute();
+            $ultima_gestion_ue = $query->fetchAll();
+
+            if(count($ultima_gestion_ue)==2){
+                $gestion_especialidades = $ultima_gestion_ue[1]['gestion'];
+            } else{
+                $gestion_especialidades = $ultima_gestion_ue[0]['gestion'];
+            }
         }
+        
 
         ////////
         $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad,ieth.gestion_tipo_id
@@ -977,7 +1027,35 @@ class SolicitudBTHController extends Controller {
                 } else{
                     $grado = 3;
                 } 
-                  // dump ($grado);die; 
+                $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+               $query = $entity->createQueryBuilder('iec')
+                       ->select('(iec.gradoTipo)')
+                       ->where('iec.institucioneducativa = :sie')
+                       ->andWhere('iec.nivelTipo = :idnivel')
+                       ->andwhere('iec.gestionTipo = :gestion')
+                       ->andWhere('iec.gradoTipo in (:arrgrados)')
+                       ->setParameter('sie', $institucion->getId())
+                       ->setParameter('idnivel', 13)
+                       ->setParameter('gestion', $gestion)
+                       ->setParameter('arrgrados', array(3,4,5,6))
+                       ->distinct()
+                       ->orderBy('iec.gradoTipo', 'ASC')
+                       ->getQuery();
+                       // dump($query->getSQL());die;
+               $objGrados = $query->getResult();
+               $arrGrados = array();
+               foreach ($objGrados as $data) {
+                   $arrGrados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
+               }
+                $arrGrados = array();
+                foreach ($objGrados as $data) {
+                    $arrGrados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
+                }
+                $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$institucion_id));
+                if(!$objrehabilitationbth){
+                    $gestion = 2018;
+                }
+                $especialidades_adicionar=$this->obtieneespecialidadesrestantes($institucion_id,$gestion);
 
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
                     'ieducativa'    => $infoUe,
@@ -997,7 +1075,10 @@ class SolicitudBTHController extends Controller {
                     'tipoTramite'   =>$tipoTramite,
                     'tramite_tipo'  =>trim($tramite_tipo),
                     'flujotipo'     => $flujotipo->getId(),
-                    'grado'         =>$grado
+                    'grado'         =>$grado,
+                    'grados'        => $arrGrados,
+                    'especialidad_adicionar'  => $especialidades_adicionar,
+
                 ));
 
     }
@@ -1462,6 +1543,8 @@ class SolicitudBTHController extends Controller {
             ->getQuery()
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $gradoSelected = isset($datos[5]['grado'])?$datos[5]['grado']:'';
+        // dump($datos[5]['grado']);die;
         /**
          * EL DEPARTAMENTO YA NO ENVIA UN INFORME EN CASO DE DEVOLUCION)
          */
@@ -1491,15 +1574,11 @@ class SolicitudBTHController extends Controller {
                 $query->execute();
                 $grado = $query->fetch(); //dump($institucion_id);die;
 
-                if($grado){
-                     if ((int)$grado['grado_tipo_id'] < 6){
-                    $grado = (int)$grado['grado_tipo_id']+1;
-                    }else{
-                    $grado = (int)$grado['grado_tipo_id'];
-                    }
-                } else{
-                    $grado = 3;
-                } 
+                if ($gradoSelected == 3 or $gradoSelected == 4) {
+                    $estado_grado_tipo = 7;
+                } elseif ($gradoSelected == 5 or $gradoSelected == 6) {
+                    $estado_grado_tipo = 1;
+                }
         return $this->render('SieHerramientaBundle:SolicitudBTH:FormularioBTHDis.html.twig',array(
             'ieducativa'    => $infoUe,
             'institucion'   => $institucion,
@@ -1512,7 +1591,7 @@ class SolicitudBTHController extends Controller {
             'informe'       =>$informe,
             'id_tramite'    =>$id_tramite,
             'documento'     =>$documento,
-            'grado'         =>$grado
+            'grado'         =>$gradoSelected
         ));
     }
 //Departamental
@@ -1843,6 +1922,15 @@ class SolicitudBTHController extends Controller {
                                     $em->persist($entity);
                                     $em->flush();
                                 }
+                                 $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$institucionid));
+                                 
+
+                                 if($objrehabilitationbth){
+                                    $rehabilitacion = $em->getRepository('SieAppWebBundle:RehabilitacionBth')->find($objrehabilitationbth[0][1]);
+                                    $rehabilitacion->setFechaFin(new \DateTime(date('Y-m-d')));
+                                    $em->persist($rehabilitacion);
+                                    $em->flush();
+                                 }
                             } else {
                                 // En caso de ratificacion
                                 // Se consulta si la UE quiere ratificar para una gestion nueva o en la misma gestion
@@ -1860,25 +1948,11 @@ class SolicitudBTHController extends Controller {
                                 $ultima_gestion = $grado_ue[1]['gestion'];
                                 $gestion_actual =  $request->getSession()->get('currentyear');
                                 if ($ultima_gestion<$gestion_actual) {
-                                    //Si la UE ya se encuentra como BTH en alguna gestion pasada se hace un nuevo registro con la gestion actual
-                                    if($ultima_gestion == 2018){
-                                        if ($grado_ue[1]['grado_tipo_id'] < 6) {
-                                            $grado_tipo_id = $grado_ue[1]['grado_tipo_id'] + 1;
-                                            if ($grado_tipo_id == 3 or $grado_tipo_id == 4) {
+                                        if ($gradoSelected == 3 or $gradoSelected == 4) {
                                                 $estado_grado_tipo = 7;
-                                            } else {
-                                                if ($grado_tipo_id == 5 or $grado_tipo_id == 6) {
-                                                    $estado_grado_tipo = 1;
-                                                }
-                                            }
-                                        } else {
-                                            $grado_tipo_id = 6;
+                                        } elseif ($gradoSelected == 5 or $gradoSelected == 6) {
                                             $estado_grado_tipo = 1;
                                         }
-                                    }else{
-                                      $grado_tipo_id = 3;
-                                      $estado_grado_tipo = 7;
-                                    }
 
                                     //Adecuacion: se actualizan los datos de la Unidad Educativa al finalizar el tramite
                                     $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
@@ -1886,7 +1960,7 @@ class SolicitudBTHController extends Controller {
                                     $institucionBth->setInstitucioneducativaId($institucionid);
                                     $institucionBth->setInstitucioneducativa($datosUe['institucioneducativa']);
                                     $institucionBth->setEsimpreso(false);
-                                    $institucionBth->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_tipo_id));//3
+                                    $institucionBth->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($gradoSelected));//3
                                     $institucionBth->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
                                     $institucionBth->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find($estado_grado_tipo));//7
                                     $em->persist($institucionBth);
@@ -1894,7 +1968,7 @@ class SolicitudBTHController extends Controller {
                                     // check if the Ue has RehabilitacionBth data
                                     $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$institucionid));
                                     // if the UE has RehabilitacionBth data remove the specialities
-                                    if($objrehabilitationbth){
+                                    /*if($objrehabilitationbth){
                                         ///remove the speciality to save the new specialities
                                         $objSpeciality = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array(
                                             'institucioneducativa'=> $institucionid,
@@ -1905,7 +1979,7 @@ class SolicitudBTHController extends Controller {
                                             $em->remove($value);
                                         }
                                         $em->flush();
-                                    }
+                                    }*/
 
                                     for ($i = 0; $i < count($datos[2]['select_especialidad']); $i++) {
                                         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_especialidad_tecnico_humanistico');")->execute();
@@ -1921,41 +1995,20 @@ class SolicitudBTHController extends Controller {
                                         $em->persist($entity);
                                         $em->flush();
                                     }
-                                } elseif ($ultima_gestion==$gestion_actual) {
-                                    //Adecuacion: se actualizan los datos de la Unidad Educativa al finalizar el tramite
-                                    if($ultima_gestion == 2018){
-                                        if ($grado_ue[1]['grado_tipo_id'] < 6) {
-                                            $grado_tipo_id = $grado_ue[1]['grado_tipo_id'] + 1;
+                                   $objrehabilitationbth = $this->getUeRehabilitation(array('sie'=>$institucionid));
 
-                                            if ($grado_tipo_id == 3 or $grado_tipo_id == 4) {
-                                                $estado_grado_tipo = 7;
-                                            } else {
-                                                if ($grado_tipo_id == 5 or $grado_tipo_id == 6) {
-                                                    $estado_grado_tipo = 1;
-                                                }
-                                            }
-                                        } else {
-                                            $grado_tipo_id = 6;
-                                            $estado_grado_tipo = 1;
-                                        }
-                                    } else {
-                                            $grado_tipo_id = 3;
-                                            $estado_grado_tipo = 7;
-                                    }
+                                 if($objrehabilitationbth){
+                                    $gestion_buscar = 2019;
+                                 } else {
+                                    $gestion_buscar = 2018;
+                                 }
 
-                                    $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
-                                    $institucionBth->setGestionTipoId($this->session->get('currentyear'));
-                                    $institucionBth->setInstitucioneducativaId($institucionid);
-                                    $institucionBth->setInstitucioneducativa($datosUe['institucioneducativa']);
-                                    $institucionBth->setEsimpreso(false);
-                                    $institucionBth->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_tipo_id));//3
-                                    $institucionBth->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
-                                    $institucionBth->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find($estado_grado_tipo));//7
-                                    $em->persist($institucionBth);
-                                    $em->flush();
-                                    for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
-                                        $entity = new InstitucioneducativaEspecialidadTecnicoHumanistico();
-                                        $idespecialidad = $datos[2]['select_especialidad'][$i];
+                                 $query = $em->getConnection()->prepare("SELECT especialidad_tecnico_humanistico_tipo_id from institucioneducativa_especialidad_tecnico_humanistico WHERE institucioneducativa_id = $institucionid and gestion_tipo_id = $gestion_buscar");
+                                $query->execute();
+                                $especialidades_adicionar_bth = $query->fetchAll();
+                                foreach ($especialidades_adicionar_bth as $key => $value) {
+                                  $entity = new InstitucioneducativaEspecialidadTecnicoHumanistico();
+                                        $idespecialidad = $value['especialidad_tecnico_humanistico_tipo_id'];
                                         $espe = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($idespecialidad);
                                         $ue = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucionid);
                                         $gestiontipo = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear'));
@@ -1965,8 +2018,11 @@ class SolicitudBTHController extends Controller {
                                         $entity->setFechaRegistro(new \DateTime(date('Y-m-d')));
                                         $em->persist($entity);
                                         $em->flush();
-                                    }
                                 }
+
+                                
+
+                                } 
                             }
                             // fin else
                             // FIN DE volcado a la base de datos
