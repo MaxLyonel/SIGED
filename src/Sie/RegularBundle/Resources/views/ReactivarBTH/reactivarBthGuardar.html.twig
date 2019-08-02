@@ -18,6 +18,8 @@
                             <th>Fecha de inicio de Trámite</th>
                             <th>Fecha de Finalización</th>
                             <th>Grado aprobado</th>
+                            <th>Seguimiento</th>
+                            <th>Historial</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +32,11 @@
                                 <td>{{t.fechaRegistro|date('d-m-Y')}}</td>
                                 <td>{{t.fechaFin|date('d-m-Y')}}</td>
                                 <td>{{t.grado}}</td>
+                                <th><a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Seguimiento" onclick="detalle({{t.id}},{{t.flujoTipoId}})">
+                                            <i class="fa fa-list"></i>
+                                    </a>
+                                </th>
+                                <td></td>
                             </tr>
                         {% endfor %}
                     </tbody>

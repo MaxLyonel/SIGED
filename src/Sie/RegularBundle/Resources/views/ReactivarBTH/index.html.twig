@@ -1,5 +1,10 @@
 {% extends 'layoutRegular.html.twig' %}
 {% block contentoption %}
+    <style>
+        .modal-dialog{
+            width: 70%;
+        }
+    </style>
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
@@ -65,7 +70,8 @@
     <div class="col-md-12" id="contenido" >
     </div>
 </div>
-
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+</div><!-- /.modal -->
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -111,6 +117,22 @@
                 }
             });
             
+        }
+        function detalle(id,flujo){
+            formData = {id: id,flujo:flujo};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('wf_tramite_recibido_detalle')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
         }
 
     </script>
