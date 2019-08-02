@@ -363,3 +363,7 @@ sie_regular_promedio_calidad:
 sie_regular_review_up_sie_file:
     resource: "@SieRegularBundle/Resources/config/routing/ReviewUpSieFile.yml"
     prefix:   /sie/reviewupsiefile
+
+sie_regular_tramite_aceleracion:
+    resource: "@SieRegularBundle/Resources/config/routing/tramiteAceleracion.yml"
+    prefix:   /sie/tramiteacelera

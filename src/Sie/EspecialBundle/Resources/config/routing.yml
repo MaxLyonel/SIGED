@@ -62,10 +62,6 @@ sie_especial_talento_extraordinario:
     resource: "@SieEspecialBundle/Resources/config/routing/talentoExtraordinario.yml"
     prefix:   /espsie/talento
 
-sie_especial_tramite_aceleracion:
-    resource: "@SieEspecialBundle/Resources/config/routing/tramiteAceleracion.yml"
-    prefix:   /sie/tramiteacelera
-
 index:
     path:     /index
     defaults: { _controller: SieEspecialBundle:InfoEspecial:index }
