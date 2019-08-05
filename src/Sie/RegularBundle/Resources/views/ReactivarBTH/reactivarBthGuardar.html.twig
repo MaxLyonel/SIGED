@@ -36,7 +36,11 @@
                                             <i class="fa fa-list"></i>
                                     </a>
                                 </th>
-                                <td></td>
+                                <td>
+                                <a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Seguimiento" onclick="historial({{t.id}},{{t.codsie}})">
+                                            <i class="fa fa-list"></i>
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
