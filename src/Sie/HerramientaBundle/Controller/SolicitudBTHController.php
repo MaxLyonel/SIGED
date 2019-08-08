@@ -399,8 +399,7 @@ class SolicitudBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
       $query = $em->getConnection()->prepare("SELECT ieht.grado_tipo_id as grado
                      FROM institucioneducativa_humanistico_tecnico ieht
-                     WHERE ieht.institucioneducativa_id = $id_Institucion and institucioneducativa_humanistico_tecnico_tipo_id in(7,1)
-                                         and  gestion_tipo_id < $gestion
+                     WHERE ieht.institucioneducativa_id = $id_Institucion and  gestion_tipo_id < $gestion
                      ORDER BY gestion_tipo_id DESC LIMIT 1 ");
             $query->execute();
             $ue_verificada = $query->fetchAll();  //dump($ue_verificada);die;
