@@ -1,13 +1,13 @@
 solicitud_bth_index:
     path:     /
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:index }
-solicitud_bth_nuevasolicitud:
-    path:     bthnuevasolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nuevasolicitud }
-solicitud_bth_enviosolicitud:
-    path:     bthenviosolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
-    methods:  POST
+# solicitud_bth_nuevasolicitud:
+#     path:     bthnuevasolicitud/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nuevasolicitud }
+# solicitud_bth_enviosolicitud:
+#     path:     bthenviosolicitud/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
+#     methods:  POST
 solicitud_bth_imprimeDirector:
     path:     bhtimprimeFormulario/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:imprimirDirector}
@@ -43,8 +43,14 @@ solicitud_bth_departamental_finaliza:
     path:     bthsolicitudDepartamentalfinalizatramite/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:finalizatramiteBTHDep }
 
-
-
+#Rutas para el nuevo
+solicitud_bth_nuevasolicitud:
+    path:     nueva/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nueva }
+solicitud_bth_enviosolicitud:
+    path:     guarda/nuevo/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardaNuevo }
+    methods:  POST
 
 
 
