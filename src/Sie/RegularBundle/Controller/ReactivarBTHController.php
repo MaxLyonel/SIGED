@@ -225,4 +225,146 @@ class ReactivarBTHController extends Controller {
         return $this->redirectToRoute('reactivarbth_index');
 
     }
+    public function historialBTHAction(Request $request){
+        //$datosUeTramite = $this->obtenerDatosTramiteUe($request->get('id'));
+        $datosUe = $this->obtenerInformacionUE($request->get('id'),$request->get('sie'));
+        $obtenerDatosTramiteUe = $this->obtenerInformacionTramite($request->get('id'));
+        //dump($datosUe['ubicacionUe']['institucioneducativa']);die;
+        return $this->render('SieRegularBundle:ReactivarBTH:historial.html.twig',array(
+        'idtramite'     => $request->get('id'),
+        'institucion'   => $request->get('sie'),
+        'institucioneducativa'   => $datosUe['ubicacionUe']['institucioneducativa'],
+        'ubicacion'   => $datosUe['ubicacionUe'],
+        'director'      => $datosUe['director'],
+        'especialidadarray'=> $obtenerDatosTramiteUe['especialidades'],
+        'grado'         => $obtenerDatosTramiteUe['grado'],
+        'documentoDistrito'=>$obtenerDatosTramiteUe['documentoDistrito'],
+        'documentoDepartamento'=>$obtenerDatosTramiteUe['documentoDepartamento']));
+    }
+    public function obtenerInformacionUE($tramiteId,$sie){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
+            FROM tramite trm 
+            INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+            INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+            WHERE trm.id=$tramiteId
+            ORDER BY wfsol.id DESC limit 1");
+        $query->execute();
+        $infoUE = $query->fetch();
+        $gestion    = $infoUE['gestion_id'];
+        //Datos de Ubicacion de la UE
+        $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
+        $query = $repository->createQueryBuilder('jg')
+            ->select('lt4.codigo AS codigo_departamento,
+                        lt4.lugar AS departamento,
+                        lt3.codigo AS codigo_provincia,
+                        lt3.lugar AS provincia,
+                        lt2.codigo AS codigo_seccion,
+                        lt2.lugar AS seccion,
+                        lt1.codigo AS codigo_canton,
+                        lt1.lugar AS canton,
+                        lt.codigo AS codigo_localidad,
+                        lt.lugar AS localidad,
+                        dist.id AS codigo_distrito,
+                        dist.distrito,
+                        orgt.orgcurricula,
+                        dept.dependencia,
+                        jg.id AS codigo_le,
+                        inst.id,
+                        inst.institucioneducativa,
+                        lt.area2001,
+                        estt.estadoinstitucion,
+                        jg.direccion,
+                        jg.zona')
+            ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
+            ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
+            ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
+            ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
+            ->join('SieAppWebBundle:DependenciaTipo', 'dept', 'WITH', 'inst.dependenciaTipo = dept.id')
+            ->where('inst.id = :idInstitucion')
+            ->andWhere('inss.gestionTipo in (:gestion)')
+            ->setParameter('idInstitucion', $sie)
+            ->setParameter('gestion', $gestion)
+            ->getQuery();
+        $ubicacionUe = $query->getSingleResult();
+        //Datos del Director de la Unidad Educativa
+        $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
+        $query = $repository->createQueryBuilder('mins')
+            ->select('per.carnet, per.paterno, per.materno, per.nombre')
+            ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
+            ->where('mins.institucioneducativa = :idInstitucion')
+            ->andWhere('mins.gestionTipo = :gestion')
+            ->andWhere('mins.cargoTipo IN (:cargo)')
+            ->andWhere('mins.esVigenteAdministrativo = :esvigente')
+            ->setParameter('idInstitucion', $sie)
+            ->setParameter('gestion', $gestion)
+            ->setParameter('cargo', array(1,12))
+            ->setParameter('esvigente', true)
+            ->setMaxResults(1)
+            ->getQuery();
+        $director = $query->getOneOrNullResult();
+        return array('ubicacionUe' => $ubicacionUe ,'director' => $director);
+    }
+    public function obtenerInformacionTramite($tramiteId){
+        $em = $this->getDoctrine()->getManager();
+        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+        ->select('wf')
+        ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+        ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+        ->where('t.id =' . $tramiteId)
+        ->orderBy('wf.id', 'desc')
+        ->setMaxResults('1')
+        ->getQuery()
+        ->getResult();
+        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $especialidadarray = array();
+        foreach ($datos[2]['select_especialidad'] as $value) {
+            $especialidad = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->findOneById($value);
+            $especialidadarray[] = $especialidad->getEspecialidad();
+        }
+        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+        ->select('wfd')
+        ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+        ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+        ->where('td.tramite='.$tramiteId)
+        ->andWhere('fp.orden in (3,5)')
+        ->andWhere("wfd.esValido=true")
+        ->orderBy("td.flujoProceso")
+        ->getQuery()
+        ->getResult();
+        $documentoDistrito = json_decode($resultDatos[0]->getDatos(),true);
+        $documentoDepartamento =json_decode($resultDatos[1]->getDatos(),true);
+        return array('especialidades' => $especialidadarray ,
+            'grado' => ($datos[5]['grado'])?$datos[5]['grado']:'',
+            'documentoDistrito'=>$documentoDistrito[5],
+            'documentoDepartamento'=>$documentoDepartamento[6]);
+    }
 }
+/*
+$em = $this->getDoctrine()->getManager();
+        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+        ->select('wfd')
+        ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+        ->where('td.tramite='.$tramiteId)
+        ->andWhere("wfd.esValido=true")
+        ->orderBy("td.flujoProceso")
+        ->getQuery()
+        ->getResult();
+
+$resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+->select('wfd')
+->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+->where('td.tramite='.$tramite_id)
+->andWhere('fp.orden=1')
+->andWhere("wfd.esValido=true")
+->orderBy("td.flujoProceso")
+->getQuery()
+->getSingleResult();
+        */

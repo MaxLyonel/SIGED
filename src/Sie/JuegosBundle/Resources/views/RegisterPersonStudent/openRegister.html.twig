@@ -1,65 +1,100 @@
- <div class="modal-dialog modal-lg modal-photo-viewer">
+
+
+
+<div class="modal-dialog modal-lg modal-photo-viewer">
 
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Busqueda</h4>
+                        <h4 class="modal-title">Comisión</h4>
                     </div>
                     <div class="modal-body no-padding">
-                    {% if showOptionRegister %}
+                        <div class="row">                             
+                            <div class="table-responsive mb-20">
+                                <table class="table" id="tablecouch">
+                                    <thead>
+                                        <tr>
+                                            <th>Carnet</th>
+                                            <th>Complemento</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(s)</th>
+                                            <th>Tipo</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for key, data in dataComision %}
+                                            {% set comision = data.comision %}
+                                            {% set nombre = data.nombre %}
+                                            {% set paterno = data.paterno %}
+                                            {% set materno = data.materno %}
+                                            {% set carnet = data.carnet %}
+                                            {% set idRemove = data.idRemove %}
+                                            {% set complemento = data.complemento %}                                            
+                                            {% if data.complemento == "" %}
+                                                {% set ci = data.carnet %}
+                                            {% else %}
+                                                {% set ci = data.carnet~'-'~data.complemento%}
+                                            {% endif %}
+                                            <tr id="row{{ key }}">
+                                                <td>{{carnet}}</td>
+                                                <td>{{complemento}}</td>
+                                                <td>{{paterno}}</td>
+                                                <td>{{materno}}</td>
+                                                <td>{{nombre}}</td>
+                                                <td>{{comision}}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-form" onclick="removeCouch('{{idRemove}}',{{key}});" >
+                                                        <i class="fa fa-remove"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div><!-- /.table-responsive -->
+                                <!--/ End basic table -->                       
+                        </div>
 
-
-                        {{form_start(form,{'attr':{'id':'formLookForPersonId' }} )}}
-
-
-		            <div class="panel rounded shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title"></h3>
-                            </div>
-                            
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body no-padding">
-
-                            
-                                <div class="form-body">
-                                   
-
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                            	{{form_widget(form.carnet)}}
+                        {% if showOptionRegister %}
+                        <!-- Start condensed table -->                        
+                            {{form_start(form,{'attr':{'id':'formLookForPersonId' }} )}}
+                                <div class="panel panel-info rounded shadow">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h4 class="panel-title">Buscar persona</h4>
+                                        </div>                                    
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="form-body">     
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        {{form_widget(form.carnet)}}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{form_widget(form.complemento)}}
+                                                    </div>
+                                                </div>
+                                            </div>                                    
+                                        </div><!-- /.form-body -->
+                                        <div class="form-footer">
+                                            <div class="pull-right">
+                                                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                                {{form_widget(form.find)}}                                        
                                             </div>
-                                            <div class="col-md-6">
-                                                {{form_widget(form.complemento)}}
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                
-                                </div><!-- /.form-body -->
-                                <div class="form-footer">
-                                    <div class="pull-right">
-                                        <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
-                                        {{form_widget(form.find)}}                                        
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div><!-- /.form-footer -->
-                            
-
-                        </div><!-- /.panel-body -->
-                    </div>
-
-
-		            {{form_end(form)}}
-                    {% else %}
-                    <div class="alert alert-warning">
-                        <strong>Entrenador registrado</strong> 
-                    </div>
-                        
-                    {% endif %}
-
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.form-footer -->   
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            {{form_end(form)}}
+                        {% else %}
+                            <div class="alert alert-warning">
+                                <strong>Entrenador registrado</strong> 
+                            </div>                            
+                        {% endif %}
                     </div>
 					<div id="idPersonData">
 					</div>

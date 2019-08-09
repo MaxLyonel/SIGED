@@ -134,6 +134,23 @@
                 },
             });
         }
+        function historial(id,sie){
+            formData = {id: id,sie:sie};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('reactivarbth_historial')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    //console.log(data);
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
+        }
 
     </script>
 {% endblock %}

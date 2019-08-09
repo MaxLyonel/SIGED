@@ -248,4 +248,60 @@ class JdpPruebaRegla
     {
         return $this->pruebaTipo;
     }
+    /**
+     * @var integer
+     */
+    private $comisionCupoInscripcion;
+
+    /**
+     * @var integer
+     */
+    private $comisionCupoPresentacion;
+
+
+    /**
+     * Set comisionCupoInscripcion
+     *
+     * @param integer $comisionCupoInscripcion
+     * @return JdpPruebaRegla
+     */
+    public function setComisionCupoInscripcion($comisionCupoInscripcion)
+    {
+        $this->comisionCupoInscripcion = $comisionCupoInscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get comisionCupoInscripcion
+     *
+     * @return integer 
+     */
+    public function getComisionCupoInscripcion()
+    {
+        return $this->comisionCupoInscripcion;
+    }
+
+    /**
+     * Set comisionCupoPresentacion
+     *
+     * @param integer $comisionCupoPresentacion
+     * @return JdpPruebaRegla
+     */
+    public function setComisionCupoPresentacion($comisionCupoPresentacion)
+    {
+        $this->comisionCupoPresentacion = $comisionCupoPresentacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get comisionCupoPresentacion
+     *
+     * @return integer 
+     */
+    public function getComisionCupoPresentacion()
+    {
+        return $this->comisionCupoPresentacion;
+    }
 }

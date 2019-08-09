@@ -9,6 +9,10 @@ reactivarbth_buscar_nuevo:
 reactivarbth_buscar_nuevo_guardar:
     path:     /buscaTramiteBTH/guardar
     defaults: { _controller: SieRegularBundle:ReactivarBTH:buscaTramiteBTHGuardar }
-    
+
+reactivarbth_historial:
+    path:     /historialBTH/
+    defaults: { _controller: SieRegularBundle:ReactivarBTH:historialBTH }
+
 
 
