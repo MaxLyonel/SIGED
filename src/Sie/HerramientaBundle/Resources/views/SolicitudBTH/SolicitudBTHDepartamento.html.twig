@@ -1,0 +1,472 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Solicitudes BTH  <span>Solicitud BTH </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Solicitud BTH</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Index</li>
+            </ol>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"> Nro. Trámite: <strong>{{ id_tramite}}</strong>  - Formulario de Solicitud BTH </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">1.- Personal Administrativo </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <b>Director(a)</b>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    {{ director.paterno ~' '~ director.materno ~' '~ director.nombre }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Carnet de Identidad</b>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    {{ director.carnet }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">2.- Información General</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            {% set iedu = ieducativa[0] %}
+                                            {% set iedusu = ieducativa[1] %}
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <b>Código RUE</b>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    {{ institucion.id }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Unidad Educativa</b>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    {{ iedu.institucioneducativa }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Localización</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <b>Departamento</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ ubicacion['departamento'] }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Localidad</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ ubicacion['localidad'] }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Cantón</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ ubicacion['canton'] }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Zona</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ ubicacion['zona'] }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Distrito</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ ubicacion['distrito'] }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <b>Dirección</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ ubicacion['direccion'] }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">4.- Cumplimiento de Requisitos</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <b>Informe</b>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="ckbox ckbox-theme">
+                                                        <input id="informe"  type="checkbox" disabled>
+                                                        <label for="informe"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">5.- Grado</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="alert alert-info">
+                                                <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                                <div class="notification-info">
+                                                    <b>Nota</b> Una vez aprobada la solicitud BTH con el año de escolaridad correcto, por ningún motivo se retirarán de la formación Técnica Tecnológica del Bachillerato Técnico Humanístico en ningún año de escolaridad.
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <b>Año de Escolaridad a implementar BTH:</b><br>
+                                                    <b><span>Nivel: Secundario</span></b>
+                                                </div>
+                                                <div class="col-md-6 text-center">
+                                                    <p><b>Grado</b></p>
+                                                    <p style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">6.- Especialidad</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>Especialidades Ratificadas</strong>
+                                                </div>
+                                                <div class="col-md-3">
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="form-control" multiple  >
+                                                        {% for especialidadarray in especialidadarray %}#}
+                                                            <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">7.- Evaluación Distrital</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <b>¿Solicitud Procedente?</b>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="siprocede" type="radio" name="radiotype1" checked>
+                                                        <label for="siprocede"><b>Si</b></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <b>Documento adjunto</b>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <a class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~institucion.id~'/'~'bth/'~ documento )}}" target="_blank">
+                                                        <i class="fa fa-file-pdf-o fa-2x" ></i> Informe Enviado por la Dirección Distrital
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">8.- Evaluación Departamental</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="alert alert-warning">
+                                                <b>Nota.-</b> Se recomienda adjuntar el informe de aprobación al Sistema de Información Educativa de las unidades educativas Técnico Humanísticas Plenas. <br>
+                                                <b> El archivo no debe superar a los 2MB</b>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <b>¿Autoriza a la Unidad Educativa como BTH?</b>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="siprocededep" type="radio" name="radiotypedep" value="si"  onclick="muestraobs()" checked>
+                                                        <label for="siprocededep"><b>Si</b></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="noprocededep" type="radio" name="radiotypedep" value="no" onclick="muestraobs()">
+                                                        <label for="noprocededep"><b>No</b></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" id="documento">
+                                                <div class="col-md-12">
+                                                    <div class="pull-left">
+                                                        <label for="adjdocumento">
+                                                        <i class="fa fa-cloud-upload"></i> <b>Adjuntar Informe</b>
+                                                        </label>
+                                                        <input type="file" id="adjdocumento" title="Adjuntar Informe" accept="application/pdf,.doc,.docx">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row" id="NOBTH" style="display: none;">
+                                                <div class="col-md-12">
+                                                    <strong>¿Desea hacer la devolución del trámite al Técnico SIE Distrital correspondiente, para su corrección? </strong>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="sidevolucion" type="radio" name="radiotypedevolucion" value="si" onclick="muestraobs2()" checked>
+                                                        <label for="sidevolucion"><strong>Si</strong></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="nodevolucion" type="radio" name="radiotypedevolucion" value="no" onclick="muestraobs2()" >
+                                                        <label for="nodevolucion"><strong>No</strong></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8" id="obs" style="display: none">
+                                                    <textarea class="form-control" rows="5" id="obstxt" placeholder="Escriba la observación en caso de caso de devolución."></textarea>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row" id="nota" style="display: none">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-danger">
+                                                        <strong>Nota.-</strong> Al cancelar el támite de la Unidad Educativa: {{ iedu.institucioneducativa }} <b>NO</b> se autorizará para trabajar como BTH.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <button class="btn btn-sm btn-facebook" id="btn_accion" title="Finalizar Solicitud" onclick="verificaenviarsolicitud()"><i class="fa fa-send"></i> Finalizar Solicitud</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+    <script>
+        $(document).ready(function(){
+            var informe = {{ informe }}
+                if(informe==1){
+                    document.getElementById("informe").checked = true;
+                }
+            $('#NOBTH').hide();
+            $('#adjdocumento').change(function() {
+                var a=(this.files[0].size);
+                if(a > 2057157) {
+                    swal("El documento adjunto supera a los 2MB");
+                    $('#adjdocumento').val('');
+                };
+            });
+        });
+        function muestraobs(){
+            var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+            var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+            if(respuesta=='si'){
+                $('#NOBTH').hide();
+                $('#documento').show();
+                $('#btn_accion').prop('title','Finalizar Solicitud');
+                $('#nota').hide();
+            }else {
+                $('#NOBTH').show();
+                $('#obs').show(2000);
+                $('#documento').hide();
+                $('#btn_accion').prop('title','Enviar Solicitud');
+
+                if(respuesta2=='no'){
+                    $('#obs').hide();
+                    $('#nota').show();
+                }
+            }
+        }
+        function muestraobs2(){
+            var respuesta=$('input:radio[name=radiotypedevolucion]:checked').val();
+            if(respuesta=='si'){
+                $('#obs').show(2000);
+                $('#btn_accion').prop('title','Finalizar Solicitud');
+                $('#nota').hide();
+            }else {
+                $('#obs').hide();
+                $('#btn_accion').prop('title','Enviar Solicitud');
+                $('#nota').show();
+            }
+        }
+
+        function verificaenviarsolicitud() {
+            var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+            var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+            if(respuesta == 'no' && respuesta2 == 'no' ){
+                var msj = '{{ id_tramite }}';
+                if(confirm('Al seleccionar la opción NO en ambas preguntas, el trámite será cancelado.¿Esta seguro de cancelar el tramite: '+ msj +'?')){
+                    enviarSolicituDepartamentaldbth();
+                    //return true;
+                }else{
+                    return false;
+                }
+            }
+           enviarSolicituDepartamentaldbth();
+        }
+        function  enviarSolicituDepartamentaldbth() {
+            swal({
+                title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                text: "La información llenada será enviada a la instancia correspondiente.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Continuar"],
+            })
+                .then(function(willDelete)  {
+                    if (willDelete) {
+                        var institucion_id={{ institucion.id }};
+                        var ip = [];
+                        if($('#informe:checked').val())
+                            ip.push({ informe : 1});
+                        else ip.push({ informe : 0 });
+                        ip.push({institucionid : institucion_id});
+                        var especialidades_id = [];
+                        $("#select_especialidad").find("option").each(function(index, opc){
+                            especialidades_id.push(opc.value);
+                        });
+                        ip.push({"select_especialidad" : especialidades_id});
+                        var obstxt=$('#obstxt').val();
+                        if($('#siprocede').is(':checked')) {
+                            ip.push({siprocededis: 1})
+                        } else {
+                            ip.push({noprocededis: 0})
+                        }
+                        if($('#sidevolucion').is(':checked')) {
+                            ip.push({sidevolucion: 1})
+                        } else {
+                            ip.push({nodevolucion: 0})
+                        }
+                        var evaluacion  = "NO";
+                        if($('#siprocededep:checked').val())
+                                { evaluacion  ="SI";}
+                         //evaluacion 2
+                        var evaluacion2  = "NO";
+                        if($('#sidevolucion:checked').val())
+                                { evaluacion2  ="SI";}
+                        //validacion checked autoriza u.e.
+                        var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+                        var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+                        if(respuesta == 'si'){
+                            if($('#adjdocumento').val()=="")
+                            {swal("Debe adjuntar su informe de respuesta.");
+                                return false;}
+                        }
+                        //validacion para la observacion
+                        if(respuesta2 == 'si' && respuesta == 'no' ){
+                            if(obstxt == ''){
+                                swal("Debe introducir alguna observación");
+                                return false;}
+                        }
+
+                        /*if(respuesta == 'si'&& (respuesta2 == 'si'||respuesta2 == 'no')  ){
+
+                        }else{
+                            if(respuesta=='no' && respuesta2=='no'){
+                            }else{
+                                if(obstxt == ''){
+                                    swal("Debe introducir alguna observación");
+                                    return false;}
+                            }
+                        }*/
+
+                        ip.push({grado:{{grado}}});
+                        var ipt=JSON.stringify(ip);
+                        var imagen = '{{ asset("img/loading96.gif") }}';
+                        var fd = new FormData();
+                        fd.append('ipt', ipt);
+                        fd.append('id_distrito', {{ ubicacion['codigo_distrito'] }});
+                        fd.append('evaluacion', evaluacion);
+                        fd.append('institucionid', {{ institucion.id }});
+                        fd.append('id_tramite', {{ id_tramite}});
+                        fd.append('obstxt', obstxt);
+                        fd.append('evaluacion2', evaluacion2);                        
+                        var docpdf = document.getElementById('adjdocumento');
+                        fd.append('docpdf', docpdf.files[0]);
+                        $.ajax({
+                            type: 'post',
+                            url: "{{ path('solicitud_bth_guarda_Dep') }}",
+                            data: fd,
+                            mimeType:"multipart/form-data",
+                            dataType : 'json',
+                            contentType: false,
+                            cache: false,
+                            processData:false,
+                            beforeSend: function () {
+                                swal({
+                                    title: "Finalizando Trámite...",
+                                    text: "Espere un momento por favor",
+                                    icon: imagen,
+                                    buttons: false
+                                });
+                            },
+                            success: function (data) {console.log(data);
+                                if (data.estado=='1'){
+                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }});
+                                    location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                                }else if(data.estado == 4){
+                                    swal(data.msg);
+                                }
+                                else{
+                                    swal("Su respuesta no se envío correctamente");
+                                }
+                            },
+                            complete: function () {
+                                swal.stopLoading();
+                                swal.close();
+                            }
+                        });
+                    }
+                });
+
+        }
+    </script>
+{% endblock %}

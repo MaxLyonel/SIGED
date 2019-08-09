@@ -178,6 +178,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% if sw == 1 %}
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <b>Documento adjunto</b><br>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <a class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~institucion.id~'/bth/'~ documento )}}" target="_blank">
+                                                <i class="fa fa-file-pdf-o fa-2x" ></i> Informe Enviado por la Dirección Distrital
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                     <div class="row">
                                         <div class="col-md-12 text-center"><br/>
                                             <button type="submit" class="btn btn-sm btn-facebook" id="enviar_solicitud_bth_nuevo" title="Enviar Solicitud"><i class="fa fa-send"></i> Enviar a Dirección Distrital</button>
@@ -226,15 +238,15 @@
                                     <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                                     <div class="notification-info">
                                         <p>
-                                            El trámite no se pudo iniciar por las siguientes razones: 
+                                            El trámite no se puede iniciar por las siguientes razones: 
                                         </p>
                                         <br>
-                                        <ul>
-                                            <li>1.- La Unidad Educativa debe pertenecer a Educación Regular. </li>
-                                            <li>2.- La Unidad Educativa ya inicio o realizó el trámite de SOLICITUD BTH. </li>
-                                            <li>3.- La Unidad Educativa no tiene el nivel secundario habilitado.</li>
-                                            <li>4.- El director de la Unidad Educativa no se encuentra vigente en la gestión actual. </li> 
-                                        </ul>    
+                                        <ol>
+                                            <li>La Unidad Educativa debe pertenecer a Educación Regular.</li>
+                                            <li>La Unidad Educativa ya inicio o realizó el trámite de SOLICITUD BTH.</li>
+                                            <li>La Unidad Educativa no tiene el nivel secundario habilitado.</li>
+                                            <li>El director de la Unidad Educativa no se encuentra vigente en la gestión actual.</li> 
+                                        </ol>    
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +269,7 @@
         event.preventDefault();
         swal({
             title: "¿Está Segura/o de enviar los valores introducidos?",
-            text: "Año de Escolaridad a implementar BTH: " +$('#literal_grado').text()+ "\n\nLa información llenada será enviada a la Dirección Distrital. Puede Descargar su comprobante en Trámites Enviados",
+            text: "Año de Escolaridad a implementar BTH: " +$('#literal_grado').text()+ "\n\nLa información llenada será enviada a la Dirección Distrital. Puede Descargar su comprobante en Trámites Enviados.",
             icon: "warning",
             dangerMode: true,
             buttons: ["Cancelar", "Continuar"],
@@ -276,8 +288,11 @@
 
     function enviarSolicitudBth() {
         var idsolicitud = {{ tipo_tramite }};
-        
+        var tipo_sw = {{ sw }};
+        var idflujotipo = {{ idflujo }};
+        var id_distrito = {{ ubicacion['lugarTipoIdDistrito'] }};
         var institucionid = {{ institucion.id }};
+        var tramite_id = {{ tramite_id }};
         var ip = [];
         if($('#informe:checked').val()) {
             ip.push({ informe : 1});
@@ -304,7 +319,7 @@
         $.ajax({
             type: 'post',
             url: "{{ path('solicitud_bth_enviosolicitud') }}",
-            data:{ipt: ipt, id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }}, institucionid: institucionid, idsolicitud: idsolicitud, idflujotipo: {{ idflujo }}, sw: 0},
+            data:{'ipt': ipt, 'id_distrito': id_distrito, 'institucionid': institucionid, 'idsolicitud': idsolicitud, 'idflujotipo': idflujotipo, 'sw': tipo_sw, 'tramite_id': tramite_id},
             dataType : 'json',
             beforeSend: function () {
                 swal({
@@ -326,6 +341,11 @@
                     swal('El trámite no se pudo iniciar \n' + data.msg);
                     $('#enviar_solicitud_bth_nuevo').attr("disabled", false);
                 }
+            },
+            error: function () {
+                $('#enviar_solicitud_bth_nuevo').attr("disabled", false);
+                swal.stopLoading();
+                swal.close();
             },
             complete: function () {
                 swal.stopLoading();
