@@ -37,9 +37,9 @@ class PostBachilleratoController extends Controller {
      */
     public function indexAction() {
         
-        $this->session->getFlashBag()->add('successpost', 'Use el modulo Extranjeros/Inicial/Post Bachillerato...');
-        return $this->redirect($this->generateUrl('post_bachillerato_index'));
-        die('krlos');
+        // $this->session->getFlashBag()->add('successpost', 'Use el modulo Extranjeros/Inicial/Post Bachillerato...');
+        return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+        // die('krlos');
         $em = $this->getDoctrine()->getManager();
 
         $id_usuario = $this->session->get('userId');
