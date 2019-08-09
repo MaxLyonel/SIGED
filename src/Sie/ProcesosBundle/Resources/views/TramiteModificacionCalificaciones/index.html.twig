@@ -5,6 +5,15 @@
         [v-cloak]{
             display: none;
         }
+        .buscador{
+            margin-top: -20px;
+            /* background: #E4E4E4; */
+            padding: 10px;
+        }
+        .encabezado{
+            padding: 5px;
+            /* font-weight: bold; */
+        }
         .estudiante{
             padding: 10px;
             background: #EEEEEE;
@@ -12,16 +21,66 @@
             font-weight: bold;
             font-size: 17px;
         }
+        .jupper{
+            text-transform: uppercase;
+        }
+        [v-cloak]{
+            display: none;
+        }
+        .estudiante{
+            padding: 10px;
+            background: #EEEEEE;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        input[type='text']{
+            /* background: #000000; */
+        }
+        .select-nota:hover{
+            border-color: #ABBDC9;
+            background: #EAFBF1;
+            color: #009900;
+        }
+        .seleccionado{
+            background: #B8F1CA !important;
+        }
+        .headtabla{
+            background: #717171 !important;
+            color: #FFFFFF;
+            border-bottom: none !important;
+        }
+        .check{
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        }
+        h5{
+            font-weight: bold;
+        }
+        .cajaPromedio{
+            font-weight: bold; 
+            /* background:#DDDDDD; */
+            background:#DD5277;
+        }
+        .cajaNota{
+            cursor: pointer;
+        }
+
+        .include{
+            margin: 20px;
+        }
+
     </style>
 
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Solicitud de Modificaciòn y Adiciòn de Calificaciones <span></span></h2>
+        <h2><i class="fa fa-list-alt"></i> Trámites <span>Solicitud de Modificaciòn y Adiciòn de Calificaciones</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href={{ path('tramite_modificacion_calificaciones_index') }}>Solicitud Modificación/Adición de calificaciones</a>
+                    <a href="{{ path('wf_tramite_index') }}">Tramites</a>
+                    {# <a href={{ path('tramite_modificacion_calificaciones_index') }}>Solicitud Modificación/Adición de calificaciones</a> #}
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -29,44 +88,196 @@
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
-    <div class="body-content animated fadeIn">
-        <div id="app">
-            <div class="panel panel-default">
+    <div class="include animated fadeIn">
+        {% if idTramite is not null %}
+            {% include 'SieProcesosBundle:TramiteModificacionCalificaciones:historial.html.twig' with { 'historial': historial} %}
+        {% endif %}
+    </div>
+    <div id="app">
+    <div v-cloak>
+        <div class="body-content animated fadeIn">
+
+            <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Buscar estudiante</h3>
+                    <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Solicitud </h3>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group row">
-                        <div class="col-md-3 text-right">
-                            <label>Código Rude:</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" v-model="codigoRude" v-on:keyup.13="buscarEstudiante">
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-info" type="button" v-on:click="buscarEstudiante()"> <i class="fa fa-search"></i> Buscar estudiante</button>
-                        </div>
-                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="text-center">
+                                <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
+                                <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
+                            </div>
+                            <a class="btn btn-primary" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;"> <i class="fa fa-search"></i> Buscar estudiante </a>
+                            <div class="clearfix"></div>
+                            <div v-if="datos != ''">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">
+                                                <h5>Datos Estudiante</h5>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><th>Código Rude</th><td>${codigoRude}</td></tr>
+                                        <tr><th>Nombre completo</th><td>${estudiante}</td></tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><th>Código SIE</th><td>${sie}</td></tr>
+                                        <tr><th>Unidad Educativa</th><td>${institucioneducativa}</td></tr>
+                                        <tr><th>Nivel</th><td>${nivel}</td></tr>
+                                        <tr><th>Grado</th><td>${grado}</td></tr>
+                                        <tr><th>Paralelo</th><td>${paralelo}</td></tr>
+                                        <tr><th>Turno</th><td>${turno}</td></tr>
+                                        <tr><th>Gestión</th><td>${gestion}</td></tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <h5>
+                                    <b>Detalle de calificaciones</b>
+                                    <a v-if="datos != ''" class="btn btn-primary" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
+                                </h5>
+                                <div v-if="notas.length > 0 || notasCualitativas.length > 0">
+                                    <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="5">Cuantitativas</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="headtabla">Asignatura</th>
+                                                <th class="headtabla">Periodo</th>
+                                                <th class="headtabla">Calificación actual</th>
+                                                <th class="headtabla">Nueva calificación</th>
+                                                <th class="headtabla"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(nota, pos) in notas">
+                                                <td>${nota.asignatura}</td>
+                                                <td>${nota.bimestre}</td>
+                                                <td>${nota.nota}</td>
+                                                <td>
+                                                    <input type="text" class="form-control input-sm" style="width:50px;" v-model.number="nota.notaNueva" v-on:keypress="validarNota" v-on:keyup="validarValorNota(nota)" maxlength="3">
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-default btn-xs" v-on:click="eliminarNota(nota)"> <i class="fa fa-remove"></i>  </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <table v-if="notasCualitativas.length > 0" class="table table-bordered table-striped table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="4">Cualitativas</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="headtabla">Periodo</th>
+                                                <th class="headtabla">Valoración actual</th>
+                                                <th class="headtabla">Nueva valoración</th>
+                                                <th class="headtabla"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(cualitativa, pos) in notasCualitativas">
+                                                <td class="table-cell" style="vertical-align:middle">${cualitativa.bimestre}</td>
+                                                <td>${cualitativa.notaCualitativa}</td>
+                                                <td>
+                                                    <textarea  class="form-control input-sm jupper" cols="17" rows="4" v-model="cualitativa.notaNuevaCualitativa" v-on:keypress="validarNotaCualitativa();"></textarea>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-default btn-xs" v-on:click="eliminarNotaCualitativa(cualitativa)"> <i class="fa fa-remove"></i>  </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                            <h5><b>Justificación de la solicitud</b></h5>
 
-                    <div v-cloak>
+                                            <textarea v-model="justificacion" id="" rows="4" class="form-control jupper" ref="justificacion"></textarea>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                            <h5>Adjuntar Informe (*.pdf)</h5>
+                                            <input type="file" name="image" @change="getImage" accept="file/*" class="form-control">  
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <hr>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                            <a href="" class="btn btn-default">Cancelar</a>
+                                            <button v-bind:disabled="formularioEnviado" v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div v-else>
+                                    <div class="alert alert-info">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Agregar calificación" ->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalEstudiante">
+            <div class="modal-dialog" style="width:800px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Buscar estudiante</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row buscador">
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right">
+                                Código rude
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <input type="text" class="form-control" v-model="rudeBuscar">
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> </button>
+                            </div>
+                        </div>
+
                         <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
                         <div v-if="buscando" class="text-center">
-                            <img src="{{asset('img/loading96.gif')}}" alt="">
+                            <img src="{{asset('img/loading.gif')}}" alt="">
                         </div>
-                        <div v-if="estudiante != ''">
-                            <br>
-                            <p class="h5">
-                                Estudiante: 
-                                <div class="estudiante">
-                                    ${ estudiante }
-                                </div>
-                            </p>
-                            <p class="h5">Historial de Inscripciones:</p>
 
-                            <table class="table table-striped table-primary">
+                        <div v-if="inscripciones.length > 0">
+                            <p class="encabezado bg-primary">Datos Estudiante</p>
+                            <table class="table table-primary">
+                                <tr>
+                                    <th>Código Rude</th>
+                                    <td>${codigoRude}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <td>${estudiante}</td>
+                                </tr>
+                            </table>
+                            <br>
+                            <p class="encabezado bg-primary">Historial de Inscripciones: <span> ( Seleccione una inscripción )</span> </p>
+                            <table class="table table-striped table-default">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th class="text-center border-right">#</th>
                                         <th>Gestión</th>
                                         <th>Sie</th>
                                         <th>Institución educativa</th>
@@ -79,7 +290,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(ins, index) in inscripciones">
-                                        <td>${ index + 1}</td>
+                                        <td class="text-center border-right">${ index + 1}</td>
                                         <td>${ins.gestion}</td>
                                         <td>${ins.sie}</td>
                                         <td>${ins.institucioneducativa}</td>
@@ -88,53 +299,169 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-bind:href="ins.ruta" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a>
+                                            <a v-if="ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalCalificaciones">
+            <div class="modal-dialog" style="width:800px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Calificaciones</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Cuantitativos <small> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small> </h4>
+                        <table class="table table-bordered" id="tablaNotas" style="background:#FFFFFF">
+                            <thead>
+                                <tr>
+                                    <th><small>Área</small></th>
+                                    <th v-for="n in datos.titulosNotas" align="center"><small>${n.titulo}</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="a in datos.cuantitativas">
+                                    <td data-title="Área">
+                                        <small>${a.asignatura}</small>
+                                    </td>
+                                    <td v-for="n in a.notas" v-bind:id="n.idFila" align="center" v-bind:data-title="n.bimestre" v-on:click="agregarNota(n.idEstudianteNota,a.asignatura,n.bimestre,n.nota,n.id,n.idFila,n.idNotaTipo,n.idEstudianteAsignatura)" v-bind:class="claseNotaTipo(n.idNotaTipo)" >
+                                        <small v-if="datos.nivel == 11 || datos.nivel == 1 || datos.nivel == 403">${n.nota}</small>
+                                        <div v-else>${n.nota}</div>
+                                    </td>
+                                </tr>
+                                <tr v-if="datos.gestion >= 2019 && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.tipoSubsistema != 4">
+                                    <td align="center" colspan="5">PROMEDIO ANUAL</td>
+                                    <td v-for="c in datos.cualitativas" align="center">
+                                        <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" v-bind:value="c.notaCuantitativa" v-bind:class="['form-control','input-sm', 'p'+c.idNotaTipo]" >
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
+                            <h4>Cualitativos <small> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+                            <table v-if="datos.cualitativas != ''" class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
+                                <thead>
+                                    <tr class="cf">
+                                        <th>Periodo</th>
+                                        <th>Valoración</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="c in datos.cualitativas">
+                                        <td data-title="Área">${c.notaTipo.titulo}</td>
+                                        <td v-bind:id="c.idFila" align="center" class="select-nota" style="cursor:pointer" v-on:click="agregarNotaCualitativa(c.idEstudianteNotaCualitativa,idInscripcion,c.idNotaTipo,c.idFila,c.notaCualitativa,c.notaCuantitativa,c.notaTipo.titulo,c.idEstudianteNotaCualitativa)">
+                                            ${c.notaCualitativa}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div v-else>
+                                No tiene valoraciones cualitativas...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+    </div>
+
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script>
         var app = new Vue({
             delimiters: ['${', '}'],
             el: '#app',
             data: {
-                // codigoRude: '8073023520101288A',
-                // codigoRude: '8073003220081593',
-                codigoRude: '407300182007718',
-                estudiante: '',
+                idTramite: '{{idTramite}}',
+                buscando: false,
+                rudeBuscar: '407300182007718',
                 respuesta: '',
+
+                codigoRude: '',
+                estudiante: '',
+
+                sie: '',
+                institucioneducativa: '',
+                nivel: '',
+                grado: '',
+                paralelo: '',
+                turno: '',
+                gestion: '',
+                
                 inscripciones: [],
-                buscando: false
+                datos: [],
+
+                idInscripcion: '',
+                flujoTipo: '',
+                notas: [],
+                filas: [],
+                notasCualitativas: [],
+                filasCualitativas: [],
+                justificacion: '',
+                informe: '',
+                flujoTipo: '{{flujoTipo}}',
+                formularioEnviado: false
             },
             methods: {
+                inArray: function(needle, haystack) {
+                    var length = haystack.length;
+                    for(var i = 0; i < length; i++) {
+                        if(haystack[i] == needle) return true;
+                    }
+                    return false;
+                },
+                claseNotaTipo: function(tiponota){
+                    if(this.inArray(tiponota, [5,6,7,8,9,11])){
+                        return ['cajaPromedio'];
+                    }else{
+                        return ['select-nota','cajaNota'];
+                    }
+                },
                 buscarEstudiante: function(){
-
                     this.buscando = true;
-                    
+                    this.codigoRude = '';
                     this.estudiante = '';
                     this.inscripciones = '';
                     this.respuesta = '';
+                    this.datos = '';
+
+                    this.idInscripcion = '';
+                    this.sie = '';
+                    this.institucioneducativa = '';
+                    this.nivel = '';
+                    this.grado = '';
+                    this.paralelo = '';
+                    this.turno = '';
+                    this.gestion = '';
+
+                    this.notas = [];
+                    this.filas = [];
+                    this.notasCualitativas = [];
+                    this.filasCualitativas = [];
+                    this.justificacion = '';
+                    this.informe = '';
 
                     axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_estudiante', {
-                        codigoRude: this.codigoRude,
+                        codigoRude: this.rudeBuscar,
                         flujoTipo: '{{ flujoTipo }}'
                     }))
                     .then(response => {
-                        console.log(response);
                         if (response.status == 200) {
+                            this.codigoRude = response.data.codigoRude;
                             this.estudiante = response.data.estudiante;
                             this.inscripciones = response.data.inscripciones;
                             $('[data-toggle="tooltip"]').tooltip();
@@ -148,6 +475,266 @@
                     .catch(e => {
                         console.log(e);
                         this.buscando = false;
+                    });
+                },
+                seleccionarInscripcion: function(pos){
+                    this.idInscripcion = this.inscripciones[pos].idInscripcion;
+                    this.sie = this.inscripciones[pos].sie;
+                    this.institucioneducativa = this.inscripciones[pos].institucioneducativa;
+                    this.nivel = this.inscripciones[pos].nivel;
+                    this.grado = this.inscripciones[pos].grado;
+                    this.paralelo = this.inscripciones[pos].paralelo;
+                    this.turno = this.inscripciones[pos].turno;
+                    this.gestion = this.inscripciones[pos].gestion;
+                    this.datos = [];
+
+                    this.notas = [];
+                    this.filas = [];
+                    this.notasCualitativas = [];
+                    this.filasCualitativas = [];
+                    this.justificacion = '';
+                    this.informe = '';
+
+                    // CARGAMOS LAS CALIFICACIONES
+                    axios.post(Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {idInscripcion: this.idInscripcion, idTramite: this.idTramite}))
+                    .then(response => {
+                        if (response.data.tramitePendiente.length > 0) {
+                            Swal.fire(
+                              'Tramites pendientes!',
+                              'El estudiante ya tiene un tramite pendiente de la misma inscripción.',
+                              'warning'
+                            );
+                        }else{
+                            this.datos = response.data.datos;
+                            $('#modalEstudiante').modal('hide');
+                        }
+                    })
+                    .catch(e => {
+                        Swal.fire(
+                          'Error!',
+                          e,
+                          'danger'
+                        );
+                    });
+                },
+                agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura){
+                    if (idNotaTipo != 5) {
+                        var nuevaNota = {
+                            idEstudianteNota: idEstudianteNota,
+                            asignatura: asignatura,
+                            bimestre: bimestre,
+                            nota: nota,
+                            notaNueva: '',
+                            idNota: idNota,
+                            idFila: idFila,
+                            idNotaTipo: idNotaTipo,
+                            idEstudianteAsignatura: idEstudianteAsignatura
+                        }
+
+                        var index = this.filas.indexOf(idFila);
+
+                        if(index == -1){
+                            this.notas.push(nuevaNota);
+                            this.filas.push(idFila);
+                            $('#'+idFila).addClass('seleccionado');
+                        }else{
+                            // Swal.fire(
+                            //   'Aviso!',
+                            //   'La calificación ya fue seleccionada',
+                            //   'warning'
+                            // )
+                            this.eliminarNota(nuevaNota);
+                        }
+                    }
+                },
+                eliminarNota: function(row){
+                    // this.notas.splice(pos,1);
+                    var index = this.notas.indexOf(row);
+                    this.notas.splice(index, 1);
+                    var index1 = this.filas.indexOf(row.idFila);
+                    this.filas.splice(index1,1);
+
+                    $('#'+row.idFila).removeClass('seleccionado');
+                    console.log(this.filas);
+                },
+                validarNota: function(event){
+                    var k = event.charCode || event.keyCode;
+                    if ((k < 48 || k > 57) //NUmeros
+                        && (k != 13) //ENTER
+                        && (k != 8) //retroceso
+                        && (k != 9) //tab
+                    ){
+                        event.preventDefault();
+                        return false;
+                    }
+                },
+                validarValorNota: function(nota){
+                    // if(nota.notaNueva == ""){ nota.notaNueva = 0; }
+                    if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                    if(nota.notaNueva > 100){ nota.notaNueva = 100; }
+
+                    if(nota.notaNueva != "" && nota.notaNueva != 0){
+                        nota.notaNueva = Math.round(nota.notaNueva);
+                    }
+                },
+                agregarNotaCualitativa: function(idEstudianteNotaCualitativa,idInscripcion,idNotaTipo,idFila,notaCualitativa,notaCuantitativa,notaTipo,idEstudianteNotaCualitativa){
+                    var nuevaNotaCualitativa = {
+                        idEstudianteNotaCualitativa: idEstudianteNotaCualitativa,
+                        idInscripcion: idInscripcion,
+                        idNotaTipo: idNotaTipo,
+                        idFila: idFila,
+                        notaCualitativa: notaCualitativa,
+                        notaCuantitativa: notaCuantitativa,
+                        bimestre: notaTipo,
+                        notaNuevaCualitativa: ''
+                    }
+
+                    var index = this.filasCualitativas.indexOf(idFila);
+
+                    if(index == -1){
+                        this.notasCualitativas.push(nuevaNotaCualitativa);
+                        this.filasCualitativas.push(idFila);
+                        $('#'+idFila).addClass('seleccionado');
+                    }else{
+                        // Swal.fire(
+                        //   'Aviso!',
+                        //   'La valoración ya fue seleccionada',
+                        //   'warning'
+                        // )
+                        this.eliminarNotaCualitativa(nuevaNotaCualitativa);
+                    }
+                },
+                eliminarNotaCualitativa: function(row){
+                    // this.notas.splice(pos,1);
+                    var index = this.notasCualitativas.indexOf(row);
+                    this.notasCualitativas.splice(index, 1);
+                    var index1 = this.filasCualitativas.indexOf(row.idFila);
+                    this.filasCualitativas.splice(index1,1);
+
+                    $('#'+row.idFila).removeClass('seleccionado');
+                    console.log(this.filas);
+                },
+                validarNotaCualitativa: function(){
+                    var key = window.event;
+                    var k = key.charCode || key.keyCode;
+                    if ((k < 48 || k > 57) //NUmeros
+                        && (k != 13) //ENTER
+                        && (k != 8) //retroceso
+                        && (k != 9) //tab
+                    )
+                    return false;
+                },
+                getImage: function(event){
+                    this.informe = event.target.files[0];
+                },
+                enviarSolicitud: function(){
+                    // DESACTIVAMOS EL BOTON DE ENVIAR
+
+                    // VALIDAR NOTAS
+                    var notasValidas = true;
+                    $.each(this.notas, function(index, val) {
+                        if(val.notaNueva == '' || val.notaNueva == 0){
+                            notasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasValidas){
+                        Swal.fire(
+                          'Completar calificación!',
+                          'Las calificaciones no pueden ser vacias o tener valor cero.',
+                          'warning'
+                        );
+                        return;
+                    }
+                    
+                    // VALIDAR NOTAS CUALITATIVAS
+                    var notasCualitativasValidas = true;
+                    var cualitativaMensaje = '';
+                    $.each(this.notasCualitativas, function(index, val) {
+                        if(val.notaNuevaCualitativa.trim() == ''){
+                            cualitativaMensaje = 'Las valoraciones no pueden estar vacias.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+
+                        if(val.notaNuevaCualitativa.trim().length < 15){
+                            cualitativaMensaje = 'Las valoraciones deben tener al menos 15 caracteres.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasCualitativasValidas){
+                        Swal.fire(
+                          'Completar valoración!',
+                          cualitativaMensaje,
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA LLENADO EL JUSTIFICATIVO
+                    if (this.justificacion.trim().length == 0) {
+                        this.$refs.justificacion.focus();
+                        Swal.fire(
+                          'Justificar!',
+                          'Debe justificar el motivo por el que esta realizando la solicitud.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DEL INFORME
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                          'Adjuntar Informe',
+                          'Debe adjuntar un escaneado del informe.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    $.each(this.notasCualitativas, function(index, val) {
+                        val.notaNuevaCualitativa = val.notaNuevaCualitativa.toUpperCase();
+                    });
+
+                    var data = new FormData();
+                    data.append('idTramite', this.idTramite);
+                    data.append('idInscripcion', this.idInscripcion);
+                    data.append('codigoRude', this.codigoRude);
+                    data.append('estudiante', this.estudiante);
+                    data.append('sie', this.sie);
+                    data.append('institucioneducativa', this.institucioneducativa);
+                    data.append('nivel', this.nivel);
+                    data.append('grado', this.grado);
+                    data.append('paralelo', this.paralelo);
+                    data.append('turno', this.turno);
+                    data.append('gestion', this.gestion);
+
+                    data.append('flujoTipo', this.flujoTipo);
+                    data.append('notas', JSON.stringify(this.notas));
+                    data.append('notasCualitativas', JSON.stringify(this.notasCualitativas));
+                    data.append('justificacion', this.justificacion);
+                    data.append('informe', this.informe);
+
+                    this.formularioEnviado = true;
+
+                    axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
+                    .then(response => {
+                        // Swal.fire({
+                        //   title: 'Solicitud enviada',
+                        //   text: 'Se envio la solicutd exitosamente.',
+                        //   type: 'success',
+                        //   showConfirmButton: true
+                        // });
+                        window.location.href = "{{path('wf_tramite_index', { tipo: 3 })}}";
+                    })
+                    .catch(e => {
+                        this.formularioEnviado = false;
+                        Swal.fire(
+                          'Error!',
+                          '',
+                          'error'
+                        );
                     });
                 }
             },

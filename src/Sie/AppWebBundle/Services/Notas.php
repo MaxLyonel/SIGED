@@ -1465,7 +1465,13 @@ die;/*
 
                 if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($arrayPromedios) > 0 ) or ($gestion == 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
-                    $nuevoEstado = 5; // Aprobado
+
+                    if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+                        $nuevoEstado = 26; // promovido por postbachillerato
+                    }else{
+                        $nuevoEstado = 5; // Aprobado
+                    }
+
                     if($tipo == 'Bimestre'){
                         foreach ($arrayPromedios as $ap) {
                             if($ap < 51){
@@ -1502,39 +1508,55 @@ die;/*
 
                             // PARA PRIMARIA A PARTIR DE LA GESTION 2019 PARA LA PROMOCION SE EVALUARA EL PROMEDIO ANUAL GENERAL
                             if ($gestion >= 2019 and $nivel == 12) {
+                                // CALCULAMOS EL PROMEDIO GENERAL PRIMARIA
+                                $sumaPrimaria = 0;
+                                foreach ($arrayPromedios as $ap) {
+                                    $sumaPrimaria = $sumaPrimaria + $ap;
+                                }
+                                $promedioPrimaria = round($sumaPrimaria/count($arrayPromedios));
+
+                                // OBTENEMOS EL REGISTRO DE LA NOTA PROMEDIO
                                 $promedioGeneral = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array(
                                     'estudianteInscripcion'=>$inscripcion->getId(),
                                     'notaTipo'=>5
                                 ));
+                                
                                 if($promedioGeneral){
-                                    if ($promedioGeneral->getNotaCuantitativa() < 51) {
-                                        $nuevoEstado = 28; // ESTADO RETENIDO 28 - REEMPLAZA ESTADO REPROBADO 11
-                                    } else {
-                                        $nuevoEstado = 5;
-                                    }
-
-                                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
-                                    $this->em->persist($inscripcion);
-                                    $this->em->flush();
-                                    
-                                    /// Registro den log de estado de matricula
-                                    $nuevo = [];
-                                    $nuevo['id'] = $inscripcion->getId();
-                                    $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
-
-                                    if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
-                                        $this->funciones->setLogTransaccion(
-                                            $inscripcion->getId(),
-                                            'estudiante_inscripcion',
-                                            'U',
-                                            $request->server->get('HTTP_HOST'),
-                                            $nuevo,
-                                            $anterior,
-                                            'SERVICIO NOTAS - ESTADO MATRICULA',
-                                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                                        );
-                                    }
+                                    // SI EXISTE EL PROMEDIO GENERAL LO ACTUALIZAMOS
+                                    $this->modificarNotaCualitativa($promedioGeneral->getId(), '', $promedioPrimaria);
+                                }else{
+                                    // SI NO EXISTE LO REGISTRAMOS
+                                    $promedioGeneral = $this->registrarNotaCualitativa(5, $idInscripcion, '', $promedioPrimaria);
                                 }
+
+                                if ($promedioGeneral->getNotaCuantitativa() < 51) {
+                                    $nuevoEstado = 28; // ESTADO RETENIDO 28 - REEMPLAZA ESTADO REPROBADO 11
+                                } else {
+                                    $nuevoEstado = 5;
+                                }
+
+                                $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+                                $this->em->persist($inscripcion);
+                                $this->em->flush();
+                                
+                                /// Registro den log de estado de matricula
+                                $nuevo = [];
+                                $nuevo['id'] = $inscripcion->getId();
+                                $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                                if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
+                                    $this->funciones->setLogTransaccion(
+                                        $inscripcion->getId(),
+                                        'estudiante_inscripcion',
+                                        'U',
+                                        $request->server->get('HTTP_HOST'),
+                                        $nuevo,
+                                        $anterior,
+                                        'SERVICIO NOTAS - ESTADO MATRICULA',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                    );
+                                }
+
                             }else{
 
                                 $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
@@ -1782,12 +1804,12 @@ die;/*
     /**
     * REGISTRO Y MODIFICACION DE NOTAS CUALITATIVAS (estudiante_nota_cualitativa) 
     */
-    public function registrarNotaCualitativa($idNotaTipo, $idEstudianteInscripcion, $notaCualitativa){
+    public function registrarNotaCualitativa($idNotaTipo, $idEstudianteInscripcion, $notaCualitativa, $notaCuantitativa){
         // Reiniciamos la secuencia de la tabla notas
         $newNotaCualitativa = new EstudianteNotaCualitativa();
         $newNotaCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo));
         $newNotaCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idEstudianteInscripcion));
-        $newNotaCualitativa->setNotaCuantitativa(0);
+        $newNotaCualitativa->setNotaCuantitativa($notaCuantitativa);
         $newNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
         $newNotaCualitativa->setUsuarioId($this->session->get('userId'));
         $newNotaCualitativa->setFechaRegistro(new \DateTime('now'));
@@ -1820,7 +1842,7 @@ die;/*
         return $newNotaCualitativa;
     }
 
-    public function modificarNotaCualitativa($idEstudianteNotaCualitativa, $notaCualitativa){
+    public function modificarNotaCualitativa($idEstudianteNotaCualitativa, $notaCualitativa, $notaCuantitativa){
         $datosNotaCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa);
         if($datosNotaCualitativa){
 
@@ -1832,6 +1854,7 @@ die;/*
             $anterior['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
 
             $datosNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
+            $datosNotaCualitativa->setNotaCuantitativa(mb_strtoupper($notaCuantitativa, 'utf-8'));
             $datosNotaCualitativa->setUsuarioId($this->session->get('userId'));
             $datosNotaCualitativa->setFechaModificacion(new \DateTime('now'));
             $this->em->persist($datosNotaCualitativa);

@@ -8,9 +8,11 @@ tramite_modificacion_calificaciones_buscar_estudiante:
     options:
         expose: true
 
-tramite_modificacion_calificaciones_formulario:
-    path:     /formulario/{flujoTipo}/{idInscripcion}
-    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formulario }
+tramite_modificacion_calificaciones_buscar_calificaciones:
+    path:     /buscarCalificaciones/{idInscripcion}/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:buscarCalificaciones }
+    options:
+        expose: true
 
 tramite_modificacion_calificaciones_formulario_save:
     path:     /formulariosave
@@ -22,12 +24,6 @@ tramite_modificacion_calificaciones_formulario_imprimir:
     path:     /formularioImprimir
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioImprimir }
 
-tramite_modificacion_calificaciones_formulario_obtener_datos:
-    path:     /formularioObtenerDatos
-    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioObtenerDatos }
-    options:
-        expose: true
-
 # DISTRITO
 
 tramite_modificacion_calificaciones_recepcion_verifica_distrito:
@@ -37,8 +33,6 @@ tramite_modificacion_calificaciones_recepcion_verifica_distrito:
 tramite_modificacion_calificaciones_deriva_distrito:
     path:     /derivaDistrito
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDistrito }
-    options:
-        expose: true
 
 # DEPARTAMENTO
 
@@ -49,5 +43,3 @@ tramite_modificacion_calificaciones_recepcion_verifica_departamento:
 tramite_modificacion_calificaciones_deriva_departamento:
     path:     /derivaDepartamento
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDepartamento }
-    options:
-        expose: true
