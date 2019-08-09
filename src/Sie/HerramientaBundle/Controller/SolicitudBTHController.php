@@ -842,20 +842,13 @@ class SolicitudBTHController extends Controller {
         } else {
             $especialidad_homologado = $especialidades_id;
         }
-        // dump($especialidades_id, $especialidad_homologado);die;
-        /* $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
-                     FROM especialidad_tecnico_humanistico_tipo eth
-                     WHERE eth.es_vigente is TRUE AND eth.id NOT in         
-                        (".$especialidad_homologado.") ORDER BY 1");
-        $query->execute();
-        $especialidades_restantes = $query->fetchAll(); */
         $especialidades_restantes = $em->createQueryBuilder()
             ->select('e.id, e.especialidad')
             ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
             ->where('e.id not in (:noEspecilidades)')
-            // ->andWhere('e.esVigente = :estado')
+            ->andWhere('e.esVigente = :estado')
             ->setParameter('noEspecilidades', $especialidad_homologado)
-            // ->setParameter('estado', true)
+            ->setParameter('estado', true)
             ->orderBy('e.especialidad')
             ->getQuery()
             ->getResult();
