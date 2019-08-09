@@ -75,9 +75,18 @@
                                 <td>{{rude}}</td>
                                 <td>{{nombre}}</td>
                                 <td>
-                                    <div class="ckbox ckbox-primary">
+                                
+                                    {% if ci|default %}
+                                        <div class="ckbox ckbox-primary">
                                         <input id="id{{data.eInsJueId}}" name="estudiantes[]" type="checkbox" value="{{data.eInsJueId}}" onclick="setDeportistas(this,'{{nombre|replace({"'":"&#39;"})}}')">
                                         <label for="id{{data.eInsJueId}}"></label>
+                                        
+                                    {% else %}
+                                        <div class="">
+                                        <span class="label label-danger">No tiene  CI</span>
+                                        
+                                        
+                                    {% endif %}
                                     </div>
                                 </td>
                             </tr>
