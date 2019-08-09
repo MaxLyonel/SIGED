@@ -150,7 +150,7 @@
                                                 </div>
                                                 <div class="col-md-6 text-center">
                                                     <p><b>Grado</b></p>
-                                                    <p style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
+                                                    <p id="literal_grado" style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -355,7 +355,7 @@
         function  enviarSolicituDepartamentaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                text: "La información llenada será enviada a la instancia correspondiente.",
+                text: "Año de Escolaridad a implementar BTH: " +$('#literal_grado').text()+ "\n\nLa información llenada será enviada a la instancia correspondiente.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -406,17 +406,6 @@
                                 swal("Debe introducir alguna observación");
                                 return false;}
                         }
-
-                        /*if(respuesta == 'si'&& (respuesta2 == 'si'||respuesta2 == 'no')  ){
-
-                        }else{
-                            if(respuesta=='no' && respuesta2=='no'){
-                            }else{
-                                if(obstxt == ''){
-                                    swal("Debe introducir alguna observación");
-                                    return false;}
-                            }
-                        }*/
 
                         ip.push({grado:{{grado}}});
                         var ipt=JSON.stringify(ip);
