@@ -86,10 +86,29 @@ class SolicitudBTHController extends Controller {
         $especialidades = $em->getConnection()->prepare("SELECT eth.id, eth.especialidad
             FROM institucioneducativa_especialidad_tecnico_humanistico a
             INNER JOIN especialidad_tecnico_humanistico_tipo eth on a.especialidad_tecnico_humanistico_tipo_id=eth.id
-            WHERE eth.es_vigente is TRUE and institucioneducativa_id=$institucion_id and gestion_tipo_id=2018
+            WHERE institucioneducativa_id=$institucion_id and gestion_tipo_id=2018
             ORDER BY eth.especialidad");
         $especialidades->execute();
-        $especialidad_anterior = $especialidades->fetchAll();
+        $especialidad_homologacion = $especialidades->fetchAll();
+        foreach ($especialidad_homologacion as $value) {
+            $esp_id = $value['id'];
+            if ($value['id'] == 55 ) {
+                $esp_id = 3;
+            } elseif ($value['id'] == 45 ) {
+                $esp_id = 62;
+            } elseif ($value['id'] == 44 ) {
+                $esp_id = 63;
+            } elseif ($value['id'] == 2 ) {
+                $esp_id = 61;
+            } elseif ($value['id'] == 9 ) {
+                $esp_id = 66;
+            } elseif ($value['id'] == 6 ) {
+                $esp_id = 4;
+            }
+            $especialidad = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->findOneById($esp_id);
+            if ($especialidad)
+                $especialidad_anterior[] = array('id'=>$especialidad->getId(), 'especialidad'=>$especialidad->getEspecialidad());
+        }
 
         $especialidad_vigente = $this->obtieneespecialidadesrestantes($institucion_id, 2018);
 
@@ -161,7 +180,6 @@ class SolicitudBTHController extends Controller {
                 ORDER BY 2");
             $query->execute();
             $especialidad_anterior = $query->fetchAll();
-            
             $especialidad_vigente = $this->obtieneespecialidadesrestantes($institucion_id, $gestion);
             $tipo_tramite = 27;
         }
@@ -384,6 +402,7 @@ class SolicitudBTHController extends Controller {
         }
         return  new JsonResponse(array('estado' => $res, 'msg' => $msg));
     }
+
     // DEPARTAMENTAL
     public function formularioDepartamentalAction(Request $request) {
         $id_tramite = $request->get('id');
@@ -781,18 +800,65 @@ class SolicitudBTHController extends Controller {
         }
     }
 
-    public function obtieneespecialidadesrestantes($id_institucion,$gestion) {
+    public function obtieneespecialidadesrestantes($id_institucion, $gestion) {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
+        $especialidades = $em->getConnection()->prepare("SELECT espt.id
+            FROM institucioneducativa_especialidad_tecnico_humanistico ieth
+            INNER JOIN especialidad_tecnico_humanistico_tipo espt ON ieth.especialidad_tecnico_humanistico_tipo_id = espt.id
+            WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion");
+        $especialidades->execute();
+        $especialidades_id = $especialidades->fetchAll();
+        if ($gestion == 2018) {
+            foreach ($especialidades_id as $value) {
+                $esp_id = "";
+                switch ($value['id']) {
+                    case 55:
+                        $esp_id = 3;
+                        break;
+                    case 45:
+                        $esp_id = 62;
+                        break;
+                    case 44:
+                        $esp_id = 63;
+                        break;
+                    case 2:
+                        $esp_id = 61;
+                        break;
+                    case 9:
+                        $esp_id = 66;
+                        break;
+                    case 6:
+                        $esp_id = 4;
+                        break;
+                    default:
+                        $esp_id = $value['id'];
+                        break;
+                }
+                $especialidad = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->findOneById($esp_id);
+                if ($especialidad) {
+                    $especialidad_homologado[] = $especialidad->getId();
+                }
+            }
+        } else {
+            $especialidad_homologado = $especialidades_id;
+        }
+        // dump($especialidades_id, $especialidad_homologado);die;
+        /* $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
                      FROM especialidad_tecnico_humanistico_tipo eth
                      WHERE eth.es_vigente is TRUE AND eth.id NOT in         
-                        (SELECT espt.id
-                    FROM institucioneducativa_especialidad_tecnico_humanistico ieth
-                    INNER JOIN especialidad_tecnico_humanistico_tipo espt ON ieth.especialidad_tecnico_humanistico_tipo_id = espt.id
-                    WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion
-                    )ORDER BY 1");
+                        (".$especialidad_homologado.") ORDER BY 1");
         $query->execute();
-        $especialidades_restantes = $query->fetchAll();
+        $especialidades_restantes = $query->fetchAll(); */
+        $especialidades_restantes = $em->createQueryBuilder()
+            ->select('e.id, e.especialidad')
+            ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
+            ->where('e.id not in (:noEspecilidades)')
+            // ->andWhere('e.esVigente = :estado')
+            ->setParameter('noEspecilidades', $especialidad_homologado)
+            // ->setParameter('estado', true)
+            ->orderBy('e.especialidad')
+            ->getQuery()
+            ->getResult();
         return $especialidades_restantes;
     }
 
