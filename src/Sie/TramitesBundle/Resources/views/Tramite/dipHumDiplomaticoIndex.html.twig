@@ -1,0 +1,276 @@
+
+{% extends "::layoutTramites.html.twig"%}
+   
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">
+                            <i class="glyphicon glyphicon-edit"></i>
+                            Busqueda del estudiante
+                        </h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form", 'class': 'form-horizontal'} } )}}
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(formBusqueda.rude)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(formBusqueda.rude) }}
+                                </div>  
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(formBusqueda.gestion)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(formBusqueda.gestion) }}
+                                </div>  
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">
+                                {{ form_widget(formBusqueda.search,{ 'attr':{'class':'btn btn-primary col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                            </div>
+                        </div>
+                    {{form_end(formBusqueda)}} 
+                </div><!-- /.panel-body -->
+            </div>
+        </div><!-- /.panel-body -->
+    </div>
+       
+    {% if listaDocumento is defined  %}
+        <div class="row">    
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel panel-invoice rounded">
+                    <div class="panel-sub-heading">
+                        <div class="row inner-all">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="text-left mb-10">
+                                    <h3 class="mt-0 text-primary"><strong>{{listaDocumento.paterno}} {{listaDocumento.materno}} {{listaDocumento.nombre}}</strong></h3>
+                                    <address>
+                                        <strong>Código RUDE/RUDEAL: </strong>{{listaDocumento.rude}}<br>
+                                        <strong>Cédula de Identidad: </strong>{{listaDocumento.carnetIdentidad}}<br>
+                                        <strong>Código SIE: </strong>{{listaDocumento.sie}} - {{listaDocumento.gestion}}<br>
+                                        <strong>Fecha de nacimiento: </strong>{{listaDocumento.fechanacimiento|date('d/m/Y') }}<br>
+                                        <strong>Lugar de nacimiento: </strong>
+                                            {% if listaDocumento.departamentonacimiento != "" %}{{ listaDocumento.departamentonacimiento }} - {% endif %}
+                                            {{ listaDocumento.paisnacimiento }}
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="text-right">
+                                    {% if listaDocumento.serie is not null and listaDocumento.serie != "" %}
+                                        <h3 class="mt-0 text-info"><strong>Trámite Nro.: </strong> {{listaDocumento.tramite}}</h3>
+                                        <h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>
+                                    {% endif %}
+                                    <address>
+                                        {% if listaDocumento.documentoTipo is not null and listaDocumento.documentoTipo != "" %}<strong>Tipo documento: </strong>  {{listaDocumento.documentoTipo}}{% endif %}<br>
+                                        {% if listaDocumento.fechaemision is not null and listaDocumento.fechaemision != "" %}<strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}{% endif %} <br>
+                                        {% if listaDocumento.departamentoemision is not null and listaDocumento.departamentoemision != "" %}<strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}{% endif %}<br>
+                                    </address>
+                                    <p class="text-right">
+                                        {% if msgReactivaTramite is defined  %}
+                                            {% if msgReactivaTramite == ""  %}
+                                                <form name="form" role="form" action="{{ path('tramite_reactiva_guarda') }}" method="POST">
+                                                    <input type="hidden" name="supletorio" value="{{listaDocumento.tramite|base64_encode}}"/>
+                                                    <input type="hidden" name="serie" value="{{ arrayForm.serie }}">
+                                                    <input type="hidden" name="obs" value="{{ arrayForm.obs }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.tramite) }}">
+                                                    <button type="submit" class="btn btn-success" data-original-title="Reactivar Trámite" onclick="this.style.visibility='hidden';"><strong>Reactivar Trámite</strong></button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-sub-heading -->
+                </div>
+            </div>
+        </div>
+
+        <div class="row message-wrapper rounded shadow mb-20">
+            {% if listaTramiteDetalle is defined %}
+                <div class="col-lg-9 col-md-9 col-sm-6 message-sideleft">
+                    <div class="panel panel-invoice rounded">
+                        <div class="panel-sub-heading">
+                            <button type="button" class="btn btn-success btn-lg btn-block"><strong>{{listaDocumento.tramiteTipo}}&nbsp;</strong></button>
+                        </div><!-- /.panel-sub-heading -->
+                        <div class="panel-body">
+                                {% if listaTramiteDetalle|length > 0 %}
+                                <div class="profile-timeline">
+                                    <div class="timeline">
+                                        <div class="timeline-item alt">
+                                            <div class="text-right">
+                                                <div class="time-show first">
+                                                    <a class="btn btn-teal"><strong>Inicio del trámite</strong></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% set c = 0 %}
+                                        {% set color = 'primary' %}
+                                        {% set icon = 'fa-thumbs-up' %}
+                                        {% set flujo_proceso_id = 0 %}
+                                        {% set siguiente_flujo_proceso_id = 0 %}
+                                        {% set anterior_flujo_proceso_id = 0 %}
+                                        {% set siguienteProceso = "" %}
+                                        {% for detalle in listaTramiteDetalle %}
+                                            {% set c = c + 1 %}
+                                            {% set id = detalle.tramite_detalle_id %}
+                                            {% set tramite_id = detalle.tramite_id %}
+                                            {% set tramite_tipo = detalle.tramite_tipo %}
+                                            {% set tramite_estado = detalle.tramite_estado %}
+                                            {% set proceso = detalle.proceso %}
+                                            {% set persona_remitente = detalle.persona_remitente %}
+                                            {% set persona_destinatario = detalle.persona_destinatario %}
+                                            {% set fecha_proceso = detalle.fecha_proceso %}
+                                            {% set observacion = detalle.observacion %}
+                                            {% set anterior_estado_id = detalle.anterior_estado_id %}
+                                            {% set flujo_proceso_id = detalle.flujo_proceso_id %}
+                                            {% set siguiente_flujo_proceso_id = detalle.siguiente_flujo_proceso_id %}
+                                            {% set anterior_flujo_proceso_id = detalle.anterior_flujo_proceso_id %}
+                                            {% set siguienteProceso = detalle.siguiente_proceso %}
+                                            {% if siguienteProceso == "" %}
+                                                {% set siguienteProceso = "Fin del trámite" %}
+                                            {% endif %}
+
+                                            {% if c == 1 %}
+                                                {% set color = 'primary' %}
+                                            {% elseif  c == 2 %}
+                                                {% set color = 'danger' %}
+                                            {% elseif  c == 3 %}
+                                                {% set color = 'warning' %}
+                                            {% elseif  c == 4 %}
+                                                {% set color = 'lilac' %}
+                                            {% elseif  c == 5 %}
+                                                {% set color = 'info' %}
+                                                {% set c = 0 %}
+                                            {% else %}
+                                                {% set color = 'primary' %}
+                                            {% endif %}
+
+                                            {% if anterior_estado_id == 4 %}
+                                                {% set icon = 'fa-thumbs-down' %}
+                                            {% else %}
+                                                {% set icon = 'fa-thumbs-up' %}
+                                            {% endif %}
+
+                                            <div class="timeline-item {% if loop.index % 2 == 0 %}alt{% endif %}">
+                                                <div class="timeline-desk">
+                                                    <div class="panel panel-{{color}} shadow">
+                                                        <div class="panel-heading">
+                                                            <div class="panel-title">{% if anterior_estado_id == 4 %}Devuelto a los trámites con {% endif %}{{ proceso }}</div>
+                                                            <span class="arrow{% if loop.index % 2 == 0 %}-alt{% endif %}"></span>
+                                                            <span class="timeline-icon bg-{{color}}"><i class="fa {{ icon }}"></i></span>
+                                                        </div>
+                                                        <div class="panel-body rounded">
+                                                            <span class="timeline-date"></span>
+                                                            <h1 class="fg-{{color}}"><i class="fa fa-book"></i> {{ fecha_proceso|date('d/m/Y') }}</h1>
+                                                            <p><i class="fa fa-comment"></i> {{ observacion }} </p>
+                                                            <p><i class="fa fa-user"></i> {{ persona_destinatario }} </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        {% if siguiente_flujo_proceso_id == flujo_proceso_id %}
+                                            <div class="timeline-item alt">
+                                                <div class="text-right">
+                                                    <div class="time-show">
+                                                        <a href="#" class="btn btn-teal"><strong>Trámite concluido</strong></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="timeline-item alt">
+                                                <div class="text-right">
+                                                    <div class="time-show">
+                                                        <a class="btn btn-inverse">{{ siguienteProceso }}</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--/ End timeline -->
+                                </div>
+                            {% endif %}
+                        </div><!-- /.panel-body -->
+                    </div>
+                </div>
+            {% endif %}
+            <div {% if listaTramiteDetalle is defined %}class="col-lg-3 col-md-3 col-sm-6 message-sideright clearfix"{% else %}class="col-lg-12 col-md-12 col-sm-12 message-sideright clearfix"{% endif %}>
+                <div class="panel panel-invoice rounded">
+                    <div class="panel-sub-heading">
+                        <button type="button" class="btn btn-lilac btn-lg btn-block"><strong>&nbsp;</strong></button>
+                    </div><!-- /.panel-sub-heading -->
+                    <div class="panel-body">
+                        {% if listaDocumentoDetalle|length > 0 %}
+                            <div class="recent-activity message-sideright">
+                                {% set c = 0 %}
+                                {% for detalle in listaDocumentoDetalle %}
+                                    {% set c = c + 1 %}
+                                    {% set documentoTipo = detalle.documentoTipo %}
+                                    {% set serie = detalle.serie %}
+                                    {% set documentoEstado = detalle.documentoEstado %}
+                                    {% set documentoEstadoId = detalle.documentoEstadoId %}
+                                    {% set fechaRegistro = detalle.fechaRegistro %}
+                                    {% set observacion = detalle.observacion %}
+                                    {% if documentoEstadoId == 1 %}
+                                        {% set color = 'primary' %}
+                                    {% elseif  documentoEstadoId == 2 %}
+                                        {% set color = 'danger' %}
+                                    {% else %}
+                                        {% set color = 'success' %}
+                                    {% endif %}
+                                    <!-- Start recent activity item -->
+                                    <div class="recent-activity-item recent-activity-{{color}}">
+                                        <div class="recent-activity-badge">
+                                            <span class="recent-activity-badge-userpic"></span>
+                                        </div>
+                                        <div class="recent-activity-body">
+                                            <div class="recent-activity-body-head">
+                                                <div class="recent-activity-body-head-caption">
+                                                    <h3 class="recent-activity-body-title">
+                                                        {{documentoTipo}} {% if documentoEstadoId == 2 %}<span class="label label-{{color}}" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{documentoEstado}}">{{documentoEstado}}</span>{% endif %}
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <div class="recent-activity-body-content">
+                                                <p>
+                                                    <a class="text-{{color}}">{{serie}}</a> registrado el {{fechaRegistro|date('d/m/Y')}}
+                                                    <span class="text-block text-muted">{{observacion}}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End recent activity item -->
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}    
+{% endblock %}

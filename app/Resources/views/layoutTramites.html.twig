@@ -262,7 +262,7 @@
 
                 <!-- Start left navigation - menu -->
                 <ul class="sidebar-menu">
-                    {% set rol8 = false %}    <!-- rol distrito -->
+                    {% set rol8 = false %}    <!-- rol nacional -->
                     {% set rol9 = false %}    <!-- rol cea -->
                     {% set rol10 = false %}    <!-- rol distrito -->
                     {% set rol12 = false %}    <!-- rol recepcion unidad educativa -->
@@ -272,6 +272,10 @@
                     {% set rol16 = false %}    <!-- rol impresion -->
                     {% set rol17 = false %}    <!-- rol legalizacion -->
                     {% set rol20 = false %}    <!-- rol consulta nacional -->
+                    {% set rol41 = false %}    <!-- rol tecnico legalizacion distrital -->
+                    {% set rol42 = false %}    <!-- rol tecnico legalizacion departamental -->
+                    {% set rol43 = false %}    <!-- rol ventanilla legalizacion departamental -->
+                    {% set rol44 = false %}    <!-- rol sub director de educacion -->
                     {% for item in app.session.get('roluser') %}
                         {% if item.id == 8 %}
                             {% set rol8 = true %}
@@ -408,25 +412,169 @@
                         </li>  
                     {% else %}
                         <!-- Start development - sub menu -->
-                        {% for key,menu in app.session.get('aMenu') %}
-                            <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
+                        {% if (1 != 1) %}
+                            {% for key,menu in app.session.get('aMenu') %}
+                                <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
+                                    <a href="javascript:void(0);">
+                                        <span class="icon"><i class="fa fa-search"></i></span>
+                                        <span class="text">{{key}}</span>
+                                        <span class="arrow"></span>
+                                    </a>
+                                    <ul class="collapse nav" id="menu{{loop.index}}">
+                                        {% for smenu in menu %}
+                                            {% if app.session.get('pSubMenuId') == smenu.subMenuId %}
+                                            <li class="active"><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
+                                            {% else %}
+                                            <li><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                    <!-- /.nav-second-level -->
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if ((rol16) or (rol42 or rol8)) %}
+                            <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-search"></i></span>
-                                    <span class="text">{{key}}</span>
+                                    <span class="text">Herramientas</span>
                                     <span class="arrow"></span>
                                 </a>
-                                <ul class="collapse nav" id="menu{{loop.index}}">
-                                    {% for smenu in menu %}
-                                        {% if app.session.get('pSubMenuId') == smenu.subMenuId %}
-                                          <li class="active"><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
-                                        {% else %}
-                                          <li><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_documento_supletorio') }}">Supletorio</a></li>
+                                    <li><a href="{{ path('tramite_reactiva_busca') }}">Reactiva</a></li>
                                 </ul>
-                                <!-- /.nav-second-level -->
-                            </li>
-                        {% endfor %}
+                            </li>  
+                        {% endif %}
+                        {% if ((rol13 or rol14 or rol15 or rol16) or (rol10 or rol41 or rol42 or rol43 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Diploma Humanístico</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    {% if ((rol13 or rol14 or rol16) or (rol10 or rol41 or rol43 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_diploma_humanistico_regular_registro_busca') }}">Registro Regular</a></li>
+                                        <li><a href="{{ path('tramite_diploma_humanistico_alternativa_registro_busca') }}">Registro Alternativa</a></li>
+                                    {% endif %}
+                                    {% if ((rol14 or rol16) or (rol43 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_recepcion_busca') }}">Recepción</a></li>
+                                    {% endif %}
+                                    {% if ((rol15 or rol16) or (rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_autorizacion_busca') }}">Autorización</a></li>
+                                    {% endif %}
+                                    {% if ((rol16) or (rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_impresion_busca') }}">Asignación de Cartón</a></li>
+                                    {% endif %}
+                                    {% if ((rol14 or rol16) or (rol43 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_impresion_acta_busca') }}">Impresión Acta</a></li>
+                                    {% endif %}
+                                    {% if ((rol16) or (rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_impresion_carton_busca') }}">Impresión Carton por Serie</a></li>
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_impresion_carton_lote_busca') }}">Impresión por Lote</a></li>
+                                    {% endif %}
+                                    {% if ((rol14 or rol16) or (rol43 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_envio_busca') }}">Envío</a></li>
+                                    {% endif %}
+                                    {% if ((rol13 or rol14 or rol16) or (rol10 or rol41 or rol43 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_detalle_diploma_humanistico_entrega_busca') }}">Entrega</a></li>
+                                    {% endif %}
+                                    {% if (1 > 1) %}
+                                        {% if ((rol14 or rol16) or (rol43 or rol42 or rol8)) %}
+                                            <li><a href="{{ path('tramite_diploma_humanistico_registro_diplomatico_busca') }}">Registro Diplomatico</a></li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol13 or rol14 or rol15 or rol16 or rol17) or (rol10 or rol41 or rol43 or rol42 or rol8 or rol20)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Seguimiento</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_seguimiento_busca') }}">Búsqueda por trámite</a></li>
+                                    <li><a href="{{ path('tramite_seguimiento_documento_busca') }}">Búsqueda por número serie</a></li>
+                                    <li><a href="{{ path('tramite_seguimiento_rude_busca') }}">Búsqueda por código rude</a></li>
+                                    {% if ((rol16 or rol17) or (rol42 or rol8 or rol20)) %}
+                                        <li><a href="{{ path('tramite_seguimiento_cedula_busca') }}">Búsqueda por C.I.</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol12 or rol13 or rol16 or rol17) or (rol9 or rol10 or rol41 or rol42 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Estudiante</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    {% if ((rol13 or rol16 or rol17) or (rol10 or rol41 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('estudiante_index') }}">Buscar Estudiante</a></li>
+                                        <li><a href="{{ path('history_new_inscription_index') }}">Historial de Inscripción</a></li>
+                                    {% endif %}
+                                        <li><a href="{{ path('declaracion_jurada_index') }}">Declaración Jurada</a></li> 
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol14 or rol16 or rol17) or (rol43 or rol42 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Legalización</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_documento_legalizacion_numero_serie') }}">Por número de serie</a></li>
+                                    {% if ((rol16) or (rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_documento_legalizacion_institucion_educativa') }}">Por institución educativa</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol16) or (rol42 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Homologación</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_homologacion_diploma_humanistico_index') }}">Diploma Humanístico</a></li>
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol16) or (rol42 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Diploma Técnico Reg.</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_tecnico_humanistico_recepcion') }}">Registro</a></li>
+                                    <li><a href="{{ path('tramite_tecnico_humanistico_impresion') }}">Impresión</a></li>
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol16) or (rol42 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Estadística</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}">Dip. Hum. por gestión egreso</a></li>
+                                </ul>
+                            </li>  
+                        {% endif %}
+
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-search"></i></span>
@@ -456,12 +604,7 @@
                     <!--/ End development - sub menu -->
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->
-
-
-
                 <!--/ End left navigation - menu -->
-
-
 
                 <!-- Start left navigation - footer -->
                 <div class="sidebar-footer hidden-xs hidden-sm hidden-md">
@@ -474,7 +617,6 @@
 
             </aside><!-- /#sidebar-left -->
             <!--/ END SIDEBAR LEFT -->
-
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
@@ -533,9 +675,6 @@
             <i class="fa fa-angle-up"></i>
         </div><!-- /#back-top -->
         <!--/ END BACK TOP -->
-
-
-
 
         <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
         <!-- START @CORE PLUGINS -->
