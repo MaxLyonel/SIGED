@@ -11,18 +11,20 @@ solicitud_bth_index:
 solicitud_bth_imprimeDirector:
     path:     bhtimprimeFormulario/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:imprimirDirector}
-solicitud_bth_formulario:
-    path:     bhtFormulario/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioDirector}
-solicitud_bth_lista_especialidades:
-    path:     bhtEspecialidades/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:ListaEspecialidades}
-solicitud_bth_distrital_index:
-    path:     bthsolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDis }
-solicitud_bth_formularioDis:
-    path:     bthformularioBTHDis/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioBTHDis }
+# Ya no se usan
+# solicitud_bth_formulario:
+#     path:     bhtFormulario/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioDirector}
+# solicitud_bth_lista_especialidades:
+#     path:     bhtEspecialidades/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:ListaEspecialidades}
+# solicitud_bth_distrital_index:
+#     path:     bthsolicitud/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDis }
+# solicitud_bth_formularioDis:
+#     path:     bthformularioBTHDis/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioBTHDis }
+
 # solicitud_bth_solicitudBTHDis:
 #     path:     bthsolicitudBTHDis/
 #     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDis }
