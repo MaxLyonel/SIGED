@@ -8,7 +8,7 @@
         </div>
         <div class="clearfix"></div>
 	</div>
-	<div class="panel-body" style="display:block">
+	<div class="panel-body" style="display:none">
 		<div class="row">
             <div class="col-md-12">
                 <!-- Start color horizontal tabs -->
@@ -17,7 +17,7 @@
                     <div class="panel-heading no-padding">
                         <ul class="nav nav-tabs">
                         	{% for h in historial %}
-                        		{% if h.orden != 5 %}
+                        		{% if h.orden != 5 and h.orden != 4 %}
 	                        		<li {% if loop.index == 1 %} class="nav-border nav-border-top-lilac active" {% else %} class="nav-border nav-border-top-lilac" {% endif %} >
 	                                    <a href="component-tabsaccordion.html#tab{{ h.orden }}" data-toggle="tab" aria-expanded="true">
 	                                        <i class="fa fa-user"></i>

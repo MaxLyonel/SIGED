@@ -9,7 +9,7 @@ tramite_modificacion_calificaciones_buscar_estudiante:
         expose: true
 
 tramite_modificacion_calificaciones_buscar_calificaciones:
-    path:     /buscarCalificaciones/{idInscripcion}/{idTramite}
+    path:     /buscarCalificaciones
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:buscarCalificaciones }
     options:
         expose: true
@@ -23,6 +23,15 @@ tramite_modificacion_calificaciones_formulario_save:
 tramite_modificacion_calificaciones_formulario_imprimir:
     path:     /formularioImprimir
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioImprimir }
+
+
+tramite_modificacion_calificaciones_formulario_vista_imprimir_libreta:
+    path:     /formularioVistaImprimirLibreta
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaImprimirLibreta }
+
+tramite_modificacion_calificaciones_formulario_vista_imprimir_finalizar:
+    path:     /formularioVistaImprimirFinalizar/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaImprimirFinalizar }
 
 # DISTRITO
 

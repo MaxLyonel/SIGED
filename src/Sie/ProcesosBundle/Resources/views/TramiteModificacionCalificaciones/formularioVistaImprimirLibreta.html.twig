@@ -1,0 +1,51 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    <style type="text/css">
+        label{
+            font-weight: bold;
+        }
+    </style>
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Trámites <span>Solicitud de Modificaciòn y Adiciòn de Calificaciones</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_index') }}">Tramites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Imprimir Libreta</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+
+        {% include 'SieProcesosBundle:TramiteModificacionCalificaciones:historial.html.twig' with { 'historial': historial} %}
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"> <i class="fa fa-file"></i> Imprimir libreta </h3>
+            </div>
+            <div class="panel-body">
+                Trámite Nro. <b> {{ idTramite }} </b> aprobado.
+                <hr>
+                <div class="text-center">
+	                <a href="{{path('download_libreta', {'idInscripcion': idInscripcion, 'rude': rude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+	                  	<b><i class="fa fa-file-pdf-o fa-2x"></i> Imprimir Libreta Electrónica</b>
+	                </a>
+            	</div>
+                <hr>
+                <div class="text-center">
+                	<a href="{{path('tramite_modificacion_calificaciones_formulario_vista_imprimir_finalizar', {idTramite: idTramite})}}" class="btn btn-primary">Finalizar trámite</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+{% endblock %}

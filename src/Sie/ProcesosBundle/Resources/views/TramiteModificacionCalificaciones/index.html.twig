@@ -38,7 +38,7 @@
             /* background: #000000; */
         }
         .select-nota:hover{
-            border-color: #ABBDC9;
+            /* border-color: #60AA5D; */
             background: #EAFBF1;
             color: #009900;
         }
@@ -69,7 +69,9 @@
         .include{
             margin: 20px;
         }
-
+        .titulo{
+            padding: 5px;
+        }
     </style>
 
     <div class="header-content">
@@ -274,6 +276,9 @@
                             </table>
                             <br>
                             <p class="encabezado bg-primary">Historial de Inscripciones: <span> ( Seleccione una inscripción )</span> </p>
+                            <div v-if="cargandoCalificaciones" style="position:absolute; text-align:center; background:#FFFFFF; width:95%">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Cargando calificaciones
+                            </div>
                             <table class="table table-striped table-default">
                                 <thead>
                                     <tr>
@@ -299,7 +304,7 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-if="ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11) && (ins.idNivel != 1 && ins.idNivel != 11)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
@@ -319,7 +324,7 @@
                         <h4 class="modal-title">Calificaciones</h4>
                     </div>
                     <div class="modal-body">
-                        <h4>Cuantitativos <small> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small> </h4>
+                        <h4 class="bg-primary titulo">Cuantitativas <small> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small> </h4>
                         <table class="table table-bordered" id="tablaNotas" style="background:#FFFFFF">
                             <thead>
                                 <tr>
@@ -346,7 +351,7 @@
                             </tbody>
                         </table>
                         <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
-                            <h4>Cualitativos <small> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+                            <h4 class="bg-primary titulo">Cualitativas <small> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
                             <table v-if="datos.cualitativas != ''" class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
                                 <thead>
                                     <tr class="cf">
@@ -390,6 +395,7 @@
                 buscando: false,
                 rudeBuscar: '407300182007718',
                 respuesta: '',
+                cargandoCalificaciones: false,
 
                 codigoRude: '',
                 estudiante: '',
@@ -478,6 +484,8 @@
                     });
                 },
                 seleccionarInscripcion: function(pos){
+                    this.cargandoCalificaciones = true;
+
                     this.idInscripcion = this.inscripciones[pos].idInscripcion;
                     this.sie = this.inscripciones[pos].sie;
                     this.institucioneducativa = this.inscripciones[pos].institucioneducativa;
@@ -496,7 +504,10 @@
                     this.informe = '';
 
                     // CARGAMOS LAS CALIFICACIONES
-                    axios.post(Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {idInscripcion: this.idInscripcion, idTramite: this.idTramite}))
+                    axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {
+                        idInscripcion: this.idInscripcion, 
+                        idTramite: this.idTramite
+                    }))
                     .then(response => {
                         if (response.data.tramitePendiente.length > 0) {
                             Swal.fire(
@@ -508,6 +519,7 @@
                             this.datos = response.data.datos;
                             $('#modalEstudiante').modal('hide');
                         }
+                        this.cargandoCalificaciones = false;
                     })
                     .catch(e => {
                         Swal.fire(
@@ -515,10 +527,13 @@
                           e,
                           'danger'
                         );
+
+                        this.cargandoCalificaciones = false;
                     });
                 },
                 agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura){
-                    if (idNotaTipo != 5) {
+                    if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11) {
+
                         var nuevaNota = {
                             idEstudianteNota: idEstudianteNota,
                             asignatura: asignatura,
@@ -569,9 +584,25 @@
                     }
                 },
                 validarValorNota: function(nota){
-                    // if(nota.notaNueva == ""){ nota.notaNueva = 0; }
-                    if(nota.notaNueva < 0){ nota.notaNueva = 0; }
-                    if(nota.notaNueva > 100){ nota.notaNueva = 100; }
+                    // VALIDACIONES TRIMESTRALES
+                    if(nota.idNotaTipo == 6 || nota.idNotaTipo == 7 || nota.idNotaTipo == 8){
+                        if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                        if(nota.notaNueva > 70){ nota.notaNueva = 70; }
+                    }
+                    if(nota.idNotaTipo == 30 || nota.idNotaTipo == 31 || nota.idNotaTipo == 32 || nota.idNotaTipo == 10){
+                        if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                        if(nota.notaNueva > 60){ nota.notaNueva = 60; }    
+                    }
+                    if(nota.idNotaTipo == 27 || nota.idNotaTipo == 28 || nota.idNotaTipo == 29){
+                        if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                        if(nota.notaNueva > 10){ nota.notaNueva = 10; }
+                    }
+
+                    // VALIDACION PARA NOTAS BIMESTRALES
+                    if(nota.idNotaTipo == 1 || nota.idNotaTipo == 2 || nota.idNotaTipo == 3 || nota.idNotaTipo == 4 || nota.idNotaTipo == 5){
+                        if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                        if(nota.notaNueva > 100){ nota.notaNueva = 100; }    
+                    }                    
 
                     if(nota.notaNueva != "" && nota.notaNueva != 0){
                         nota.notaNueva = Math.round(nota.notaNueva);

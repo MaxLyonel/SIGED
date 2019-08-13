@@ -44,6 +44,14 @@ class DefaultController extends Controller {
 
         //settear variables a usar antes de la interfaz login
         switch ($request->server->get('HTTP_HOST')) {
+            case 'procesos.local':
+            case '172.20.196.7':
+                $sysname = 'PROCESOS';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutProcesos.html.twig';
+                $this->session->set('pathSystem', "SieProcesosBundle");
+                break;
             case '172.20.196.9:8011':
             case 'siged.sie.gob.bo':
                 $sysname = 'REGULAR';

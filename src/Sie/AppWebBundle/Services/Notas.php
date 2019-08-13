@@ -201,7 +201,7 @@ class Notas{
                                                             'idNotaTipo'=>$tn[$i],
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=> $this->literal($tn[$i])['abrev'],
-                                                            'idFila'=>$an['id'].''.$tn[$i]
+                                                            'idFila'=>$a['asignaturaId'].''.$tn[$i]
                                                         );
                             }
                         }
@@ -218,7 +218,7 @@ class Notas{
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=>$this->literal($tn[$i]['abrev']),
-                                                            'idFila'=>$a['id'].''.$tn[$i]
+                                                            'idFila'=>$an['id'].''.$tn[$i]
                                                         );
                                     $existe = 'si';
                                     break;
@@ -235,7 +235,7 @@ class Notas{
                                                             'idNotaTipo'=>$i,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=>$this->literal($tn[$i]['abrev']),
-                                                            'idFila'=>$a['id'].''.$tn[$i]
+                                                            'idFila'=>$a['asignaturaId'].''.$tn[$i]
                                                         );
                             }
                         }
@@ -1465,9 +1465,12 @@ die;/*
 
                 if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($arrayPromedios) > 0 ) or ($gestion == 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
-
-                    if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
-                        $nuevoEstado = 26; // promovido por postbachillerato
+                    if ($inscripcion->getEstadomatriculaInicioTipo()) {
+                        if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+                            $nuevoEstado = 26; // promovido por postbachillerato
+                        }else{
+                            $nuevoEstado = 5; // Aprobado
+                        }   
                     }else{
                         $nuevoEstado = 5; // Aprobado
                     }
