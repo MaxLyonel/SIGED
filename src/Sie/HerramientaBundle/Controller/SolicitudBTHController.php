@@ -735,8 +735,9 @@ class SolicitudBTHController extends Controller {
             FROM institucioneducativa_especialidad_tecnico_humanistico ieth
             INNER JOIN especialidad_tecnico_humanistico_tipo espt ON ieth.especialidad_tecnico_humanistico_tipo_id = espt.id
             WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion");
-        $especialidades->execute();
+        $especialidades->execute(); 
         $especialidades_id = $especialidades->fetchAll();
+        $especialidad_homologado =array();
         if ($gestion == 2018) {
             foreach ($especialidades_id as $value) {
                 $esp_id = "";
@@ -769,18 +770,30 @@ class SolicitudBTHController extends Controller {
                 }
             }
         } else {
-            $especialidad_homologado = $especialidades_id;
-        }
-        $especialidades_restantes = $em->createQueryBuilder()
+                $especialidad_homologado = $especialidades_id;
+
+                }//dump($especialidad_homologado);die;
+        if(count($especialidad_homologado)>1){
+            $especialidades_restantes = $em->createQueryBuilder()
             ->select('e.id, e.especialidad')
             ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
-            ->where('e.id not in (:noEspecilidades)')
-            ->andWhere('e.esVigente = :estado')
+            ->where('e.esVigente = :estado')
+            ->andWhere('e.id not in (:noEspecilidades)')
             ->setParameter('noEspecilidades', $especialidad_homologado)
             ->setParameter('estado', true)
             ->orderBy('e.especialidad')
             ->getQuery()
             ->getResult();
+        } else {
+            $especialidades_restantes = $em->createQueryBuilder()
+            ->select('e.id, e.especialidad')
+            ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
+            ->where('e.esVigente = :estado')
+            ->setParameter('estado', true)
+            ->orderBy('e.especialidad')
+            ->getQuery()
+            ->getResult();
+        }
         return $especialidades_restantes;
     }
 
