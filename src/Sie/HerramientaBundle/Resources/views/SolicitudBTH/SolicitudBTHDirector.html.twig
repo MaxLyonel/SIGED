@@ -276,12 +276,13 @@
         })
         .then(function(willDelete)  {
             if (willDelete) {
-                if($('#select_especialidad').val()) {
-                    enviarSolicitudBth();
+                enviarSolicitudBth();
+                /* if($('#select_especialidad').val()) {
+                    
                 } else {
                     swal("Debe seleccionar al menos una especialidad.");
                     return false;
-                }
+                } */
             }
         });
     });
@@ -306,11 +307,17 @@
         });
         
         if (especialidad_ant.length > 0) {
-            especialidad_ant = especialidad_ant.concat($('#select_especialidad').val());
+            if ($('#select_especialidad').val()){
+                especialidad_ant = especialidad_ant.concat($('#select_especialidad').val());
+            }
         } else {
             especialidad_ant = $('#select_especialidad').val();
         }
         var especialidades = especialidad_ant.map(function(item) { return parseInt(item, 10); });
+        if(especialidades.length == 0) {
+            swal("Debe seleccionar al menos una especialidad.");
+            return false;
+        }
         ip.push({ select_especialidad : especialidades });
         ip.push({ grado: $('#form_grado').val() });
         var ipt = JSON.stringify(ip);
