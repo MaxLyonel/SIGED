@@ -51,8 +51,6 @@
                                             <h3 class="panel-title">2.- Información General</h3>
                                         </div>
                                         <div class="panel-body">
-                                            {% set iedu = ieducativa[0] %}
-                                            {% set iedusu = ieducativa[1] %}
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <b>Código RUE</b>
@@ -64,7 +62,7 @@
                                                     <b>Unidad Educativa</b>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    {{ iedu.institucioneducativa }}
+                                                    {{ institucion.institucioneducativa }}
                                                 </div>
                                             </div>
                                         </div>
@@ -134,7 +132,7 @@
                                     </div>
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title">5.- Año de escolaridad</h3>
+                                            <h3 class="panel-title">5.- Grado</h3>
                                         </div>
                                         <div class="panel-body">
                                             <div class="alert alert-info">
@@ -149,8 +147,8 @@
                                                     <b><span>Nivel: Secundario</span></b>
                                                 </div>
                                                 <div class="col-md-6 text-center">
-                                                    <p><b>Año de escolaridad</b></p>
-                                                    <p style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
+                                                    <p><b>Grado</b></p>
+                                                    <p id="literal_grado" style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +266,7 @@
                                             <div class="row" id="nota" style="display: none">
                                                 <div class="col-md-12">
                                                     <div class="alert alert-danger">
-                                                        <strong>Nota.-</strong> Al cancelar el támite de la Unidad Educativa: {{ iedu.institucioneducativa }} <b>NO</b> se autorizará para trabajar como BTH.
+                                                        <strong>Nota.-</strong> Al cancelar el támite de la Unidad Educativa: {{ institucion.institucioneducativa }} <b>NO</b> se autorizará para trabajar como BTH.
                                                     </div>
                                                 </div>
                                             </div>
@@ -292,10 +290,10 @@
 {{ parent() }}
     <script>
         $(document).ready(function(){
-            var informe = {{ informe }}
-                if(informe==1){
-                    document.getElementById("informe").checked = true;
-                }
+            var informe = {{ informe }};
+            if(informe==1){
+                document.getElementById("informe").checked = true;
+            }
             $('#NOBTH').hide();
             $('#adjdocumento').change(function() {
                 var a=(this.files[0].size);
@@ -355,7 +353,7 @@
         function  enviarSolicituDepartamentaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                text: "La información llenada será enviada a la instancia correspondiente.",
+                text: "Año de Escolaridad a implementar BTH: " +$('#literal_grado').text()+ "\n\nLa información llenada será enviada a la instancia correspondiente.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -406,17 +404,6 @@
                                 swal("Debe introducir alguna observación");
                                 return false;}
                         }
-
-                        /*if(respuesta == 'si'&& (respuesta2 == 'si'||respuesta2 == 'no')  ){
-
-                        }else{
-                            if(respuesta=='no' && respuesta2=='no'){
-                            }else{
-                                if(obstxt == ''){
-                                    swal("Debe introducir alguna observación");
-                                    return false;}
-                            }
-                        }*/
 
                         ip.push({grado:{{grado}}});
                         var ipt=JSON.stringify(ip);

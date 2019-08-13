@@ -1434,4 +1434,21 @@ class Funciones {
         }
     }
 
+    /**
+     * Servicio para eliminar especialidades bth
+     * @param  [integer] $codsie     [Id de inscripcion del estudiante]
+     * @param  [integer] $gestion    [id de la gestion]
+     * @return [boolean]             [Retorna true si elimmino las especialidades y false si no tiene especialidades]
+     */
+    public function eliminarEspecialidad($codsie,$gestion){
+       
+        $ieht = $this->em->createQueryBuilder()
+        ->delete('esp')
+        ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico','esp')
+        ->where('esp.institucioneducativa = '. $codsie)
+        ->andWhere('esp.gestionTipo='. $gestion)
+        ->getQuery()
+        ->getResult();
+        
+    }
 }

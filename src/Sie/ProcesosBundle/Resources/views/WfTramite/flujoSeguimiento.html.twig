@@ -40,6 +40,7 @@
             success: function (data) {
                 $('#flujo').empty();
                 $('#flujo').append(data);
+                $(".tooltips").tooltip();
                 var btn = document.getElementById("run"),
                 cd = document.getElementById("code"),
                 chart;
@@ -80,7 +81,7 @@
                     'flowstate' : {
                         'inicio' : { 'fill' : '#D7D7D7','font-color' : 'black', 'font-size' : 12},
                         'past' : { 'fill' : 'white','font-color' : 'black', 'font-size' : 12},
-                        //'current' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
+                        'recibido' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
                         'current' : {'fill' : '#8BF3FE', 'font-color' : '#1B5583', 'font-weight' : 'bold'},
                         'future' : { 'fill' : '#FFFF99'},
                         'request' : { 'fill' : 'blue'},
