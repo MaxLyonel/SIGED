@@ -327,9 +327,21 @@ class UnificacionRudeController extends Controller {
                         }
                     }
                     $this->addFlash('autoselcorr', 'Se ha seleccionado al rude con historial en:'. $msg .' Como el rude correcto.'); 
-                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudecor,'rudeinc' => $rudeinc));
                 }
                 
+            }
+            if($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1){
+                if ($studenta->getSegipId() == 1){
+                    $rudecor =$rudea;
+                    $rudeinc =$rudeb;
+                }
+                if ($studentb->getSegipId() == 1){
+                    $rudecor =$rudeb;
+                    $rudeinc =$rudea;
+                }
+                $this->addFlash('autoselcorr', 'Se ha seleccionado al rude con el Carnet de Identidad validado por Segip como el rude correcto.'); 
+                return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudecor,'rudeinc' => $rudeinc));
             }
 
             //*******FIN VERIFICANDO QUE ALGUNO DE LOS RUDES NO TENGA DATOS EN BACHILER DESTACADO
