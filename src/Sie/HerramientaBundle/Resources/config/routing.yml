@@ -215,3 +215,6 @@ sie_herramienta_anular_bth:
      resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
      prefix:   /sie/anularbth
 
+sie_newrequestbth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/newrequestbth.yml"
+     prefix:   /sie/newrequestbth
