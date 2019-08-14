@@ -469,12 +469,12 @@ class ReemplazoController extends Controller {
                         $entrenadorSave = false;
                         if(count($entrenadorEntity) > 0){
                             $entrenadorSave = true;
-                            $personaId = $entrenadorEntity["personaId"];
+                            // $personaId = $entrenadorEntity["personaId"];
                         } else {
                             $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($estudianteInscripcionJuegosId,($faseId-1));
                             if(count($entrenadorEntity) > 0){
                                 $entrenadorSave = true;
-                                $personaId = $entrenadorEntity["personaId"];
+                                // $personaId = $entrenadorEntity["personaId"];
                             } else {
                                 $entrenadorSave = false;
                             }
@@ -515,11 +515,21 @@ class ReemplazoController extends Controller {
                                     $comisionId = 140;
                                 }
                             }
-                            $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
-                            $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
-                            $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
-                            $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
-                            $em->persist($personaInscripcionJuegos);
+                            // $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
+                            // $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
+                            // $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
+                            // $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
+                            // $em->persist($personaInscripcionJuegos);
+
+                            foreach($entrenadorEntity as $entrenador){
+                                $personaId = $entrenador["personaId"];
+                                $comisionId = $entrenador["comisionId"];
+                                $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
+                                $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
+                                $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
+                                $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
+                                $em->persist($personaInscripcionJuegos);
+                            }
                         }
 
                         $estudianteInscripcionJuegosEntity->setEsactivo(false);
