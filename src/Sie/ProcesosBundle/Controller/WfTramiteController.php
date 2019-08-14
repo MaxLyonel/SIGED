@@ -70,6 +70,7 @@ class WfTramiteController extends Controller
         //dump($request);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
+        $roluserlugarid = $this->session->get('roluserlugarid');
         $pathSystem = $this->session->get('pathSystem');
         $tipo = $request->get('tipo');
         //validation if the user is logged
@@ -88,6 +89,9 @@ class WfTramiteController extends Controller
                 break;
             case 4:
                 $data = $this->listaConcluidos();
+                break;
+            case 5:
+                $data = $this->listaReactivadosBth($roluserlugarid);
                 break;
             default:
                 $data = $this->listaNuevos($pathSystem);
@@ -572,7 +576,7 @@ class WfTramiteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||p.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
+        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||p.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
         from tramite t
         join tramite_tipo tt on t.tramite_tipo=tt.id
         join flujo_tipo ft on t.flujo_tipo_id = ft.id
@@ -593,6 +597,31 @@ class WfTramiteController extends Controller
     }
 
     /**
+     * Listado de trámites concluidos
+     */
+    public function listaReactivadosBTh($roluserlugarid)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,ie.id as codigo_sie,ie.institucioneducativa,case when r.fecha_fin is null then'PENDIENTE' else 'CONCLUIDO' end as estado,r.fecha_inicio,r.fecha_fin as fecha_conclusion,r.obs,p.nombre || ' '|| p.paterno || ' '||p.materno as usuario
+            from tramite t
+            join tramite_tipo tt on t.tramite_tipo=tt.id
+            join flujo_tipo ft on t.flujo_tipo_id = ft.id
+            join institucioneducativa ie on t.institucioneducativa_id=ie.id
+			join jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
+			join lugar_tipo lt on lt.id = jg.lugar_tipo_id_distrito
+			join rehabilitacion_bth r on r.tramite_id=t.id
+			join usuario u on r.usuario_registro_id=u.id
+			join persona p on p.id=u.persona_id
+            where ft.id=6 and t.tramite_tipo=31 and lt.lugar_tipo_id=".$roluserlugarid);
+        $query->execute();
+        $data['entities'] = $query->fetchAll();;
+        $data['titulo'] = "Listado de trámites reactivados para BTH";
+        $data['tipo'] = 5;
+        return $data;
+    }
+
+    /**
      * funcion que lista el flujo de un tramite para el diagrama
      */
     public function listarF($flujotipo,$idtramite)
@@ -600,13 +629,14 @@ class WfTramiteController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id'=>$idtramite,'flujoTipo'=>$flujotipo));
-        
+        $data['tramite_tipo'] = $tramite->getTramiteTipo()->getTramiteTipo();
         if($tramite->getEstudianteInscripcion()){
             /**
             * TRAMITE PARA ESTUDIANTES
             */
             $data['tipo'] = "ESTUDIANTE: ";
             $data['nombre'] = $tramite->getEstudianteInscripcion()->getEstudiante()->getNombre() . ' ' . $tramite->getEstudianteInscripcion()->getEstudiante()->getPaterno() . ' ' . $tramite->getEstudianteInscripcion()->getEstudiante()->getMaterno();
+            $data['codsie'] = $tramite->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
 
             $query = $em->getConnection()->prepare("select p.id, p.flujo,d.estudiante, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
             from
@@ -632,16 +662,19 @@ class WfTramiteController extends Controller
         }elseif($tramite->getMaestroInscripcion()){
             $data['tipo'] = "MAESTRO: ";
             $data['nombre'] = $tramite->getMaestroInscripcion()->getPersona()->getNombre() . ' ' . $tramite->getMaestroInscripcion()->getPersona()->getPaterno() . ' ' . $tramite->getMaestroInscripcion()->getPersona()->getMaterno();
+            $data['codsie'] = $tramite->getMaestroInscripcion()->getInstitucioneducativa()->getId();
 
         }elseif($tramite->getApoderadoInscripcion()){
             $data['tipo'] = "APODERADO: ";
             $data['nombre'] = $tramite->getApoderadoInscripcion()->getPersona()->getNombre() . ' ' . $tramite->getApoderadoInscripcion()->getPersona()->getPaterno() . ' ' . $tramite->getApoderadoInscripcion()->getPersona()->getMaterno();
+            $data['codsie'] = $tramite->getApoderadoInscripcion()->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         
         }else{
             /**
             * TRAMITE PARA UNIDADES EDUCATIVAS
             */
             $data['tipo'] = "UNIDAD EDUCATIVA: ";
+            $data['codsie'] = $tramite->getInstitucioneducativa()->getId();
             if($tramite->getInstitucioneducativa()){
                 $data['nombre'] = $tramite->getInstitucioneducativa()->getInstitucioneducativa();
             }else{

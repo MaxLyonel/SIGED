@@ -51,8 +51,6 @@
                                             <h3 class="panel-title">2.- Información General</h3>
                                         </div>
                                         <div class="panel-body">
-                                            {% set iedu = ieducativa[0] %}
-                                            {% set iedusu = ieducativa[1] %}
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <b>Código RUE</b>
@@ -64,7 +62,7 @@
                                                     <b>Unidad Educativa</b>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    {{ iedu.institucioneducativa }}
+                                                    {{ institucion.institucioneducativa }}
                                                 </div>
                                             </div>
                                         </div>
@@ -134,7 +132,7 @@
                                     </div>
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title">5.- Año de escolaridad</h3>
+                                            <h3 class="panel-title">5.- Grado</h3>
                                         </div>
                                         <div class="panel-body">
                                             <div class="alert alert-info">
@@ -149,8 +147,8 @@
                                                     <b><span>Nivel: Secundario</span></b>
                                                 </div>
                                                 <div class="col-md-6 text-center">
-                                                    <p><b>Año de escolaridad</b></p>
-                                                    <p style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
+                                                    <p><b>Grado</b></p>
+                                                    <p id="literal_grado" style="font-size: 50px; font-weight: bold; color: green">{{ grado }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -256,7 +254,7 @@
         function  enviarSolicituDistritaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar la respuesta a la solicitud?",
-                text: "La información llenada será enviada a la instancia correspondiente.",
+                text: "Año de Escolaridad a implementar BTH: " +$('#literal_grado').text()+ "\n\nLa información llenada será enviada a la instancia correspondiente.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -264,11 +262,16 @@
             })
                 .then(function(willDelete)  {
                     if (willDelete) {
-                        var institucionid={{ institucion.id }}
+                        var institucionid = {{ institucion.id }};
+                        var datosw = {{ sw }};
+                        var distrito_id = {{ ubicacion['codigo_distrito'] }};
+                        var grado = {{ grado }};
                         var ip = [];
-                        if($('#informe:checked').val())
-                            ip.push({ informe : 1});
-                        else ip.push({ informe : 0 });
+                        if($('#informe:checked').val()) {
+                            ip.push({informe: 1});
+                        } else {
+                            ip.push({informe: 0 });
+                        }
                         ip.push({institucionid : institucionid});
                         var especialidades_id = [];
                         $("#select_especialidad").find("option").each(function(index, opc){
@@ -279,9 +282,10 @@
                         if($('#siprocede').is(':checked')) {
                             var evaluacion  ="SI";
                         } else {
-                            if(obstxt == ''){
+                            if(obstxt == '') {
                                 swal("Debe describir una observación.");
-                                return false;            }
+                                return false;
+                            }
                             var evaluacion  = "NO";
                         }
                         if($('#siprocede:checked').val())
@@ -290,22 +294,23 @@
                         if($('#noprocede:checked').val())
                         ip.push({noprocede: 1})
 
-                        if($('#adjdocumento').val()=="")
-                        {swal("Debe adjuntar su informe.");
-                        return false;}
-                        ip.push({grado:{{grado}}});
+                        if($('#adjdocumento').val() == "") {
+                            swal("Debe adjuntar su informe.");
+                            return false;
+                        }
+                        ip.push({'grado': grado});
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
                         var fd = new FormData();
                         fd.append('ipt', ipt);
-                        fd.append('id_distrito', {{ ubicacion['codigo_distrito'] }});
+                        fd.append('id_distrito', distrito_id);
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
                         fd.append('obstxt', obstxt);                       
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
-                        fd.append('sw',0);
+                        fd.append('sw', datosw);
                         $.ajax({
                             type: 'post',
                             url: "{{ path('solicitud_bth_enviosolicitud_Dep') }}",
