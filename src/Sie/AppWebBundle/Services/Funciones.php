@@ -1250,6 +1250,23 @@ class Funciones {
         return $tiempo;
     }
 
+    public function getTheCurrentYear($fechanacimiento, $fechaLimit){
+        
+        list($dia,$mes,$anno) = explode("-",$fechanacimiento);
+        list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+
+
+        $ano_diferencia = $annoLimit - $anno;
+        $mes_diferencia = $mesLimit - $mes;
+        $dia_diferencia = $diaLimit - $dia;
+        
+        if ($dia_diferencia < 0 && $mes_diferencia <= 0){
+            $ano_diferencia--;
+        }
+
+        return $ano_diferencia;
+    }    
+
 
 
     /**
