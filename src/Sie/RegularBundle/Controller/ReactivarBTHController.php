@@ -342,8 +342,8 @@ class ReactivarBTHController extends Controller {
         $documentoDepartamento =json_decode($resultDatos[1]->getDatos(),true);
         return array('especialidades' => $especialidadarray ,
             'grado' => ($datos[5]['grado'])?$datos[5]['grado']:'',
-            'documentoDistrito'=>$documentoDistrito[5],
-            'documentoDepartamento'=>$documentoDepartamento[6]);
+            'documentoDistrito'=>($documentoDistrito[5])?$documentoDistrito[5]:$documentoDistrito[4],
+            'documentoDepartamento'=>($documentoDepartamento[6])?$documentoDepartamento[6]:$documentoDepartamento[5],);
     }
 }
 /*
