@@ -737,7 +737,7 @@ class SolicitudBTHController extends Controller {
             WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion");
         $especialidades->execute(); 
         $especialidades_id = $especialidades->fetchAll();
-        $especialidad_homologado =array();
+        $especialidad_homologado = array();
         if ($gestion == 2018) {
             foreach ($especialidades_id as $value) {
                 $esp_id = "";
@@ -770,29 +770,28 @@ class SolicitudBTHController extends Controller {
                 }
             }
         } else {
-                $especialidad_homologado = $especialidades_id;
-
-                }//dump($especialidad_homologado);die;
-        if(count($especialidad_homologado)>1){
+            $especialidad_homologado = $especialidades_id;
+        }
+        if(count($especialidad_homologado)>0){
             $especialidades_restantes = $em->createQueryBuilder()
-            ->select('e.id, e.especialidad')
-            ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
-            ->where('e.esVigente = :estado')
-            ->andWhere('e.id not in (:noEspecilidades)')
-            ->setParameter('noEspecilidades', $especialidad_homologado)
-            ->setParameter('estado', true)
-            ->orderBy('e.especialidad')
-            ->getQuery()
-            ->getResult();
+                ->select('e.id, e.especialidad')
+                ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
+                ->where('e.esVigente = :estado')
+                ->andWhere('e.id not in (:noEspecilidades)')
+                ->setParameter('noEspecilidades', $especialidad_homologado)
+                ->setParameter('estado', true)
+                ->orderBy('e.especialidad')
+                ->getQuery()
+                ->getResult();
         } else {
             $especialidades_restantes = $em->createQueryBuilder()
-            ->select('e.id, e.especialidad')
-            ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
-            ->where('e.esVigente = :estado')
-            ->setParameter('estado', true)
-            ->orderBy('e.especialidad')
-            ->getQuery()
-            ->getResult();
+                ->select('e.id, e.especialidad')
+                ->from('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo','e')
+                ->where('e.esVigente = :estado')
+                ->setParameter('estado', true)
+                ->orderBy('e.especialidad')
+                ->getQuery()
+                ->getResult();
         }
         return $especialidades_restantes;
     }
