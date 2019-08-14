@@ -218,7 +218,7 @@ class UnificacionRudeController extends Controller {
             $message = null;
 
             if ($tramitea && $tramiteb) {
-                $message = 'Ambos rudes cuentan con tramite de diplomas, por lo que no pueden ser unificados.';
+                $message = 'Ambos rudes cuentan con tramite de diplomas, por lo que no pueden ser unificados.</br>Para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones correspondiente a uno de los rudes.';
                 $this->addFlash('notihistory', $message);
                 return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
             } else {
@@ -308,7 +308,7 @@ class UnificacionRudeController extends Controller {
                             $msg = $msg . '</br>-' . $key . '</br>';
                         }
                     }
-                    $this->addFlash('notihistory', 'Ambos rudes cuentan con historial:</br></br>'. $msg .'</br>Por lo que no pueden unificarse');
+                    $this->addFlash('notihistory', 'Ambos rudes cuentan con historial:</br></br>'. $msg .'</br>Por lo que no pueden unificarse.</br>Si uno de los rudes cuenta con trámite en Diplomas, para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones.');
                     return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
                 }else{
                     if(in_array(1,$arrudea)){
