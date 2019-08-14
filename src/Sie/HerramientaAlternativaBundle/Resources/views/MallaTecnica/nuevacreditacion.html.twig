@@ -65,11 +65,15 @@
             success: function (data) {
 
                 $('#form_especialidad').empty();
+                 $("#form_especialidad").prepend("<option value='' selected='selected'>Seleccionar...</option>");
                 $.each(data.listarespecialidades, function (i,value) {
+                   
                     $('#form_especialidad').append('<option value="' + i + '">' + value + '</option>');
                 });
 
-            }
+            },
+          
+
         });
     }
    function listarNivelesAlt(idEsp){

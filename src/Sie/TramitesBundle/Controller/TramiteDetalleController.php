@@ -897,7 +897,7 @@ class TramiteDetalleController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,15);
+        $rolPermitido = array(15,44,8);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -1244,7 +1244,7 @@ class TramiteDetalleController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(15,16,8,44,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -2341,7 +2341,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2810,12 +2810,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,14);
+        $rolPermitido = array(14,16,8,43,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -3114,12 +3114,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,15);
+        $rolPermitido = array(15,16,8,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -3418,12 +3418,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -3869,17 +3869,17 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
-		if(empty($activeMenu)){
-			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-		} 
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+		// } 
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
         
         return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonIndex.html.twig', array(
             'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerie('tramite_detalle_diploma_humanistico_impresion_carton_pdf','','','1')->createView(),
@@ -3914,12 +3914,14 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
-		if(empty($activeMenu)){
-			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-		} 
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }        
+        
+        $rolPermitido = array(14,16,8,42,43);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -4036,7 +4038,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
         // $activeMenu = 'asds';
 		
 		if(empty($activeMenu)){
@@ -4047,7 +4049,7 @@ class TramiteDetalleController extends Controller {
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
         
         return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonLoteIndex.html.twig', array(
             'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerieLote('tramite_detalle_diploma_humanistico_impresion_carton_lote_pdf','','','','1')->createView(),
@@ -4222,12 +4224,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,14);
+        $rolPermitido = array(14,16,8,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -4535,12 +4537,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,13);
+        $rolPermitido = array(13,14,16,8,10,41,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
