@@ -42,3 +42,7 @@ sie_juegos_RegisterPersonStudent:
     resource: "@SieJuegosBundle/Resources/config/routing/RegisterPersonStudent.yml"
     prefix:   /person
 
+sie_juegos_RegistryPersonComission:
+    resource: "@SieJuegosBundle/Resources/config/routing/RegistryPersonComission.yml"
+    prefix:   /registrypersoncomission
+
