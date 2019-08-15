@@ -23,10 +23,21 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
+/**
+ * Author: Carlos Pacha Cordova <pckrlos@gmail.com>
+ * Description:This is a class for reporting the commission data
+ * Date: 14-08-2019
+ *
+ *
+ * RegistryPersonComissionController.php
+ *
+ * Email bugs/suggestions to <pckrlos@gmail.com>
+ */
 class RegistryPersonComissionController extends Controller{
 
     public $session;
     public $currentyear;
+    public $userlogged;
     // public $comisionTipo;
 
     /**
@@ -35,14 +46,20 @@ class RegistryPersonComissionController extends Controller{
     public function __construct() {
         //init the session values
         $this->session = new Session();
-        $this->currentyear = $this->session->get('currentyear')-1;
+        $this->currentyear = $this->session->get('currentyear');
+        $this->userlogged = $this->session->get('userId');
     }
-
+    /**
+     * to index function to show the main page
+     * by krlos pacha pckrlos.a.gmail.dot.com
+     * @param type
+     * @return void
+     */
     public function indexAction(){
-        $id_usuario = $this->session->get('userId');
+        // $id_usuario = $this->session->get('userId');
 
         //validation if the user is logged
-        if (!isset($id_usuario)) {
+        if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
@@ -60,7 +77,17 @@ class RegistryPersonComissionController extends Controller{
         return $form;
     }
 
+    /**
+     * to look for person data 
+     * by krlos pacha pckrlos.a.gmail.dot.com
+     * @param form array by post
+     * @return template
+     */
     public function lookForDataAction(Request $request){
+        // check the users session
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         // get send data        
@@ -132,13 +159,26 @@ class RegistryPersonComissionController extends Controller{
     }
 
     public function newPersonAction(){
+        // check the users session
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         return $this->render('SieJuegosBundle:RegistryPersonComission:newPerson.html.twig', array(
                 // ...
             ));    
     }
 
-
+    /**
+     * to registry the commission data 
+     * by krlos pacha pckrlos.a.gmail.dot.com
+     * @param form array by post
+     * @return template
+     */
     public function registerCommissionAction(Request $request){
+        // check the users session
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         // get the send values
         $personId = $request->get('personId');
         $form = $this->formCommission($personId)->createView();
@@ -168,7 +208,17 @@ class RegistryPersonComissionController extends Controller{
         return $form;
     }
 
+    /**
+     * to save the commission info
+     * by krlos pacha pckrlos.a.gmail.dot.com
+     * @param form array by post
+     * @return template
+     */
     public function saveCommissionAction(Request $request){
+        // check the users session
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         // get the send values
         $form = $request->get('form');
         // create db conexin 
@@ -198,8 +248,17 @@ class RegistryPersonComissionController extends Controller{
         }
 
     }
-
+    /**
+     * to look for the person data by segip method
+     * by krlos pacha pckrlos.a.gmail.dot.com
+     * @param form array by post
+     * @return template
+     */
     public function lookForDataBySegipAction(Request $request){
+        // check the users session
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         // get the data send
         $form = $request->get('form');
         
