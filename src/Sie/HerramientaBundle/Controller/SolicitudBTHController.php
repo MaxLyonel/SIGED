@@ -814,8 +814,8 @@ class SolicitudBTHController extends Controller {
             ->orderBy("td.flujoProceso")
             ->getQuery()
             ->getSingleResult();
-        $datos = json_decode($resultDatos->getDatos());
-        $grado_reporte = $datos[3];
+        $datos = json_decode($resultDatos->getDatos(),true);
+        $grado_reporte = (int)$datos[3]['grado'];
 
         $arch = 'FORMULARIO_'.$request->get('idUE').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
