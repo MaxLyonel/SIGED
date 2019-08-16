@@ -43,9 +43,9 @@
         {% if entity is defined and entityEquipoLaboratorio is defined %}
             <div class="row">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2 col-md-offset-10">
                         {{form_start(eliminarregistro, { 'attr': {'data-toggle': 'validator','role': "form",'onsubmit': 'confirmar(this); return false;'} } )}}
-                        {{ form_widget(eliminarregistro.eliminar,{'attr':{'class':'btn btn-danger col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                        {{ form_widget(eliminarregistro.eliminar,{'attr':{'class':'btn btn-sm btn-danger' } } ) }}
                         {{form_end(eliminarregistro)}}
                         {#<button type="button" id="eliminar_registro" class="btn btn-danger form-control btn-xs" onclick="eliminarRegistroEqui()" > Eliminar Registro </button>#}
                     </div>
@@ -415,7 +415,7 @@
     {{parent()}}
     <script>
         function confirmar(form){
-            if(confirm('¿ Estas seguro de eliminar la información reportada?')){
+            if(confirm('¿Esta seguro de eliminar la información reportada? \nSe recomienda NO eliminar la información reportada sin autorización del Ministerio de Educación')){
                 form.submit();
                 return true;
             }
