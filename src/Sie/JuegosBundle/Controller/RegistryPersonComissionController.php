@@ -71,7 +71,7 @@ class RegistryPersonComissionController extends Controller{
 
     private function formFindPerson(){
         $form = $this->createFormBuilder()
-                ->add('ci', 'text', array('label' => 'carnet Identidad', 'attr' => array('placeholder' => 'Ingresar CI', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('cifind', 'text', array('label' => 'carnet Identidad', 'attr' => array('placeholder' => 'Ingresar CI', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('complemento', 'text', array('label' => 'complemento', 'attr' => array('placeholder' => 'Ingresar Complemento','class' => 'form-control', 'required' => false,'style' => 'text-transform:uppercase', 'maxlength'=>'2')))
                 ->add('find','button',array('label'=>'Buscar','attr'=>array('class'=>'btn btn-success','onclick'=>'lookForData()')))
                 ->getForm();
@@ -170,7 +170,7 @@ class RegistryPersonComissionController extends Controller{
     private function getPerson($data){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select * from persona 
-        where carnet = '".$data['ci']."' and complemento = '".$data['complemento']."'");
+        where carnet = '".$data['cifind']."' and complemento = '".$data['complemento']."'");
         $query->execute();
         return $query->fetch();
         // $entity = $em->getRepository('SieAppWebBundle:Persona');
