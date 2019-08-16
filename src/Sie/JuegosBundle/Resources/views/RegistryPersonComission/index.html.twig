@@ -172,7 +172,7 @@
     };
     var registerCommission = function(){
         var personId = $('#form_personId').val();
-        if(confirm('¿Esta seguro de realizar la asignación?')){
+        //if(confirm('¿Esta seguro de realizar la asignación?')){
                $.ajax({
                     type: 'post',
                     url: Routing.generate('registrypersoncomission_registerCommission'),
@@ -188,8 +188,8 @@
                     },
                 });
                 return true;
-            }else
-                return false;
+            //}else
+            //    return false;
                
     };
     var saveCommission = function(){

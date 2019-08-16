@@ -236,7 +236,7 @@ class RegistryPersonComissionController extends Controller{
                         ->setParameter('levelId','12')
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision','attr'=>array('class'=>'form-control')))
-        ->add('personId', 'text', array('data'=>$personId , 'mapped'=>false))
+        ->add('personId', 'hidden', array('data'=>$personId , 'mapped'=>false))
         ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-info','onclick'=>'saveCommission()')))
         
         ->getForm();
