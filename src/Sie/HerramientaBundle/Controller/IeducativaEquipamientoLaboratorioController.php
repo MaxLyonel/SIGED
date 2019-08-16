@@ -137,7 +137,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
         $entityInstitucionEducativaEquipoLaboratorio = $this->getInstitucionEducativaEquipoLaboratorio($sie);
         //dump($entityInstitucionEducativaEquipoLaboratorio);die;
         if ($entityInstitucionEducativaEquipoLaboratorio) {
-            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion']));
+            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion'].'. Se recomienda NO eliminar la información reportada sin autorización del Ministerio de Educación'));
 
             return $this->render($this->session->get('pathSystem') . ':IeducativaEquipamientoLaboratorio:equipamientoLaboratorioVista.html.twig', array(
                 'entity' => $entityIntitucionEducativaGestion[0]
@@ -287,7 +287,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
 
         $entityInstitucionEducativaEquipoLaboratorio = $this->getInstitucionEducativaEquipoLaboratorio($sie);
         if ($entityInstitucionEducativaEquipoLaboratorio) {
-            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion']));
+            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion'].'. Se recomienda NO eliminar la información reportada, sin autorización del Ministerio de Educación'));
             return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
         }
 
