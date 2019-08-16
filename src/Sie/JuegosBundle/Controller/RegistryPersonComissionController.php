@@ -18,6 +18,7 @@ use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos as EstudianteInscripc
 use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos as EquipoEstudianteInscripcionJuegos;
 use Sie\AppWebBundle\Entity\JdpPersonaInscripcionJuegos;
 use Sie\AppWebBundle\Entity\ComisionJuegosDatos;
+use Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos;
 use Sie\AppWebBundle\Entity\Persona;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
@@ -88,6 +89,7 @@ class RegistryPersonComissionController extends Controller{
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         // get send data        
@@ -125,6 +127,18 @@ class RegistryPersonComissionController extends Controller{
                 ->add('paterno', 'text', array('label' => 'Paterno', 'attr' => array('placeholder' => 'Ingresar Paterno', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('materno', 'text', array('label' => 'Materno', 'attr' => array('placeholder' => 'Ingresar Materno', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('regPerson','button',array('label'=>'Regstrar Persona','attr'=>array('class'=>'btn btn-success','onclick'=>'lookForDataBySegip()')))
+
+                ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
+                    'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('gt')
+                                ->where('gt.id IN (:arrGenero)')
+                                ->setParameter('arrGenero', array(1,2))
+                                // ->orderBy('lt.codigo', 'ASC')
+                        ;
+                    }, 'property' => 'genero'
+                ))
+
                 ->getForm();
         return $form;
     }
@@ -270,8 +284,8 @@ class RegistryPersonComissionController extends Controller{
         // dump($form);
         // dump($arrParametros);
         // die;
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
-
+        // $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+        $answerSegip = true;
         if($answerSegip){
             // save the person data
             $swSavePerson = $this->savePerson($form);
@@ -308,30 +322,19 @@ class RegistryPersonComissionController extends Controller{
     }
 
     private function saveCommissionData($form){
+        
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $swAnswer = false;
         try {
 
             // save the commision to the person choose
-            $objComisionJuegosDatos = new ComisionJuegosDatos();
-            $objComisionJuegosDatos->setDepartamentoTipo($form['departamento']);
-            // $objComisionJuegosDatos->setPruebaTipo($entityPruebaTipo);
-            $objComisionJuegosDatos->setFaseTipo($em->getRepository('SieAppWebBundle:FaseTipo')->find(3));
-            $objComisionJuegosDatos->setGestionTipoId($this->session->get('currentyear')); 
-            // $objComisionJuegosDatos->setInstitucioneducativa($entityInstitucioneducativa);  
-            // $objComisionJuegosDatos->setFoto($foto);  
-            $objComisionJuegosDatos->setCarnetIdentidad('000');  
-            $objComisionJuegosDatos->setNombre('usertest');  
-            $objComisionJuegosDatos->setPaterno('usertest');  
-            $objComisionJuegosDatos->setMaterno('usertest');  
-            $objComisionJuegosDatos->setCelular('110');  
-            // $objComisionJuegosDatos->setCorreo($correo);  
-            $objComisionJuegosDatos->setComisionTipoId($form['comisionTipo']);  
-            // $objComisionJuegosDatos->setEsentrenador($esEntrenador);  
-            // $objComisionJuegosDatos->setAvc($avc);
-            // $objComisionJuegosDatos->setGeneroTipo($generoPersonaId);  
-            // $objComisionJuegosDatos->setPosicion($posicion);                                                           
+            $objComisionJuegosDatos = new JdpDelegadoInscripcionJuegos();
+            $objComisionJuegosDatos->setFaseTipo($em->getRepository('SieAppWebBundle:JdpFaseTipo')->find(4));
+            $objComisionJuegosDatos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($form['personId']));
+            $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
+            $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
+            $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
             
             $em->persist($objComisionJuegosDatos);
             $em->flush(); 
@@ -345,23 +348,33 @@ class RegistryPersonComissionController extends Controller{
     }
 
     private function savePerson($form){
+        // dump($form);
+        // die;
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $swAnswer = false;
         try {
-            // $objPerson = new Persona();
-            // $objPerson->setCarnet();
-            // $objPerson->setComplemento();
-            // $objPerson->setFechaNacimiento();
-            // $objPerson->setNombre();
-            // $objPerson->setPaterno();
-            // $objPerson->setMaterno();
+            $objPerson = new Persona();
+            $objPerson->setSegipId(1);
+            $objPerson->setCarnet($form['ci']);
+            $objPerson->setComplemento($form['complemento']);
+            $objPerson->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
+            $objPerson->setPaterno(mb_strtoupper($form['paterno'], 'utf8'));
+            $objPerson->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
+            $objPerson->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            $objPerson->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
+            // need ask about these values 
+            $objPerson->setRda(0);
+            $objPerson->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(0));
+            $objPerson->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(0));
+            $objPerson->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+            $objPerson->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
 
-            // $em->persist($objPerson);
-            // $em->flush();            
+            $em->persist($objPerson);
+            $em->flush();            
             
             // $swAnswer = $objPerson->getId();
-            $swAnswer = 111111;
+            $swAnswer = $objPerson->getId();
         } catch (Exception $e) {
             $swAnswer = false;
         }

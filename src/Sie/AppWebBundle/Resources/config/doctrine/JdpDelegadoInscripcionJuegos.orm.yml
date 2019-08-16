@@ -2,12 +2,18 @@ Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos:
     type: entity
     table: jdp_delegado_inscripcion_juegos
     indexes:
-        IDX_FF774DBF9E27EC77:
+        IDX_FF774DBF179FF95:
             columns:
-                - fase_tipo_id
+                - gestion_tipo_id
+        IDX_FF774DBF606841D:
+            columns:
+                - lugar_tipo_id
         IDX_FF774DBFF5F88DB9:
             columns:
                 - persona_id
+        IDX_FF774DBF9E27EC77:
+            columns:
+                - fase_tipo_id
         IDX_FF774DBF2C887590:
             columns:
                 - comision_tipo_id
@@ -28,13 +34,22 @@ Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos:
             fixed: false
             comment: ''
     manyToOne:
-        faseTipo:
-            targetEntity: JdpFaseTipo
+        gestionTipo:
+            targetEntity: GestionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                fase_tipo_id:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         persona:
@@ -44,6 +59,15 @@ Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos:
             inversedBy: null
             joinColumns:
                 persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        faseTipo:
+            targetEntity: JdpFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fase_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         comisionTipo:
