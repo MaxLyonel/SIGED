@@ -148,6 +148,7 @@
         }
 
         if(!message){
+            if(confirm('¿Esta seguro de realizar la asignación?')){
                $.ajax({
                     type: 'post',
                     url: Routing.generate('registrypersoncomission_lookForDataBySegip'),
@@ -162,6 +163,8 @@
 
                     },
                 });
+            }else
+                return false;
         }else{
             alert(message);
             return false;
@@ -185,8 +188,7 @@
                     },
                 });
                 return true;
-            }
-            else
+            }else
                 return false;
                
     };
