@@ -95,12 +95,30 @@ class RegistryPersonComissionController extends Controller{
         // get send data        
         $form = $request->get('form');
         $dataPerson = $this->getPerson($form);
+        
+        $objComisionJuegosDatos = false;
         $entity = false;
         $form = false;
+
         if($dataPerson){    
             $entity = $em->getRepository('SieAppWebBundle:Persona')->find($dataPerson['id']);
+            $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+            if($objComisionJuegosDatos){
+                $message = 'Datos existentes';
+                $this->addFlash('lookForDataMessage', $message);
+                $typeMessage = 'success';
+            }else{
+                $message = 'Registre datos de comision';
+                $this->addFlash('lookForDataMessage', $message);
+                $typeMessage = 'warning';
+
+            }
+            // dump($objComisionJuegosDatos);die;
             $form = $this->formRegisterCommission($entity)->createView();
         }else{
+            $message = 'Registre datos de la Persona';
+            $this->addFlash('lookForDataMessage', $message);
+            $typeMessage = 'warning';
             $form = $this->formFindPersonBySegip()->createView();
         }
         // die;
@@ -108,11 +126,14 @@ class RegistryPersonComissionController extends Controller{
                 'entity' => $entity,
                 'form' => $form,
                 'dataCommission' => array(),
+                'objComisionJuegosDatos' => $objComisionJuegosDatos,
+                'typeMessage' => $typeMessage,
+
             ));    
     }
     private function formRegisterCommission($entity){
         $form = $this->createFormBuilder()
-        ->add('personId', 'text', array('data'=>$entity->getId() , 'mapped'=>false))
+        ->add('personId', 'hidden', array('data'=>$entity->getId() , 'mapped'=>false))
         ->add('regPerson','button',array('label'=>'Regstrar Comision','attr'=>array('class'=>'btn btn-warning','onclick'=>'registerCommission()')))
                 ->getForm();
         return $form;
