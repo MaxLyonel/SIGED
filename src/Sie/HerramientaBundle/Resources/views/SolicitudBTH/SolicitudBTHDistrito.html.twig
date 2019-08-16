@@ -265,7 +265,7 @@
                         var institucionid = {{ institucion.id }};
                         var datosw = {{ sw }};
                         var distrito_id = {{ ubicacion['codigo_distrito'] }};
-                        var grado = {{ grado }};
+                        var grado = $('#literal_grado').text();
                         var ip = [];
                         if($('#informe:checked').val()) {
                             ip.push({informe: 1});
@@ -281,6 +281,10 @@
                         var obstxt=$('#obstxt').val();
                         if($('#siprocede').is(':checked')) {
                             var evaluacion  ="SI";
+                            if($('#literal_grado').text() == '') {
+                                swal("Grado no existente, se recomienda hacer la devolución del trámite a la Unidad Educativa.");
+                                return false;
+                            }
                         } else {
                             if(obstxt == '') {
                                 swal("Debe describir una observación.");
@@ -307,7 +311,7 @@
                         fd.append('evaluacion', evaluacion);
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
-                        fd.append('obstxt', obstxt);                       
+                        fd.append('obstxt', obstxt);
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
                         fd.append('sw', datosw);
