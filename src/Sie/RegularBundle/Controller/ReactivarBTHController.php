@@ -195,15 +195,19 @@ class ReactivarBTHController extends Controller {
                 $ieht->setGestionTipoId($sesion->get('currentyear'));
                 $ieht->setInstitucioneducativaId($form['codsie']);
                 $ieht->setInstitucioneducativa($tramite->getInstitucioneducativa()->getInstitucioneducativa());
-                $entity->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
+                $ieht->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
                 $ieht->setEsimpreso(false);
+                $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
+                $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
+                $em->persist($ieht);
+                $em->flush();
             }else{ //Modificacion tabla institucioneducativa_humanistico_tecnico
                 $ieht->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
+                //Modificacion tabla institucioneducativa_humanistico_tecnico
+                $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
+                $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
+                $em->flush();
             }
-            //Modificacion tabla institucioneducativa_humanistico_tecnico
-            $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
-            $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
-            $em->flush();
             
             /**
              * registro de reactivacion bth
