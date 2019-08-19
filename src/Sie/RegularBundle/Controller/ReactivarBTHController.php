@@ -190,6 +190,21 @@ class ReactivarBTHController extends Controller {
         //dump($form,$imagen,$ieht);die;
         $em->getConnection()->beginTransaction();
         try {
+            if (!$ieht) {//Si el tramite fue anulado de IEHT
+                $ieht = new InstitucioneducativaHumanisticoTecnico();
+                $ieht->setGestionTipoId($sesion->get('currentyear'));
+                $ieht->setInstitucioneducativaId($form['codsie']);
+                $ieht->setInstitucioneducativa($tramite->getInstitucioneducativa()->getInstitucioneducativa());
+                $entity->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
+                $ieht->setEsimpreso(false);
+            }else{ //Modificacion tabla institucioneducativa_humanistico_tecnico
+                $ieht->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
+            }
+            //Modificacion tabla institucioneducativa_humanistico_tecnico
+            $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
+            $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
+            $em->flush();
+            
             /**
              * registro de reactivacion bth
             */
@@ -202,12 +217,6 @@ class ReactivarBTHController extends Controller {
             $rehabilitacionBth->setUsuarioRegistroId($id_usuario);
             $rehabilitacionBth->setInstitucioneducativaId($ieht->getInstitucioneducativaId());
             $em->persist($rehabilitacionBth);
-            $em->flush();
-            
-            //Modificacion tabla institucioneducativa_humanistico_tecnico
-            $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
-            $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
-            $ieht->setFechaModificacion(new \DateTime(date('Y-m-d')));
             $em->flush();
 
             //Modificacion tipo de tramite a Regularizacion en tramite
