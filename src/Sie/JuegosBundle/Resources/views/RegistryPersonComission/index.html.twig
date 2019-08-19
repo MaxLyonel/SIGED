@@ -27,7 +27,7 @@
                                 <div class="form-group no-margin">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            {{form_widget(form.ci)}}
+                                            {{form_widget(form.cifind)}}
                                         </div>
                                         <div class="col-md-2">
                                             {{form_widget(form.complemento)}}
@@ -86,7 +86,7 @@
     <script type="text/javascript">
 
     var lookForData = function(){
-        var ci = $('#form_ci').val();
+        var ci = $('#form_cifind').val();
         
         var dataForm = $('#idFormFindPerson').serialize();
           if (ci.length > 0) {
@@ -108,6 +108,9 @@
 
             } else {
 
+                alert('debe registrar el CI');
+                return false;
+
             }
 
 
@@ -116,6 +119,36 @@
 
     var lookForDataBySegip = function(){
         var formData = $('#lookForDataBySegipForm').serialize();
+        var message = '';
+        var ci              = $('#form_ci').val();
+        var genero          = $('#form_generoTipo').val();
+        var nombre          = $('#form_nombre').val();
+        var materno         = $('#form_materno').val();
+        var paterno        = $('#form_paterno').val();
+        var fechaNacimiento = $('#form_fechaNacimiento').val();
+        //alert(ci +' '+ genero+' '+nombre+' '+paterno+' '+materno+' '+fechaNacimiento);return false;
+
+        if(!ci){
+            message+='\nCampo Requerido CI';
+        }
+        /*if(genero){
+            message+='\nCampo Requerido GENERO';
+        }*/
+        if(!nombre){
+            message+='\nCampo Requerido NOMBRE';
+        }
+        if(!paterno){
+            message+='\nCampo Requerido PATERNO';
+        }
+        if(!materno){
+            message+='\nCampo Requerido MATERNO';
+        }
+        if(!fechaNacimiento){
+            message+='\nCampo Requerido FECHA NACIMIENTO';
+        }
+
+        if(!message){
+            if(confirm('¿Esta seguro de realizar la asignación?')){
                $.ajax({
                     type: 'post',
                     url: Routing.generate('registrypersoncomission_lookForDataBySegip'),
@@ -130,9 +163,16 @@
 
                     },
                 });
+            }else
+                return false;
+        }else{
+            alert(message);
+            return false;
+        }
     };
     var registerCommission = function(){
         var personId = $('#form_personId').val();
+        //if(confirm('¿Esta seguro de realizar la asignación?')){
                $.ajax({
                     type: 'post',
                     url: Routing.generate('registrypersoncomission_registerCommission'),
@@ -147,6 +187,10 @@
 
                     },
                 });
+                return true;
+            //}else
+            //    return false;
+               
     };
     var saveCommission = function(){
         var formData = $('#idCommissionData').serialize();
