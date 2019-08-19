@@ -70,7 +70,7 @@ class EstudianteDatopersonalController extends Controller {
         $queryEntidadDeportistas = $em->getConnection()->prepare("
                 select e.id as estudiante_id, lt5.lugar as departamento, cpt.id as circunscripcion, lt.lugar as distrito, cast(ie.id as varchar) || ' - ' || ie.institucioneducativa as institucioneducativa
                 , dt.disciplina, pt.prueba, gt.genero, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, edp.estatura,  edp.peso,  edp.talla,  edp.foto
-                from estudiante_inscripcion_juegos as eij
+                from jdp_estudiante_inscripcion_juegos as eij
                 inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
                 inner join estudiante as e on e.id = ei.estudiante_id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
@@ -82,10 +82,10 @@ class EstudianteDatopersonalController extends Controller {
                 inner join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                 inner join lugar_tipo as lt5 on lt5.id = lt4.lugar_tipo_id
                 inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
-                inner join prueba_tipo as pt on pt.id = eij.prueba_tipo_id 
+                inner join jdp_prueba_tipo as pt on pt.id = eij.prueba_tipo_id 
                 inner join genero_tipo as gt on gt.id = e.genero_tipo_id
-                inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
-                inner join circunscripcion_tipo as cpt on cpt.id = jg.circunscripcion_tipo_id
+                inner join jdp_disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
+                inner join jdp_circunscripcion_tipo as cpt on cpt.id = jg.circunscripcion_tipo_id
                 left join (select * from jdp_estudiante_datopersonal where id in (select max(id) from jdp_estudiante_datopersonal where gestion_tipo_id = ".$gestionActual." group by estudiante_id)) as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
                 where eij.gestion_tipo_id = ".$gestionActual." and eij.fase_tipo_id = 4 and lt5.codigo = '".$codigoEntidad."' --and dt.nivel_tipo_id = 13
                 order by lt5.lugar, cpt.id, lt.lugar, ie.id, dt.disciplina, pt.prueba, gt.genero, e.nombre, e.paterno, e.materno
