@@ -88,7 +88,7 @@ class WfTramiteController extends Controller
                 $data = $this->listaEnviados($rol,$usuario);
                 break;
             case 4:
-                $data = $this->listaConcluidos($roluserlugarid);
+                $data = $this->listaConcluidos($rol,$roluserlugarid);
                 break;
             case 5:
                 $data = $this->listaReactivadosBth($roluserlugarid);
@@ -572,7 +572,7 @@ class WfTramiteController extends Controller
     /**
      * Listado de trámites concluidos
      */
-    public function listaConcluidos($roluserlugarid)
+    public function listaConcluidos($rol,$roluserlugarid)
     {
         $em = $this->getDoctrine()->getManager();
         $lugarNivelid = $em->getRepository('SieAppWebBundle:LugarTipo')->find($roluserlugarid)->getLugarNivel()->getId();
@@ -590,6 +590,12 @@ class WfTramiteController extends Controller
         left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
         left join persona pa on ai.persona_id=pa.id
         order by ft.flujo,t.id,t.fecha_fin"); */
+        if($rol == 9){
+
+        }else{
+            
+        }
+        $id_usuario = $this->session->get('userId');
         $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,'SIE:'||ie.id as codigo_tabla,
         'Institucion Educativa: '||ie.institucioneducativa as nombre,
         'CONCLUIDO' as estado
@@ -599,7 +605,7 @@ class WfTramiteController extends Controller
         join institucioneducativa ie on t.institucioneducativa_id=ie.id
         join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
         join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
-        where case when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
         
         union all
         select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,'RUDE: '|| e.codigo_rude as codigo_tabla,
@@ -614,7 +620,7 @@ class WfTramiteController extends Controller
         join institucioneducativa ie on iec.institucioneducativa_id=ie.id
         join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
         join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
-        where case when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
         
         union all
         select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,'CI: '||p.carnet as codigo_tabla,
@@ -628,7 +634,7 @@ class WfTramiteController extends Controller
         join institucioneducativa ie on mi.institucioneducativa_id=ie.id
         join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
         join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
-        where case when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
         
         union all
         select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,'CI: '||pa.carnet as codigo_tabla,
@@ -644,7 +650,7 @@ class WfTramiteController extends Controller
         join institucioneducativa ie on iec.institucioneducativa_id=ie.id
         join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
         join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
-        where case when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
 
         union all
         select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,'SIE:' as codigo_tabla,
@@ -657,7 +663,7 @@ class WfTramiteController extends Controller
         join flujo_proceso fp on fp.id=td.flujo_proceso_id and fp.orden=1
         join wf_solicitud_tramite wf on wf.tramite_detalle_id=td.id and wf.es_valido is true
         join lugar_tipo lt on lt.id=wf.lugar_tipo_distrito_id
-        where case when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        where case when ". $rol ."=9 then t.institucioneducativa_id NOTNULL when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
         and t.estudiante_inscripcion_id ISNULL and t.maestro_inscripcion_id ISNULL and t.apoderado_inscripcion_id ISNULL and t.institucioneducativa_id ISNULL
         ;");
         $query->execute();
