@@ -690,7 +690,7 @@ class WfTramiteController extends Controller
 			join rehabilitacion_bth r on r.tramite_id=t.id
 			join usuario u on r.usuario_registro_id=u.id
 			join persona p on p.id=u.persona_id
-            where ft.id=6 and t.tramite_tipo=31 and lt.lugar_tipo_id=".$roluserlugarid);
+            where ft.id=6 and t.tramite_tipo=31");
         $query->execute();
         $data['entities'] = $query->fetchAll();;
         $data['titulo'] = "Listado de trámites reactivados para BTH";

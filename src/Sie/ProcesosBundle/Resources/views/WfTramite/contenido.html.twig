@@ -140,7 +140,7 @@
                                 <td>
                                     {% if entity.id_estado == 15 or entity.id_estado == 4 %} {#si esta enviado/devuelto #}
                                         <form action="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" method="post" style="display:inline-block" id="form_recibir">                    
-                                            <button type="submit" class="btn btn-warning btn-xs tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Recibir para:{{ entity.proceso_tipo }}" onclick="disabled = true;this.form.submit()">
+                                            <button type="submit" class="btn btn-warning btn-xs tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Recibir para:{{ entity.proceso_tipo }}" id="btn_recibir" onclick="disabled = true;this.form.submit()">
                                                 <i class="glyphicon glyphicon-check"></i>
                                             </button>
                                         </form>
