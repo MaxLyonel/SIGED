@@ -357,7 +357,7 @@
                                     <td>{{ entity.fecha_inicio|date('d-m-Y') }}</td>
                                     <td>{% if entity.fecha_conclusion  %}{{ entity.fecha_conclusion|date('d-m-Y') }}{% endif %}</td>
                                     <td>{{ entity.estado }}</td>
-                                    <td>{{ entity.obs }}</td>
+                                    <td><spam class = "more">{{ entity.obs }}</spam></td>
                                     <td>{{ entity.usuario }}</td>
                                 </tr>
                             {% endfor %}
