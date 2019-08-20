@@ -1,0 +1,45 @@
+    {% for flashMessage in app.session.flashbag.get('messageCommission') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h3 class="panel-title">Registrar Información de Comisión</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idCommissionData'} } )}}
+            <div class="form-body">
+                <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                            <strong>Departamento</strong></br>
+                                {{form_widget(form.departamento)}}
+                            </div>
+                            <div class="col-md-6">
+                            <strong>Comisión</strong></br>
+                                {{form_widget(form.comisionTipo)}}
+                            </div>
+                            {{form_widget(form.personId)}}
+                        </div>
+                    </div>
+                    
+                </div><!-- /.form-body -->
+                <div class="form-footer">
+                    <div class="pull-right">
+                        {# <button class="btn btn-danger mr-5">Cancel</button> #}
+                        {{form_widget(form.regCommission)}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.form-footer -->
+            </div>
+		{{form_end(form) }}<!-- /.form-footer -->
+            
+        </div><!-- /.panel-body -->
+        
+    </div>

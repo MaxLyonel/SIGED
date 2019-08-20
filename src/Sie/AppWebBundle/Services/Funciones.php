@@ -1250,6 +1250,23 @@ class Funciones {
         return $tiempo;
     }
 
+    public function getTheCurrentYear($fechanacimiento, $fechaLimit){
+        
+        list($dia,$mes,$anno) = explode("-",$fechanacimiento);
+        list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+
+
+        $ano_diferencia = $annoLimit - $anno;
+        $mes_diferencia = $mesLimit - $mes;
+        $dia_diferencia = $diaLimit - $dia;
+        
+        if ($dia_diferencia < 0 && $mes_diferencia <= 0){
+            $ano_diferencia--;
+        }
+
+        return $ano_diferencia;
+    }    
+
 
 
     /**
@@ -1434,4 +1451,21 @@ class Funciones {
         }
     }
 
+    /**
+     * Servicio para eliminar especialidades bth
+     * @param  [integer] $codsie     [Id de inscripcion del estudiante]
+     * @param  [integer] $gestion    [id de la gestion]
+     * @return [boolean]             [Retorna true si elimmino las especialidades y false si no tiene especialidades]
+     */
+    public function eliminarEspecialidad($codsie,$gestion){
+       
+        $ieht = $this->em->createQueryBuilder()
+        ->delete('esp')
+        ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico','esp')
+        ->where('esp.institucioneducativa = '. $codsie)
+        ->andWhere('esp.gestionTipo='. $gestion)
+        ->getQuery()
+        ->getResult();
+        
+    }
 }

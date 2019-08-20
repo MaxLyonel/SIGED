@@ -48,6 +48,8 @@ class ReporteLaboFisQuimController extends Controller {
             ,case when a.tipo_area = 'R' then 'RURAL' when a.tipo_area = 'U' then 'URBANA' else '' end as area
             ,case when w.institucioneducativa_id is null then 'NO' else 'SI' end as registro_labo
             ,w.id
+            ,w.fecha_registro
+            ,w.fecha_modificacion
             from
             (select  a.id as cod_ue_id,a.institucioneducativa as desc_ue,a.orgcurricular_tipo_id,a.estadoinstitucion_tipo_id, h.estadoinstitucion, a.le_juridicciongeografica_id as cod_le_id,a.orgcurricular_tipo_id as cod_org_curr_id,f.orgcurricula
             ,a.dependencia_tipo_id as cod_dependencia_id, e.dependencia,a.convenio_tipo_id as cod_convenio_id,g.convenio,d.cod_dep as id_departamento,d.des_dep as desc_departamento

@@ -42,6 +42,11 @@
                                     <li>
                                         <a href="javascript:void(0);" onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
                                     </li>
+                                    {% if app.session.get('roluser') in [8,41] %}
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="reactivadosBth()"> <i class="fa fa-file-text-o"></i> Reactivados BTH</a>
+                                        </li>
+                                    {% endif %}
                                 </ul>
                             </div>    
                         </div>
@@ -232,6 +237,26 @@
             });
         }
 
+        function reactivadosBth(){
+            formData = {tipo: 5};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#titulo').text('Trámites Reactivados para BTH');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    cargatablas();
+                    $(".tooltips").tooltip();
+                },
+            });
+        }
+
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell
             $('#table tfoot th').each( function () {
@@ -297,6 +322,15 @@
                     $('#modal').append(data);
                 },
             });
+        }
+        function validar(){
+           if (confirm('Esta seguro de recibir el trámite?')){
+               //$('#btn_recibir').attr('disabled',true);
+               //return true;
+           }else{
+               return false;
+           }
+           
         }
 
     </script>
