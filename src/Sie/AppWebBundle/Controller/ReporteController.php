@@ -3113,6 +3113,9 @@ class ReporteController extends Controller {
      * @return chart
      */
     public function chartColumnInformacionGeneral($entity,$titulo,$subTitulo,$tipoReporte,$contenedor) {
+        $format = '{point.label:,.0f} ({point.y:.1f}%)';
+        $tituloY = '';
+        $valueY = '{value} %';
         switch ($tipoReporte) {
             case 1:
                 //$datosTemp = "{name: 'No Incorporados', y: ".round(((100*$entity['cant_no_incorporado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_no_incorporado']."}, {name: 'Retiros Abandono', y: ".round(((100*$entity['cant_retiro_abandono'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_abandono']."}, {name: 'Retiros Traslado', y: ".round(((100*$entity['cant_retiro_traslado'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_traslado']."}, {name: 'Retiros', y: ".round(((100*$entity['cant_retiro'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro']."}, {name: 'Retiros Doble Promoción', y: ".round(((100*$entity['cant_retiro_doble_promocion'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['cant_retiro_doble_promocion']."}, {name: 'Efectivos', y: ".round(((100*$entity['total_matricula'])/(($entity['total_inscrito']==0) ? 1:$entity['total_inscrito'])),1).", label: ".$entity['total_matricula']."},";
@@ -3153,10 +3156,13 @@ class ReporteController extends Controller {
             case 13:
                 $datosTemp = "";
                 foreach($entity as $dato){
-                    $datosTemp = $datosTemp . "{name: '". $dato['nombre'] ."', y: ".round(((100*$dato['cantidad'])/(($dato['total']==0) ? 1:$dato['total'])),1).", label: ".$dato['cantidad']."},";    
+                    $datosTemp = $datosTemp . "{name: '". $dato['nombre'] ."', y: " . $dato['cantidad'] . ", label: ".$dato['cantidad']."},";    
                 }
                 $pointLabel = "Institutos";
-                $name = 'Carrera';
+                $name = 'Carrera:';
+                $format = '{point.label:,.0f}';
+                $tituloY = 'Institutos Técnicos y/o Tecnológicos';
+                $valueY = '{value}';
                 break;
             case 14:
                 $datosTemp = "";
@@ -3169,10 +3175,12 @@ class ReporteController extends Controller {
             case 15:
                 $datosTemp = "";
                 foreach($entity as $dato){
-                    $datosTemp = $datosTemp . "{name: '". $dato['detalle'] ."', y: ".round(((100*$dato['cantidad'])/(($dato['total']==0) ? 1:$dato['total'])),1).", label: ".$dato['cantidad']."},";    
+                    $datosTemp = $datosTemp . "{name: '". $dato['detalle'] ."', y: ".$dato['cantidad'].", label: ".$dato['cantidad']."},";    
                 }
                 $pointLabel = "Centros";
                 $name = 'Área de Atención';
+                $format = '{point.label:,.0f}';
+                $valueY = '{value}';
                 break;
             default:
                 $datosTemp = "";
@@ -3192,14 +3200,14 @@ class ReporteController extends Controller {
                         text: '".$subTitulo."'
                     },
                     xAxis: {
-                        type: 'category'
+                        type: 'category',
                     },
                     yAxis: {
                         title: {
-                            text: ''
+                            text: '". $tituloY ."'
                         },
                         labels: {
-                            format: '{value} %'
+                            format: '". $valueY ."'
                         }
                     },
                     legend: {
@@ -3210,7 +3218,7 @@ class ReporteController extends Controller {
                             borderWidth: 0,
                             dataLabels: {
                                 enabled: true,
-                                format: '{point.label:,.0f} ({point.y:.1f}%)'
+                                format: '". $format ."'
                             }
                         }
                     },        
@@ -5044,7 +5052,7 @@ class ReporteController extends Controller {
             $link = false;
         }
         
-        $chartAmbito = $this->chartDonut3dInformacionGeneral($entityEstadistica[4],"Centros de Educación Especial segun Ámbito de Educación",$gestionActual,14,"chartContainerAmbito");
+        //$chartAmbito = $this->chartDonut3dInformacionGeneral($entityEstadistica[4],"Centros de Educación Especial segun Ámbito de Educación",$gestionActual,14,"chartContainerAmbito");
         $chartArea = $this->chartPie($entityEstadistica[2],"Centros de Educación Especial segun Área Geográfica",$gestionActual,3,"chartContainerArea");
         $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica[1],"Centros de Educación Especial según Dependencia",$gestionActual,14,"chartContainerDependencia");
         $chartDiscapacidad = $this->chartColumnInformacionGeneral($entityEstadistica[3]," Centros de Educación Especial según Áreas de Atención",$gestionActual,15,"chartContainerDiscapacidad");
@@ -5061,7 +5069,7 @@ class ReporteController extends Controller {
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
                 'infoEstadistica'=>$entityEstadistica,
-                'datoGraficoAmbito'=>$chartAmbito,
+                //'datoGraficoAmbito'=>$chartAmbito,
                 'datoGraficoArea'=>$chartArea,
                 'datoGraficoDependencia'=>$chartDependencia,
                 'datoGraficoDiscapacidad'=>$chartDiscapacidad,
@@ -5074,7 +5082,7 @@ class ReporteController extends Controller {
         } else {
             return $this->render('SieAppWebBundle:Reporte:institucionEducativaEspecial.html.twig', array(
                 'infoEntidad'=>$entidad,
-                'datoGraficoAmbito'=>$chartAmbito,
+                //'datoGraficoAmbito'=>$chartAmbito,
                 'datoGraficoArea'=>$chartArea,
                 'datoGraficoDependencia'=>$chartDependencia,
                 'datoGraficoDiscapacidad'=>$chartDiscapacidad,

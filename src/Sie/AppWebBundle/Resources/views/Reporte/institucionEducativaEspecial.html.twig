@@ -85,7 +85,7 @@
                     <div id="tour-8" class="panel shadow">
                         <div class="panel-heading">
                             <div id="tour-12" class="pull-left">
-                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Centros de Educación Especial {% if infoSubEntidad is defined and link %}por {{infoSubEntidad[0]['nombrearea']}}{%endif%}</h3>
+                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Centros de Educación Especial {% if infoSubEntidad is defined and link %}por {{infoSubEntidad[0]['nombrearea']}}{% endif %}</h3>
                             </div>   
                             <div class="pull-right"> 
                             </div>                          
@@ -153,7 +153,7 @@
             {% endif %}
             
             <div id="tour-7" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">     
-                {% if datoGraficoAmbito is defined %}
+                {# {% if datoGraficoAmbito is defined %}
                     <div class="row">                                       
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="panel panel-default shadow">
@@ -179,7 +179,35 @@
                             </div>
                         </div>
                     </div>
-                {% endif %} 
+                {% endif %}  #}
+                {% if datoGraficoDiscapacidad is defined %}
+                    <div class="row">                   
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-default shadow">
+                                <!--
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class='fa fa-map'></i> Unidades Educativas - Dependencia</h3>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-inverse" onclick="seeGraphic(5,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
+                                            <i class='fa fa-bar-chart'></i>
+                                        </button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                -->
+                                <div class="panel-body">
+                                    <!-- Start project overview --> 
+                                    <div id="chartContainerDiscapacidad" style="height: 300px;"> </div> 
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div> 
+                {% endif %}
                 {% if datoGraficoArea is defined %}
                     <div class="row">                                       
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -235,34 +263,6 @@
                         </div>
                     </div> 
                 {% endif %}
-                {% if datoGraficoDiscapacidad is defined %}
-                    <div class="row">                   
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="panel panel-default shadow">
-                                <!--
-                                <div class="panel-heading">
-                                    <div class="pull-left">
-                                        <h3 class="panel-title"><i class='fa fa-map'></i> Unidades Educativas - Dependencia</h3>
-                                    </div>
-                                    <div class="pull-right">
-                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
-                                            <i class="fa fa-angle-up"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-inverse" onclick="seeGraphic(5,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
-                                            <i class='fa fa-bar-chart'></i>
-                                        </button>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                -->
-                                <div class="panel-body">
-                                    <!-- Start project overview --> 
-                                    <div id="chartContainerDiscapacidad" style="height: 300px;"> </div> 
-                                </div><!-- /.panel-body -->
-                            </div>
-                        </div>
-                    </div> 
-                {% endif %}
             </div>        
         </div>
         <div class="row">
@@ -303,11 +303,11 @@
                 {% endif %} 
             {% endautoescape %}            
 
-            {% autoescape %}
+            /*{% autoescape %}
                 {% if datoGraficoAmbito is defined %}
                     {{ datoGraficoAmbito|raw }}
                 {% endif %} 
-            {% endautoescape %}
+            {% endautoescape %}*/
 
             {% autoescape %}
                 {% if datoGraficoArea is defined %}
@@ -326,7 +326,7 @@
             {% endautoescape %}
 
             $(function () {
-                chartContainerAmbitoLoad(); 
+                //chartContainerAmbitoLoad(); 
                 chartContainerAreaLoad();
                 chartContainerDependenciaLoad();
                 chartContainerDiscapacidadLoad();

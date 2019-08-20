@@ -69,14 +69,16 @@
                         <div class="panel-heading">
                             <div class="pull-left">
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
-                            </div>  
+                            </div>
                             <div class="pull-right">
-                                <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosPdf'].submit();" title="Descargar Instituciones Educativas en formato PDF" class="btn btn-danger">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-success">
-                                    <i class="fa fa-file-excel-o"></i>
-                                </button>
+                                {% if  infoEntidad.rolactual in [0,7] %}
+                                    <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosPdf'].submit();" title="Descargar Instituciones Educativas en formato PDF" class="btn btn-danger">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </button>
+                                    <button id="tour-14" onclick="document.forms['formEstadisticaInstitutosTecnicostecnologicosXls'].submit();" title="Descargar Instituciones Educativas en formato EXCEL" class="btn btn-success">
+                                        <i class="fa fa-file-excel-o"></i>
+                                    </button>
+                                {% endif %}
                             </div>
                             <div class="clearfix"></div>
                         </div>
