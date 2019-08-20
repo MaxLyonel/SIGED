@@ -138,6 +138,15 @@ class TramiteModificacionCalificacionesController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
 
+        // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DOCUMENTOS EMITIDOS
+        $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
+        if (count($documentos) > 0) {
+            $response->setStatusCode(202);
+            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
+            return $response;
+        }
+        // dump($documentos);die;
+
         // SI EL ESTUDIANTE NO EXISTE, DEVOLVEMOS 204 SIN CONTENIDO
         if(!$estudiante){
             $response->setStatusCode(202);
@@ -213,6 +222,8 @@ class TramiteModificacionCalificacionesController extends Controller {
         $idTramite = $request->get('idTramite');
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
 
         if ($idTramite == "") {
             $idTramite = 0;
@@ -224,26 +235,54 @@ class TramiteModificacionCalificacionesController extends Controller {
                     from tramite t
                     inner join tramite_detalle td on td.tramite_id = t.id
                     inner join wf_solicitud_tramite wf on wf.tramite_detalle_id = td.id
+                    inner join flujo_proceso fp on td.flujo_proceso_id =fp.id
                     where t.fecha_fin is null
                     and t.id != ". $idTramite ."
                     and wf.datos like '%".$idInscripcion."%'
                     and t.institucioneducativa_id = ". $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() ."
                     and wf.es_valido is true
+                    and fp.flujo_tipo_id = 7
                     ");
+
         $query->execute();
         $tramitePendiente = $query->fetchAll();
 
+        $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+
         $datos = [];
+        $promedioGeneral = ''; // PARA PRIMARIA 2019
         if(count($tramitePendiente)<=0) {
-            $datos = $this->get('notas')->regular($idInscripcion, 4);
+            $datos = $this->get('notas')->regular($idInscripcion, $operativo - 1);
+            // dump($datos);die;
+            if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
+                foreach ($datos['cualitativas'] as $key => $value) {
+                    if ($value['idNotaTipo'] == 5) {
+                        $promedioGeneral = $value['notaCuantitativa'];
+                    }
+                }
+            }
         }
 
+// dump($datos);die;
+        // ESTADOS MATRICULAS
+        $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(4,5,11,28)));
+        $arrayEstados = [];
+        foreach ($estados as $key => $value) {
+            $arrayEstados[] = array(
+                'id'=>$value->getId(),
+                'estadoMatricula'=>$value->getEstadomatricula()
+            );
+        }
+
+        // dump($arrayEstados);die;
 
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData(array(
             'datos'=>$datos,
-            'tramitePendiente'=>$tramitePendiente
+            'tramitePendiente'=>$tramitePendiente,
+            'estadosMatricula'=>$arrayEstados,
+            'promedioGeneral'=>$promedioGeneral
         ));
 
         return $response;
@@ -386,7 +425,8 @@ class TramiteModificacionCalificacionesController extends Controller {
                     $lugarTipo['lugarTipoIdDistrito']
                 );
 
-                $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
+                // $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
+
             }else{
                 // NUEVAMENTE ENVIAMOS EL TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteEnviado(
@@ -405,14 +445,17 @@ class TramiteModificacionCalificacionesController extends Controller {
                 );
 
                 $msg = "El Tramite ".$registroTramite['msg']." fue enviado exitosamente";
+
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', $msg);
             }
 
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('exito', $msg);
-
             $response->setStatusCode(200);
-            $response->setData($registroTramite);
+            $response->setData(array(
+                'idTramite'=>$registroTramite['idtramite'],
+                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones', array('idTramite'=>$registroTramite['idtramite']))
+            ));
             return $response;
 
         } catch (Exception $e) {
@@ -503,11 +546,44 @@ class TramiteModificacionCalificacionesController extends Controller {
 
     public function formularioVistaImprimirLibretaAction(Request $request){
         try {
-
+            // OBTENEMOS LAS VARIABLES
             $idTramite = $request->get('id');
             $em = $this->getDoctrine()->getManager();
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
             $flujoTipo = $tramite->getFlujoTipo()->getId();
+
+            $sie = $tramite->getInstitucioneducativa()->getId();
+            $gestion = $tramite->getGestionId();
+
+            // OBTENEMOS EL LUGAR TIPO
+            $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+
+            // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
+            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+            $tareaActual = $tarea['tarea_actual'];
+
+            // ENVIAMOS EL TRAMITE
+            $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                $this->session->get('userId'),
+                $this->session->get('roluser'),
+                $flujoTipo,
+                $tareaActual,
+                'institucioneducativa',
+                $sie,
+                'Libreta impresa',
+                '',
+                $idTramite,
+                '',
+                '',
+                $lugarTipo['lugarTipoIdDistrito']
+            );
+
+            // CRAEMOS EL MENSAJE DE TRAMITE FINALIZADO
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', "Tramite Nro. ". $idTramite ." finalizado");
+
+            // OBTENEMOS EL HISTORIAL DEL TRAMITE
             $historial = $this->historial($idTramite);
 
             foreach ($historial as $h) {
@@ -517,6 +593,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 }
             }
 
+            // CREAMOS LAS VARIABLES PARA LA IMPRESION DE LA LIBRETA
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
 
@@ -549,40 +626,40 @@ class TramiteModificacionCalificacionesController extends Controller {
 
     public function formularioVistaImprimirFinalizarAction(Request $request){
         try {
-            $idTramite = $request->get('idTramite');
-            $em = $this->getDoctrine()->getManager();
-            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
-            $flujoTipo = $tramite->getFlujoTipo()->getId();
-            $sie = $tramite->getInstitucioneducativa()->getId();
-            $gestion = $tramite->getGestionId();
+            // $idTramite = $request->get('idTramite');
+            // $em = $this->getDoctrine()->getManager();
+            // $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+            // $flujoTipo = $tramite->getFlujoTipo()->getId();
+            // $sie = $tramite->getInstitucioneducativa()->getId();
+            // $gestion = $tramite->getGestionId();
 
-            $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+            // $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
 
-            // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
-            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
-            $tareaActual = $tarea['tarea_actual'];
+            // // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
+            // $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+            // $tareaActual = $tarea['tarea_actual'];
 
-            // ENVIAMOS EL TRAMITE
-            $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                $this->session->get('userId'),
-                $this->session->get('roluser'),
-                $flujoTipo,
-                $tareaActual,
-                'institucioneducativa',
-                $sie,
-                'Libreta impresa',
-                '',
-                $idTramite,
-                '',
-                '',
-                $lugarTipo['lugarTipoIdDistrito']
-            );
+            // // ENVIAMOS EL TRAMITE
+            // $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+            //     $this->session->get('userId'),
+            //     $this->session->get('roluser'),
+            //     $flujoTipo,
+            //     $tareaActual,
+            //     'institucioneducativa',
+            //     $sie,
+            //     'Libreta impresa',
+            //     '',
+            //     $idTramite,
+            //     '',
+            //     '',
+            //     $lugarTipo['lugarTipoIdDistrito']
+            // );
 
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('exito', "Tramite Nro. ". $idTramite ." finalizado");
+            // $request->getSession()
+            //         ->getFlashBag()
+            //         ->add('exito', "Tramite Nro. ". $idTramite ." finalizado");
 
-            return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
+            // return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
 
         } catch (Exception $e) {
             
@@ -611,7 +688,7 @@ class TramiteModificacionCalificacionesController extends Controller {
 
             $idTramite = $request->get('idTramite');
             $procedente = $request->get('procedente');
-            $observacion = $request->get('observacion');
+            $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
             $subsanable = $request->get('subsanable');
 
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
@@ -768,17 +845,22 @@ class TramiteModificacionCalificacionesController extends Controller {
 
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
 
+        // GENERAMOS EL MENSAJE PARA LA APROBACION
         $msg = '';
         if($operativo >= 4){
             $msg = 'Se derivará el trámite a la unidad educativa, para que imprima la nueva libreta';
         }else{
             $msg = "";
         }
+        // OBTENEMOS EL ESTADO DE MATRICULA
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $estadomatricula = $inscripcion->getEstadomatriculaTipo()->getId();
 
         return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaDepartamento.html.twig', array(
             'idTramite'=>$idTramite,
             'historial'=>$historial,
-            'msg'=>$msg
+            'msg'=>$msg,
+            'estadomatricula'=>$estadomatricula
         ));
     }
 
@@ -789,7 +871,9 @@ class TramiteModificacionCalificacionesController extends Controller {
 
             $idTramite = $request->get('idTramite');
             $aprueba = $request->get('aprueba');
-            $observacion = $request->get('observacion');
+            $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
+
+            $estadomatricula = $request->get('estadomatricula');
 
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
             $flujoTipo = $tramite->getFlujoTipo()->getId();
@@ -823,9 +907,9 @@ class TramiteModificacionCalificacionesController extends Controller {
                     $datosNotas = $h['datos'];
                 }
             }
-// dump($datosNotas);die;
-            // VERIFICAMOS SI EXISTE EL INFORME
-            if(isset($_FILES['resAdm'])){
+
+            // VERIFICAMOS SI EXISTE EL INFORME Y SI EL ESTADO DE MATRICULA DEL ESTUDIANTE ES DIFERENTE A EFECTIVO 4
+            if(isset($_FILES['resAdm']) and $estadomatricula != 4){
                 $file = $_FILES['resAdm'];
 
                 if ($file['name'] != "") {
@@ -875,14 +959,31 @@ class TramiteModificacionCalificacionesController extends Controller {
             }
 
             // ARMAMOS EL ARRAY DE LOS DATOS
-
-            $datos = json_encode(array(
-                'sie'=>$sie,
-                'aprueba'=>$aprueba,
-                'gestionConsolidada'=>$gestionConsolidada,
-                'observacion'=>$observacion,
-                'resAdm'=>$resAdm
-            ));
+            // VERIFICAMOS SI EL ESTADO DE MATRICULA ES IGUAL A 4 EFECTIVO PARA NO REGISTRA RESOLUCION ADMINISTRATIVA
+            if ($estadomatricula == 4) {
+                $datos = json_encode(array(
+                    'sie'=>$sie,
+                    'aprueba'=>$aprueba,
+                    'gestionConsolidada'=>$gestionConsolidada,
+                    'observacion'=>$observacion,
+                    'estadomatricula'=>$estadomatricula,
+                    'resAdm'=>$resAdm,
+                    'nroResAdm'=>'',
+                    'fechaResAdm'=>''
+                ));
+            }else{
+                $datos = json_encode(array(
+                    'sie'=>$sie,
+                    'aprueba'=>$aprueba,
+                    'gestionConsolidada'=>$gestionConsolidada,
+                    'observacion'=>$observacion,
+                    'estadomatricula'=>$estadomatricula,
+                    'resAdm'=>$resAdm,
+                    'nroResAdm'=>$request->get('nroResAdm'),
+                    'fechaResAdm'=>$request->get('fechaResAdm')
+                ));
+            }
+            
 
             // ENVIAMOS EL TRAMITE
             $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(

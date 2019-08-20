@@ -181,6 +181,8 @@ class Notas{
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$an['notaCuantitativa'],
                                                             'notaCualitativa'=>$an['notaCualitativa'],
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=> $this->literal($tn[$i])['abrev'],
@@ -198,6 +200,8 @@ class Notas{
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>0,
                                                             'notaCualitativa'=>'',
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$tn[$i],
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=> $this->literal($tn[$i])['abrev'],
@@ -215,6 +219,8 @@ class Notas{
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$an['notaCuantitativa'],
                                                             'notaCualitativa'=>$an['notaCualitativa'],
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=>$this->literal($tn[$i]['abrev']),
@@ -232,6 +238,8 @@ class Notas{
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>0,
                                                             'notaCualitativa'=>'',
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$i,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=>$this->literal($tn[$i]['abrev']),
@@ -436,6 +444,8 @@ class Notas{
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$valorNota,
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=>$an['notaTipo'],
@@ -457,6 +467,8 @@ class Notas{
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>$valorNota,
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$i,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=>$this->literal($i)['titulo'],
@@ -478,6 +490,8 @@ class Notas{
                                                                 'id'=>$cont."-5",
                                                                 'idEstudianteNota'=>$an['idNota'],
                                                                 'nota'=>$an['notaCuantitativa'],
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
                                                                 'idNotaTipo'=>$an['idNotaTipo'],
                                                                 'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                                 'bimestre'=>$an['notaTipo'],
@@ -493,6 +507,8 @@ class Notas{
                                                             'id'=>$cont."-5",
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>'',
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>5,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=>'Promedio',
@@ -545,6 +561,8 @@ class Notas{
                                                              'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                              'notaCualitativa'=>$c->getNotaCualitativa(),
                                                              'notaCuantitativa'=>0,
+                                                             'notaCuantitativaNueva'=>'',
+                                                             'notaCualitativaNueva'=>'',
                                                              'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                              'idFila'=>$idInscripcion.''.$i
                                                             );
@@ -561,7 +579,9 @@ class Notas{
                                                          'idNotaTipo'=>$i,
                                                          'notaCualitativa'=>'',
                                                          'notaCuantitativa'=>'',
-                                                         'notaTipo'=>$this->literal($i),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
+                                                         'notaTipo'=>$this->literal($i)['titulo'],
                                                          'idFila'=>$idInscripcion.''.$i
                                                         );
                             $existe = true;
@@ -580,6 +600,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                          'idFila'=>$idInscripcion.'18'
                                                         );
@@ -596,7 +618,9 @@ class Notas{
                                                      'idNotaTipo'=>18,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal(18),
+                                                     'notaCuantitativaNueva'=>'',
+                                                     'notaCualitativaNueva'=>'',
+                                                     'notaTipo'=>$this->literal(18)['titulo'],
                                                      'idFila'=>$idInscripcion.'18'
                                                     );
                         $existe = true;
@@ -630,6 +654,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                          'idFila'=>$idInscripcion.''.$i
                                                         );
@@ -646,7 +672,9 @@ class Notas{
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i),
+                                                     'notaCuantitativaNueva'=>'',
+                                                     'notaCualitativaNueva'=>'',
+                                                     'notaTipo'=>$this->literal($i)['titulo'],
                                                      'idFila'=>$idInscripcion.''.$i
                                                     );
                         $existe = true;
@@ -665,6 +693,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                          'idFila'=>$idInscripcion.'5'
                                                         );
@@ -681,6 +711,8 @@ class Notas{
                                                      'idNotaTipo'=>5,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
+                                                     'notaCuantitativaNueva'=>'',
+                                                     'notaCualitativaNueva'=>'',
                                                      'notaTipo'=>'Promedio anual',
                                                      'idFila'=>$idInscripcion.'5'
                                                     );
@@ -700,6 +732,7 @@ class Notas{
                 'gestionActual'=>$this->session->get('currentyear'),
                 'idInscripcion'=>$idInscripcion,
                 'gestion'=>$gestion,
+                'grado'=>$grado,
                 'tipoNota'=>$tipo,
                 'estadosPermitidos'=>$estadosPermitidos,
                 'cantidadFaltantes'=>$cantidadFaltantes,
@@ -1552,7 +1585,7 @@ die;/*
                                         $inscripcion->getId(),
                                         'estudiante_inscripcion',
                                         'U',
-                                        $request->server->get('HTTP_HOST'),
+                                        '',
                                         $nuevo,
                                         $anterior,
                                         'SERVICIO NOTAS - ESTADO MATRICULA',

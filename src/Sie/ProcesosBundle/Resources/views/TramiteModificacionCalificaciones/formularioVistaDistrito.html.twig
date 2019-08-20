@@ -4,20 +4,26 @@
         label{
             font-weight: bold;
         }
+        .jupper{
+            text-transform: uppercase;
+        }
     </style>
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span>Solicitud de Modificaciòn y Adiciòn de Calificaciones</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
                     <a href="{{ path('wf_tramite_index') }}">Tramites</a>
-                    {# <a href={{ path('tramite_modificacion_calificaciones_index') }}>Solicitud Modificación/Adición de calificaciones</a> #}
                     <i class="fa fa-angle-right"></i>
                 </li>
-
-                <li class="active">Index</li>
+                <li>
+                    <i class="fa fa-file"></i>
+                    Solicitud de Modificaciòn y/o Adiciòn de Calificaciones
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Formulario recepción distrito</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
@@ -27,7 +33,7 @@
 
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title"> <i class="fa fa-file"></i> Recepción y verificación Distrito </h3>
+                <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Recepción y verificación Distrito </h3>
             </div>
             <div class="panel-body">
                 <form action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
@@ -60,11 +66,11 @@
                     </div>
                     <div class="form-group">
                         <label>Observación</label>
-                        <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control" required></textarea>
+                        <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
                     </div>
                     <div class="form-group">
                         <label>Adjuntar informe (Opcional)</label>
-                        <input type="file" name="informe">
+                        <input type="file" name="informe" onchange="cargarArchivo(event);">
                         <br>
                     </div>
                     <div class="form-group">
@@ -80,6 +86,7 @@
 
 {% block javascripts %}
     {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript">
         function validarRadio(){
             if($('#procedente1').is(':checked')){
@@ -96,6 +103,32 @@
             validarRadio();
         });
         validarRadio();
+
+        function cargarArchivo(event){
+            var informe = event.target.files[0];
+            var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+            if(!allowedExtensions.exec(event.target.value)){
+                event.target.value = '';
+                Swal.fire(
+                      'Archivo incorrecto!',
+                      'El archivo adjunto debe ser una imagen o un archivo pdf',
+                      'warning'
+                    );
+                return false;
+            }else{
+                var megas = (informe.size / 1024)/1024;
+                if (megas > 2) {
+                    event.target.value = '';
+                    Swal.fire(
+                      'Tamaño no permitido!',
+                      'El archivo debe tener un peso menor a 2 mg',
+                      'warning'
+                    );
+                    return false;
+                }
+            }
+            this.informe = event.target.files[0];
+        }
 
     </script>
 {% endblock %}

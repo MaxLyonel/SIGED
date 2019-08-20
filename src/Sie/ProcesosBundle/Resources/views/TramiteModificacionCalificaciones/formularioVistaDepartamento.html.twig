@@ -4,20 +4,26 @@
         label{
             font-weight: bold;
         }
+        .jupper{
+            text-transform: uppercase;
+        }
     </style>
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span>Solicitud de Modificaciòn y Adiciòn de Calificaciones</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
                     <a href="{{ path('wf_tramite_index') }}">Tramites</a>
-                    {# <a href={{ path('tramite_modificacion_calificaciones_index') }}>Solicitud Modificación/Adición de calificaciones</a> #}
                     <i class="fa fa-angle-right"></i>
                 </li>
-
-                <li class="active">Index</li>
+                <li>
+                    <i class="fa fa-file"></i>
+                    Solicitud de Modificaciòn y/o Adiciòn de Calificaciones
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Formulario recepción departamento</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
@@ -27,11 +33,12 @@
 
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title"> <i class="fa fa-file"></i> Recepción y verificación Departamento </h3>
+                <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de Recepción y verificación Departamento </h3>
             </div>
             <div class="panel-body">
                 <form action="{{path('tramite_modificacion_calificaciones_deriva_departamento')}}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="idTramite" value="{{idTramite}}">
+                    <input type="hidden" name="estadomatricula" value="{{estadomatricula}}">
                     <div class="form-group">
                         <label>¿Aprobar trámite?</label>
                         <div class="radio">
@@ -47,13 +54,28 @@
                     </div>
                     <div class="form-group">
                         <label>Observación</label>
-                        <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control" required></textarea>
+                        <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
                     </div>
-                    <div id="divRA" class="form-group" style="display:none">
-                        <label>Adjuntar Resolucion Administrativa</label>
-                        <input type="file" id="resAdm" name="resAdm" required>
-                        <br>
-                    </div>
+                    {% if estadomatricula != 4 %}
+                        <div id="divRA" style="display:none">
+                            <h5><b>Resolución Administrativa</b> </h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Nro. de R.A.</label>
+                                    <input type="text" name="nroResAdm" id="nroResAdm" class="form-control" placeholder="Ejm. 001/2019">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Fecha de R.A.</label>
+                                    <input type="text" name="fechaResAdm" id="fechaResAdm" class="form-control" placeholder="dd-mm-yyyy">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Adjuntar R.A.</label>
+                                <input type="file" id="resAdm" name="resAdm" required onchange="cargarArchivo(event);">
+                            </div>
+                            <br>
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Enviar</button>
@@ -67,15 +89,21 @@
 
 {% block javascripts %}
     {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript">
+        $("#fechaResAdm").inputmask({ "alias": "dd-mm-yyyy" });
         function validarRadio(){
             if($('#aprueba1').is(':checked')){
                 $('#divRA').css('display','block');
                 $('#resAdm').attr('required','required');
+                $('#nroResAdm').attr('required','required');
+                $('#fechaResAdm').attr('required','required');
             }else{
                 if($('#aprueba2').is(':checked')){
                     $('#divRA').css('display','none');
                     $('#resAdm').removeAttr('required');
+                    $('#nroResAdm').removeAttr('required');
+                    $('#fechaResAdm').removeAttr('required');
                 }
             }
         }
@@ -83,5 +111,31 @@
             validarRadio();
         });
         validarRadio();
+
+        function cargarArchivo(event){
+            var informe = event.target.files[0];
+            var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+            if(!allowedExtensions.exec(event.target.value)){
+                event.target.value = '';
+                Swal.fire(
+                      'Archivo incorrecto!',
+                      'El archivo adjunto debe ser una imagen o un archivo pdf',
+                      'warning'
+                    );
+                return false;
+            }else{
+                var megas = (informe.size / 1024)/1024;
+                if (megas > 2) {
+                    event.target.value = '';
+                    Swal.fire(
+                      'Tamaño no permitido!',
+                      'El archivo debe tener un peso menor a 2 mg',
+                      'warning'
+                    );
+                    return false;
+                }
+            }
+            this.informe = event.target.files[0];
+        }
     </script>
 {% endblock %}

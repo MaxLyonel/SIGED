@@ -38,7 +38,7 @@
                         <div class="tab-content">
                         	{% for h in historial %}
 	                            <div {% if loop.index == 1 %} class="tab-pane fade in active" {% else %} class="tab-pane fade" {% endif %} id="tab{{ h.orden }}">
-	                                {% if h.orden == 1 %}
+	                                {% if h.orden == 1 %} {# unidad educativa #}
 										<div class="row">
 										    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										        <div class="text-center">
@@ -141,7 +141,7 @@
 										    </div>
 										</div>
 	                                {% endif %}
-	                                {% if h.orden == 2 %}
+	                                {% if h.orden == 2 %} {# distrito #}
 										<div class="form-group">
 										    <p><b>¿El trámite es procedente?</b></p>
 										    <div class="radio">
@@ -156,7 +156,7 @@
 										    </div>
 										</div>
 										{% if h.datos.procedente == 'NO' %}
-											<div class="form-group" style="background:#E3C5A7">
+											<div class="form-group" style="background:#E3C5A7; display:none">
 											    <p><b>¿Qué desea hacer con el trámite?</b></p>
 											    <div class="radio">
 											        <label class="radio-inline">
@@ -182,7 +182,7 @@
 											</div>
 										{% endif %}
 	                                {% endif %}
-	                                {% if h.orden == 3 %}
+	                                {% if h.orden == 3 %} {# departamento #}
 										<div class="form-group">
 										    <label>¿Aprobar trámite?</label>
 										    <div class="radio">
@@ -200,10 +200,23 @@
 										    <label>Observación</label>
 										    <p>{{ h.datos.observacion }}</p>
 										</div>
+										{% if h.datos.nroResAdm != '' and h.datos.fechaResAdm %}
+											<h5><b>Resolución Administrativa</b> </h5>
+											<div class="row">
+											    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+											        <label>Nro. de R.A.</label>
+											        <p>{{h.datos.nroResAdm}}</p>
+											    </div>
+											    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">											    	
+											        <label>Fecha de R.A.</label>
+											        <p>{{h.datos.fechaResAdm}}</p>
+											    </div>
+											</div>
+										{% endif %}
 										{% if h.datos.resAdm is not null %}
 											<div class="form-group">
-											    <p><b>Informe</b></p>
-											    <a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.resAdm.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver informe adjunto </b></a>
+											    <p><b>R.A.</b></p>
+											    <a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.resAdm.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver R.A. adjunto </b></a>
 											    <br>
 											</div>
 										{% endif %}
