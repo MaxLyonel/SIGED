@@ -1466,7 +1466,7 @@ die;/*
                 if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($arrayPromedios) > 0 ) or ($gestion == 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
                     
-                    if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+                    if($inscripcion->getEstadomatriculaInicioTipo() != null and $inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
                         $nuevoEstado = 26; // promovido por postbachillerato
                     }else{
                         $nuevoEstado = 5; // Aprobado
