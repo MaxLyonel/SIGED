@@ -150,7 +150,7 @@ class CdlSeguimientoController extends Controller
             WHERE lt1.codigo::integer=". $codigo ."
             GROUP BY lt.id,lt.codigo,lt.lugar,lt1.lugar");
         }elseif($rol == 10){
-            $query = $em->getConnection()->prepare("SELECT lt.lugar as jurisdiccion,'Unidad Educativa' as nombreArea, ie.id as codigo, ie.institucioneducativa  as nombre,COUNT(DISTINCT ie.id) as cantidad, 9 as rolUsuario,(SELECT COUNT(*) as total
+            $query = $em->getConnection()->prepare("SELECT lt.lugar as jurisdiccion,'Unidad Educativa: ' as nombreArea, ie.id as codigo, ie.id || '-'||ie.institucioneducativa  as nombre,COUNT(DISTINCT ie.id) as cantidad, 9 as rolUsuario,(SELECT COUNT(*) as total
             FROM institucioneducativa ie
             JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id AND ies.gestion_tipo_id=". $gestion ."
             JOIN jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
@@ -166,7 +166,7 @@ class CdlSeguimientoController extends Controller
             GROUP BY ie.id,ie.institucioneducativa,lt.lugar");
 
         }elseif($rol == 9){
-            $query = $em->getConnection()->prepare("SELECT ie.institucioneducativa as jurisdiccion,'Club de Lectura' as nombreArea, a.id as codigo, a.nombre_club  as nombre,1 as cantidad,0 as rolUsuario, 1 as total
+            $query = $em->getConnection()->prepare("SELECT ie.id || '-'||ie.institucioneducativa as jurisdiccion,'Club de Lectura' as nombreArea, a.id as codigo, a.nombre_club  as nombre,1 as cantidad,0 as rolUsuario, 1 as total
                                                     FROM cdl_club_lectura a
                                                     JOIN institucioneducativa_sucursal ies on a.institucioneducativasucursal_id=ies.id AND ies.gestion_tipo_id=". $gestion ."
                                                     JOIN institucioneducativa ie on ie.id=ies.institucioneducativa_id
