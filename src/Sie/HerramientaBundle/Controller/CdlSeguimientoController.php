@@ -150,7 +150,7 @@ class CdlSeguimientoController extends Controller
             WHERE lt1.codigo::integer=". $codigo ."
             GROUP BY lt.id,lt.codigo,lt.lugar,lt1.lugar");
         }elseif($rol == 10){
-            $query = $em->getConnection()->prepare("SELECT lt.lugar as jurisdiccion,'Unidad Educativa' as nombreArea, ie.id as codigo, ie.id || '-'||ie.institucioneducativa  as nombre,COUNT(DISTINCT ie.id) as cantidad, 9 as rolUsuario,(SELECT COUNT(*) as total
+            $query = $em->getConnection()->prepare("SELECT lt.lugar as jurisdiccion,'Unidad Educativa: ' as nombreArea, ie.id as codigo, ie.id || '-'||ie.institucioneducativa  as nombre,COUNT(DISTINCT ie.id) as cantidad, 9 as rolUsuario,(SELECT COUNT(*) as total
             FROM institucioneducativa ie
             JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id AND ies.gestion_tipo_id=". $gestion ."
             JOIN jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
