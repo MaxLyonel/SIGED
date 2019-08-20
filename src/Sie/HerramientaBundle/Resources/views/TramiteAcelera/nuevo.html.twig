@@ -427,7 +427,7 @@
                             break;
                         default:
                             $("#fila_destino").hide();
-                            $("#estado_destino").text("Disponible");
+                            $("#estado_destino").text("Tiene secundaria");
                             break;
                     }
                     return false;
@@ -449,10 +449,10 @@
                     },
                     success: function (data) {
                         if (data.msg == "existe") {
-                            $("#estado_destino").text("Disponible");
+                            $("#estado_destino").text("Tiene secundaria");
                             $("#estado_destino").css("color", "#1565c0");
                         } else {
-                            $("#estado_destino").text("No disponible");
+                            $("#estado_destino").text("No tiene secundaria");
                             $("#estado_destino").css("color", "#c62828");
                         }
                     }
@@ -464,8 +464,8 @@
             event.preventDefault();
             $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
             $("#tramite_st").val(0);
-            if ($("#estado_destino").text() == "No disponible") {
-                mesage("warning", "Notificación", "La Unidad Educativa al que se destinará al Estudiante no está disponible.", false, 1);
+            if ($("#estado_destino").text() == "No tiene secundaria") {
+                mesage("warning", "Notificación", "La Unidad Educativa al que se destinará al Estudiante no tiene nivel secundaria.", false, 1);
                 $("#guardar").hide();
             } else {
                 $("#guardar").show();

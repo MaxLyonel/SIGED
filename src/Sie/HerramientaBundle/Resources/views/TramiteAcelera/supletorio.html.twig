@@ -93,14 +93,14 @@
                             <h4>{% if actas|length == 1 %}Acta Supletorio por Grado {% else %} Actas Supletorios por Grado {% endif %}</h4>
                             <div class="row" id="tbl_cumano">
                                 {% for acta in actas %}
+                                <input type="hidden" id="iec_id{{loop.index}}" value="{{ acta.curso.iec_id }}">
+                                <input type="hidden" id="sel_nivel{{loop.index}}" value="{{ acta.curso.nivel_id }}">
+                                <input type="hidden" id="sel_grado{{loop.index}}" value="{{ acta.curso.grado_id }}">
+                                <input type="hidden" id="sel_paralelo{{loop.index}}" value="{{ acta.curso.paralelo_id }}">
+                                <input type="hidden" id="sel_turno{{loop.index}}" value="{{ acta.curso.turno_id }}">
+                                <input type="hidden" id="sel_sie{{loop.index}}" value="{{ acta.curso.codigo_sie }}">
                                 <div class="col-md-6">
                                     {% if loop.index == 1 %}
-                                    <input type="hidden" id="iec_id{{loop.index}}" value="{{ acta.curso.iec_id }}">
-                                    <input type="hidden" id="sel_nivel{{loop.index}}" value="{{ acta.curso.nivel_id }}">
-                                    <input type="hidden" id="sel_grado{{loop.index}}" value="{{ acta.curso.grado_id }}">
-                                    <input type="hidden" id="sel_paralelo{{loop.index}}" value="{{ acta.curso.paralelo_id }}">
-                                    <input type="hidden" id="sel_turno{{loop.index}}" value="{{ acta.curso.turno_id }}">
-                                    <input type="hidden" id="sel_sie{{loop.index}}" value="{{ acta.curso.codigo_sie }}">
                                     <table class="table table-bordered">
                                         <tbody class="text-muted">
                                             <tr>
@@ -157,8 +157,7 @@
                                         </tbody>
                                     </table>
                                     {% else %}
-                                    <input type="hidden" id="iec_id{{loop.index}}" value="{{ acta.curso.iec_id }}">
-                                    <table class="table table-bordered">
+                                    <!-- <table class="table table-bordered">
                                         <tbody class="text-muted">
                                             <tr>
                                                 <td style="padding: 2px 8px; border: none" width="40%">
@@ -228,6 +227,39 @@
                                                 </td>
                                             </tr>
                                         </tbody>
+                                    </table> -->
+                                    <table class="table table-bordered">
+                                        <tbody class="text-muted">
+                                            <tr>
+                                                <td style="padding: 10px 8px; border: none" width="40%"><b>SIE&nbsp;&nbsp;&nbsp;</b> {{ acta.curso.codigo_sie }}</td>
+                                                <td style="padding: 10px 8px; border: none" width="60%">{{ acta.curso.nombre_sie }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%"><b>Nivel</b></td>
+                                                <td style="padding: 2px 8px; border: none" width="60%">{{ acta.curso.nivel }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Grado</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.grado }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Paralelo</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.paralelo }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Turno</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.turno }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 8px; border: none" colspan="2">
+                                                    {% if acta.curso.iec_id == 0 %}
+                                                    <span id="estado{{loop.index}}"><b class="text-danger">No disponible</b></span>
+                                                    {% else %}
+                                                    <span id="estado{{loop.index}}"><b class="text-primary">Disponible</b></span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                     <table class="table table-bordered tbl_aceleracion" id="tbl_aceleracion{{loop.index}}">
                                         <thead>
@@ -268,6 +300,14 @@
                                     </div>
                                 </div>
                             </div> -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="comision">Comisión Técnica Pedagógica</label>
+                                        <input type="text" class="form-control" id="comision" name="comision" title="Ingrese los nombres de la comisión" placeholder="Nombre, Nombre, etc." required>
+                                    </div>
+                                </div>
+                            </div>
                             <h5 class="float-left"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
                             <div class="row">
                                 <div class="col-md-12 text-center">
@@ -389,7 +429,8 @@
                     fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
                     fd.append('curso_asignatura_notas', JSON.stringify(curso_asignatura_notas));
                     fd.append('notificar', $("#notificar").val());
-                    var docsup = document.getElementById('acta_supletorio');
+                    fd.append('comision', $("#comision").val());
+                    // var docsup = document.getElementById('acta_supletorio');
                     // fd.append('acta_supletorio', docsup.files[0]);
                     $.ajax({
                         type: 'post',
@@ -428,7 +469,7 @@
             } else {
                 $("#tramite_st").val(0);
                 $("#modalConfirm").modal('show');
-                mesage('warning', 'Notificación', 'Es posible que algún cursno no esté disponible.', false);
+                mesage('warning', 'Notificación', 'Es posible que algún curso no esté disponible.', false);
             }
         }
 

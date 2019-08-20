@@ -619,6 +619,7 @@ class TramiteAceleraController extends Controller
         $datos['institucioneducativa_id'] = $request->get('institucioneducativa_id');
         $datos['curso_asignatura_notas'] = $request->get('curso_asignatura_notas');
         $datos['notificar'] = $request->get('notificar');
+        $datos['comision'] = $request->get('comision');
         // $datos['acta_supletorio'] = $doc_acta;
 
         $usuario_id = $request->getSession()->get('userId');
@@ -1434,8 +1435,10 @@ class TramiteAceleraController extends Controller
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
         $datosTramite.='<tr><td><b>Tipo de Talento Extraordinario:</b></td><td>'.strtoupper($estudiante_talento->getTalentoTipo()).'</td><td><b>Puede Acelerar:</b></td><td>'.($estudiante_talento->getAcelera()==true?'SI':'NO').'</td></tr>';
         $datosTramite.='<tr><td><b>Tramitó en Centro Educativo:</b></td><td colspan="3">'.$estudiante_talento->getInstitucioneducativa()->getId().' - '.$estudiante_talento->getInstitucioneducativa()->getInstitucioneducativa().'</td></tr>';
-        $datosTramite.='</table>';
-        $pdf->writeHTML($datosTramite, true, false, true, false, '');
+        $datosTramite.='</table><br><br>';
+        $pdf->writeHTML($datosTramite, false, false, true, false, '');
+
+        $pdf->writeHTML('<span style="font-size: 8.5px"><b>Comisión Técnica Pedagógica: </b>'.(isset($datos2->comision)?$datos2->comision:'').'</span><br><br>', false, false, true, false, '');
 
         $pdf->writeHTML('<span style="font-size: 8px">RESULTADOS DE LA EVALUACIÓN DE LA COMISIÓN TÉCNICA PEDAGÓGICA:</span>', true, false, true, false, '');//$html, true, 0, true, true
         $exist_primaria = $exist_secundaria = false;
@@ -1549,8 +1552,8 @@ class TramiteAceleraController extends Controller
                 if($primaria['nota6'][$key]!='') {$actaSupletorio.='<td align="center">'.$primaria['nota6'][$key].'</td>';}
                 $actaSupletorio.='</tr>';
             }
-            $actaSupletorio.='</table>';
-            $pdf->writeHTML($actaSupletorio, true, false, true, false, '');
+            $actaSupletorio.='</table><br><br>';
+            $pdf->writeHTML($actaSupletorio, false, false, true, false, '');
         }
         if ($exist_secundaria) {
             $actaSupletorio='<table border="0.5" cellpadding="2" style="font-size: 8.5px">';
@@ -1597,19 +1600,19 @@ class TramiteAceleraController extends Controller
             $actaSupletorio.='</table>';
             $pdf->writeHTML($actaSupletorio, true, false, true, false, '');
         } */
-        $pdf->writeHTML('<span>Grado al que estará inscrito: &nbsp;<b>'.$datos1->grado_inscripcion.'.</b><br></span>', true, false, true, false, '');
+        $pdf->writeHTML('<span>Grado al que estará inscrito: &nbsp;<b>'.$datos1->grado_inscripcion.'.</b><br></span><br>', false, false, true, false, '');
         $pdf->writeHTML('<span>Para su consideración y fines consiguientes, firman los responsables del proceso de Aceleración Educativa.<br/><br/><br/></span>', true, false, true, false, '');
         
-        $firmas='<table cellpadding="0.5" style="font-size: 8.2px;">';
+        /* $firmas='<table cellpadding="0.5" style="font-size: 8.2px;">';
         $firmas.='<tr><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________<br/>Directora(or) Unidad Educativa</td><td align="center">&nbsp;&nbsp;&nbsp;____________________________<br/>Directora(or) Distrital de Educación</td><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________<br/>Representante de la Comisión Técnica Pedagógica de la Unidad Educativa</td><td align="center">&nbsp;&nbsp;_____________________________<br/>Madre, Padre de familia, apoderado o tutor del Estudiante</td></tr>';
         $firmas.='<tr><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td></tr>';
         $firmas.='<tr><td align="center">Sello y Firma</td><td align="center">Sello y Firma</td><td align="center">Firma</td><td align="center">Firma</td></tr>';
-        $firmas.='</table>';
-        /* $firmas='<table cellpadding="0.5" style="font-size: 8.2px;">';
+        $firmas.='</table>'; */
+        $firmas='<table cellpadding="0.5" style="font-size: 8.2px;">';
         $firmas.='<tr><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_____________________________<br/>Directora(or) Unidad Educativa</td><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;________________________________<br/>Directora(or) Distrital de Educación</td><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________________<br/>Representante de la Comisión Técnica Pedagógica de la Unidad Educativa</td></tr>';
         $firmas.='<tr><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td></tr>';
         $firmas.='<tr><td align="center">Sello y Firma</td><td align="center">Sello y Firma</td><td align="center">Firma</td></tr>';
-        $firmas.='</table>'; */
+        $firmas.='</table>';
         $pdf->writeHTML($firmas, true, false, true, false, '');
         $lugar_fecha='<span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span>';
         $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $lugar_fecha, $border = 0, $ln = 0, $fill = 0, $reseth = true,
