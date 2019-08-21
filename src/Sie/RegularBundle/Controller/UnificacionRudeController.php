@@ -148,10 +148,11 @@ class UnificacionRudeController extends Controller {
         $studenta = array();
         $studentb = array();
         $studenta = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudea));
+        //dump($studenta);die;
         if (!$studenta) {
             $message = 'El código '.$rudea.' no existe.';
             $this->addFlash('notihistory', $message);            
-            return $this->render('SieRegularBundle:UnificacionRude:UnificacionRude:resulterror.html.twig' );
+            return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
         } else {
             $studentb = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudeb));
             if (!$studentb) {
@@ -628,7 +629,7 @@ class UnificacionRudeController extends Controller {
                 foreach ($inscripinco as $inscrip) {
                     $antes = $inscrip;                    
                     $inscrip->setEstudiante($studentcor);
-                    $em->persist($inscrip);
+                    //$em->persist($inscrip);
                     $em->flush();
                     //******EL DATO DEL ESTUDIANTE DESTACADO ES LLEVADO JUNTO CON LA INSCRIPCION
                     //$studentDestacInco = $em->getRepository('SieAppWebBundle:EstudianteDestacado')->findBy(array('estudianteInscripcion' => $inscrip));
