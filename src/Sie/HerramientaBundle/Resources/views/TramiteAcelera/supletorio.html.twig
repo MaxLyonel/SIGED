@@ -301,14 +301,45 @@
                                 </div>
                             </div> -->
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="comision">Comisión Técnica Pedagógica</label>
-                                        <input type="text" class="form-control" id="comision" name="comision" title="Ingrese los nombres de la comisión" placeholder="Nombre, Nombre, etc." required>
+                                        <label for="cedula"><b>Comisión Técnica Pedagógica</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="cedula" placeholder="Buscar por Cédula de Identidad" autocomplete="off">
+                                            <div class="input-group-addon" onclick="searchClick()" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="hidden" id="dni">
+                                    <input type="hidden" id="nombre">
+                                    <input type="hidden" id="cargo">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="respuesta" autocomplete="off" disabled>
+                                            <div class="input-group-addon" style="background: #fafafa; cursor: pointer" onclick="agregarResponsable()">Agregar</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <h5 class="float-left"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="tbl_comision">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Cédula Identidad</b></th>
+                                                    <th><b>Nombre Completo</b></th>
+                                                    <th>&nbsp;</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div><br>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -373,10 +404,12 @@
         $('.noedit').keydown(function() {
             return false;
         });
-        function mesage(tipo, titulo, msg, estado) {
-            $("#envio").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+        function mesage(tipo, titulo, msg, estado, flag) {
+            $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            if (flag) {
+                $("#envio").append('<center><a href="reporte/supletorio?idtramite='+$("#tramite_id").val()+'" class="" target="_blank"><i class="fa fa-file-pdf-o"></i> Imprimir Acta Supletorio</a></center>');
+            }
             if (estado == true) {
                 setTimeout(function () { $("#envio").empty(); }, 3500);
             }
@@ -388,9 +421,17 @@
 
         $("#form_supletorio").submit(function (event) {
             event.preventDefault();
+            var cantidad_comision = $("#tbl_comision tbody").find("tr").length;
+            if (cantidad_comision == 0) {
+                $("#guardar").hide();
+                $("#modalConfirm").modal('show');
+                mesage('warning', 'Notificación', 'Debe agregar la comisión técnica pedagógica.', false, false);
+                return false;
+            }
             $("#envio").html('<h5>¿Está seguro(a) de haber llenado las notas coherentemente? verifique antes de enviar.</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
+            $("#guardar").show();
             $("#modalConfirm").modal('show');
         });
 
@@ -422,6 +463,10 @@
                 }
                 curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
             });
+            var lista_comision = [];
+            $("#tbl_comision tbody").find("tr").each(function(i, td) {
+                lista_comision.push({'ci': $(this).find('td')[0].innerText, 'nombre': $(this).find('td')[1].innerText});
+            });
             if (validarIEC == true) {
                 if (validarAsig == true) {
                     var fd = new FormData();
@@ -429,7 +474,7 @@
                     fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
                     fd.append('curso_asignatura_notas', JSON.stringify(curso_asignatura_notas));
                     fd.append('notificar', $("#notificar").val());
-                    fd.append('comision', $("#comision").val());
+                    fd.append('comision', JSON.stringify(lista_comision));
                     // var docsup = document.getElementById('acta_supletorio');
                     // fd.append('acta_supletorio', docsup.files[0]);
                     $.ajax({
@@ -446,15 +491,14 @@
                         },
                         success: function (data) {
                             $("#envio").empty();
+                            $("#guardar").attr('disabled', true);
                             if (data.estado == 200) {
-                                $("#guardar").attr('disabled', true);
                                 clearInput();
                                 $("#tramite_st").val(1);
-                                mesage('info', 'Notificación', data.msg, false);
+                                mesage('info', 'Notificación', data.msg, false, true);
                                 //location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
                             } else {
-                                $("#guardar").attr('disabled', false);
-                                mesage('danger', 'Alerta', data.msg, false);
+                                mesage('danger', 'Alerta', data.msg, false, false);
                             }
                         },
                         error: function (error) {
@@ -464,12 +508,12 @@
                 } else {
                     $("#tramite_st").val(0);
                     $("#modalConfirm").modal('show');
-                    mesage('warning', 'Notificación', 'Algún acta supletorio, no cuenta con asignaturas.', false);
+                    mesage('warning', 'Notificación', 'Algún acta supletorio, no cuenta con asignaturas.', false, false);
                 }
             } else {
                 $("#tramite_st").val(0);
                 $("#modalConfirm").modal('show');
-                mesage('warning', 'Notificación', 'Es posible que algún curso no esté disponible.', false);
+                mesage('warning', 'Notificación', 'Es posible que algún curso no esté disponible.', false, false);
             }
         }
 
@@ -562,5 +606,64 @@
         function redirect() {
             location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
         }
+        
+        $('#cedula').keypress(function (event) {
+            if (event.keyCode === 10 || event.keyCode === 13) {
+                event.preventDefault();
+                searchResponsable();
+            }
+        });
+        function searchClick() {
+            searchResponsable();
+        }
+        function searchResponsable() {
+            var cedula = $('#cedula').val();
+            if (cedula != "") {
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_acelera_search_ctp'),
+                    data: {'cedula': cedula},
+                    beforeSend: function () {
+                        $("#respuesta").val('Buscando...');
+                    },
+                    success: function (data) {
+                        if (data.msg == 'existe') {
+                            $("#respuesta").val(data.nombre);// + ', ' + data.cargo
+                            $("#dni").val(data.cedula);
+                            $("#nombre").val(data.nombre);
+                            $("#cargo").val(data.cargo);
+                        } else {
+                            $("#respuesta").val('Sin resultados');
+                        }
+                    }
+                });
+            } else {
+                $('#cedula').focus();
+            }
+        }
+
+        function agregarResponsable() {
+            var cedulas = [];
+            if ($("#respuesta").val() != "" && $("#nombre").val() != "") {
+                $("#tbl_comision tbody").find("tr").each(function(i, td) {
+                    cedulas.push($(this).find('td')[0].innerText);
+                });
+                var indice = cedulas.indexOf($("#dni").val());
+                if (indice == -1) {
+                    var rhtml = "<tr><td>"+$("#dni").val()+"</td><td>"+$("#nombre").val()+"</td><td><button type='button' class='btn btn-danger btn-sm delete-row'><i class='fa fa-trash'></i></button></td></tr>";
+                    $("#tbl_comision tbody").append(rhtml);
+                    $("#respuesta").val('');
+                    $("#dni").val('');
+                    $("#nombre").val('');
+                    $("#cedula").val('');
+                }
+            } else {
+                $('#cedula').focus();
+            }
+        }
+
+        $("#tbl_comision").on('click', '.delete-row', function(){
+            $(this).parents("tr").remove();
+        });
     </script>
 {% endblock %}

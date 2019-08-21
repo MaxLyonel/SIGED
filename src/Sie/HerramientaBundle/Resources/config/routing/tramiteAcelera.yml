@@ -57,3 +57,9 @@ tramite_acelera_curso:
 tramite_acelera_reporte:
     path:     /acta/supletorio
     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:rptActaSupletorio }
+
+tramite_acelera_search_ctp:
+    path:     /busca/comision
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaCTP }
+    options:
+        expose: true

@@ -514,7 +514,7 @@
                         mesage('info', 'Notificación', data.msg, false, 1);
                     } else {
                         mesage('danger', 'Alerta', data.msg, false, 1);
-                        $("#guardar").attr('disabled', false);
+                        $("#guardar").attr('disabled', true);
                     }
                 },
                 error: function (error) {
