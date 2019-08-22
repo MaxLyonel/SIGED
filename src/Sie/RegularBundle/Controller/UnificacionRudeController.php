@@ -201,7 +201,7 @@ class UnificacionRudeController extends Controller {
                 //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON DOBLES INSCRIPCIONES EN LA MISMA UE Y GESTION
                 $validaDobleInscripcionRegular = $this->getVerificaDobleInscripcion($rudea,$rudeb);
                 if (count($validaDobleInscripcionRegular) > 0) {
-                    $message = "Se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion'];
+                    $message = "Se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion']." SIE:". $validaDobleInscripcionRegular[0]['institucioneducativa_id'];
                     $this->addFlash('validacionerror', $message);
                     $validado = 0;
                 }
@@ -521,17 +521,17 @@ class UnificacionRudeController extends Controller {
         return $query->fetchAll();
     }
 
-    public function getVerificaDobleInscripcion($rudecor,$rudeinc){
+    public function getVerificaDobleInscripcion($rudea,$rudeb){
         
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select cast('Regular' as varchar) as subsistema, cast('Doble inscripcion en la misma Unidad Educativa ' as varchar) as observacion, gestion_rude_b as gestion,institucioneducativa_id_c as institucioneducativa_id,institucioneducativa_c as institucioneducativa,estadomatricula_rude_b,estadomatricula_rude_c,codigo_rude_b,codigo_rude_c
         from (
         select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_fin_r as estadomatricula_rude_b,institucioneducativa_id_raep as institucioneducativa_id_b,institucioneducativa_raep as institucioneducativa_b,codigo_rude_raep as codigo_rude_b
-        from sp_genera_estudiante_historial('". $rudecor ."') 
+        from sp_genera_estudiante_historial('". $rudea ."') 
         where institucioneducativa_tipo_id_raep = 1) b 
         INNER JOIN
         (select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_fin_r as estadomatricula_rude_c,institucioneducativa_id_raep as institucioneducativa_id_c,institucioneducativa_raep as institucioneducativa_c,codigo_rude_raep as codigo_rude_c
-        from sp_genera_estudiante_historial('". $rudeinc ."') 
+        from sp_genera_estudiante_historial('". $rudeb ."') 
         where institucioneducativa_tipo_id_raep = 1
         ) c  ON b.gestion_rude_b = c.gestion_rude_c AND b.institucioneducativa_id_b=c.institucioneducativa_id_c");
 
