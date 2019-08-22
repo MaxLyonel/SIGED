@@ -52,9 +52,14 @@ RegisterPersonStudent_register_person_json:
    path:    /sie/registerPerson/json
    defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:registerPersonJson }
    options:
-        expose: true      
-    
+        expose: true        
 
+RegisterPersonStudent_register_person_foto:
+   path:    /sie/registerPerson/foto
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:registerPersonFoto }
+   options:
+        expose: true   
+    
 RegisterPersonStudent_open_register:
    path:    /sie/openRegister
    defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:openRegister }
