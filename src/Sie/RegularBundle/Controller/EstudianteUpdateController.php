@@ -92,7 +92,12 @@ class EstudianteUpdateController extends Controller {
             $this->session->getFlashBag()->add('noticemodi', 'No se permite el cambio, estudiante tiene tramite de diplomas...');
             return $this->redirectToRoute('sie_estudiantes');
           }
-
+          
+          // to validate the tuicion value
+          if(!$this->get('funciones')->getInscriptionToValidateTuicion($form)){
+            $this->session->getFlashBag()->add('noticemodi', 'No tiene tuición sobre la UNIDAD EDUCATIVA o el estado de la/el estudiante no es el permitido.');
+            return $this->redirectToRoute('sie_estudiantes');
+          }
 
             //get the values to the build the forms
             $m1 = isset($form['mode1']) ? $form['mode1'] : 0;
@@ -655,6 +660,7 @@ class EstudianteUpdateController extends Controller {
         return $answerSegip;
     }
 
+
     /**
      * update an existing Estudiante entity.
      *
@@ -664,8 +670,7 @@ class EstudianteUpdateController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-           
-
+  
         $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
@@ -984,7 +989,6 @@ class EstudianteUpdateController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
