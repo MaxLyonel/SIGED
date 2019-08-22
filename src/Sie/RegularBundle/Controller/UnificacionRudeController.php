@@ -484,36 +484,27 @@ class UnificacionRudeController extends Controller {
         }
         //dump($dataInscriptionCorr,$dataInscriptionIncc);die;               
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_rude_b as gestion, estadomatricula_rude_b as estadomatricula from (
-            select * from (            
-            select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_tipo_id_fin_r as estadomatricula_rude_b
-            from sp_genera_estudiante_historial('".$rudeinc."') 
-            where institucioneducativa_tipo_id_raep = 1
-            and estadomatricula_tipo_id_fin_r not in ('6','9')
-            ) b 
-        INNER JOIN
-            (
-            select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
-            from sp_genera_estudiante_historial('".$rudecor."') 
-            where institucioneducativa_tipo_id_raep = 1
-            and estadomatricula_tipo_id_fin_r not in ('6','9')
-            ) c 
-            ON b.gestion_rude_b = c.gestion_rude_c
-            AND b.estadomatricula_rude_b = c.estadomatricula_rude_c) regular";
         
-        
-        $queryverdipb = $em->getConnection()->prepare($sqlb);
-        $queryverdipb->execute();
-        $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
+        $validado = 1;
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        $validado = 0;
-        if (count($dataInscriptionJsonVerDipb) > 0) {
-            $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
+        $validaEstadosRegular = $this->getVerificaEstadosGestion($rudecor,$rudeinc);
+
+        if (count($validaEstadosRegular) > 0) {
+            $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
             $this->addFlash('notihistory', $message);
             $validado = 0;
             //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
-        } else {
-            $validado = 1;
+        }
+
+        //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON DOBLES INSCRIPCIONES EN LA MISMA UE Y GESTION
+        $validaDobleInscripcionRegular = $this->getVerificaDobleInscripcion($rudecor,$rudeinc);
+        //dump($validaDobleInscripcionRegular);die;
+
+        if (count($validaDobleInscripcionRegular) > 0) {
+            $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion'];
+            $this->addFlash('notihistory', $message);
+            $validado = 0;
+            //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
         }
 
         //*********** PARA ALTERNATIVA SE VERIFICA QUE ULTIMOS GRADOS TENGAN COERENCIA
@@ -571,14 +562,12 @@ class UnificacionRudeController extends Controller {
             $maxCor = '0';
         }
 
-        if ($validado == '0'){
+        if ($validado == 0){
             if (($maxInc != '0') && ($maxCor != '0')){
                 if ($maxanioCor < $maxanioInc){
-                    $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
+                    $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
                     $this->addFlash('notihistory', $message);
                     $validado = 0;
-                } else {
-                    $validado = 1;
                 }
             }
         }   
@@ -596,6 +585,48 @@ class UnificacionRudeController extends Controller {
                     'dataInscriptionInccE' => $dataInscriptionInccE,
                     'dataInscriptionInccP' => $dataInscriptionInccP
         ));
+    }
+
+    public function getVerificaEstadosGestion($rudecor,$rudeinc){
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_rude_b as gestion, estadomatricula_rude_b as estadomatricula from (
+            select * from (            
+            select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_tipo_id_fin_r as estadomatricula_rude_b
+            from sp_genera_estudiante_historial('".$rudeinc."') 
+            where institucioneducativa_tipo_id_raep = 1
+            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            ) b 
+            INNER JOIN
+            (
+            select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
+            from sp_genera_estudiante_historial('".$rudecor."') 
+            where institucioneducativa_tipo_id_raep = 1
+            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            ) c 
+            ON b.gestion_rude_b = c.gestion_rude_c
+            AND b.estadomatricula_rude_b = c.estadomatricula_rude_c) regular");
+
+        $query->execute();
+        return $query->fetchAll();
+    }
+
+    public function getVerificaDobleInscripcion($rudecor,$rudeinc){
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select cast('Regular' as varchar) as subsistema, cast('Doble inscripcion en la misma Unidad Educativa ' as varchar) as observacion, gestion_rude_b as gestion,institucioneducativa_id_c as institucioneducativa_id,institucioneducativa_c as institucioneducativa,estadomatricula_rude_b,estadomatricula_rude_c,codigo_rude_b,codigo_rude_c
+        from (
+        select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_fin_r as estadomatricula_rude_b,institucioneducativa_id_raep as institucioneducativa_id_b,institucioneducativa_raep as institucioneducativa_b,codigo_rude_raep as codigo_rude_b
+        from sp_genera_estudiante_historial('". $rudecor ."') 
+        where institucioneducativa_tipo_id_raep = 1) b 
+        INNER JOIN
+        (select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_fin_r as estadomatricula_rude_c,institucioneducativa_id_raep as institucioneducativa_id_c,institucioneducativa_raep as institucioneducativa_c,codigo_rude_raep as codigo_rude_c
+        from sp_genera_estudiante_historial('". $rudeinc ."') 
+        where institucioneducativa_tipo_id_raep = 1
+        ) c  ON b.gestion_rude_b = c.gestion_rude_c AND b.institucioneducativa_id_b=c.institucioneducativa_id_c");
+
+        $query->execute();
+        return $query->fetchAll();
     }
     
     public function unificarAction(Request $request, $rudeinc, $rudecor) {        
@@ -690,7 +721,7 @@ class UnificacionRudeController extends Controller {
                     );
             }
             
-            //guardaro de log antiguo de datos de unificacion            
+            //guardado de log antiguo de datos de unificacion            
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcorr[0]->getInstitucioneducativaCurso()->getId());
             $ur = new UnificacionRude();
             $ur->setRudeinco($rudeinc);
