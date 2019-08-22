@@ -670,13 +670,14 @@ class EstudianteUpdateController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-  
+
         $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
-
         $oldDataStudent = clone $entity;
+        $oldDataStudent = (array)$oldDataStudent;
+        
         // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
 
@@ -687,13 +688,13 @@ class EstudianteUpdateController extends Controller {
             $entity->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
             $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
             $em->flush();
-
+            $updateDataStudent = (array)$entity;
             $this->get('funciones')->setLogTransaccion(
                                    $entity->getId(),
                                     'estudiante',
                                     'U',
                                     '',
-                                    $entity,
+                                    $updateDataStudent,
                                     $oldDataStudent,
                                     'SIGED',
                                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
@@ -738,6 +739,7 @@ class EstudianteUpdateController extends Controller {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
+        $oldDataStudent = (array)$oldDataStudent;
 
          // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
@@ -753,12 +755,13 @@ class EstudianteUpdateController extends Controller {
             $entity->setObservacionadicional($form['obsAdicional']);
             $em->persist($entity);
             $em->flush();
+            $updateDataStudent = (array)$entity;
              $this->get('funciones')->setLogTransaccion(
                                    $entity->getId(),
                                     'estudiante',
                                     'U',
                                     '',
-                                    $entity,
+                                    $updateDataStudent,
                                     $oldDataStudent,
                                     'SIGED',
                                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
@@ -803,6 +806,7 @@ class EstudianteUpdateController extends Controller {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
+        $oldDataStudent = (array)$oldDataStudent;
           // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
         // dump($resultSegip);
@@ -853,12 +857,13 @@ class EstudianteUpdateController extends Controller {
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
         //need to add 2 files too
         $em->flush();
+        $updateDataStudent = (array)$entity;
           $this->get('funciones')->setLogTransaccion(
                                $entity->getId(),
                                 'estudiante',
                                 'U',
                                 '',
-                                $entity,
+                                $updateDataStudent,
                                 $oldDataStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
@@ -909,6 +914,7 @@ class EstudianteUpdateController extends Controller {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
+        $oldDataStudent = (array)$oldDataStudent;
 
            // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
@@ -939,13 +945,13 @@ class EstudianteUpdateController extends Controller {
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
         //need to add 2 files too
         $em->flush();
-
+        $updateDataStudent = (array)$entity;
          $this->get('funciones')->setLogTransaccion(
                                $entity->getId(),
                                 'estudiante',
                                 'U',
                                 '',
-                                $entity,
+                                $updateDataStudent,
                                 $oldDataStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
@@ -995,6 +1001,7 @@ class EstudianteUpdateController extends Controller {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
+        $oldDataStudent = (array)$oldDataStudent;
             // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
 
@@ -1026,12 +1033,13 @@ class EstudianteUpdateController extends Controller {
         //need to save departamento, etc,etc
         //need to add 2 files too
         $em->flush();
+        $updateDataStudent = (array)$entity;
           $this->get('funciones')->setLogTransaccion(
                                $entity->getId(),
                                 'estudiante',
                                 'U',
                                 '',
-                                $entity,
+                                $updateDataStudent,
                                 $oldDataStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
