@@ -4,7 +4,7 @@
                         {% for flashMessage in app.session.flashbag.get('validacionerror') %}
                             <div class="alert alert-danger alert-dismissible" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <strong>¡Proceso detenido!</strong> {{ flashMessage }}
+                                <strong>¡Proceso detenido!</strong> {{ flashMessage|raw }}
                             </div>
                         {% endfor %}
                     {% endif %}
