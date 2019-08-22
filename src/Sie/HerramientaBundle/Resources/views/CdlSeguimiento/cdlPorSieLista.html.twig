@@ -1,0 +1,49 @@
+<div class="panel-body">
+    <div class="panel-body panel-primary">
+        <div class="panel">
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+			    <tr>
+					<th>Unidad Educativa:</th><td>{{institucioneducativa.institucioneducativa|upper}}</td>
+					<th>Departamento:</th><td>{{institucioneducativa.leJuridicciongeografica.distritoTipo.departamentoTipo.departamento|upper}}</td>
+				</tr>
+				<tr>
+				    <th>Distrito:</th><td>{{institucioneducativa.leJuridicciongeografica.distritoTipo.distrito|upper}}</td>
+                    <th>Dependencia:</th><td>{{institucioneducativa.dependenciaTipo.dependencia|upper}}</td>
+				</tr>
+			</table>
+        </div>
+        {% if msg == "ok" %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 1%;">Nro.</th>
+                        <th>Nombre Club</th>
+                        <th style="width: 10%;">Nro. de Eventos</th>
+                        <th style="width: 10%;">Nro. de Participantes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data is not empty %}
+                        {% for data in data %}
+                            <tr>
+                                <td data-title="Nro." class="text-center">{{ loop.index }}</td>
+                                <td data-title="Nombre Club">{{ data.nombre_club }}</td>
+                                <td data-title="Nombre Club" class="text-center">{{ data.nro_eventos }}</td>
+                                <td data-title="Nombre Club" class="text-center">{{ data.nro_integrantes }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-teal">No hay Clubs registrados</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -54,8 +54,8 @@ class DesunificationRudeController extends Controller {
      * @return type the list of bachilleres
      */
     public function buildAction(Request $request) {
-        $rude = $request->get('rude');
-        $rude2 = $request->get('rudeb');
+        $rude = trim($request->get('rude'));
+        $rude2 = trim($request->get('rudeb'));
         $em = $this->getDoctrine()->getManager();
         
         //$objEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
@@ -96,17 +96,18 @@ class DesunificationRudeController extends Controller {
         $query = $em->getConnection()->prepare("select * from get_estudiante_historial_json('" . $rude . "');");
         $query->execute();
         $dataInscriptionJson = $query->fetchAll();
+        //dump($dataInscriptionJson);die;
         foreach ($dataInscriptionJson as $key => $inscription) {
             $dataInscription [] = json_decode($inscription['get_estudiante_historial_json'], true);
         }
-
+       
         $query2 = $em->getConnection()->prepare("select * from get_estudiante_historial_json('" . $rude2 . "');");
         $query2->execute();
         $dataInscriptionJson2 = $query2->fetchAll();
         foreach ($dataInscriptionJson2 as $key => $inscription2) {
             $dataInscription2 [] = json_decode($inscription2['get_estudiante_historial_json'], true);
         }
-
+        //dump($dataInscriptionJson,$dataInscriptionJson2);die;
         $objEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude2));
         
 //        dump($dataInscription);
@@ -115,7 +116,7 @@ class DesunificationRudeController extends Controller {
         if (!isset($dataInscription2)) {
             $dataInscription2 = array();
         }
-        
+
         if (isset($dataInscription,$objEstudiante)) {
             $dataExist = ($dataInscription) ? 1 : 0;
             return $this->render($this->session->get('pathSystem') . ':DesunificationRude:unificationInfo.html.twig', array(
@@ -150,8 +151,10 @@ class DesunificationRudeController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
+            
             $aStudent = $request->get('forme');            
             $aInscription = $request->get('form');            
+            //dump($aStudent,$aInscription);die;
             $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($aStudent['idStudent']);            
             
             //$sSie = substr($objStudent->getCodigoRude(), '0', '8');            
@@ -165,13 +168,13 @@ class DesunificationRudeController extends Controller {
                 //dump($val);die;
                 if (key($aInscription) != '_token') {
                     $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val);
+                    //dump($objInscription);die;
                     $objInscription->setEstudiante($objStudentb);
                     $em->persist($objInscription);
                     $em->flush();
                 }
                 next($aInscription);
             }
-            
             $llave = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $objStudent->getCodigoRude(), 'validacionReglaTipo' => 11, 'solucionTipoId' => 0));
             if($llave) {
                 $llave->setEsActivo(true);
@@ -180,6 +183,7 @@ class DesunificationRudeController extends Controller {
             }
             
             $em->getConnection()->commit();
+            //dump($objInscription);die;
             
             $query = $em->getConnection()->prepare("select * from get_estudiante_historial_json('" . $objStudent->getCodigoRude() . "');");
             $query->execute();

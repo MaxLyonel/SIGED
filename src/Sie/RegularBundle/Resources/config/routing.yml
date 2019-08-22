@@ -367,3 +367,7 @@ sie_regular_review_up_sie_file:
 sie_regular_tramite_aceleracion:
     resource: "@SieRegularBundle/Resources/config/routing/tramiteAceleracion.yml"
     prefix:   /sie/tramiteacelera
+
+sie_regular_reactivar_bth:
+     resource: "@SieRegularBundle/Resources/config/routing/reactivarBTH.yml"
+     prefix:   /sie/reactivarbth

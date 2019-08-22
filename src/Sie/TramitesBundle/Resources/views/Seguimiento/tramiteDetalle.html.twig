@@ -29,7 +29,7 @@
                                     <address>
                                         <strong>Código RUDE/RUDEAL: </strong>{{listaDocumento.rude}}<br>
                                         <strong>Cédula de Identidad: </strong>{{listaDocumento.carnetIdentidad}}<br>
-                                        <strong>Código SIE: </strong>{{listaDocumento.sie}}<br>
+                                        <strong>Código SIE: </strong>{{listaDocumento.sie}} - {{listaDocumento.gestion}}<br>
                                         <strong>Fecha de nacimiento: </strong>{{listaDocumento.fechanacimiento|date('d/m/Y') }}<br>
                                         <strong>Lugar de nacimiento: </strong>
                                             {% if listaDocumento.departamentonacimiento != "" %}{{ listaDocumento.departamentonacimiento }} - {% endif %}

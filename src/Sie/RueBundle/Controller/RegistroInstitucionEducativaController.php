@@ -875,7 +875,15 @@ class RegistroInstitucionEducativaController extends Controller {
 
           //adiciona niveles nuevos
           //$niveles = $form['nivelTipo'];
+          $nivel = new InstitucioneducativaNivelAutorizado();
+        $nivel->setFechaRegistro(new \DateTime('now'));
+        //$nivel->setGestionTipoId($this->session->get('currentyear'));
+        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById(6));
+        $nivel->setInstitucioneducativa($entity);
+        $em->persist($nivel);
+
           $niveles = (isset($form['nivelTipo']))?$form['nivelTipo']:array();
+
           for($i=0;$i<count($niveles);$i++){
 
             $nivel = new InstitucioneducativaNivelAutorizado();

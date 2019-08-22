@@ -1,11 +1,20 @@
             <div class="row">
                 <row>
-                    {% for flashMessage in app.session.flashbag.get('autoselcorr') %}
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong>Proceso automatico</strong> {{ flashMessage }}
-                        </div>
-                    {% endfor %}
+                    {% if validado == 0 %}
+                        {% for flashMessage in app.session.flashbag.get('notihistory') %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>¡Advertencia!</strong> {{ flashMessage|raw }}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for flashMessage in app.session.flashbag.get('autoselcorr') %}
+                            <div class="alert alert-warning alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>Proceso automatico</strong> {{ flashMessage|raw }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </row>  
                 <row>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -160,8 +169,6 @@
                             <div class="col-xs-3">
                                 {% if validado == 1 %}                       
                                     <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudes('{{studentIncc.codigoRude}}', '{{studentCorr.codigoRude}}')" > UNIFICAR RUDES</a>
-                                {% else %}     
-                                    <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" > UNIFICAR RUDES</a>
                                 {% endif %}     
                             </div>                                                
                             <div class="col-xs-3">

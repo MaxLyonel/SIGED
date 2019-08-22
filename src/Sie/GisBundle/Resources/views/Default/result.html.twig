@@ -59,9 +59,8 @@
 {% endif %}
 
 
-<script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDROD2n5aHXRd8k_LaEPmgRNnLm576G-Kc&callback=initMap">
-    </script>
+    
+    
     <script>
         var peticion1;
         function listarProvincias(idDpto) {
@@ -176,68 +175,21 @@
         function initMap() {
             var latitud = {{latitud}}; //parseInt($('#latitud').val());
             var longitud = {{longitud}}; //parseInt($('#longitud').val());
-            var codigoEdificio = 123455;
 
-            myLatLng = {lat: latitud, lng: longitud};
+            var zoom = 4;
 
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: myLatLng,
-                zoom: 17,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
+            map = new OpenLayers.Map("map");
+            map.addLayer(new OpenLayers.Layer.OSM());
+
+            var myLatLng = new OpenLayers.LonLat(longitud,latitud).transform(
+                new OpenLayers.Projection("EPSG:4326"),
+                map.getProjectionObject()
+            );
             
-            marker = new google.maps.Marker({
-                position: myLatLng,
-                map: map,
-                title: 'Edificio Escolar',
-                icon: image,
-                draggable: true
-            });
+            map.setCenter(myLatLng, zoom);
 
-            contentString = '<h5>Código Local Educativo: '+codigoEdificio+'</h5>'+
-                            '<p>Mover a la nueva ubicación</p>'+
-                            '<!--button onclick="confirmarUbicacion()" class="btn btn-success btn-xs">Confirmar</button-->';
 
-            infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-
-            marker.addListener('click', function() {
-                infowindow.open(map, marker);
-                map.setZoom(17);
-            });
-
-            // Eventos del movimiento del marker Draggable
-            marker.addListener('dragstart', function() {
-                console.log('Empezando');
-                infowindow.close();
-            });
-            marker.addListener('drag', function() {
-                console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
-                //infowindow.open(map, marker);
-                $('#latitud').val(marker.getPosition().lat());
-                $('#longitud').val(marker.getPosition().lng());
-                $('#latitudText').text(marker.getPosition().lat());
-                $('#longitudText').text(marker.getPosition().lng());
-            });
-            marker.addListener('dragend', function() {
-                console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
-                //infowindow.open(map, marker);
-                $('#latitud').val(marker.getPosition().lat());
-                $('#longitud').val(marker.getPosition().lng());
-                $('#latitudText').text(marker.getPosition().lat());
-                $('#longitudText').text(marker.getPosition().lng());
-            });
-
-            $('#latitud').val(marker.getPosition().lat());
-            $('#longitud').val(marker.getPosition().lng());
-
-            $('#latitudText').text(marker.getPosition().lat());
-            $('#longitudText').text(marker.getPosition().lng());
-            /*google.maps.event.addListener(marker, 'dragend', function() 
-            {
-                alert('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
-            });*/
+            
         }
 
         function eliminar(){

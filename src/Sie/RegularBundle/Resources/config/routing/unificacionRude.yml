@@ -2,8 +2,12 @@ unificacion_index:
     path:    /
     defaults: { _controller: SieRegularBundle:UnificacionRude:index }
 
+unificacion_index_calidad:
+    path:    /unifrudecalidad
+    defaults: { _controller: SieRegularBundle:UnificacionRude:index }
+
 unificacion_ver_historial:
-    path:    /uni_historial/{rudea}/{rudeb}
+    path:    /uni_historial/{rudea}/{rudeb}/{onoffcalidad}
     defaults: { _controller: SieRegularBundle:UnificacionRude:unificarverhistorial }
     options:
        expose: true
@@ -20,8 +24,8 @@ unificacion_unificar:
     options:
        expose: true
        
-unificacion_index_calidad:
-    path:    /unificarcalidad/
-    defaults: { _controller: SieRegularBundle:UnificacionRude:indexcalidad }
-    options:
-       expose: true       
+# unificacion_index_calidad:
+#     path:    /unificarcalidad/
+#     defaults: { _controller: SieRegularBundle:UnificacionRude:indexcalidad }
+#     options:
+#        expose: true       

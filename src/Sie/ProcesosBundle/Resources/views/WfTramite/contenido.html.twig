@@ -2,7 +2,7 @@
     <div class="alert alert-success">
         {% for msg in app.session.flashBag.get('exito') %}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <i class="glyphicon glyphicon-ok"></i> {{ msg }}
+                <i class="glyphicon glyphicon-ok"></i> {{ msg|raw }}
         {% endfor %}
     </div>
 {% endif %}
@@ -10,7 +10,7 @@
     <div class="alert alert-danger">
         {% for msg in app.session.flashBag.get('error') %}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <i class="glyphicon glyphicon-remove"></i> {{ msg }}
+                <i class="glyphicon glyphicon-remove"></i> {{ msg|raw }}
         {% endfor %}
     </div>
 {% endif %}
@@ -18,7 +18,7 @@
     <div class="alert alert-warning">
         {% for msg in app.session.flashBag.get('recibido') %}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <i class="glyphicon glyphicon-info-sign"></i> {{ msg }}
+            <i class="glyphicon glyphicon-info-sign"></i> {{ msg|raw }}
         {% endfor %}
     </div>
 {% endif %}
@@ -43,9 +43,11 @@
                                 </td>
                                 <td>{{ entity.flujo }}</td>
                                 <td class="text-center" style="max-width: 20px">
-                                    <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary tooltips" data-toggle="tooltip" data-placement="top" title="Iniciar Trámite">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
+                                    <form action="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();">                                    
+                                        <button type="submit" class="btn btn-primary btn-xs text-primary tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Iniciar Trámite" onclick="disabled = true;this.form.submit()">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -112,7 +114,7 @@
                                 <td>{{ entity.nombre_tabla }}</td>
                                 <td>{{ entity.flujo }}</td>
                                 <td>{{ entity.tramite_tipo }}</td>
-                                <td>{{ entity.obs }}</td>
+                                <td class = "more">{{ entity.obs }}</td>
                                 <td>{{ entity.tarea_actual }}</td>
                                 <td><span class={% if entity.id_estado == 3 %}"label label-warning"{% elseif entity.id_estado == 4 %}"label label-danger" {% else %} "label label-success"{% endif %}>{{ entity.tramite_estado }}</span></td>
                                 <td>{{ entity.fecha_estado|date('d-m-Y') }}</td>
@@ -137,8 +139,8 @@
                                 <td>{{ entity.proceso_tipo }}</td>
                                 <td>
                                     {% if entity.id_estado == 15 or entity.id_estado == 4 %} {#si esta enviado/devuelto #}
-                                        <form action="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();">                                    
-                                            <button type="submit" class="btn btn-warning btn-xs tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Recibir para:{{ entity.proceso_tipo }}" onclick="disabled = true;this.form.submit()">
+                                        <form action="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" method="post" style="display:inline-block" id="form_recibir">                    
+                                            <button type="submit" class="btn btn-warning btn-xs tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Recibir para:{{ entity.proceso_tipo }}" id="btn_recibir" onclick="disabled = true;this.form.submit()">
                                                 <i class="glyphicon glyphicon-check"></i>
                                             </button>
                                         </form>
@@ -147,9 +149,11 @@
                                         </a>
                                     {% endif %}
                                     {% if entity.id_estado == 3 %} {#si esta recibido #}
-                                        <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs tooltips" data-toggle="tooltip" data-placement="top" title="{{ entity.proceso_tipo }}">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
+                                        <form action="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();">                                    
+                                            <button type="submit" class="btn btn-primary btn-xs tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{ entity.proceso_tipo }}" onclick="disabled = true;this.form.submit()">
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        </form>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -211,7 +215,7 @@
                                 <td>{{ entity.flujo }}</td>
                                 <td>{{ entity.tramite_tipo }}</td>
                                 <td>{{ entity.proceso_tipo }}</td>
-                                <td>{{ entity.obs }}</td>
+                                <td><spam class = "more">{{ entity.obs }}</spam></td>
                                 <td>{{ entity.tramite_estado }}</td>
                                 <td>{{ entity.fecha_recepcion|date('d-m-Y') }}</td>
                                 <td>{{ entity.plazo }}</td>
@@ -220,9 +224,11 @@
                                 <td>{{ entity.nombre }}</td>
                                 <td>
                                     {% if entity.ruta_reporte %} {#si tiene reporte #}
-                                        <a href="{{ path('wf_tramite_reporte_formulario', { 'idtramite': entity.id,'id_td': entity.id_td }) }}" class="btn btn-danger btn-xs text-primary tooltips" data-toggle="tooltip" data-placement="top" title="Imprimir">
-                                            <i class="glyphicon glyphicon-print"></i>
-                                        </a>
+                                        <form action="{{ path(entity.ruta_reporte, { 'idtramite': entity.id,'id_td': entity.id_td }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();">                                    
+                                            <button type="submit" class="btn btn-danger btn-xs text-primary tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Comprobante" onclick="disabled = true;this.form.submit()">
+                                                <i class="glyphicon glyphicon-print"></i>
+                                            </button>
+                                        </form>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -284,12 +290,75 @@
                                     <td>{{ entity.fecha_registro|date('d-m-Y') }}</td>
                                     <td>{{ entity.fecha_fin|date('d-m-Y') }}</td>
                                     <td>{{ entity.duracion }}</td>
-                                    <td><span class="label label-success">{{ entity.estado }} </span></td>
+                                    <td>{% if entity.tramite_tipo_id == 31 %}
+                                            <span class="label label-warning">CONCLUIDO-EN REGULARIZACIÓN</span>
+                                        {% else %}
+                                            <span class="label label-success">{{ entity.estado }} </span>
+                                        {% endif %}    
+                                    </td>
                                     <td class="text-center">
                                         <a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
                                             <i class="fa fa-list"></i>
                                         </a>
                                     </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{# TRAMITES REACTIVACION BTH #}
+{% if tipo == 5 %}
+    <div class="row">
+		<div class="col-md-12">
+            <div class="table-responsive">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped table-primary" id="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="min-width: 15px;">No. Trámite</th>
+                                <th>Trámite</th>
+                                <th>Tipo de Trámite</th>
+                                <th>Código SIE</th>
+                                <th>Unidad Educativa</th>
+                                <th>Fecha de reactivación</th>
+                                <th>Fecha de conclusión</th>
+                                <th>Esdado</th>
+                                <th>Observación</th>
+                                <th>Usuario que reactivó</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th class="text-center" style="min-width: 15px;">No. Trámite</th>
+                                <th>Trámite</th>
+                                <th>Tipo de Trámite</th>
+                                <th>Código SIE</th>
+                                <th>Unidad Educativa</th>
+                                <th>Fecha de reactivación</th>
+                                <th>Fecha de conclusión</th>
+                                <th>Esdado</th>
+                                <th>Observación</th>
+                                <th>Usuario que reactivó</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    <td>{{ entity.id }}</td>
+                                    <td>{{ entity.flujo }}</td>
+                                    <td>{{ entity.tramite_tipo }}</td>
+                                    <td>{{ entity.codigo_sie }}</td>
+                                    <td>{{ entity.institucioneducativa }}</td>
+                                    <td>{{ entity.fecha_inicio|date('d-m-Y') }}</td>
+                                    <td>{% if entity.fecha_conclusion  %}{{ entity.fecha_conclusion|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{{ entity.estado }}</td>
+                                    <td><spam class = "more">{{ entity.obs }}</spam></td>
+                                    <td>{{ entity.usuario }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

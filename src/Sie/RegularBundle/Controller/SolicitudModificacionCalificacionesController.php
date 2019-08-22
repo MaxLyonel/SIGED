@@ -1220,6 +1220,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                                 $datosNota = $this->get('notas')->modificarNota($ds->getEstudianteNotaId(),0,$ds->getNotaCualitativaNew());
                                             }else{
                                                 $datosNota = $this->get('notas')->modificarNota($ds->getEstudianteNotaId(),$ds->getNotaCuantitativaNew(),'');
+                                                // dump($datosNota);die;
                                             }
                                         }else{
                                             if($nivel == 11 or $nivel == 1 or $nivel == 403){

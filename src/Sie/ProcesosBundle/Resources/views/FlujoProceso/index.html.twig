@@ -170,13 +170,13 @@
                     <div class="form-group col-md-12">
                         <label class="col-sm-4">Tarea</label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.tarea, {'attr':{'class':'form-control','onclick':'cargar_tareas_proceso(0)'} }) }}
+                            {{ form_widget(form.tarea, {'attr':{'class':'chosen-select form-control','onchange':'cargar_tareas_proceso(0)'} }) }}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-sm-4">Rol</label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
+                            {{ form_widget(form.rol, {'attr':{'class':'form-control chosen-select mb-15'} }) }}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -376,6 +376,7 @@
         });
         function cargar_tareas_proceso(paso) {
             //alert('hola');
+            
             if($('#form_proceso').val()==""){return false;}
             var formData = {flujotipo: $('#form_proceso').val(),paso: paso};
             $.ajax({

@@ -341,7 +341,7 @@
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
                         </ul>
                     </li>
-                    {#
+                    
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -352,7 +352,7 @@
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
                         </ul>
                     </li>
-                    #}
+                   
                     {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -403,7 +403,6 @@
                         {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                         </ul>
-<<<<<<< HEAD
                     </li> #}
                     
                     <li class="submenu">
@@ -539,9 +538,14 @@
                             <ul>
                                 <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
                             </ul>
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
                         </li>
                     {% endif %}
-
+                    
 
                     {#
                         <li class="submenu">
@@ -556,7 +560,8 @@
                     </li>
 
                         #}
-                    {#{% if  app.session.get('roluser') == 10   %}
+                        {#
+                    {% if  app.session.get('roluser') == 10   %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -1376,7 +1381,6 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
 
             <!--/ END CORE PLUGINS -->
 

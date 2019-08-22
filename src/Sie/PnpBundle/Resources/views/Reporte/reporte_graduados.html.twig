@@ -1,0 +1,267 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+     <div class="header-content">
+        <h2><i class="fa fa-eye animated flip"></i>REPORTE DE GRADUADOS <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-eye"></i>
+                    <a href="#">
+                    Ver
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Reporte de Graduados</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+  
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+         <!-- /.row -->
+
+        <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Reporte de Gradudados Buscar <span></span>
+                    </div>
+                    <div class="panel-body">
+                        <form action="{{path('sie_pnp_reporte_graduados')}}" class="form-horizontal" method="post">
+                            <div class="form-group col-xs-12 col-lg-2">
+                                <div class="col-sm-12"  {% if roluser != 8 %}style="display: none" {% endif %}>
+                                    <select class="form-control" required="required" id="lugar_tipo_id" name="lugar_tipo_id" placeholder="Departamento">
+                                        <option value="1" {% if lugar_tipo_id ==  '1'%} selected="selected" {% endif %}>Bolivia</option>
+                                        <option value="31654" {% if lugar_tipo_id ==  '31654'%} selected="selected" {% endif %}>Chuquisaca</option>
+                                        <option value="31655" {% if lugar_tipo_id ==  '31655'%} selected="selected" {% endif %}>La Paz</option>
+                                        <option value="31656" {% if lugar_tipo_id ==  '31656'%} selected="selected" {% endif %}>Cochabamba</option>
+                                        <option value="31657" {% if lugar_tipo_id ==  '31657'%} selected="selected" {% endif %}>Oruro</option>
+                                        <option value="31658" {% if lugar_tipo_id ==  '31658'%} selected="selected" {% endif %}>Potosí</option>
+                                        <option value="31659" {% if lugar_tipo_id ==  '31659'%} selected="selected" {% endif %}>Tarija</option>
+                                        <option value="31660" {% if lugar_tipo_id ==  '31660'%} selected="selected" {% endif %}>Santa Cruz</option>
+                                        <option value="31661" {% if lugar_tipo_id ==  '31661'%} selected="selected" {% endif %}>Beni</option>
+                                        <option value="31662" {% if lugar_tipo_id ==  '31662'%} selected="selected" {% endif %}>Pando</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-2">
+                                <label class="col-sm-2 control-label">de:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="inicio" id="inicio" class="form-control" onkeypress="return false" value="{{ inicio }}" autocomplete="off" >
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-2">
+                                <label class="col-sm-2 control-label">a:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="fin" id="fin" class="form-control" onkeypress="return false" value="{{ fin }}" autocomplete="off" >
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-4">
+                                <div class="col-sm-12">
+                                    <input type="radio" name="opc" value="0" {% if opc == 0 %} checked {% endif %}>&nbsp;Grupos Cerrados &nbsp;&nbsp;
+                                    <input type="radio" name="opc" value="1" {% if opc == 1 %} checked {% endif %}>&nbsp;Grupos Abiertos &nbsp;&nbsp;
+                                    <input type="radio" name="opc" value="2" {% if opc == 2 %} checked {% endif %}>&nbsp;Todos
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-1">
+                                <button type="submit" class="btn rounded btn-success" onclick="return ver_fechas(inicio,fin)">Ver</button>
+                            </div>
+                        </form>
+                    </div>
+                    {% if filas %}
+                        <div class="panel-heading">
+                            Resultado de búsqueda
+                        </div>
+                        <div class="panel-body">
+                            <div class="" style="width: 100%; overflow: scroll;">
+                                <table align="center" id="" border="1" class="display" cellspacing="0" width="100%">    
+                                    <thead>
+                                        <tr>
+                                            {#}<th>{% if lugar_tipo_id == 1 %}Departamento{% else %} Municipio {% endif %}</th>
+                                            <th>B1P1</th>
+                                            <th>B1P2</th>
+                                            <th>B2P1</th>
+                                            <th>B2P2</th>
+                                            <th>AES1</th>
+                                            <th>AES2</th>
+                                            <th>AAS1</th>
+                                            <th>AAS2</th>
+                                            <th>2 DO</th>
+                                            <th>3 RO</th>
+                                            <th>5 TO</th>
+                                            <th>6 TO</th> {#}
+                                            <td rowspan="3"><strong>{% if lugar_tipo_id == 1 %}Departamento{% else %} Municipio {% endif %}</strong></td>
+                                            <td align="center" colspan="4"><strong>Plan Antiguo</strong></td>
+                                            <td align="center" colspan="4"><strong>Plan Nuevo</strong></td>
+                                            <td align="center" colspan="4"><strong>Total</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" colspan="2"><strong>Bloque 1</strong></td>
+                                            <td align="center" colspan="2"><strong>Bloque 2</strong></td>
+                                            <td align="center" colspan="2"><strong>Ap. Elementales</strong></td>
+                                            <td align="center" colspan="2"><strong>Ap. Avanzados</strong></td>
+                                            <td align="center" rowspan="2"><strong>Segundo</strong></td>
+                                            <td align="center" rowspan="2"><strong>Tercero</strong></td>
+                                            <td align="center" rowspan="2"><strong>Quinto</strong></td>
+                                            <td align="center" rowspan="2"><strong>Sexto</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Parte 1</strong></td>
+                                            <td align="center"><strong>Parte 2</strong></td>
+                                            <td align="center"><strong>Parte 1</strong></td>
+                                            <td align="center"><strong>Parte 2</strong></td>
+                                            <td align="center"><strong>sem 1</strong></td>
+                                            <td align="center"><strong>sem 2</strong></td>
+                                            <td align="center"><strong>sem 1</strong></td>
+                                            <td align="center"><strong>sem 2</strong></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for fila in filas %}
+                                        <tr>
+                                            {% if fila.nombre == "Total" %}
+                                                <td><strong>{{ fila.nombre }}</strong></td>
+                                                <td align="center"><strong>{{ fila.b1p1 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.b1p2 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.b2p1 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.b2p2 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.aes1 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.aes2 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.aas1 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.aas2 }}</strong></td>
+                                                <td align="center"><strong>{{ fila.seg }}</strong></td>
+                                                <td align="center"><strong>{{ fila.ter }}</strong></td>
+                                                <td align="center"><strong>{{ fila.qui }}</strong></td>
+                                                <td align="center"><strong>{{ fila.sex }}</strong></td>
+                                            {% else %}
+                                                <td>{{ fila.nombre }}</td>
+                                                <td align="center">{{ fila.b1p1 }}</td>
+                                                <td align="center">{{ fila.b1p2 }}</td>
+                                                <td align="center">{{ fila.b2p1 }}</td>
+                                                <td align="center">{{ fila.b2p2 }}</td>
+                                                <td align="center">{{ fila.aes1 }}</td>
+                                                <td align="center">{{ fila.aes2 }}</td>
+                                                <td align="center">{{ fila.aas1 }}</td>
+                                                <td align="center">{{ fila.aas2 }}</td>
+                                                <td align="center">{{ fila.seg }}</td>
+                                                <td align="center">{{ fila.ter }}</td>
+                                                <td align="center">{{ fila.qui }}</td>
+                                                <td align="center">{{ fila.sex }}</td>                
+                                            {% endif %}
+                                        </tr>   
+                                    {% endfor %}   
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>             
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+     function ver_fechas(inicio,fin){
+        
+        array_fecha = inicio.value.split("-");
+        var ano=array_fecha[0];
+        var mes=(array_fecha[1]-1);
+        var dia=(array_fecha[2]);
+        var fecha_inicio = new Date(ano,mes,dia);
+        array_fecha = fin.value.split("-");
+        var ano=array_fecha[0];
+        var mes=(array_fecha[1]-1);
+        var dia=(array_fecha[2]);
+        var fecha_fin = new Date(ano,mes,dia);
+        if(fecha_fin >= fecha_inicio)
+            return true;
+        else{
+            alert("Error!, la fecha final no puede ser menor que la inicial");
+            return false;
+        }
+            
+        
+    }
+ $("#inicio").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            language: "es",
+        });
+     $("#fin").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            language: "es",
+        });
+    
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
+        
+        $('#tablaTotales tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaTotales').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    </script>
+{% endblock %}

@@ -629,7 +629,7 @@ class DocumentoController extends Controller {
         $em->flush();
 
         $documentoId = $entityDocumento->getId();
-        if($documentoTipo == 1 or $documentoTipo == 2){
+        if($documentoTipo == 1 or $documentoTipo == 2 or $documentoTipo == 6 or $documentoTipo == 7){
             if ($documentoFirmaId != 0 and $documentoFirmaId != ""){
                 if($documentoTipo == 2){
                     $entityDocumentoGenerado = $this->getDocumentoLegalizado($documentoId);
@@ -647,6 +647,12 @@ class DocumentoController extends Controller {
                     case 2:
                         $personaTipoId = 2;
                         break;
+                    case 6:
+                        $personaTipoId = 1;
+                        break;
+                    case 7:
+                        $personaTipoId = 1;
+                        break;
                     default:
                         $personaTipoId = 0;
                 }
@@ -661,8 +667,10 @@ class DocumentoController extends Controller {
                     $lugarNacimiento = $entityDocumentoGenerado['paisnacimiento'];
                 }    
                 
-                $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
-                $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
+                // $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
+                // $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
+                $dateNacimiento = ($entityDocumentoGenerado['fechanacimiento']);
+                $dateEmision = ($entityDocumentoGenerado['fechaemision']);
                             
                 $datos = array(
                     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
@@ -690,7 +698,7 @@ class DocumentoController extends Controller {
                 $entityDocumento->setTokenPrivado($keys['keyPrivada']);
                 $entityDocumento->setTokenImpreso($keys['token']);
                 $em->persist($entityDocumento);
-                $em->flush();
+                // $em->flush();
 
                 // dump($entityDocumento);dump($entityDocumentoFirma);dump($datos);die;    
                 
@@ -700,6 +708,8 @@ class DocumentoController extends Controller {
                 $cantidadIncremento = ($entityDocumentoFirmaAutorizada->getUsado()) + 1;
                 $entityDocumentoFirmaAutorizada->setUsado($cantidadIncremento);
                 $em->persist($entityDocumentoFirmaAutorizada);
+                // $em->flush();
+
                 $em->flush();
             } 
 
@@ -1035,9 +1045,9 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,17);
+        $rolPermitido = array(14,16,17,8,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -1212,15 +1222,18 @@ class DocumentoController extends Controller {
                      */
                     if($entity[0]["observacion"] != ""){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Estudiante con código rude '.$entity[0]["rude"].' tiene la siguiente observación: '.$entity[0]["observacion"]));
-                        return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+                        // return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+                        return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
                     }
 
                     if (!$entity[0]["estadofintramite"]){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con codigo rude "'.$entity[0]["rude"].'" y con número de serie "'.$entity[0]["serie"].'" no concluyo su trámite, conluya su tramite e intente nuevamente'));
-                        return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+                        // return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+                        return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
                     } elseif (!$entity[0]["estadodocumento"]){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El documento con numero de serie "'.$entity[0]["serie"].'" se encuentra anulado, no es posible realizar su legalicación'));
-                        return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+                        // return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+                        return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
                     } else {
                         $em->getConnection()->beginTransaction();
                         try {
@@ -1331,9 +1344,9 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = 17;
+        $rolPermitido = 16;
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -1545,9 +1558,9 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,17);
+        $rolPermitido = array(16,17,8,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -1936,7 +1949,7 @@ class DocumentoController extends Controller {
         $datosEncryptDecode = base64_decode($datos);
         $rsa = new RSA;
         $rsa->loadKey($keyPrivada);
-        $datos = $rsa1->decrypt($datosEncryptDecode);
+        $datos = $rsa->decrypt($datosEncryptDecode);
         // explode("|",$datos)
         return $datos;
     }
