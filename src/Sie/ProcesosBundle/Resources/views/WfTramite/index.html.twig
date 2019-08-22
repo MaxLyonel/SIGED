@@ -252,6 +252,7 @@
                     $('#contenido').empty();
                     $('#contenido').append(data);
                     cargatablas();
+                    readmore();
                     $(".tooltips").tooltip();
                 },
             });
@@ -322,6 +323,15 @@
                     $('#modal').append(data);
                 },
             });
+        }
+        function validar(){
+           if (confirm('Esta seguro de recibir el trámite?')){
+               //$('#btn_recibir').attr('disabled',true);
+               //return true;
+           }else{
+               return false;
+           }
+           
         }
 
     </script>

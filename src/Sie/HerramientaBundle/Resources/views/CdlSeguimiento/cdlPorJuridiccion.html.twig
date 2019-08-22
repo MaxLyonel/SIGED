@@ -60,7 +60,7 @@
                                 <h4 class="no-margin">Unidades Educativas con Clubs de Lectura</h4>
                                 <p class="text-muted">
                                     {% if data is not empty %}
-                                        {% if data.0.rolusuario == 0 %} Unidad Educativa-{{data.0.jurisdiccion}}{% else %}Por {{data.0.nombrearea}}{% endif %}
+                                        {% if data.0.rolusuario == 0 %} Unidad Educativa: {{data.0.jurisdiccion}}{% else %}Por {{data.0.nombrearea}}{% endif %}
                                     {% else %}
                                         No existen Clubs de Lectura registrados
                                     {% endif %}
