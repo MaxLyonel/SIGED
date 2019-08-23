@@ -236,7 +236,9 @@ class RegistryPersonComissionController extends Controller{
                         ->setParameter('levelId','12')
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision','attr'=>array('class'=>'form-control')))
+        ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
         ->add('personId', 'hidden', array('data'=>$personId , 'mapped'=>false))
+        
         ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-info','onclick'=>'saveCommission()')))
         
         ->getForm();
@@ -256,6 +258,7 @@ class RegistryPersonComissionController extends Controller{
         }
         // get the send values
         $form = $request->get('form');
+        $form['photoData'] = $request->files->get('form');
         // create db conexin 
         $em = $this->getDoctrine()->getManager();
 
@@ -343,19 +346,32 @@ class RegistryPersonComissionController extends Controller{
     }
 
     private function saveCommissionData($form){
-        
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $swAnswer = false;
         try {
+            //look for person
+            $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($form['personId']);
+            // create the img path
+            $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
+                if (!file_exists($dirtmp)) {
+                mkdir($dirtmp, 0775);
+            }
+            // get info about the img
+            $imgExtension = $form['photoData']['photoperson']->getMimeType();
+            list($typeImg, $extensionImg) = explode('/', $imgExtension);
+            $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+            //move the file on the img path
+            $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
 
             // save the commision to the person choose
             $objComisionJuegosDatos = new JdpDelegadoInscripcionJuegos();
             $objComisionJuegosDatos->setFaseTipo($em->getRepository('SieAppWebBundle:JdpFaseTipo')->find(4));
-            $objComisionJuegosDatos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($form['personId']));
+            $objComisionJuegosDatos->setPersona($objPerson);
             $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
             $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
             $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
+            $objComisionJuegosDatos->setRutaImagen($dirtmp.'/'.$namePhoto);
             
             $em->persist($objComisionJuegosDatos);
             $em->flush(); 

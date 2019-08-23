@@ -33,6 +33,13 @@ Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos:
             length: 255
             fixed: false
             comment: ''
+        rutaImagen:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: ruta_imagen
     manyToOne:
         gestionTipo:
             targetEntity: GestionTipo
