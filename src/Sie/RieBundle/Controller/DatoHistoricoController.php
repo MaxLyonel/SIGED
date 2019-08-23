@@ -123,8 +123,16 @@ class DatoHistoricoController extends Controller {
      * Guardar datos de historiales
      */
     public function createAction(Request $request){
-    	try {
-            $form = $request->get('form');
+        $form = $request->get('form');
+        $maximo = 3.5 * (1024 * 1024);
+        $size = $_FILES['form']['size']['archivo'];
+        //dump($_FILES,$size,$maximo);die;
+        if($size > $maximo){
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3.5 megas.');
+            return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
+        }
+        try {
+            
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
             // $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
@@ -175,8 +183,15 @@ class DatoHistoricoController extends Controller {
      * Guardar la modificación de datos historicos
      */
      public function updateAction(Request $request){
-    	try {
-            $form = $request->get('form');
+        $form = $request->get('form');
+        $maximo = 3.5 * (1024 * 1024);
+        $size = $_FILES['form']['size']['archivo'];
+        //dump($size,$maximo);die;
+        if($size > $maximo){
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3.5 megas');
+            return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
+        }
+        try {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
             $historico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($form['id']);
@@ -186,10 +201,10 @@ class DatoHistoricoController extends Controller {
             $historico->setDescripcion($form['descripcion']);
             $historico->setDatoAdicional(($form['datoAdicional'])?$form['datoAdicional']:NULL);
             $historico->setFechaModificacion(new \DateTime('now'));
-
             //Validando el archivo
             if($request->files->get('form')['archivo']){
-                if($historico->getArchivo() != ''){
+                //dump($this->get('kernel')->getRootDir());die;
+                if($historico->getArchivo() != '' and is_readable($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo())  ){
                     unlink($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo());    
                 }  
                 // $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
@@ -216,7 +231,8 @@ class DatoHistoricoController extends Controller {
         try{        
             $em = $this->getDoctrine()->getManager();
             $historico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($request->get('idhistorico'));
-            if($historico->getArchivo() != ''){
+            //if($historico->getArchivo() != '' and is_readable($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo())){
+            if($historico->getArchivo() != '' and is_readable($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo())){
                 // unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
                 unlink($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo());    
             }             
@@ -236,6 +252,7 @@ class DatoHistoricoController extends Controller {
     public function upFileToServer($archivo){
 
         $dirfile = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/';
+        //$dirfile = 'uploads/archivos/';
         move_uploaded_file($archivo['form']['tmp_name']['archivo'],$dirfile.$archivo['form']['name']['archivo']);
 
         return $archivo['form']['name']['archivo'];

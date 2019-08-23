@@ -440,8 +440,13 @@ class ReglaController extends Controller
         $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
 
         $estadoMatriculaInicioId = $estudianteInscripcionEntity->getEstadomatriculaInicioTipo()->getId();
-        if($estadoMatriculaInicioId == 9 or $estadoMatriculaInicioId == 15){
-            return array('0' => false, '1' => 'no puede registrar a estudiantes con traslado');
+        $fechaRegistroInscripcion = $estudianteInscripcionEntity->getFechaInscripcion();
+        $fechaLimiteTraslado = new \DateTime('15-06-2019');
+        if($estadoMatriculaInicioId == 9 or $estadoMatriculaInicioId == 15) {
+            $fechaLimiteTraslado = new \DateTime('15-06-2019');
+            if($fechaRegistroInscripcion > $fechaLimiteTraslado){
+                return array('0' => false, '1' => 'no puede registrar a estudiantes con traslado');
+            }   
         }
 
         $institucioneducativaCursoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $estudianteInscripcionEntity->getInstitucioneducativaCurso()->getId()));

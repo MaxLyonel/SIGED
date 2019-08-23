@@ -1250,6 +1250,23 @@ class Funciones {
         return $tiempo;
     }
 
+    public function getTheCurrentYear($fechanacimiento, $fechaLimit){
+        
+        list($dia,$mes,$anno) = explode("-",$fechanacimiento);
+        list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+
+
+        $ano_diferencia = $annoLimit - $anno;
+        $mes_diferencia = $mesLimit - $mes;
+        $dia_diferencia = $diaLimit - $dia;
+        
+        if ($dia_diferencia < 0 && $mes_diferencia <= 0){
+            $ano_diferencia--;
+        }
+
+        return $ano_diferencia;
+    }    
+
 
 
     /**
@@ -1454,5 +1471,62 @@ class Funciones {
 
         return $documentos;
     }
+    /**
+     * Servicio para eliminar especialidades bth
+     * @param  [integer] $codsie     [Id de inscripcion del estudiante]
+     * @param  [integer] $gestion    [id de la gestion]
+     * @return [boolean]             [Retorna true si elimmino las especialidades y false si no tiene especialidades]
+     */
+    public function eliminarEspecialidad($codsie,$gestion){
+       
+        $ieht = $this->em->createQueryBuilder()
+        ->delete('esp')
+        ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico','esp')
+        ->where('esp.institucioneducativa = '. $codsie)
+        ->andWhere('esp.gestionTipo='. $gestion)
+        ->getQuery()
+        ->getResult();
+        
+    }
+
+    /**
+     * Service to check the users tuicion
+     * @param  [array] $codrude    [codigoRude, userId, gestion]
+     */
+    public function getInscriptionToValidateTuicion($form){
+        //look for the current inscription on 4.5.11 matricula id
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('iec')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('e.codigoRude = :id')
+                ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->setParameter('id', $form['codigoRude'])
+                ->setParameter('mat', array(4, 5, 11))
+                ->setParameter('gestion', $this->session->get('currentyear'))
+                ->orderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        
+        $objCurrentInscripcion = $query->getResult();
+        
+        if($objCurrentInscripcion){
+            // check the tución info
+            $currentSie = $objCurrentInscripcion[0]->getinstitucioneducativa()->getid();
+            $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $currentSie);
+            $query->bindValue(':rolId', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetch(); 
+            
+            return ($aTuicion['get_ue_tuicion']);
+        }else{
+            return false;
+        }
+                
+    }    
+
 
 }

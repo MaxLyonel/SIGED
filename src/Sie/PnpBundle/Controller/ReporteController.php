@@ -38,7 +38,7 @@ class ReporteController extends Controller
   
 //////////////Reporte General 
 public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $request){
-//carlos
+//
     $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
 
@@ -94,6 +94,7 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
         } 
     }
     /////////////// REVISAR DE DONDE ESTA VINVIENDO Y QUE QUIERE VER
+    $select1=$where=$select2_groupby=$groupby2="";
     if($nivel_ini==1 and $nivel_fin==1){//inicio-Departamentos
         $select1="id_dep as id,dep as lugar";
         $select2_groupby="id_dep,dep,bloque,parte";

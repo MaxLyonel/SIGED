@@ -39,6 +39,10 @@ class JdpComisionTipo
      */
     private $esactivo;
 
+    public function __toString(){
+       return $this->comision;
+    }
+
 
     /**
      * Get id
