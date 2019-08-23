@@ -220,6 +220,7 @@ class TramiteModificacionCalificacionesController extends Controller {
     public function buscarCalificacionesAction(Request $request){
         $idInscripcion = $request->get('idInscripcion');
         $idTramite = $request->get('idTramite');
+        $flujoTipo = $request->get('flujoTipo');
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
         $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
@@ -241,8 +242,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                     and wf.datos like '%".$idInscripcion."%'
                     and t.institucioneducativa_id = ". $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() ."
                     and wf.es_valido is true
-                    and fp.flujo_tipo_id = 7
-                    ");
+                    and fp.flujo_tipo_id = ".$flujoTipo);
 
         $query->execute();
         $tramitePendiente = $query->fetchAll();

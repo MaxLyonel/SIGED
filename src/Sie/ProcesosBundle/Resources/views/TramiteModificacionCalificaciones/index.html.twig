@@ -586,7 +586,8 @@
                     // CARGAMOS LAS CALIFICACIONES
                     axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {
                         idInscripcion: this.idInscripcion, 
-                        idTramite: this.idTramite
+                        idTramite: this.idTramite,
+                        flujoTipo: this.flujoTipo
                     }))
                     .then(response => {
                         if (response.data.tramitePendiente.length > 0) {
