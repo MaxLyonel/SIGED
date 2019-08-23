@@ -341,7 +341,7 @@
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
                         </ul>
                     </li>
-                    {#
+                    
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -352,7 +352,7 @@
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
                         </ul>
                     </li>
-                    #}
+                   
                     {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -538,9 +538,14 @@
                             <ul>
                                 <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
                             </ul>
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
                         </li>
                     {% endif %}
-
+                    
 
                     {#
                         <li class="submenu">

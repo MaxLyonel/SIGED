@@ -982,12 +982,12 @@ class ClasificacionController extends Controller {
                                     $entrenadorSave = false;
                                     if(count($entrenadorEntity) > 0){
                                         $entrenadorSave = true;
-                                        $personaId = $entrenadorEntity["personaId"];
+                                        // $personaId = $entrenadorEntity["personaId"];
                                     } else {
                                         $entrenadorEntity = $registerPersonStudentController->getEquipoCouch($deportista,$fase);
                                         if(count($entrenadorEntity) > 0){
                                             $entrenadorSave = true;
-                                            $personaId = $entrenadorEntity["personaId"];
+                                            // $personaId = $entrenadorEntity["personaId"];
                                         } else {
                                             $entrenadorSave = false;
                                         }
@@ -1025,11 +1025,16 @@ class ClasificacionController extends Controller {
                                                 $comisionId = 140;
                                             }
                                         }
-                                        $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
-                                        $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
-                                        $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
-                                        $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
-                                        $em->persist($personaInscripcionJuegos);
+                                        //dump($entrenadorEntity);die;
+                                        foreach($entrenadorEntity as $entrenador){
+                                            $personaId = $entrenador["personaId"];
+                                            $comisionId = $entrenador["comisionId"];
+                                            $personaInscripcionJuegos = new JdpPersonaInscripcionJuegos();
+                                            $personaInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
+                                            $personaInscripcionJuegos->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personaId));
+                                            $personaInscripcionJuegos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($comisionId));
+                                            $em->persist($personaInscripcionJuegos);
+                                        }
                                     }
 
                                     $em->flush();
@@ -2212,6 +2217,8 @@ class ClasificacionController extends Controller {
         if ($inscripcion != ""){
             $inscripcion = base64_decode($inscripcion);
         }
+
+        $response = new JsonResponse();
         try{
             $entityDatos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('id'=>($inscripcion)));
             if ($entityDatos) {
@@ -2253,9 +2260,12 @@ class ClasificacionController extends Controller {
                         if(count($entityEquipoDatos) > 0){
                             $em->remove($entityEquipoDatos);
                         }
-                        $entityEntrenadorDatos = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos'=>($inscripcion)));
+                        $entityEntrenadorDatos = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('estudianteInscripcionJuegos'=>($inscripcion)));
+                        
                         if(count($entityEntrenadorDatos) > 0){
-                            $em->remove($entityEntrenadorDatos);
+                            foreach ($entityEntrenadorDatos as $entrenadorRegistrado) {
+                                $em->remove($entrenadorRegistrado);
+                            }                            
                         }
                         $em->remove($entityDatos);
                         $em->flush();
@@ -2278,7 +2288,6 @@ class ClasificacionController extends Controller {
             $em->getConnection()->rollback();
             $respuesta = array('registro'=>false, 'msg_correcto' => "", 'msg_incorrecto' => 'No se puede eliminar la inscripcion del estudiante');
         }
-        $response = new JsonResponse();
         return $response->setData($respuesta);
     }
 

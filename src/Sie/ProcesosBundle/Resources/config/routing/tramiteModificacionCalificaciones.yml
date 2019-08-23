@@ -17,3 +17,19 @@ tramite_modificacion_calificaciones_formulario_save:
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioSave }
     options:
         expose: true
+
+tramite_modificacion_calificaciones_formulario_imprimir:
+    path:     /formularioImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioImprimir }
+
+# DISTRITO
+
+tramite_modificacion_calificaciones_recepcion_verifica_distrito:
+    path:     /recepcionaVerificaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:recepcionVerificaDistrito }
+
+tramite_modificacion_calificaciones_deriva_distrito:
+    path:     /derivaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDistrito }
+    options:
+        expose: true

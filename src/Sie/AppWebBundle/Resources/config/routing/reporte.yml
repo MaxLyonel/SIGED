@@ -117,3 +117,11 @@ reporte_superior_directorio_itts_busqueda:
 reporte_superior_directorio_itts_detalle:
     path:     /directorio/itts/detalle/superior
     defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsDetalleSuperior }
+
+reporte_diversa_index:
+    path:     /diversa
+    defaults: { _controller: SieHerramientaAlternativaBundle:EstadisticasDiversa:diversaIndex }
+
+reporte_permanente_index:
+    path:     /permanente
+    defaults: { _controller: SiePermanenteBundle:EstadisticasPermanente:permanenteIndex }

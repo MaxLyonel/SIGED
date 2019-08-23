@@ -13,8 +13,8 @@ Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo:
     fields:
         especialidad:
             type: string
-            nullable: true
-            length: 50
+            nullable: false
+            length: 80
             fixed: false
             comment: ''
         descAbrev:
@@ -39,4 +39,19 @@ Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo:
             nullable: false
             comment: ''
             default: true
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     lifecycleCallbacks: {  }

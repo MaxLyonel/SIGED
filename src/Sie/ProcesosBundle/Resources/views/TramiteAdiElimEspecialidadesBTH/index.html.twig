@@ -39,8 +39,17 @@
                                         {{form_widget(form.solicitud)}}
                                     </div>
                                     {{form_end(form)}}
-                                </div>
+                                </div>                                
                             </div><!-- /.panel-body -->
+                            <div class="row"> 
+                                    <div class="alert alert-success ">
+                                        <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                        <div class="notification-info">             
+                                            <p> <b>Nota.-</b> Solo las Unidades Educativas aprobadas como Plenas podrán iniciar el trámite de "Adición  y Eliminación de Especialidades".                                                
+                                            </p>                                            
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -171,6 +180,16 @@
                         </div>
                     </div>
                     <div class="row" id="form_eliminar_especialidad" style="display: none">
+                        <div> 
+                            <div class="alert alert-warning ">
+                                <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                <div class="notification-info">             
+                                    <p>
+                                        Tome en cuenta que para la eliminación de la(s) especialidades,ninguna debe contener información registrada. 
+                                    </p>                                            
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="panel">
                                 <div class="panel-body">
@@ -308,15 +327,15 @@
                                     <div class="alert alert-warning ">
                                         <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                                         <div class="notification-info">
-                                            {% if estado == 1 %}
+                                            {# {% if estado == 1 %} #}
                                             <p>
                                                 Su Unidad Educativa no es plena.
                                             </p>
-                                            {% elseif estado == 2 %}
+                                            {# {% elseif estado == 2 %}
                                                 <p>
                                                     Su Unidad Educativa ya inicio su trámite ó no le corresponde realizar la solicitud.
                                                 </p>
-                                            {% endif %}
+                                            {% endif %} #}
                                         </div>
                                     </div>
                                 </div>
@@ -393,10 +412,7 @@
                                     swal("Ingresar un informe breve para la solicitud de adición de especialidades");
                                     return false;
                                 }
-
-                                //var ipt=JSON.stringify(ip);
-                                
-                                
+                                textDirectorAdicionar = textDirectorAdicionar.replace(/[\n\t\r]/g,"").trim();
                                 $('#enviarSolicitud_adicionar').attr("disabled", true);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $.ajax({
@@ -420,7 +436,7 @@
                                             $(".modal-backdrop ").css("display", "none");
                                             $('#msg').text(data.msg);
                                             $('#recargar').modal('show');
-                                            $(".modal-backdrop ").css("display", "none");  
+                                            $(".modal-backdrop ").css("display", "none");
 
                                         }
                                         else if(data.estado==3 ){
@@ -433,7 +449,7 @@
                                                 '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                                 '- Su Unidad Educativa ya se encuentra registrado como BTH.');
                                         }
-                                        
+
                                     },
                                     complete: function () {
                                         swal.stopLoading();
@@ -478,6 +494,7 @@
                                     swal("Ingresar un informe breve para la solicitud de eliminación de especialidades");
                                     return false;
                                 }
+                                textDirectorEliminar = textDirectorEliminar.replace(/[\n\t\r]/g,"").trim();
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $('#enviarSolicitud_eliminar').attr('disabled',true);
                                 $.ajax({
@@ -511,7 +528,7 @@
                                         else {
                                             swal(data.msg);
                                         }
-                                        
+
                                     },
                                     complete: function () {
                                         swal.stopLoading();
@@ -579,7 +596,7 @@
         $(document).ready(function(){
             $('#form_adicionar_especialidad').hide();
             $('#form_eliminar_especialidad').hide();
-            $('#mensaje').hide();            
+            $('#mensaje').hide();
         });
     </script>
 {% endblock %}

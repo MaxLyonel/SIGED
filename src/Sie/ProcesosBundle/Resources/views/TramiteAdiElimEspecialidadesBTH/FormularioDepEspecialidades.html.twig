@@ -193,7 +193,7 @@
                                         <div class="col-md-4">
                                             <strong>Documento adjunto</strong>
                                         </div>
-                                        <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~id_institucion~'/'~'bth/'~ documento )}}" target="_blank">
+                                        <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~id_institucion~'/'~'addremovespeciality/'~ documento )}}" target="_blank">
                                             <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
                                         </a>
                                     </div>
@@ -204,15 +204,15 @@
                                 <div class="col-md-12">
                                      <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title">5.- Informe Unidad Educativaa</h3>
+                                            <h3 class="panel-title">5.- Informe Unidad Educativa</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div id="listaespecialidades_adicionar">
-                                                    <div class="table-responsive mb-20">                   
+                                                    <div class="table-responsive mb-20">
                                                         <textarea id="textDirector" class="form-control" rows="6" disabled="true" >
-                                                            {{textDirector}}
-                                                        </textarea> 
+                                                            {{textDirector | raw }}
+                                                        </textarea>
                                                     </div>
                                                 </div>
                                             </div>

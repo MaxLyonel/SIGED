@@ -1,0 +1,72 @@
+<div class="panel rounded panel panel-icon panel-primary">
+    <div class="panel-heading">
+        <div class="pull-left">
+            <h3 class="panel-title">Datos del Trámite</h3>
+        </div>
+        <div class="clearfix"></div>
+    </div><!-- /.panel-heading -->
+    <div class="panel-body no-padding">
+        <div class="">
+            <div id="no-more-tables">
+                <table class="table" id="tablaelimina">
+                    <thead>
+                        <tr>
+                            <th>Nro. de Trámite</th>
+                            <th>Código SIE</th>
+                            <th>Unidad Educativa</th>
+                            <th>Tipo de Trámite</th>
+                            <th>Fecha de inicio de Trámite</th>
+                            <th>Fecha de Finalización</th>
+                            <th>Grado aprobado</th>
+                            <th>Seguimiento</th>
+                            <th>Historial</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in tramite %}
+                            <tr>
+                                <td>{{t.id}}</td>
+                                <td>{{t.codsie}}</td>
+                                <td>{{t.institucioneducativa}}</td>
+                                <td>{{t.tramiteTipo}}</td>
+                                <td>{{t.fechaRegistro|date('d-m-Y')}}</td>
+                                <td>{{t.fechaFin|date('d-m-Y')}}</td>
+                                <td>{{t.grado}}</td>
+                                <th><a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Seguimiento" onclick="detalle({{t.id}},{{t.flujoTipoId}})">
+                                            <i class="fa fa-list"></i>
+                                    </a>
+                                </th>
+                                <td>
+                                <a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Seguimiento" onclick="historial({{t.id}},{{t.codsie}})">
+                                            <i class="fa fa-list"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class = "panel-body no-padding">
+                {{form_start(formDatos, { 'attr': {'data-toggle': 'validator','role': "form", 'id': 'form_datos'} } )}}    
+                    <div class="form-body">
+                        <div class="form-group">
+                            {{form_label(formDatos.obs)}}
+                            {{ form_widget(formDatos.obs) }}
+                        </div>
+                        <div class="form-group">
+                            {{form_label(formDatos.adjunto)}}
+                            {{ form_widget(formDatos.adjunto) }}
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="pull-right">
+                            {{ form_widget(formDatos.guardar) }}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                {{form_end(formDatos)}}
+            </div>
+        </div>
+    </div>
+</div>
+    

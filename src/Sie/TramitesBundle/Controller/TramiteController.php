@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Sie\AppWebBundle\Entity\Tramite;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionDiplomatico;
 
 use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
@@ -115,6 +116,90 @@ class TramiteController extends Controller {
                 ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->where('e.id = :id')
                 ->andWhere('t.esactivo = true')
+                ->setParameter('id', $estudianteId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un tramite activo en funcion al id del estudiante y tipo de trámite
+    // PARAMETROS: id, gestionId, tramitetipoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEstudianteTramiteTipoActivo($estudianteId, $tramiteTipoId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $entity->createQueryBuilder('t')
+                ->select("t.id as id, ei.id as estudiante_inscripcion_id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:Documento', 'd', 'WITH', 'd.tramite = t.id and d.documentoEstado = 1 and d.documentoTipo in (1,9)')
+                ->innerJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
+                ->where('e.id = :id')
+                ->andWhere('gt.id = :gestionId')
+                ->andWhere('tt.id = :tramiteTipoId')
+                ->andWhere('t.esactivo = true')
+                ->setParameter('id', $estudianteId)
+                ->setParameter('tramiteTipoId', $tramiteTipoId)
+                ->setParameter('gestionId', $gestionId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un estudiante en funcion al id y gestion
+    // PARAMETROS: id, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEstudianteInscripcionGestion($estudianteId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select("ei.id as estudiante_inscripcion_id, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad")
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('e.id = :id')
+                ->andWhere('gt.id = :gestionId')
+                ->setParameter('id', $estudianteId)
+                ->setParameter('gestionId', $gestionId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un estudiante en funcion al id 
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEstudiante($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select("e.id as estudiante_id, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad")
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('e.id = :id')
                 ->setParameter('id', $estudianteId);
         $entity = $query->getQuery()->getResult();
         return $entity;
@@ -533,9 +618,9 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,10,13);
+        $rolPermitido = array(13,14,16,8,10,41,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -579,9 +664,9 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,10,13);
+        $rolPermitido = array(13,14,16,8,10,41,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -597,6 +682,426 @@ class TramiteController extends Controller {
             'titulo' => 'Registro',
             'subtitulo' => 'Trámite - Diploma Humanístico Alternativa',
             ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega un formulario para buscar el estudiante diplomatico
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegistroDiplomaticoBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime("Y");
+        $gestion = $fechaActual->format('Y');
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+
+        $rolPermitido = array(16,8,42);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
+        $gestionInicio = $gestion - 2;
+
+        return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumDiplomaticoIndex.html.twig', array(
+            'formBusqueda' => $this->creaFormBuscaRudeGestion('tramite_diploma_humanistico_registro_diplomatico_lista','',$entidadGestionTipo, $gestionInicio)->createView(),
+            'titulo' => 'Registro Diplomatico',
+            'subtitulo' => 'Diploma Humanístico Regular',
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la busqueda de un bachiller por código rude en una gestión dada
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaRudeGestion($routing, $rude, $gestion, $gestionInicio) {
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('rude', 'text', array('label' => 'Código Rude', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $rude, 'style' => 'text-transform:uppercase', 'placeholder' => 'Código Rude' , 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
+            ->add('gestion', 'entity', array('data' => $gestion, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'required' => true), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id > :gestionInicio')
+                                ->setParameter('gestionInicio', 2016)
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega informacion del estudiante diplomatico, para su respectivo registro
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegistroDiplomaticoListaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime("Y");
+        $gestionActual = $fechaActual->format('Y');
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $registro = true;
+        $rude = '';
+        $gestion = $gestionActual;
+        $tramiteId = 0;
+        $estudianteInscripcionId = 0;
+        $em = $this->getDoctrine()->getManager();
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $rude = $form['rude'];
+                $gestion = $form['gestion'];
+                // dump($rude);dump($gestion);
+
+                $entidadEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
+                if(count($entidadEstudiante)<=0){
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del estudiante con el codigo rude '.$rude));
+                    $registro = false;
+                }
+
+
+                if($registro){
+                    $entidadTramite = $this->getEstudianteTramiteTipoActivo($entidadEstudiante->getId(), 1, $gestion);     
+                    if(count($entidadTramite) > 0){
+                        $entidadTramite = $entidadTramite[0];
+                        $tramiteId = $entidadTramite['id'];
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' ya cuenta con un trámite de Diploma de Bachiller ('.$tramiteId.')'));
+                        $registro = false;   
+                    }          
+                } 
+                
+
+                if($registro){
+                    $entidadTramite = $this->getEstudianteInscripcionGestion($entidadEstudiante->getId(), $gestion);     
+                    if(count($entidadTramite) > 0){
+                        $entidadTramite = $entidadTramite[0];
+                        $estudianteInscripcionId = $entidadTramite['estudiante_inscripcion_id'];
+                        // $tramiteId = $entidadTramite['id'];
+                    } else {
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' no cuenta con una inscripcion en la gestion '.$gestion));
+                        $registro = false;   
+                        $entidadTramite = $this->getEstudiante($entidadEstudiante->getId()); 
+                        if (count($entidadTramite) > 0){
+                            $entidadTramite = $entidadTramite[0];
+                        } else {
+                            $entidadTramite = array();
+                        }
+                    }          
+                } 
+                // dump($entidadTramite);dump($registro);
+
+                if($registro){
+                    $estudiantePaisId = $entidadEstudiante->getPaisTipo()->getId();
+                    // dump($estudiantePaisId);
+                    if($estudiantePaisId == 1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' tiene nacionalidad Boliviana, no corresponde su registro por este medio'));
+                        $registro = false;
+                    }
+                }
+
+                if($registro){
+                    $estudianteSegipId = $entidadEstudiante->getSegipId();
+                    // dump($estudianteSegipId);
+                    if($estudianteSegipId == 1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'Los datos personales del estudiante con codigo rude '.$rude.' fue validado por segip, realize su tramite de forma regular'));
+                        $registro = false;
+                    }
+                }
+
+                if($registro){
+                    $estudianteDobleNacionalidad = $entidadEstudiante->getEsDobleNacionalidad();
+                    // dump($estudianteDobleNacionalidad);
+                    if($estudianteDobleNacionalidad){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' tiene nacionalidad Boliviana y Extranjera, no corresponde su registro por este medio'));
+                        $registro = false;
+                    }
+                }
+              
+                if($registro){
+                    $entidadEstudianteInscripcionRegular = $this->getEstudiantesRegularHumanisticaVerifica($entidadEstudiante->getId(),$gestion);
+                    $entidadEstudianteInscripcionAlternativa = $this->getEstudiantesAlternativaHumanisticaVerifica($entidadEstudiante->getId(),$gestion);
+                    // dump($entidadEstudianteInscripcionRegular);dump($entidadEstudianteInscripcionAlternativa);
+                    // $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $entidadEstudiante->getId(), ''));
+                    if(count($entidadEstudianteInscripcionRegular)>0 and count($entidadEstudianteInscripcionAlternativa)>0){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' en la gestión '.$gestion.', esta registrado como bachiller en los subsistemas de Educación Regular y Educación de Adultos'));
+                        $registro = false;
+                    }
+
+                    if(count($entidadEstudianteInscripcionRegular)<1 and count($entidadEstudianteInscripcionAlternativa)<1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' no esta registrado como bachiller en la gestión '.$gestion));
+                        $registro = false;
+                    }
+
+                    if(count($entidadEstudianteInscripcionRegular)>1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' en la gestión '.$gestion.', cuenta con mas de un registro como bachiller en el subsistema de Educación Regular'));
+                        $registro = false;
+                    }
+
+                    if(count($entidadEstudianteInscripcionAlternativa)>1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' en la gestión '.$gestion.', cuenta con mas de un registro como bachiller en el subsistema de Educación de Adultos'));
+                        $registro = false;
+                    }
+                    
+                    $estudianteInscripcionEstadoId = 0;
+                    $estudianteInscripcionEstado = "";
+                    $estudianteInstitucionEducativaId = 0;
+                    if(count($entidadEstudianteInscripcionRegular) == 1){
+                        $estudianteInscripcionEstadoId = $entidadEstudianteInscripcionRegular[0]['estadomatricula_tipo_id'];
+                        $estudianteInscripcionEstado = $entidadEstudianteInscripcionRegular[0]['estadomatricula'];
+                        $estudianteInstitucionEducativaId = $entidadEstudianteInscripcionRegular[0]['institucioneducativa_id'];
+                    }
+
+                    if(count($entidadEstudianteInscripcionAlternativa) == 1){
+                        $estudianteInscripcionEstadoId = $entidadEstudianteInscripcionAlternativa[0]['estadomatricula_tipo_id'];
+                        $estudianteInscripcionEstado = $entidadEstudianteInscripcionAlternativa[0]['estadomatricula'];
+                        $estudianteInstitucionEducativaId = $entidadEstudianteInscripcionAlternativa[0]['institucioneducativa_id'];
+                    }
+                    // dump($entidadEstudianteInscripcionRegular);dump($entidadEstudianteInscripcionAlternativa);
+
+                    if(count($entidadEstudianteInscripcionRegular)>0 or count($entidadEstudianteInscripcionAlternativa)>0){
+                        if(($gestion < $gestionActual and !in_array($estudianteInscripcionEstadoId,array(5,55))) or ($gestion == $gestionActual and !in_array($estudianteInscripcionEstadoId,array(4,5,55))) ){
+                            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estado de matrícula ('.$estudianteInscripcionEstado.') del estudiante '.$rude.' no corresponde, para la emisión de un Diploma de Bachiller'));
+                            $registro = false;
+                        }  
+                    }                   
+                    // dump($entidadEstudiante);dump($estudianteInscripcionEstado);
+                }
+
+                $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
+                $gestionInicio = $gestion - 2;
+
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+
+                $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($tramiteId);
+                // dump($entityTramiteDetalle);
+
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($tramiteId);
+                // dump($entityDocumentoDetalle);
+
+                return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumDiplomaticoIndex.html.twig', array(
+                    'formBusqueda' => $this->creaFormBuscaRudeGestion('tramite_diploma_humanistico_registro_diplomatico_lista',$rude,$entidadGestionTipo, $gestionInicio)->createView(),
+                    'titulo' => 'Registro Diplomatico',
+                    'subtitulo' => 'Diploma Humanístico Regular',
+                    'listaDocumento' => $entidadTramite,
+                    'listaTramiteDetalle' => $entityTramiteDetalle,
+                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                    'registro' => $registro,
+                    'form' => $this->creaFormularioTramiteDiplomatico($estudianteInscripcionId, $rude, $gestion)->createView()
+                ));
+            } else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_diploma_humanistico_registro_diplomatico_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error en el envio, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_diploma_humanistico_registro_diplomatico_busca'));
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra el trámite del estudiante diplomatico
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegistroDiplomaticoGuardaAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d g:i:s'));
+        $gestionActual = (int)$fechaActual->format('Y');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $token = $request->get('_token');
+        if (!$this->isCsrfTokenValid('diplomatico', $token)) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_busca');
+        }
+       
+        $form = $request->get('form');
+
+        if(!$form){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_busca');
+        }
+        
+        $rude= base64_decode($form['rude']);
+        $gestion = base64_decode($form['gestion']);
+        $documento = ($form['documento']);
+        $estudianteInscripcionId = base64_decode($form['inscripcion']);
+        $foto = $request->files->get('form');
+        $formBusqueda = array('rude'=>$rude,'gestion'=>$gestion);
+        // dump($rude);dump($gestion);dump($documento);dump($estudianteInscripcionId);dump($foto);dump($formBusqueda);die;
+
+        if(!$foto){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+        }
+
+        //dump($request->get('form'));die;
+        $filename = "";
+        if (null != $foto['foto']) {
+            $file = $foto['foto'];
+            // $file = $entityEstudianteDatopersonal->getFoto();
+            if(!in_array($file->guessExtension(), array('jpg','jpeg','png','bmp'))){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Formato de la imagen no permitido, intente nuevamente con aquellos permitidos (.jpg, .jpeg, .png, .bmp)'));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            }
+            $filename = $rude.'_CarnetDiplomatico_'.$gestion.'_'.$estudianteInscripcionId.'.'.$file->guessExtension();
+            $filesize = $file->getClientSize();
+            if ($filesize/1024 <= 5120) {                
+                $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_estudiante/'.$rude.'/';                               
+            } else {                
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().' excede el tamaño permitido, Fotografia muy grande, favor ingresar una fotografía que no exceda los 5MB.'));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            } 
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            // $entityUsuarioRemitente = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
+            // $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $entityTramiteDetalle[0]->getTramite()->getId()));
+            // $entityTramiteDetalleEstado = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 1));
+            // $entityFlujoProceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('id' => $flujoProcesoId));
+
+            $entidadEstudianteInscripcionDiplomatico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionDiplomatico')->findBy(array('estudianteInscripcion' => $estudianteInscripcionId));
+            $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+
+            if(count($entidadEstudianteInscripcionDiplomatico)>0){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante '.$rude.' ya se encuentra registrado como hijo de diplomatico en la gestion '.$gestion));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            }
+
+            $entidadEstudianteInscripcionDiplomatico = new EstudianteInscripcionDiplomatico();
+            //dump($entidadEstudianteInscripcionDiplomatico);die;
+            $entidadEstudianteInscripcionDiplomatico->setestudianteInscripcion($entidadEstudianteInscripcion);
+            $entidadEstudianteInscripcionDiplomatico->setDocumentoPath($rude.'/'.$filename);
+            $entidadEstudianteInscripcionDiplomatico->setDocumentoNumero($documento);
+            $entidadEstudianteInscripcionDiplomatico->setObs('Estudiante Registrado como hijo de diplomatico en fecha'.$fechaActual->format('d-m-Y'));
+            $em->persist($entidadEstudianteInscripcionDiplomatico);
+
+            $messageCorrecto = "";
+            $messageError = "";
+            
+            $participanteNombre = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+            $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+            $msgContenido = "";
+            $msg = array('0'=>true, '1'=>'');
+            if(count($entidadEstudianteInscripcion)>0){
+                $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                $gestionId = $gestion;
+                $msg = array('0'=>true, '1'=>$participanteNombre);
+                $msgContenido = $this->getDipHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId);
+                if($msgContenido != ""){
+                    $msg = array('0'=>false, '1'=>$participanteNombre.' ('.$msgContenido.')');
+                }
+            } else {
+                $msg = array('0'=>false, '1'=>'Inscripcion del estudiante '.$rude.' en la gestion '.$gestion.' no encontrado');
+            }
+            
+            $flujoTipoId = 1;
+            $tramiteTipoId = 1;
+            if ($msg[0]) {
+                $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+                $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
+                $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+
+                $file->move($adjuntoDir, $filename);
+                if (!file_exists($adjuntoDir.'/'.$filename)){
+                    $em->getConnection()->rollback();
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().', no fue registrada.'));
+                    return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+                } 
+
+                $em->flush();   
+                $em->getConnection()->commit();
+                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Registro guardado correctamente'));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_busca');
+            } else {
+                $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            }
+
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para el registro del estudiante diplomatico 
+    // PARAMETROS: estudianteInscripcionId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function creaFormularioTramiteDiplomatico($estudianteInscripcionId, $rude, $gestion)
+    { 
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('tramite_diploma_humanistico_registro_diplomatico_guarda'))
+            ->add('inscripcion', 'hidden', array('attr' => array('value' => base64_encode($estudianteInscripcionId))))
+            ->add('rude', 'hidden', array('attr' => array('value' => base64_encode($rude))))
+            ->add('gestion', 'hidden', array('attr' => array('value' => base64_encode($gestion))))
+            ->add('documento', 'text', array('label' => 'Número de documento', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[A-Za-z0-9\/\-]{1,12}', 'maxlength' => '12',  'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Número de Documento', 'style' => 'text-transform:uppercase')))
+            ->add('foto', 'file', array('label' => 'Fotografía (.jpg - .jpeg - .png -.bmp)', 'required' => true, 'attr' => array('accept=' => 'image/jpg,image/jpeg,image/png,image/bmp') )) 
+            ->add('save', 'submit', array('label' => 'Registrar Trámite', 'attr' => array('class' => 'form-control btn btn-blue')))
+            ->getForm();
+        return $form;        
     }
 
     //****************************************************************************************************
@@ -1131,6 +1636,38 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
             select * from get_estudiante_bachiller_humanistico_alternativa(".$institucionEducativaId."::INT,".$gestionId."::INT) as v
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega un listado de incripciones del bachiller en educacion regular humanistica
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getEstudiantesRegularHumanisticaVerifica($estudianteId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select * from get_estudiante_bachiller_humanistico_verifica_regular(".$estudianteId."::INT,".$gestionId."::INT) as v
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega un listado de incripciones del bachiller en educacion alternativa humanistica
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getEstudiantesAlternativaHumanisticaVerifica($estudianteId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select * from get_estudiante_bachiller_humanistico_verifica_alternativa(".$estudianteId."::INT,".$gestionId."::INT) as v
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -2673,12 +3210,12 @@ class TramiteController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
 
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);

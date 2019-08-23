@@ -152,7 +152,7 @@ class TrasladoController extends Controller {
 
             //check if the student has calification
             if(!$bolNote){
-              $session->getFlashBag()->add('noticemove', 'El estudiante no cuenta con notas... favor revisar calificaciones');
+              $session->getFlashBag()->add('noticemove', 'El estudiante no cuenta con notas... favor revisar');
               return $this->render($this->session->get('pathSystem') . ':Traslado:index.html.twig', array(
                           'form' => $this->createSearchForm()->createView(),
               ));
@@ -330,6 +330,7 @@ class TrasladoController extends Controller {
             break;
         case 1:
         case 4:
+        case 2:
             $message = "Traslado realizado.";
             $this->addFlash('estadoTraslado', $message);
 
@@ -347,99 +348,99 @@ class TrasladoController extends Controller {
             return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig'
             );
             break;
-        case 2:
+        // case 2:
 
-            // Datos de la inscripcion actual
-            $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($arrInfoUeducativaFrom['estInsId']);
+        //     // Datos de la inscripcion actual
+        //     $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($arrInfoUeducativaFrom['estInsId']);
 
-            $notas = $arrayNotas['notas'];
-            //dump($notas);die;
-            $cualitativas = $arrayNotas['cualitativas'];
-
-
-            // Materias del nuevo curso
-            $nuevoCurso = $em->createQueryBuilder()
-                            ->select('ieco')
-                            ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
-                            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
-                            ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
-                            ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
-                            ->innerJoin('SieAppWebBundle:TurnoTipo','tt','with','iec.turnoTipo = tt.id')
-                            ->innerJoin('SieAppWebBundle:NivelTipo','nt','with','iec.nivelTipo = nt.id')
-                            ->innerJoin('SieAppWebBundle:GradoTipo','grat','with','iec.gradoTipo = grat.id')
-                            ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','with','iec.paraleloTipo = pt.id')
-                            ->innerJoin('SieAppWebBundle:CicloTipo','ct','with','iec.cicloTipo = ct.id')
-                            ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','with','ieco.asignaturaTipo = at.id')
-                            ->where('ie.id = :sie')
-                            ->andWhere('gt.id = :gestion')
-                            ->andWhere('tt.id = :turno')
-                            ->andWhere('nt.id = :nivel')
-                            ->andWhere('grat.id = :grado')
-                            ->andWhere('pt.id = :paralelo')
-                            ->andWhere('ct.id = :ciclo')
-                            ->orderBy('at.id','ASC')
-                            ->setParameter('sie',$form['institucionEducativa'])
-                            ->setParameter('gestion',$this->session->get('currentyear'))
-                            ->setParameter('turno',$form['turno'])
-                            ->setParameter('nivel',$form['nivelId'])
-                            ->setParameter('grado',$form['gradoId'])
-                            ->setParameter('paralelo',$form['paralelo'])
-                            ->setParameter('ciclo',$arrInfoUeducativaFrom['cicloId'])
-                            ->getQuery()
-                            ->getResult();
+        //     $notas = $arrayNotas['notas'];
+        //     //dump($notas);die;
+        //     $cualitativas = $arrayNotas['cualitativas'];
 
 
-            //dump($nuevoCurso);die;
-            $nuevoArrayNotas = array();
-            foreach ($nuevoCurso as $nc) {
-                $existe = false;
-                for($i=0;$i<count($notas);$i++){
-                    if($nc->getAsignaturaTipo()->getId() == $notas[$i]['idAsignatura']){
-                        $existe = true;
-                        $position = $i;
-                    }
-                }
-                if($existe == true){
-                    $nuevoArrayNotas[] = $notas[$position];
-                }else{
-                    $cantidadNotas = count($notas[$position-1]['notas']);
-                    $notasAdd = array();
-                    for($j=1;$j<=$cantidadNotas;$j++){
-                        $notasAdd[] = array(
-                            'id'=>$i."-".$j,
-                            'idEstudianteNota'=>'nuevo',
-                            'nota'=>'',
-                            'idNotaTipo'=>$j
-                        );
-                    }
-
-                    //dump($cantidadNotas);die;
-                    $nuevoArrayNotas[] = array(
-                        'idAsignatura'=>$nc->getAsignaturaTipo()->getId(),
-                        'asignatura'=>$nc->getAsignaturaTipo()->getAsignatura(),
-                        'idCursoOferta'=>$nc->getId(),
-                        'notas'=>$notasAdd
-                    );
-                }
-            }
-            //
-            //dump($nuevoArrayNotas);
-            //die;
-
-            //dump($arrayNotas);die;
-            $message = "Traslado no realizado, se identifico que el curso de destino tiene mas materias, debe registrar las notas de la(s) materia(s) faltantes para poder realizar el traslado.";
-            $this->addFlash('estadoTraslado', $message);
-
-            // Armamos el array con los datos de la nueva inscripcion
+        //     // Materias del nuevo curso
+        //     $nuevoCurso = $em->createQueryBuilder()
+        //                     ->select('ieco')
+        //                     ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
+        //                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
+        //                     ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
+        //                     ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
+        //                     ->innerJoin('SieAppWebBundle:TurnoTipo','tt','with','iec.turnoTipo = tt.id')
+        //                     ->innerJoin('SieAppWebBundle:NivelTipo','nt','with','iec.nivelTipo = nt.id')
+        //                     ->innerJoin('SieAppWebBundle:GradoTipo','grat','with','iec.gradoTipo = grat.id')
+        //                     ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','with','iec.paraleloTipo = pt.id')
+        //                     ->innerJoin('SieAppWebBundle:CicloTipo','ct','with','iec.cicloTipo = ct.id')
+        //                     ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','with','ieco.asignaturaTipo = at.id')
+        //                     ->where('ie.id = :sie')
+        //                     ->andWhere('gt.id = :gestion')
+        //                     ->andWhere('tt.id = :turno')
+        //                     ->andWhere('nt.id = :nivel')
+        //                     ->andWhere('grat.id = :grado')
+        //                     ->andWhere('pt.id = :paralelo')
+        //                     ->andWhere('ct.id = :ciclo')
+        //                     ->orderBy('at.id','ASC')
+        //                     ->setParameter('sie',$form['institucionEducativa'])
+        //                     ->setParameter('gestion',$this->session->get('currentyear'))
+        //                     ->setParameter('turno',$form['turno'])
+        //                     ->setParameter('nivel',$form['nivelId'])
+        //                     ->setParameter('grado',$form['gradoId'])
+        //                     ->setParameter('paralelo',$form['paralelo'])
+        //                     ->setParameter('ciclo',$arrInfoUeducativaFrom['cicloId'])
+        //                     ->getQuery()
+        //                     ->getResult();
 
 
-            return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig',array(
-              'asignaturas'=>$arrayNotas['notas'],'cualitativas'=>$arrayNotas['cualitativas'],'operativo'=>$arrayNotas['operativo'],
-              'newAsignaturas'=>$nuevoArrayNotas,
-              'newForm'=>$newForm,
+        //     //dump($nuevoCurso);die;
+        //     $nuevoArrayNotas = array();
+        //     foreach ($nuevoCurso as $nc) {
+        //         $existe = false;
+        //         for($i=0;$i<count($notas);$i++){
+        //             if($nc->getAsignaturaTipo()->getId() == $notas[$i]['idAsignatura']){
+        //                 $existe = true;
+        //                 $position = $i;
+        //             }
+        //         }
+        //         if($existe == true){
+        //             $nuevoArrayNotas[] = $notas[$position];
+        //         }else{
+        //             $cantidadNotas = count($notas[$position-1]['notas']);
+        //             $notasAdd = array();
+        //             for($j=1;$j<=$cantidadNotas;$j++){
+        //                 $notasAdd[] = array(
+        //                     'id'=>$i."-".$j,
+        //                     'idEstudianteNota'=>'nuevo',
+        //                     'nota'=>'',
+        //                     'idNotaTipo'=>$j
+        //                 );
+        //             }
 
-            ));
-            break;
+        //             //dump($cantidadNotas);die;
+        //             $nuevoArrayNotas[] = array(
+        //                 'idAsignatura'=>$nc->getAsignaturaTipo()->getId(),
+        //                 'asignatura'=>$nc->getAsignaturaTipo()->getAsignatura(),
+        //                 'idCursoOferta'=>$nc->getId(),
+        //                 'notas'=>$notasAdd
+        //             );
+        //         }
+        //     }
+        //     //
+        //     //dump($nuevoArrayNotas);
+        //     //die;
+
+        //     //dump($arrayNotas);die;
+        //     $message = "Traslado no realizado, se identifico que el curso de destino tiene mas materias, debe registrar las notas de la(s) materia(s) faltantes para poder realizar el traslado.";
+        //     $this->addFlash('estadoTraslado', $message);
+
+        //     // Armamos el array con los datos de la nueva inscripcion
+
+
+        //     return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig',array(
+        //       'asignaturas'=>$arrayNotas['notas'],'cualitativas'=>$arrayNotas['cualitativas'],'operativo'=>$arrayNotas['operativo'],
+        //       'newAsignaturas'=>$nuevoArrayNotas,
+        //       'newForm'=>$newForm,
+
+        //     ));
+        //     break;
       }
 
       die;
