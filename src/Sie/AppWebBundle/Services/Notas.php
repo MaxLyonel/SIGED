@@ -536,7 +536,7 @@ class Notas{
             * Recorremos el array generado de las notas y recuperamos los titulos de las notas, para la tabla
             */
             $titulos_notas = array();
-            if(count($notasArray)>0){
+            if(count($notasArray)>0 and isset($notasArray[0]['notas'])){
                 $titulos = $notasArray[0]['notas'];
                 for($i=0;$i<count($titulos);$i++){
                     $titulos_notas[] = array('titulo'=>$titulos[$i]['bimestre']);
