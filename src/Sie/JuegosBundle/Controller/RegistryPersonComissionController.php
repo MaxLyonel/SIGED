@@ -98,16 +98,24 @@ class RegistryPersonComissionController extends Controller{
         
         $objComisionJuegosDatos = false;
         $entity = false;
+        $pathToShowImg = false;
         $form = false;
 
         if($dataPerson){    
             $entity = $em->getRepository('SieAppWebBundle:Persona')->find($dataPerson['id']);
-            $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+            
+            
             if($objComisionJuegosDatos){
                 $message = 'Datos existentes';
                 $this->addFlash('lookForDataMessage', $message);
                 $typeMessage = 'success';
             }else{
+                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                if($objComisionJuegosDatos){
+                    list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
+                    $pathToShowImg = '../..'.$pathImg;
+                }
+
                 $message = 'Registre datos de comision';
                 $this->addFlash('lookForDataMessage', $message);
                 $typeMessage = 'warning';
@@ -128,6 +136,7 @@ class RegistryPersonComissionController extends Controller{
                 'dataCommission' => array(),
                 'objComisionJuegosDatos' => $objComisionJuegosDatos,
                 'typeMessage' => $typeMessage,
+                'pathToShowImg' => $pathToShowImg,
 
             ));    
     }
