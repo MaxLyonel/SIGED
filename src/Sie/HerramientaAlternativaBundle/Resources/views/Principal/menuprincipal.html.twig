@@ -159,7 +159,7 @@
 
 
         <div class="body-content animated fadeIn">
-        {% if estadoOperativo == true %}
+        {% if estadoOperativo is defined and estadoOperativo == true %}
             <div class="alert alert-danger ">
                 <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                 <div class="notification-info">
@@ -172,7 +172,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if estadoOperativo == false and rutaObservaciones %}
+        {% if estadoOperativo is defined and estadoOperativo == false and rutaObservaciones %}
             <div class="alert alert-info ">
                 <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                 <div class="notification-info">

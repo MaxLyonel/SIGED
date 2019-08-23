@@ -143,8 +143,9 @@ class StudentsInscriptionsController extends Controller {
       //get the students year old
 
       // $yearStudent = (date('Y') - date('Y',strtotime($form['dateStudent'])));
-      $arrYearStudent =$this->get('funciones')->tiempo_transcurrido($form['dateStudent'], '30-6-'.date('Y'));
-      $yearStudent = $arrYearStudent[0];
+      // $arrYearStudent =$this->get('funciones')->tiempo_transcurrido($form['dateStudent'], '30-6-'.date('Y'));
+      // $yearStudent = $arrYearStudent[0];
+      $yearStudent =$this->get('funciones')->getTheCurrentYear($form['dateStudent'], '30-6-'.date('Y'));
       // dump($objInstitucioneducativaCursoStudent);
       // dump($yearStudent);
       // die;

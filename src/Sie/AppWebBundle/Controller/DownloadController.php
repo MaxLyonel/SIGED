@@ -1059,7 +1059,7 @@ class DownloadController extends Controller {
     }
 
     public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
-        set_time_limit(200);
+        set_time_limit(500);
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
@@ -1103,7 +1103,7 @@ class DownloadController extends Controller {
 
     //ROBÓTICA
     public function buildArchsOlimpiadasRoboticaTxtAction(Request $request, $gestion) {
-        set_time_limit(200);
+        set_time_limit(500);
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;

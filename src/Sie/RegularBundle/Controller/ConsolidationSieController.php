@@ -339,7 +339,7 @@ class ConsolidationSieController extends Controller {
 
                 $objAllowUEQa = $this->get('funciones')->appValidationQuality(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27,48'));
                 if($objAllowUEQa){
-                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
+                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder cargar el archivo ');
                   system('rm -fr ' . $dirtmp);
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
