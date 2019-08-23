@@ -477,14 +477,17 @@
                                     <span class="selected"></span>
                                 </a>
                             </li>
+                            {% if 1 > 1 %}
                             <li>
                                 <a href="{{path('reporte_especial_centro_educativo_index')}}">
                                     <span class="text">Estadística Centro de Educación Especial</span>
                                     <span class="selected"></span>
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </li>
+                     {% if 1 > 1 %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -505,7 +508,7 @@
                             </li>  
                         </ul>
                     </li>
-
+                    {% endif %}
                     {% if ingresaAdmin == 1 or app.session.get('userId') == '13855318' %}                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
