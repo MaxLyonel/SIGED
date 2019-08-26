@@ -193,12 +193,16 @@
                
     };
     var saveCommission = function(){
-        var formData = $('#idCommissionData').serialize();
+        var formData = new FormData(document.getElementById("idCommissionData"));
        if(confirm('is good??')){
            $.ajax({
                     type: 'post',
-                    url: Routing.generate('registrypersoncomission_saveCommission'),
                     data: formData,
+                    dataType: 'html',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    url: Routing.generate('registrypersoncomission_saveCommission'),
                     beforeSend: function () {
                         $('#resultPerson').empty();
                         $('#resultPerson').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');

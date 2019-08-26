@@ -192,4 +192,32 @@ class JdpDelegadoInscripcionJuegos
     {
         return $this->lugarTipo;
     }
+    /**
+     * @var string
+     */
+    private $rutaImagen;
+
+
+    /**
+     * Set rutaImagen
+     *
+     * @param string $rutaImagen
+     * @return JdpDelegadoInscripcionJuegos
+     */
+    public function setRutaImagen($rutaImagen)
+    {
+        $this->rutaImagen = $rutaImagen;
+    
+        return $this;
+    }
+
+    /**
+     * Get rutaImagen
+     *
+     * @return string 
+     */
+    public function getRutaImagen()
+    {
+        return $this->rutaImagen;
+    }
 }
