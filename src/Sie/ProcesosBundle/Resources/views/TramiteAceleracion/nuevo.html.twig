@@ -1,4 +1,5 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutHerramienta.html.twig' %} #}
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Aceleración Educativa <span></span></h2>
@@ -189,7 +190,7 @@
                                             <div class="form-group">
                                                 <label class="text-primary" for="sie_destino">Unidad Educativa Destino (secundaria)</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="sie_destino" onkeyUp="getUnidadEducativa()" required>
+                                                    <input type="text" class="form-control" id="sie_destino" onkeyUp="getUnidadEducativa()" disabled required>
                                                     <div class="input-group-addon" onclick="getUnidadEducativa()" style="cursor: pointer"><i class="fa fa-search"></i></div>
                                                 </div>
                                             </div>
@@ -270,7 +271,6 @@
         $('.noedit').keydown(function() {
             return false;
         });
-        // $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
         $('#rude').keypress(function (event) {
             if (event.keyCode === 10 || event.keyCode === 13) {
                 event.preventDefault();
@@ -361,14 +361,12 @@
 
         function mesage(tipo, titulo, msg, estado, flag) {
             if(flag == 0) {
-                $("#carga").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                     '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             } else if(flag == 2) {
-                $("#mensaje").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' + msg +' </div>');
+                $("#mensaje").html('<div class="alert alert-'+ tipo +'" role="alert">\n' + msg +' </div>');
             } else {
-                $("#envio").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                     '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             }
             if (estado == true) {
@@ -422,11 +420,13 @@
                         case 'Quinto de secundaria':
                         case 'Sexto de secundaria':
                             $("#sie_destino").val($("#codigo_sie").val());
+                            $("#sie_destino").attr('disabled', false);
                             $("#fila_destino").show();
                             getUnidadEducativa();
                             break;
                         default:
                             $("#fila_destino").hide();
+                            $("#sie_destino").attr('disabled', true);
                             $("#estado_destino").text("Tiene secundaria");
                             break;
                     }

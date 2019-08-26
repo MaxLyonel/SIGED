@@ -58,10 +58,6 @@ sie_especial_info_students:
     resource: "@SieEspecialBundle/Resources/config/routing/infoStudents.yml"
     prefix:   /espsie/infoStudents
 
-sie_especial_talento_extraordinario:
-    resource: "@SieEspecialBundle/Resources/config/routing/talentoExtraordinario.yml"
-    prefix:   /espsie/talento
-
 index:
     path:     /index
     defaults: { _controller: SieEspecialBundle:InfoEspecial:index }

@@ -1,4 +1,5 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutHerramienta.html.twig' %} #}
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Aceleración Educativa <span></span></h2>
@@ -90,6 +91,7 @@
                             <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                             <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                             <input type="hidden" id="notificar" name="notificar" value="{{ notificar }}">
+                            <input type="hidden" id="devolucion" name="devolucion" value="{{ devolucion }}">
                             <h4>{% if actas|length == 1 %}Acta Supletorio por Grado {% else %} Actas Supletorios por Grado {% endif %}</h4>
                             <div class="row" id="tbl_cumano">
                                 {% for acta in actas %}
@@ -475,6 +477,7 @@
                     fd.append('curso_asignatura_notas', JSON.stringify(curso_asignatura_notas));
                     fd.append('notificar', $("#notificar").val());
                     fd.append('comision', JSON.stringify(lista_comision));
+                    fd.append('devolucion', $("#devolucion").val());
                     // var docsup = document.getElementById('acta_supletorio');
                     // fd.append('acta_supletorio', docsup.files[0]);
                     $.ajax({

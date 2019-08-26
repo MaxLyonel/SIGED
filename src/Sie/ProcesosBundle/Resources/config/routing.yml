@@ -43,3 +43,10 @@ sie_procesos_tramite_modificacion_calificaciones:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificaciones.yml"
     prefix:   /tramitemodificacionCalificaciones
 
+sie_especial_talento_extraordinario:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteTalentoExtraordinario.yml"
+    prefix:   /sie/tramite/talento
+
+sie_procesos_tramite_aceleracion:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteAceleracion.yml"
+    prefix:   /sie/tramite/aceleracion

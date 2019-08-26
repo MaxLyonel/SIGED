@@ -1,0 +1,89 @@
+# Rutas para academico
+tramite_acelera_nuevo:
+    path:     /nuevo
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:nuevo }
+
+tramite_acelera_search:
+    path:     /busqueda
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:buscaEstudiante }
+    options:
+        expose: true
+
+tramite_acelera_asignaturas:
+     path:    /obtiene/{sie}/{nivel}/{grado}/{paralelo}/{turno}/{cantidad}
+     defaults: { _controller: SieProcesosBundle:TramiteAceleracion:getAsignaturas }
+     options:
+         expose: true
+
+tramite_acelera_save_new:
+    path:     /guardar
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:guardaNuevo }
+    options:
+        expose: true
+
+tramite_acelera_supletorio:
+    path:     /supletorio
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:supletorio }
+
+tramite_acelera_save_suple:
+    path:     /guardarsuple
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:guardaSuple }
+    options:
+        expose: true
+
+tramite_acelera_save_obs:
+    path:     /guardarobs
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:guardaObs }
+    options:
+        expose: true
+
+tramite_acelera_search_ie:
+     path:    /buscaie/{id}/{nivel}/{grado}
+     defaults: { _controller: SieProcesosBundle:TramiteAceleracion:buscaIe }
+     options:
+         expose: true
+
+tramite_acelera_verify_ie:
+     path:    /verificaie/{sie}
+     defaults: { _controller: SieProcesosBundle:TramiteAceleracion:verificaIe }
+     options:
+         expose: true
+
+tramite_acelera_curso:
+     path:    /buscaie/{id}/{nivel}/{grado}/{paralelo}/{turno}
+     defaults: { _controller: SieProcesosBundle:TramiteAceleracion:buscaCurso }
+     options:
+         expose: true
+
+tramite_acelera_reporte:
+    path:     /acta/supletorio
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:rptActaSupletorio }
+
+tramite_acelera_search_ctp:
+    path:     /busca/comision
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:buscaCTP }
+    options:
+        expose: true
+
+# Rutas para siged
+tramite_acelera_verifica:
+    path:     /verifica
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:verifica }
+
+tramite_acelera_observacion:
+    path:     /observacion
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:observacion }
+
+tramite_acelera_save_verify:
+    path:     /guardarverifica
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:guardaVerifica }
+    options:
+        expose: true
+
+tramite_acelera_nuevo_comprobante:
+    path:     /reporte/solicitud
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:rptSolicitud }
+
+tramite_acelera_supletorio_comprobante:
+    path:     /reporte/supletorio
+    defaults: { _controller: SieProcesosBundle:TramiteAceleracion:rptSupletorio }

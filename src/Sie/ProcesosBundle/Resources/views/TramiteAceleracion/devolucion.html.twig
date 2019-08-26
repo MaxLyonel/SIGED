@@ -1,4 +1,5 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutHerramienta.html.twig' %} #}
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Aceleración Educativa <span></span></h2>
@@ -10,7 +11,7 @@
                     <a href="{{path('wf_tramite_index', {'tipo':1})}}">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-                <li class="active">Nuevo</li>
+                <li class="active">Devolución</li>
             </ol>
         </div>
     </div>
@@ -136,7 +137,7 @@
                                 <div class="col-sm-3 col-md-3">
                                     <div class="form-group" id="inf_psico">
                                         <label for="informe">Informe Psicopedagógico</label>
-                                        <input type="hidden" class="form-control" id="informe" name="informe">
+                                        <input type="hidden" class="form-control" id="informe" name="informe" value="{{ talento.informe }}">
                                         <a class="form-control text-primary" role="button" href="{{asset('uploads/archivos/flujos/tramite/talento/')}}{{ talento.informe }}" id="url_informe" target="_blank">Documento adjunto</a>
                                     </div>
                                 </div>
@@ -176,6 +177,24 @@
                                     <div class="form-group">
                                         <b>Grados a Acelerar: </b><span id="grado_acelerar"></span> <br>
                                         <b>Inscrito en la Gestión Actual: </b><span id="grado_inscripcion"></span>
+                                    </div>
+                                    <div class="row" id="fila_destino" style="display: none">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="text-primary" for="sie_destino">Unidad Educativa Destino (secundaria)</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="sie_destino" onkeyUp="getUnidadEducativa()" disabled required>
+                                                    <div class="input-group-addon" onclick="getUnidadEducativa()" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="text-primary" for="estado_destino">&nbsp;</label>
+                                                <!-- <input type="text" class="form-control" id="estado_destino" style="background-color: #fafafa; border: 1px solid #dddddd; color:red" readonly>} -->
+                                                <span class="form-control" id="estado_destino" style="background-color: #fafafa; border: 1px solid #dddddd; color:red" readonly></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -229,17 +248,15 @@
         $('.noedit').keydown(function() {
             return false;
         });
-        
+
         function mesage(tipo, titulo, msg, estado, flag) {
             if(flag == 0) {
-                $("#carga").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                     '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             } else if(flag == 2) {
-                $("#mensaje").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' + msg +' </div>');
+                $("#mensaje").html('<div class="alert alert-'+ tipo +'" role="alert">\n' + msg +' </div>');
             } else {
-                $("#envio").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                     '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             }
             if (estado == true) {
@@ -262,6 +279,7 @@
             $("#centro_tramite").val('');
             
             $("#codigo_sie").val('');
+            $("#sie_destino").val('');
             $("#institucion_educativa").val('');
             $("#nivel").val('');
             $("#grado").val('');
@@ -283,6 +301,24 @@
             $("#grado_cantidad").find('option').each(function(index, item) {
                 if (siguiente == item.value) {
                     $("#grado_inscripcion").text(item.text);
+                    switch (item.text) {
+                        case 'Primero de secundaria':
+                        case 'Segundo de secundaria':
+                        case 'Tercero de secundaria':
+                        case 'Cuarto de secundaria':
+                        case 'Quinto de secundaria':
+                        case 'Sexto de secundaria':
+                            $("#sie_destino").val($("#codigo_sie").val());
+                            $("#sie_destino").attr('disabled', false);
+                            $("#fila_destino").show();
+                            getUnidadEducativa();
+                            break;
+                        default:
+                            $("#fila_destino").hide();
+                            $("#sie_destino").attr('disabled', true);
+                            $("#estado_destino").text("Tiene secundaria");
+                            break;
+                    }
                     return false;
                 } else if(item.value != '') {
                     $("#grado_acelerar").append(item.text + ', ');
@@ -290,12 +326,40 @@
             });
         }
 
+        function getUnidadEducativa() {
+            var sie = $('#sie_destino').val();
+            if (sie.length > 7) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_acelera_verify_ie', {'sie': sie}),
+                    beforeSend: function () {
+                        $("#estado_destino").text("Buscando...");
+                        $("#estado_destino").css("color", "#ef6c00");
+                    },
+                    success: function (data) {
+                        if (data.msg == "existe") {
+                            $("#estado_destino").text("Tiene secundaria");
+                            $("#estado_destino").css("color", "#1565c0");
+                        } else {
+                            $("#estado_destino").text("No tiene secundaria");
+                            $("#estado_destino").css("color", "#c62828");
+                        }
+                    }
+                });
+            }
+        }
+
         $("#registro").submit(function (event) {
             event.preventDefault();
             $("#envio").html('<h5>¿Está seguro(a) de reiniciar el trámite con la información ingresada?</h5>');
             $("#tramite_st").val(0);
-            $("#guardar").attr('disabled', false);
-            $("#modalConfirm").modal('show');
+            if ($("#estado_destino").text() == "No tiene secundaria") {
+                mesage("warning", "Notificación", "La Unidad Educativa al que se destinará al Estudiante no tiene nivel secundaria.", false, 1);
+                $("#guardar").hide();
+            } else {
+                $("#guardar").show();
+            }
+            $("#modalConfirm").modal("show");
         });
 
         function sendTramite() {
@@ -316,6 +380,7 @@
             fd.append('grado_cantidad', (($("#grado_cantidad").val()*1)+1));
             fd.append('grado_acelerar', $("#grado_acelerar").text());
             fd.append('grado_inscripcion', $("#grado_inscripcion").text());
+            fd.append("sie_destino", $("#sie_destino").val());
             fd.append('devolucion', 1);
             $.ajax({
                 type: 'post',

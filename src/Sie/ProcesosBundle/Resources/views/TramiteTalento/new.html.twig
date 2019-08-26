@@ -1,4 +1,5 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutEspecialSie.html.twig' %} #}
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
@@ -22,15 +23,19 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Solicitud de Talento</h3>
+                                <h3 class="panel-title">Solicitud Talento Extraordinario</h3>
                             </div>
+                            {#<div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
+                            </div>#}
                         </div>
                     </div>
                     <div class="panel-body">
+                        {% if centro_inscripcion != 0 %}
                         <div class="row">
                             <div class="col-sm-12 col-md-12">
                                 <form class="form-inline text-center" style="margin-bottom: 8px">
-                                  <div class="form-group"  style="width: 250px">
+                                  <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" class="form-control" id="rude" placeholder="Buscar por RUDE" autocomplete="off">
                                       <div class="input-group-addon"><i class="fa fa-search"></i></div>
@@ -42,21 +47,27 @@
                         </div>
                         <div id="carga"></div>
                         <hr>
-                        <div class="row">
-                            <form id="registro" autocomplete="off">
-                                <div class="col-sm-6 col-md-6">
+                        <form id="registro" autocomplete="off">
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
                                     </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="paterno">Paterno</label>
                                         <input type="text" class="form-control noedit" id="paterno" name="paterno">
                                     </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <label for="materno">Materno</label>
                                         <input type="text" class="form-control noedit" id="materno" name="materno">
                                     </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
@@ -85,32 +96,80 @@
                                         <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
                                     </div>
                                     <div class="form-group">
-                                        <label for="centro_inscripcion">Centro Inscripción</label>
-                                        <select class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
-                                            <option value="">Seleccione...</option>
-                                            {% for item in centros %}
-                                            <option value="{{item.id}}">{{item.institucioneducativa}}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="hidden" id="centro_inscripcion" name="centro_inscripcion" value="{{ centro_inscripcion }}">
+                                        <label for="centro">Centro que Inicio el Trámite</label>
+                                        <input type="text" class="form-control" id="centro" name="centro" value="{{ centro }}" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    {# <div class="form-group">
                                         <label for="fecha_solicitud">Fecha Solicitud</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control noedit" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" required>
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                         </div>
-                                    </div>
+                                    </div> #}
                                 </div>
                                 <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                 </div>
-                            </form>
+                            </div>
+                        </form>
+                        {% else %}
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>El Centro de Educacion Especial no está acreditado en área de Talento Extraordinario, por lo tanto no puede realizar el trámite.</strong>
+                                </div>
+                                <a class="btn btn-primary" href="{{path('wf_tramite_index', {'tipo':1})}}">Volver a Trámites</a>
+                            </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="modalNotificacion" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notificación</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="mensaje"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <input type="hidden" id="tramite_id">
+                    <div id="envio"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="guardar" onclick="sendTramite()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .noedit {
+            background: #eaeaea;
+            cursor: not-allowed;
+        }
+    </style>
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
@@ -120,7 +179,7 @@
         $('.noedit').keydown(function() {
             return false;
         });
-        $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
+        // $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
         $('#rude').keypress(function (event) {
             if (event.keyCode === 10 || event.keyCode === 13) {
                 event.preventDefault();
@@ -136,7 +195,7 @@
                 $("#buscar").attr('disabled', true);
                 $.ajax({
                     type: 'post',
-                    url: Routing.generate('tramite_talento_search'),
+                    url: Routing.generate('talento_extraordinario_search'),
                     data: {'rude': rude, 'flujotipo_id': $('#flujotipo_id').val()},
                     beforeSend: function () {
                         $("#carga").empty();
@@ -151,22 +210,18 @@
                             $("#materno").val(data.estudiante.materno);
                             $("#cedula").val(data.estudiante.cedula);
                             $("#complemento").val(data.estudiante.complemento);
-                            var fechanacimiento = data.estudiante.fecha_nacimiento.date.length>0?data.estudiante.fecha_nacimiento.date.substring(0, 10):'';
-                            if (fechanacimiento != '') {
-                                fechanacimiento = fechanacimiento.split('-').reverse().join('/');
-                            }
-                            $("#fecha_nacimiento").val(fechanacimiento);
+                            $("#fecha_nacimiento").val(data.estudiante.fecha_nacimiento);
                             $("#institucion_educativa").val(data.estudiante.institucion_educativa);
                             $("#estudiante_id").val(data.estudiante.estudiante_id);
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
-                        } else if (data.msg == 'nocurso') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.', true);
-                        } else if (data.msg == 'noins') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito.', true);
-                        } else if (data.msg == 'noest') {
-                            mesage('warning', 'Notificación', 'El estudiante no existe.', true);
+                        } else if (data.msg == 'nocurso' || data.msg == 'noins' || data.msg == 'noest') {
+                            $("#modalNotificacion").modal('show');
+                            mesage('warning', 'Notificación', '<h4>El Estudiante no cumple con las siguientes condiciones</h4>'+
+                            '<ul><li>Debe estar en Educación Regular.</li>'+
+                            '<li>Debe estar inscrito en la gestión actual.</li></ul>', false, 2);
                         } else if (data.msg == 'existe') {
-                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.', false);
+                            $("#modalNotificacion").modal('show');
+                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.', false, 2);
                         }
                         $("#buscar").attr('disabled', false);
                     },
@@ -176,17 +231,23 @@
                 });
             } else {
                 $("#carga").empty();
-                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false);
+                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false, 0);
                 $('#rude').focus();
             }
         }
 
-        function mesage(tipo, titulo, msg, estado) {
-            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+        function mesage(tipo, titulo, msg, estado, flag) {
+            if(flag == 0) {
+                $("#carga").append('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            } else if(flag == 2) {
+                $("#mensaje").html('<div class="alert alert-'+ tipo +'" role="alert">\n' + msg +' </div>');
+            } else {
+                $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            }
             if (estado == true) {
-                setTimeout(function () { $("#carga").empty(); }, 3500);
+                setTimeout(function () { $("#carga").empty(); $("#envio").empty(); }, 3500);
             }
         }
 
@@ -200,34 +261,55 @@
             $("#institucion_educativa").val('');
             $("#estudiante_id").val('');
             $("#estudiante_ins_id").val('');
-            $("#fecha_solicitud").val('');
         }
 
-        $("#registro").submit( function (event) {
+        $("#registro").submit(function (event) {
             event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
+            $("#tramite_st").val(0);
+            $("#modalConfirm").modal("show");
+        });
+
+        // $("#registro").submit( function (event) {
+        function sendTramite() {
             $("#guardar").attr('disabled', true);
             $.ajax({
                 type: 'post',
-                url: Routing.generate('tramite_talento_save'),
-                data: {'solicitud': {'estudiante_id': $("#estudiante_id").val(), 'estudiante_ins_id': $("#estudiante_ins_id").val(), 'flujotipo_id': $("#flujotipo_id").val(), 'centro_inscripcion': $("#centro_inscripcion").val(), 'fecha_solicitud': $("#fecha_solicitud").val()}},
+                url: Routing.generate('talento_extraordinario_save'),
+                data: {'solicitud': {'estudiante_id': $("#estudiante_id").val(), 'estudiante_ins_id': $("#estudiante_ins_id").val(), 'flujotipo_id': $("#flujotipo_id").val(), 'centro_inscripcion': $("#centro_inscripcion").val()}}, //$(this).serialize()
                 beforeSend: function () {
-                    $("#carga").empty();
-                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                    $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
-                    $("#guardar").attr('disabled', false);
-                    $("#carga").empty();
+                    $("#guardar").attr('disabled', true);
+                    $("#envio").empty();
                     if (data.estado == 200) {
                         clearInput();
-                        location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+                        $("#tramite_st").val(1);
+                        $("#tramite_id").val(data.tramite);
+                        mesage('info', 'Notificación', data.msg, false, 1);
+                        // location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
-                        mesage('danger', 'Alerta', data.msg, false);
+                        mesage('danger', 'Alerta', 'No se pudo iniciar el trámite de Talento Extraordinario', false, 1);
+                        $("#guardar").attr('disabled', false);
                     }
                 },
                 error: function (error) {
                     $("#guardar").attr('disabled', false);
                 }
             });
-        });
+        };
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val() == 1) {
+                if ($('#tramite_id').val() != ''){
+                    var url = '{{ path("talento_extraordinario_upreport", {"id": "idtramite"}) }}'; 
+                    location.href = url.replace("idtramite", $('#tramite_id').val());
+                } else {
+                    location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+                }
+            }
+        }
     </script>
 {% endblock %}
