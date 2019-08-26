@@ -477,9 +477,38 @@
                                     <span class="selected"></span>
                                 </a>
                             </li>
+                            {% if 1 > 1 %}
+                            <li>
+                                <a href="{{path('reporte_especial_centro_educativo_index')}}">
+                                    <span class="text">Estadística Centro de Educación Especial</span>
+                                    <span class="selected"></span>
+                                </a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </li>
-
+                     {% if 1 > 1 %}
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="text">Educación Superior</span>
+                            <span class="arrow open fa-angle-double-down"></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{path('reporte_informacion_general_institutos_tecnicos')}}">
+                                    <span class="text">Estadística Institutos Técnicos y Tecnológicos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{path('reporte_superior_directorio_itts')}}">
+                                    <span class="icon"><i class="fa fa-home"></i></span>
+                                    <span class="text">Directorio de Institutos</span>
+                                </a>
+                            </li>  
+                        </ul>
+                    </li>
+                    {% endif %}
                     {% if ingresaAdmin == 1 or app.session.get('userId') == '13855318' %}                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -502,7 +531,7 @@
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Directorio de I.E.</span>
                         </a>
-                    </li>             
+                    </li>               
                     <!--
                     <li class="submenu">
                         <a href="javascript:void(0);">
