@@ -112,8 +112,8 @@ class RegistryPersonComissionController extends Controller{
             }else{
                 $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
                 if($objComisionJuegosDatos){
-                    list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = '../..'.$pathImg;
+                    // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
+                    $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
                 }
 
                 $message = 'Registre datos de comision';
@@ -237,7 +237,16 @@ class RegistryPersonComissionController extends Controller{
         $arrDepto=array();
         $form = $this->createFormBuilder()
         
-        ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento','attr'=>array('class'=>'form-control')))
+        ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
+            'query_builder' => function(EntityRepository $e){
+                return $e->createQueryBuilder('lt')
+                        ->where('lt.paisTipoId = :paisId')
+                        ->andwhere('lt.lugarNivel = :levelId')
+                        ->setParameter('paisId','1')
+                        ->setParameter('levelId','1')
+                        ->orderBy('lt.lugar', 'ASC');
+            }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
+        ))
         ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:ComisionTipo', 'empty_value'=>'Selecionar Comisión',
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('ct')
@@ -369,7 +378,7 @@ class RegistryPersonComissionController extends Controller{
             // get info about the img
             $imgExtension = $form['photoData']['photoperson']->getMimeType();
             list($typeImg, $extensionImg) = explode('/', $imgExtension);
-            $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+            $namePhoto = $objPerson->getCarnet().'_foto_'.$form['personId'].'.'.$extensionImg;
             //move the file on the img path
             $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
 
@@ -380,7 +389,7 @@ class RegistryPersonComissionController extends Controller{
             $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
             $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
             $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
-            $objComisionJuegosDatos->setRutaImagen($dirtmp.'/'.$namePhoto);
+            $objComisionJuegosDatos->setRutaImagen($objPerson->getCarnet()."/".$namePhoto);
             
             $em->persist($objComisionJuegosDatos);
             $em->flush(); 
