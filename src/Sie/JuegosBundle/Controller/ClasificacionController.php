@@ -2112,16 +2112,22 @@ class ClasificacionController extends Controller {
 
         $objEntidad = $this->buscaEntidadFase($fase,$usuario);
 
-        $codigoEntidad = $objEntidad[0]['id'];
+        if(count($objEntidad)>0){
+            $codigoEntidad = $objEntidad[0]['id'];
+        } else {
+            $codigoEntidad = 0;
+        }        
+        $nivelId = 12;
 
         //print_r($codigoEntidad);
-
+        //dump($codigoEntidad);die;
         $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.xls';
         $response = new Response();
         //$response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        //$response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');  
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesAcompañantesJuegos_f3_v1.rptdesign&__format=xls&coddep='.$codigoEntidad.'&codges='.$gestionActual));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesAcompañantesJuegos_f3_v2.rptdesign&__format=xls&coddep='.$codigoEntidad.'&codges='.$gestionActual.'&codniv='.$nivelId));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

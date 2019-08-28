@@ -1,0 +1,132 @@
+    {% for flashMessage in app.session.flashbag.get('lookForDataMessage') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <strong></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+<div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                
+                    <h3 class="panel-title"><strong>Informaci&oacute;n Personal</strong></h3>
+                
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            {% if entity %}
+                
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="row" style="text-align: center"><img width="100" height="100" src="{{asset('uploads/documento_persona/'~entity.foto)}}" alt=""></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                <strong>Carnet Identidad: </strong></br>{{entity.carnet}}
+                                </div>
+                                <div class="col-md-4">
+                                <strong>complemento: </strong></br>{{entity.complemento}}
+                                </div>
+                                <div class="col-md-4">
+                                <strong>Fecha Nacimiento: </strong></br>{{entity.fechaNacimiento | date('d-m-Y')}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                <strong>Nombre: </strong></br>{{entity.nombre}}
+                                </div>
+                                <div class="col-md-4">
+                                <strong>Paterno: </strong></br>{{entity.paterno}}
+                                </div>
+                                <div class="col-md-4">
+                                <strong>Materno: </strong></br>{{entity.materno}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div><!-- /.form-body -->
+
+                    {% if objComisionJuegosDatos %}
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <strong>Comision: </strong></br>{{objComisionJuegosDatos.comisionTipo}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    <strong>Departamento: </strong></br>{{objComisionJuegosDatos.lugarTipo}}
+                                    </div>
+                                    
+                                </div>
+                            </div>                        
+                        </div><!-- /.form-body -->
+                   {% else %}
+                        <div class="form-footer">
+                            <div class="pull-right">
+                                {{form(form)}}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.form-footer -->
+                    {% endif %}
+            {% else %}
+
+            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'lookForDataBySegipForm'} } )}}
+                <div class="form-body">
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{form_widget(form.ci)}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form_widget(form.complemento)}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_widget(form.fechaNacimiento)}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_widget(form.generoTipo)}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{form_widget(form.nombre)}}
+                            </div>
+                            <div class="col-md-4">
+                                {{form_widget(form.paterno)}}
+                            </div>
+                            <div class="col-md-4">
+                                {{form_widget(form.materno)}}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div><!-- /.form-body -->
+                <div class="form-footer">
+                    <div class="pull-right">
+                        {# <button class="btn btn-danger mr-5">Cancel</button> #}
+                        {{form_widget(form.regPerson)}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.form-footer -->
+            {{form_end(form) }}
+
+            {% endif  %}
+
+
+        
+
+        </div><!-- /.panel-body -->
+        <div class="row">
+            <div id="resultPerson">
+            </div> 
+        </div>
+    </div>
