@@ -1,0 +1,95 @@
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Datos de Edici&oacute;n <span>----</span></h2>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+            <div class="col-md-12">
+
+                <!-- Start comment form -->
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Persona</h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{path('listPersonRegister_index')}}">Retornar</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+
+                       {% include 'SieJuegosBundle:RegistryPersonComission:personInfo.html.twig' with {'entity': entity} %}
+                       <!-- /.form-body -->                           
+                       {% include 'SieJuegosBundle:RegistryPersonComission:commissionForm.html.twig' with {'form': form} %}
+                       
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End comment form -->
+
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div id="resultUpdate">
+            </div> 
+        </div>
+
+</div>
+
+
+<!-- Start inside form layout -->
+        <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+        <!-- <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"> -->
+           
+        </div>
+        <!-- /.modal -->
+        <!--/ End inside form layout -->
+        <!--/ END ALL MODALS -->
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+
+
+    <script>    
+    var updateCommission = function(){
+        
+        var formData = new FormData(document.getElementById("idCommissionData"));
+       if(confirm('is good??')){
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    dataType: 'html',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    url: Routing.generate('listPersonRegister_updateCommission'),
+                    beforeSend: function () {
+                        $('#resultUpdate').empty();
+                        $('#resultUpdate').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#resultUpdate').empty();
+                        $('#resultUpdate').append(data);
+
+                    },
+                });
+       }else{
+           return false;
+       }
+
+    };    
+
+
+    </script>
+   
+
+
+{%endblock%}

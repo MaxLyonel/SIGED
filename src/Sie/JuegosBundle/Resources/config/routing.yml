@@ -46,3 +46,6 @@ sie_juegos_RegistryPersonComission:
     resource: "@SieJuegosBundle/Resources/config/routing/RegistryPersonComission.yml"
     prefix:   /registrypersoncomission
 
+sie_juegos_ListPersonRegister:
+    resource: "@SieJuegosBundle/Resources/config/routing/ListPersonRegister.yml"
+    prefix:   /listpersonregister
