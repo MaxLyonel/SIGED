@@ -772,150 +772,148 @@ class RegistroInstitucionEducativaController extends Controller {
 
     public function updateAction(Request $request) {
     	$this->session = new Session();
-    	$form = $request->get('form');
-
-    	//valida fecha de resolucion
-//     	$fechaResolucion = new \DateTime($form['fechaResolucion']);
-
-//     	if ($fechaResolucion > new \DateTime('now')) {
-//     		$this->get('session')->getFlashBag()->add('registroInstitucionError', 'La fecha de resolucion es mayor que la fecha actual');
-// //     		$this->redirect($request->server->get('HTTP_REFERER'));
-// //     		return $this->redirect($request->getReferer());
-// //     		return $this->redirectToRoute('rue_edit');
-//     		return $this->redirect($request->server->get('HTTP_REFERER'));
-//     	}
-//     	dump($fechaResolucion);die;
-    	/*
-    	 * Actualizacion de datos personales / persona
-    	 */
-    	$em = $this->getDoctrine()->getManager();
-      $em->getConnection()->beginTransaction();
-
-
-      try {
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
-  //     	$em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_area_especial_autorizado');")->execute();
-
-        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRue']);
-  //     	$entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRue'));
-
-        $entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
-        $entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
-        $entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
-        $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
-        $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
-        $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
-        $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucionTipo']));
-        $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
-        $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
-        $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
-
-        $em->persist($entity);
-        $em->flush();
-
-        //elimina los niveles
-        $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-
-        if($nivelesElim){
-            foreach ($nivelesElim as $nivel) {
-                $em->remove($nivel);
+        $form = $request->get('form');
+        $sw = true;
+        $em = $this->getDoctrine()->getManager();
+        
+        if ($form['estadoTipo'] == 19) {
+            // Validar estudiantes efectivos en la UE
+            $query = $em->getConnection()->prepare("SELECT
+                c.institucioneducativa_id,
+                c.turno_tipo_id,
+                c.nivel_tipo_id,
+                c.grado_tipo_id,
+                c.paralelo_tipo_id,
+                a.codigo_rude,
+                a.paterno,
+                a.materno,
+                a.nombre,
+                b.estadomatricula_tipo_id
+                FROM
+                estudiante a
+                INNER JOIN estudiante_inscripcion b ON b.estudiante_id = a.id
+                INNER JOIN institucioneducativa_curso c ON b.institucioneducativa_curso_id = c.id
+                WHERE
+                c.gestion_tipo_id = ".$this->session->get('currentyear')." AND
+                c.institucioneducativa_id = ".$form['idRue']." AND
+                b.estadomatricula_tipo_id = 4;");
+            $query->execute();
+            $efectivos = $query->fetchAll();
+            if(count($efectivos)>0) {
+                $sw = false;
             }
-            $em->flush();
         }
-        //elimina las areas
-        $areasElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+        if ($sw){
+            $em->getConnection()->beginTransaction();
+            try {
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
+                $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRue']);
+                $entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
+                $entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
+                $entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
+                $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
+                $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
+                $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
+                $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucionTipo']));
+                $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
+                $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
+                $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
 
-        if($areasElim) {
-            foreach ($areasElim as $area) {
-                $em->remove($area);
-            }
-            $em->flush();
+                $em->persist($entity);
+                $em->flush();
+
+                //elimina los niveles
+                $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+
+                if($nivelesElim){
+                    foreach ($nivelesElim as $nivel) {
+                        $em->remove($nivel);
+                    }
+                    $em->flush();
+                }
+                //elimina las areas
+                $areasElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+
+                if($areasElim) {
+                    foreach ($areasElim as $area) {
+                        $em->remove($area);
+                    }
+                    $em->flush();
+                }
+
+                if ($form['institucionTipo'] == 1 or $form['institucionTipo'] == 2 or $form['institucionTipo'] == 5 or $form['institucionTipo'] == 6) {
+
+                //adiciona niveles nuevos
+                $niveles = (isset($form['nivelTipo']))?$form['nivelTipo']:array();
+
+                for($i=0;$i<count($niveles);$i++){
+
+                    $nivel = new InstitucioneducativaNivelAutorizado();
+                    $nivel->setFechaRegistro(new \DateTime('now'));
+                    //$nivel->setGestionTipoId($this->session->get('currentyear'));
+                    $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
+                    $nivel->setInstitucioneducativa($entity);
+                    $em->persist($nivel);
+                }
+                $em->flush();
+
+                }
+                elseif ($form['institucionTipo'] == 4) {
+
+                //adiciona areas nuevas
+                $areas = $form['areaEspecialTipo'];
+
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_area_especial_autorizado');")->execute();
+                for($i=0;$i<count($areas);$i++){
+
+                    $area = new InstitucioneducativaAreaEspecialAutorizado();
+                    $area->setFechaRegistro(new \DateTime('now'));
+                    $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
+                    $area->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($entity->getId()));
+                    $em->persist($area);
+                }
+                $em->flush();
+                //elimina los niveles
+                $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+                foreach ($niveles as $nivel) {
+                    $em->remove($nivel);
+                }
+                $em->flush();
+
+                //adiciona niveles nuevos
+                $nivel = new InstitucioneducativaNivelAutorizado();
+                $nivel->setFechaRegistro(new \DateTime('now'));
+                //$nivel->setGestionTipoId($this->session->get('currentyear'));
+                $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById(6));
+                $nivel->setInstitucioneducativa($entity);
+                $em->persist($nivel);
+
+                    $niveles = (isset($form['nivelTipo']))?$form['nivelTipo']:array();
+
+                    for($i=0;$i<count($niveles);$i++){
+
+                        $nivel = new InstitucioneducativaNivelAutorizado();
+                        $nivel->setFechaRegistro(new \DateTime('now'));
+                        //$nivel->setGestionTipoId($this->session->get('currentyear'));
+                        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
+                        $nivel->setInstitucioneducativa($entity);
+                        $em->persist($nivel);
+                    }
+                    $em->flush();
+                }
+
+                $em->getConnection()->commit();
+                return $this->redirect($this->generateUrl('rue'));
+
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                return $this->redirect($this->generateUrl('rue'));
+            }   
+        } else {
+            $this->get('session')->getFlashBag()->add('mensaje', 'La institución educativa: '.$form['idRue'].'-'.$form['institucionEducativa'].', cuenta con estudiantes efectivos. No es posible el "cierre" de la misma.');
+            return $this->redirect($this->generateUrl('rue'));
         }
-
-
-        if ($form['institucionTipo'] == 1 or $form['institucionTipo'] == 2 or $form['institucionTipo'] == 5 or $form['institucionTipo'] == 6) {
-
-          //adiciona niveles nuevos
-          $niveles = (isset($form['nivelTipo']))?$form['nivelTipo']:array();
-
-          for($i=0;$i<count($niveles);$i++){
-
-            $nivel = new InstitucioneducativaNivelAutorizado();
-            $nivel->setFechaRegistro(new \DateTime('now'));
-            //$nivel->setGestionTipoId($this->session->get('currentyear'));
-            $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
-            $nivel->setInstitucioneducativa($entity);
-            $em->persist($nivel);
-          }
-          $em->flush();
-
-
-        }
-        elseif ($form['institucionTipo'] == 4) {
-
-          //adiciona areas nuevas
-          $areas = $form['areaEspecialTipo'];
-  //     		dump($areas);die;
-          $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_area_especial_autorizado');")->execute();
-          for($i=0;$i<count($areas);$i++){
-
-            $area = new InstitucioneducativaAreaEspecialAutorizado();
-            $area->setFechaRegistro(new \DateTime('now'));
-            $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
-            $area->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($entity->getId()));
-            $em->persist($area);
-          }
-          $em->flush();
-          //elimina los niveles
-          $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-          foreach ($niveles as $nivel) {
-            $em->remove($nivel);
-          }
-          $em->flush();
-
-          //adiciona niveles nuevos
-          //$niveles = $form['nivelTipo'];
-          $nivel = new InstitucioneducativaNivelAutorizado();
-        $nivel->setFechaRegistro(new \DateTime('now'));
-        //$nivel->setGestionTipoId($this->session->get('currentyear'));
-        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById(6));
-        $nivel->setInstitucioneducativa($entity);
-        $em->persist($nivel);
-
-          $niveles = (isset($form['nivelTipo']))?$form['nivelTipo']:array();
-
-          for($i=0;$i<count($niveles);$i++){
-
-            $nivel = new InstitucioneducativaNivelAutorizado();
-            $nivel->setFechaRegistro(new \DateTime('now'));
-            //$nivel->setGestionTipoId($this->session->get('currentyear'));
-            $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
-            $nivel->setInstitucioneducativa($entity);
-            $em->persist($nivel);
-          }
-          $em->flush();
-
-        }
-
-
-        // Try and commit the transaction
-        $em->getConnection()->commit();
-        return $this->redirect($this->generateUrl('rue'));
-
-      } catch (Exception $e) {
-        $em->getConnection()->rollback();
-        return $this->redirect($this->generateUrl('rue'));
-      }
-
-
-
-
-
-
     }
-
-
-
 
     /**
      * Deletes a Institucioneducativa entity.
@@ -1000,3 +998,22 @@ class RegistroInstitucionEducativaController extends Controller {
 
 
 }
+/*SELECT
+c.institucioneducativa_id,
+c.turno_tipo_id,
+c.nivel_tipo_id,
+c.grado_tipo_id,
+c.paralelo_tipo_id,
+a.codigo_rude,
+a.paterno,
+a.materno,
+a.nombre,
+b.estadomatricula_tipo_id
+FROM
+estudiante a
+INNER JOIN estudiante_inscripcion b ON b.estudiante_id = a."id"
+INNER JOIN institucioneducativa_curso c ON b.institucioneducativa_curso_id = c.id
+WHERE
+c.gestion_tipo_id = 2019 AND
+c.institucioneducativa_id = 40730328 AND
+b.estadomatricula_tipo_id = 4;*/
