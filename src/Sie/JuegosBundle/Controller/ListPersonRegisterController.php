@@ -114,6 +114,7 @@ class ListPersonRegisterController extends Controller{
                 'data' => $em->getReference("SieAppWebBundle:ComisionTipo",$data[0]['comisionTipoId'])
             ))
         ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
+        ->add('obs', 'text', array('label' => 'Observacion', 'required' => true, 'attr'=> array('class'=>'form-control')))
         ->add('personId', 'hidden', array('data'=>$data[0]['personId'] , 'mapped'=>false))
         
         ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-info','onclick'=>'updateCommission()')))
@@ -187,15 +188,31 @@ class ListPersonRegisterController extends Controller{
         try {
             //look for person
             $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($form['personId']);
-            // create the img path
-            $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
-                if (!file_exists($dirtmp)) {
-                mkdir($dirtmp, 0775);
+
+            $personaId = $form['personId'];
+            $cedula = $objPerson->getCarnet();
+            $complemento = $objPerson->getComplemento();
+            $ci = '';
+            if ($complemento == ""){
+                $ci = $cedula;
+            } else {
+                $ci = $cedula.'-'.$complemento;
             }
+
+            // create the img path
+            // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
+            $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
+
+            // if (!file_exists($dirtmp)) {
+            //     mkdir($dirtmp, 0775);
+            // }
+
             // get info about the img
             $imgExtension = $form['photoData']['photoperson']->getMimeType();
             list($typeImg, $extensionImg) = explode('/', $imgExtension);
-            $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+            // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+            $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+
             //move the file on the img path
             $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
 
@@ -207,10 +224,15 @@ class ListPersonRegisterController extends Controller{
             $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
             $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
             $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
-            $objComisionJuegosDatos->setRutaImagen($objPerson->getCarnet()."/".$namePhoto);
+            $objComisionJuegosDatos->setRutaImagen($ci.'/'.$namePhoto);            
+            $objComisionJuegosDatos->setObs(isset($form['obs'])?strtoupper(mb_strtoupper($form['obs'], 'utf8')):'');
             
             $em->persist($objComisionJuegosDatos);
-            $em->flush(); 
+            
+            $objPerson->setFoto($ci.'/'.$namePhoto);            
+            $em->persist($objPerson);
+
+            $em->flush();                         
             $swAnswer = true;
             
         } catch (Exception $e) {
