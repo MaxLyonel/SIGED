@@ -1,7 +1,8 @@
+<p style="font-size:1.5em; font-weight:bold">Trámite Nro. {{ idTramite }}</p>
 <div class="panel panel-primary">
 	<div class="panel-heading" data-action="collapse" style="cursor:pointer">
 		<div class="pull-left">
-            <h3 class="panel-title"><i class="fa fa-list"></i> Historial</h3>
+            <h3 class="panel-title"><i class="fa fa-list"></i> Historial </h3>
         </div>
         <div class="pull-right">
             {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-down"></i></button> #}
@@ -42,7 +43,7 @@
 										<div class="row">
 										    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										        <div class="text-center">
-										            <h3>FORMULARIO DE ADICIÓN Y MODIFICACIÓN DE CALIFICACIONES</h3>
+										            <h3>FORMULARIO DE ADICIÓN Y/O MODIFICACIÓN DE CALIFICACIONES</h3>
 										            <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
 										        </div>
 
@@ -135,7 +136,11 @@
 										            </div>
 										            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 										                <h5><b>Informe</b></h5>
-										                <a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.informe.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver informe adjunto </b></a>
+										                {% if h.datos.informe is not null %}
+										                	<a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.informe.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver informe adjunto </b></a>
+										                {% else %}
+										                	<span class="text-danger">No se adjunto el informe</span>
+										                {% endif %}
 										            </div>
 										        </div>
 										    </div>

@@ -323,8 +323,7 @@ class TramiteModificacionCalificacionesController extends Controller {
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
 
             // OBTENEMOS EL ID DEL TRAMITE SI SE TRATA DE UNA MODIFICACION
-            // $idTramite = $request->get('idTramite');
-
+            $idTramite = $request->get('idTramite');
             // VERIFICAMOS SI EXISTE EL ARCHIVO
             if(isset($_FILES['informe'])){
                 $file = $_FILES['informe'];
@@ -349,7 +348,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                     $response->setStatusCode(500);
                     return $response;
                 }
-                
+
                 // CREAMOS LOS DATOS DE LA IMAGEN
                 $informe = array(
                     'name' => $name,
@@ -420,10 +419,12 @@ class TramiteModificacionCalificacionesController extends Controller {
                     $tipoTramite->getId(),//$tipoTramite,
                     '',//$varevaluacion,
                     '',//$idTramite,
-                    json_encode($data),
+                    json_encode($data, JSON_UNESCAPED_UNICODE),
                     '',//$lugarTipoLocalidad,
                     $lugarTipo['lugarTipoIdDistrito']
                 );
+
+                $idTramite = $registroTramite['idtramite'];
 
                 // $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
 
@@ -439,10 +440,12 @@ class TramiteModificacionCalificacionesController extends Controller {
                     '',
                     '',
                     $idTramite,
-                    json_encode($data),
+                    json_encode($data, JSON_UNESCAPED_UNICODE),
                     '',
                     $lugarTipo['lugarTipoIdDistrito']
                 );
+
+                // dump($registroTramie);die;
 
                 $msg = "El Tramite ".$registroTramite['msg']." fue enviado exitosamente";
 
@@ -453,8 +456,8 @@ class TramiteModificacionCalificacionesController extends Controller {
 
             $response->setStatusCode(200);
             $response->setData(array(
-                'idTramite'=>$registroTramite['idtramite'],
-                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones', array('idTramite'=>$registroTramite['idtramite']))
+                'idTramite'=>$idTramite,
+                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones', array('idTramite'=>$idTramite))
             ));
             return $response;
 
@@ -682,9 +685,9 @@ class TramiteModificacionCalificacionesController extends Controller {
     }    
 
     public function derivaDistritoAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
         try {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
 
             $idTramite = $request->get('idTramite');
             $procedente = $request->get('procedente');
@@ -756,7 +759,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'subsanable'=>$subsanable,
                 'observacion'=>$observacion,
                 'informe'=>$informe
-            ));
+            ), JSON_UNESCAPED_UNICODE);
 
             // ENVIAMOS EL TRAMITE
             $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
@@ -786,9 +789,8 @@ class TramiteModificacionCalificacionesController extends Controller {
                 $datos = json_encode(array(
                     'subsanable'=>$subsanable,
                     'observacion'=>$observacion
-                ));
+                ), JSON_UNESCAPED_UNICODE);
 
-                // NUEVAMENTE ENVIAMOS EL TRAMITE
                 $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
                     $this->session->get('userId'),
                     $this->session->get('roluser'),
@@ -970,7 +972,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                     'resAdm'=>$resAdm,
                     'nroResAdm'=>'',
                     'fechaResAdm'=>''
-                ));
+                ), JSON_UNESCAPED_UNICODE);
             }else{
                 $datos = json_encode(array(
                     'sie'=>$sie,
@@ -981,7 +983,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                     'resAdm'=>$resAdm,
                     'nroResAdm'=>$request->get('nroResAdm'),
                     'fechaResAdm'=>$request->get('fechaResAdm')
-                ));
+                ), JSON_UNESCAPED_UNICODE);
             }
             
 
@@ -1073,7 +1075,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 $datos = json_encode(array(
                     'gestionConsolidada'=>$gestionConsolidada,
                     'observacion'=>$observacion
-                ));
+                ), JSON_UNESCAPED_UNICODE);
 
                 // NUEVAMENTE ENVIAMOS EL TRAMITE
                 $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
