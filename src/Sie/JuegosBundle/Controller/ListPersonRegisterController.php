@@ -97,14 +97,16 @@ class ListPersonRegisterController extends Controller{
         $arrDepto=array();
         $form = $this->createFormBuilder()
         
-        ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
+        ->add('departamento', 'entity', array('label'=>'Lugar comision','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('lt')
                         ->where('lt.paisTipoId = :paisId')
                         ->andwhere('lt.lugarNivel = :levelId')
+                        ->orwhere('lt.id = :lugarId')
                         ->setParameter('paisId','1')
                         ->setParameter('levelId','1')
-                        ->orderBy('lt.lugar', 'ASC');
+                        ->setParameter('lugarId','1')
+                        ->orderBy('lt.id', 'ASC');
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control'),
                 'data' => $em->getReference("SieAppWebBundle:LugarTipo",$data[0]['lugarTipoId'])
                 ))
