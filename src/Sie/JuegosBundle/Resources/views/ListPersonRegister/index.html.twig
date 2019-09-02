@@ -40,6 +40,7 @@
                                     <th>Nombre</th>
                                     <th>Comision</th>
                                     <th>Lugar</th>
+                                    <th>Obs.</th>
                                     {# <th>Fechanacimiento</th> #}
                                     <th>Actions</th>
                                 </tr>
@@ -54,6 +55,7 @@
                                     <td>{{ entity.nombre }}</td>
                                     <td>{{ entity.comisionTipo }}</td>
                                     <td>{{ entity.lugarTipo }}</td>
+                                    <td>{{ entity.obs }}</td>
                                     <td>
                                     <ul>
                                         {% set items = {
@@ -62,6 +64,9 @@
                                         {% set jsnDelegadoId = items|json_encode() %}
                                         <li>
                                             <a href="{{ path('listPersonRegister_edit', { 'id': jsnDelegadoId }) }}">edit</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('listPersonRegister_edit', { 'id': jsnDelegadoId }) }}">credencial</a>
                                         </li>
                                     </ul>
                                     </td>
