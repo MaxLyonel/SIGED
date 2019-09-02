@@ -391,8 +391,9 @@ class RegistryPersonComissionController extends Controller{
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision','attr'=>array('class'=>'form-control')))
         ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
+        ->add('obs', 'text', array('label' => 'Observacion', 'required' => true, 'attr'=> array('class'=>'form-control')))
         ->add('personId', 'hidden', array('data'=>$personId , 'mapped'=>false))        
-        ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-info','onclick'=>'saveDelegacionDepartamental()')))
+        ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-info','onclick'=>'saveCommission()')))
         ->getForm();
         return $form;
     }
@@ -627,7 +628,7 @@ class RegistryPersonComissionController extends Controller{
             $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
             // $objComisionJuegosDatos->setRutaImagen($dirtmp.'/'.$namePhoto);            
             $objComisionJuegosDatos->setRutaImagen($ci.'/'.$namePhoto);            
-
+            $objComisionJuegosDatos->setObs(isset($form['obs'])?strtoupper(mb_strtoupper($form['obs'], 'utf8')):'');
             $em->persist($objComisionJuegosDatos);
 
             $objPerson->setFoto($ci.'/'.$namePhoto);            
