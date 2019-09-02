@@ -545,6 +545,19 @@
                             {% endif %}
                         </li>
                     {% endif %}
+
+                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('regularizacion_cut_index')}}">Nivelaci&oacute;n</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}                    
                     
 
                     {#
