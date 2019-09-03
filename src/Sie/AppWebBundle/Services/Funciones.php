@@ -1504,7 +1504,7 @@ class Funciones {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->andwhere('iec.gestionTipo = :gestion')
                 ->setParameter('id', $form['codigoRude'])
-                ->setParameter('mat', array(4, 5, 11))
+                ->setParameter('mat', array(4, 5, 11, 61, 62, 63))
                 ->setParameter('gestion', $this->session->get('currentyear'))
                 ->orderBy('ei.fechaInscripcion', 'DESC')
                 ->getQuery();

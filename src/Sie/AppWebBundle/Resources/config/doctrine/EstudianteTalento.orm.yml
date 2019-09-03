@@ -1,22 +1,19 @@
-Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos:
+Sie\AppWebBundle\Entity\EstudianteTalento:
     type: entity
-    table: jdp_delegado_inscripcion_juegos
+    table: estudiante_talento
     indexes:
-        IDX_FF774DBF179FF95:
+        IDX_FA38B6A11EEFD20:
             columns:
-                - gestion_tipo_id
-        IDX_FF774DBF606841D:
+                - usuario_registro_id
+        IDX_FA38B6A1DADD026:
             columns:
-                - lugar_tipo_id
-        IDX_FF774DBFF5F88DB9:
+                - usuario_modificacion_id
+        IDX_FA38B6A13AB163FE:
             columns:
-                - persona_id
-        IDX_FF774DBF9E27EC77:
+                - institucioneducativa_id
+        IDX_FA38B6A159590C39:
             columns:
-                - fase_tipo_id
-        IDX_FF774DBF2C887590:
-            columns:
-                - comision_tipo_id
+                - estudiante_id
     id:
         id:
             type: integer
@@ -27,63 +24,68 @@ Sie\AppWebBundle\Entity\JdpDelegadoInscripcionJuegos:
             generator:
                 strategy: SEQUENCE
     fields:
-        obs:
+        acelera:
+            type: boolean
+            nullable: true
+            comment: ''
+        talentoTipo:
             type: string
             nullable: true
-            length: 255
+            length: 50
             fixed: false
             comment: ''
-        rutaImagen:
+            column: talento_tipo
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        informe:
             type: string
             nullable: true
-            length: 150
+            length: 100
             fixed: false
             comment: ''
-            column: ruta_imagen
     manyToOne:
-        gestionTipo:
-            targetEntity: GestionTipo
+        usuarioRegistro:
+            targetEntity: Usuario
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                gestion_tipo_id:
+                usuario_registro_id:
                     referencedColumnName: id
             orphanRemoval: false
-        lugarTipo:
-            targetEntity: LugarTipo
+        usuarioModificacion:
+            targetEntity: Usuario
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                lugar_tipo_id:
+                usuario_modificacion_id:
                     referencedColumnName: id
             orphanRemoval: false
-        persona:
-            targetEntity: Persona
+        institucioneducativa:
+            targetEntity: Institucioneducativa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                persona_id:
+                institucioneducativa_id:
                     referencedColumnName: id
             orphanRemoval: false
-        faseTipo:
-            targetEntity: JdpFaseTipo
+        estudiante:
+            targetEntity: Estudiante
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                fase_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        comisionTipo:
-            targetEntity: JdpComisionTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                comision_tipo_id:
+                estudiante_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

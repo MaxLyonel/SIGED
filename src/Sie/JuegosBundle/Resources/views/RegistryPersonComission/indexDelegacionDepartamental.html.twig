@@ -3,7 +3,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="glyphicon glyphicon-pencil"></i> Registro de Entrenador <span>----</span></h2>
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro de delegado <span>----</span></h2>
     </div><!-- /.header-content -->
     <!--/ End page header -->
 
@@ -16,9 +16,6 @@
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Busqueda</h3>
-                        </div>
-                        <div class="pull-right">
-                            <a href="{{path('listPersonRegister_index')}}">Retornar</a>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
@@ -88,7 +85,7 @@
     {{parent()}}
     <script type="text/javascript">
 
-    var lookForData = function(){
+    var buscaDelegado = function(){
         var ci = $('#form_cifind').val();
         
         var dataForm = $('#idFormFindPerson').serialize();
@@ -96,7 +93,7 @@
 
                $.ajax({
                     type: 'post',
-                    url: Routing.generate('registrypersoncomission_look_for_data'),
+                    url: Routing.generate('registrypersoncomission_buscaDelegado'),
                     data: dataForm,
                     beforeSend: function () {
                         $('#resultPerson').empty();
@@ -173,12 +170,12 @@
             return false;
         }
     };
-    var registerCommission = function(){
+    var registerDelegado = function(){
         var personId = $('#form_personId').val();
         //if(confirm('¿Esta seguro de realizar la asignación?')){
                $.ajax({
                     type: 'post',
-                    url: Routing.generate('registrypersoncomission_registerCommission'),
+                    url: Routing.generate('registrypersoncomission_registerDelegacionDepartamental'),
                     data: {'personId':personId},
                     beforeSend: function () {
                         $('#resultCommission').empty();
@@ -195,9 +192,21 @@
             //    return false;
                
     };
-    var saveCommission = function(){
+    var saveDelegado = function(){
         var formData = new FormData(document.getElementById("idCommissionData"));
-       if(confirm('is good??')){
+        if($('#form_photoperson').val() == ""){
+            alert("Error: Debe ingresar la fotografia del delegado");
+            return false;
+        }
+        if($('#form_departamento').val() == ""){
+            alert("Error: Debe seleccionar departamento");
+            return false;
+        }
+        if($('#form_comisionTipo').val() == ""){
+            alert("Error: Debe seleccionar comisión");
+            return false;
+        }
+        if(confirm('¿Esta seguro de registrar al delegado?')){
            $.ajax({
                     type: 'post',
                     data: formData,
@@ -205,7 +214,7 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    url: Routing.generate('registrypersoncomission_saveCommission'),
+                    url: Routing.generate('registrypersoncomission_saveDelegacionDepartamental'),
                     beforeSend: function () {
                         $('#resultPerson').empty();
                         $('#resultPerson').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
@@ -216,7 +225,7 @@
 
                     },
                 });
-       }else{
+       } else {
            return false;
        }
 

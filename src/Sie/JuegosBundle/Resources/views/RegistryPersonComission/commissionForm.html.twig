@@ -1,0 +1,51 @@
+ {{form_start(form, { 'attr': {'data-toggle': 'validator', 'enctype':'multipart/form-data', 'role': "form", 'name': "idCommissionData", 'id':'idCommissionData'} } )}}
+    <div class="form-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5 col-md-offset-4">
+                    <label for="photoperson" class="control-label"><strong>Subir Foto</strong></label>                            
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail col-sm-12" data-trigger="fileinput" style="height: 350px;"></div>
+                        <div>
+                            <span class="btn btn-info btn-file">
+                                <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                {{ form_widget(form.photoperson, { 'attr': {'class': 'col-sm-12'} }) }} 
+                            </span>
+                            <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                        </div>
+                    </div>    
+                </div>                            
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="departamento" class="control-label"><strong>{{form_label(form.departamento)}}</strong></label>                            
+                    {{form_widget(form.departamento)}}
+                </div>
+                <div class="col-md-6">
+                    <label for="comisionTipo" class="control-label"><strong>Comisi&oacute;n</strong></label>
+                    {{form_widget(form.comisionTipo)}}
+                    {{form_widget(form.personId)}}
+                </div>                        
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <label for="departamento" class="control-label"><strong>Observaci&oacute;n</strong></label>                            
+                    {{form_widget(form.obs)}}
+                </div>
+            </div>
+
+
+        </div>                
+        <!-- /.form-body -->
+        
+        <div class="form-footer">
+            <div class="pull-right">
+                {# <button class="btn btn-danger mr-5">Cancel</button> #}
+                {{form_widget(form.regCommission)}}
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.form-footer -->
+    </div>
+    {{form_end(form) }}<!-- /.form-footer -->

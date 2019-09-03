@@ -1,0 +1,271 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index', {'tipo':1})}}">Trámites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Nuevo</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Solicitud de Talento</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <form class="form-inline text-center" style="margin-bottom: 8px">
+                                  <div class="form-group"  style="width: 250px">
+                                    <div class="input-group">
+                                      <input type="text" class="form-control" id="rude" placeholder="Buscar por RUDE" autocomplete="off">
+                                      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                    </div>
+                                  </div>
+                                  <button type="button" class="btn btn-primary" id="buscar" onclick="searchClick()">Buscar</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="carga"></div>
+                        <hr>
+                        <div class="row">
+                            <form id="registro" autocomplete="off">
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre</label>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="paterno">Paterno</label>
+                                        <input type="text" class="form-control noedit" id="paterno" name="paterno">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="materno">Materno</label>
+                                        <input type="text" class="form-control noedit" id="materno" name="materno">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="cedula">Cédula Identidad</label>
+                                                <input type="text" class="form-control noedit" id="cedula" name="cedula">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="complemento">Complemento</label>
+                                                <input type="text" class="form-control noedit" id="complemento" name="complemento">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <input type="hidden" id="estudiante_id" name="estudiante_id">
+                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
+                                    <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
+                                    <div class="form-group">
+                                        <label for="institucion_educativa">Unidad Educativa</label>
+                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="centro_inscripcion">Centro Inscripción</label>
+                                        <select class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
+                                            <option value="" selected disabled>Seleccione...</option>
+                                            {% for item in centros %}
+                                            <option value="{{item.id}}">{{item.institucioneducativa}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {# <div class="form-group">
+                                        <label for="fecha_solicitud">Fecha Solicitud</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control noedit" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" required>
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                    </div> #}
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalNotificacion" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notificación</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="mensaje"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .noedit {
+            background: #eaeaea;
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        // $(document).ready(function() {
+        // });
+        $('.noedit').keydown(function() {
+            return false;
+        });
+        $('#rude').keypress(function (event) {
+            if (event.keyCode === 10 || event.keyCode === 13) {
+                event.preventDefault();
+                searchEstudiante();
+            }
+        });
+        function searchClick() {
+            searchEstudiante();
+        }
+        function searchEstudiante() {
+            var rude = $('#rude').val();
+            if (rude != "") {
+                $("#buscar").attr('disabled', true);
+                $.ajax({
+                    type: 'post',//tramite_talento_search
+                    url: Routing.generate('talento_extraordinario_search_tool'),
+                    data: {'rude': rude, 'flujotipo_id': $('#flujotipo_id').val()},
+                    beforeSend: function () {
+                        $("#carga").empty();
+                        $("#carga").append('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                        clearInput();
+                    },
+                    success: function (data) {
+                        $("#carga").empty();
+                        var lista = "";
+                        if (data.msg == 'exito') {
+                            $("#nombre").val(data.estudiante.nombre);
+                            $("#paterno").val(data.estudiante.paterno);
+                            $("#materno").val(data.estudiante.materno);
+                            $("#cedula").val(data.estudiante.cedula);
+                            $("#complemento").val(data.estudiante.complemento);
+                            $("#fecha_nacimiento").val(data.estudiante.fecha_nacimiento);
+                            $("#institucion_educativa").val(data.estudiante.institucion_educativa);
+                            $("#estudiante_id").val(data.estudiante.estudiante_id);
+                            $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
+                        } else if (data.msg == 'noest') {
+                            lista += '<li><b>No se encontro al estudiante en el sistema.</b></li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                        } else if (data.msg == 'noins') {
+                            lista += '<li>No se encontro al estudiante en el sistema.</li>';
+                            lista += '<li><b>Debe estar inscrito en la gestión actual.</b></li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                        } else if (data.msg == 'noue') {
+                            lista += '<li>No se encontro al estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li><b>Debe estar inscrito en su Unidad Educativa.</b></li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                        } else if (data.msg == 'existe') {
+                            lista += '<li>No se encontro al estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li><b>El trámite ya fue solicitado con anterioridad.</b></li>';
+                        }
+                        $("#modalNotificacion").modal('show');
+                        $("#mensaje").html('<div class="alert alert-warning" role="alert"><h4>El Estudiante no cumple con las siguientes condiciones</h4><ul>'+lista+'</ul></div>');
+                        $("#buscar").attr('disabled', false);
+                    },
+                    error: function (error) {
+                        $("#buscar").attr('disabled', false);
+                    }
+                });
+            } else {
+                $("#carga").empty();
+                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false);
+                $('#rude').focus();
+            }
+        }
+
+        function mesage(tipo, titulo, msg, estado) {
+            $("#carga").append('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            if (estado == true) {
+                setTimeout(function () { $("#carga").empty(); }, 3500);
+            }
+        }
+
+        function clearInput() {
+            $("#nombre").val('');
+            $("#paterno").val('');
+            $("#materno").val('');
+            $("#cedula").val('');
+            $("#complemento").val('');
+            $("#fecha_nacimiento").val('');
+            $("#institucion_educativa").val('');
+            $("#estudiante_id").val('');
+            $("#estudiante_ins_id").val('');
+        }
+
+        $("#registro").submit( function (event) {
+            event.preventDefault();
+            $("#guardar").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_save_tool'),
+                data: {'solicitud': {'estudiante_id': $("#estudiante_id").val(), 'estudiante_ins_id': $("#estudiante_ins_id").val(), 'flujotipo_id': $("#flujotipo_id").val(), 'centro_inscripcion': $("#centro_inscripcion").val()}},
+                beforeSend: function () {
+                    $("#carga").empty();
+                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#guardar").attr('disabled', false);
+                    $("#carga").empty();
+                    if (data.estado == 200) {
+                        clearInput();
+                        location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+                    } else {
+                        mesage('danger', 'Alerta', data.msg, false);
+                    }
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        });
+    </script>
+{% endblock %}

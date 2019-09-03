@@ -1,10 +1,21 @@
 registrypersoncomission_index:
     path:     /
     defaults: { _controller: SieJuegosBundle:RegistryPersonComission:index }
+    
+registrypersoncomission_indexDelegacionDepartamental:
+    path:     /indexDelegacionDepartamental
+    defaults: { _controller: SieJuegosBundle:RegistryPersonComission:indexDelegacionDepartamental }
+
 
 registrypersoncomission_look_for_data:
     path:     /lookForData
     defaults: { _controller: SieJuegosBundle:RegistryPersonComission:lookForData }
+    options:
+         expose: true    
+
+registrypersoncomission_buscaDelegado:
+    path:     /buscaDelegado
+    defaults: { _controller: SieJuegosBundle:RegistryPersonComission:buscaDelegado }
     options:
          expose: true    
 
@@ -17,6 +28,18 @@ registrypersoncomission_registerCommission:
     defaults: { _controller: SieJuegosBundle:RegistryPersonComission:registerCommission }
     options:
          expose: true        
+
+registrypersoncomission_registerDelegacionDepartamental:
+    path:     /registerDelegacionDepartamental
+    defaults: { _controller: SieJuegosBundle:RegistryPersonComission:registerDelegacionDepartamental }
+    options:
+         expose: true 
+
+registrypersoncomission_saveDelegacionDepartamental:
+    path:     /saveDelegacionDepartamental
+    defaults: { _controller: SieJuegosBundle:RegistryPersonComission:saveDelegacionDepartamental }
+    options:
+         expose: true
 
 registrypersoncomission_saveCommission:
     path:     /saveCommission
