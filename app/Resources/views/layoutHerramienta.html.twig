@@ -39,9 +39,6 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-
-
-
             
             <link rel="stylesheet" type="text/css" href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
@@ -56,6 +53,7 @@
             <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
             
             <!--/ END THEME STYLES -->
+            <link href="https://openlayers.org/api/theme/default/style.css" rel="stylesheet">
 
             <!-- START @IE SUPPORT -->
             <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -1382,6 +1380,11 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
 
+             <!-- Highcharts Charts -->
+            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+            <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+            <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+            <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
             <!--/ END CORE PLUGINS -->
 
             <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
@@ -1431,7 +1434,8 @@
 
             <!--/ END GOOGLE ANALYTICS -->
 
-            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+           
+
         {% endblock %}
     </body>
     <!--/ END BODY -->
