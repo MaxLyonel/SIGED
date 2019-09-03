@@ -70,6 +70,10 @@ class ListPersonRegisterController extends Controller{
 
     
     public function editAction(Request $request){
+        //validation if the user is logged
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         // get the send values
         $jsonDelegadoId = $request->get('id');
         $arrDelegadoId = json_decode($jsonDelegadoId,true);
@@ -93,14 +97,16 @@ class ListPersonRegisterController extends Controller{
         $arrDepto=array();
         $form = $this->createFormBuilder()
         
-        ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
+        ->add('departamento', 'entity', array('label'=>'Lugar comision','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('lt')
                         ->where('lt.paisTipoId = :paisId')
                         ->andwhere('lt.lugarNivel = :levelId')
+                        ->orwhere('lt.id = :lugarId')
                         ->setParameter('paisId','1')
                         ->setParameter('levelId','1')
-                        ->orderBy('lt.lugar', 'ASC');
+                        ->setParameter('lugarId','1')
+                        ->orderBy('lt.id', 'ASC');
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control'),
                 'data' => $em->getReference("SieAppWebBundle:LugarTipo",$data[0]['lugarTipoId'])
                 ))
@@ -128,7 +134,7 @@ class ListPersonRegisterController extends Controller{
         $em = $this->getDoctrine()->getManager();
          $entity = $em->getRepository('SieAppWebBundle:Persona');
         $query = $entity->createQueryBuilder('per')
-                ->select('per.id as personId, per.carnet, per.complemento, per.paterno, per.materno,per.nombre,jdij.id as id, IDENTITY(jdij.comisionTipo) as comisionTipoId, IDENTITY(jdij.lugarTipo) as lugarTipoId, ct.comision as comisionTipo, lt.lugar as lugarTipo, jdij.rutaImagen')  
+                ->select('per.id as personId, per.carnet, per.complemento, per.paterno, per.materno,per.nombre,jdij.id as id, IDENTITY(jdij.comisionTipo) as comisionTipoId, IDENTITY(jdij.lugarTipo) as lugarTipoId, ct.comision as comisionTipo, lt.lugar as lugarTipo, jdij.rutaImagen, jdij.obs')  
                 ->join('SieAppWebBundle:JdpDelegadoInscripcionJuegos', 'jdij', 'WITH', 'per.id = jdij.persona')
                 ->join('SieAppWebBundle:ComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
                 ->join('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jdij.lugarTipo = lt.id');
@@ -138,6 +144,7 @@ class ListPersonRegisterController extends Controller{
                  ->setParameter('delegadoId', $delegadoId);
          }
          $query = $query
+                ->orderBy('lt.lugar', 'ASC')
                 ->getQuery();
                 // dump($query->getSQL());die;
         $entities = $query->getResult();

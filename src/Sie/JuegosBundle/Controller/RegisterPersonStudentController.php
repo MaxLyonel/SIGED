@@ -20,6 +20,7 @@ use Sie\AppWebBundle\Entity\JdpPersonaInscripcionJuegos;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Sie\JuegosBundle\Controller\RegistroController as registroController;
 
 class RegisterPersonStudentController extends Controller{
 
@@ -871,7 +872,18 @@ class RegisterPersonStudentController extends Controller{
             $estudianteInscripcionJuegosEntity = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->find($arrIdInscription[0]);
             $faseId = $estudianteInscripcionJuegosEntity->getFaseTipo()->getId();
             $pruebaId = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getId();
+            $nivelId = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
             $reglaPrueba = $reglaController->getPruebaRegla($gestionActual,$faseId,$pruebaId);
+
+            $registroController = new registroController();
+            $registroController->setContainer($this->container);
+
+            $faseActivo = $registroController->getFaseActivo($faseId, $nivelId, $fechaActual);
+            if (!$faseActivo) {
+                return $response->setData(array(
+                    'msg_incorrecto' => 'Inscripción cerrada'
+                ));
+            }
 
             if(count($arrCouchs) < $reglaPrueba->getComisionCupoPresentacion()){
                 foreach ($arrIdInscription as $key => $value) {

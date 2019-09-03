@@ -324,6 +324,19 @@
                                 </ul>
                             </li>
                         {% endif %}
+                         {% if app.session.get('roluser') in [8] %}    
+                            <!-- Start navigation - dashboard -->
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-user"></i></span>
+                                    <span class="text">Seguimiento</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{ path('listPersonRegister_index') }}">Comisi&oacute;n</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
                     {% for item in app.session.get('roluser') %}
                         {% if item.id == 9 or item.id == 10 or item.id == 6 or item.id == 7 or item.id == 28 or item.id == 8 %}
                             <li class="submenu">
