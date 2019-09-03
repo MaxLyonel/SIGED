@@ -101,5 +101,21 @@
                 {% include 'SieRegularBundle:NoteConsultationParents:nota_especial.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% endif %}
         </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 7 %}
+                    {% if app.session.get('currentyear') == gestion and inscripcion.estadomatriculaTipo.id == 4 and tuicion == true and (inscripcion.institucioneducativaCurso.nivelTipo.id == 11 or inscripcion.institucioneducativaCurso.nivelTipo.id == 12 or inscripcion.institucioneducativaCurso.nivelTipo.id == 13) %}
+                        <div class="btn-group btn-group-justified">
+                        <div class="alert alert-warning">
+                            <strong>Importante:</strong> En caso de no haber reportado las calificaciones, se le hablita la opcioń para poder registrar</br> las mimas.
+                        </div>
+                        {{form_start(setNotasForm)}}
+                            <input type='hidden' id='idInscripcion' name='idInscripcion' value='{{inscripcion.id}}'>
+                        {{form_end(setNotasForm)}}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>

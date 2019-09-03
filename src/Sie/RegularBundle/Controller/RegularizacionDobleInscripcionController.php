@@ -98,7 +98,7 @@ class RegularizacionDobleInscripcionController extends Controller {
             //dump($arrayInscripciones);
             //die;
 
-            $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(6)));
+            $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(6,9)));
 
             return $this->render('SieRegularBundle:RegularizacionDobleInscripcion:result.html.twig',array('arrayInscripciones'=>$arrayInscripciones,'estados'=>$estados,'gestion'=>$gestion));
 

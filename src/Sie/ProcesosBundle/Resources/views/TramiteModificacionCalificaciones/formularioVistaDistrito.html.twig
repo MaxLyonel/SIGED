@@ -1,0 +1,134 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    <style type="text/css">
+        label{
+            font-weight: bold;
+        }
+        .jupper{
+            text-transform: uppercase;
+        }
+    </style>
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_index') }}">Tramites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-file"></i>
+                    Solicitud de Modificaciòn y/o Adiciòn de Calificaciones
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Formulario recepción distrito</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+
+        {% include 'SieProcesosBundle:TramiteModificacionCalificaciones:historial.html.twig' with { 'historial': historial} %}
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de recepción y verificación Distrito </h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="idTramite" value="{{idTramite}}">
+                    <div class="form-group">
+                        <label>¿El trámite es procedente?</label>
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="procedente" value="SI" required id="procedente1">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="procedente" value="NO" required id="procedente2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="divFinalizar" style="display:none">
+                        <label>¿Qué desea hacer con el trámite?</label>
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" checked="checked" name="subsanable" value="SI" required>
+                                Devolver trámite a la Unidad Educativa
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="subsanable" value="NO" required>
+                                Finalizar y cerrar trámite
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Observación</label>
+                        <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Adjuntar informe (Opcional)</label>
+                        <input type="file" name="informe" onchange="cargarArchivo(event);">
+                        <br>
+                    </div>
+                    <div class="form-group">
+                        <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript">
+        function validarRadio(){
+            if($('#procedente1').is(':checked')){
+                $('#divFinalizar').css('display','none');
+                // $('input[name="subsanable"]').removeAttr('required');
+            }else{
+                if($('#procedente2').is(':checked')){
+                    $('#divFinalizar').css('display','block');
+                }
+                // $('input[name="subsanable"]').attr('required','required');
+            }
+        }
+        $('input[name="procedente"]').on('change', function(){
+            validarRadio();
+        });
+        validarRadio();
+
+        function cargarArchivo(event){
+            var informe = event.target.files[0];
+            var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+            if(!allowedExtensions.exec(event.target.value)){
+                event.target.value = '';
+                Swal.fire(
+                      'Archivo incorrecto!',
+                      'El archivo adjunto debe ser una imagen o un archivo pdf',
+                      'warning'
+                    );
+                return false;
+            }else{
+                var megas = (informe.size / 1024)/1024;
+                if (megas > 2) {
+                    event.target.value = '';
+                    Swal.fire(
+                      'Tamaño no permitido!',
+                      'El archivo debe tener un peso menor a 2 mg',
+                      'warning'
+                    );
+                    return false;
+                }
+            }
+            this.informe = event.target.files[0];
+        }
+
+    </script>
+{% endblock %}

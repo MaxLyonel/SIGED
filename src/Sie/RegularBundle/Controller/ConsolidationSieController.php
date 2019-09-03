@@ -287,11 +287,20 @@ class ConsolidationSieController extends Controller {
                 ////////////////////////////////////////////////////////////////////new new by krlos
                 // //make the temp dir name
                 $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
+
+                if (is_readable($this->get('kernel')->getRootDir() . '/../web/empfiles')) {
+                    
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                }
+                //check if the file exist to create the same
                 if (!file_exists($dirtmp)) {
                     mkdir($dirtmp, 0770);
                 }else{
                   system('rm -fr ' . $dirtmp.'/*');
                 }
+
 
                 //move the file emp to the directory temp
                 $file = $oFile->move($dirtmp, $originalName);
@@ -330,7 +339,7 @@ class ConsolidationSieController extends Controller {
 
                 $objAllowUEQa = $this->get('funciones')->appValidationQuality(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27,48'));
                 if($objAllowUEQa){
-                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
+                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder cargar el archivo ');
                   system('rm -fr ' . $dirtmp);
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }

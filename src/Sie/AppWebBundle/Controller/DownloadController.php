@@ -478,21 +478,21 @@ class DownloadController extends Controller {
         switch ($version) {
             case 1:
                 # code...
-                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
-                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v1';
+                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
+                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v1';
 
                 break;
             case 2:
                 # code...
-                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v2';
-                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v2';
+                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v2';
+                 $nameReportInicial = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v2';
             
                 break;
             
             default:
                 # code...
-                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
-                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v1';
+                $nameReportPrimSecc  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
+                $nameReportInicial   = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v1';
                 break;
         }
         switch ($nivel) {
@@ -507,6 +507,7 @@ class DownloadController extends Controller {
                 $report = $this->container->getParameter('urlreportweb') . $nameReportPrimSecc.'.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
                 break;
           }
+        
         $response->setContent(file_get_contents($report));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -1058,11 +1059,11 @@ class DownloadController extends Controller {
     }
 
     public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
-        set_time_limit(200);
+        set_time_limit(500);
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/empfiles/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         // Generamos Archivo
@@ -1080,7 +1081,7 @@ class DownloadController extends Controller {
     }
 
     public function downloadArchsOlimpiadasTxtAction(Request $request) {
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/empfiles/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         //create response to donwload the file
@@ -1102,11 +1103,11 @@ class DownloadController extends Controller {
 
     //ROBÓTICA
     public function buildArchsOlimpiadasRoboticaTxtAction(Request $request, $gestion) {
-        set_time_limit(200);
+        set_time_limit(500);
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/empfiles/';
         $archivo = "archsOlimpiadasRoboticaTxt.zip";
 
         // Generamos Archivo
@@ -1123,7 +1124,7 @@ class DownloadController extends Controller {
     }
 
     public function downloadArchsOlimpiadasRoboticaTxtAction(Request $request) {
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/empfiles/';
         $archivo = "archsOlimpiadasRoboticaTxt.zip";
 
         //create response to donwload the file
@@ -1208,4 +1209,17 @@ class DownloadController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    public function tramiteModificacionCalificacionesAction(Request $request, $idTramite) {
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'tramite_modificacion_calificaciones_' . $idTramite . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_tramite_modificacion_calificaciones_ue_gral_v1_jqc.rptdesign&id_tramite=' . $idTramite . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
 }

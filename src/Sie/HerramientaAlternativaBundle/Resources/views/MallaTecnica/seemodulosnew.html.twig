@@ -55,20 +55,21 @@
                                 </div>
                             <div class="panel-body">
 
-                                {% if (malla.idacreditacion == '1') %}
-                                    {% if (malla.tothoras < '500') %}
-                                        <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
-                                    {% endif %}
-                                {% elseif (malla.idacreditacion == '20') %}
-                                    {% if (malla.tothoras < '500') %}
-                                        <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
-                                    {% endif %}
-                                {% elseif (malla.idacreditacion == '32') %}
-                                    {% if (malla.tothoras < '1000') %}
-                                        <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                {% if (app.session.get('ie_per_estado') != '0') %}
+                                    {% if (malla.idacreditacion == '1') %}
+                                        {% if (malla.tothoras < '500') %}
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                        {% endif %}
+                                    {% elseif (malla.idacreditacion == '20') %}
+                                        {% if (malla.tothoras < '500') %}
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                        {% endif %}
+                                    {% elseif (malla.idacreditacion == '32') %}
+                                        {% if (malla.tothoras < '1000') %}
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
-
                                 <br>
                                 {% if (malla.modulo!='') %}
 
@@ -103,8 +104,11 @@
                                                         <td data-title="Acciones" class="text-center">
                                                             {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                                             {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                                            <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
-                                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
+                                                            {% if (app.session.get('ie_per_estado') != '0') %}
+                                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
+                                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
+
+                                                             {% endif %}
 
                                                         </td>
                                                     </tr>

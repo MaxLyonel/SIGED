@@ -181,6 +181,8 @@ class Notas{
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$an['notaCuantitativa'],
                                                             'notaCualitativa'=>$an['notaCualitativa'],
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=> $this->literal($tn[$i])['abrev'],
@@ -198,10 +200,12 @@ class Notas{
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>0,
                                                             'notaCualitativa'=>'',
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$tn[$i],
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=> $this->literal($tn[$i])['abrev'],
-                                                            'idFila'=>$an['id'].''.$tn[$i]
+                                                            'idFila'=>$a['asignaturaId'].''.$tn[$i]
                                                         );
                             }
                         }
@@ -215,10 +219,12 @@ class Notas{
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$an['notaCuantitativa'],
                                                             'notaCualitativa'=>$an['notaCualitativa'],
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=>$this->literal($tn[$i]['abrev']),
-                                                            'idFila'=>$a['id'].''.$tn[$i]
+                                                            'idFila'=>$an['id'].''.$tn[$i]
                                                         );
                                     $existe = 'si';
                                     break;
@@ -232,10 +238,12 @@ class Notas{
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>0,
                                                             'notaCualitativa'=>'',
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$i,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=>$this->literal($tn[$i]['abrev']),
-                                                            'idFila'=>$a['id'].''.$tn[$i]
+                                                            'idFila'=>$a['asignaturaId'].''.$tn[$i]
                                                         );
                             }
                         }
@@ -260,11 +268,28 @@ class Notas{
                 vuelve:
                 if($conArea == true){
                     // Obtenemos las areas o campos del estudiante
+                    // $asignaturas = $this->em->createQueryBuilder()
+                    //             ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    //             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    //             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    //             ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    //             ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
+                    //             ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
+                    //             ->orderBy('at.id','ASC')
+                    //             ->addOrderBy('asit.id','ASC')
+                    //             ->where('ei.id = :idInscripcion')
+                    //             ->setParameter('idInscripcion',$idInscripcion)
+                    //             ->getQuery()
+                    //             ->getResult();
+
+                    // REALIZAMOS LA VUELTA COMPLETA PARA OBTENER LAS MATERIAS CORRECTAS
                     $asignaturas = $this->em->createQueryBuilder()
                                 ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.institucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ieco.insitucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','ea.estudianteInscripcion = ei.id and ea.institucioneducativaCursoOferta = ieco.id')
                                 ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
                                 ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
                                 ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
@@ -276,18 +301,18 @@ class Notas{
                                 ->getResult();
                 }else{
                     // Obtenemos las asigganturas sin areas o campos del estudiante
-                    $asignaturas = $this->em->createQueryBuilder()
-                                ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
-                                ->groupBy('asit.id, asit.asignatura, ea.id')
-                                ->orderBy('asit.id','ASC')
-                                ->where('ei.id = :idInscripcion')
-                                ->setParameter('idInscripcion',$idInscripcion)
-                                ->getQuery()
-                                ->getResult();
+                    // $asignaturas = $this->em->createQueryBuilder()
+                    //             ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    //             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    //             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    //             ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    //             ->groupBy('asit.id, asit.asignatura, ea.id')
+                    //             ->orderBy('asit.id','ASC')
+                    //             ->where('ei.id = :idInscripcion')
+                    //             ->setParameter('idInscripcion',$idInscripcion)
+                    //             ->getQuery()
+                    //             ->getResult();
                 }
 
                 // dump($asignaturas);die;
@@ -303,7 +328,7 @@ class Notas{
                 $nuevaArea = false;
                 foreach ($cursoOferta as $co) {
                     // LA MATERIA TECNICA GENERAL Y ESPECILIZADA NO SE AGREGAN AUTOMATICAMENTE A TODOS LOS ESTUDIANTES A PARTIR DE LA GESTION 2019
-                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039) or ($gestion >= 2019 and $nivel != 13 ))) {
+                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039) or ($gestion >= 2019 and $nivel != 13) or ($gestion >= 2019 and $nivel == 13 and $grado<3))) {
 
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
@@ -419,6 +444,8 @@ class Notas{
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>$an['idNota'],
                                                             'nota'=>$valorNota,
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$an['idNotaTipo'],
                                                             'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                             'bimestre'=>$an['notaTipo'],
@@ -440,9 +467,11 @@ class Notas{
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>$valorNota,
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>$i,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
-                                                            'bimestre'=>$this->literalnota($i)['titulo'],
+                                                            'bimestre'=>$this->literal($i)['titulo'],
                                                             'idFila'=>$a['asignaturaId'].''.$i
                                                         );
                             }
@@ -461,6 +490,8 @@ class Notas{
                                                                 'id'=>$cont."-5",
                                                                 'idEstudianteNota'=>$an['idNota'],
                                                                 'nota'=>$an['notaCuantitativa'],
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
                                                                 'idNotaTipo'=>$an['idNotaTipo'],
                                                                 'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                                 'bimestre'=>$an['notaTipo'],
@@ -476,6 +507,8 @@ class Notas{
                                                             'id'=>$cont."-5",
                                                             'idEstudianteNota'=>'nuevo',
                                                             'nota'=>'',
+                                                            'notaNueva'=>'',
+                                                            'notaCualitativaNueva'=>'',
                                                             'idNotaTipo'=>5,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
                                                             'bimestre'=>'Promedio',
@@ -503,7 +536,7 @@ class Notas{
             * Recorremos el array generado de las notas y recuperamos los titulos de las notas, para la tabla
             */
             $titulos_notas = array();
-            if(count($notasArray)>0){
+            if(count($notasArray)>0 and isset($notasArray[0]['notas'])){
                 $titulos = $notasArray[0]['notas'];
                 for($i=0;$i<count($titulos);$i++){
                     $titulos_notas[] = array('titulo'=>$titulos[$i]['bimestre']);
@@ -528,6 +561,8 @@ class Notas{
                                                              'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                              'notaCualitativa'=>$c->getNotaCualitativa(),
                                                              'notaCuantitativa'=>0,
+                                                             'notaCuantitativaNueva'=>'',
+                                                             'notaCualitativaNueva'=>'',
                                                              'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                              'idFila'=>$idInscripcion.''.$i
                                                             );
@@ -544,7 +579,9 @@ class Notas{
                                                          'idNotaTipo'=>$i,
                                                          'notaCualitativa'=>'',
                                                          'notaCuantitativa'=>'',
-                                                         'notaTipo'=>$this->literal($i).' '.$tipoNota,
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
+                                                         'notaTipo'=>$this->literal($i)['titulo'],
                                                          'idFila'=>$idInscripcion.''.$i
                                                         );
                             $existe = true;
@@ -563,6 +600,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                          'idFila'=>$idInscripcion.'18'
                                                         );
@@ -579,7 +618,9 @@ class Notas{
                                                      'idNotaTipo'=>18,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal(18).' '.$tipoNota,
+                                                     'notaCuantitativaNueva'=>'',
+                                                     'notaCualitativaNueva'=>'',
+                                                     'notaTipo'=>$this->literal(18)['titulo'],
                                                      'idFila'=>$idInscripcion.'18'
                                                     );
                         $existe = true;
@@ -613,6 +654,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                          'idFila'=>$idInscripcion.''.$i
                                                         );
@@ -629,7 +672,9 @@ class Notas{
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i).' '.$tipoNot,
+                                                     'notaCuantitativaNueva'=>'',
+                                                     'notaCualitativaNueva'=>'',
+                                                     'notaTipo'=>$this->literal($i)['titulo'],
                                                      'idFila'=>$idInscripcion.''.$i
                                                     );
                         $existe = true;
@@ -648,6 +693,8 @@ class Notas{
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
                                                          'notaCuantitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativaNueva'=>'',
+                                                         'notaCualitativaNueva'=>'',
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo(),
                                                          'idFila'=>$idInscripcion.'5'
                                                         );
@@ -664,6 +711,8 @@ class Notas{
                                                      'idNotaTipo'=>5,
                                                      'notaCualitativa'=>'',
                                                      'notaCuantitativa'=>'',
+                                                     'notaCuantitativaNueva'=>'',
+                                                     'notaCualitativaNueva'=>'',
                                                      'notaTipo'=>'Promedio anual',
                                                      'idFila'=>$idInscripcion.'5'
                                                     );
@@ -683,6 +732,7 @@ class Notas{
                 'gestionActual'=>$this->session->get('currentyear'),
                 'idInscripcion'=>$idInscripcion,
                 'gestion'=>$gestion,
+                'grado'=>$grado,
                 'tipoNota'=>$tipo,
                 'estadosPermitidos'=>$estadosPermitidos,
                 'cantidadFaltantes'=>$cantidadFaltantes,
@@ -794,7 +844,14 @@ class Notas{
         );
     }
 
-    public function literal($num){
+    public function literal($idNota){
+        $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
+        $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
+        
+        return $bim;
+    }
+
+    public function literalNum($num){
         switch ($num) {
             case '1': $lit = 'Primer'; break;
             case '2': $lit = 'Segundo'; break;
@@ -909,7 +966,8 @@ die;/*
                                     $anterior['id'] = $updateNota->getId();
                                     $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
+
 
                                     $updateNota->setFechaModificacion(new \DateTime('now'));
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -920,7 +978,7 @@ die;/*
                                     $nuevo['id'] = $updateNota->getId();
                                     $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                                     
                                     $this->funciones->setLogTransaccion(
                                         $updateNota->getId(),
@@ -941,7 +999,7 @@ die;/*
                                     $anterior['id'] = $updateNota->getId();
                                     $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
-                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                     $updateNota->setFechaModificacion(new \DateTime('now'));
                                     $updateNota->setNotaCuantitativa($notas[$i]);
@@ -951,7 +1009,7 @@ die;/*
                                     $nuevo['id'] = $updateNota->getId();
                                     $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
-                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                     $this->funciones->setLogTransaccion(
                                         $updateNota->getId(),
@@ -1027,7 +1085,7 @@ die;/*
                                 $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $anterior['notaCuantitativa'] = $updateCualitativa->getNotaCuantitativa();
                                 $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                                $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                $anterior['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
 
 
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
@@ -1049,7 +1107,7 @@ die;/*
                                 $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $nuevo['notaCuantitativa'] = $updateCualitativa->getNotaCuantitativa();
                                 $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                                $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                $nuevo['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateCualitativa->getId(),
@@ -1125,7 +1183,7 @@ die;/*
                                     $anterior['id'] = $updateNota->getId();
                                     $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                                     $updateNota->setUsuarioId($this->session->get('userId'));
@@ -1139,7 +1197,7 @@ die;/*
                                     $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
                                     $nuevo['fechaRegistro'] = $updateNota->getFechaRegistro()->format('d-m-Y');
-                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                 }else{
                                     // Registro de notas estudiante en el log
@@ -1147,7 +1205,7 @@ die;/*
                                     $anterior['id'] = $updateNota->getId();
                                     $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
-                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                     $updateNota->setNotaCuantitativa($notas[$i]);
                                     $updateNota->setUsuarioId($this->session->get('userId'));
@@ -1161,7 +1219,7 @@ die;/*
                                     $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                     $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                                     $nuevo['fechaRegistro'] = $updateNota->getFechaRegistro()->format('d-m-Y');
-                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                                 }
 
                                 $this->funciones->setLogTransaccion(
@@ -1196,7 +1254,7 @@ die;/*
                                 $anterior['id'] = $existeNotaCuantitativa->getId();
                                 $anterior['notaTipo'] = $existeNotaCuantitativa->getNotaTipo()->getId();
                                 $anterior['notaCuantitativa'] = $existeNotaCuantitativa->getNotaCuantitativa();
-                                $anterior['fechaModificacion'] = $existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y');
+                                $anterior['fechaModificacion'] = ($existeNotaCuantitativa->getFechaModificacion())?$existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y'):'';
 
                                 $existeNotaCuantitativa->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $existeNotaCuantitativa->setUsuarioId($this->session->get('userId'));
@@ -1209,7 +1267,7 @@ die;/*
                                 $nuevo['id'] = $existeNotaCuantitativa->getId();
                                 $nuevo['notaTipo'] = $existeNotaCuantitativa->getNotaTipo()->getId();
                                 $nuevo['notaCuantitativa'] = $existeNotaCuantitativa->getNotaCuantitativa();
-                                $nuevo['fechaModificacion'] = $existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y');
+                                $nuevo['fechaModificacion'] = ($existeNotaCuantitativa->getFechaModificacion())?$existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $existeNotaCuantitativa->getId(),
@@ -1231,7 +1289,7 @@ die;/*
                                 $anterior['id'] = $updateNota->getId();
                                 $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
-                                $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
@@ -1244,7 +1302,7 @@ die;/*
                                 $nuevo['id'] = $updateNota->getId();
                                 $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
-                                $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $newNota->getId(),
@@ -1305,7 +1363,7 @@ die;/*
                                 $anterior['id'] = $updateCualitativa->getId();
                                 $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                                $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                $anterior['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
 
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
@@ -1318,7 +1376,7 @@ die;/*
                                 $nuevo['id'] = $updateCualitativa->getId();
                                 $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                                $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                $nuevo['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateCualitativa->getId(),
@@ -1440,7 +1498,14 @@ die;/*
 
                 if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($arrayPromedios) > 0 ) or ($gestion == 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
-                    $nuevoEstado = 5; // Aprobado
+                    
+                    if($inscripcion->getEstadomatriculaInicioTipo() != null and $inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+                        $nuevoEstado = 26; // promovido por postbachillerato
+
+                    }else{
+                        $nuevoEstado = 5; // Aprobado
+                    }
+
                     if($tipo == 'Bimestre'){
                         foreach ($arrayPromedios as $ap) {
                             if($ap < 51){
@@ -1477,39 +1542,55 @@ die;/*
 
                             // PARA PRIMARIA A PARTIR DE LA GESTION 2019 PARA LA PROMOCION SE EVALUARA EL PROMEDIO ANUAL GENERAL
                             if ($gestion >= 2019 and $nivel == 12) {
+                                // CALCULAMOS EL PROMEDIO GENERAL PRIMARIA
+                                $sumaPrimaria = 0;
+                                foreach ($arrayPromedios as $ap) {
+                                    $sumaPrimaria = $sumaPrimaria + $ap;
+                                }
+                                $promedioPrimaria = round($sumaPrimaria/count($arrayPromedios));
+
+                                // OBTENEMOS EL REGISTRO DE LA NOTA PROMEDIO
                                 $promedioGeneral = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array(
                                     'estudianteInscripcion'=>$inscripcion->getId(),
                                     'notaTipo'=>5
                                 ));
+                                
                                 if($promedioGeneral){
-                                    if ($promedioGeneral->getNotaCuantitativa() < 51) {
-                                        $nuevoEstado = 28; // ESTADO RETENIDO 28 - REEMPLAZA ESTADO REPROBADO 11
-                                    } else {
-                                        $nuevoEstado = 5;
-                                    }
-
-                                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
-                                    $this->em->persist($inscripcion);
-                                    $this->em->flush();
-                                    
-                                    /// Registro den log de estado de matricula
-                                    $nuevo = [];
-                                    $nuevo['id'] = $inscripcion->getId();
-                                    $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
-
-                                    if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
-                                        $this->funciones->setLogTransaccion(
-                                            $inscripcion->getId(),
-                                            'estudiante_inscripcion',
-                                            'U',
-                                            $request->server->get('HTTP_HOST'),
-                                            $nuevo,
-                                            $anterior,
-                                            'SERVICIO NOTAS - ESTADO MATRICULA',
-                                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                                        );
-                                    }
+                                    // SI EXISTE EL PROMEDIO GENERAL LO ACTUALIZAMOS
+                                    $this->modificarNotaCualitativa($promedioGeneral->getId(), '', $promedioPrimaria);
+                                }else{
+                                    // SI NO EXISTE LO REGISTRAMOS
+                                    $promedioGeneral = $this->registrarNotaCualitativa(5, $idInscripcion, '', $promedioPrimaria);
                                 }
+
+                                if ($promedioGeneral->getNotaCuantitativa() < 51) {
+                                    $nuevoEstado = 28; // ESTADO RETENIDO 28 - REEMPLAZA ESTADO REPROBADO 11
+                                } else {
+                                    $nuevoEstado = 5;
+                                }
+
+                                $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+                                $this->em->persist($inscripcion);
+                                $this->em->flush();
+                                
+                                /// Registro den log de estado de matricula
+                                $nuevo = [];
+                                $nuevo['id'] = $inscripcion->getId();
+                                $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                                if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
+                                    $this->funciones->setLogTransaccion(
+                                        $inscripcion->getId(),
+                                        'estudiante_inscripcion',
+                                        'U',
+                                        '',
+                                        $nuevo,
+                                        $anterior,
+                                        'SERVICIO NOTAS - ESTADO MATRICULA',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                    );
+                                }
+
                             }else{
 
                                 $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
@@ -1722,7 +1803,7 @@ die;/*
             $anterior['notaTipo'] = $datosNota->getNotaTipo()->getId();
             $anterior['notaCuantitativa'] = $datosNota->getNotaCuantitativa();
             $anterior['notaCualitativa'] = $datosNota->getNotaCualitativa();
-            $anterior['fechaModificacion'] =  ($datosNota->getFechaModificacion())? $datosNota->getFechaModificacion()->format('d-m-Y'):'';
+            $anterior['fechaModificacion'] = ($datosNota->getFechaModificacion())?$datosNota->getFechaModificacion()->format('d-m-Y'):'';
 
             $datosNota->setNotaCuantitativa($notaCuantitativa);
             $datosNota->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
@@ -1737,7 +1818,7 @@ die;/*
             $nuevo['notaTipo'] = $datosNota->getNotaTipo()->getId();
             $nuevo['notaCuantitativa'] = $datosNota->getNotaCuantitativa();
             $nuevo['notaCualitativa'] = $datosNota->getNotaCualitativa();
-            $nuevo['fechaModificacion'] =  ($datosNota->getFechaModificacion())? $datosNota->getFechaModificacion()->format('d-m-Y'):'';
+            $nuevo['fechaModificacion'] = ($datosNota->getFechaModificacion())?$datosNota->getFechaModificacion()->format('d-m-Y'):'';
             
             $this->funciones->setLogTransaccion(
                 $datosNota->getId(),
@@ -1757,12 +1838,12 @@ die;/*
     /**
     * REGISTRO Y MODIFICACION DE NOTAS CUALITATIVAS (estudiante_nota_cualitativa) 
     */
-    public function registrarNotaCualitativa($idNotaTipo, $idEstudianteInscripcion, $notaCualitativa){
+    public function registrarNotaCualitativa($idNotaTipo, $idEstudianteInscripcion, $notaCualitativa, $notaCuantitativa){
         // Reiniciamos la secuencia de la tabla notas
         $newNotaCualitativa = new EstudianteNotaCualitativa();
         $newNotaCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo));
         $newNotaCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idEstudianteInscripcion));
-        $newNotaCualitativa->setNotaCuantitativa(0);
+        $newNotaCualitativa->setNotaCuantitativa($notaCuantitativa);
         $newNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
         $newNotaCualitativa->setUsuarioId($this->session->get('userId'));
         $newNotaCualitativa->setFechaRegistro(new \DateTime('now'));
@@ -1795,7 +1876,7 @@ die;/*
         return $newNotaCualitativa;
     }
 
-    public function modificarNotaCualitativa($idEstudianteNotaCualitativa, $notaCualitativa){
+    public function modificarNotaCualitativa($idEstudianteNotaCualitativa, $notaCualitativa, $notaCuantitativa){
         $datosNotaCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa);
         if($datosNotaCualitativa){
 
@@ -1804,9 +1885,10 @@ die;/*
             $anterior['id'] = $datosNotaCualitativa->getId();
             $anterior['notaTipo'] = $datosNotaCualitativa->getNotaTipo()->getId();
             $anterior['notaCualitativa'] = $datosNotaCualitativa->getNotaCualitativa();
-            $anterior['fechaModificacion'] =  ($datosNotaCualitativa->getFechaModificacion())? $datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
+            $anterior['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
 
             $datosNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
+            $datosNotaCualitativa->setNotaCuantitativa(mb_strtoupper($notaCuantitativa, 'utf-8'));
             $datosNotaCualitativa->setUsuarioId($this->session->get('userId'));
             $datosNotaCualitativa->setFechaModificacion(new \DateTime('now'));
             $this->em->persist($datosNotaCualitativa);
@@ -1817,10 +1899,10 @@ die;/*
             $nuevo['id'] = $datosNotaCualitativa->getId();
             $nuevo['notaTipo'] = $datosNotaCualitativa->getNotaTipo()->getId();
             $nuevo['notaCualitativa'] = $datosNotaCualitativa->getNotaCualitativa();
-            $nuevo['fechaModificacion'] =  ($datosNotaCualitativa->getFechaModificacion())? $datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
+            $nuevo['fechaModificacion'] = ($datosNotaCualitativa->getFechaModificacion())?$datosNotaCualitativa->getFechaModificacion()->format('d-m-Y'):'';
             
             $this->funciones->setLogTransaccion(
-                $updateCualitativa->getId(),
+                $datosNotaCualitativa->getId(),
                 'estudiante_nota_cualitativa',
                 'U',
                 '',
@@ -2062,7 +2144,7 @@ die;/*
                                                  'idEstudianteNotaCualitativa'=>'nuevo',
                                                  'idNotaTipo'=>18,
                                                  'notaCualitativa'=>'',
-                                                 'notaTipo'=>$this->literal(18).' '.$tipoNota
+                                                 'notaTipo'=>$this->literal(18)
                                                 );
                     $existe = true;
                 }
@@ -2089,7 +2171,7 @@ die;/*
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
                                                      'idNotaTipo'=>$i,
                                                      'notaCualitativa'=>'',
-                                                     'notaTipo'=>$this->literal($i).' '.$tipoNota
+                                                     'notaTipo'=>$this->literal($i)
                                                     );
                         $existe = true;
                     }
@@ -2211,7 +2293,7 @@ die;/*
                             $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                             $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                             $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                            $anterior['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
+                            $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -2229,7 +2311,7 @@ die;/*
                             $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                             $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                             $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                            $nuevo['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
+                            $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                             
                             $this->funciones->setLogTransaccion(
                                 $updateNota->getId(),
@@ -2294,9 +2376,7 @@ die;/*
                             $anterior['id'] = $updateCualitativa->getId();
                             $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                             $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                            $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
-                            $anterior['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
-
+                            $anterior['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
 
                             $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                             $updateCualitativa->setUsuarioId($this->session->get('userId'));
@@ -2309,7 +2389,8 @@ die;/*
                             $nuevo['id'] = $updateCualitativa->getId();
                             $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                             $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                            $nuevo['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
+                            $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                            $nuevo['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
                             
                             $this->funciones->setLogTransaccion(
                                 $updateCualitativa->getId(),
@@ -2379,7 +2460,7 @@ die;/*
                                 $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                                 $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                $anterior['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
+                                $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                 if($nivel == 11 or $nivel == 1 or $nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -2397,7 +2478,7 @@ die;/*
                                 $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
                                 $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                $nuevo['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
+                                $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateNota->getId(),
@@ -2438,7 +2519,7 @@ die;/*
                                 $arrayNota['notaCuantitativa'] = $existeNotaCuantitativa->getNotaCuantitativa();
                                 $arrayNota['notaCualitativa'] = $existeNotaCuantitativa->getNotaCualitativa();
                                 $arrayNota['fechaRegistro'] = $existeNotaCuantitativa->getFechaRegistro()->format('d-m-Y');
-                                $arrayNota['fechaModificacion'] = $existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y');
+                                $arrayNota['fechaModificacion'] = ($existeNotaCuantitativa->getFechaModificacion())?$existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $existeNotaCuantitativa->getId(),
@@ -2460,7 +2541,7 @@ die;/*
                                 $anterior['id'] = $updateNota->getId();
                                 $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                $anterior['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
+                                $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
@@ -2472,8 +2553,7 @@ die;/*
                                 $nuevo['id'] = $updateNota->getId();
                                 $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
                                 $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
-                                $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
-                                $nuevo['fechaModificacion'] =  ($updateNota->getFechaModificacion())? $updateNota->getFechaModificacion()->format('d-m-Y'):'';
+                                $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateNota->getId(),
@@ -2534,7 +2614,7 @@ die;/*
                                 $anterior['id'] = $updateCualitativa->getId();
                                 $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                                $anterior['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
+                                $anterior['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
 
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
@@ -2547,7 +2627,7 @@ die;/*
                                 $nuevo['id'] = $updateCualitativa->getId();
                                 $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
                                 $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
-                                $nuevo['fechaModificacion'] =  ($updateCualitativa->getFechaModificacion())? $updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
+                                $nuevo['fechaModificacion'] = ($updateCualitativa->getFechaModificacion())?$updateCualitativa->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
                                     $updateCualitativa->getId(),
@@ -2572,9 +2652,88 @@ die;/*
         }
     }
 
-    public function literalnota($idNota){
-        $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
-        $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
-        return $bim;
+    /*==========================================================================
+    =             REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS            =
+    ==========================================================================*/
+    
+    /**
+     * [registroNotasParaMateria description]
+     * @param  integer $idco [id curso oferta]
+     * @return array       [datos de las notas cualitativas y cuantitativas que se deben llenar]
+     */
+    public function llenarNotasMateriaAntes($idInscripcion, $idsco){
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $curso = $inscripcion->getInstitucioneducativaCurso();
+        $sie = $curso->getInstitucioneducativa()->getId();
+        $gestion = $curso->getGestionTipo()->getId();
+        $nivel = $curso->getNivelTipo()->getId();
+
+        $operativo = $this->funciones->obtenerOperativo($sie, $gestion);
+
+        $cursosOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('id'=>$idsco));
+        $cont = 0;
+        $cuantitativas = [];
+        
+        if($operativo > 1){
+            if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 11)) {
+                foreach ($cursosOferta as $key => $co) {
+
+                    $cuantitativas[$cont] = array(
+                        'idco'=>$co->getId(),
+                        'idAsignatura'=>$co->getAsignaturaTipo()->getId(),
+                        'asignatura'=>$co->getAsignaturaTipo()->getAsignatura(),
+                    );
+
+                    for ($i=1; $i < $operativo; $i++) { 
+                        $cuantitativas[$cont]['notas'][] = array(
+                            'bimestre'=>$i.' Bim',
+                            'idNotaTipo'=>$i,
+                            'nota'=>'',
+                            'notaCualitativa'=>''
+                        );
+                    }
+                    $cont++;
+                }   
+            }
+        }
+
+        $cualitativas = [];
+        // if($gestion < 2019 or ($gestion >= 2019 and $nivel == 11)){
+        //     for ($i=1; $i < $operativo; $i++) {
+        //         $cualitativas[] = array(
+        //             'bimestre'=>$this->literal($i).' Bimestre',
+        //             'idNotaTipo'=>$i,
+        //             'nota'=>'',
+        //             'notaCualitativa'=>''
+        //         );
+        //     }
+        // }
+
+        // if($nivel == 11 and $operativo >= 4){
+        //     $cualitativas[] = array(
+        //         'bimestre'=>'Valoración anual',
+        //         'idNotaTipo'=>18,
+        //         'nota'=>'',
+        //         'notaCualitativa'=>''
+        //     );
+        // }
+
+
+        $data = [
+            'cuantitativas'=>$cuantitativas,
+            'cualitativas'=>$cualitativas,
+            'idInscripcion'=>$idInscripcion,
+            'sie'=>$sie,
+            'gestion'=>$gestion,
+            'nivel'=>$nivel,
+            'operativo'=>$operativo,
+        ];
+
+        return $data;
     }
+    
+    /*=====  End of  REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS  ======*/
+    
+    
+    
 }

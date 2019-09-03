@@ -136,4 +136,88 @@ class JdpDelegadoInscripcionJuegos
     {
         return $this->comisionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\LugarTipo
+     */
+    private $lugarTipo;
+
+
+    /**
+     * Set gestionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
+     * @return JdpDelegadoInscripcionJuegos
+     */
+    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
+    {
+        $this->gestionTipo = $gestionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GestionTipo 
+     */
+    public function getGestionTipo()
+    {
+        return $this->gestionTipo;
+    }
+
+    /**
+     * Set lugarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\LugarTipo $lugarTipo
+     * @return JdpDelegadoInscripcionJuegos
+     */
+    public function setLugarTipo(\Sie\AppWebBundle\Entity\LugarTipo $lugarTipo = null)
+    {
+        $this->lugarTipo = $lugarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get lugarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\LugarTipo 
+     */
+    public function getLugarTipo()
+    {
+        return $this->lugarTipo;
+    }
+    /**
+     * @var string
+     */
+    private $rutaImagen;
+
+
+    /**
+     * Set rutaImagen
+     *
+     * @param string $rutaImagen
+     * @return JdpDelegadoInscripcionJuegos
+     */
+    public function setRutaImagen($rutaImagen)
+    {
+        $this->rutaImagen = $rutaImagen;
+    
+        return $this;
+    }
+
+    /**
+     * Get rutaImagen
+     *
+     * @return string 
+     */
+    public function getRutaImagen()
+    {
+        return $this->rutaImagen;
+    }
 }

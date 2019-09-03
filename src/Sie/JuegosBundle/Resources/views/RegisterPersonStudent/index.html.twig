@@ -451,8 +451,7 @@
 
     };
 
-    var registerPerson = function(){
-        
+    var registerPerson = function(){        
         var formData = $('#idFormPersonToRegister').serialize()
         // $('#modal').modal('hide');
         $.ajax({
@@ -531,6 +530,36 @@
         }
 
     };
+
+    var confirmaFoto = function(){
+        var r = confirm("¿ Está seguro de modificar la fotografía ?");
+        if (r == true) {
+            var formulario = $('#formFoto')[0];
+            var formData = new FormData(formulario);
+            alert("correcto");return false;
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_documento_firma_modifica_guarda'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#modal').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    $('#modal').modal('hide');
+                },
+                success: function (data) {
+                    $('#img'+$('#form_id').val()+'').empty();
+                    $('#img'+$('#form_id').val()+'').append('<img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,'+escape(data.firma1)+'" />');
+                },
+                error: function(error){
+                    $('#modal').modal('toggle');
+                },
+            }); 
+            return true;
+        } else {
+            return false;
+        }
+    }; 
 
     </script>
    
