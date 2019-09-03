@@ -1,0 +1,215 @@
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutRegular.html.twig' %} #}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Aceleración Educativa <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index', {'tipo':2})}}">Trámites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Observación</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Observación del trámite</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form id="form_observacion" autocomplete="off">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="rude">Código RUDE</label>
+                                        <input type="text" class="form-control noedit" id="rude" name="rude" value="{{ rude }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre del Estudiante</label>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
+                                    <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
+                                    <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
+                                    <div class="form-group">
+                                        <label for="informe">Informe Psicopedagógico</label>
+                                        <input type="hidden" class="form-control" id="informe" name="informe" value="{{ informe }}">
+                                        <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/talento/'~ informe )}}" target="_blank">Documento adjunto</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
+                                        <input type="hidden" class="form-control" id="solicitud_tutor" name="solicitud_tutor" value="{{ solicitud_tutor }}">
+                                        <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ solicitud_tutor )}}" target="_blank">Documento adjunto</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="informe_comision">Informe Complementario</label>
+                                        <input type="hidden" class="form-control" id="informe_comision" name="informe_comision" value="{{ informe_comision }}">
+                                        {% if informe_comision|length > 0%}
+                                        <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ informe_comision )}}" target="_blank">Documento adjunto</a>
+                                        {% else %}
+                                        <a class="form-control text-danger" role="button">Sin documento</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                {# <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="procede_aceleracion">¿Procede Aceleración?</label>
+                                        <input type="text" class="form-control noedit" id="procede_aceleracion" name="procede_aceleracion" value="{{ procede_aceleracion }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_cantidad">Grados a Acelerar</label>
+                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" value="{{ grado_cantidad }}" disabled>
+                                    </div>
+                                </div> #}
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_acelerar"><b>Grados a Acelerar</b></label><br>
+                                        <span>{{ grado_acelerar }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_inscripcion"><b>Inscrito en la Gestión Actual</b></label><br>
+                                        <span>{{ grado_inscripcion }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="observacion">Observación</label>
+                                        <textarea rows="3" class="form-control" id="observacion" name="observacion" placeholder="Describa la observación para la devolución o para terminar el trámite." required> {{ observacion }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label><input type="radio" name="optradio" value="SI" required>Devolver trámite</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label><input type="radio" name="optradio" value="NO" required>Finalizar trámite</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="float-left"><b class="text-danger">Nota:</b> Tome encuenta, si desea devolver o no el trámite.</h5>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <div id="envio"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="guardar" onclick="sendObservacion()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() {
+            $("#envio").html('<h5>¿Está seguro(a) de registrar la observación del trámite?</h5>');
+        });
+        $('.noedit').keydown(function() {
+            return false;
+        });
+        function mesage(tipo, titulo, msg, estado) {
+            $("#envio").append('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            if (estado == true) {
+                setTimeout(function () { $("#envio").empty(); }, 3500);
+            }
+        }
+
+        function clearInput() {
+            $("#observacion").val('');
+            $("input:radio").attr("checked", false);
+        }
+
+        $("#form_observacion").submit(function (event) {
+            event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de registrar la observación del trámite?</h5>');
+            $("#tramite_st").val(0);
+            $("#guardar").attr('disabled', false);
+            $("#modalConfirm").modal('show');
+        });
+
+        function sendObservacion() {
+            $("#guardar").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_acelera_save_obs'),
+                data: {'tramite_id': $('#tramite_id').val(), 'institucioneducativa_id': $('#institucioneducativa_id').val(),  'observacion': $('#observacion').val(), 'procede_obs': document.querySelector('input[name="optradio"]:checked').value},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#envio").empty();
+                    if (data.estado == 200) {
+                        $("#guardar").attr('disabled', true);
+                        clearInput();
+                        $("#tramite_st").val(1);
+                        mesage('info', 'Notificación', data.msg, false);
+                    } else {
+                        $("#guardar").attr('disabled', false);
+                        mesage('danger', 'Alerta', data.msg, false);
+                    }
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        }
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val() == 1) {
+                location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+            }
+        }
+    </script>
+{% endblock %}

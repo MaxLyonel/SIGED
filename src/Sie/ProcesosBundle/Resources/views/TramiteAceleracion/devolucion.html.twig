@@ -1,0 +1,425 @@
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutHerramienta.html.twig' %} #}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Aceleración Educativa <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index', {'tipo':1})}}">Trámites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Devolución</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Devolución de Aceleración</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="observacion" class="text-danger"><b>Observación Distrital</b></label>
+                            <textarea class="form-control" name="observacion" id="observacion" disabled>{{ observacion }}</textarea>
+                        </div>
+                        <hr>
+                        <form id="registro" autocomplete="off">
+                            <h4>Datos del estudiante</h4>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombres</label>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante.nombre }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="paterno">Paterno</label>
+                                        <input type="text" class="form-control noedit" id="paterno" name="paterno" value="{{ estudiante.paterno }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="materno">Materno</label>
+                                        <input type="text" class="form-control noedit" id="materno" name="materno" value="{{ estudiante.materno }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="cedula">Cédula de Identidad</label>
+                                        <input type="text" class="form-control noedit" id="cedula" name="cedula" value="{{ estudiante.cedula }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="complemento">Complemento</label>
+                                        <input type="text" class="form-control noedit" id="complemento" name="complemento" value="{{ estudiante.complemento }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <h4>Datos de Inscripción</h4>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="codigo_sie">Código SIE</label>
+                                        <input type="text" class="form-control noedit" id="codigo_sie" name="codigo_sie" value="{{ inscripcion.codigo_sie }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="institucion_educativa">Unidad Educativa</label>
+                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa" value="{{ inscripcion.nombre_sie }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="nivel">Nivel</label>
+                                        <input type="text" class="form-control noedit" id="nivel" name="nivel" value="{{ inscripcion.nivel }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="grado">Grado</label>
+                                        <input type="text" class="form-control noedit" id="grado" name="grado" value="{{ inscripcion.grado }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="paralelo">Paralelo</label>
+                                        <input type="text" class="form-control noedit" id="paralelo" name="paralelo" value="{{ inscripcion.paralelo }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="turno">Turno</label>
+                                        <input type="text" class="form-control noedit" id="turno" name="turno" value="{{ inscripcion.turno }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <h4>Datos de Talento Extraordinario</h4>
+                            <div class="row">
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="tipo_talento">Tipo de Talento Extraordinario</label>
+                                        <input type="text" class="form-control noedit" id="tipo_talento" name="tipo_talento" value="{{ talento.tipo_talento }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="puede_acelerar">¿Puede Acelerar?</label>
+                                        <input type="text" class="form-control noedit" id="puede_acelerar" name="puede_acelerar" value="{{ talento.puede_acelerar }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="centro_tramite">Tramitó en Centro Educativo</label>
+                                        <input type="text" class="form-control noedit" id="centro_tramite" name="centro_tramite" value="{{ talento.centro_tramite }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <div class="form-group" id="inf_psico">
+                                        <label for="informe">Informe Psicopedagógico</label>
+                                        <input type="hidden" class="form-control" id="informe" name="informe" value="{{ talento.informe }}">
+                                        <a class="form-control text-primary" role="button" href="{{asset('uploads/archivos/flujos/tramite/talento/')}}{{ talento.informe }}" id="url_informe" target="_blank">Documento adjunto</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4>Datos de Solicitud</h4>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
+                                        <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf,.doc,.docx" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="informe_comision">Informe Complementario</label>
+                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" {% if primer_tramite == 'SI' %} disabled {% endif %} required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <input type="hidden" id="estudiante_id" name="estudiante_id" value="{{ estudiante.estudiante_id }}">
+                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id" value="{{ estudiante.estudiante_ins_id }}">
+                                    <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
+                                    <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
+                                    <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
+                                    <input type="hidden" id="primer_tramite" name="primer_tramite" value="{{ primer_tramite }}">
+                                    <div class="form-group">
+                                        <label for="grado_cantidad">Hasta que Grado va Acelerar</label>
+                                        <select class="form-control" id="grado_cantidad" name="grado_cantidad" onchange="selectGrado()" required>
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            {% for grado in grados %}
+                                            {% if grado.nivel == 13 and grado.id == 6 %}
+                                            <option value="{{grado.cantidad}}" data-id="{{grado.id}}" disabled style="color: white">{{grado.grado}}</option>
+                                            {% else %}
+                                            <option value="{{grado.cantidad}}" data-id="{{grado.id}}">{{grado.grado}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <b>Grados a Acelerar: </b><span id="grado_acelerar"></span> <br>
+                                        <b>Inscrito en la Gestión Actual: </b><span id="grado_inscripcion"></span>
+                                    </div>
+                                    <div class="row" id="fila_destino" style="display: none">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="text-primary" for="sie_destino">Unidad Educativa Destino (secundaria)</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="sie_destino" onkeyUp="getUnidadEducativa()" disabled required>
+                                                    <div class="input-group-addon" onclick="getUnidadEducativa()" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="text-primary" for="estado_destino">&nbsp;</label>
+                                                <!-- <input type="text" class="form-control" id="estado_destino" style="background-color: #fafafa; border: 1px solid #dddddd; color:red" readonly>} -->
+                                                <span class="form-control" id="estado_destino" style="background-color: #fafafa; border: 1px solid #dddddd; color:red" readonly></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="float-left"><b class="text-danger">Nota:</b> El documento adjunto no debe superar los 2MB</h5>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <div id="envio"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="guardar" onclick="sendTramite()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() {
+            $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
+            $('.myfiles').change(function() {
+                if(this.files[0].size > 2057157) {
+                    $(this).val('');
+                    $(this).css('background', '#ffebee');
+                } else {
+                    $(this).css('background', '#ffffff');
+                }
+            });
+            $(".numeric").keypress(function (e) {
+                if (String.fromCharCode(e.keyCode).match(/[^0-5]/g)) return false;
+            });
+        });
+        $('.noedit').keydown(function() {
+            return false;
+        });
+
+        function mesage(tipo, titulo, msg, estado, flag) {
+            if(flag == 0) {
+                $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+                    '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            } else if(flag == 2) {
+                $("#mensaje").html('<div class="alert alert-'+ tipo +'" role="alert">\n' + msg +' </div>');
+            } else {
+                $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+                    '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            }
+            if (estado == true) {
+                setTimeout(function () { $("#carga").empty(); $("#envio").empty(); }, 3500);
+            }
+        }
+
+        function clearInput() {
+            $("#nombre").val('');
+            $("#paterno").val('');
+            $("#materno").val('');
+            $("#cedula").val('');
+            $("#complemento").val('');
+            $("#fecha_nacimiento").val('');
+            $("#institucion_educativa").val('');
+            $("#estudiante_id").val('');
+            $("#estudiante_ins_id").val('');
+            $("#tipo_talento").val('');
+            $("#puede_acelerar").val('');
+            $("#centro_tramite").val('');
+            
+            $("#codigo_sie").val('');
+            $("#sie_destino").val('');
+            $("#institucion_educativa").val('');
+            $("#nivel").val('');
+            $("#grado").val('');
+            $("#paralelo").val('');
+            $("#turno").val('');
+
+            $("#solicitud_tutor").val('');
+            $("#informe_comision").val('');
+            $("#grado_cantidad").val('');
+            $("#procede_aceleracion").val('');
+            $("#informe").val('');
+            $("#url_informe").attr('href', '');
+        }
+
+        function selectGrado() {
+            $("#grado_acelerar").text('');
+            $("#grado_inscripcion").text('');
+            var siguiente = ($("#grado_cantidad").val()*1)+1;
+            $("#grado_cantidad").find('option').each(function(index, item) {
+                if (siguiente == item.value) {
+                    $("#grado_inscripcion").text(item.text);
+                    switch (item.text) {
+                        case 'Primero de secundaria':
+                        case 'Segundo de secundaria':
+                        case 'Tercero de secundaria':
+                        case 'Cuarto de secundaria':
+                        case 'Quinto de secundaria':
+                        case 'Sexto de secundaria':
+                            $("#sie_destino").val($("#codigo_sie").val());
+                            $("#sie_destino").attr('disabled', false);
+                            $("#fila_destino").show();
+                            getUnidadEducativa();
+                            break;
+                        default:
+                            $("#fila_destino").hide();
+                            $("#sie_destino").attr('disabled', true);
+                            $("#estado_destino").text("Tiene secundaria");
+                            break;
+                    }
+                    return false;
+                } else if(item.value != '') {
+                    $("#grado_acelerar").append(item.text + ', ');
+                }
+            });
+        }
+
+        function getUnidadEducativa() {
+            var sie = $('#sie_destino').val();
+            if (sie.length > 7) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_acelera_verify_ie', {'sie': sie}),
+                    beforeSend: function () {
+                        $("#estado_destino").text("Buscando...");
+                        $("#estado_destino").css("color", "#ef6c00");
+                    },
+                    success: function (data) {
+                        if (data.msg == "existe") {
+                            $("#estado_destino").text("Tiene secundaria");
+                            $("#estado_destino").css("color", "#1565c0");
+                        } else {
+                            $("#estado_destino").text("No tiene secundaria");
+                            $("#estado_destino").css("color", "#c62828");
+                        }
+                    }
+                });
+            }
+        }
+
+        $("#registro").submit(function (event) {
+            event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de reiniciar el trámite con la información ingresada?</h5>');
+            $("#tramite_st").val(0);
+            if ($("#estado_destino").text() == "No tiene secundaria") {
+                mesage("warning", "Notificación", "La Unidad Educativa al que se destinará al Estudiante no tiene nivel secundaria.", false, 1);
+                $("#guardar").hide();
+            } else {
+                $("#guardar").show();
+            }
+            $("#modalConfirm").modal("show");
+        });
+
+        function sendTramite() {
+            $("#guardar").attr('disabled', true);
+            var fd = new FormData();
+            fd.append('tramite_id', $("#tramite_id").val());
+            fd.append('estudiante_id', $("#estudiante_id").val());
+            fd.append('estudiante_ins_id', $("#estudiante_ins_id").val());
+            fd.append('flujotipo_id', $("#flujotipo_id").val());
+            fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
+            fd.append('primer_tramite', $("#primer_tramite").val());
+            fd.append('informe', $("#informe").val());
+            var docsol = document.getElementById('solicitud_tutor');
+            var doccom = document.getElementById('informe_comision');
+            fd.append("documento[]", docsol.files[0]);
+            fd.append("documento[]", doccom.files[0]);
+            fd.append('procede_aceleracion', $("#puede_acelerar").val());
+            fd.append('grado_cantidad', (($("#grado_cantidad").val()*1)+1));
+            fd.append('grado_acelerar', $("#grado_acelerar").text());
+            fd.append('grado_inscripcion', $("#grado_inscripcion").text());
+            fd.append("sie_destino", $("#sie_destino").val());
+            fd.append('devolucion', 1);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_acelera_save_new'),
+                data: fd,
+                mimeType:"multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData:false,
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#envio").empty();
+                    if (data.estado == 200) {
+                        $("#guardar").attr('disabled', true);
+                        clearInput();
+                        $("#tramite_st").val(1);
+                        // $("#tramite_id").val(data.tramite);
+                        mesage('info', 'Notificación', data.msg, false, 1);
+                    } else {
+                        mesage('danger', 'Alerta', data.msg, false, 1);
+                        $("#guardar").attr('disabled', false);
+                    }
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        }
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val() == 1) {
+                var url = '{{ path("tramite_acelera_supletorio", {"id": "idtramite"}) }}'; 
+                location.href = url.replace("idtramite", $('#tramite_id').val());
+                // location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+            }
+        }
+    </script>
+{% endblock %}
