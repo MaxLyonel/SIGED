@@ -97,14 +97,16 @@ class ListPersonRegisterController extends Controller{
         $arrDepto=array();
         $form = $this->createFormBuilder()
         
-        ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
+        ->add('departamento', 'entity', array('label'=>'Lugar comision','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('lt')
                         ->where('lt.paisTipoId = :paisId')
                         ->andwhere('lt.lugarNivel = :levelId')
+                        ->orwhere('lt.id = :lugarId')
                         ->setParameter('paisId','1')
                         ->setParameter('levelId','1')
-                        ->orderBy('lt.lugar', 'ASC');
+                        ->setParameter('lugarId','1')
+                        ->orderBy('lt.id', 'ASC');
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control'),
                 'data' => $em->getReference("SieAppWebBundle:LugarTipo",$data[0]['lugarTipoId'])
                 ))
@@ -213,13 +215,17 @@ class ListPersonRegisterController extends Controller{
             // }
 
             // get info about the img
-            $imgExtension = $form['photoData']['photoperson']->getMimeType();
-            list($typeImg, $extensionImg) = explode('/', $imgExtension);
-            // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
-            $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+            if($form['photoData']['photoperson']){
 
-            //move the file on the img path
-            $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+                $imgExtension = $form['photoData']['photoperson']->getMimeType();
+                list($typeImg, $extensionImg) = explode('/', $imgExtension);
+                // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+                $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+
+                //move the file on the img path
+                $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+            }
+            
 
             // save the commision to the person choose
             // $objComisionJuegosDatos = new JdpDelegadoInscripcionJuegos();
@@ -229,12 +235,16 @@ class ListPersonRegisterController extends Controller{
             $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
             $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
             $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
-            $objComisionJuegosDatos->setRutaImagen($ci.'/'.$namePhoto);            
+            if($form['photoData']['photoperson']){
+                $objComisionJuegosDatos->setRutaImagen($ci.'/'.$namePhoto);            
+            }
             $objComisionJuegosDatos->setObs(isset($form['obs'])?strtoupper(mb_strtoupper($form['obs'], 'utf8')):'');
             
             $em->persist($objComisionJuegosDatos);
-            
-            $objPerson->setFoto($ci.'/'.$namePhoto);            
+            if($form['photoData']['photoperson']){
+                $objPerson->setFoto($ci.'/'.$namePhoto);            
+            }
+
             $em->persist($objPerson);
 
             $em->flush();                         

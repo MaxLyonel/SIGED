@@ -13,3 +13,23 @@ cdl_seguimiento_porsie_lista:
 cdl_seguimiento_porjurisdiccion:
     path:  /cdlporjurisdiccion
     defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:cdlPorJurisdiccion }
+
+cdl_seguimiento_con_cdl:
+    path:  /concdl
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:uesConClubesDeLectura }
+
+cdl_seguimiento_sin_cdl:
+    path:  /uesincdl
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:uesSinClubesDeLectura }
+
+cdl_seguimiento_clubes_lectura:
+    path:  /clubeslectura
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:clubesLectura }
+
+cdl_seguimiento_estudiantes_clubes_lectura:
+    path:  /estudiantesclubeslectura
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:estudiantesClubesLectura }
+
+cdl_seguimiento_lecturas_productos:
+    path:  /lecturasproductos
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:LecturasProductos }
