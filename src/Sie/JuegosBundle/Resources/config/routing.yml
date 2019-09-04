@@ -49,3 +49,8 @@ sie_juegos_RegistryPersonComission:
 sie_juegos_ListPersonRegister:
     resource: "@SieJuegosBundle/Resources/config/routing/ListPersonRegister.yml"
     prefix:   /listpersonregister
+
+sie_juegos_PrintCredencial:
+    resource: "@SieJuegosBundle/Resources/config/routing/PrintCredencial.yml"
+    prefix:   /printcredencial
+    
