@@ -1,10 +1,9 @@
 <div class="row">
-    <div class="col-md-12">
-
+    <div class="col-md-12">    
     <div class="panel rounded shadow">
         <div class="panel-body">
             <div class="inner-all">
-                <button class="btn btn-primary btn-xs btn-push">Descargar Credencial</button>
+                <a class="btn btn-block btn-sm btn-info btn-push" href="{{ path('printCredencial_donwload', {'selectedReport': form.typeOption, 'id':entity.id} )}}"><i class="fa fa-download"></i> Descargar Credencial</a>
             </div>
         </div><!-- /.panel-body -->
     </div>

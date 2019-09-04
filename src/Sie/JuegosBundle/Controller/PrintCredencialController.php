@@ -269,10 +269,45 @@ class PrintCredencialController extends Controller{
      * @param string codigoRude
      * @return form
      */
-    public function donwloadAction(){
-        return $this->render('SieJuegosBundle:PrintCredencial:donwload.html.twig', array(
-                // ...
-            ));    
+    public function donwloadAction(Request $request, $selectedReport, $id){
+        //che the type report to download
+        switch ($selectedReport) {
+            // STUDENT
+            case 0:
+                # code...
+                $reportDownload = 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=40730460&gestion=2019&&__format=pdf&';
+                break;
+            // acompaniante    
+            case 1:
+                # code...
+                $reportDownload = 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=40730460&gestion=2019&&__format=pdf&';
+                break;
+            // Delegado
+            case 2:
+                # code...
+                $reportDownload = 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=40730460&gestion=2019&&__format=pdf&';            
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_3333_2019.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $reportDownload));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+
+        // return $this->render('SieJuegosBundle:PrintCredencial:donwload.html.twig', array(
+        //         // ...
+        //     ));    
     }
 
 }

@@ -9,5 +9,5 @@ printCredencial_lookfor_credencial:
          expose: true     
 
 printCredencial_donwload:
-    path:     /donwload
+    path:     /donwload/{selectedReport}/{id}
     defaults: { _controller: SieJuegosBundle:PrintCredencial:donwload }
