@@ -319,8 +319,11 @@ class TramiteModificacionCalificacionesController extends Controller {
             $idInscripcion = $request->get('idInscripcion');
             $em = $this->getDoctrine()->getManager();
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-            $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-            $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            // $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            // $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+            $sie = $this->session->get('ie_id');
+            $gestion = $this->session->get('currentyear');
 
             // OBTENEMOS EL ID DEL TRAMITE SI SE TRATA DE UNA MODIFICACION
             $idTramite = $request->get('idTramite');
@@ -364,13 +367,13 @@ class TramiteModificacionCalificacionesController extends Controller {
             // OBTENEMOS LA INFORMACION DEL FORMULARIO
             $codigoRude = $request->get('codigoRude');
             $estudiante = $request->get('estudiante');
-            $sie = $request->get('sie');
+            $sieInscripcion = $request->get('sie');
             $institucioneducativa = $request->get('institucioneducativa');
-            $nivel = $request->get('nivel');
-            $grado = $request->get('grado');
-            $paralelo = $request->get('paralelo');
-            $turno = $request->get('turno');
-            $gestion = $request->get('gestion');
+            $nivelInscripcion = $request->get('nivel');
+            $gradoInscripcion = $request->get('grado');
+            $paraleloInscripcion = $request->get('paralelo');
+            $turnoInscripcion = $request->get('turno');
+            $gestionInscripcion = $request->get('gestion');
 
             $flujoTipo = $request->get('flujoTipo');
             $notas = json_decode($request->get('notas'),true);
@@ -382,13 +385,13 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'idInscripcion'=> $idInscripcion,
                 'codigoRude' => $codigoRude,
                 'estudiante' => $estudiante,
-                'sie' => $sie,
+                'sie' => $sieInscripcion,
                 'institucioneducativa' => $institucioneducativa,
-                'nivel' => $nivel,
-                'grado' => $grado,
-                'paralelo' => $paralelo,
-                'turno' => $turno,
-                'gestion' => $gestion,
+                'nivel' => $nivelInscripcion,
+                'grado' => $gradoInscripcion,
+                'paralelo' => $paraleloInscripcion,
+                'turno' => $turnoInscripcion,
+                'gestion' => $gestionInscripcion,
                 'flujoTipo'=>$flujoTipo,
                 'notas'=> $notas,
                 'notasCualitativas'=>$notasCualitativas,
@@ -520,7 +523,8 @@ class TramiteModificacionCalificacionesController extends Controller {
             }
 
             $query = $em->getConnection()->prepare("
-                        select * from tramite_detalle td
+                        select * from tramite t 
+                        inner join tramite_detalle td on td.tramite_id = t.id
                         inner join flujo_proceso fp on td.flujo_proceso_id = fp.id
                         inner join proceso_tipo pt on fp.proceso_id = pt.id
                         inner join rol_tipo rt on fp.rol_tipo_id = rt.id
@@ -787,6 +791,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 );
 
                 $datos = json_encode(array(
+                    'sie'=>$sie,
                     'subsanable'=>$subsanable,
                     'observacion'=>$observacion
                 ), JSON_UNESCAPED_UNICODE);
@@ -899,13 +904,13 @@ class TramiteModificacionCalificacionesController extends Controller {
             $historial = $this->historial($idTramite);
             $datosNotas = null;
             $idInscripcion = null;
-            $sie = null;
-            $gestion = null;
+            $sieInscripcion = null;
+            $gestionInscripcion = null;
             foreach ($historial as $h) {
                 if($h['orden'] == 1){
                     $idInscripcion = $h['datos']['idInscripcion'];
-                    $sie = $h['datos']['sie'];
-                    $gestion = $h['datos']['gestion'];
+                    $sieInscripcion = $h['datos']['sie'];
+                    $gestionInscripcion = $h['datos']['gestion'];
                     $datosNotas = $h['datos'];
                 }
             }
@@ -953,8 +958,8 @@ class TramiteModificacionCalificacionesController extends Controller {
 
             // VERIFICAMOS SI LA GESTION ES CONSOLIDADA OPERATIVO >= 4 O LA GESTION PERMITE LA IMPRESION DE LA LIBRETA ELECTRONICA
             $gestionConsolidada = 'NO';
-            if($gestion >= 2015){
-                $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+            if($gestionInscripcion >= 2015){
+                $operativo = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
                 if($operativo >= 4 ){
                     $gestionConsolidada = 'SI';
                 }
@@ -1098,7 +1103,7 @@ class TramiteModificacionCalificacionesController extends Controller {
 
             $request->getSession()
                     ->getFlashBag()
-                    ->add('exito', "El Tramite ". $idTramite ."fue enviado exitosamente");
+                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
 
             return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
 
