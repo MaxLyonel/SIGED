@@ -119,9 +119,9 @@ class PrintCredencialController extends Controller{
             case 1:
                 $objComisionJuegosDatos = array();
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
-                $objComisionJuegosDatosAll = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
+                $objDatosAll = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
                 // dump($this->session->get('currentyear'));
-                foreach ($objComisionJuegosDatosAll as $key => $value) {
+                foreach ($objDatosAll as $key => $value) {
                     $objComisionJuegosDatos[] = $this->getJuegosInscriptionsByGestoinValida($value->getEstudianteInscripcionJuegos()->getId(),$this->session->get('currentyear'));
                 }
                 break;
@@ -144,7 +144,8 @@ class PrintCredencialController extends Controller{
                 break;
         }
 
-        // dump($data);
+        // dump($form['typeOption']);
+        // dump($objComisionJuegosDatos);
         // die;
         return $this->render('SieJuegosBundle:PrintCredencial:lookforCredencial.html.twig', array(
                 'entity' => $entity,
