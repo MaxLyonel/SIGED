@@ -1,0 +1,13 @@
+printCredencial_index:
+    path:     /
+    defaults: { _controller: SieJuegosBundle:PrintCredencial:index }
+
+printCredencial_lookfor_credencial:
+    path:     /lookforCredencial
+    defaults: { _controller: SieJuegosBundle:PrintCredencial:lookforCredencial }
+    options:
+         expose: true     
+
+printCredencial_donwload:
+    path:     /donwload
+    defaults: { _controller: SieJuegosBundle:PrintCredencial:donwload }
