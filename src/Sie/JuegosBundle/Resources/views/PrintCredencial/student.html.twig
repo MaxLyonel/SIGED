@@ -1,0 +1,93 @@
+    {% for flashMessage in app.session.flashbag.get('lookForDataMessage') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <strong></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+<div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                
+                    <h3 class="panel-title"><strong>Informaci&oacute;n Personal</strong></h3>
+                
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            {% if entity %}
+               <div class="form-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="row" style="text-align: center"><img width="400" height="350" src="{{asset('uploads/documento_persona/'~ pathToShowImg ~'')}}" alt=""></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                            <strong>Carnet Identidad: </strong></br>{{entity.carnetIdentidad}}
+                            </div>
+                            <div class="col-md-4">
+                            <strong>complemento: </strong></br>{{entity.complemento}}
+                            </div>
+                            <div class="col-md-4">
+                            <strong>C&oacute;digo Rude: </strong></br>{{entity.codigoRude}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                            <strong>Nombre: </strong></br>{{entity.nombre}}
+                            </div>
+                            <div class="col-md-4">
+                            <strong>Paterno: </strong></br>{{entity.paterno}}
+                            </div>
+                            <div class="col-md-4">
+                            <strong>Materno: </strong></br>{{entity.materno}}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                {% if objComisionJuegosDatos %}
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                <strong>SIE: </strong></br>{{objComisionJuegosDatos[1].id}}
+                                </div>
+                                <div class="col-md-6">
+                                <strong>Institucioneducativa: </strong></br>{{objComisionJuegosDatos[1].institucioneducativa}}
+                                </div>
+                                
+                            </div>
+                        </div>    
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                <strong>Prueba: </strong></br>{{objComisionJuegosDatos[0].pruebaTipo.prueba}}
+                                </div>
+                                <div class="col-md-6">
+                                <strong>Fase: </strong></br>{{objComisionJuegosDatos[0].faseTipo.fase}}
+                                </div>
+                                
+                            </div>
+                        </div>                        
+                    </div><!-- /.form-body -->
+                {% else %}
+                {% endif %}
+
+            {% else %}     
+            {% endif  %}
+
+
+        
+
+        </div><!-- /.panel-body -->
+        <div class="row">
+            <div id="resultPerson">
+            </div> 
+        </div>
+    </div>

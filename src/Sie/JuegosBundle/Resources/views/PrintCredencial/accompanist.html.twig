@@ -1,0 +1,81 @@
+    {% for flashMessage in app.session.flashbag.get('lookForDataMessage') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <strong></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+<div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                
+                    <h3 class="panel-title"><strong>Informaci&oacute;n Personal</strong></h3>
+                
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            {% if entity %}
+                {% include 'SieJuegosBundle:RegistryPersonComission:personInfo.html.twig' with {'entity': entity} %}                
+                    <!-- /.form-body -->
+
+                    {% if objComisionJuegosDatos %}
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Rude</th>
+                            <th scope="col">Estudiante</th>
+                            <th scope="col">Institucioneducativa</th>
+                            <th scope="col">Prueba</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in objComisionJuegosDatos %}
+                                <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td> {{data['0'].codigoRude}} </td>
+                                <td> {{data['0'].nombre}} {{data['0'].paterno}} {{data['0'].materno}}</td>
+                                <td> {{data['2'].id}} {{data['2'].institucioneducativa}}</td>
+                                <td> {{data['1'].pruebaTipo.prueba}} </td>
+                                </tr>
+                            
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    
+                      
+
+                        {# <div class="form-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <strong>Comision: </strong></br>{{objComisionJuegosDatos.comisionTipo}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    <strong>Departamento: </strong></br>{{objComisionJuegosDatos.lugarTipo}}
+                                    </div>
+                                    
+                                </div>
+                            </div>                        
+                        </div><!-- /.form-body --> #}
+
+                   {% else %}
+                        {# <div class="form-footer">
+                            <div class="pull-right">
+                                {{form(form)}}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.form-footer --> #}
+                    {% endif %}
+            {% else %}
+            {% endif  %}
+
+
+        
+
+        </div><!-- /.panel-body -->
+        <div class="row">
+            <div id="resultPerson">
+            </div> 
+        </div>
+    </div>

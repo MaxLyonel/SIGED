@@ -1,0 +1,129 @@
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Buscar Credencial <span>----</span></h2>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+            <div class="col-md-12">
+
+                <!-- Start comment form -->
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Busqueda</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+
+                     {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idFormlookforPerson'} } )}}
+                        <div class="form-body">
+                            <div class="form-group no-margin">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{form_widget(form.carnetRude)}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{form_widget(form.complemento)}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form_widget(form.typeOption)}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{form_widget(form.find)}}
+                                    </div>
+                                </div>
+                            </div><!-- /.form-group -->
+                            <div class="form-group no-margin">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {# {{form_widget(form.disciplina)}} #}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {# {{form_widget(form.prueba)}} #}
+                                    </div>
+                                </div>
+
+                            </div><!-- /.form-group -->
+                            
+                        </div><!-- /.form-body -->
+                        <div class="form-footer">
+                            <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                        </div><!-- /.form-footer -->
+                    {{form_end(form)}}
+                    
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End comment form -->
+
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div id="resultPerson">
+            </div> 
+        </div>
+
+</div>
+
+
+<!-- Start inside form layout -->
+        <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+        <!-- <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"> -->
+           
+        </div>
+        <!-- /.modal -->
+        <!--/ End inside form layout -->
+        <!--/ END ALL MODALS -->
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+
+    <script type="text/javascript">
+        var lookForDataPerson = function(){
+            
+            var ci = $('#form_carnetRude').val();
+            var complemento = $('#form_complemento').val();
+            var selectedOption = $('#form_typeOption').val();
+            
+            var dataForm = $('#idFormlookforPerson').serialize();
+            if (ci.length > 0) {
+
+                $.ajax({
+                        type: 'post',
+                        url: Routing.generate('printCredencial_lookfor_credencial'),
+                        data: dataForm,
+                        beforeSend: function () {
+                            $('#resultPerson').empty();
+                            $('#resultPerson').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        },
+                        success: function (data) {
+                            $('#resultPerson').empty();
+                            $('#resultPerson').append(data);
+
+                        },
+                    });
+
+                } else {
+
+                    alert('debe registrar el CI');
+                    return false;
+
+                }
+            
+
+    };
+    </script>
+
+   
+   
+
+
+{%endblock%}
