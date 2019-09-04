@@ -271,22 +271,22 @@ class PrintCredencialController extends Controller{
      * @return form
      */
     public function donwloadAction(Request $request, $selectedReport, $id){
-        //che the type report to download
+        //che the type report to download  id, codges, codniv
         switch ($selectedReport) {
             // STUDENT
             case 0:
                 # code...
-                $reportDownload = 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=40730460&gestion=2019&&__format=pdf&';
+                $reportDownload = 'jdp_estudiante_inscripcion_juegos.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
                 break;
             // acompaniante    
             case 1:
                 # code...
-                $reportDownload = 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=40730460&gestion=2019&&__format=pdf&';
+                $reportDownload = 'jdp_persona_inscripcion_juegos.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
                 break;
             // Delegado
             case 2:
                 # code...
-                $reportDownload = 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=40730460&gestion=2019&&__format=pdf&';            
+                $reportDownload = 'jdp_delegado_inscripcion_juegos.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
                 break;
             
             default:
@@ -296,7 +296,7 @@ class PrintCredencialController extends Controller{
 
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_3333_2019.pdf'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'juegos_credencial_'.$id .'_2019.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $reportDownload));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
