@@ -276,17 +276,17 @@ class PrintCredencialController extends Controller{
             // STUDENT
             case 0:
                 # code...
-                $reportDownload = 'jdp_estudiante_inscripcion_juegos.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
+                $reportDownload = 'jdp_crd_deportista_v1.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
                 break;
             // acompaniante    
             case 1:
                 # code...
-                $reportDownload = 'jdp_persona_inscripcion_juegos.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
+                $reportDownload = 'jdp_crd_delegado_v1.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
                 break;
             // Delegado
             case 2:
                 # code...
-                $reportDownload = 'jdp_delegado_inscripcion_juegos.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
+                $reportDownload = 'jdp_crd_organizador_v1.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
                 break;
             
             default:
