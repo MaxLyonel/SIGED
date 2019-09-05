@@ -76,7 +76,7 @@ class GestionMenuController extends Controller {
         $menuObjeto = $query->getResult();
         
         return $this->render('SieAppWebBundle:GestionMenu:list.html.twig', array(
-                    'menuObjeto' => $menuObjeto,
+            'menuObjeto' => $menuObjeto,
         ));
         
     }
@@ -84,7 +84,7 @@ class GestionMenuController extends Controller {
     /**
      * Update Estado in Menu entity.
      */
-    public function estadoAction($id) {
+    public function estadoAction(Request $request, $id) {
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
@@ -105,7 +105,8 @@ class GestionMenuController extends Controller {
 
         $em->flush();
 
-        return $this->redirect($this->generateUrl('gestionmenu'));
+        $response = new Response();
+        return $response;
     }
     
 }
