@@ -248,9 +248,11 @@ class UnificacionRudeController extends Controller {
                 $juegosb=$this->get('seguimiento')->getJuegos($rudeb);
     
                 if ($juegosa && $juegosb){
-                    $message = 'Ambos rudes cuentan con historial en juegos.';
+                    /* $message = 'Ambos rudes cuentan con historial en juegos.';
                     $this->addFlash('notihistory', $message);
-                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' ); */
+                    $arrudea['Juegos'] = 1;
+                    $arrudeb['Juegos'] = 1;
                 }else{
                     if ($juegosa == false  && $juegosb == true) {
                         $arrudea['Juegos'] = 0;
@@ -267,9 +269,11 @@ class UnificacionRudeController extends Controller {
                 $olimpiadasb=$this->get('seguimiento')->getOlimpiadas($rudeb);
 
                 if ($olimpiadasa && $olimpiadasb) {
-                    $message = 'Ambos rudes cuentan con historial en olimpiadas.';
+                   /*  $message = 'Ambos rudes cuentan con historial en olimpiadas.';
                     $this->addFlash('notihistory', $message);
-                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' ); */
+                    $arrudea['Olimpiadas'] = 1;
+                    $arrudeb['olimpiadas'] = 1;
                 }else{
                     if ($olimpiadasa == false  && $olimpiadasb == true) {
                         $arrudea['Olimpiadas'] = 0;
@@ -301,8 +305,16 @@ class UnificacionRudeController extends Controller {
                 }
                 
                 //*******VERIFICANDO QUE ALGUNO DE LOS RUDES TENGA T,J,O,B***********//
+                $sw=0;
                 if (count($arrudea)>0 or count($arrudeb)>0){
                     if(in_array(1,$arrudea) and in_array(1,$arrudeb)){
+                        //dump($arrudea,$arrudeb);die;
+                        if((isset($arrudea['Diplomas']) and $arrudea['Diplomas'] == 1 and isset($arrudeb['Bachiller Destacado']) and $arrudeb['Bachiller Destacado']==1) or (isset($arrudeb['Diplomas']) and $arrudeb['Diplomas'] == 1 and isset($arrudea['Bachiller Destacado']) and $arrudea['Bachiller Destacado']==1)){
+                            $msg = "Diplomas y Bachiller Destacado";
+                            $this->addFlash('notihistory', 'Ambos rudes cuentan con historial en: '. $msg .'</br>Por lo que no pueden unificarse.</br>Para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones.');
+                            return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+                        }
+                        $sw=1;
                         $msg = '<strong>RUDE:</strong> '. $rudea;
                         foreach($arrudea as $key => $valor ){
                             if($valor == 1){
@@ -315,8 +327,7 @@ class UnificacionRudeController extends Controller {
                                 $msg = $msg . '</br>-' . $key . '</br>';
                             }
                         }
-                        $this->addFlash('notihistory', 'Ambos rudes cuentan con historial:</br></br>'. $msg .'</br>Por lo que no pueden unificarse.</br>Si uno de los rudes cuenta con trámite en Diplomas, para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones.');
-                        return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+                        $this->addFlash('autoselcorr', '<strong>TOME NOTA: </strong>Los rudes cuentan con historial en:</br></br>'. $msg); 
                     }else{
                         if(in_array(1,$arrudea)){
                             $corr = 'a';
@@ -337,7 +348,7 @@ class UnificacionRudeController extends Controller {
                         goto corrinc;
                     }
                 }
-                if($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1){
+                if(($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1) and $sw == 0){
                     if ($studenta->getSegipId() == 1){
                         $corr = 'a';
                         $inc = 'b';
@@ -554,7 +565,6 @@ class UnificacionRudeController extends Controller {
 
         $studentDatPerInco = $em->getRepository('SieAppWebBundle:EstudianteDatopersonal')->findBy(array('estudiante' => $studentinc));        
         $studentPnpRecSabInco = $em->getRepository('SieAppWebBundle:PnpReconocimientoSaberes')->findBy(array('estudiante' => $studentinc));
-
         //*************GENERANDO BACKUP DEL RUDE INCORRECTO
         $sqlb = "select * from sp_genera_repaldo_rude('".$rudeinc."')";
         $queryverdipb = $em->getConnection()->prepare($sqlb);

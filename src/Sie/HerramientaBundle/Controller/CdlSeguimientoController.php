@@ -871,7 +871,7 @@ class CdlSeguimientoController extends Controller
         $entidad = $chartController->buscaEntidadRol($codigoArea,$rolUsuario);
         $subEntidades = $this->buscaSubEntidadEstudiantesClubesLecturaAreaRol($codigoArea,$rolUsuario,$gestionActual);
         $entityEstadistica = $this->buscaEstadisticaEstudiantesClubesLecturaAreaRol($codigoArea,$rolUsuario,$gestionActual);
-        //dump($entityEstadistica,$subEntidades,$entidad);
+        //dump($entityEstadistica[5]);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
             foreach ($subEntidades as $key => $dato) {
                 $subEntidades[$key]['total_general'] = $entityEstadistica[0][0]['total'];
@@ -890,7 +890,8 @@ class CdlSeguimientoController extends Controller
         $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Estudiantes en clubes de lectura según Área Geográfica",$gestionProcesada,2,"chartContainerArea");
         $chartGenero = $chartController->chartPie($entityEstadistica[3],"Estudiantes en clubes de lectura según Género",$gestionProcesada,1,"chartContainerGenero");
         $chartNivel = $chartController->chartDonut3d($entityEstadistica[4],"Estudiantes en clubes de lectura según nivel",$gestionProcesada,2,"chartContainerNivel");
-        //dump($chartDependencia);die;
+        $chartNivelGrado = $chartController->chartDonutInformacionGeneralNivelGrado($entityEstadistica[5],"Estudiantes en clubes de lectura según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,1,"chartContainerNivelGrado");
+        //dump($chartNivelGrado);die;
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
@@ -908,6 +909,7 @@ class CdlSeguimientoController extends Controller
                 'datoGraficoArea'=>$chartArea,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoNivel'=>$chartNivel,
+                'datoGraficoNivelGrado'=>$chartNivelGrado,
                 'gestion'=>$gestionProcesada,
                 'link'=>$link,
                 'mensaje'=>$mensaje,
@@ -923,6 +925,7 @@ class CdlSeguimientoController extends Controller
                     'datoGraficoArea'=>$chartArea,
                     'datoGraficoGenero'=>$chartGenero,
                     'datoGraficoNivel'=>$chartNivel,
+                    'datoGraficoNivelGrado'=>$chartNivelGrado,
                     'gestion'=>$gestionProcesada,
                     'link'=>$link,
                     'mensaje'=>$mensaje,
@@ -937,6 +940,7 @@ class CdlSeguimientoController extends Controller
                     'datoGraficoArea'=>$chartArea,
                     'datoGraficoGenero'=>$chartGenero,
                     'datoGraficoNivel'=>$chartNivel,
+                    'datoGraficoNivelGrado'=>$chartNivelGrado,
                     'gestion'=>$gestionProcesada,
                     'link'=>$link,
                     'mensaje'=>$mensaje,
@@ -1086,11 +1090,11 @@ class CdlSeguimientoController extends Controller
                 ORDER BY id)
                 
                 UNION ALL
-                (select 5 as tipo_id, nivel as tipo_nombre,grado as detalle,grado_tipo_id as id,count(*) as cantidad,(select count(*) as total
+                (select 5 as tipo_id, case when nivel_tipo_id=11 then 'Inicial' when nivel_tipo_id=12 then 'Primaria' when nivel_tipo_id=13 then 'Secundaria' end  as tipo_nombre,grado as detalle,grado_tipo_id as id,count(*) as cantidad,(select count(*) as total
                 from tabla)
                 from tabla
                 GROUP BY nivel_tipo_id,nivel,grado_tipo_id,grado
-                ORDER BY tipo_nombre)
+                ORDER BY tipo_nombre,id)
                 ");
     
             $queryEntidad->execute();

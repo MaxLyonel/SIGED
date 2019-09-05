@@ -1545,7 +1545,7 @@ class ReporteController extends Controller {
         $chartGenero = $this->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionProcesada,3,"chartContainerEfectivoGenero");
         $chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
         $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionProcesada,5,"chartContainerEfectivoDependencia");
-
+        
         return $this->render('SieAppWebBundle:Reporte:matriculaEducativaRegular.html.twig', array(
             'infoEntidad'=>$entidad,
             'infoSubEntidad'=>$subEntidades, 
@@ -1611,7 +1611,7 @@ class ReporteController extends Controller {
         $chartGenero = $this->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionProcesada,3,"chartContainerEfectivoGenero");
         $chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
         $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionProcesada,5,"chartContainerEfectivoDependencia");
-        
+        //dump($chartNivelGrado);die;
         if ($entidad != '' and $subEntidades != ''){
             return $this->render('SieAppWebBundle:Reporte:matriculaEducativaRegular.html.twig', array(
                 'infoEntidad'=>$entidad,
@@ -4670,7 +4670,7 @@ class ReporteController extends Controller {
                 if ($codigoDepartamento == "") {
                     $codigoDepartamento = 0;
                 }
-                $textUnidadEducativa = $form['ue'];
+                $textUnidadEducativa = trim($form['ue']);
                 $dependencia = isset($form['dependencia']) ? $form['dependencia'] : array();
                 $dependenciaList = "";
                 for($i = 0; $i < count($dependencia); $i++) {
@@ -4773,12 +4773,16 @@ class ReporteController extends Controller {
             $departamentoId = $ainfoBusqueda['departamento'];
             $dependenciaArrayId = $ainfoBusqueda['dependencia'];
             $dependenciaList = "";
+            //dump($dependenciaArrayId);die;
             for($i = 0; $i < count($dependenciaArrayId); $i++) {
                 if($dependenciaList==""){
                     $dependenciaList = $dependenciaArrayId[$i];
                 } else {
                     $dependenciaList = $dependenciaList.",".$dependenciaArrayId[$i];
                 }
+            }
+            if($dependenciaList==""){
+                $dependenciaList = "1,2,5,3";
             }
 
             $entityDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoId ));
@@ -4787,7 +4791,8 @@ class ReporteController extends Controller {
                 select distinct ie.id as codigo, ie.institucioneducativa as institucioneducativa, det.dependencia, eit.id as estadoinstitucion_id, eit.estadoinstitucion, dep.lugar as departamento, dis.lugar as distrito, jg.direccion as direccion
                 , 'Educación '||(case oct.id when 2 then (case iena.nivel_tipo_id when 6 then 'Especial' else oct.orgcurricula end) else oct.orgcurricula end) as orgcurricular, loc.lugar as localidad, can.lugar as canton, sec.lugar as seccion
                 , pro.lugar as provincia, jg.zona, c.director, jg.cordx, jg.cordy, loc.area, ien.nivel_autorizado
-                , replace(replace(replace(replace(iet.turno, 'M', 'Mañana'), 'T', 'Tarde'), 'N', 'Noche'), '-', ', ') as turno
+                , replace(replace(replace(replace(iet.turno, 'M', 'Mañana'), 'T', 'Tarde'), 'N', 'Noche'), '-', ', ') as turno,
+                esp.especialidad,esp.grado_autorizado
                 from institucioneducativa as ie
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 inner join ( SELECT id,codigo,lugar,lugar_tipo_id,area2001 AS area FROM lugar_tipo WHERE lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
@@ -4812,6 +4817,15 @@ class ReporteController extends Controller {
                     group by iena1.institucioneducativa_id
                 ) as ien on ien.institucioneducativa_id = ie.id
                 left join (
+                    select string_agg(distinct et.especialidad,', ') as especialidad, ieht.institucioneducativa_id,gt.grado as grado_autorizado
+                    from institucioneducativa_humanistico_tecnico ieht 
+					inner join grado_tipo gt on gt.id=ieht.grado_tipo_id
+                    inner join institucioneducativa_especialidad_tecnico_humanistico ieeth on ieeth.institucioneducativa_id=ieht.institucioneducativa_id
+					inner join especialidad_tecnico_humanistico_tipo et on et.id=ieeth.especialidad_tecnico_humanistico_tipo_id
+                    where ieht.institucioneducativa_id = ".$sie."   and ieht.institucioneducativa_humanistico_tecnico_tipo_id in (1,7) and ieht.gestion_tipo_id = ". $gestionActual ."
+                    group by ieht.institucioneducativa_id,gt.grado
+                ) as esp on esp.institucioneducativa_id = ie.id
+                left join (
                     select string_agg(cast(vv.turno_id as varchar), '-' order by vv.turno_id) as turno_id, string_agg(vv.turno,'-' order by vv.turno_id) as turno, vv.institucioneducativa_id from (
                         select v.turno, case v.turno when 'M' then 1 when 'T' then 2 when 'N' then 3 else 0 end as turno_id, v.institucioneducativa_id from (
                         select unnest(string_to_array(string_agg(distinct case tt1.abrv when 'MTN' then 'M-T-N' when '.' then '' when 'MN' then 'M-N' else tt1.abrv end,'-'),'-','')) as turno, iec1.institucioneducativa_id from institucioneducativa_curso as iec1 
@@ -4826,12 +4840,12 @@ class ReporteController extends Controller {
                     group by institucioneducativa_id
                 ) as iet on iet.institucioneducativa_id = ie.id 
                 where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$sie." 
-                and (case ".$departamentoId." when 0 then dep.codigo != '0' else dep.codigo = '".$departamentoId."' end)
-                and det.id in (".$dependenciaList.")            
+                --and (case ".$departamentoId." when 0 then dep.codigo != '0' else dep.codigo = '".$departamentoId."' end)
+                --and det.id in (".$dependenciaList.")            
                 order by orgcurricular, departamento, estadoinstitucion, seccion
             ");
-
             $query->execute();
+
             $entityInstitucionEducativa = $query->fetchAll();
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar información, intente nuevamente'));            
@@ -5270,6 +5284,7 @@ class ReporteController extends Controller {
         foreach ($objEntidad as $key => $dato) {
             $aDato[$dato['tipo_id']][]= $dato;
         }
+        //dump($aDato);die;
         return $aDato;
     }
 
