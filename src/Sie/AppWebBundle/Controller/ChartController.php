@@ -1,5 +1,4 @@
 <?php
-
 namespace Sie\AppWebBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -36,20 +35,38 @@ class ChartController extends Controller {
      * @return chart
      */
     public function chartDonut3d($entity,$titulo,$subTitulo,$nombreLabel,$contenedor) {
-
+        //dump($nombreLabel);die;
         $datosTemp = "";
-        $subTotal = 0;
-        foreach ($entity['dato'] as $key => $dato) {
-            $porcentaje = 0;
-            if ($key == 0){
-                $subTotal = $dato['cantidad'];
-            } else {
-                $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
-                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
-            }
-        }
-        
-        $pointLabel = $nombreLabel;
+        switch ($nombreLabel) {
+            case 1:
+                $pointLabel = "Unidades Educativas";
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];  
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            case 2:
+                $pointLabel = "Estudiantes";
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];  
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            default:
+                $subTotal = 0;    
+                $pointLabel = $nombreLabel; 
+                $nameseries = $entity['tipo'];
+                foreach ($entity['dato'] as $key => $dato) {
+                    $porcentaje = 0;
+                    if ($key == 0){
+                        $subTotal = $dato['cantidad'];
+                    } else {
+                        $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
+                        $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                    }
+                }
+                break;                
+        }   
 
         $datos = "   
             var ".$contenedor."Load = function() {
@@ -92,7 +109,7 @@ class ChartController extends Controller {
                         pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'
                     },
                     series: [{
-                        name: '".$entity['tipo']."',
+                        name: '".$nameseries."',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
@@ -111,16 +128,32 @@ class ChartController extends Controller {
     public function chartPie($entity,$titulo,$subTitulo,$nombreLabel,$contenedor) {
         
         $datosTemp = "";
-        $subTotal = 0;
-        foreach ($entity['dato'] as $key => $dato) {
-            $porcentaje = 0;
-            if ($key == 0){
-                $subTotal = $dato['cantidad'];
-            } else {
-                $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
-                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
-            }
-        }                   
+
+        switch ($nombreLabel) {
+            case 1:
+                $nameSeries = "Género";
+                $pointLabel = "Estudiantes";
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];  
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            default:
+                $subTotal = 0;
+                $nameSeries= $entity['tipo'];
+                $pointLabel = $nombreLabel;
+                foreach ($entity['dato'] as $key => $dato) {
+                    $porcentaje = 0;
+                    if ($key == 0){
+                        $subTotal = $dato['cantidad'];
+                    } else {
+                        $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
+                        $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                    }
+                } 
+                break;                
+        }   
+
 
         $datos = "   
             var ".$contenedor."Load = function() {
@@ -154,10 +187,10 @@ class ChartController extends Controller {
                     },
                     tooltip: {
                         headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$nombreLabel."</b> del total<br/>'
+                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'
                     },
                     series: [{
-                        name: '".$entity['tipo']."',
+                        name: '".$nameSeries."',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
@@ -176,19 +209,62 @@ class ChartController extends Controller {
     public function chartColumn($entity,$titulo,$subTitulo,$nombreLabel,$contenedor) {
         
         $datosTemp = "";
-        $subTotal = 0;
-        foreach ($entity['dato'] as $key => $dato) {
-            $porcentaje = 0;
-            if ($key == 0){
-                $subTotal = $dato['cantidad'];
-            } else {
-                $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
-                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
-            }
-        }   
-
-        $pointLabel = $nombreLabel;
-
+        $format = '{point.label:,.0f} ({point.y:.1f}%)';
+        $tituloY = '';
+        $valueY = '{value} %';
+        switch ($nombreLabel) {
+            case 1:
+                $pointLabel = "Unidades Educativas";    
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            case 2:
+                $pointLabel = "Unidades Educativas";
+                $format = '{point.label:,.0f}';
+                $valueY = '{value}';  
+                foreach($entity as $e){
+                    if($e['cantidad'] != 0){
+                        $nameseries = $e['tipo_nombre'];
+                        $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".$e['cantidad'].", label: ".$e['cantidad']."},";    
+                    }
+                }
+                break;
+            case 3:
+                $pointLabel = "Estudiantes";
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            case 4:
+                $pointLabel = "Estudiantes";
+                $format = '{point.label:,.0f}';
+                $valueY = '{value}';  
+                foreach($entity as $e){
+                    if($e['cantidad'] != 0){
+                        $nameseries = $e['tipo_nombre'];
+                        $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".$e['cantidad'].", label: ".$e['cantidad']."},";    
+                    }
+                }
+                break;
+            default:
+                $subTotal = 0;
+                $pointLabel = $nombreLabel;
+                $nameseries = $entity['tipo'];
+                foreach ($entity['dato'] as $key => $dato) {
+                    $porcentaje = 0;
+                    if ($key == 0){
+                        $subTotal = $dato['cantidad'];
+                    } else {
+                        $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
+                        $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                    }
+                }   
+                break;                
+        }  
+        
         $datos = "   
             var ".$contenedor."Load = function() {
                  $('#".$contenedor."').highcharts({
@@ -207,7 +283,10 @@ class ChartController extends Controller {
                     },
                     yAxis: {
                         title: {
-                            text: ''
+                            text: '". $tituloY ."'
+                        },
+                        labels: {
+                            format: '". $valueY ."'
                         }
 
                     },
@@ -219,7 +298,7 @@ class ChartController extends Controller {
                             borderWidth: 0,
                             dataLabels: {
                                 enabled: true,
-                                format: '{point.label:,.0f} ({point.y:.1f}%)'
+                                format: '". $format ."'
                             }
                         }
                     },        
@@ -229,7 +308,7 @@ class ChartController extends Controller {
                     },
 
                     series: [{
-                        name: '".$entity['tipo']."',
+                        name: '".$nameseries."',
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
@@ -248,18 +327,36 @@ class ChartController extends Controller {
     public function chartSemiPieDonut3d($entity,$titulo,$subTitulo,$nombreLabel,$contenedor) {
         
         $datosTemp = "";
-        $subTotal = 0;
-        foreach ($entity['dato'] as $key => $dato) {
-            $porcentaje = 0;
-            if ($key == 0){
-                $subTotal = $dato['cantidad'];
-            } else {
-                $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
-                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
-            }
-        }   
-
-        $pointLabel = $nombreLabel;
+        switch ($nombreLabel) {
+            case 1:
+                $pointLabel = "Unidades Educativas";    
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            case 2:
+                $pointLabel = "Estudiantes";
+                foreach($entity as $e){
+                    $nameseries = $e['tipo_nombre'];
+                    $datosTemp = $datosTemp ."{name: '". $e['detalle'] ."', y: ".round(((100*$e['cantidad'])/(($e['total']==0) ? 1:$e['total'])),1).", label: ".$e['cantidad']."},";    
+                }
+                break;
+            default:
+                $subTotal = 0;
+                $pointLabel = $nombreLabel;
+                $nameseries = $entity['tipo'];
+                foreach ($entity['dato'] as $key => $dato) {
+                    $porcentaje = 0;
+                    if ($key == 0){
+                        $subTotal = $dato['cantidad'];
+                    } else {
+                        $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
+                        $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                    }
+                }   
+                break;                
+        }
 
         $datos = "   
             var ".$contenedor."Load = function() {
@@ -301,7 +398,7 @@ class ChartController extends Controller {
                     },
                     series: [{
                         type: 'pie',
-                        name: '".$entity['tipo']."',
+                        name: '".$nameseries."',
                         innerSize: '50%',
                         data: [".$datosTemp."]
                     }]
@@ -315,18 +412,37 @@ class ChartController extends Controller {
     public function chartDonutInformacionGeneralNivelGrado($entity,$titulo,$subTitulo,$tipoReporte,$contenedor) {
         //dump($entity);die;
         $aData = array();
-        foreach ($entity['dato'] as $key => $dato) {
-            if ($key != 0) {
-                $aData[$dato['detalle']][$dato['subdetalle']] = $dato['cantidad'];
-            }
+        switch ($tipoReporte) {
+            case 1:
+                $nameSeries = 'Nivel de Estudio';
+                $name = 'Año de Escolaridad';
+                $pointLabel = 'Estudiantes';
+                foreach ($entity as $dato) {
+                    $total = $dato['total'];
+                    $aData[$dato['tipo_nombre']][$dato['detalle']] = $dato['cantidad'];
+                } 
+                //dump($aData);die;
+                break;
+            default:
+                $nameSeries = 'Etapa/Acreditación';
+                $name = 'Cantidad';
+                $pointLabel = 'Participantes';
+                $total = $entity['dato'][0]['cantidad'];
+                foreach ($entity['dato'] as $key => $dato) {
+                    if ($key != 0) {
+                        $aData[$dato['detalle']][$dato['subdetalle']] = $dato['cantidad'];
+                    }
+                } 
+                break;         
         }
+        
         $data = "";
         $categoria = "";
         $cantidad = 0;
         $subCategoria = "";
         $subCantidad = 0;
         $subPorcentaje = 0;
-        $total = $entity['dato'][0]['cantidad'];
+        
         $count = 1;
         foreach ($aData as $key => $nivel) {
             $nombre = $key;
@@ -340,8 +456,8 @@ class ChartController extends Controller {
             foreach ($nivel as $key => $dato) {
 
                 $cantidad = $cantidad + $dato;
-                $porcentaje = round(($dato*100)/($total), 1);
-          //      dump($porcentaje);die;
+                $porcentaje = round(($dato*100)/($total), 2);
+                //dump($porcentaje);die;
                 if ($subCategoria == "") {
                     $subCategoria = "'" . $key . "'";
                 } else {
@@ -391,8 +507,8 @@ class ChartController extends Controller {
         $datos = " 
             function ".$contenedor."Load() {
 
-                var colors = ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
-                
+                //var colors = ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
+                var colors = Highcharts.getOptions().colors,
                 categories = [".$categoria."],            
                 data = [".$data."],
                 nivelData = [],
@@ -422,6 +538,7 @@ class ChartController extends Controller {
                             color: Highcharts.Color(data[i].color).brighten(brightness).get()
                         });
                     }
+                    console.log(gradoData);
                 }
 
                 $('#".$contenedor."').highcharts({                    
@@ -451,10 +568,10 @@ class ChartController extends Controller {
                         shared: true,
                         useHTML: true,
                         headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} Participantes</b> del total<br/>'
+                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ". $pointLabel ."</b> del total<br/>'
                     },
                     series: [{
-                        name: 'Etapa/Acreditación',
+                        name: '".$nameSeries."',
                         data: nivelData,
                         size: '60%',
                         dataLabels: {
@@ -465,9 +582,9 @@ class ChartController extends Controller {
                             distance: -30
                         }
                     }, {
-                        name: 'Cantidad',
+                        name: '". $name ."',
                         data: gradoData,
-                        size: '80%',
+                        size: '90%',
                         innerSize: '60%',
                         dataLabels: {
                             formatter: function () {
@@ -479,7 +596,7 @@ class ChartController extends Controller {
                 });
             }
         ";
-      //  dump($datos);die;
+        //dump($datos);die;
         return $datos;
     }
 
