@@ -294,7 +294,7 @@ class PrintCredencialController extends Controller{
                 # code...
                 break;
         }
-        dump(($this->container->getParameter('urlreportweb') . $reportDownload));die;
+        //dump(($this->container->getParameter('urlreportweb') . $reportDownload));die;
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'juegos_credencial_'.$id .'_2019.pdf'));
