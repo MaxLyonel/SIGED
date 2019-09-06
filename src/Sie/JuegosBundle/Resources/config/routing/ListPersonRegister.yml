@@ -1,0 +1,18 @@
+listPersonRegister_index:
+    path:     /
+    defaults: { _controller: SieJuegosBundle:ListPersonRegister:index }
+
+listPersonRegister_edit:
+    path:     /edit
+    defaults: { _controller: SieJuegosBundle:ListPersonRegister:edit }
+
+    
+listPersonRegister_new:
+    path:     /new
+    defaults: { _controller: SieJuegosBundle:ListPersonRegister:new }
+
+listPersonRegister_updateCommission:
+    path:     /updateCommission
+    defaults: { _controller: SieJuegosBundle:ListPersonRegister:updateCommission }    
+    options:
+         expose: true    

@@ -5,6 +5,8 @@ gestionmenu:
 gestionmenu_estado:
     path:     /{id}/estado
     defaults: { _controller: "SieAppWebBundle:GestionMenu:estado" }
+    options:
+        expose: true
 
 gestionmenu_list:
     path:     /{id}/list

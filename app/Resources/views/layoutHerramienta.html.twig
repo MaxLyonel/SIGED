@@ -39,9 +39,6 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-
-
-
             
             <link rel="stylesheet" type="text/css" href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
@@ -56,6 +53,7 @@
             <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
             
             <!--/ END THEME STYLES -->
+            <link href="https://openlayers.org/api/theme/default/style.css" rel="stylesheet">
 
             <!-- START @IE SUPPORT -->
             <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -341,7 +339,7 @@
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
                         </ul>
                     </li>
-                    {#
+                    
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -352,7 +350,7 @@
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
                         </ul>
                     </li>
-                    #}
+                   
                     {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -543,6 +541,19 @@
                                     <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
                                 </ul>
                             {% endif %}
+                        </li>
+                    {% endif %}
+
+                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('regularizacion_cut_index')}}">Nivelaci&oacute;n</a></li>
+                            </ul>
                         </li>
                     {% endif %}
                     
@@ -1382,6 +1393,11 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
 
+             <!-- Highcharts Charts -->
+            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+            <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+            <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+            <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
             <!--/ END CORE PLUGINS -->
 
             <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
@@ -1431,7 +1447,8 @@
 
             <!--/ END GOOGLE ANALYTICS -->
 
-            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+           
+
         {% endblock %}
     </body>
     <!--/ END BODY -->

@@ -93,24 +93,23 @@ class ReactivarBTHController extends Controller {
                             'msg' => $msg,
                         ));    
                     }else{ //NO TIENE TRAMITES PENDIENTES
-                        //$tr = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$id,'flujoTipo'=>6),array('id'=>'DESC'),1);
                         $tr = $em->getRepository('SieAppWebBundle:Tramite')->createQueryBuilder('t')
-                            ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId,f.id as flujoTipoId')
-                            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = t.institucioneducativa')
-                            ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
-                            ->innerJoin('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico', 'h', 'WITH', 'ie.id = h.institucioneducativaId')
-                            ->innerJoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'g.id = h.gradoTipo')
-                            ->innerJoin('SieAppWebBundle:FlujoTipo', 'f', 'WITH', 'f.id = t.flujoTipo')
-                            ->where('t.institucioneducativa = :id')
-                            ->andwhere('t.tramiteTipo IN (:tipo)')
-                            ->andwhere('h.gestionTipoId = (select max(h1.gestionTipoId) from SieAppWebBundle:InstitucioneducativaHumanisticoTecnico h1 where h1.institucioneducativaId=' . $idInstitucion.')')
-                            ->andwhere('t.flujoTipo = 6')
-                            ->orderBy('t.id','DESC')
-                            ->setParameter('id', $idInstitucion)
-                            ->setParameter('tipo', array(27,28,31))
-                            ->getQuery()
-                            ->getResult();
-                        //dump($tr);die;
+                        ->select('t.id,ie.id as codsie,ie.institucioneducativa,t.fechaRegistro,t.fechaFin,g.id as grado,tt.tramiteTipo,tt.id as tramiteTipoId,f.id as flujoTipoId')
+                        ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = t.institucioneducativa')
+                        ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                        ->leftJoin('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico', 'h', 'WITH', 'ie.id = h.institucioneducativaId')
+                        ->leftJoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'g.id = h.gradoTipo')
+                        ->innerJoin('SieAppWebBundle:FlujoTipo', 'f', 'WITH', 'f.id = t.flujoTipo')
+                        ->where('t.institucioneducativa = :id')
+                        ->andwhere('t.tramiteTipo IN (:tipo)')
+                        ->andwhere('t.flujoTipo = 6')
+                        ->andwhere('((h.id IS NULL and 1=1) or (h.id IS NOT NULL and h.gestionTipoId = (select max(h1.gestionTipoId) from SieAppWebBundle:InstitucioneducativaHumanisticoTecnico h1 where h1.institucioneducativaId=' . $idInstitucion.')))')
+                        ->orderBy('t.id','DESC')
+                        ->setParameter('id', $idInstitucion)
+                        ->setParameter('tipo', array(27,28,31))
+                        ->getQuery()
+                        ->getResult();
+
                         if($tr[0]['tramiteTipoId'] == 31){
                             $response = new JsonResponse();    
                             $msg = 'La Unidad Educativa ya rehabilitó su trámite para BTH.';
@@ -190,6 +189,25 @@ class ReactivarBTHController extends Controller {
         //dump($form,$imagen,$ieht);die;
         $em->getConnection()->beginTransaction();
         try {
+            if (!$ieht) {//Si el tramite fue anulado de IEHT
+                $ieht = new InstitucioneducativaHumanisticoTecnico();
+                $ieht->setGestionTipoId($sesion->get('currentyear'));
+                $ieht->setInstitucioneducativaId($form['codsie']);
+                $ieht->setInstitucioneducativa($tramite->getInstitucioneducativa()->getInstitucioneducativa());
+                $ieht->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
+                $ieht->setEsimpreso(false);
+                $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
+                $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
+                $em->persist($ieht);
+                $em->flush();
+            }else{ //Modificacion tabla institucioneducativa_humanistico_tecnico
+                $ieht->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
+                //Modificacion tabla institucioneducativa_humanistico_tecnico
+                $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
+                $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
+                $em->flush();
+            }
+            
             /**
              * registro de reactivacion bth
             */
@@ -202,12 +220,6 @@ class ReactivarBTHController extends Controller {
             $rehabilitacionBth->setUsuarioRegistroId($id_usuario);
             $rehabilitacionBth->setInstitucioneducativaId($ieht->getInstitucioneducativaId());
             $em->persist($rehabilitacionBth);
-            $em->flush();
-            
-            //Modificacion tabla institucioneducativa_humanistico_tecnico
-            $ieht->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(0));
-            $ieht->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(5));
-            $ieht->setFechaModificacion(new \DateTime(date('Y-m-d')));
             $em->flush();
 
             //Modificacion tipo de tramite a Regularizacion en tramite
@@ -338,6 +350,7 @@ class ReactivarBTHController extends Controller {
         ->orderBy("td.flujoProceso")
         ->getQuery()
         ->getResult();
+        
         $documentoDistrito = json_decode($resultDatos[0]->getDatos(),true);
         $documentoDepartamento =json_decode($resultDatos[1]->getDatos(),true);
         return array('especialidades' => $especialidadarray ,
@@ -346,25 +359,3 @@ class ReactivarBTHController extends Controller {
             'documentoDepartamento'=>($documentoDepartamento[6])?$documentoDepartamento[6]:$documentoDepartamento[5],);
     }
 }
-/*
-$em = $this->getDoctrine()->getManager();
-        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
-        ->select('wfd')
-        ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
-        ->where('td.tramite='.$tramiteId)
-        ->andWhere("wfd.esValido=true")
-        ->orderBy("td.flujoProceso")
-        ->getQuery()
-        ->getResult();
-
-$resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
-->select('wfd')
-->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
-->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
-->where('td.tramite='.$tramite_id)
-->andWhere('fp.orden=1')
-->andWhere("wfd.esValido=true")
-->orderBy("td.flujoProceso")
-->getQuery()
-->getSingleResult();
-        */

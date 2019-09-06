@@ -318,6 +318,13 @@ class SolicitudBTHController extends Controller {
                 $especialidadarray[] = array('id' => $especialidad->getId(), 'especialidad' => $especialidad->getEspecialidad());
             }
         }
+         if ($sw==0 and isset($datos[3]['grado'])){
+            $grado = $datos[3]['grado'];
+        } elseif ($sw==1 and isset($datos[5]['grado'])){
+            $grado = $datos[5]['grado'];
+        } else {
+            $grado = '';
+        }
 
         $datosForm = $this->datosFormulario($institucion_id, $gestion);
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDistrito.html.twig', array(
@@ -327,7 +334,7 @@ class SolicitudBTHController extends Controller {
             'especialidadarray' => $especialidadarray,
             'informe' => $informe,
             'id_tramite' => $id_tramite,
-            'grado' => $sw==0?$datos[3]['grado']:$datos[5]['grado'],
+            'grado' =>$grado, //$sw==0?$datos[3]['grado']:$datos[5]['grado'],
             'sw' => $sw
         ));
     }
@@ -464,6 +471,11 @@ class SolicitudBTHController extends Controller {
                 $especialidadarray[] = array('id' => $especialidad->getId(), 'especialidad' => $especialidad->getEspecialidad());
             }
         }
+        if (isset($datos[4]['grado'])){
+            $grado = $datos[4]['grado'];
+                   } else {
+            $grado = '';
+        }
 
         $datosForm = $this->datosFormulario($institucion_id, $gestion);
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDepartamento.html.twig',array(
@@ -474,7 +486,7 @@ class SolicitudBTHController extends Controller {
             'informe' => $informe,
             'id_tramite' => $id_tramite,
             'documento' => $documento,
-            'grado'=>$datos[4]['grado']
+            'grado'=>$grado
         ));
     }
 

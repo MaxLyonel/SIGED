@@ -385,11 +385,17 @@
                         }
                         var evaluacion  = "NO";
                         if($('#siprocededep:checked').val())
-                                { evaluacion  ="SI";}
+                            { evaluacion  ="SI";
+                            if($('#literal_grado').text() == '') {
+                                    swal("Grado no existente, se recomienda hacer la devolución del trámite a la Unidad Educativa.");
+                                    return false;
+                                }
+                        }
                          //evaluacion 2
                         var evaluacion2  = "NO";
-                        if($('#sidevolucion:checked').val())
-                                { evaluacion2  ="SI";}
+                        if($('#sidevolucion:checked').val()){
+                            evaluacion2  ="SI";
+                        }
                         //validacion checked autoriza u.e.
                         var respuesta=$('input:radio[name=radiotypedep]:checked').val();
                         var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
@@ -405,7 +411,7 @@
                                 return false;}
                         }
 
-                        ip.push({grado:{{grado}}});
+                        ip.push({grado: $('#literal_grado').text()});
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
                         var fd = new FormData();

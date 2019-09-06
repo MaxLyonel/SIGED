@@ -42,7 +42,7 @@
                                     <li>
                                         <a href="javascript:void(0);" onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
                                     </li>
-                                    {% if app.session.get('roluser') == 41 %}
+                                    {% if app.session.get('roluser') in [8,41] %}
                                         <li>
                                             <a href="javascript:void(0);" onclick="reactivadosBth()"> <i class="fa fa-file-text-o"></i> Reactivados BTH</a>
                                         </li>
@@ -252,6 +252,7 @@
                     $('#contenido').empty();
                     $('#contenido').append(data);
                     cargatablas();
+                    readmore();
                     $(".tooltips").tooltip();
                 },
             });
@@ -322,6 +323,15 @@
                     $('#modal').append(data);
                 },
             });
+        }
+        function validar(){
+           if (confirm('Esta seguro de recibir el trámite?')){
+               //$('#btn_recibir').attr('disabled',true);
+               //return true;
+           }else{
+               return false;
+           }
+           
         }
 
     </script>
