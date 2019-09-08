@@ -549,8 +549,8 @@ class RegistryPersonComissionController extends Controller{
         // dump($form);
         // dump($arrParametros);
         // die;
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
-        // $answerSegip = true;
+        //$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+         $answerSegip = true;
         if($answerSegip){
             // save the person data
             $swSavePerson = $this->savePerson($form);
