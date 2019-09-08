@@ -654,7 +654,7 @@ class RegistryPersonComissionController extends Controller{
         $swAnswer = false;
         try {
             $objPerson = new Persona();
-            $objPerson->setSegipId(1);
+            $objPerson->setSegipId(0);
             $objPerson->setCarnet($form['ci']);
             $objPerson->setComplemento($form['complemento']);
             $objPerson->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
