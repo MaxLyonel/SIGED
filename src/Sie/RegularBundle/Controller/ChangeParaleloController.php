@@ -33,7 +33,7 @@ class ChangeParaleloController extends Controller {
     public function indexAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
-        return $this->redirectToRoute('principal_web');
+        
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));

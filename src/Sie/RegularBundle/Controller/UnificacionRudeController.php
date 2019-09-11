@@ -30,7 +30,7 @@ class UnificacionRudeController extends Controller {
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        return $this->redirectToRoute('principal_web');
+        // return $this->redirectToRoute('principal_web');
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
