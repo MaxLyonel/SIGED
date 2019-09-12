@@ -188,7 +188,7 @@ class PrintCredencialController extends Controller{
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('mat', array( 3,4,5,6,10 ))
-                ->setParameter('faseTipo', 2)
+                ->setParameter('faseTipo', 4)
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
