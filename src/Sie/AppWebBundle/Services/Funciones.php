@@ -1047,10 +1047,11 @@ class Funciones {
     }
 
     public function getSpeciality($data){
+    //dump($data);die;
            $query = $this->em->createQueryBuilder()
                     ->select('esp')
                     ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico', 'ieeth')
-                    ->innerjoin('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
+                    ->innerjoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
                     ->where('ieeth.institucioneducativa = :currentSie')
                     ->andwhere('ieeth.gestionTipo = :currentGestion')
                     ->setParameter('currentSie',$data['currentSie'])
