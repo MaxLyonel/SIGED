@@ -998,10 +998,12 @@ class Funciones {
                 ->andWhere('it = :idTipo')
                 ->andWhere('iec.nivelTipo = :level')
                 ->andWhere('iec.gradoTipo in (:levels)')
+                ->andWhere('em.id in (:mat)')
                 ->setParameter('id', $data['codigoRude'])
                 ->setParameter('idTipo',1)
                 ->setParameter('levels',array(3,4,5,6))
                 ->setParameter('level', 13)
+                ->setParameter('mat', array(4,5,55,11))
                 ->orderBy('iec.gestionTipo', 'ASC')
                 ->addorderBy('ei.fechaInscripcion', 'ASC')
                 ->getQuery();
