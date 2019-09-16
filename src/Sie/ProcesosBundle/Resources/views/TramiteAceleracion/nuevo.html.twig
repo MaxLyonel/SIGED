@@ -23,7 +23,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Solicitud de Aceleración</h3>
+                                <h3 class="panel-title">Inicio de trámite para Aceleración Educativa</h3>
                             </div>
                         </div>
                     </div>
@@ -54,13 +54,13 @@
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="paterno">Paterno</label>
+                                        <label for="paterno">Apellido Paterno</label>
                                         <input type="text" class="form-control noedit" id="paterno" name="paterno">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="materno">Materno</label>
+                                        <label for="materno">Apellido Materno</label>
                                         <input type="text" class="form-control noedit" id="materno" name="materno">
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                                         <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
                                     </div>
                                     <!-- <div class="form-group">
@@ -162,11 +162,11 @@
                                 <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
-                                        <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="informe_comision">Informe Complementario</label>
-                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" disabled required>
+                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf" disabled required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
@@ -182,7 +182,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <b>Grados a Acelerar: </b><span id="grado_acelerar"></span> <br>
+                                        <b>Grados que va Acelerar: </b><span id="grado_acelerar"></span> <br>
                                         <b>Inscrito en la Gestión Actual: </b><span id="grado_inscripcion"></span>
                                     </div>
                                     <div class="row" id="fila_destino" style="display: none">
@@ -205,7 +205,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <h5 class="float-left"><b class="text-danger">Nota:</b> El documento adjunto no debe superar los 2MB</h5>
+                            <h5 class="float-left"><b class="text-danger">Nota:</b> El Informe Complementario será requerido a partir de la segunda aceleración.</h5>
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -236,7 +236,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Confirmar</h4>
+                    <h4 class="modal-title">Alerta</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="tramite_st" value="0">
@@ -259,9 +259,9 @@
             $('.myfiles').change(function() {
                 if(this.files[0].size > 2057157) {
                     $(this).val('');
-                    $(this).css('background', '#ffebee');
-                } else {
-                    $(this).css('background', '#ffffff');
+                    $("#btn_aceptar").hide();
+                    $("#mensaje").html('<h5>El archivo no debe superar el peso permitido de <b>2MB</b>.</h5>');
+                    $("#modalNotificacion").modal('show');
                 }
             });
             $(".numeric").keypress(function (e) {
@@ -299,6 +299,8 @@
                     },
                     success: function (data) {
                         $("#carga").empty();
+                        var lista = "";
+                        var error = false;
                         if (data.msg == 'exito') {
                             $("#nombre").val(data.estudiante.nombre);
                             $("#paterno").val(data.estudiante.paterno);
@@ -336,15 +338,58 @@
                             
                             $('#inf_psico').css('display', 'block');
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
-                        } else if (data.msg == 'notalento' || data.msg == 'noregular' || data.msg == 'nocurso' || data.msg == 'noins' || data.msg == 'noest') {
-                            $("#modalNotificacion").modal('show');
-                            mesage('warning', 'Notificación', '<h4>El Estudiante no cumple con las siguientes condiciones</h4>'+
-                            '<ul><li>Debe estar en Educación Regular.</li>'+
-                            '<li>Debe estar inscrito en la gestión actual.</li>'+
-                            '<li>Debe ser determinado como Talento Extraordinario.</li></ul>', false, 2);
+                        } else if (data.msg == 'noest') {
+                            lista += '<li><b>Debe existir el registro del Estudiante en el sistema.</b></li>';
+                            lista += '<li>Debe estar en Educación Regular.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>Debe ser identificado como Talento Extraordinario.</li>';
+                            lista += '<li>El trámite de Aceleración Educativa ya fue iniciado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'noregular') {
+                            lista += '<li>Debe existir el registro del Estudiante en el sistema.</li>';
+                            lista += '<li><b>Debe estar en Educación Regular.</b></li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>Debe ser identificado como Talento Extraordinario.</li>';
+                            lista += '<li>El trámite de Aceleración Educativa ya fue iniciado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'noins' || data.msg == 'nocurso') {
+                            lista += '<li>Debe existir el registro del Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar en Educación Regular.</li>';
+                            lista += '<li><b>Debe estar inscrito en la gestión actual.</b></li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>Debe ser identificado como Talento Extraordinario.</li>';
+                            lista += '<li>El trámite de Aceleración Educativa ya fue iniciado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'noue') {
+                            lista += '<li>Debe existir el registro del Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar en Educación Regular.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li><b>Debe estar inscrito en su Unidad Educativa.</b></li>';
+                            lista += '<li>Debe ser identificado como Talento Extraordinario.</li>';
+                            lista += '<li>El trámite de Aceleración Educativa ya fue iniciado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'notalento') {
+                            lista += '<li>Debe existir el registro del Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar en Educación Regular.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li><b>Debe ser identificado como Talento Extraordinario.</b></li>';
+                            lista += '<li>El trámite de Aceleración Educativa ya fue iniciado con anterioridad.</li>';
+                            error = true;
                         } else if (data.msg == 'existe') {
+                            lista += '<li>Debe existir el registro del Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar en Educación Regular.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>Debe ser identificado como Talento Extraordinario.</li>';
+                            lista += '<li><b>El trámite de Aceleración Educativa ya fue iniciado con anterioridad.</b></li>';
+                            error = true;
+                        }
+                        if (error) {
                             $("#modalNotificacion").modal('show');
-                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.', false, 2);
+                            $("#mensaje").html('<div class="alert alert-warning" role="alert"><h4>El Estudiante no cumple con las siguientes condiciones</h4><ul>'+lista+'</ul></div>');
                         }
                         $("#buscar").attr('disabled', false);
                     },
@@ -413,12 +458,12 @@
                 if (siguiente == item.value) {
                     $("#grado_inscripcion").text(item.text);
                     switch (item.text) {
-                        case 'Primero de secundaria':
-                        case 'Segundo de secundaria':
-                        case 'Tercero de secundaria':
-                        case 'Cuarto de secundaria':
-                        case 'Quinto de secundaria':
-                        case 'Sexto de secundaria':
+                        case 'Primero de Secundaria Comunitaria Productiva':
+                        case 'Segundo de Secundaria Comunitaria Productiva':
+                        case 'Tercero de Secundaria Comunitaria Productiva':
+                        case 'Cuarto de Secundaria Comunitaria Productiva':
+                        case 'Quinto de Secundaria Comunitaria Productiva':
+                        case 'Sexto de Secundaria Comunitaria Productiva':
                             $("#sie_destino").val($("#codigo_sie").val());
                             $("#sie_destino").attr('disabled', false);
                             $("#fila_destino").show();
@@ -507,14 +552,14 @@
                 success: function (data) {
                     $("#envio").empty();
                     if (data.estado == 200) {
-                        $("#guardar").attr('disabled', true);
+                        $("#guardar").hide();
                         clearInput();
                         $("#tramite_st").val(1);
                         $("#tramite_id").val(data.tramite);
                         mesage('info', 'Notificación', data.msg, false, 1);
                     } else {
                         mesage('danger', 'Alerta', data.msg, false, 1);
-                        $("#guardar").attr('disabled', true);
+                        $("#guardar").attr('disabled', false);
                     }
                 },
                 error: function (error) {

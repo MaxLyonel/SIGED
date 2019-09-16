@@ -46,13 +46,13 @@
                             </div>
                             <div class="col-xs-6">
                                 <div class="form-group">
-                                    <label for="es_talento">¿Es Talento?</label>
+                                    <label for="es_talento">¿Es Talento Extraordinario?</label>
                                     <input type="text" class="form-control" id="es_talento" value="{{ es_talento }}" disabled>
                                 </div>
                             </div>
                             <div class="col-xs-6">
                                 <div class="form-group">
-                                    <label for="tipo_talento">Tipo de Talento</label>
+                                    <label for="tipo_talento">Tipo de Talento Extraordinario</label>
                                     <input type="text" class="form-control" id="tipo_talento" value="{{ tipo_talento }}" disabled>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
             <div class="modal-content">
                 <form id="confirmar">
                     <div class="modal-header">
-                        <h4 class="modal-title">Confirmar</h4>
+                        <h4 class="modal-title">Alerta</h4>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
@@ -108,7 +108,7 @@
     {{parent()}}
     <script>
         $(document).ready(function() {
-            $("#carga").html('<h5>¿Está seguro(a) de finalizar trámite?</h5>');
+            $("#carga").html('<h5>¿Está seguro(a) de finalizar el trámite?</h5>');
         });
 
         $("#confirmar").submit(function (event) {
@@ -124,6 +124,7 @@
                 },
                 success: function (data) {
                     if (data.estado == 200) {
+                        $("#confirma").hide();
                         mesage('info', data.msg);
                         $("#tramite_st").val(1);
                     } else {
@@ -142,9 +143,10 @@
         }
 
         function openModal() {
-            $("#modalConfirm").modal('show');
             $("#confirma").attr('disabled', false);
             $("#tramite_st").val(0);
+            $("#carga").html('<h5>¿Está seguro(a) de finalizar el trámite?</h5>');
+            $("#modalConfirm").modal('show');
         }
 
         function closeModal() {

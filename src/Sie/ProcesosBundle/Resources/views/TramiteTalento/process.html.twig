@@ -46,12 +46,13 @@
                             </div>
                         </div>
                         <hr>
+                        <p><b class="text-danger">Nota:</b> Ingrese los datos requeridos en base al Informe Psicopedagógico.</p>
                         <div class="row">
                             <form id="modifica" autocomplete="off">
                                 <div class="col-md-6 col-sm-6">
                                     <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <div class="form-group">
-                                        <label for="es_talento">¿Es Talento?</label>
+                                        <label for="es_talento">¿Es Talento Extraordinario?</label>
                                         <select type="text" class="form-control" id="es_talento" name="es_talento" disabled required>
                                             <option value="" disabled selected>Seleccione...</option>
                                             <option value="SI">Si</option>
@@ -59,7 +60,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="tipo_talento">Tipo de Talento</label>
+                                        <label for="tipo_talento">Tipo de Talento Extraordinario</label>
                                         <select type="text" class="form-control" id="tipo_talento" name="tipo_talento" disabled required>
                                             <option value="" disabled selected>Seleccione...</option>
                                             <option value="general">General</option>
@@ -77,12 +78,12 @@
                                 </div>
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label for="nro_informe">Número de Informe</label>
+                                        <label for="nro_informe">Nro. de Informe Psicopedagógico</label>
                                         <input type="text" class="form-control" id="nro_informe" name="nro_informe" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="informe">Documento Informe</label>
-                                        <input type="file" class="form-control" id="informe" name="informe" accept=".pdf" required>
+                                        <label for="informe">Informe Psicopedagógico</label>
+                                        <input type="file" class="form-control myfiles" id="informe" name="informe" accept=".pdf" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12 col-sm-12 text-center">
@@ -103,11 +104,12 @@
                     <h4 class="modal-title">Notificación</h4>
                 </div>
                 <div class="modal-body text-center">
-                    <h5>¿Está seguro(a) de posponer el adjuntado del Informe Psicopedagógico?</h5>
-                    <div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div>
+                    <div id="mensaje"></div>
+                    {# <h5>¿Está seguro(a) de posponer el adjuntado del Informe Psicopedagógico?</h5>
+                    <div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div> #}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="redirect()">Aceptar</button>
+                    <button type="button" id="btn_aceptar" class="btn btn-primary" onclick="redirect()">Aceptar</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -117,7 +119,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Confirmar</h4>
+                    <h4 class="modal-title">Alerta</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="tramite_st" value="0">
@@ -135,7 +137,15 @@
     {{parent()}}
     <script>
         $(document).ready(function() {
-            $("#carga").html('<h5>¿Está seguro(a) de guardar la información ingresada?</h5>');
+            $("#carga").html('<h5>¿Está seguro(a) de guardar la información ingresada y remiter a la Dirección Distrital?</h5>');
+            $('.myfiles').change(function() {
+                if(this.files[0].size > 2057157) {
+                    $(this).val('');
+                    $("#btn_aceptar").hide();
+                    $("#mensaje").html('<h5>El archivo no debe superar el peso permitido de <b>2MB</b></h5>');
+                    $("#modalNotificacion").modal('show');
+                }
+            });
             $("#es_talento").prop("disabled", false);
         });
         $('.noedit').keydown(function() {
@@ -171,6 +181,7 @@
 
         $("#modifica").submit(function (event) {
             event.preventDefault();
+            $("#carga").html('<h5>¿Está seguro(a) de guardar la información ingresada y remiter a la Dirección Distrital?</h5>');
             $("#tramite_st").val(0);
             $("#actualiza").attr('disabled', false);
             $("#modalProcess").modal('show');
@@ -201,10 +212,11 @@
                 success: function (data) {
                     if (data.estado == 200) {
                         clearInput();
+                        $("#actualiza").hide();
                         $("#tramite_st").val(1);
                         message('info', data.msg);
                     } else {
-                        message('warning', 'No se pudo guardar los datos. Cierre la ventana flotante e intente de nuevo.');
+                        message('warning', data.msg);
                         $("#actualiza").attr('disabled', true);
                     }
                 },
@@ -226,6 +238,8 @@
         }
 
         function cancelForm() {
+            $("#mensaje").html('<h5>¿Está seguro(a) de posponer el adjuntado del Informe Psicopedagógico?</h5><div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div>');
+            $("#btn_aceptar").show();
             $("#modalNotificacion").modal('show');
         }
 
