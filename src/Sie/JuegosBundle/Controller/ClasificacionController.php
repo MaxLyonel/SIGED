@@ -2117,7 +2117,7 @@ class ClasificacionController extends Controller {
         } else {
             $codigoEntidad = 0;
         }        
-        $nivelId = 12;
+        $nivelId = 13;
 
         //print_r($codigoEntidad);
         //dump($codigoEntidad);die;
