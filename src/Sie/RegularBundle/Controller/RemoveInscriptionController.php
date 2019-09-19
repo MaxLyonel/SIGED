@@ -109,6 +109,15 @@ class RemoveInscriptionController extends Controller {
                 $this->addFlash('warningremoveins', $message);
                 return $this->redirectToRoute('remove_inscription_sie_index');
             }
+
+            //verificamos si esta en la tabla de olim_estudiante_inscripcion
+            $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
+            if ($objolim_estudiante_inscripcion) {
+                $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
+                $this->addFlash('warningremoveins', $message);
+                return $this->redirectToRoute('remove_inscription_sie_index');
+            }
+
             //get the student's inscription
             $objEstudiantInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eiid);
             //get institucioneducativaCurso info
@@ -293,13 +302,12 @@ class RemoveInscriptionController extends Controller {
             //step 6 copy data to control table and remove teh inscription
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eiid);
 
-            //verificamos si esta en la tabla de olim_estudiante_inscripcion
-            $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
-            if ($objolim_estudiante_inscripcion) {
-                $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
-                $this->addFlash('warningremoveins', $message);
-                return $this->redirectToRoute('remove_inscription_sie_index');
+            //paso Xi borrando objHumanistico
+            $objEntity = $em->getRepository('SieAppWebBundle:Rude')->findBy(array('estudianteInscripcion' => $eiid ));
+            foreach ($objEntity as $element) {
+                $em->remove($element);
             }
+            $em->flush();
 
             $studentInscription = new EstudianteInscripcionEliminados();
             $studentInscription->setEstudianteInscripcionId($objStudentInscription->getId());
