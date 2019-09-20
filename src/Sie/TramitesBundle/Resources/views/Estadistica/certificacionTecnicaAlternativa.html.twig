@@ -120,7 +120,49 @@
                                             </form>  
                                         {% endif %}  
                                     </div>   
-                                </div>                                 
+                                </div> 
+                                {% if nivelActual == 0 %}
+                                    <div class="row media">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            Estadística Completa 
+                                        </div>    
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            {% if infoEntidad[0] is defined %}
+                                                <form name="formEstadisticaCertificacionTecnicaCompleta" id="formEstadisticaCertificacionTecnicaCompleta" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_general_completa') }}" method="POST">  
+                                                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                    <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
+                                                    <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
+                                                    <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                        <i class="fa fa-file-pdf-o"></i>
+                                                    </button>
+                                                    <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                        <i class="fa fa-file-excel-o"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}   
+                                        </div>   
+                                    </div>     
+                                    <div class="row media">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            Especialidades Completa 
+                                        </div>    
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            {% if infoEntidad[0] is defined %}
+                                                <form name="formEstadisticaCertificacionTecnicaEspecialidadCompleta" id="formEstadisticaCertificacionTecnicaEspecialidadCompleta" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad_completa') }}" method="POST">  
+                                                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                    <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
+                                                    <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
+                                                    <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                        <i class="fa fa-file-pdf-o"></i>
+                                                    </button>
+                                                    <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                        <i class="fa fa-file-excel-o"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}   
+                                        </div>   
+                                    </div>    
+                                {% endif %}                           
                             </div>
                         </div>            
                     <div class="panel shadow">
