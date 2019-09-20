@@ -48,6 +48,7 @@
                                         <th>Lista PDF</th>
                                         <th>Lista XLS</th>
                                         <th>Certificados PDF</th>
+                                        <th>Reportes</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -60,6 +61,7 @@
                                         <th>Lista PDF</th>
                                         <th>Lista XLS</th>
                                         <th>Certificados PDF</th>
+                                        <th>Reportes</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -91,6 +93,30 @@
                                                 <a href="{{path('rue_download_certificado', {'certificado': entity.id } )}}">
                                                     <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt="">                                                        
                                                 </a>
+                                            </td>
+                                            <td class="text-left">
+                                                {% if 'RUE' in entity.observacion %}
+                                                    {% set rue = 1 %}
+                                                {% else %}
+                                                    {% set rue = 0 %}
+                                                {% endif %}
+                                                <ul>
+                                                    <li>
+                                                        <a href="{{path('rue_download_control_departamento', {'certificado': entity.id, 'tipo': rue } )}}">
+                                                            Control Dirección Departamental
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{path('rue_download_control_distrito', {'certificado': entity.id, 'tipo': rue } )}}">
+                                                            Control Dirección Distrital
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{path('rue_download_lista_certificados', {'certificado': entity.id } )}}">
+                                                            Lista (excel)
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </td>
                                         </tr>
                                     {% endfor %}

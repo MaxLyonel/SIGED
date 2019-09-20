@@ -119,11 +119,15 @@ class PrintCredencialController extends Controller{
             case 1:
                 $objComisionJuegosDatos = array();
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
-                $objComisionJuegosDatosAll = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
+                $objDatosAll = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
                 // dump($this->session->get('currentyear'));
-                foreach ($objComisionJuegosDatosAll as $key => $value) {
+                $objComisionJuegosDatos[]=$objDatosAll[0];
+                foreach ($objDatosAll as $key => $value) {
                     $objComisionJuegosDatos[] = $this->getJuegosInscriptionsByGestoinValida($value->getEstudianteInscripcionJuegos()->getId(),$this->session->get('currentyear'));
+                    
                 }
+                //$objComisionJuegosDatos[]=$objDatosAll[0];
+                //dump($objComisionJuegosDatos);die;
                 break;
             case 2:
                 # code...
@@ -144,8 +148,8 @@ class PrintCredencialController extends Controller{
                 break;
         }
 
-        // dump($data);
-        // die;
+        // dump($form['typeOption']);
+         //dump($objComisionJuegosDatos);die;
         return $this->render('SieJuegosBundle:PrintCredencial:lookforCredencial.html.twig', array(
                 'entity' => $entity,
                 'form' => $form,
@@ -184,7 +188,7 @@ class PrintCredencialController extends Controller{
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('mat', array( 3,4,5,6,10 ))
-                ->setParameter('faseTipo', 2)
+                ->setParameter('faseTipo', 4)
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
@@ -205,11 +209,9 @@ class PrintCredencialController extends Controller{
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('i,jeij')
+                ->select('i,jeij,e')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
-
                 ->leftjoin('SieAppWebBundle:JdpEstudianteInscripcionJuegos', 'jeij', 'WITH', 'ei.id = jeij.estudianteInscripcion')
-
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
                 ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
@@ -269,10 +271,45 @@ class PrintCredencialController extends Controller{
      * @param string codigoRude
      * @return form
      */
-    public function donwloadAction(){
-        return $this->render('SieJuegosBundle:PrintCredencial:donwload.html.twig', array(
-                // ...
-            ));    
+    public function donwloadAction(Request $request, $selectedReport, $id){
+        //che the type report to download  id, codges, codniv
+        switch ($selectedReport) {
+            // STUDENT
+            case 0:
+                # code...
+                $reportDownload = 'jdp_crd_deportista_v1.rptdesign&id='.$id .'&codniv=12&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+            // acompaniante    
+            case 1:
+                # code...
+                $reportDownload = 'jdp_crd_delegado_v1.rptdesign&id='.$id .'&codniv=12&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+            // Delegado
+            case 2:
+                # code...
+                $reportDownload = 'jdp_crd_organizador_v1.rptdesign&id='.$id .'&codniv=12&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        //dump(($this->container->getParameter('urlreportweb') . $reportDownload));die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'juegos_credencial_'.$id .'_2019.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $reportDownload));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+
+        // return $this->render('SieJuegosBundle:PrintCredencial:donwload.html.twig', array(
+        //         // ...
+        //     ));    
     }
 
 }

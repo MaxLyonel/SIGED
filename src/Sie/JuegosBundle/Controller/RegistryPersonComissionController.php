@@ -254,8 +254,8 @@ class RegistryPersonComissionController extends Controller{
                 ->add('complemento', 'text', array('label' => 'complemento', 'attr' => array('placeholder' => 'Ingresar Complemento','class' => 'form-control', 'required' => false,'style' => 'text-transform:uppercase', 'maxlength'=>'2')))
                 ->add('fechaNacimiento', 'text', array('label' => 'Fecha Nacimiento', 'attr' => array('placeholder' => 'Ingresar Fecha Nacimiento', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('placeholder' => 'Ingresar Nombre', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
-                ->add('paterno', 'text', array('label' => 'Paterno', 'attr' => array('placeholder' => 'Ingresar Paterno', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
-                ->add('materno', 'text', array('label' => 'Materno', 'attr' => array('placeholder' => 'Ingresar Materno', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('paterno', 'text', array('label' => 'Paterno', 'attr' => array('required'=>false,'placeholder' => 'Ingresar Paterno', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('materno', 'text', array('label' => 'Materno', 'attr' => array('required'=>false,'placeholder' => 'Ingresar Materno', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '50', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('regPerson','button',array('label'=>'Regstrar Persona','attr'=>array('class'=>'btn btn-success','onclick'=>'lookForDataBySegip()')))
 
                 ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
@@ -549,8 +549,8 @@ class RegistryPersonComissionController extends Controller{
         // dump($form);
         // dump($arrParametros);
         // die;
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
-        // $answerSegip = true;
+        //$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+         $answerSegip = true;
         if($answerSegip){
             // save the person data
             $swSavePerson = $this->savePerson($form);
@@ -654,7 +654,7 @@ class RegistryPersonComissionController extends Controller{
         $swAnswer = false;
         try {
             $objPerson = new Persona();
-            $objPerson->setSegipId(1);
+            $objPerson->setSegipId(0);
             $objPerson->setCarnet($form['ci']);
             $objPerson->setComplemento($form['complemento']);
             $objPerson->setNombre(mb_strtoupper($form['nombre'], 'utf8'));

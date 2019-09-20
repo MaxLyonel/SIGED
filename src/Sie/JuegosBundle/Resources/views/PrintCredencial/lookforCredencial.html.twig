@@ -1,28 +1,48 @@
 <div class="row">
     <div class="col-md-12">
+    {% if objComisionJuegosDatos %}
+        {% if form.typeOption == 0 %}
+            {% set id = objComisionJuegosDatos[0].id %}
+        {% endif %}
+        {% if form.typeOption == 1 %}
+        {# {{dump(objComisionJuegosDatos[0])}} #}
+            {% set id = objComisionJuegosDatos[0].id %}
+        {% endif %}
+        {% if form.typeOption == 2 %}
+            {% set id = objComisionJuegosDatos.id %}
+        {% endif %}   
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <a class="btn btn-block btn-sm btn-info btn-push" href="{{ path('printCredencial_donwload', {'selectedReport': form.typeOption, 'id':id} )}}"><i class="fa fa-download"></i> Descargar Credencial</a>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
 
-    <div class="panel rounded shadow">
-        <div class="panel-body">
-            <div class="inner-all">
-                <button class="btn btn-primary btn-xs btn-push">Descargar Credencial</button>
-            </div>
-        </div><!-- /.panel-body -->
-    </div>
-
-    {% if form.typeOption == 0 %}
-        {% include 'SieJuegosBundle:PrintCredencial:student.html.twig'  %}
+        {% if form.typeOption == 0 %}
+            {% include 'SieJuegosBundle:PrintCredencial:student.html.twig'  %}
+        {% endif %}
+        {% if form.typeOption == 1 %}
+            {% include 'SieJuegosBundle:PrintCredencial:accompanist.html.twig'  %}
+        {% endif %}
+        
+        {% if form.typeOption == 2 %}
+            {% include 'SieJuegosBundle:RegistryPersonComission:dataPerson.html.twig'  %}
+        {% endif %}
+        
+            {# with {'dataInscription': dataInscriptionR} #}
+    {% else %}
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <strong>Datos no encontrados</strong>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
     {% endif %}
-    {% if form.typeOption == 1 %}
-        {% include 'SieJuegosBundle:PrintCredencial:accompanist.html.twig'  %}
-    {% endif %}
-    
-    {% if form.typeOption == 2 %}
-        {% include 'SieJuegosBundle:RegistryPersonComission:dataPerson.html.twig'  %}
-    {% endif %}
-    
-        {# with {'dataInscription': dataInscriptionR} #}
     </div>
 </div>
+
 <div class="row">
             
         

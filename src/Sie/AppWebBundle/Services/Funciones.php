@@ -998,10 +998,12 @@ class Funciones {
                 ->andWhere('it = :idTipo')
                 ->andWhere('iec.nivelTipo = :level')
                 ->andWhere('iec.gradoTipo in (:levels)')
+                ->andWhere('em.id in (:mat)')
                 ->setParameter('id', $data['codigoRude'])
                 ->setParameter('idTipo',1)
                 ->setParameter('levels',array(3,4,5,6))
                 ->setParameter('level', 13)
+                ->setParameter('mat', array(4,5,55,11))
                 ->orderBy('iec.gestionTipo', 'ASC')
                 ->addorderBy('ei.fechaInscripcion', 'ASC')
                 ->getQuery();
@@ -1047,10 +1049,11 @@ class Funciones {
     }
 
     public function getSpeciality($data){
+    //dump($data);die;
            $query = $this->em->createQueryBuilder()
                     ->select('esp')
                     ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico', 'ieeth')
-                    ->innerjoin('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
+                    ->innerjoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
                     ->where('ieeth.institucioneducativa = :currentSie')
                     ->andwhere('ieeth.gestionTipo = :currentGestion')
                     ->setParameter('currentSie',$data['currentSie'])
@@ -1145,9 +1148,11 @@ class Funciones {
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
                 ->andWhere('it = :idTipo')
+                ->andWhere('em.id in(:estmat)')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->setParameter('id', $data['codigoRude'])
                 ->setParameter('idTipo',1)
+                ->setParameter('estmat',array(4,5,55,11))
                 ->setParameter('gestion',$data['gestion'])
                 ->orderBy('iec.gestionTipo', 'ASC')
                 ->addorderBy('ei.fechaInscripcion', 'ASC')

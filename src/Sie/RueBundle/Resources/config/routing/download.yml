@@ -10,4 +10,14 @@ rue_download_lista_certificado_xls:
     path:    /listaxls/{certificado}
     defaults: { _controller: "SieRueBundle:Download:listaxls" }
 
-    
+rue_download_control_departamento:
+    path:    /controldpto/{certificado}/{tipo}
+    defaults: { _controller: "SieRueBundle:Download:controlDepartamento" }
+
+rue_download_control_distrito:
+    path:    /controldis/{certificado}/{tipo}
+    defaults: { _controller: "SieRueBundle:Download:controlDistrito" }
+
+rue_download_lista_certificados:
+    path:    /listaresumen/{certificado}
+    defaults: { _controller: "SieRueBundle:Download:listaResumen" }
