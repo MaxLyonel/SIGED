@@ -164,21 +164,20 @@ class ClasificacionController extends Controller {
         $ue = $request->get('form_ue');
         $cultural = $request->get('form_representacion');
 
-        $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');
+        $entity = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eij')
-                ->innerJoin('SieAppWebBundle:PruebaTipo', 'pt', 'WITH', 'pt.id = eij.pruebaTipo')
+                ->innerJoin('SieAppWebBundle:JdpPruebaTipo', 'pt', 'WITH', 'pt.id = eij.pruebaTipo')
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','e.id = ei.estudiante')
                 ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = eij.gestionTipo')
-                ->innerJoin('SieAppWebBundle:FaseTipo', 'ft', 'WITH', 'ft.id = eij.faseTipo')
-                ->where('eij.marca = :cultural')
+                ->innerJoin('SieAppWebBundle:JdpFaseTipo', 'ft', 'WITH', 'ft.id = eij.faseTipo')
+                ->where('pt.id = 0')
                 ->andWhere('gt.id = :gestionId')
                 ->andWhere('ie.id = :ueId')
                 ->andWhere('ft.id = 4')
                 ->setParameter('ueId', $ue)
-                ->setParameter('cultural', $cultural)
                 ->setParameter('gestionId', $gestionActual)
                 ->orderBy('pt.prueba', 'ASC')
                 ->getQuery();
@@ -690,7 +689,7 @@ class ClasificacionController extends Controller {
                 ->add('ue', 'hidden', array('attr' => array('value' => $value1)))
                 ->add('representacion','choice',
                       array('label' => 'Representación',
-                            'choices' => (array('111' => 'Danza','112' => 'Poeta')),
+                            'choices' => (array('111' => 'Danza')),
                             'attr' => array('class' => 'form-control')))
                 ->add('submit', 'submit', array('label' => 'Registrar', 'attr' => array('class' => 'btn btn-default')))
                 ->getForm();
@@ -754,10 +753,10 @@ class ClasificacionController extends Controller {
                 }
 
                 try {
-                    $pruebaEntity = $em->getRepository('SieAppWebBundle:PruebaTipo')->findOneBy(array('id' => 0));
+                    $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => 0));
                     $gestionEntity = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionActual));
-                    $faseEntity = $em->getRepository('SieAppWebBundle:FaseTipo')->findOneBy(array('id' => $fase));
-                    $comisionEntity = $em->getRepository('SieAppWebBundle:ComisionTipo')->findOneBy(array('id' => (int)($cultural)));
+                    $faseEntity = $em->getRepository('SieAppWebBundle:JdpFaseTipo')->findOneBy(array('id' => $fase));
+                    $comisionEntity = $em->getRepository('SieAppWebBundle:JdpComisionTipo')->findOneBy(array('id' => (int)($cultural)));
                     $entidadUsuario = $this->buscaEntidadFase(3,$id_usuario);
                     $msgEstudiantesRegistrados = "";
                     $msgEstudiantesObservados = "";
@@ -765,7 +764,7 @@ class ClasificacionController extends Controller {
                         $msg = $this->validaInscripcionCulturalJuegos($deportista,$gestionActual,0,$fase,13,$entidadUsuario[0]["id"]); //validaInscripcionCulturalJuegos
                         if($msg[0]){
                             $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $deportista));
-                            $estudianteInscripcionJuegos = new EstudianteInscripcionJuegos();
+                            $estudianteInscripcionJuegos = new JdpEstudianteInscripcionJuegos();
                             $estudianteInscripcionJuegos->setEstudianteInscripcion($estudianteInscripcionEntity );
                             $estudianteInscripcionJuegos->setPruebaTipo($pruebaEntity);
                             $estudianteInscripcionJuegos->setGestionTipo($gestionEntity);
@@ -773,6 +772,7 @@ class ClasificacionController extends Controller {
                             $estudianteInscripcionJuegos->setFechaRegistro($fechaActual);
                             $estudianteInscripcionJuegos->setFechaModificacion($fechaActual);
                             $estudianteInscripcionJuegos->setUsuarioId($id_usuario);
+                            $estudianteInscripcionJuegos->setEsactivo(true);
                             $estudianteInscripcionJuegos->setObs($comisionEntity->getComision());
                             $em->persist($estudianteInscripcionJuegos);
                             $em->flush();
@@ -1741,7 +1741,7 @@ class ClasificacionController extends Controller {
     public function validaInscripcionCulturalJuegos($inscripcionEstudiante,$gestion,$prueba,$fase,$nivel,$entidadUsuarioId) {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select * from estudiante_inscripcion_juegos as eij
+            select * from jdp_estudiante_inscripcion_juegos as eij
             where eij.estudiante_inscripcion_id = ".$inscripcionEstudiante." and eij.gestion_tipo_id = ".$gestion." and eij.fase_tipo_id = ".$fase." and eij.prueba_tipo_id  = 0
              ");
         $query->execute();
@@ -1749,7 +1749,7 @@ class ClasificacionController extends Controller {
 
 
         $query = $em->getConnection()->prepare("
-            select eij.* as cantidad from estudiante_inscripcion_juegos as eij
+            select eij.* as cantidad from jdp_estudiante_inscripcion_juegos as eij
             inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
@@ -2136,6 +2136,38 @@ class ClasificacionController extends Controller {
     }
 
 
+    
+    public function listaDeportistasClasificadosSeguimientoDescargaPdfAction($fase,$usuario) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
+        $em = $this->getDoctrine()->getManager();
+
+        $objEntidad = $this->buscaEntidadFase($fase,$usuario);
+
+        if(count($objEntidad)>0){
+            $codigoEntidad = $objEntidad[0]['id'];
+        } else {
+            $codigoEntidad = 0;
+        }        
+        $nivelId = 13;
+
+        //print_r($codigoEntidad);
+        //dump($codigoEntidad);die;
+        $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        //$response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        //$response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');  
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_general_seguimiento_v1_rcm.rptdesign&__format=xls&dep='.$codigoEntidad.'&gestion='.$gestionActual.'&fase=4'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 
     public function estadisticaRegistroUnidadesEducativasFasePreviaDepartamentoDescargaPdfAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
