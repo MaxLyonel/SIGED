@@ -303,11 +303,12 @@ class RemoveInscriptionController extends Controller {
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eiid);
 
             //to remove all info about RUDE
-            $objRude = $em->getRepository('SieAppWebBundle:Rude')->findBy(array('estudianteInscripcion' => $eiid ));
+            $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion' => $eiid ));
 
             if($objRude){
 
                 $objRudeAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude' => $objRude->getId() ));
+
                 foreach ($objRudeAbandono as $element) {
                     $em->remove($element);
                 }
@@ -389,8 +390,8 @@ class RemoveInscriptionController extends Controller {
             $em->flush();
 
 
-            foreach ($objRude as $element) {
-                $em->remove($element);
+            if ($objRude) {
+                $em->remove($objRude);
             }
             $em->flush();
 
