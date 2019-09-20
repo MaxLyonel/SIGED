@@ -27,9 +27,9 @@ class CdlSeguimientoController extends Controller
         $lista = array();
         $lista[0]['nombre'] = "CLUBES DE LECTURA POR UNIDAD EDUCATIVA";
         $lista[0]['ruta'] = "cdl_seguimiento_porsie";
-        $lista[1]['nombre'] = "Unidades Educativas de su Jurisdicción que cuentan con Clubs de Lectura.";
-        $lista[1]['ruta'] = "cdl_seguimiento_porjurisdiccion";
-        /* $lista[2]['nombre'] = "CANTIDAD DE UNIDADES EDUCATIVAS QUE CUENTAN CON AL MENOS UN CLUB DE LECTURA";
+        // $lista[1]['nombre'] = "Unidades Educativas de su Jurisdicción que cuentan con Clubs de Lectura.";
+        // $lista[1]['ruta'] = "cdl_seguimiento_porjurisdiccion";
+         $lista[2]['nombre'] = "CANTIDAD DE UNIDADES EDUCATIVAS QUE CUENTAN CON AL MENOS UN CLUB DE LECTURA";
         $lista[2]['ruta'] = "cdl_seguimiento_con_cdl";
         $lista[3]['nombre'] = "CANTIDAD DE UNIDADES EDUCATIVAS QUE NO CUENTAN CON CLUBES DE LECTURA";
         $lista[3]['ruta'] = "cdl_seguimiento_sin_cdl";
@@ -37,8 +37,8 @@ class CdlSeguimientoController extends Controller
         $lista[4]['ruta'] = "cdl_seguimiento_clubes_lectura";
         $lista[5]['nombre'] = "CANTIDAD DE ESTUDIANTES QUE PARTICIPAN DE UN CLUB DE LECTURA POR AÑO DE ESCOLARIDAD";
         $lista[5]['ruta'] = "cdl_seguimiento_estudiantes_clubes_lectura";
-        $lista[6]['nombre'] = "LISTADO DE LECTURAS Y PRODUCTOS DE LOS CLUBES DE LECTURA";
-        $lista[6]['ruta'] = "cdl_seguimiento_lecturas_productos"; */
+        // $lista[6]['nombre'] = "LISTADO DE LECTURAS Y PRODUCTOS DE LOS CLUBES DE LECTURA";
+        // $lista[6]['ruta'] = "cdl_seguimiento_lecturas_productos"; 
         return $this->render('SieHerramientaBundle:CdlSeguimiento:index.html.twig', array('lista'=>$lista,
             ));
     }
