@@ -407,13 +407,13 @@ class RegistryPersonComissionController extends Controller{
                         ->orderBy('lt.id', 'ASC');
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
         ))
-        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:ComisionTipo', 'empty_value'=>'Selecionar Comisión',
+        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
 
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('ct')
                         ->where('ct.nivelTipoId = :levelId')
-                        ->andWhere('ct.estado = true')
-                        ->setParameter('levelId','12')
+                        ->andWhere('ct.esactivo = true')
+                        ->setParameter('levelId','13')
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision','attr'=>array('class'=>'form-control')))
         ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
@@ -448,7 +448,7 @@ class RegistryPersonComissionController extends Controller{
                 'query_builder' => function(EntityRepository $e){
                     return $e->createQueryBuilder('ct')
                             ->where('ct.nivelTipoId = :levelId')
-                            ->andWhere('ct.estado = true')
+                            ->andWhere('ct.esactivo = true')
                             ->andWhere('ct.id in (103,105,106,107)')
                             ->setParameter('levelId','12')
                             ->orderBy('ct.comision', 'ASC');
@@ -475,7 +475,7 @@ class RegistryPersonComissionController extends Controller{
                 'query_builder' => function(EntityRepository $e){
                     return $e->createQueryBuilder('ct')
                             ->where('ct.nivelTipoId = :levelId')
-                            ->andWhere('ct.estado = true')
+                            ->andWhere('ct.esactivo = true')
                             ->andWhere('ct.id in (146,154,150,156,152,153,122)')
                             ->setParameter('levelId','13')
                             ->orderBy('ct.comision', 'ASC');
