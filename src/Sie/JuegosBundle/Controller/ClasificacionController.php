@@ -247,9 +247,37 @@ class ClasificacionController extends Controller {
         $forma = $this->creaFormularioRegistroCultural('sie_juegos_representacion_cultural_lista_estudiante_registro', $sie, $gestion, $nivelId, $gradoId, $generoId, 0)->createView();
 
 
+        $entity = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
+        $query = $entity->createQueryBuilder('eij')
+                ->innerJoin('SieAppWebBundle:JdpPruebaTipo', 'pt', 'WITH', 'pt.id = eij.pruebaTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
+                ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->leftJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = eij.gestionTipo')
+                ->innerJoin('SieAppWebBundle:JdpFaseTipo', 'ft', 'WITH', 'ft.id = eij.faseTipo')
+                ->where('pt.id = 0')
+                ->andWhere('gt.id = :gestionId')
+                ->andWhere('ie.id = :ueId')
+                ->andWhere('ft.id = 4')
+                ->setParameter('ueId', $sie)
+                ->setParameter('gestionId', $gestion)
+                ->orderBy('pt.prueba', 'ASC')
+                ->getQuery();
+        $aInscritos = $query->getResult();
+        if(count($aInscritos)>0){
+            foreach ($aInscritos as $inscrito) {
+                $ainscritos[base64_encode($inscrito->getId())] = $inscrito->getEstudianteInscripcion()->getEstudiante()->getNombre().' '.$inscrito->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$inscrito->getEstudianteInscripcion()->getEstudiante()->getMaterno();
+            }
+        } else {
+            $ainscritos = array();
+        }
+
+
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:seeStudentsCultural.html.twig', array(
                     'form' => $this->creaFormularioRegistroCultural('sie_juegos_representacion_cultural_lista_estudiante_registro', $sie, $gestion, $nivelId, $gradoId, $generoId, 0)->createView(),
                     'objStudents' => $objStudents,
+                    'objCultural' => $ainscritos,
                     'sie' => $sie,
                     'nivel' => $nivel,
                     'gestion' => $gestion,
