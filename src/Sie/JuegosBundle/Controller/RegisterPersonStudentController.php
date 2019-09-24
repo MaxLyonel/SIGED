@@ -828,6 +828,8 @@ class RegisterPersonStudentController extends Controller{
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $sesion = $request->getSession();
+        $id_usuario = $this->session->get('userId');
     	// dump($request);die;
     	//get the send values
     	$form = $request->get('form');
