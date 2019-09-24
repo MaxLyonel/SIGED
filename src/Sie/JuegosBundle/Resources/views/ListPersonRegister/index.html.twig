@@ -3,7 +3,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="glyphicon glyphicon-pencil"></i> Lista de Personas registradas <span>----</span></h2>
+        <h2><i class="glyphicon glyphicon-pencil"></i> Comisiones <span>Lista de Personas registradas</span></h2>
     </div><!-- /.header-content -->
     <!--/ End page header -->
 
@@ -15,21 +15,23 @@
                 <div class="panel rounded shadow">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Busqueda</h3>
+                            <h3 class="panel-title">Búsqueda</h3>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
-                    <div class="panel-body no-padding">
+                    <div class="panel-body">
 
-                    <h1>Persona list</h1>
-                        <ul>
-                            <li>
-                                <a href="{{ path('registrypersoncomission_index') }}">
-                                    Registrar Nueva Persona
-                                </a>
-                            </li>
-                        </ul>
-                        <table class="table">
+                    <h1>Lista</h1>
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <a href="{{ path('registrypersoncomission_index') }}" class="btn btn-md btn-primary">
+                                <i class="fa fa-fw fa-plus"></i> Registrar Nueva Persona
+                            </a>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     
@@ -41,8 +43,7 @@
                                     <th>Comision</th>
                                     <th>Lugar</th>
                                     <th>Obs.</th>
-                                    {# <th>Fechanacimiento</th> #}
-                                    <th>Actions</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,12 +75,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-
-                            
-
-                        
-                           
-
+                    </div>
                     </div><!-- /.panel-body -->
                 </div><!-- /.panel -->
                 <!--/ End comment form -->
@@ -108,9 +104,4 @@
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
-
-   
-   
-
-
-{%endblock%}
+{% endblock %}

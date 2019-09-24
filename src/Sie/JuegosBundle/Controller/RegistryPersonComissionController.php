@@ -407,13 +407,13 @@ class RegistryPersonComissionController extends Controller{
                         ->orderBy('lt.id', 'ASC');
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
         ))
-        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:ComisionTipo', 'empty_value'=>'Selecionar Comisión',
+        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
 
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('ct')
                         ->where('ct.nivelTipoId = :levelId')
-                        ->andWhere('ct.estado = true')
-                        ->setParameter('levelId','12')
+                        ->andWhere('ct.esactivo = true')
+                        ->setParameter('levelId','13')
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision','attr'=>array('class'=>'form-control')))
         ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
@@ -448,7 +448,7 @@ class RegistryPersonComissionController extends Controller{
                 'query_builder' => function(EntityRepository $e){
                     return $e->createQueryBuilder('ct')
                             ->where('ct.nivelTipoId = :levelId')
-                            ->andWhere('ct.estado = true')
+                            ->andWhere('ct.esactivo = true')
                             ->andWhere('ct.id in (103,105,106,107)')
                             ->setParameter('levelId','12')
                             ->orderBy('ct.comision', 'ASC');
@@ -475,7 +475,7 @@ class RegistryPersonComissionController extends Controller{
                 'query_builder' => function(EntityRepository $e){
                     return $e->createQueryBuilder('ct')
                             ->where('ct.nivelTipoId = :levelId')
-                            ->andWhere('ct.estado = true')
+                            ->andWhere('ct.esactivo = true')
                             ->andWhere('ct.id in (146,154,150,156,152,153,122)')
                             ->setParameter('levelId','13')
                             ->orderBy('ct.comision', 'ASC');
@@ -674,23 +674,27 @@ class RegistryPersonComissionController extends Controller{
             } else {
                 $ci = $cedula.'-'.$complemento;
             }
+            
+            $namePhoto = "";
 
-            // create the img path
-            // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
-            $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
+            if($form['photoData']['photoperson'] != null) {
+                // create the img path
+                // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
+                $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
 
-            // if (!file_exists($dirtmp)) {
-            //     mkdir($dirtmp, 0775);
-            // }
+                // if (!file_exists($dirtmp)) {
+                //     mkdir($dirtmp, 0775);
+                // }
 
-            // get info about the img
-            $imgExtension = $form['photoData']['photoperson']->getMimeType();
-            list($typeImg, $extensionImg) = explode('/', $imgExtension);
-            // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
-            $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+                // get info about the img
+                $imgExtension = $form['photoData']['photoperson']->getMimeType();
+                list($typeImg, $extensionImg) = explode('/', $imgExtension);
+                // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+                $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
 
-            //move the file on the img path
-            $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+                //move the file on the img path
+                $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+            }
 
             // save the commision to the person choose
             $objComisionJuegosDatos = new JdpDelegadoInscripcionJuegos();
