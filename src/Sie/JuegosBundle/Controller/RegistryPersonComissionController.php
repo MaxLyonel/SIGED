@@ -674,23 +674,27 @@ class RegistryPersonComissionController extends Controller{
             } else {
                 $ci = $cedula.'-'.$complemento;
             }
+            
+            $namePhoto = "";
 
-            // create the img path
-            // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
-            $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
+            if($form['photoData']['photoperson'] != null) {
+                // create the img path
+                // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
+                $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
 
-            // if (!file_exists($dirtmp)) {
-            //     mkdir($dirtmp, 0775);
-            // }
+                // if (!file_exists($dirtmp)) {
+                //     mkdir($dirtmp, 0775);
+                // }
 
-            // get info about the img
-            $imgExtension = $form['photoData']['photoperson']->getMimeType();
-            list($typeImg, $extensionImg) = explode('/', $imgExtension);
-            // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
-            $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+                // get info about the img
+                $imgExtension = $form['photoData']['photoperson']->getMimeType();
+                list($typeImg, $extensionImg) = explode('/', $imgExtension);
+                // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+                $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
 
-            //move the file on the img path
-            $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+                //move the file on the img path
+                $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+            }
 
             // save the commision to the person choose
             $objComisionJuegosDatos = new JdpDelegadoInscripcionJuegos();
