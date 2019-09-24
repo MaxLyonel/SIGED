@@ -154,16 +154,18 @@
                     </div>
                 </div>  
 
-                <form name="formEstadisticaXls" id="formEstadisticaXls" role="form" action="{{ path('sie_herramienta_estadistica_bth_unidadeducativa_xlsx') }}" method="POST">  
+                <form name="formEstadisticaXls" id="formEstadisticaXls" role="form" action="{{ path('cdl_seguimiento_uesconcdl_descarga') }}" method="POST">  
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
+                    <input type="hidden" name="tipo" value="xlsx" />
                 </form>   
 
-                <form name="formEstadisticaPdf" id="formEstadisticaPdf" role="form" action="{{ path('sie_herramienta_estadistica_bth_unidadeducativa_pdf') }}" method="POST">  
+                <form name="formEstadisticaPdf" id="formEstadisticaPdf" role="form" action="{{ path('cdl_seguimiento_uesconcdl_descarga') }}" method="POST">  
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
+                    <input type="hidden" name="tipo" value="pdf" />     
                 </form>                   
             {% else %}
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
