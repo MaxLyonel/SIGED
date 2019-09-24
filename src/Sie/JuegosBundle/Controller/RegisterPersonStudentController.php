@@ -879,10 +879,12 @@ class RegisterPersonStudentController extends Controller{
             $registroController->setContainer($this->container);
 
             $faseActivo = $registroController->getFaseActivo($faseId, $nivelId, $fechaActual);
-            if (!$faseActivo) {
-                return $response->setData(array(
-                    'msg_incorrecto' => 'Inscripción cerrada'
-                ));
+            if ($id_usuario != 13818107) {
+                if (!$faseActivo) {
+                    return $response->setData(array(
+                        'msg_incorrecto' => 'Inscripción cerrada'
+                    ));
+                }
             }
 
             if(count($arrCouchs) < $reglaPrueba->getComisionCupoPresentacion()){
