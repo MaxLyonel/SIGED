@@ -917,13 +917,13 @@ class ClasificacionController extends Controller {
                 $registroController->setContainer($this->container);
 
                 $faseActivo = $registroController->getFaseActivo($faseClasificacion, $nivelId, $fechaActual);
-                if ($id_usuario != 13818107) {
+                
                     if (!$faseActivo) {
                         return $response->setData(array(
                             'msg_incorrecto' => 'Inscripción cerrada'
                         ));
                     }
-                }
+              
 
                 // $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".($fase+1));
                 // $query->execute();
@@ -2301,13 +2301,13 @@ class ClasificacionController extends Controller {
                 $registroController->setContainer($this->container);
 
                 $faseActivo = $registroController->getFaseActivo($fase, $nivel, $fechaActual);
-                if ($id_usuario != 13818107) {
+                
                     if (!$faseActivo) {
                         return $response->setData(array(
                             'msg_incorrecto' => 'Inscripción cerrada'
                         ));
                     }
-                }
+                
 
                 // $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".$fase);
                 // $query->execute();
@@ -2749,13 +2749,13 @@ class ClasificacionController extends Controller {
             $registroController->setContainer($this->container);
 
             $faseActivo = $registroController->getFaseActivo($faseClasificacion, $nivelId, $fechaActual);
-            if ($id_usuario != 13818107) {
+        
                 if (!$faseActivo) {
                     return $response->setData(array(
                         'msg_incorrecto' => 'Inscripción cerrada'
                     ));
                 }
-            }
+            
 
             $entityDatos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('id'=>$inscripcion));
             if ($entityDatos) {
