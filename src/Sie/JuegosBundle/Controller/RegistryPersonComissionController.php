@@ -154,7 +154,7 @@ class RegistryPersonComissionController extends Controller{
                     ->getQuery();
 
                 $objComisionJuegosDatos = $query->getResult();
-                dump($objComisionJuegosDatos);
+
                 if($objComisionJuegosDatos){
                     // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
                     $pathToShowImg = $objComisionJuegosDatos[0]->getRutaImagen();
@@ -182,7 +182,6 @@ class RegistryPersonComissionController extends Controller{
                 $typeMessage = 'warning';
 
             }
-            // dump($objComisionJuegosDatos);die;
             $form = $this->formRegisterCommission($entity)->createView();
         }else{
             $message = 'Registre datos de la Persona';
