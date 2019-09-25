@@ -113,7 +113,10 @@ class PrintCredencialController extends Controller{
         switch ($form['typeOption']) {
             case 0:
                 //get student data
-                $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['carnetRude']));
+                $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('carnetIdentidad'=>$form['carnetRude']));
+                if(!$entity) {
+                    $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['carnetRude']));
+                }
                 $objComisionJuegosDatos = $this->getCurrentInscriptionsByGestoinValida($form['carnetRude'],$this->session->get('currentyear'));                
                 break;
             case 1:
