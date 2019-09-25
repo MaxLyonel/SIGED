@@ -509,7 +509,7 @@ class RegistryPersonComissionController extends Controller{
                     return $e->createQueryBuilder('ct')
                             ->where('ct.nivelTipoId = :levelId')
                             ->andWhere('ct.esactivo = true')
-                            ->andWhere('ct.id in (146,154,150,156,152,153,122)')
+                            ->andWhere('ct.id in (146,154,150,156,152,153,122,151)')
                             ->setParameter('levelId','13')
                             ->orderBy('ct.comision', 'ASC');
                 }, 'property' => 'comision','attr'=>array('class'=>'form-control', 'required' => true)))

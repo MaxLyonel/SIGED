@@ -828,6 +828,8 @@ class RegisterPersonStudentController extends Controller{
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $sesion = $request->getSession();
+        $id_usuario = $this->session->get('userId');
     	// dump($request);die;
     	//get the send values
     	$form = $request->get('form');
@@ -879,10 +881,12 @@ class RegisterPersonStudentController extends Controller{
             $registroController->setContainer($this->container);
 
             $faseActivo = $registroController->getFaseActivo($faseId, $nivelId, $fechaActual);
-            if (!$faseActivo) {
-                return $response->setData(array(
-                    'msg_incorrecto' => 'Inscripción cerrada'
-                ));
+            if ($id_usuario != 13818107) {
+                if (!$faseActivo) {
+                    return $response->setData(array(
+                        'msg_incorrecto' => 'Inscripción cerrada'
+                    ));
+                }
             }
 
             if(count($arrCouchs) < $reglaPrueba->getComisionCupoPresentacion()){
