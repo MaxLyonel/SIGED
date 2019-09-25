@@ -192,7 +192,7 @@ class RegistryPersonComissionController extends Controller{
         
         if($objComisionJuegosDatos){
             $objComisionJuegosDatos = $objComisionJuegosDatos[0];
-            $pathToShowImg = $objComisionJuegosDatos[0]->getRutaImagen();
+            $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
         }
         
         return $this->render('SieJuegosBundle:RegistryPersonComission:lookForData.html.twig', array(
