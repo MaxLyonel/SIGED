@@ -132,20 +132,49 @@ class RegistryPersonComissionController extends Controller{
         $entity = false;
         $pathToShowImg = false;
         $form = false;
+        $ratificar = false;
 
         if($dataPerson){    
             $entity = $em->getRepository('SieAppWebBundle:Persona')->find($dataPerson['id']);
-            
             
             if($objComisionJuegosDatos){
                 $message = 'Datos existentes';
                 $this->addFlash('lookForDataMessage', $message);
                 $typeMessage = 'success';
             }else{
-                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                // $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                $jdij = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos');
+                $query = $jdij->createQueryBuilder('jdij')
+                    ->select('jdij')
+                    ->join('SieAppWebBundle:JdpComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
+                    ->where('jdij.persona = :persona')
+                    ->andWhere('ct.nivelTipoId = :nivelId')
+                    ->setParameter('persona', $entity)
+                    ->setParameter('nivelId', 13)
+                    ->getQuery();
+
+                $objComisionJuegosDatos = $query->getResult();
+                dump($objComisionJuegosDatos);
                 if($objComisionJuegosDatos){
                     // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
+                    $pathToShowImg = $objComisionJuegosDatos[0]->getRutaImagen();
+                    $ratificar = false;
+                } else {
+                    
+                    $jdij = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos');
+                    $query = $jdij->createQueryBuilder('jdij')
+                    ->select('jdij')
+                    ->join('SieAppWebBundle:JdpComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
+                    ->where('jdij.persona = :persona')
+                    ->andWhere('ct.nivelTipoId = :nivelId')
+                    ->setParameter('persona', $entity)
+                    ->setParameter('nivelId', 12)
+                    ->getQuery();
+
+                    $objComisionJuegosDatos = $query->getResult();
+                    
+                    $ratificar = true;
+                    
                 }
 
                 $message = 'Registre datos de comision';
@@ -161,7 +190,11 @@ class RegistryPersonComissionController extends Controller{
             $typeMessage = 'warning';
             $form = $this->formFindPersonBySegip()->createView();
         }
-        // die;
+        
+        if($objComisionJuegosDatos){
+            $objComisionJuegosDatos = $objComisionJuegosDatos[0];
+        }
+        
         return $this->render('SieJuegosBundle:RegistryPersonComission:lookForData.html.twig', array(
                 'entity' => $entity,
                 'form' => $form,
@@ -169,7 +202,7 @@ class RegistryPersonComissionController extends Controller{
                 'objComisionJuegosDatos' => $objComisionJuegosDatos,
                 'typeMessage' => $typeMessage,
                 'pathToShowImg' => $pathToShowImg,
-
+                'ratificar' => $ratificar,
             ));    
     }
 

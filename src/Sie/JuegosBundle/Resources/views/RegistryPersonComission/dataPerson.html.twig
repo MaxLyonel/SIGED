@@ -17,7 +17,7 @@
                 {% include 'SieJuegosBundle:RegistryPersonComission:personInfo.html.twig' with {'entity': entity} %}                
                     <!-- /.form-body -->
 
-                    {% if objComisionJuegosDatos %}
+                    {% if objComisionJuegosDatos and ratificar != true %}
                         <div class="form-body">
                             <div class="form-group">
                                 <div class="row">
