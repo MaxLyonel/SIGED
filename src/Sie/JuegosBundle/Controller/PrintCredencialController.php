@@ -108,6 +108,7 @@ class PrintCredencialController extends Controller{
         $objComisionJuegosDatos = false;
         $entity = false;
         $pathToShowImg = false;
+        $ratificar = false;
         $typeMessage = 'success';
         
         switch ($form['typeOption']) {
@@ -142,7 +143,7 @@ class PrintCredencialController extends Controller{
                 $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
                 if($objComisionJuegosDatos){
                     // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
+                    $pathToShowImg = $entity->getFoto();
                 }
                 break;
             
@@ -160,7 +161,7 @@ class PrintCredencialController extends Controller{
                 'objComisionJuegosDatos' => $objComisionJuegosDatos,
                 'typeMessage' => $typeMessage,
                 'pathToShowImg' => $pathToShowImg,
-                // 'typeOption' => $form['typeOption'],
+                'ratificar' => $ratificar,
             ));    
     }
     private function getJuegosInscriptionsByGestoinValida($id, $gestion) {

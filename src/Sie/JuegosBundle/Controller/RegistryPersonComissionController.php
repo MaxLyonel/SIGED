@@ -137,6 +137,10 @@ class RegistryPersonComissionController extends Controller{
         if($dataPerson){    
             $entity = $em->getRepository('SieAppWebBundle:Persona')->find($dataPerson['id']);
             
+            if($entity) {
+                $pathToShowImg = $entity->getFoto();
+            }
+
             if($objComisionJuegosDatos){
                 $message = 'Datos existentes';
                 $this->addFlash('lookForDataMessage', $message);
@@ -157,7 +161,6 @@ class RegistryPersonComissionController extends Controller{
 
                 if($objComisionJuegosDatos){
                     // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = $objComisionJuegosDatos[0]->getRutaImagen();
                     $ratificar = false;
                 } else {
                     
@@ -192,7 +195,6 @@ class RegistryPersonComissionController extends Controller{
         
         if($objComisionJuegosDatos){
             $objComisionJuegosDatos = $objComisionJuegosDatos[0];
-            $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
         }
         
         return $this->render('SieJuegosBundle:RegistryPersonComission:lookForData.html.twig', array(
@@ -691,6 +693,7 @@ class RegistryPersonComissionController extends Controller{
     }
 
     private function saveCommissionData($form){
+        
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $swAnswer = false;
@@ -707,7 +710,7 @@ class RegistryPersonComissionController extends Controller{
             } else {
                 $ci = $cedula.'-'.$complemento;
             }
-            
+
             $namePhoto = "";
 
             if($form['photoData']['photoperson'] != null) {
@@ -723,10 +726,14 @@ class RegistryPersonComissionController extends Controller{
                 $imgExtension = $form['photoData']['photoperson']->getMimeType();
                 list($typeImg, $extensionImg) = explode('/', $imgExtension);
                 // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
-                $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+                $namePhoto = $ci.'/'.$ci.'_fotografia_'.$personaId.'.'.$extensionImg;
 
                 //move the file on the img path
                 $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+            } else {
+                if($objPerson) {
+                    $namePhoto = $objPerson->getFoto();
+                }
             }
 
             // save the commision to the person choose
@@ -735,22 +742,17 @@ class RegistryPersonComissionController extends Controller{
             $objComisionJuegosDatos->setPersona($objPerson);
             $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
             $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
-            $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
-            // $objComisionJuegosDatos->setRutaImagen($dirtmp.'/'.$namePhoto);            
-            $objComisionJuegosDatos->setRutaImagen($ci.'/'.$namePhoto);            
+            $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));           
             $objComisionJuegosDatos->setObs(isset($form['obs'])?strtoupper(mb_strtoupper($form['obs'], 'utf8')):'');
+            $objComisionJuegosDatos->setRutaImagen($namePhoto);
             $em->persist($objComisionJuegosDatos);
-
-            $objPerson->setFoto($ci.'/'.$namePhoto);            
+            $objPerson->setFoto($namePhoto);
             $em->persist($objPerson);
-
             $em->flush(); 
             $swAnswer = true;
-            
         } catch (Exception $e) {
             $swAnswer = false;
         }
-
         return $swAnswer;
     }
 
