@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use \Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\CdlClubLectura;
 use Sie\AppWebBundle\Entity\CdlEventos;
 use Doctrine\ORM\EntityRepository;
@@ -27,9 +28,9 @@ class CdlSeguimientoController extends Controller
         $lista = array();
         $lista[0]['nombre'] = "CLUBES DE LECTURA POR UNIDAD EDUCATIVA";
         $lista[0]['ruta'] = "cdl_seguimiento_porsie";
-        // $lista[1]['nombre'] = "Unidades Educativas de su Jurisdicción que cuentan con Clubs de Lectura.";
-        // $lista[1]['ruta'] = "cdl_seguimiento_porjurisdiccion";
-         $lista[2]['nombre'] = "CANTIDAD DE UNIDADES EDUCATIVAS QUE CUENTAN CON AL MENOS UN CLUB DE LECTURA";
+        /* $lista[1]['nombre'] = "Unidades Educativas de su Jurisdicción que cuentan con Clubs de Lectura.";
+        $lista[1]['ruta'] = "cdl_seguimiento_porjurisdiccion"; */
+        $lista[2]['nombre'] = "CANTIDAD DE UNIDADES EDUCATIVAS QUE CUENTAN CON AL MENOS UN CLUB DE LECTURA";
         $lista[2]['ruta'] = "cdl_seguimiento_con_cdl";
         $lista[3]['nombre'] = "CANTIDAD DE UNIDADES EDUCATIVAS QUE NO CUENTAN CON CLUBES DE LECTURA";
         $lista[3]['ruta'] = "cdl_seguimiento_sin_cdl";
@@ -37,8 +38,8 @@ class CdlSeguimientoController extends Controller
         $lista[4]['ruta'] = "cdl_seguimiento_clubes_lectura";
         $lista[5]['nombre'] = "CANTIDAD DE ESTUDIANTES QUE PARTICIPAN DE UN CLUB DE LECTURA POR AÑO DE ESCOLARIDAD";
         $lista[5]['ruta'] = "cdl_seguimiento_estudiantes_clubes_lectura";
-        // $lista[6]['nombre'] = "LISTADO DE LECTURAS Y PRODUCTOS DE LOS CLUBES DE LECTURA";
-        // $lista[6]['ruta'] = "cdl_seguimiento_lecturas_productos"; 
+        $lista[6]['nombre'] = "LISTADO DE LECTURAS Y PRODUCTOS DE LOS CLUBES DE LECTURA";
+        $lista[6]['ruta'] = "cdl_seguimiento_lecturas_productos";
         return $this->render('SieHerramientaBundle:CdlSeguimiento:index.html.twig', array('lista'=>$lista,
             ));
     }
@@ -145,14 +146,15 @@ class CdlSeguimientoController extends Controller
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         $gestionProcesada = $gestionActual;
         $link = true;
-        if ($rolUsuario == 9){
+        if ($rolUsuario == 10){
             $link = false;
-            $chartDependencia = null;
-            $chartArea = null;
+            //$chartDependencia = null;
+            //$chartArea = null;
         }else{
-            $chartDependencia = $chartController->chartColumn($entityEstadistica[1],"Unidades Educativas según Dependencia",$gestionProcesada,1,"chartContainerDependencia");
-            $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Unidades Educativas según Área Geográfica",$gestionProcesada,1,"chartContainerArea");
+            
         }
+        $chartDependencia = $chartController->chartColumn($entityEstadistica[1],"Unidades Educativas según Dependencia",$gestionProcesada,1,"chartContainerDependencia");
+        $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Unidades Educativas según Área Geográfica",$gestionProcesada,1,"chartContainerArea");
         //dump($chartDependencia);die;
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
@@ -222,6 +224,9 @@ class CdlSeguimientoController extends Controller
             JOIN jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
+            WHERE ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY dpt.id,dpt.departamento");
         }elseif($rol == 7){
             $query = $em->getConnection()->prepare("SELECT 'Distrito' as nombreArea, ddt.id as codigo, ddt.distrito  as nombre, 10 as rolUsuario,coalesce(COUNT(DISTINCT ie.id),0) as cantidad
@@ -232,6 +237,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             where dpt.id=". $area ."
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ddt.id,ddt.distrito");
         }elseif($rol == 10){
             $query = $em->getConnection()->prepare("SELECT 'Unidad Educativa' as nombreArea, ie.id as codigo, ie.id || ' - ' ||ie.institucioneducativa  as nombre, 9 as rolUsuario,coalesce(COUNT(DISTINCT ie.id),0) as cantidad
@@ -242,6 +250,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             where ddt.id=". $area ."
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ie.id,ie.institucioneducativa");
 
         }elseif($rol == 9){
@@ -532,6 +543,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             WHERE a.id ISNULL
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY dpt.id,dpt.departamento");
         }elseif($rol == 7){
             $query = $em->getConnection()->prepare("SELECT 'Distrito' as nombreArea, ddt.id as codigo, ddt.distrito  as nombre, 10 as rolUsuario,coalesce(COUNT(DISTINCT ie.id),0) as cantidad
@@ -542,6 +556,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             where dpt.id=". $area ." AND a.id ISNULL
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ddt.id,ddt.distrito");
         }elseif($rol == 10){
             $query = $em->getConnection()->prepare("SELECT 'Unidad Educativa' as nombreArea, ie.id as codigo, ie.id || ' - ' ||ie.institucioneducativa  as nombre, 9 as rolUsuario,coalesce(COUNT(DISTINCT ie.id),0) as cantidad
@@ -552,6 +569,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             where ddt.id=". $area ." AND a.id ISNULL
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ie.id,ie.institucioneducativa");
 
         }elseif($rol == 9){
@@ -674,8 +694,8 @@ class CdlSeguimientoController extends Controller
         if ($rolUsuario == 10){
             $link = false;
         }
-        $chartDependencia = $chartController->chartColumn($entityEstadistica[1],"Unidades Educativas según Dependencia",$gestionProcesada,1,"chartContainerDependencia");
-        $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Unidades Educativas según Área Geográfica",$gestionProcesada,1,"chartContainerArea");
+        $chartDependencia = $chartController->chartColumn($entityEstadistica[1],"Clubes de Lectura según Dependencia",$gestionProcesada,1,"chartContainerDependencia");
+        $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Clubes de Lectura según Área Geográfica",$gestionProcesada,1,"chartContainerArea");
         //dump($chartDependencia);die;
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
@@ -745,6 +765,9 @@ class CdlSeguimientoController extends Controller
             JOIN jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
+            WHERE ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY dpt.id,dpt.departamento");
         }elseif($rol == 7){
             $query = $em->getConnection()->prepare("SELECT 'Distrito' as nombreArea, ddt.id as codigo, ddt.distrito  as nombre, 10 as rolUsuario,coalesce(COUNT(*),0) as cantidad
@@ -755,6 +778,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             where dpt.id=". $area ."
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ddt.id,ddt.distrito");
         }elseif($rol == 10){
             $query = $em->getConnection()->prepare("SELECT 'Unidad Educativa' as nombreArea, ie.id as codigo, ie.id || ' - ' ||ie.institucioneducativa  as nombre, 9 as rolUsuario,coalesce(COUNT(*),0) as cantidad
@@ -765,6 +791,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jg.distrito_tipo_id
             JOIN departamento_tipo dpt on dpt.id=ddt.departamento_tipo_id
             where ddt.id=". $area ."
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ie.id,ie.institucioneducativa");
 
         }elseif($rol == 9){
@@ -988,6 +1017,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jurg.distrito_tipo_id 
             join departamento_tipo dpt on ddt.departamento_tipo_id=dpt.id
             where dpt.id=". $area ."
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ddt.id,ddt.distrito");
         }elseif($rol == 10){
             $query = $em->getConnection()->prepare("SELECT 'Unidad Educativa' as nombreArea, ie.id as codigo, ie.id || ' - ' ||ie.institucioneducativa  as nombre, 9 as rolUsuario,coalesce(COUNT(*),0) as cantidad
@@ -1001,6 +1033,9 @@ class CdlSeguimientoController extends Controller
             join distrito_tipo ddt on ddt.id=jurg.distrito_tipo_id 
             join departamento_tipo dpt on ddt.departamento_tipo_id=dpt.id
             where ddt.id=". $area ."
+            AND ie.institucioneducativa_tipo_id =1
+            AND ie.estadoinstitucion_tipo_id = 10
+            AND ie.institucioneducativa_acreditacion_tipo_id = 1
             GROUP BY ie.id,ie.institucioneducativa");
 
         }elseif($rol == 9){
@@ -1106,5 +1141,272 @@ class CdlSeguimientoController extends Controller
         }
         
         return $aDato;
+    }
+
+    public function LecturasProductosAction(Request $request) {
+        
+        return $this->render('SieHerramientaBundle:CdlSeguimiento:lecturasProductos.html.twig', array(
+            'form' => $this->createAreaForm()->createView()
+        ));    
+        
+    }
+
+    private function createAreaForm() {
+
+        return $this->createFormBuilder()
+        ->add('departamento','entity',array('label'=>'Departamento:','required'=>true,'attr' => array('class' => 'form-control','onchange' => 'buscarDistrito(this.value)'),'class'=>'SieAppWebBundle:DepartamentoTipo','query_builder'=>function(EntityRepository $dt){
+            return $dt->createQueryBuilder('dt')->where('dt.id <> 0')->orderBy('dt.departamento','ASC');},'property'=>'departamento','empty_value' => 'Todos'))
+    	->add('distrito', 'choice', array('label'=>'Distrito:','required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+        ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'buscarClubLectura()')))
+        ->getForm();
+    }
+
+    
+    
+    public function buscraDistritoAction(Request $request) {
+        
+        $id = $request->get('id');
+        //dump($id);die;
+        $em = $this->getDoctrine()->getManager();
+        $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->findBy(array('departamentoTipo'=>$id));
+        $distritoArray = array();
+        foreach ($distrito as $d){
+            $distritoArray[$d->getId()] = $d->getDistrito();
+        }
+        $response = new JsonResponse();
+        return $response->setData(array('distrito' => $distritoArray));
+        //dump($distrito);die;
+    }
+
+    public function listaLecturasAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime();
+        $gestionActual = date_format($fechaActual,'Y');
+        $form = $request->get('form');
+        //dump($form);die;
+        $em = $this->getDoctrine()->getManager();
+        if ($form['departamento']=="") {
+            $area = 0;
+        }elseif ($form['distrito']==""){
+            $area = (int)$form['departamento'];
+        }else{
+            $area = (int)$form['distrito'];
+        }
+        
+        //dump($area);die;
+        $em = $this->getDoctrine()->getManager();
+        $query =  $em->getConnection()->prepare("select ie.id,ie.institucioneducativa,dpt.departamento,dpt.id as departamento_codigo,ddt.id as codigo_distrito,ddt.distrito,a.id as cdl_club_lectura_id,a.nombre_club,p.nombre ||' '||p.paterno ||' '||p.materno as maestro,
+        count(b.id) as nro_lecturas, count(c.id) as nro_productos,count(d.id) as nro_imagen,count(e.id) as nro_miembros
+        FROM institucioneducativa ie
+        JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id AND ies.gestion_tipo_id=". $gestionActual ."
+        join cdl_club_lectura a on a.institucioneducativasucursal_id=ies.id
+        join maestro_inscripcion mi on mi.id=a.maestroinscripcion_id
+        join persona p on p.id=mi.persona_id
+        left join cdl_integrantes e on a.id=e.cdl_club_lectura_id
+        left join cdl_eventos b on a.id=b.cdl_club_lectura_id
+        left join cdl_productos c on b.id=c.cdl_eventos_id
+        left join cdl_productoimagen d on c.id=d.cdl_productos_id
+        JOIN jurisdiccion_geografica jurg ON ie.le_juridicciongeografica_id = jurg.id
+        JOIN lugar_tipo lt ON lt.id = jurg.lugar_tipo_id_localidad
+        join distrito_tipo ddt on ddt.id=jurg.distrito_tipo_id and CASE WHEN ". $area ." > 9 THEN  ddt.id = ". $area ." else ddt.id > 0 END
+        join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
+        join departamento_tipo dpt on ddt.departamento_tipo_id=dpt.id and CASE WHEN ". $area ." <> 0 and ". $area ."<10 THEN  dpt.id = ". $area ." ELSE dpt.id IN (1,2,3,4,5,6,7,8,9) END
+        WHERE ie.institucioneducativa_tipo_id =1
+        AND ie.estadoinstitucion_tipo_id = 10
+        AND ie.institucioneducativa_acreditacion_tipo_id = 1
+        GROUP BY ie.id,ie.institucioneducativa,dpt.departamento,dpt.id,ddt.id,ddt.distrito,a.id,a.nombre_club,p.nombre,p.paterno,p.materno
+        ORDER BY departamento,codigo_distrito,id");
+
+        $query->execute();
+        $data = $query->fetchAll();
+        //dump($data);die;
+
+        return $this->render('SieHerramientaBundle:CdlSeguimiento:lista.html.twig', array(
+            'entities' => $data,
+            'codigo'=>$area
+        ));  
+    }
+
+    /**
+     * Imprime estadistica de unidades educativas con clubes de lectura segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function uesConCdlDescargaAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestionActual = $request->get('gestion');
+        $rol = $request->get('rol');
+        //dump($codigo);die;
+        
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+        
+        $report = 'est_cdl_unidadeducativa_v2_pvc.rptdesign'; 
+
+        $em = $this->getDoctrine()->getManager();
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $report .'&__format='. $tipoArchivo .'&gestion='.$gestionActual.'&codigo='.$codigoArea));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estadistica de unidades educativas sin clubes de lectura segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function uesSinCdlDescargaAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestionActual = $request->get('gestion');
+        $rol = $request->get('rol');
+        //dump($codigo);die;
+        
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+        $report = 'est_cdl_sin_unidadeducativa_v2_pvc.rptdesign';
+        
+        $em = $this->getDoctrine()->getManager();
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $report .'&__format='. $tipoArchivo .'&gestion='.$gestionActual.'&codigo='.$codigoArea));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estadistica de clubes de lectura segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function cdlDescargaAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestionActual = $request->get('gestion');
+        $rol = $request->get('rol');
+        //dump($codigo);die;
+        
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+        $report = 'est_cdl_clubes_lectura_v2_pvc.rptdesign';
+        
+        $em = $this->getDoctrine()->getManager();
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $report .'&__format='. $tipoArchivo .'&gestion='.$gestionActual.'&codigo='.$codigoArea));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estadistica de estudiantes en clubes de lectura segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estudiantesCdlDescargaAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestionActual = $request->get('gestion');
+        $rol = $request->get('rol');
+        //dump($codigo);die;
+        
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+        $report = 'est_cdl_estudiantes_v2_pvc.rptdesign';
+        
+        $em = $this->getDoctrine()->getManager();
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $report .'&__format='. $tipoArchivo .'&gestion='.$gestionActual.'&codigo='.$codigoArea));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime lista de clubes y lecturas segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function listaLecturasDescargaAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        //dump($codigo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_cdl__lecturas_productos_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestionActual.'&codigo='.$codigoArea));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
     }
 }
