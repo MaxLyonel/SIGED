@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use \Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\CdlClubLectura;
 use Sie\AppWebBundle\Entity\CdlEventos;
 use Doctrine\ORM\EntityRepository;
@@ -693,8 +694,8 @@ class CdlSeguimientoController extends Controller
         if ($rolUsuario == 10){
             $link = false;
         }
-        $chartDependencia = $chartController->chartColumn($entityEstadistica[1],"Unidades Educativas según Dependencia",$gestionProcesada,1,"chartContainerDependencia");
-        $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Unidades Educativas según Área Geográfica",$gestionProcesada,1,"chartContainerArea");
+        $chartDependencia = $chartController->chartColumn($entityEstadistica[1],"Clubes de Lectura según Dependencia",$gestionProcesada,1,"chartContainerDependencia");
+        $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[2],"Clubes de Lectura según Área Geográfica",$gestionProcesada,1,"chartContainerArea");
         //dump($chartDependencia);die;
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
@@ -1246,7 +1247,8 @@ class CdlSeguimientoController extends Controller
         if ($tipoArchivo == 'pdf') {
             $contentType = 'application/pdf';
         } else {
-            $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
         }
         
         $report = 'est_cdl_unidadeducativa_v2_pvc.rptdesign'; 
@@ -1281,9 +1283,10 @@ class CdlSeguimientoController extends Controller
         if ($tipoArchivo == 'pdf') {
             $contentType = 'application/pdf';
         } else {
-            $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
         }
-        $report = 'est_cdl_sin_unidadeducativa_v2_pvc .rptdesign';
+        $report = 'est_cdl_sin_unidadeducativa_v2_pvc.rptdesign';
         
         $em = $this->getDoctrine()->getManager();
         $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
@@ -1315,9 +1318,10 @@ class CdlSeguimientoController extends Controller
         if ($tipoArchivo == 'pdf') {
             $contentType = 'application/pdf';
         } else {
-            $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
         }
-        $report = 'est_cdl_estudiantes_v2_pvc.rptdesign';
+        $report = 'est_cdl_clubes_lectura_v2_pvc.rptdesign';
         
         $em = $this->getDoctrine()->getManager();
         $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
@@ -1349,7 +1353,8 @@ class CdlSeguimientoController extends Controller
         if ($tipoArchivo == 'pdf') {
             $contentType = 'application/pdf';
         } else {
-            $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
         }
         $report = 'est_cdl_estudiantes_v2_pvc.rptdesign';
         
@@ -1387,7 +1392,8 @@ class CdlSeguimientoController extends Controller
         if ($tipoArchivo == 'pdf') {
             $contentType = 'application/pdf';
         } else {
-            $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
         }
 
         $em = $this->getDoctrine()->getManager();
