@@ -138,10 +138,13 @@ class PrintCredencialController extends Controller{
                 $this->addFlash('lookForDataMessage', $message);
                 $data = $this->getDelegadoData($form);
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
-                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
-                if($objComisionJuegosDatos){
-                    $pathToShowImg = $entity->getFoto();
+                if($entity){
+                    $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                    if($objComisionJuegosDatos){
+                        $pathToShowImg = $entity->getFoto();
+                    }
                 }
+                
                 break;
         }
 
