@@ -1256,20 +1256,23 @@ class Funciones {
     }
 
     public function getTheCurrentYear($fechanacimiento, $fechaLimit){
+        $dias = explode("-", $fechanacimiento, 3);
+        $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+        $edad = (int)((time()-$dias)/31556926 );
+        return $edad;        
+        // list($dia,$mes,$anno) = explode("-",$fechanacimiento);
+        // list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+
+
+        // $ano_diferencia = $annoLimit - $anno;
+        // $mes_diferencia = $mesLimit - $mes;
+        // $dia_diferencia = $diaLimit - $dia;
         
-        list($dia,$mes,$anno) = explode("-",$fechanacimiento);
-        list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+        // if ($dia_diferencia < 0 && $mes_diferencia <= 0){
+        //     $ano_diferencia--;
+        // }
 
-
-        $ano_diferencia = $annoLimit - $anno;
-        $mes_diferencia = $mesLimit - $mes;
-        $dia_diferencia = $diaLimit - $dia;
-        
-        if ($dia_diferencia < 0 && $mes_diferencia <= 0){
-            $ano_diferencia--;
-        }
-
-        return $ano_diferencia;
+        // return $ano_diferencia;
     }    
 
 

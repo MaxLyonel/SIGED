@@ -8,7 +8,7 @@
         {# {{dump(objComisionJuegosDatos[0])}} #}
             {% set id = objComisionJuegosDatos[0].id %}
         {% endif %}
-        {% if form.typeOption == 2 %}
+        {% if form.typeOption > 1 %}
             {% set id = objComisionJuegosDatos.id %}
         {% endif %}   
         <div class="panel rounded shadow">
@@ -26,7 +26,7 @@
             {% include 'SieJuegosBundle:PrintCredencial:accompanist.html.twig'  %}
         {% endif %}
         
-        {% if form.typeOption == 2 %}
+        {% if form.typeOption > 1 %}
             {% include 'SieJuegosBundle:RegistryPersonComission:dataPerson.html.twig'  %}
         {% endif %}
         

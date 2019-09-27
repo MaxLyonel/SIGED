@@ -74,7 +74,7 @@ class PrintCredencialController extends Controller{
 
 
     private function indexForm(){
-        $arrCriteria = array('Estudiante','Acompañante','Delegado, Jefe de mision y organizador');
+        $arrCriteria = array('Estudiante','Acompañante','Delegado, Jefe de mision y organizador','Salud','Apoyo','Prensa','Invitado');
     
     return $this->createFormBuilder()
         ->add('carnetRude', 'text', array('label'=>'CI/RUDE:', 'attr'=>array('class'=>'form-control','placeholder'=>'Carnet Identidad/Rude')))
@@ -113,7 +113,6 @@ class PrintCredencialController extends Controller{
         
         switch ($form['typeOption']) {
             case 0:
-                //get student data
                 $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('carnetIdentidad'=>$form['carnetRude']));
                 if(!$entity) {
                     $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['carnetRude']));
@@ -124,36 +123,31 @@ class PrintCredencialController extends Controller{
                 $objComisionJuegosDatos = array();
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
                 $objDatosAll = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
-                // dump($this->session->get('currentyear'));
-                $objComisionJuegosDatos[]=$objDatosAll[0];
-                foreach ($objDatosAll as $key => $value) {
-                    $objComisionJuegosDatos[] = $this->getJuegosInscriptionsByGestoinValida($value->getEstudianteInscripcionJuegos()->getId(),$this->session->get('currentyear'));
-                    
+                
+                if ($objDatosAll) {
+                    $objComisionJuegosDatos[]=$objDatosAll[0];
+                    foreach ($objDatosAll as $key => $value) {
+                        $objComisionJuegosDatos[] = $this->getJuegosInscriptionsByGestoinValida($value->getEstudianteInscripcionJuegos()->getId(),$this->session->get('currentyear'));
+                        
+                    }
                 }
-                //$objComisionJuegosDatos[]=$objDatosAll[0];
-                //dump($objComisionJuegosDatos);die;
                 break;
-            case 2:
-                # code...
+            default:
                 $message = 'Datos existentes';
                 $typeMessage = 'success';
                 $this->addFlash('lookForDataMessage', $message);
                 $data = $this->getDelegadoData($form);
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
-                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
-                if($objComisionJuegosDatos){
-                    // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = $entity->getFoto();
+                if($entity){
+                    $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                    if($objComisionJuegosDatos){
+                        $pathToShowImg = $entity->getFoto();
+                    }
                 }
-                break;
-            
-            default:
-                # code...
+                
                 break;
         }
 
-        // dump($form['typeOption']);
-         //dump($objComisionJuegosDatos);die;
         return $this->render('SieJuegosBundle:PrintCredencial:lookforCredencial.html.twig', array(
                 'entity' => $entity,
                 'form' => $form,
@@ -281,19 +275,39 @@ class PrintCredencialController extends Controller{
             // STUDENT
             case 0:
                 # code...
-                $reportDownload = 'jdp_crd_deportista_v1.rptdesign&id='.$id .'&codniv=12&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                $reportDownload = 'jdp_crd_deportista_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
                 break;
             // acompaniante    
             case 1:
                 # code...
-                $reportDownload = 'jdp_crd_delegado_v1.rptdesign&id='.$id .'&codniv=12&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                $reportDownload = 'jdp_crd_delegado_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
                 break;
             // Delegado
             case 2:
                 # code...
-                $reportDownload = 'jdp_crd_organizador_v1.rptdesign&id='.$id .'&codniv=12&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                $reportDownload = 'jdp_crd_organizador_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+
+            case 3:
+                # code...
+                $reportDownload = 'jdp_crd_salud_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
                 break;
             
+            case 4:
+                # code...
+                $reportDownload = 'jdp_crd_apoyo_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+            
+            case 5:
+                # code...
+                $reportDownload = 'jdp_crd_prensa_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+
+            case 6:
+                # code...
+                $reportDownload = 'jdp_crd_invitado_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+
             default:
                 # code...
                 break;
