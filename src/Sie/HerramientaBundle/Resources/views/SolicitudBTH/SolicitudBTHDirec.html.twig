@@ -8,7 +8,7 @@
     <div class="header-content">
         <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí12312:</span>
+            <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
@@ -18,9 +18,10 @@
 
                 <li class="active">Index</li>
             </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
+        </div>
+    </div>
     <div class="body-content animated fadeIn">
+    {% if estado == 0 %}
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
@@ -28,7 +29,7 @@
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Formularios de Solicitudes</h3>
-                            </div><!-- /.panel-heading -->
+                            </div>
                             <div class="panel-body">
                                 <div class="row">
                                     {{form_start(form,{'attr':{'id':'formSolicitud'} })}}
@@ -38,7 +39,7 @@
                                     </div>
                                     {{form_end(form)}}
                                 </div>
-                            </div><!-- /.panel-body -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title" id="titulo">Formularios </h3>
-            </div><!-- /.panel-heading -->
+            </div>
             <div class="panel-body">
                 <div class="row" id="form_nuevo" >
                     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -57,188 +58,162 @@
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">1.- Información General</h3>
-                                    </div><!-- /.panel-heading -->
+                                    </div>
                                     <div class="panel-body">
+                                        {% set iedu = ieducativa[0] %}
+                                        {% set iedusu = ieducativa[1] %}
                                         <div class="row">
-                                            {% set iedu = ieducativa[0] %}
-                                            {% set iedusu = ieducativa[1] %}
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Código RUE</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Unidad Educativa</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
+                                                <b>Código RUE</b>
                                             </div>
                                             <div class="col-md-9">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ institucion.id }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ iedu.institucioneducativa }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                    </div>
-                                                </div>
+                                                {{ institucion.id }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Unidad Educativa</b>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ iedu.institucioneducativa }}
                                             </div>
                                         </div>
-
-
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">2.- Localización</h3>
-                                    </div><!-- /.panel-heading -->
+                                    </div>
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Departamento</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Cantón</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Distrito</strong>
-                                                    </div>
-                                                </div>
+                                                <b>Departamento</b>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['departamento'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['canton'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['distrito'] }}
-                                                    </div>
-                                                </div>
+                                                {{ ubicacion['departamento'] }}
                                             </div>
-                                            <div class="col-md-2">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Localidad</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Zona</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Dirección</strong>
-                                                    </div>
-                                                </div>
+                                            <div class="col-md-3">
+                                                <b>Localidad</b>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['localidad'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['zona'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['direccion'] }}
-                                                    </div>
-                                                </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['localidad'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Cantón</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['canton'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Zona</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['zona'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Distrito</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['distrito'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Dirección</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['direccion'] }}
                                             </div>
                                         </div>
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
-                                    </div><!-- /.panel-heading -->
+                                    </div>
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>2.1 Informe</strong>
+                                                <strong>Informe</strong>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-8">
                                                 <div class="ckbox ckbox-theme">
                                                     <input id="informe"  type="checkbox">
                                                     <label for="informe"></label>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">4.- Especialidad</h3>
-                                    </div><!-- /.panel-heading -->
+                                        <h3 class="panel-title">4.- Año de escolaridad</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="alert alert-info">
+                                            <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                            <div class="notification-info">
+                                                <b>Nota</b> Una vez aprobada la solicitud BTH con el año de escolaridad correcto, por ningún motivo se retirarán de la formación Técnica Tecnológica del Bachillerato Técnico Humanístico en ningún año de escolaridad.
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <b>Año de Escolaridad a implementar BTH:</b><br>
+                                                <b><span>Nivel: Secundario</span></b>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="grado"><b>Año de escolaridad</b></label>
+                                                    <select id="form_grado" name="form[grado]" required="required" class="form-control" onchange="showGrado(this)">
+                                                        <option value="" selected="selected" disabled>Seleccione...</option>
+                                                        {% for keygrado, selectGrado in grados %}
+                                                            <option value="{{ keygrado }}">{{ selectGrado }}</option>
+                                                        {% endfor %}
+                                                    </select>                                                
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <p><b>Grado Seleccionado</b></p>
+                                                <p id="literal_grado" style="font-size: 50px; font-weight: bold; color: green">-</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">5.- Especialidad</h3>
+                                    </div>
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>Seleccionar las especialidades</strong>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="especialidad_actual"><b>Especialidades habilitadas</b></label>
+                                                    {% if especialidad_actual|length > 0 %}
+                                                    <ul> 
+                                                        {% for especialidad in especialidad_actual %}
+                                                        <li value="{{ especialidad.id }}">{{ especialidad.especialidad }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    {% else %}
+                                                    <ul> 
+                                                        <li class="text-danger">Ninguna</li>
+                                                    </ul>
+                                                    {% endif %}
+                                                </div>
                                             </div>
-                                            <div class="col-md-3">
-                                            </div>
-                                            <div class="col-md-5">
-                                                <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                    {% for especialidad in especialidad %}
-                                                        <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>Nivel al que se Aplica</strong>
-                                            </div>
-                                            <div class="col-md-3">
-                                            </div>
-                                            <div class="col-md-5">
-                                                <strong><span class="label label-primary">Nivel: Secundaria</span></strong>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="pull-right">
-                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="select_especialidad"><b>Adicionar especialidades</b></label>
+                                                    <select data-placeholder="Seleccionar"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                        {% for especialidad in especialidad %}
+                                                            <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
+                                                        {% endfor %}
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><!-- /.panel-body -->
+                                        <div class="row">
+                                            <div class="col-md-12 text-center"><br/>
+                                                <button class="btn btn-sm btn-facebook" id="enviar_solicitud_bth_nuevo" title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-send"></i> Enviar a Dirección Distrital</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -251,134 +226,75 @@
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">1.- Información General</h3>
-                                    </div><!-- /.panel-heading -->
+                                    </div>
                                     <div class="panel-body">
+                                        {% set iedu = ieducativa[0] %}
+                                        {% set iedusu = ieducativa[1] %}    
                                         <div class="row">
-                                            {% set iedu = ieducativa[0] %}
-                                            {% set iedusu = ieducativa[1] %}
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Código RUE</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Unidad Educativa</strong>
-                                                    </div>
-                                                </div>
+                                                <b>Código RUE</b>
                                             </div>
                                             <div class="col-md-9">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ institucion.id }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ iedu.institucioneducativa }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                    </div>
-                                                </div>
+                                                {{ institucion.id }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Unidad Educativa</b>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ iedu.institucioneducativa }}
                                             </div>
                                         </div>
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">2.- Localización</h3>
-                                    </div><!-- /.panel-heading -->
+                                    </div>
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Departamento</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Cantón</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Distrito</strong>
-                                                    </div>
-                                                </div>
+                                                <b>Departamento</b>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['departamento'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['canton'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['distrito'] }}
-                                                    </div>
-                                                </div>
+                                                {{ ubicacion['departamento'] }}
                                             </div>
-                                            <div class="col-md-2">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Localidad</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Zona</strong>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Dirección</strong>
-                                                    </div>
-                                                </div>
+                                            <div class="col-md-3">
+                                                <b>Localidad</b>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['localidad'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['zona'] }}
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        {{ ubicacion['direccion'] }}
-                                                    </div>
-                                                </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['localidad'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Cantón</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['canton'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Zona</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['zona'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Distrito</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['distrito'] }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Dirección</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ ubicacion['direccion'] }}
                                             </div>
                                         </div>
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
-                                    </div><!-- /.panel-heading -->
+                                    </div>
                                     <div class="panel-body">
 
                                         <div class="row">
@@ -393,61 +309,90 @@
                                             </div>
                                         </div>
 
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">4.- Especialidad</h3>
-                                    </div><!-- /.panel-heading -->
+                                        <h3 class="panel-title">4.- Año de escolaridad</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="alert alert-info">
+                                            <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                            <div class="notification-info">
+                                                <b>Nota</b> Una vez aprobada la solicitud BTH con el año de escolaridad correcto, por ningún motivo se retirarán de la formación Técnica Tecnológica del Bachillerato Técnico Humanístico en ningún año de escolaridad.
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <b>Año de Escolaridad a implementar BTH:</b><br>
+                                                <b><span>Nivel: Secundario</span></b>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="form_grado_ratificacion"><b>Año de Escolaridad</b></label>
+                                                    <select id="form_grado_ratificacion" name="form[grado]" required="required" class="form-control" onchange="showGrado(this)">
+                                                        <option value="" selected="selected">seleccionar...</option>
+                                                        {% for keygrado, selectGrado in grados %}
+                                                            <option value="{{ keygrado }}">{{ selectGrado }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <p><b>Grado Seleccionado</b></p>
+                                                <span id="literal_grado_ratificacion" style="font-size: 50px; font-weight: bold; color: green">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">5.- Especialidad</h3>
+                                    </div>
                                     <div class="panel-body">
                                         <div class="row" id="mensaje">
                                             <div class="panel-body">
                                                 <div class="alert alert-success">
-                                                    <strong>Alerta!</strong> Su Unidad Educativa tiene especialidades que sufrieron cambios según las nuevas especialidades de la gestión 2019. Usted debe elegir una o ambas especialidades
-                                                    <br>
-
+                                                    <strong>Alerta!</strong> Su Unidad Educativa tiene especialidades que sufrieron cambios según las nuevas especialidades de la gestión 2019. Usted debe elegir una o ambas especialidades.
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>Lista de Especialidades</strong>
-                                            </div>
-                                            <div class="col-md-3">
-                                            </div>
-                                            <div class="col-md-5" id="second-chose">
-                                                <select data-placeholder="Seleccionar especialidad" id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="" multiple="" style="display: none;" >
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>Curso al que se Aplica</strong>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <strong><span class="label label-primary">Nivel: Secundaria</span> <span >Grado: {{ grado }}</span> </strong>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="pull-right">
-                                                    <button id="btnenviar" class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="lista_especialidades_ratificacion"><b>Especialidades habilitadas</b></label>
+                                                    <select data-placeholder="Seleccionar" id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="" multiple="" style="display: none;" >
+                                                    </select>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="select_especialidad_r"><b>Adicionar especialidades</b></label>
+                                                    <select data-placeholder="Seleccionar"  id="select_especialidad_r" name="select_especialidad_r[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                        {% for especialidad in especialidad %}
+                                                            <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button id="btnenviar" class="btn btn-sm btn-facebook" id="enviar_solicitud_bth_ratificacion" title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-send"></i> Enviar a Dirección Distrital</button>
                                             </div>
                                         </div>
                                         {#<div class="row">
                                             <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id,'tramite_id':listatareas.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
                                         </div>#}
-                                    </div><!-- /.panel-body -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div><!-- /.panel-body -->
+            </div>
         </div>
     </div>
-
         <div class="modal fade" id="recargar" tabindex="-1" role="dialog" style=" border-radius: 80px;" >
             <div class="modal-dialog " role="document">
                 <div class="modal-content">
@@ -468,6 +413,39 @@
                 </div>
             </div>
         </div>
+    </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"></h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="alert alert-warning ">
+                                            <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                            <div class="notification-info">
+                                                <p>
+                                                    Su Unidad Educativa ya inicio su trámite ó no le corresponde realizar la solicitud para BTH.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <a href="{{ path('wf_tramite_index') }}" class="btn btn-info">Volver</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {% endif %}
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -550,6 +528,8 @@
         * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
         var solicitud=$('#form_solicitud :selected').text();
+        
+        
         switch (true){
             case (solicitud == 'Registro Nuevo'): //Registro Nuevo
                 swal({
@@ -564,6 +544,7 @@
                     .then(function(willDelete)  {
                         if (willDelete) {
                             var institucionid={{ institucion.id }}
+                            var gradoSelected = $('#form_grado').val();
                             var ip = [];
                             if($('#informe:checked').val())
                                 ip.push({ informe : 1});
@@ -578,9 +559,11 @@
                                 swal("Debe seleccionar al menos una especialidad.");
                                 return false;
                             }
+                            
+                            ip.push({grado:gradoSelected});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
-
+                            $('#enviar_solicitud_bth_nuevo').attr("disabled", true);
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
@@ -607,7 +590,10 @@
                                     else if(data.estado==2 ){
                                         swal(" Su Unidad Educativa ya se declaró como BTH y por lo tanto debe iniciar su trámite como 'Ratificación', ó  \n" +
                                             " A su Unidada Educativa no le corresponde realizar el trámite de solicitud BTH");
-                                    }else {
+                                    }else if(data.estado == 4){
+                                        swal(data.msg)
+                                    }
+                                    else {
                                         swal('Su formulario no se envío correctamente debido a que: \n' +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO". \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH, ' +
@@ -637,6 +623,8 @@
                     .then(function(willDelete)  {
                         if (willDelete) {
                             var institucionid={{ institucion.id }}
+                            var gradoSelected = $('#form_grado_ratificacion').val();
+                            
                             var ip = [];
                             if($('#informeregularizacion:checked').val())
                                 ip.push({ informe : 1});
@@ -646,12 +634,21 @@
                             };
                             ip.push({institucionid : institucionid});
                             var especialidades_id = [];
-                            $("#lista_especialidades_ratificacion").find("option").each(function(){
-                                especialidades_id.push(this.value);
-                            });
-                            ip.push({select_especialidad : especialidades_id});
+                            
+                            
+                            if($('#select_especialidad_r').val()) {
+                                ip.push({select_especialidad : $('#select_especialidad_r').val()});
+                            } else {
+                                swal("Debe seleccionar al menos una especialidad.");
+                                return false;
+                            }
+
+                            //ip.push({select_especialidad : especialidades_id});
+                            ip.push({grado:gradoSelected});
+                            
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
+                            $('#enviar_solicitud_bth_ratificacion').attr("disabled", true);
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
@@ -677,7 +674,10 @@
                                     }
                                     else if(data.estado==2 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
-                                    }else {
+                                    }else if(data.estado == 4){
+                                        swal(data.msg)
+                                    }
+                                    else {
                                         swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH.');
@@ -694,8 +694,15 @@
         }
     }
     function recargar() {
-        $('#recargar').modal('hide');
+        $('#recargar').modal('hide');        
         location.href = "{{ path('wf_tramite_index') }}";
+    }
+    function showGrado(params) {
+        if ($('#form_solicitud :selected').text()=='Registro Nuevo') {
+            $('#literal_grado').text(params.value);
+        } else {
+            $('#literal_grado_ratificacion').text(params.value);
+        }
     }
     $(document).ready(function(){
             $('#form_nuevo').hide();

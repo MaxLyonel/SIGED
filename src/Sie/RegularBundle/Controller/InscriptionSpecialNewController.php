@@ -51,7 +51,7 @@ class InscriptionSpecialNewController extends Controller
     public function findAction(Request $request ){
       //get values to send by post
       $form = $request->get('form');
-
+      // return $this->redirectToRoute('principal_web');
       $sw=0;
       //create db conexion
       $em = $this->getDoctrine()->getManager();

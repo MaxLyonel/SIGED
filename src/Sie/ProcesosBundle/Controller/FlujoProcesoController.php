@@ -66,8 +66,10 @@ class FlujoProcesoController extends Controller
             //->setAction($this->generateUrl('flujoproceso_guardar'))
             ->add('proceso','entity',array('label'=>'Proceso','required'=>true,'class'=>'SieAppWebBundle:FlujoTipo','query_builder'=>function(EntityRepository $ft){
                 return $ft->createQueryBuilder('ft')->where('ft.id >4')->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccionar proceso'))
-            ->add('tarea','entity',array('label'=>'Tarea','required'=>true,'class'=>'SieAppWebBundle:ProcesoTipo','property'=>'proceso_tipo','empty_value' => 'Seleccionar tarea'))
-            ->add('rol','entity',array('label'=>'Tipo de rol','required'=>true,'class'=>'SieAppWebBundle:RolTipo','property'=>'rol','empty_value' => 'Seleccionar rol'))
+            ->add('tarea','entity',array('label'=>'Tarea','required'=>true,'class'=>'SieAppWebBundle:ProcesoTipo','query_builder'=>function(EntityRepository $pt){
+                return $pt->createQueryBuilder('pt')->orderBy('pt.procesoTipo','ASC');},'property'=>'proceso_tipo','empty_value' => 'Seleccionar tarea'))
+            ->add('rol','entity',array('label'=>'Tipo de rol','required'=>true,'class'=>'SieAppWebBundle:RolTipo','query_builder'=>function(EntityRepository $rt){
+                return $rt->createQueryBuilder('rt')->orderBy('rt.rol','ASC');},'property'=>'rol','empty_value' => 'Seleccionar rol'))
             ->add('observacion','text',array('label'=>'Observación', 'required'=>false))
             ->add('asignacion','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfAsignacionTareaTipo','query_builder'=>function(EntityRepository $wfa){
                 return $wfa->createQueryBuilder('wfa')->where('wfa.id =1 ');},'property'=>'nombre','empty_value' => 'Seleccionar asignacion'))

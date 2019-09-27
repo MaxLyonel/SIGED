@@ -1,0 +1,87 @@
+Sie\AppWebBundle\Entity\JdpEquipoEstudianteClasificacionJuegos:
+    type: entity
+    table: jdp_equipo_estudiante_clasificacion_juegos
+    indexes:
+        fk_equipo_estudiante_inscripcion_jueg1:
+            columns:
+                - equipo_estudiante_inscripcion_juegos_id
+        idx_equipo_est_cla_jue_1:
+            columns:
+                - fase_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        posicion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        distancia:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        puntaje:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        marca:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        impreso:
+            type: boolean
+            nullable: true
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        equipoEstudianteInscripcionJuegos:
+            targetEntity: JdpEquipoEstudianteInscripcionJuegos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                equipo_estudiante_inscripcion_juegos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        faseTipo:
+            targetEntity: JdpFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fase_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

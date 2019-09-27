@@ -5,7 +5,7 @@ namespace Sie\AppWebBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\Estudiante;
-use Sie\AppWebBundle\Entity\EstudianteDatopersonal;
+use Sie\AppWebBundle\Entity\JdpEstudianteDatopersonal;
 use Sie\AppWebBundle\Form\EstudianteType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -70,7 +70,7 @@ class EstudianteDatopersonalController extends Controller {
         $queryEntidadDeportistas = $em->getConnection()->prepare("
                 select e.id as estudiante_id, lt5.lugar as departamento, cpt.id as circunscripcion, lt.lugar as distrito, cast(ie.id as varchar) || ' - ' || ie.institucioneducativa as institucioneducativa
                 , dt.disciplina, pt.prueba, gt.genero, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, edp.estatura,  edp.peso,  edp.talla,  edp.foto
-                from estudiante_inscripcion_juegos as eij
+                from jdp_estudiante_inscripcion_juegos as eij
                 inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
                 inner join estudiante as e on e.id = ei.estudiante_id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
@@ -82,11 +82,11 @@ class EstudianteDatopersonalController extends Controller {
                 inner join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                 inner join lugar_tipo as lt5 on lt5.id = lt4.lugar_tipo_id
                 inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
-                inner join prueba_tipo as pt on pt.id = eij.prueba_tipo_id 
+                inner join jdp_prueba_tipo as pt on pt.id = eij.prueba_tipo_id 
                 inner join genero_tipo as gt on gt.id = e.genero_tipo_id
-                inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
-                inner join circunscripcion_tipo as cpt on cpt.id = jg.circunscripcion_tipo_id
-                left join (select * from estudiante_datopersonal where id in (select max(id) from estudiante_datopersonal where gestion_tipo_id = ".$gestionActual." group by estudiante_id)) as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
+                inner join jdp_disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
+                inner join jdp_circunscripcion_tipo as cpt on cpt.id = jg.circunscripcion_tipo_id
+                left join (select * from jdp_estudiante_datopersonal where id in (select max(id) from jdp_estudiante_datopersonal where gestion_tipo_id = ".$gestionActual." group by estudiante_id)) as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
                 where eij.gestion_tipo_id = ".$gestionActual." and eij.fase_tipo_id = 4 and lt5.codigo = '".$codigoEntidad."' --and dt.nivel_tipo_id = 13
                 order by lt5.lugar, cpt.id, lt.lugar, ie.id, dt.disciplina, pt.prueba, gt.genero, e.nombre, e.paterno, e.materno
             ");
@@ -137,7 +137,7 @@ class EstudianteDatopersonalController extends Controller {
         $queryEntidadDeportistas = $em->getConnection()->prepare("
                 select e.id as estudiante_id, lt5.lugar as departamento, cpt.id as circunscripcion, lt.lugar as distrito, cast(ie.id as varchar) || ' - ' || ie.institucioneducativa as institucioneducativa
                 , dt.disciplina, pt.prueba, gt.genero, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, edp.estatura,  edp.peso,  edp.talla,  edp.foto
-                from estudiante_inscripcion_juegos as eij
+                from jdp_estudiante_inscripcion_juegos as eij
                 inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
                 inner join estudiante as e on e.id = ei.estudiante_id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
@@ -149,11 +149,11 @@ class EstudianteDatopersonalController extends Controller {
                 inner join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                 inner join lugar_tipo as lt5 on lt5.id = lt4.lugar_tipo_id
                 inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
-                inner join prueba_tipo as pt on pt.id = eij.prueba_tipo_id 
+                inner join jdp_prueba_tipo as pt on pt.id = eij.prueba_tipo_id 
                 inner join genero_tipo as gt on gt.id = e.genero_tipo_id
-                inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
-                inner join circunscripcion_tipo as cpt on cpt.id = jg.circunscripcion_tipo_id
-                left join (select * from estudiante_datopersonal where id in (select max(id) from estudiante_datopersonal where gestion_tipo_id = ".$gestionActual." group by estudiante_id)) as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
+                inner join jdp_disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
+                inner join jdp_circunscripcion_tipo as cpt on cpt.id = jg.circunscripcion_tipo_id
+                left join (select * from jdp_estudiante_datopersonal where id in (select max(id) from jdp_estudiante_datopersonal where gestion_tipo_id = ".$gestionActual." group by estudiante_id)) as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
                 where eij.gestion_tipo_id = ".$gestionActual." and eij.fase_tipo_id = 3 and jg.circunscripcion_tipo_id = ".$codigoEntidad." --and dt.nivel_tipo_id = 13
                 order by lt5.lugar, cpt.id, lt.lugar, ie.id, dt.disciplina, pt.prueba, gt.genero, e.nombre, e.paterno, e.materno
             ");
@@ -190,7 +190,7 @@ class EstudianteDatopersonalController extends Controller {
                     select e.id as estudiante_id, gt.genero, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.nombre, e.nombre || ' ' || e.materno || ' ' || e.paterno as estudiante, edp.estatura,  edp.peso,  edp.talla,  edp.foto
                     from estudiante as e
                     inner join genero_tipo as gt on gt.id = e.genero_tipo_id
-                    left join estudiante_datopersonal as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
+                    left join jdp_estudiante_datopersonal as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
                     where e.id = ".$estudianteId."
                 ");
             $queryEntidad->execute();
@@ -202,7 +202,7 @@ class EstudianteDatopersonalController extends Controller {
                 return $this->redirectToRoute('sie_juegos_inscripcion_index');
             }
 
-            $entityDatos = new EstudianteDatopersonal();
+            $entityDatos = new JdpEstudianteDatopersonal();
             $form = $this->createCreateDatosForm($entityDatos);
 
             // data es un array con claves 'name', 'email', y 'message'
@@ -236,14 +236,19 @@ class EstudianteDatopersonalController extends Controller {
             $estudianteId = $request->get('id');
             $fase = $request->get('fase');
 
+            
+
             try {
-                $entityEstudianteDatopersonal = new EstudianteDatopersonal();                      
-                $form = $this->createCreateDatosForm($entityEstudianteDatopersonal);
+                $entityEstudianteDatoPersonal = $em->getRepository('SieAppWebBundle:JdpEstudianteDatopersonal')->findOneBy(array('estudiante' => $estudianteId, 'gestionTipo' => $gestionActual));
+                if(count($entityEstudianteDatoPersonal)<=0){
+                   $entityEstudianteDatoPersonal = new JdpEstudianteDatopersonal();
+                }                    
+                $form = $this->createCreateDatosForm($entityEstudianteDatoPersonal);
                 $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     if (null != $form->get('foto')->getData()) {
-                        $file = $entityEstudianteDatopersonal->getFoto();
+                        $file = $entityEstudianteDatoPersonal->getFoto();
 
                         $filename = md5(uniqid()) . '.' . $file->guessExtension();
                         
@@ -252,7 +257,7 @@ class EstudianteDatopersonalController extends Controller {
                             $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/fotos_juegos';
                             $file->move($adjuntoDir, $filename);
 
-                            $entityEstudianteDatopersonal->setFoto($filename);
+                            $entityEstudianteDatoPersonal->setFoto($filename);
                             
                         } else {
                             $this->get('session')->getFlashBag()->set(
@@ -273,12 +278,12 @@ class EstudianteDatopersonalController extends Controller {
                 $entityEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $estudianteId));
 
 
-                $entityEstudianteDatopersonal->setEstudiante($entityEstudiante);
+                $entityEstudianteDatoPersonal->setEstudiante($entityEstudiante);
                 //$entityEstudianteDatopersonal->setEstatura($estatura);
                 //$entityEstudianteDatopersonal->setTalla($talla);
                 //$entityEstudianteDatopersonal->setPeso($peso);                                                                
                 $em = $this->getDoctrine()->getManager(); 
-                $em->persist($entityEstudianteDatopersonal);
+                $em->persist($entityEstudianteDatoPersonal);
                 $em->flush(); 
                 $em->getConnection()->commit();
                 $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Registro guardado de forma correcta'));  
@@ -295,7 +300,7 @@ class EstudianteDatopersonalController extends Controller {
                     select e.id as estudiante_id, gt.genero, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.nombre, e.nombre || ' ' || e.materno || ' ' || e.paterno as estudiante, edp.estatura,  edp.peso,  edp.talla,  edp.foto
                     from estudiante as e
                     inner join genero_tipo as gt on gt.id = e.genero_tipo_id
-                    left join estudiante_datopersonal as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
+                    left join jdp_estudiante_datopersonal as edp on edp.estudiante_id = e.id and edp.gestion_tipo_id = ".$gestionActual."
                     where e.id = ".$estudianteId."
                 ");
             $queryEntidad->execute();
@@ -318,7 +323,7 @@ class EstudianteDatopersonalController extends Controller {
         //}
     }
 
-    private function createCreateDatosForm(EstudianteDatopersonal $entity)
+    private function createCreateDatosForm(JdpEstudianteDatopersonal $entity)
     { 
         //$entity->setPruebaTipo();
         $form = $this->createForm(new EstudianteJuegosDatosClasificacionType(), $entity, array(

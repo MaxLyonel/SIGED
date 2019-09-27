@@ -52,7 +52,7 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ path('olimrobotica_index') }}" class="btn btn-link" style="padding-top: 15px;">Robótica</a></li>
-                        {# <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li> #}
+                        <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li>
                     </ul>
 
                 </div><!-- /.navbar-collapse -->
@@ -94,7 +94,7 @@
                                     <a class="media">
                                         <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
                                         <div class="media-body">
-                                            {# <span class="media-heading">{{ estudiante.nombre }} {{ estudiante.paterno }} {{ estudiante.materno }}</span> #}
+                                            <span class="media-heading">{{ estudiante.nombre }} {{ estudiante.paterno }} {{ estudiante.materno }}</span>
                                             {% if estudiante.carnetIdentidad != "" %}
                                                 <b>Carnet: </b> {{ estudiante.carnetIdentidad }} {{ estudiante.complemento }}</span><br>                                         
                                             {% endif %}

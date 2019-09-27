@@ -71,15 +71,33 @@ oliminscriptions_getParalelo:
     options:
         expose: true
 
+oliminscriptions_getParaleloFeria:
+    path:     /getParaleloFeria
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getParaleloFeria" }
+    options:
+        expose: true
+
 oliminscriptions_getTurno:
     path:     /getTurno
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getTurno" }
     options:
         expose: true
 
+oliminscriptions_getTurnoFeria:
+    path:     /getTurnoFeria
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getTurnoFeria" }
+    options:
+        expose: true
+
 oliminscriptions_getStudents:
     path:     /getStudents
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents" }
+    options:
+        expose: true
+
+oliminscriptions_getStudentsFeria:
+    path:     /getStudentsFeria
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudentsFeria" }
     options:
         expose: true
 

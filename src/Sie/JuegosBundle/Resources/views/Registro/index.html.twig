@@ -266,16 +266,6 @@
                             $("#listaSeleccionado").empty();
                             chekedOff();
                             $("#load").remove();
-                            if(data.msg_incorrecto){
-                                if(data.msg_incorrecto != ''){
-                                    $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
-                                }
-                            }
-                            if(data.msg_correcto){
-                                if(data.msg_correcto != ''){
-                                    $("#listaParticipante").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
-                                }
-                            }
 
                             var divLista = "";
                             var c = 0;
@@ -335,6 +325,18 @@
                                     $("#form_posicion").append('<option value="' + data.posiciones[i].id + '">' + data.posiciones[i].posicion + '</option>');
                                 }
                             }
+
+                            if(data.msg_incorrecto){
+                                if(data.msg_incorrecto != ''){
+                                    $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                                }
+                            }
+                            if(data.msg_correcto){
+                                if(data.msg_correcto != ''){
+                                    $("#listaParticipante").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                                }
+                            }
+                            
                         },
                         statusCode: {
                             500: function () {
@@ -851,6 +853,11 @@
                     beforeSend: function () {
                     },
                     success: function (data) {
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                            }
+                        }
                         var elemento = document.getElementById('list' + es);
                         if(data.registro[0]){
                             elemento.remove();

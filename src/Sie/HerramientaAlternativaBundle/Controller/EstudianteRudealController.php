@@ -484,7 +484,7 @@ class EstudianteRudealController extends Controller {
 
             // EDUCACION DIVERSA
             $rudeEducacionDiversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->find($form['diversaId']);
-            $rudeEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find($form['diversa']));
+            $rudeEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find(($form['diversa'] == null)?1:$form['diversa']));
 
             if($form['diversa'] == 2){            
                 $rudeEducacionDiversa->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find($request->get('unidadMilitar')));
@@ -1242,6 +1242,7 @@ class EstudianteRudealController extends Controller {
                                 ;
                             },
                             'empty_value' => 'Seleccionar...',
+                            'property'=>'grupoSanguineo',
                             'required'=>true,
                             'data'=> ($e->getSangreTipo())? $em->getReference('SieAppWebBundle:SangreTipo', $e->getSangreTipo()->getId()):'',
                             'mapped'=>false
@@ -1256,7 +1257,7 @@ class EstudianteRudealController extends Controller {
                             },
                             'multiple'=>true,
                             'property'=>'descripcionMediosComunicacion',
-                            'required'=>false,
+                            'required'=>true,
                             'data'=>$em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->findBy(array('id'=>$arrayMediosComunicacion)),
                             'mapped'=>false,
                             'expanded'=>false
@@ -1290,7 +1291,7 @@ class EstudianteRudealController extends Controller {
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
                             'property'=>'modalidadEstudio',
-                            'required'=>false,
+                            'required'=>true,
                             'data'=>($rude->getModalidadEstudioTipo())? $em->getRepository('SieAppWebBundle:ModalidadEstudioTipo')->find($rude->getModalidadEstudioTipo()->getId()):'',
                             'mapped'=>false
                         ))
@@ -1299,7 +1300,8 @@ class EstudianteRudealController extends Controller {
                             'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('at')
                                         ->where('at.id in (:ids)')
-                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'abandono_tipo'));
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'abandono_tipo'))
+                                        ->orderBy('at.id','asc');
                             },
                             'multiple'=>true,
                             'property'=>'descripcionAbandono',
@@ -1554,7 +1556,7 @@ class EstudianteRudealController extends Controller {
         $form = $this->createFormBuilder($rude)
                     ->add('id', 'hidden')
                     ->add('lugarRegistroRude', 'text', array('required' => true))
-                    ->add('fechaRegistroRude', 'text', array('required' => false, 'data'=>$fecha))             
+                    ->add('fechaRegistroRude', 'text', array('required' => true, 'data'=>$fecha))             
                     ->getForm();
 
         return $form;

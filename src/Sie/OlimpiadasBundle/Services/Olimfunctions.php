@@ -217,6 +217,32 @@ class Olimfunctions {
 
    }
 
+   /**
+    * [getStudentsToOlimpiadas description]
+    * @param  [type] $institucionEducativaCursoId [description]
+    * @return [type]                              [description]
+    */
+    public function getStudentsToOlimpiadasFeria($cursosArray){
+
+      $sql = "
+              
+              select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento 
+              from institucioneducativa ie 
+              left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
+              left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
+              left join estudiante e on ei.estudiante_id = e.id
+              where (e.pais_tipo_id = 1 or e.es_doble_nacionalidad = 't') and iec.id in (".$cursosArray.")
+              order by e.paterno, e.materno, e.nombre ASC
+          "
+              ;
+      
+      $query = $this->em->getConnection()->prepare($sql);
+      
+      $query->execute();
+      return $query->fetchAll();
+  
+     }
+
    public function getYearsOldsStudent($fecha_nacimiento, $fecha_control){
 
             $fecha_actual = $fecha_control;
@@ -470,7 +496,7 @@ class Olimfunctions {
           left join grado_tipo gt on (iec.grado_tipo_id = gt.id)
           left join paralelo_tipo pt on (iec.paralelo_tipo_id = pt.id)
           left join turno_tipo tt on (iec.turno_tipo_id = tt.id)
-          where e.codigo_rude = '".$data['codigoRude']."' and iec.gestion_tipo_id = ".$data['gestiontipoid']."
+          where i.institucioneducativa_tipo_id = 1 and e.codigo_rude = '".$data['codigoRude']."' and iec.gestion_tipo_id = ".$data['gestiontipoid']."
         
       "
     );

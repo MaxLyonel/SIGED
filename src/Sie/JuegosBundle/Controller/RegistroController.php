@@ -16,8 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Sie\JuegosBundle\Controller\EstudianteInscripcionJuegosController as estudianteInscripcionJuegosController;
 use Sie\JuegosBundle\Controller\ReglaController as reglaController;
 
-use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos as EstudianteInscripcionJuegos;
-use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos as EquipoEstudianteInscripcionJuegos;
+use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos;
+use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
@@ -435,7 +435,7 @@ class RegistroController extends Controller {
             $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estInsId));
             $estudianteInscripcionNombre = $estudianteInscripcionEntity->getEstudiante()->getNombre().' '.$estudianteInscripcionEntity->getEstudiante()->getPaterno().' '.$estudianteInscripcionEntity->getEstudiante()->getMaterno();
 
-            $estudianteInscripcionJuegos = new EstudianteInscripcionJuegos();
+            $estudianteInscripcionJuegos = new JdpEstudianteInscripcionJuegos();
             $estudianteInscripcionJuegos->setEstudianteInscripcion($estudianteInscripcionEntity );
             $estudianteInscripcionJuegos->setPruebaTipo($pruebaEntity);
             $estudianteInscripcionJuegos->setGestionTipo($gestionEntity);
@@ -448,7 +448,7 @@ class RegistroController extends Controller {
             $em->persist($estudianteInscripcionJuegos);
 
             if($equipoId > 0){
-                $equipoEstudianteInscripcionJuegos = new EquipoEstudianteInscripcionJuegos();
+                $equipoEstudianteInscripcionJuegos = new JdpEquipoEstudianteInscripcionJuegos();
                 $equipoEstudianteInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
                 $equipoEstudianteInscripcionJuegos->setEquipoId($equipoId);
                 $equipoEstudianteInscripcionJuegos->setEquipoNombre('Equipo'.$equipoId);
@@ -566,6 +566,7 @@ class RegistroController extends Controller {
         // $gestionActual = 2018;
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $id_usuario_lugar = $this->session->get('roluserlugarid');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -580,12 +581,15 @@ class RegistroController extends Controller {
 
         $response = new JsonResponse();
 
-        $faseActivo = $this->getFaseActivo($faseId, $nivelId, $fechaActual);
-        if (!$faseActivo) {
-            return $response->setData(array(
-                'msg_incorrecto' => 'Inscripción cerrada'
-            ));
+        if ($id_usuario != 13833121 and $id_usuario != 13855318 and $id_usuario != 13794833){
+            $faseActivo = $this->getFaseActivo($faseId, $nivelId, $fechaActual);
+            if (!$faseActivo) {
+                return $response->setData(array(
+                    'msg_incorrecto' => 'Inscripción cerrada'
+                ));
+            }
         }
+        
         
         $entityTipoDisciplinaPrueba = $this->verificaTipoDisciplinaPrueba($pruebaId);
 
@@ -636,7 +640,7 @@ class RegistroController extends Controller {
         foreach($deportistas as $deportista){
             $estInsId = base64_decode($deportista);
 
-            $msg = $reglaController->valEstudianteInscripcionJuegos($estInsId, $gestionActual, $pruebaId, $faseId, $equipoId);
+            $msg = $reglaController->valEstudianteInscripcionJuegos($estInsId, $gestionActual, $pruebaId, $faseId, $equipoId, 0, $id_usuario_lugar);
 
             // $msg = $this->validaInscripcionJuegos($estInsId,$gestionActual,$pruebaId,$faseId,$nivelId);
             
@@ -959,6 +963,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $id_usuario = $this->session->get('userId');
         // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -972,11 +977,23 @@ class RegistroController extends Controller {
 
         $inscripcion = base64_decode($_POST['inscripcion']);
 
+        $response = new JsonResponse();
+
         try{
             $entityDatos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('id'=>$inscripcion));
             if ($entityDatos) {
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $faseId = $entityDatos->getFaseTipo()->getId();
+
+                if ($id_usuario != 13833121 and $id_usuario != 13794833){
+                    $faseActivo = $this->getFaseActivo($faseId, $nivel, $fechaActual);
+                    if (!$faseActivo) {
+                        return $response->setData(array(
+                            'msg_incorrecto' => 'Inscripción cerrada'
+                        ));
+                    }
+                }
+
                 $estudiante = $entityDatos->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getNombre();
                 $estudianteInscripcion = $entityDatos->getEstudianteInscripcion()->getId();
                 $institucionEducativaId = $entityDatos->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
@@ -1035,8 +1052,6 @@ class RegistroController extends Controller {
             $inscritoNombre = $inscrito[0]->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$inscrito[0]->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$inscrito[0]->getEstudianteInscripcion()->getEstudiante()->getNombre();
             $ainscritos[$inscritoEquipoId][base64_encode($inscritoId )] = $inscritoNombre ;
         }
-
-        $response = new JsonResponse();
         return $response->setData(array('registro' => $respuesta, 'participantes' => $ainscritos));
     }
 

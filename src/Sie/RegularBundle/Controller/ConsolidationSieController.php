@@ -30,36 +30,44 @@ class ConsolidationSieController extends Controller {
      * @return objeto form para la subida de archivo
      */
     public function indexAction(Request $request) {
+
         //$sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
+
+            
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $aAccess = array(5, 2, 9);
+        $aAccess = array(5, 2, 9, 8);
         if (in_array($this->session->get('roluser'), $aAccess)) {
             $institutionData = $this->intitucioneducativaData($this->session->get('personaId'), $this->session->get('currentyear'));
-            
-            $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
+            //get the send data if controll up sie file
+            $form = $request->get('form');
+            if($form){
+                $institutionData1 = $this->getDataUe($form['sie']);
+            }else{
+                $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
+            }           
             
             //verificar si es IE
             if ($institutionData1) {
                 $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($institutionData1[0]['id']);
                 $objUeUploadFiles = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getFilesUploadByDistrito($objUe[0]['distritoTipoId']);
-                return $this->render('SieRegularBundle:ConsolidationSie:index.html.twig', array(
+                return $this->render($this->session->get('pathSystem') . ':ConsolidationSie:index.html.twig', array(
                             'institutionData' => $institutionData1,
                             'form' => $this->formUp($institutionData1[0]['id'])->createView(),
                             'sie' => $institutionData1[0]['id'],
                             'ueuploadfiles' => $objUeUploadFiles
                 ));
             } else {
-                return $this->render('SieRegularBundle:ConsolidationSie:find.html.twig');
+                return $this->render($this->session->get('pathSystem') . ':ConsolidationSie:find.html.twig');
             }
         } else {
-            return $this->render('SieRegularBundle:ConsolidationSie:find.html.twig');
+            return $this->render($this->session->get('pathSystem') . ':ConsolidationSie:find.html.twig');
         }
     }
 
@@ -151,7 +159,7 @@ class ConsolidationSieController extends Controller {
 
             $objUeUploadFiles = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getFilesUploadByDistrito($objUe[0]['distritoTipoId']);
 
-            return $this->render('SieRegularBundle:ConsolidationSie:index.html.twig', array(
+            return $this->render($this->session->get('pathSystem') . ':ConsolidationSie:index.html.twig', array(
                         'institutionData' => array(),
                         'instEdu' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['codigoSie']),
                         'form' => $this->formUp($form['codigoSie'])->createView(),
@@ -249,9 +257,9 @@ class ConsolidationSieController extends Controller {
         //new new by krlos
         if ($request->getMethod() == 'POST') {
 
-            $connection = ssh2_connect('172.20.0.106', 22);
-            ssh2_auth_password($connection, 'carlospacha', 'carlospacha');
-            $sftp = ssh2_sftp($connection);
+            // $connection = ssh2_connect('172.20.0.106', 22);
+            // ssh2_auth_password($connection, 'carlospacha', 'carlospacha');
+            // $sftp = ssh2_sftp($connection);
             try {
                 //echo "<pre>";
                 //get the form file
@@ -279,11 +287,20 @@ class ConsolidationSieController extends Controller {
                 ////////////////////////////////////////////////////////////////////new new by krlos
                 // //make the temp dir name
                 $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
+
+                if (is_readable($this->get('kernel')->getRootDir() . '/../web/empfiles')) {
+                    
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                }
+                //check if the file exist to create the same
                 if (!file_exists($dirtmp)) {
-                    mkdir($dirtmp, 0777);
+                    mkdir($dirtmp, 0770);
                 }else{
                   system('rm -fr ' . $dirtmp.'/*');
                 }
+
 
                 //move the file emp to the directory temp
                 $file = $oFile->move($dirtmp, $originalName);
@@ -298,7 +315,7 @@ class ConsolidationSieController extends Controller {
 
                 //get the content of extract file
                 $aDataFileUnzip = explode('/', $result);
-
+                
                 $aFileName = explode('_', $originalName);
                 $nameFileUnZip = str_replace(' ', '\ ', $aDataFileUnzip[sizeof($aDataFileUnzip) - 1]);
                 //convert the file to base64
@@ -309,6 +326,7 @@ class ConsolidationSieController extends Controller {
 
                 //get the content of file
                 $fileInfoContent = file($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                $fileInfoContent2 = file_get_contents($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
 
                 //validate the full descompresition with the SieTypeFile from begin to the end
                 if ((strcmp(preg_replace('/\s+/', '', $fileInfoContent[0]), preg_replace('/\s+/', '', $fileInfoContent[sizeof($fileInfoContent) - 1]))) !== 0) {
@@ -321,17 +339,17 @@ class ConsolidationSieController extends Controller {
 
                 $objAllowUEQa = $this->get('funciones')->appValidationQuality(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27,48'));
                 if($objAllowUEQa){
-                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
+                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder cargar el archivo ');
                   system('rm -fr ' . $dirtmp);
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
-                $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5'));
-                if($objAllowUE){
-                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
-                  system('rm -fr ' . $dirtmp);
-                  return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                }
+                // $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5'));
+                // if($objAllowUE){
+                //   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
+                //   system('rm -fr ' . $dirtmp);
+                //   return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                // }
 
                 //validation up old file ... only by tec distrito, depto
                 $aAccess = array(5, 2, 9);
@@ -359,8 +377,8 @@ class ConsolidationSieController extends Controller {
 
                     }else{
                       if(
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.7'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED6'))) === 0
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0
+                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED8'))) === 0
                       ){
 
                       }else{
@@ -431,32 +449,61 @@ class ConsolidationSieController extends Controller {
                 $mainDir = $this->get('kernel')->getRootDir() . '/../web/empfiles/';
                 //create the year directory with org curricular info
                 $yearDir = $mainDir . $aDataExtractFileUE[4];
-
+                $yearDirToSave =  $aDataExtractFileUE[4];
                 if (!file_exists($yearDir)) {
-                    mkdir($yearDir, 0777);
+                    mkdir($yearDir, 0770);
+                }else{
+                    if (!is_readable($yearDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
                 //create the distrito directory
                 $distritoDir = $yearDir . '/' . $aDataExtractFileUE[38];
+                $distritoDirToSave = $yearDirToSave . '/' . $aDataExtractFileUE[38];
 
                 if (!file_exists($distritoDir)) {
-                    mkdir($distritoDir, 0777);
+                    mkdir($distritoDir, 0770);
+                }else{
+                    if (!is_readable($distritoDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
                 //create the cod UE directory
                 $unidadEducativaDir = $distritoDir . '/' . $aDataExtractFileUE[1];
+                $unidadEducativaDirToSave = $distritoDirToSave . '/' . $aDataExtractFileUE[1];
 
                 if (!file_exists($unidadEducativaDir)) {
-                    mkdir($unidadEducativaDir, 0777);
+                    mkdir($unidadEducativaDir, 0770);
+                }else{
+                    if (!is_readable($unidadEducativaDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
                 //create the sucursal directory
                 $periodoDir = $unidadEducativaDir . '/' . $aDataExtractFileUE[5];
+                $periodoDirToSave = $unidadEducativaDirToSave . '/' . $aDataExtractFileUE[5];
 
                 if (!file_exists($periodoDir)) {
-                    mkdir($periodoDir, 0777);
+                    mkdir($periodoDir, 0770);
+                }else{
+                    if (!is_readable($periodoDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
-
+// dump($periodoDirToSave. '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+// die;
                 /**
                  * create the db directory
                  */
+/*
                 //create the year directory on db server
                 $pathGestion = "/consolidacion_online/" . $aDataExtractFileUE[4];
                 if (!($remoteStream = is_dir("ssh2.sftp://$sftp" . $pathGestion))) {
@@ -489,7 +536,28 @@ class ConsolidationSieController extends Controller {
                     $session->getFlashBag()->add('warningcons', "Failed to copy file [" . $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $unzipFile . "] to [" . '/consolidacion_online/' . $unzipFile . "].");
                     return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
+*/
 
+                //move the file on the new local path
+                // check if the file exists to move it
+                if(is_readable($dirtmp . '/' . $originalName) && is_readable($periodoDir)){
+                  rename($dirtmp . '/' . $originalName, $periodoDir . '/' . $originalName);  
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas al intenar subir el archivo emp');
+                    system('rm -fr ' . $dirtmp);
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                }
+
+                if(is_readable($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]) && is_readable($periodoDir)){
+                  rename($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2], $periodoDir . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                  // put the user owner on the file                 
+                  // system('chown root:root '. $periodoDir . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas al intenar subir el archivo');
+                    system('rm -fr ' . $dirtmp);
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));                  
+                }
+                
                 // todo the save record on the db if not exists
                 if (!$objUploadFile) {
                     $objUploadFileNew = new UploadFileControl();
@@ -500,7 +568,7 @@ class ConsolidationSieController extends Controller {
                     $objUploadFileNew->setEstadoFile(1);
                     $objUploadFileNew->setGestion($aDataExtractFileUE[4]);
                     $objUploadFileNew->setDistrito($aDataExtractFileUE[38]);
-                    $objUploadFileNew->setPath($pathPeriodo . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                    $objUploadFileNew->setPath('/consolidacion_online/' .$periodoDirToSave. '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
                     $objUploadFileNew->setDateUpload(new \DateTime('now'));
                     $objUploadFileNew->setRemoteAddr($_SERVER['REMOTE_ADDR']);
                     $objUploadFileNew->setUserAgent($_SERVER['HTTP_USER_AGENT']);
@@ -510,25 +578,30 @@ class ConsolidationSieController extends Controller {
                 }
                 //save the log info
                 $dataSave = array(
-                  'gestion' => $aDataExtractFileUE[4],
-                  'bimestre' => $aDataExtractFileUE[5]-1,
-                  'sie' => $aDataExtractFileUE[1],
+                  'gestion'          => $aDataExtractFileUE[4],
+                  'bimestre'         => $aDataExtractFileUE[5]-1,
+                  'sie'              => $aDataExtractFileUE[1],
+                  'operativoLogTipo' => $aFileInfoSie[6],
                 );
+
                 $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($dataSave);
                 $em->getConnection()->commit();
+                system('rm -fr '  . $dirtmp);
             } catch (Exception $ex) {
                 $em->getConnection()->rollback();
-                system('rm -fr ' . $dirtmp);
+                system('rm -fr '  . $dirtmp);
                 echo 'Excepción capturada: ', $ex->getMessage(), "\n";
             }
             //everything good so need to remove the tmp file
-            system('rm -fr ' . $dirtmp);
+            // system('rm -fr ' . $dirtmp);
             $session->getFlashBag()->add('successcons', 'Archivo cargado correctamente');
             return $this->redirect($this->generateUrl('consolidation_sie_web'));
         } else {
             $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente');
             return $this->redirect($this->generateUrl('consolidation_sie_web'));
         }
+    
+    }        
 
         //////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
@@ -546,7 +619,7 @@ class ConsolidationSieController extends Controller {
         //create directories on app server
 //        $dirgestion = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . '2015';
 //        if (!file_exists($dirgestion)) {
-//            mkdir($dirgestion, 0777);
+//            mkdir($dirgestion, 0770);
 //        }
 //        //create the directory on db server
 //        $pathgestion = "/consolidacion_online/" . '2015';
@@ -557,7 +630,7 @@ class ConsolidationSieController extends Controller {
 //        $objUnidEducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($id);
 //        $dirdistrito = $dirgestion . '/' . $objUnidEducativa[0]['distritoTipoId'];
 //        if (!file_exists($dirdistrito)) {
-//            mkdir($dirdistrito, 0777);
+//            mkdir($dirdistrito, 0770);
 //        }
 //        //create the directory on db server
 //        $pathdistrito = $pathgestion . '/' . $objUnidEducativa[0]['distritoTipoId'];
@@ -568,7 +641,7 @@ class ConsolidationSieController extends Controller {
 //        //create the sie directory
 //        $dirsie = $dirdistrito . '/' . $id;
 //        if (!file_exists($dirsie)) {
-//            mkdir($dirsie, 0777);
+//            mkdir($dirsie, 0770);
 //        }
 //        //create the directory on db server
 //        $pathsie = $pathdistrito . '/' . $id;
@@ -641,7 +714,7 @@ class ConsolidationSieController extends Controller {
 //        ));
 //        $dirope = $dirsie . '/' . $aFileInfoSie[6];
 //        if (!file_exists($dirope)) {
-//            mkdir($dirope, 0777);
+//            mkdir($dirope, 0770);
 //        }
 //        //create the directory on db server
 //        $pathope = $pathsie . '/' . $aFileInfoSie[6];
@@ -713,7 +786,7 @@ class ConsolidationSieController extends Controller {
 //            $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente');
 //            return $this->redirect($this->generateUrl('consolidation_sie_web'));
 //        }
-    }
+    
 
 
         /**
@@ -723,15 +796,37 @@ class ConsolidationSieController extends Controller {
          */
 
         private function saveInstitucioneducativaOperativoLog($data){
+          // dump($data);
+          //get the correct operativo log tipo id to save on the log table
+          switch ($data['operativoLogTipo']) {            
+            case "0":
+              # code...
+              $operativoLogTipo = 6;
+              break;
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+              # code...
+              $operativoLogTipo = 2;
+              break;
+            
+            default:
+              # code...
+              $operativoLogTipo = 2;
+              break;
+          }
+          
             //conexion to DB
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             try {
               //save the log data
               $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
-              $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(2));
+              $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($operativoLogTipo));
               $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
-              $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($data['bimestre']+1));
+              $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
               $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']));
               $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
               $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['bimestre']));

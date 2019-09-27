@@ -2,27 +2,21 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
     type: entity
     table: bth_estudiante_nivelacion
     indexes:
-        IDX_3E42F685A1104027:
+        IDX_3E42F685D3248FB5:
             columns:
-                - estudiante_inscripcion_id
-        IDX_3E42F6856DD9B3B9:
+                - estudiante_nota_cualitativa_id
+        IDX_3E42F685D72DBC59:
             columns:
-                - nivel_tipo_id
+                - especialidad_tecnico_humanistico_tipo_id
         IDX_3E42F685C6447610:
             columns:
                 - grado_tipo_id
-        IDX_3E42F685756DFBFA:
+        IDX_3E42F685585AE0D9:
             columns:
-                - nota_tipo_id
-        IDX_3E42F685DB38439E:
+                - asignatura_tipo_id
+        IDX_3E42F685A1104027:
             columns:
-                - usuario_id
-        IDX_3E42F685C5C70C5B:
-            columns:
-                - asignatura_id
-        IDX_3E42F68581D1D911:
-            columns:
-                - especialidad_tecnico_humanistico_id
+                - estudiante_inscripcion_id
     id:
         id:
             type: integer
@@ -33,19 +27,12 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
             generator:
                 strategy: SEQUENCE
     fields:
-        notaCuantitativa:
-            type: smallint
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: nota_cuantitativa
-        docRespaldo:
+        obs:
             type: string
-            nullable: false
-            length: 150
+            nullable: true
+            length: 200
             fixed: false
             comment: ''
-            column: doc_respaldo
         fechaRegistro:
             type: datetime
             nullable: false
@@ -56,29 +43,23 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        obs:
-            type: string
-            nullable: true
-            length: 150
-            fixed: false
-            comment: ''
     manyToOne:
-        estudianteInscripcion:
-            targetEntity: EstudianteInscripcion
+        estudianteNotaCualitativa:
+            targetEntity: EstudianteNotaCualitativa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estudiante_inscripcion_id:
+                estudiante_nota_cualitativa_id:
                     referencedColumnName: id
             orphanRemoval: false
-        nivelTipo:
-            targetEntity: NivelTipo
+        especialidadTecnicoHumanisticoTipo:
+            targetEntity: EspecialidadTecnicoHumanisticoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                nivel_tipo_id:
+                especialidad_tecnico_humanistico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         gradoTipo:
@@ -90,40 +71,22 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
                 grado_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        notaTipo:
-            targetEntity: NotaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                nota_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        usuario:
-            targetEntity: Usuario
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                usuario_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        asignatura:
+        asignaturaTipo:
             targetEntity: AsignaturaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                asignatura_id:
+                asignatura_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        especialidadTecnicoHumanistico:
-            targetEntity: EspecialidadTecnicoHumanisticoTipo
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                especialidad_tecnico_humanistico_id:
+                estudiante_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

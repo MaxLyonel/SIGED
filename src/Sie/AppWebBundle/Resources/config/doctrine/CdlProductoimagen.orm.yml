@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\CdlProductoimagen:
+    type: entity
+    table: cdl_productoimagen
+    indexes:
+        IDX_B6749CDC2A703EE4:
+            columns:
+                - cdl_productos_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        urlImagen:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+            column: url_imagen
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        cdlProductos:
+            targetEntity: CdlProductos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cdl_productos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

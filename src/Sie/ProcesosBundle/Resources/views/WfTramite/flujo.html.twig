@@ -1,0 +1,178 @@
+{% if app.session.flashBag.has('error') %}
+    <div class="alert alert-danger">
+        {% for msg in app.session.flashBag.get('error') %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+           <h4>
+                <span>DATOS DEL TRÁMITE</span></div>    
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="panel">
+                <div class="col-md-12">
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+					    <tr>
+					        <th style="width:200px">CÓDIGO SIE:</th><td>{{codsie}}</td>
+					    </tr>
+					    <tr>
+					        <th style="width:200px">{{tipo}}</th><td>{{nombre}}</td>
+					    </tr>
+                        <tr>
+					        <th style="width:200px">TIPO DE TRÁMITE:</th><td>{{tramite_tipo}}</td>
+					    </tr>
+					</table>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            {# <div class="pull-left">
+                                <h3 class="panel-title text-lilac">Ver detalle de seguimiento</h3>
+                            </div> #}
+                            <div class="pull-left">
+                                <a data-toggle="collapse" href="#collapseExample"><h4 class="panel-title text-lilac"><i class="glyphicon glyphicon-eye-open"></i>Click para ver detalle de seguimiento</h4></a>
+                            </div>
+                            <div class="clearfix"></div>
+                            {# <div class="pull-right">
+                                <button class="btn btn-sm tooltips" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" title="Ver detalle"><i class="glyphicon glyphicon-chevron-down"></i></button>
+                            </div> #}
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body collapse" id="collapseExample">
+                            <table class="table table-bordered table-middle table-primary">
+                                <thead>
+                                    <tr>
+                                        <th style="max-width: 5px">Nro.</th>
+                                        <th>Pasos del trámite</th>
+                                        <th>Fecha de recepción</th>
+                                        <th>Fecha de envío</th>
+                                        <th>Fecha de vencimiento</th>
+                                        <th>Tiempo duración</th>
+                                        <th>Plazo</th>
+                                        <th>Estado</th>
+                                        <th>Observación</th>
+                                        <th>Usuario remitente</th>
+                                        <th>Usuario destinatario</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set sw = 0 %}
+                                    {% for d in flujoDetalle %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ d.proceso_tipo }}</td>
+                                            <td>{{ d.fecha_recepcion ? d.fecha_recepcion|date('d-m-Y'):"" }}</td>
+                                            <td>{{ d.fecha_envio ? d.fecha_envio|date('d-m-Y'):"" }}</td>
+                                            <td class="text-danger">{{ d.fecha_vencimiento ? d.fecha_vencimiento|date('d-m-Y'):"" }}</td>
+                                            <td>{{ d.duracion }}</td>
+                                            <td>{{ d.plazo }}</td>
+                                            {% if d.tramite_estado %}
+                                                {% if d.tarea_sig_id == null and d.fecha_envio %}
+                                                    {% set sw = 1 %}
+                                                    <td ><span class="label label-success">TRAMITE CONCLUIDO</span></td>
+                                                {% else %}
+                                                    <td>{{ d.tramite_estado }}</td>
+                                                {% endif %}
+                                                {% if d.es_evaluacion == true  and d.fecha_envio %}
+                                                    <td>¿{{d.variable_evaluacion}}?</br>
+                                                        {{d.valor_evaluacion}}</br>
+                                                        {% if d.obs  %} Observación: {{d.obs}} {% endif %}
+                                                    </td>
+                                                {% else %}
+                                                    <td>{% if d.obs  %} Observación: {{d.obs}} {% endif %}</td>
+                                                {% endif %}
+                                            {% else %}
+                                                <td>{% if sw == 0 %}<span class="label label-warning">PENDIENTE</span>{% endif %}</td>
+                                                <td></td>
+                                            {% endif %}
+                                            <td>{{d.usuario_remitente}}</td>
+                                            <td>{{d.usuario_destinatario}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><!-- /.panel-body -->
+                    </div><!--/ End collapsible panel -->
+                </div>
+                {# {{dump(flujo)}} #}
+                <div style= "display:none" >
+                    <textarea id="code" style="width: 100%;" rows="11">
+                        st=>start: Inicio|inicio
+                        e=>end: Fin|inicio
+                        {% set sw = 0 %}
+                        {% for f in flujo %}
+                            {% if f.fecha_envio %}
+                                {% set estado = "current" %}
+                            {% elseif f.fecha_recepcion %}
+                                {% set estado = "recibido" %}
+                            {% else %}
+                                {% set estado = "past" %}
+                            {% endif %}
+                            {% if f.fecha_envio %}
+                                {{f.id}}=>operation: {{f.proceso_tipo}}
+                                {{f.fecha_envio|date('d-m-Y') }}|{{estado}}
+                                {# {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}} #}
+                            {% elseif f.fecha_recepcion %}
+                                {{f.id}}=>operation: {{f.proceso_tipo}}
+                                {{f.fecha_recepcion|date('d-m-Y') }}|{{estado}}
+                                {# {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}} #}
+                            {% else %}
+                                {{f.id}}=>operation: {{f.proceso_tipo}}|{{estado}}
+                            {% endif %}
+                            {% if f.es_evaluacion =="1" %}
+                                {% if f.valor_evaluacion %}
+                                    c{{f.id}}=>condition: ¿{{f.variable_evaluacion}}?
+                                    {{ f.valor_evaluacion }}|current
+                                {% else %}
+                                    c{{f.id}}=>condition: {{f.variable_evaluacion}}?|past
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set sw = 0 %}
+                        {% for f in flujo %}
+                            {% if f.es_evaluacion =="1" %}
+                                {{f.id}}->c{{f.id}}
+                                {% if f.condicion == "SI" %}
+                                    c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
+                                {% else %}
+                                    {% if f.condicion_tarea_siguiente == null %}
+                                        c{{f.id}}(no)->e
+                                    {% else %}
+                                        c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                {% set sw = 0 %}
+                                {% if f.tarea_ant_id == null %}
+                                    st->{{f.id}}
+                                    {{f.id}}->{{f.tarea_sig_id}}
+                                {% else %}
+                                    {% if f.tarea_sig_id == null %}
+                                        {{f.id}}->e
+                                    {% else %}
+                                        {{f.id}}->{{f.tarea_sig_id}}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        st@>e({"stroke":"Green"})
+                    </textarea></div>
+                    <div style= "display:none"><button id="run" type="button">Run</button></div>
+                    <table>
+                        <tr>
+                            <th><div style="width: 80px; height: 30px; background: #8BF3FE; border: solid 2px black" align="center">Enviado</div></th>
+                            <th><div style="width: 80px; height: 30px; background: #FFFF99; border: solid 2px black" align="center">Recibido</div></th>
+                            <th><div style="width: 80px; height: 30px; background: white; border: solid 2px black" align="center">Pendiente</div></th>
+                        </tr>
+                    </table>
+                    <div id="canvas">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

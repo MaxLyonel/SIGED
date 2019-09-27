@@ -56,7 +56,7 @@
                     {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') %}
                         {% if primaria %}
                             <button type="button" class="btn btn-default" style="float:right" onclick="newEmergente('{{infoUe}}')">
-                                Agregar Área Emergente
+                                Agregar M.I.E.
                             </button>
                         {% endif %}
                         <div class="btn-group" style="width:650px; float:right;">
@@ -91,12 +91,38 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% if tieneCursoOferta is defined %}
+                                {% if tieneCursoOferta == false %}
+                                    <tr id="mallaDiv">
+                                        <td colspan="5">
+                                            <div class="col-md-12 alert alert-warning">
+                                                El curso no tiene módulos asignados, seleccione la malla (Nueva o antigua)
+                                            </div>
+                                            <div class="col-md-12 text-center">
+                                                <form id="mallaForm" name="mallaForm">
+                                                    <div class="col-md-2 col-md-offset-3">
+                                                        Nueva <input type="radio" id="mallaNueva" name="malla" value="1" {% if (mallaActual == 1) %}checked{% endif %} />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        Antigua <input type="radio" id="mallaAntigua" name="malla" value="0" {% if (mallaActual == 0 or mallaActual == null) %}checked{% endif %} />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" onclick="guardarMalla('{{infoUe}}')" class="btn btn-success">Guardar Cambios</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
                             {% for co in cursoOferta %}
-                                <tr {% if co.esvigente == true %}class="text-strong"{% endif %}>
+                                <tr>
                                     <td class="text-center border-right">{{loop.index}}</td>
                                     <td>{{co.codigo}}</td>
                                     <td>
-                                        <span id="modulo_{{co.smpid}}">{{co.modulo}}</span>
+                                        <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
+                                            {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
+                                        </span>
                                         {% if co.codigo == '415' %}
                                             <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
                                             <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
@@ -112,7 +138,9 @@
                                     </td>
                                     {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
                                         <td class="text-center">
-                                            <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                            {% if (primaria == true and co.codigo == '408') or primaria == false %}
+                                                <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                            {% endif %}
                                         </td> 
                                     {% endif %}
                                 </tr>
@@ -121,7 +149,7 @@
                     </table>
                 </div>
                 <div id="mensajeModal">
-                    
+                    {% if mensaje is defined %}<div style='text-align:center; color:#5C9FFB'>{{mensaje}}</div>{% endif %}
                 </div>
             </div>
         </div>
@@ -157,6 +185,37 @@
 
                     }
                 }
+            });
+        }
+    };
+
+    var guardarMalla = function(infoUe){
+        if(confirm('¿Está segura/o de cambiar el tipo de malla para este curso?\nPresione aceptar para confirmar.')){
+            mallaId = $('input:radio[name=malla]:checked').val();
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe, mallaId: mallaId}),
+                url: "{{ path('herramienta_alter_curso_mallas') }}",
+                beforeSend: function () {
+                    $('#mensajeModal').empty();
+                    $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Asignando malla... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $('#mensajeModal').empty();
+                    $('#modal').empty();
+                    $('#mallaDiv').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function (data) {
+                        $('#mensajeModal').empty();
+                        $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>"+data.mensaje+"</div>");
+                    },
+                },
+                error: function(error) {
+                    $('#mensajeModal').empty();
+                    $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al agregar la malla.</div>");
+                },
             });
         }
     };

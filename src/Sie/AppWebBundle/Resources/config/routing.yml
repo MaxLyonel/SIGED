@@ -1,3 +1,7 @@
+sie_app_web_estudiantehistorialmodificacion:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudiantehistorialmodificacion.yml"
+    prefix:   /estudiantehistorialmodificacion
+
 sie_app_web_infraestructurah3riesgosdelitos:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah3riesgosdelitos.yml"
     prefix:   /infraestructurah3riesgosdelitos
@@ -257,7 +261,7 @@ sie_app_web_segip:
     prefix:   /sie/segip
 
 #modulo de tramites con flujos
-sie_app_web_wf_tramite:
-    resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
-    prefix:   /sie/tramite
+# sie_app_web_wf_tramite:
+#     resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
+#     prefix:   /sie/tramite
 

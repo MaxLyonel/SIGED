@@ -65,7 +65,6 @@ class GestionUesprocesoAperturaController extends Controller {
 
           $cursos = $query->getResult();
 
-          //dump($form);die;
           return $this->render('SieRegularBundle:GestionUesprocesoApertura:index.html.twig', array(
                                 'cursos'   => $cursos,
                                 'dataInfo' => $dataInfo,
@@ -352,36 +351,40 @@ class GestionUesprocesoAperturaController extends Controller {
               $nuevo_curso->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idInstitucion']));
               $nuevo_curso->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find(0));
               $nuevo_curso->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+              
               switch($form['nivel']){
-                  case 11:$ciclo=1;break;
-                  case 12:
-                          switch($form['grado']){
-                              case 1:
-                              case 2:
-                              case 3: $ciclo = 1;break;
-                              case 4:
-                              case 5:
-                              case 6: $ciclo = 2;break;
-                          }
-                          break;
-                  case 13:
-                          switch($form['grado']){
-                              case 1:
-                              case 2: $ciclo = 1;break;
-                              case 3:
-                              case 4: $ciclo = 2;break;
-                              case 5:
-                              case 6: $ciclo = 3;break;
-                          }
-                          break;
+                case 3: $ciclo=3;break;
+                case 11: $ciclo=1;break;
+                case 12: 
+                        switch($form['grado']){
+                            case 1:
+                            case 2: 
+                            case 3: $ciclo = 1;break;
+                            case 4:
+                            case 5:
+                            case 6: $ciclo = 2;break;
+                        }
+                        break;
+                case 13: 
+                        switch($form['grado']){
+                            case 1:
+                            case 2: $ciclo = 1;break;
+                            case 3: 
+                            case 4: $ciclo = 2;break;
+                            case 5:
+                            case 6: $ciclo = 3;break;
+                        }
+                        break;
                   case 999:
-                  $ciclo = 0;
-                  break;
+                    $ciclo = 0;
+                    break;
                   case 401:
-                  $ciclo = 0;
-                  $form['grado']=1;
-                  break;
-                  default:$ciclo = 0;break;       
+                    $ciclo = 0;
+                    $form['grado']=1;
+                    break;
+                  default:
+                    $ciclo = 0;
+                    break;       
               }
 
               $nuevo_curso->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find($ciclo));
@@ -389,10 +392,11 @@ class GestionUesprocesoAperturaController extends Controller {
               $nuevo_curso->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']));
               $nuevo_curso->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find($form['paralelo']));
               $nuevo_curso->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']));
-              $em->persist($nuevo_curso);
-              $em->flush();
 
+              $em->persist($nuevo_curso);              
+              $em->flush();
               $em->getConnection()->commit();
+              
               $this->get('session')->getFlashBag()->add('newCursocreated', 'Curso creado correctamente');
               // $nuevo_curso->setMultigrado(0);
               // $nuevo_curso->setDesayunoEscolar(1);
@@ -548,10 +552,25 @@ class GestionUesprocesoAperturaController extends Controller {
               ->add('paterno','text', array('label'=>'Paterno', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Paterno', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
               ->add('materno','text', array('label'=>'Materno', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Materno', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
               ->add('nombre','text', array('label'=>'Nombre', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Nombre', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
+              ->add('expedido', 'entity', array(
+                'label'=>'Expedido',
+                'class' => 'SieAppWebBundle:DepartamentoTipo',
+                'query_builder' => function (EntityRepository $e) {
+                    return $e->createQueryBuilder('dt')
+                            ->where('dt.id not in (0)')
+                            ->orderBy('dt.id', 'ASC')
+                    ;
+                },
+                'property'=>'departamento',
+                'empty_value' => 'Seleccionar...',
+                'required'=>false,
+                // 'data'=>($datos['expedido'] != null)?$em->getReference('SieAppWebBundle:DepartamentoTipo', $datos['expedido']):''
+                'attr'=> array('class'=>'form-control')
+              ))
               //->add('fechaNacimiento','text', array('label'=>'Fecha Nacimiento', 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'" ,'placeholder' => 'Fecha Nacimiento', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-              ->add('day','choice', array('label'=>'Dia','choices'=>$arrDay, 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'" ,'placeholder' => '', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-              ->add('month','choice', array('label'=>'Dia','choices'=>$arrMonth, 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'" ,'placeholder' => '', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-              ->add('year','choice', array('label'=>'Dia','choices'=>$arrYear, 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'" ,'placeholder' => '', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
+              ->add('day','choice', array('label'=>'Dia','choices'=>$arrDay, 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'")))
+              ->add('month','choice', array('label'=>'Mes','choices'=>$arrMonth, 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'")))
+              ->add('year','choice', array('label'=>'Año','choices'=>$arrYear, 'attr'=> array('class'=>'form-control', 'data-inputmask'=>"'alias': 'date'")))
               ->add('data', 'hidden', array('data'=> $data))
               ->add('idCurso', 'hidden', array('data'=> $idCurso))
               ->add('generoTipo', 'entity', array('label'=>'Género', 'attr'=>array('class'=>'form-control'),'mapped'=>false,
@@ -592,8 +611,7 @@ class GestionUesprocesoAperturaController extends Controller {
 
       //get the student and historial info by data info
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->getDataStudentByCiOrdataStudentNoAcredit(
-                                                                                                      $form['carnetIdentidad'],
-                                                                                                      mb_strtoupper($form['nombre'], 'UTF-8') ,
+                                                                                                      $form['carnetIdentidad'],                                                                                                      mb_strtoupper($form['nombre'], 'UTF-8') ,
                                                                                                       mb_strtoupper($form['paterno'], 'UTF-8'),
                                                                                                       mb_strtoupper($form['materno'], 'UTF-8'),
                                                                                                       $form['year'].'-'.$form['month'].'-'.$form['day'],
@@ -607,7 +625,7 @@ class GestionUesprocesoAperturaController extends Controller {
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($objStudent[0]['id']);
       } else{
         $exist = false;
-        $message = 'Estudiante no registrado... Realize la inscripción por el boton';
+        $message = 'Estudiante no registrado... Realice la inscripción por el botón "Inscribir Nuevo"';
         $this->get('session')->getFlashBag()->add('noresult', $message);
       }
 
@@ -657,9 +675,11 @@ class GestionUesprocesoAperturaController extends Controller {
         $mat = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
         $rude = $aInfoUeducativa['sie'] . $this->session->get('currentyear') . $mat . $this->generarRude($aInfoUeducativa['sie'] . $this->session->get('ie_gestion') . $mat);
 
+        $dategrepup = $newStudent['year'].'/'.$newStudent['month'].'/'.$newStudent['day'];
+        $newTime = strtotime($dategrepup);
+        $newFormatDay = date('Y-m-d', $newTime);
 
         //save the new student data
-
         $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante');");
         $query->execute();
 
@@ -669,11 +689,7 @@ class GestionUesprocesoAperturaController extends Controller {
         $student->setNombre(mb_strtoupper($newStudent['nombre'], 'UTF-8'));
         $student->setCarnetIdentidad($newStudent['carnetIdentidad']);
         $student->setComplemento($newStudent['complemento']);
-
-        $dategrepup = $newStudent['day'].'/'.$newStudent['month'].'/'.$newStudent['year'];
-        $newTime = strtotime($dategrepup);
-        $newFormatDay = date('Y-m-d', $newTime);
-
+        $student->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($newStudent['expedido'] == "" ? 0 : $newStudent['expedido']));
         $student->setFechaNacimiento(new \DateTime($newFormatDay));
         //$student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
         $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
@@ -713,7 +729,7 @@ class GestionUesprocesoAperturaController extends Controller {
         $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
         $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($newStudent['idCurso']));
         //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
-        $studentInscription->setCodUeProcedenciaId($newStudent['ueprocedencia']);
+        $studentInscription->setCodUeProcedenciaId($newStudent['ueprocedencia'] == "" ? null : $newStudent['ueprocedencia']);
         $em->persist($studentInscription);
         $em->flush();
         //to do the submit data into DB

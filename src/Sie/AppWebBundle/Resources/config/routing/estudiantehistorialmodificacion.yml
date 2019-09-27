@@ -1,0 +1,30 @@
+estudiantehistorialmodificacion:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:index" }
+
+estudiantehistorialmodificacion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:show" }
+
+estudiantehistorialmodificacion_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:new" }
+
+estudiantehistorialmodificacion_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:create" }
+    methods:  POST
+
+estudiantehistorialmodificacion_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:edit" }
+
+estudiantehistorialmodificacion_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:update" }
+    methods:  [POST, PUT]
+
+estudiantehistorialmodificacion_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:EstudianteHistorialModificacion:delete" }
+    methods:  [POST, DELETE]

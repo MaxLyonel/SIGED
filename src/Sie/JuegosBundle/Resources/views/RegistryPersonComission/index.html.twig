@@ -1,0 +1,230 @@
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro de Entrenador <span>----</span></h2>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+            <div class="col-md-12">
+
+                <!-- Start comment form -->
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Busqueda</h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{path('listPersonRegister_index')}}">Retornar</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+
+                        
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idFormFindPerson'} } )}}
+                            <div class="form-body">
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{form_widget(form.cifind)}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{form_widget(form.complemento)}}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{form_widget(form.find)}}
+                                        </div>
+                                    </div>
+                                </div><!-- /.form-group -->
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {# {{form_widget(form.disciplina)}} #}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {# {{form_widget(form.prueba)}} #}
+                                        </div>
+                                    </div>
+
+                                </div><!-- /.form-group -->
+                              
+                            </div><!-- /.form-body -->
+                            <div class="form-footer">
+                                <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                            </div><!-- /.form-footer -->
+                        {{form_end(form)}}
+
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End comment form -->
+
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div id="resultPerson">
+            </div> 
+        </div>
+
+</div>
+
+
+<!-- Start inside form layout -->
+        <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+        <!-- <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"> -->
+           
+        </div>
+        <!-- /.modal -->
+        <!--/ End inside form layout -->
+        <!--/ END ALL MODALS -->
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+
+    var lookForData = function(){
+        var ci = $('#form_cifind').val();
+        
+        var dataForm = $('#idFormFindPerson').serialize();
+          if (ci.length > 0) {
+
+               $.ajax({
+                    type: 'post',
+                    url: Routing.generate('registrypersoncomission_look_for_data'),
+                    data: dataForm,
+                    beforeSend: function () {
+                        $('#resultPerson').empty();
+                        $('#resultPerson').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#resultPerson').empty();
+                        $('#resultPerson').append(data);
+
+                    },
+                });
+
+            } else {
+
+                alert('debe registrar el CI');
+                return false;
+
+            }
+
+
+    };
+
+
+    var lookForDataBySegip = function(){
+        var formData = $('#lookForDataBySegipForm').serialize();
+        var message = '';
+        var ci              = $('#form_ci').val();
+        var genero          = $('#form_generoTipo').val();
+        var nombre          = $('#form_nombre').val();
+        var materno         = $('#form_materno').val();
+        var paterno        = $('#form_paterno').val();
+        var fechaNacimiento = $('#form_fechaNacimiento').val();
+        //alert(ci +' '+ genero+' '+nombre+' '+paterno+' '+materno+' '+fechaNacimiento);return false;
+
+        if(!ci){
+            message+='\nCampo Requerido CI';
+        }
+        /*if(genero){
+            message+='\nCampo Requerido GENERO';
+        }*/
+        if(!nombre){
+            message+='\nCampo Requerido NOMBRE';
+        }
+        /*
+        if(!paterno){
+            message+='\nCampo Requerido PATERNO';
+        }
+        if(!materno){
+            message+='\nCampo Requerido MATERNO';
+        }*/
+        if(!fechaNacimiento){
+            message+='\nCampo Requerido FECHA NACIMIENTO';
+        }
+
+        if(!message){
+            if(confirm('¿Esta seguro de realizar la asignación?')){
+               $.ajax({
+                    type: 'post',
+                    url: Routing.generate('registrypersoncomission_lookForDataBySegip'),
+                    data: formData,
+                    beforeSend: function () {
+                        $('#resultCommission').empty();
+                        $('#resultCommission').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#resultCommission').empty();
+                        $('#resultCommission').append(data);
+
+                    },
+                });
+            }else
+                return false;
+        }else{
+            alert(message);
+            return false;
+        }
+    };
+    var registerCommission = function(){
+        var personId = $('#form_personId').val();
+        //if(confirm('¿Esta seguro de realizar la asignación?')){
+               $.ajax({
+                    type: 'post',
+                    url: Routing.generate('registrypersoncomission_registerCommission'),
+                    data: {'personId':personId},
+                    beforeSend: function () {
+                        $('#resultCommission').empty();
+                        $('#resultCommission').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#resultCommission').empty();
+                        $('#resultCommission').append(data);
+
+                    },
+                });
+                return true;
+            //}else
+            //    return false;
+               
+    };
+    var saveCommission = function(){
+        var formData = new FormData(document.getElementById("idCommissionData"));
+       if(confirm('is good??')){
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    dataType: 'html',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    url: Routing.generate('registrypersoncomission_saveCommission'),
+                    beforeSend: function () {
+                        $('#resultPerson').empty();
+                        $('#resultPerson').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#resultPerson').empty();
+                        $('#resultPerson').append(data);
+
+                    },
+                });
+       }else{
+           return false;
+       }
+
+    };
+
+    </script>
+   
+
+
+{%endblock%}

@@ -1,0 +1,32 @@
+sie_herramienta_estadistica_modular_matricula_index:
+    path:     /matricula
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularMatriculaIndex}
+
+sie_herramienta_estadistica_modular_matricula_pdf:
+    path:     /matricula/pdf
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularMatriculaPdf}
+
+sie_herramienta_estadistica_modular_matricula_xls:
+    path:     /matricula/xls
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularMatriculaXls}
+
+sie_herramienta_estadistica_modular_matricula_xlsx:
+    path:     /matricula/xlsx
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularMatriculaXlsx}
+
+sie_herramienta_estadistica_modular_unidadeducativa_index:
+    path:     /unidadeducativa
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularUnidadEducativaIndex}
+
+sie_herramienta_estadistica_modular_unidadeducativa_pdf:
+    path:     /unidadeducativa/pdf
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularUnidadEducativaPdf}
+
+sie_herramienta_estadistica_modular_unidadeducativa_xls:
+    path:     /unidadeducativa/xls
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularUnidadEducativaXls}
+
+sie_herramienta_estadistica_modular_unidadeducativa_xlsx:
+    path:     /unidadeducativa/xlsx
+    defaults: { _controller: SieHerramientaBundle:Estadistica:modularUnidadEducativaXlsx}
+

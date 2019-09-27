@@ -171,6 +171,14 @@ sie_herramienta_reportelabofisquim:
     resource: "@SieHerramientaBundle/Resources/config/routing/reportelabofisquim.yml"
     prefix:   /sie/labofisquim
 
+sie_herramienta_estadistica_bth:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estadisticaBth.yml"
+    prefix:   /estadistica/bth
+
+sie_herramienta_estadistica_modular:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estadisticaModular.yml"
+    prefix:   /estadistica/modular
+
 sie_herramienta_estudianteTrabajaNuevo:
     resource: "@SieHerramientaBundle/Resources/config/routing/estudianteTrabajaNuevo.yml"
     prefix:   /sie/estudianteTrabajaNuevo    
@@ -182,3 +190,31 @@ sie_herramienta_estudianteTrabaja:
 sie_herramienta_nnats:
     resource: "@SieHerramientaBundle/Resources/config/routing/reportesNnats.yml"
     prefix:   /sie/Nnats
+
+sie_herramienta_registro_promotor:
+    resource: "@SieHerramientaBundle/Resources/config/routing/promotor.yml"
+    prefix:   /sie/promotor
+
+sie_herramienta_registro_evento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regevent.yml"
+    prefix:   /sie/regevent
+
+sie_herramienta_registro_resultado:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regresultevent.yml"
+    prefix:   /sie/regresultevent
+
+sie_herramienta_registro_estudiante:
+     resource: "@SieHerramientaBundle/Resources/config/routing/regstudent.yml"
+     prefix:   /sie/regstudent
+
+sie_herramienta_cdl_seguimiento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/cdlseguimiento.yml"
+    prefix:   /sie/cdlseguimiento
+
+sie_herramienta_anular_bth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
+     prefix:   /sie/anularbth
+
+sie_newrequestbth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/newrequestbth.yml"
+     prefix:   /sie/newrequestbth

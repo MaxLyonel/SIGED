@@ -64,6 +64,10 @@ herramienta_info_estudiante_areas:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAreas.yml"
     prefix:   /sie/estudiante_areas
 
+herramienta_info_estudiante_areas_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAreasEstudiante.yml"
+    prefix:   /sie/estudiante_areas_estudiante
+
 herramienta_info_estudiante_notas:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteNotas.yml"
     prefix:   /sie/estudiante_notas

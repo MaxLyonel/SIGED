@@ -104,40 +104,49 @@ class FlujoUsuariosController extends Controller
         $tarea =$request->get('tarea');
         $em = $this->getDoctrine()->getManager();
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
-        foreach($usuarios as $u)
-        {
-            $datos=json_decode($u,true);
-            $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($datos['usuario']);
-            $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tarea,'usuario'=>$datos['usuario'],'lugarTipoId'=>$datos['lugar_tipo']));
-            if($wfusuario){
-                $wfusuario[0]->setEsactivo(true);    
-            }else{
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_usuario_flujo_proceso');")->execute();
-                $entity = new WfUsuarioFlujoProceso();
-                $entity->setUsuario($usuario);
-                $entity->setFlujoProceso($flujoproceso);
-                $entity->setEsactivo(true);
-                $entity->setLugartipoId($datos['lugar_tipo']);
-                $em->persist($entity);
+        $em->getConnection()->beginTransaction();
+        try {
+            foreach($usuarios as $u){
+                $datos=json_decode($u,true);
+                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($datos['usuario']);
+                $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tarea,'usuario'=>$datos['usuario'],'lugarTipoId'=>$datos['lugar_tipo']));
+                if($wfusuario){
+                    $wfusuario[0]->setEsactivo(true);    
+                }else{
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_usuario_flujo_proceso');")->execute();
+                    $entity = new WfUsuarioFlujoProceso();
+                    $entity->setUsuario($usuario);
+                    $entity->setFlujoProceso($flujoproceso);
+                    $entity->setEsactivo(true);
+                    $entity->setLugartipoId($datos['lugar_tipo']);
+                    $em->persist($entity);
+                }
+                $em->flush();
+                //dump($wfusuario);die;
+                $dato[]=$usuario->getPersona()->getNombre().' '.$usuario->getPersona()->getPaterno().' '.$usuario->getPersona()->getMaterno();
             }
-            $em->flush();
-            //dump($wfusuario);die;
-            $dato[]=$usuario->getPersona()->getNombre().' '.$usuario->getPersona()->getPaterno().' '.$usuario->getPersona()->getMaterno();
-        }
-        //dump($dato);die;
-        $mensaje = 'Los siguientes usuarios fueron asignados correctamente para la tarea: '. $flujoproceso->getProceso()->getProcesoTipo();
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-
-        foreach ($dato as $d){
-            $mensaje = '- '. $d;
+            //dump($dato);die;
+            $mensaje = 'Los siguientes usuarios fueron asignados correctamente para la tarea: '. $flujoproceso->getProceso()->getProcesoTipo();
             $request->getSession()
                     ->getFlashBag()
                     ->add('exito', $mensaje);
+
+            foreach ($dato as $d){
+                $mensaje = '- '. $d;
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', $mensaje);
+            }    
+            $em->getConnection()->commit();
+            return $this->redirect($this->generateUrl('flujousuarios_usuarios',array('flujotipo'=>$flujoproceso->getFlujoTipo()->getId())));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $mensaje = 'Ocurrio un error en el registro';
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje);
+            return $this->redirect($this->generateUrl('flujousuarios_usuarios',array('flujotipo'=>$flujoproceso->getFlujoTipo()->getId())));
         }
-        return $this->redirect($this->generateUrl('flujousuarios_usuarios',array('flujotipo'=>$flujoproceso->getFlujoTipo()->getId())));
-        
     }
     public function listaUsuariosFlujoProcesoAction(Request $request)
     {
@@ -195,14 +204,16 @@ class FlujoUsuariosController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->find($id);
-        $query = $em->getConnection()->prepare('select td.* from tramite t
-                join tramite_detalle td on td.id=cast(t.tramite as int)
-                where t.flujo_tipo_id > 5 and td.flujo_proceso_id='. $wfusuario->getFlujoProceso()->getId() .' and t.fecha_fin is null and td.usuario_destinatario_id ='.$wfusuario->getUsuario()->getId());
+        $query = $em->getConnection()->prepare("select td.* from tramite t
+            join tramite_detalle td on td.id=cast(t.tramite as int)
+            join flujo_proceso fp on td.flujo_proceso_id=fp.id
+            where ((fp.tarea_sig_id=". $wfusuario->getFlujoProceso()->getId() ." and fp.es_evaluacion is false and td.tramite_estado_id in(4,15)) or (fp.es_evaluacion is true and (select condicion_tarea_siguiente from wf_tarea_compuerta wf where flujo_proceso_id=fp.id and td.valor_evaluacion=wf.condicion)=". $wfusuario->getFlujoProceso()->getId() ." and td.tramite_estado_id in(4,15)) or (fp.id=". $wfusuario->getFlujoProceso()->getId() ." and td.tramite_estado_id=3)) and t.flujo_tipo_id > 5 and t.fecha_fin is null and td.usuario_destinatario_id =".$wfusuario->getUsuario()->getId());
+        
         $query->execute();
         $tramite =$query->fetchAll();
         //dump($tramite);die;
         if($tramite){    //si el usuario tiene tramites pendientes asignados
-            $mensaje = 'El/la usuario: '. $wfusuario->getUsuario()->getPersona()->getNombre().' '. $wfusuario->getUsuario()->getPersona()->getPaterno() . ' ' . $wfusuario->getUsuario()->getPersona()->getMaterno() .' no puede ser eliminado, pues tiene tramites asignado pendientes.';
+            $mensaje = 'El/la usuario: '. $wfusuario->getUsuario()->getPersona()->getNombre().' '. $wfusuario->getUsuario()->getPersona()->getPaterno() . ' ' . $wfusuario->getUsuario()->getPersona()->getMaterno() .' no puede ser eliminado, pues tiene trámites asignados pendientes.';
             $request->getSession()
                     ->getFlashBag()
                     ->add('error', $mensaje);
@@ -225,12 +236,22 @@ class FlujoUsuariosController extends Controller
                         ->getFlashBag()
                         ->add('error', $mensaje);
             }else{    //si el usuario no tiene tramites y hay mas usuarios para la tarea, desactivarlo
-                $wfusuario->setEsactivo(false); 
-                $em->flush();
-                $mensaje = 'El/la usuario: '. $wfusuario->getUsuario()->getPersona()->getNombre().' '. $wfusuario->getUsuario()->getPersona()->getPaterno() . ' ' . $wfusuario->getUsuario()->getPersona()->getMaterno() .' fue eliminado con éxito';
-                $request->getSession()
-                        ->getFlashBag()
-                        ->add('exito', $mensaje);
+                $em->getConnection()->beginTransaction();
+                try {
+                    $wfusuario->setEsactivo(false); 
+                    $em->flush();
+                    $mensaje = 'El/la usuario: '. $wfusuario->getUsuario()->getPersona()->getNombre().' '. $wfusuario->getUsuario()->getPersona()->getPaterno() . ' ' . $wfusuario->getUsuario()->getPersona()->getMaterno() .' fue eliminado/a con éxito.';
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('exito', $mensaje);
+                    $em->getConnection()->commit();
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                    $mensaje = 'Ocurrio un error al eliminar el usuario';
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('error', $mensaje);
+                }
             }
         }
         $wfusuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfu')
@@ -259,18 +280,18 @@ class FlujoUsuariosController extends Controller
         //dump($id);die;
         $em = $this->getDoctrine()->getManager();
         $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->find($id);
-        $query = $em->getConnection()->prepare('select t.id,td.id as td_id,ft.flujo,pt.proceso_tipo from tramite t
+        $query = $em->getConnection()->prepare("select t.id,td.id as td_id,ft.flujo,pt.proceso_tipo from tramite t
                 join tramite_detalle td on td.id=cast(t.tramite as int)
                 join flujo_proceso fp on fp.id=td.flujo_proceso_id
                 join flujo_tipo ft on ft.id=t.flujo_tipo_id
                 join proceso_tipo pt on pt.id=fp.proceso_id
-                where t.flujo_tipo_id > 5 and td.flujo_proceso_id='. $wfusuario->getFlujoProceso()->getId() .' and t.fecha_fin is null and td.usuario_destinatario_id ='.$wfusuario->getUsuario()->getId());
+                where ((fp.tarea_sig_id=". $wfusuario->getFlujoProceso()->getId() ." and fp.es_evaluacion is false and td.tramite_estado_id in(4,15)) or (fp.es_evaluacion is true and (select condicion_tarea_siguiente from wf_tarea_compuerta wf where flujo_proceso_id=fp.id and td.valor_evaluacion=wf.condicion)=". $wfusuario->getFlujoProceso()->getId() ." and td.tramite_estado_id in(4,15)) or (fp.id=". $wfusuario->getFlujoProceso()->getId() ." and td.tramite_estado_id=3)) and t.flujo_tipo_id > 5 and t.fecha_fin is null and td.usuario_destinatario_id =".$wfusuario->getUsuario()->getId());
         $query->execute();
         $tramite =$query->fetchAll();
         //dump($tramite);die;
 
         if(!$tramite){
-            $mensaje = 'El/la usuario: '. $wfusuario->getUsuario()->getPersona()->getNombre().' '. $wfusuario->getUsuario()->getPersona()->getPaterno() . ' ' . $wfusuario->getUsuario()->getPersona()->getMaterno() .' no tiene tramites pendientes para derivar.';
+            $mensaje = 'El/la usuario: '. $wfusuario->getUsuario()->getPersona()->getNombre().' '. $wfusuario->getUsuario()->getPersona()->getPaterno() . ' ' . $wfusuario->getUsuario()->getPersona()->getMaterno() .' no tiene trámites pendientes para derivar.';
             $response = new JsonResponse();
             return $response->setData(array('msg' => $mensaje));
         }else{
@@ -280,12 +301,13 @@ class FlujoUsuariosController extends Controller
                 join lugar_tipo lt on wfu.lugar_tipo_id=lt.id
                 join lugar_nivel_tipo ln on lt.lugar_nivel_id=ln.id
                 join persona p on u.persona_id=p.id
-                where wfu.esactivo is true and not wfu.id=". $id ." and wfu.flujo_proceso_id=". $wfusuario->getFlujoProceso()->getId() ."  order by lt.lugar,p.nombre");
+                where wfu.esactivo is true and not wfu.id=". $id ." and wfu.flujo_proceso_id=". $wfusuario->getFlujoProceso()->getId() ." and lt.id=". $wfusuario->getLugarTipoId() ."  order by lt.lugar,p.nombre");
             $query->execute();
             $wfu = $query->fetchAll();
             //dump($wfu);die;
             if(!$wfu){
-                $mensaje = 'No se puede derivar los tramites, pues no existe oto usuario asignado a la tarea: '.$wfusuario->getFlujoProceso()->getProceso()->getProcesoTipo().'.</br>Primero ASIGNE UN NUEVO usuario para esta tarea.';
+                $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($wfusuario->getLugarTipoId())->getLugar();
+                $mensaje = 'No se puede derivar los tramites, pues no existe otro usuario asignado a la tarea: <b>'.$wfusuario->getFlujoProceso()->getProceso()->getProcesoTipo().'</b> de la jurisdicción: <b>'. $lugar .'</b>.</br>Primero <b>ASIGNE UN NUEVO</b> usuario para esta tarea.';
                 $response = new JsonResponse();
                 return $response->setData(array('msg' => $mensaje));
             }else{
@@ -302,26 +324,31 @@ class FlujoUsuariosController extends Controller
         $idNuevo =$request->get('id');
         $tarea =$request->get('tarea');
         $usuarioAnterior =$request->get('usuario');
-        //dump($tramite);die;
+        $tramites = json_decode($request->get('tramites'),true);
+
         $em = $this->getDoctrine()->getManager();
         $usuarioNuevo = $em->getRepository('SieAppWebBundle:Usuario')->find($idNuevo);
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
-        $query = $em->getConnection()->prepare('select t.id,td.id as td_id from tramite t
-                join tramite_detalle td on td.id=cast(t.tramite as int)
-                where t.flujo_tipo_id > 5 and td.flujo_proceso_id='. $tarea .' and t.fecha_fin is null and td.usuario_destinatario_id ='.$usuarioAnterior);
-        $query->execute();
-        $tramite =$query->fetchAll();
-        $dato = array();
-        //dump($tramite);die;
-        $mensaje = 'Los siguientes trámites fueron derivados a: '.$usuarioNuevo->getPersona()->getNombre().' '. $usuarioNuevo->getPersona()->getPaterno().' '. $usuarioNuevo->getPersona()->getMaterno().', para la tarea '. $flujoproceso->getProceso()->getProcesoTipo() .'.</br>';
-        foreach($tramite as $t){
-            $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($t['td_id']);
-            $tramiteDetalle->setUsuarioDestinatario($usuarioNuevo);
-            $em->flush();
-            $mensaje =$mensaje.'-'.$tramiteDetalle->getTramite()->getId().'</br>';
-        }
         $response = new JsonResponse();
-        return $response->setData(array('msg' => $mensaje));
+        $em->getConnection()->beginTransaction();
+        try {
+            $mensaje = 'Los siguientes trámites fueron derivados a: '.$usuarioNuevo->getPersona()->getNombre().' '. $usuarioNuevo->getPersona()->getPaterno().' '. $usuarioNuevo->getPersona()->getMaterno().', para la tarea '. $flujoproceso->getProceso()->getProcesoTipo() .'.</br>';
+            foreach($tramites as $t){
+                $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($t['td_id']);
+                if($tramiteDetalle->getTramiteEstado()->getId() == 3){
+                    $tramiteDetalle->setUsuarioRemitente($usuarioNuevo);    
+                }
+                $tramiteDetalle->setUsuarioDestinatario($usuarioNuevo);
+                $tramiteDetalle->setFechaModificacion(new \DateTime(date('Y-m-d')));
+                $em->flush();
+                $mensaje =$mensaje.'-'.$tramiteDetalle->getTramite()->getId().'</br>';
+            }
+            $em->getConnection()->commit();
+            return $response->setData(array('msg' => $mensaje));
+            
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('msg' => 'Ocurrió un error al derivar los trámites.'));
+        }
     }
-
 }

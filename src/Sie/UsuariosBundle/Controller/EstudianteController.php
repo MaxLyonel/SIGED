@@ -100,7 +100,7 @@ class EstudianteController extends Controller
                 $query = "  select * 
                             from estudiante a
                             where 
-                            a.nombre like '%".$form['InputNombre']."%' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
+                            a.nombre like '%".$form['InputNombre']."%' and a.paterno = '' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
             }        
             
             $stmt = $db->prepare($query);

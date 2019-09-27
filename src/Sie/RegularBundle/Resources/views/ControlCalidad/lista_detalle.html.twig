@@ -36,7 +36,7 @@
         <div class="portlet-body">
             <div class="panel-body panel-primary">
                 <div id="no-more-tables" class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover cf dataTable">
+                    <table class="table table-bordered table-hover cf dataTable">
                         <thead class="cf">
                             <tr>
                                 <th>No.</th>
@@ -62,7 +62,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
                                             </form> #}
                                         {% endif %}
-                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 %}
+                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 12 or regla.id == 13 or regla.id == 16 %}
                                             <form action="{{path('ccalidad_verificar')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -112,16 +112,18 @@
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>
                                             {% elseif detalle.solucionTipoId == 2 %}
+                                                {# {{dump(detalle)}} #}
                                                 <form action="{{path('unificacion_index_calidad')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
                                                     <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
                                                     <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
                                                     <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>
                                             {% endif %}
                                         {% elseif regla.id == 16 %}
-                                            {% if detalle.solucionTipoId == 2 %}
+                                            {% if detalle.solucionTipoId == 0 or detalle.solucionTipoId == 2 %}
                                                 <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                     <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -169,11 +171,18 @@
                                         {% elseif regla.id == 11 %}
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionApropiacionRudes({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% endif %}
-                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 %}
-                                            {# <form action="{{path('ccalidad_omitir')}}" method="post">
+                                        {% if regla.id == 20 %}
+                                            <form action="{{path('ccalidad_ratificar_edad')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de ratificar el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-check"></i> Ratificar Edad</button>
+                                            </form>
+                                        {% endif %}
+                                        {#{% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 or regla.id == 9 or regla.id == 14 or regla.id == 2 %}#}
+                                        {% if 0==1 %}
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
-                                            </form> #}
+                                            </form>
                                         {% endif %}
                                     {% elseif app.session.get('roluser') == 9 %}
                                         {% if regla.id == 27 %}
@@ -201,12 +210,6 @@
                                         {% endif %}
                                     {% elseif regla.id == 14 %}
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionEliminarMaestro({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
-                                    {% endif %}
-                                    {% if regla.id == 9 or regla.id == 14 %}
-                                        {# <form action="{{path('ccalidad_omitir')}}" method="post">
-                                            <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
-                                            <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
-                                        </form> #}
                                     {% endif %}
                                     </td>
                                 </tr>

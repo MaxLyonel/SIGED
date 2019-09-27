@@ -262,7 +262,7 @@
                                 <span class="selected"></span>
                             </a>
                         </li>
-                        {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 6 or app.session.get('roluser') == 7 or app.session.get('roluser') == 28 or app.session.get('roluser') == 8 %}
+                        {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 6 or app.session.get('roluser') == 7 or app.session.get('roluser') == 28 or app.session.get('roluser') == 8 or app.session.get('userId') == '13855318' %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-pencil"></i></span>
@@ -270,29 +270,34 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
+                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 or app.session.get('userId') == '13855318' %}
                                         <li><a href="{{path('sie_juegos_registro_fp_index')}}">Fase Previa</a></li>
                                     {% endif %}
-                                    {% if app.session.get('roluser') == 10 and 1 > 1 %}
-                                    <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
+                                    {% if app.session.get('roluser') == 10 %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
                                     {% endif %}
                                     {% if app.session.get('roluser') == 10 and 1 > 1 %}
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
                                     {% endif %}
-                                    {% if app.session.get('roluser') == 6 and 1 > 1 %}
+                                    {% if app.session.get('roluser') == 6 %}
                                         <li><a href="{{path('sie_juegos_clasificacion_f2_index')}}">Segunda Fase</a></li>
-                                        <li><a href="{{path('sie_juegos_comision_entrenador_f2_lista_index')}}">Clasificacion Entrenadores</a></li>
+                                    {% endif %}
+                                    {% if app.session.get('roluser') == 6 %}
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase2')}}">Deportistas Datos Personales</a></li>
                                     {% endif %}
-                                    {% if (app.session.get('roluser') == 7 or app.session.get('roluser') == 28) and 1 > 1 %}
+                                    {% if (app.session.get('roluser') == 7 or app.session.get('roluser') == 28) %}
                                         <li><a href="{{path('sie_juegos_clasificacion_f3_index')}}">Tercera Fase</a></li>
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase3')}}">Deportistas Datos Personales</a></li>
-                                        <li><a href="{{path('sie_juegos_comision_entrenador_f3_lista_index')}}">Registro Acompañante</a></li>
-                                        <li><a href="{{path('sie_juegos_comision_departamental_lista_index')}}">Registro Delegados</a></li>
-                                        <li><a href="{{path('sie_juegos_representacion_cultural_index')}}">Registro Rep. Cultural</a></li>
+                                        <li><a href="{{path('registrypersoncomission_indexDelegacionDepartamental')}}">Delegación Departamental</a></li> 
+                                        <li><a href="{{path('sie_juegos_representacion_cultural_index')}}">Registro Rep. Cultural</a></li> 
+                                        {% if 1 > 1 %}
+                                            <li><a href="{{path('sie_juegos_comision_entrenador_f3_lista_index')}}">Registro Acompañante</a></li>
+                                            <li><a href="{{path('sie_juegos_comision_departamental_lista_index')}}">Registro Delegados</a></li>
+                                        {% endif %}
                                     {% endif %}
                                     {% if app.session.get('roluser') == 8 %}
-                                    <li><a href="{{path('sie_juegos_comision_nacional_lista_index')}}">Registro Delegados</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_nacional_lista_index')}}">Registro Delegados</a></li>
+                                        <li><a href="{{path('sie_juegos_reemplazo_index')}}">Reemplazos</a></li>                                      
                                     {% endif %}
                                 </ul>
                             </li>
@@ -313,6 +318,26 @@
                                     {% if  app.session.get('roluser') in [7,28] %}
                                         <li><a href="{{path('sie_juegos_clasificacion_lista_deportistas_aspirantes_fase',{'fase':3,'usuario':app.session.get('userId')})}}">Registrados Segunda Fase</a></li>
                                     {% endif %}
+                                    {% if  app.session.get('roluser') in [7,28,8] %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase_nacional',{'fase':3,'usuario':app.session.get('userId')})}}">Registrados Fase Nacional</a></li>
+                                        <li><a href="{{path('sie_juegos_clasificacion_seguimiento_deportistas_inscritos_fase_nacional',{'fase':3,'usuario':app.session.get('userId')})}}">Seguimiento Fase Nacional</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                         {% if app.session.get('roluser') in [8] %}    
+                            <!-- Start navigation - dashboard -->
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-user"></i></span>
+                                    <span class="text">Seguimiento</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{ path('listPersonRegister_index') }}">Comisi&oacute;n</a></li>
+                                </ul>
+                                <ul>
+                                    <li><a href="{{ path('printCredencial_index') }}">Credenciales</a></li>
                                 </ul>
                             </li>
                         {% endif %}
@@ -321,22 +346,22 @@
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-pencil"></i></span>
-                                    <span class="text">Registro</span>
-                                    <span class="arrow"></span>
+                                    <span class="tesie_juegos_comision_entrenador_f2_lista_index
+                                    <span class="arsie_juegos_comision_entrenador_f2_lista_index
                                 </a>
                                 <ul>
-                                    {# if item.id == 9 #}
-                                    {% if 1 != 1 %}
+                                    {# if item.id =sie_juegos_comision_entrenador_f2_lista_index
+                                    {% if 1 != 1 %}sie_juegos_comision_entrenador_f2_lista_index
                                         <li><a href="{{path('sie_juegos_inscripcion_fp_busqueda')}}">Fase Previa</a></li>
                                     {% endif %}
                                     {% if item.id == 10 or item.id == 9 or item.id == 8 %}
-                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Primera Fase</a></li>
+                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Primera Fase</a></li>                                    
                                     {% endif %}
                                     {% if 1 > 1 %}
-                                    <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
+                                        <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
                                     {% endif %}
                                     {% if 1 > 1 %}
-                                    <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
                                     {% endif %}
                                     {# if item.id == 6 #}
                                     {% if 1 != 1 %}

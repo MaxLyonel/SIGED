@@ -38,13 +38,20 @@
 									<label>Nombre del proceso</label>
 									{{ form_widget(edit_form.flujo, {'attr':{'class':'form-control','style':'text-transform:uppercase'} }) }}
 								</div>
-                                <div class="clearfix"></div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+								    <label>Sistemas de Educación</label>
+									{{ form_widget(edit_form.institucioneducativaTipo, {'attr':{'class':'form-control chosen-select','data-placeholder':'Seleccionar...'} }) }}
+								</div>
+                            </div>
+                            <div class="row">
 								<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
 									<label>Observación</label>
 									{{ form_widget(edit_form.obs, {'attr':{'class':'form-control','style':'text-transform:uppercase'} }) }}
 								</div>
 							</div>
-							{{ form_widget(edit_form.submit, {'label':'Guardar cambios','attr':{'class':'btn btn-primary'}}) }}
+						    {{ form_widget(edit_form.submit, {'label':'Guardar cambios','attr':{'class':'btn btn-primary'}}) }}
                             <a href="{{path('flujotipo')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
 						{{ form_end(edit_form) }}
                     </div><!-- /.panel-body -->

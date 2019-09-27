@@ -194,6 +194,34 @@ class DefaultController extends Controller
         echo $jsonContent;
         exit;
     }
+
+    public function buscarmunicipiosAction($ieid)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = " SELECT lt2.id,lt2.lugar as  municipio
+        from lugar_tipo lt1
+        join lugar_tipo lt2 on lt1.id=lt2.lugar_tipo_id
+        where lt1.lugar_tipo_id =$ieid
+                ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) { 
+            $datos_filas["id"] = $this->encriptar($p["id"]);          
+            $datos_filas["municipio"] = $p["municipio"];            
+            $filas[] = $datos_filas;
+        }
+
+        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('message' => new JsonEncoder()));
+        $jsonContent = $serializer->serialize($filas, 'json');
+        echo $jsonContent;
+        exit;
+    }
+
     public function buscar_grado_discapacidadAction($val){
         if($val==10)$buscar="id in (5,6)";
         else $buscar="id in (1,2,7,8)";
@@ -2051,7 +2079,10 @@ class DefaultController extends Controller
         }
         //recoger si esactivo
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        if($result)
             $esactivo=$result->getEsactivo();
+        else 
+            $esactivo=0;
 
         if($esactivo==1)$esactivo=1;else $esactivo=0;
         $arch = 'PNP_CONSOLIDADO_' . $id . '_' . date('Ymd') . '.pdf';
@@ -2866,7 +2897,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             try {
                 // id de la tabla maestro_inscripcion
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
-                $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
+                if($result)
+                        $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
@@ -3276,8 +3308,14 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $curso_id=$request->get("curso_id");
             $fecha_inicio=$request->get("fecha_inicio");
             $fecha_fin=$request->get("fecha_fin");
+            $form_municipio=$request->get("form_municipio");
+            $form_provincia=$request->get("form_provincia");
+            $localidad=$request->get("localidad");
             $gestion_g= substr($fecha_fin,-4);
-
+            $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form_provincia);
+            $nom_prov=$result->getLugar();
+            $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form_municipio);
+            $nom_mun=$result->getLugar();
             $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_id);
             $ie=$institucion_educativa->getInstitucioneducativa()->getId();
             $id_maestro_inscripcion=$institucion_educativa->getMaestroInscripcionAsesor()->getId();
@@ -3349,7 +3387,22 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $product->setFechaFin(\DateTime::createFromFormat('d/m/Y', $fecha_fin));
             $product->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
             $product->setMaestroInscripcionAsesor($maestroinscripcion);
+            $product->setLugar($nom_prov);
             $em->flush();
+            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($curso_id);
+            $result->setLugarTipoSeccion($em->getRepository('SieAppWebBundle:LugarTipo')->find($form_municipio));
+            $result->setLocalidad($localidad);
+            $em->flush();
+            //actualizar nombre de municipio y localidad
+            $estudiantes=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($curso_id);
+            if($estudiantes)
+            foreach ($estudiantes as $estudiante) {
+                    $ei_id=$estudiante->getId();
+                    $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($ei_id);
+                    $result->setLugar($nom_mun);
+                    $result->setLugarcurso($localidad);
+                    $em->flush();
+                }
         }
         $id_enc=$id;
         $id=$this->desencriptar($id_enc);
@@ -3536,10 +3589,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         //print_r($lugar_usuario); die;      
         //LISTA DE TOTALES POR GESTION DEPTO PARTE Y BLOQUE
                 $query = "
-               SELECT carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,count(*) as est,SUM(CASE WHEN estadomatricula_tipo_id=62
+              SELECT carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,count(*) as est,SUM(CASE WHEN estadomatricula_tipo_id=62
             THEN 1
             ELSE 0
-    END) as est_aprob,nciclo,ngrado,plan
+    END) as est_aprob,nciclo,ngrado,plan,lugar_id,provincia_id,depto_id
 from (
 select persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno,
 institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
@@ -3566,7 +3619,8 @@ CASE
         WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
                 'PANDO'                         
     END AS depto,
-institucioneducativa_curso.lugar as provincia,llt.lugar,iecd.localidad,iecd.obs,iecd.esactivo,ei.estadomatricula_tipo_id
+institucioneducativa_curso.lugar as provincia,llt.lugar,iecd.localidad,iecd.obs,iecd.esactivo,ei.estadomatricula_tipo_id,
+lt1.id as lugar_id,lt2.id as provincia_id,lt3.id as depto_id
 
 from institucioneducativa_curso 
 inner join maestro_inscripcion 
@@ -3581,11 +3635,14 @@ left join estudiante_inscripcion ei
 on ei.institucioneducativa_curso_id=institucioneducativa_curso.id
 inner join ciclo_tipo ct ON institucioneducativa_curso.ciclo_tipo_id=ct.id
 inner join grado_tipo gt ON institucioneducativa_curso.grado_tipo_id=gt.id
+inner join lugar_tipo lt1 on iecd.lugar_tipo_id_seccion=lt1.id
+inner join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+inner join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
 where 
 date_part('year', institucioneducativa_curso.fecha_fin) = $gestion $consulta
 
 ) as t1
-GROUP BY carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,nciclo,ngrado,plan
+GROUP BY carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,depto_id,provincia,provincia_id,lugar,lugar_id,localidad,obs,esactivo,nciclo,ngrado,plan
 order by                 
 fecha_inicio,
 ciclo_tipo_id, grado_tipo_id 
@@ -3624,9 +3681,13 @@ ciclo_tipo_id, grado_tipo_id
                 $datos_filas["id"] = $p["id"];
                 $datos_filas["id_enc"] = $this->encriptar($p["id"]);
                 $datos_filas["depto"] = $p["depto"];
+                $datos_filas["depto_id"] = $p["depto_id"];
                 $datos_filas["provincia"] = $p["provincia"];
+                $datos_filas["provincia_id"] = $p["provincia_id"];
                 $datos_filas["lugar"] = $p["lugar"];
-                $datos_filas["localidad"] = $p["localidad"];
+                $datos_filas["lugar_id"] = $p["lugar_id"];
+                $datos_filas["localidad"] = str_replace("'","",$p["localidad"]);
+                //$datos_filas["localidad"] = $p["localidad"];
                 if(isset($opciones[1])){
                     $usu=$em->getRepository('SieAppWebBundle:Usuario')->findOneById(intval($opciones[1]));
                     $datos_filas["usu_c"] = $usu->getUsername();
@@ -3661,9 +3722,13 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filas["id"] = $p["id"];
             $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["depto"] = $p["depto"];
+            $datos_filas["depto_id"] = $p["depto_id"];
             $datos_filas["provincia"] = $p["provincia"];
+            $datos_filas["provincia_id"] = $p["provincia_id"];
             $datos_filas["lugar"] = $p["lugar"];
-            $datos_filas["localidad"] = $p["localidad"];
+            $datos_filas["lugar_id"] = $p["lugar_id"];
+            $datos_filas["localidad"] = str_replace("'","",$p["localidad"]);
+            //$datos_filas["localidad"] = $p["localidad"];
             //////de obs ver quien creo el curso y quien lo cerro
             $cadena = $p["obs"];
             $opciones = explode("-", $cadena);
@@ -3985,6 +4050,7 @@ ciclo_tipo_id, grado_tipo_id
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $userId = $this->session->get('userId');
+        $notas_bien=1;
 
         
         ////////cerrar curso
@@ -4408,6 +4474,7 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filasdos["id"] = $p["id"];
             $id_archivo=$p["id"];
             $datos_filasdos["institucioneducativa_id"] = $p["institucioneducativa_id"];
+            $datos_filasdos["id_enc"] = $this->encriptar($p["id"]);
             $datos_filasdos["gestion_tipo_id"] = $p["gestion_tipo_id"];
             $datos_filasdos["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filasdos["grado_tipo_id"] = $p["grado_tipo_id"];
@@ -4471,7 +4538,6 @@ ciclo_tipo_id, grado_tipo_id
         $ci = substr($ci, 0, -2);
         $reconocimiento_saberes=0;//si tiene reconocimiento de saberes 0 no 1 si
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
         $po = array();
         $userId = $this->session->get('userId');   
@@ -4536,8 +4602,11 @@ ciclo_tipo_id, grado_tipo_id
         /////////////////INICAL conocer fecha inicial del curso para permitir o no inscribir
         $institucioneducativa_curso= $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
         $gestion_ini=$institucioneducativa_curso->getFechaInicio();
-        $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
         $gestion_ini= date_format($gestion_ini,"Y");
+        $gestion_fin=$institucioneducativa_curso->getFechaFin();
+        $gestion_fin= date_format($gestion_fin,"Y");
+        $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
+        
         $usuario_id = $this->session->get('userId');
         if(!$usuario_id){
             return $this->redirectToRoute('logout');
@@ -4724,7 +4793,7 @@ ciclo_tipo_id, grado_tipo_id
         if($rec_sab){
             $fecha_homologacion=$rec_sab->getFechaHomologacion();    
             $fecha_homologacion= date_format($fecha_homologacion,"Y");    
-            if($fecha_homologacion<=$gestion_ini){
+            if($fecha_homologacion<=$gestion_fin){
                 $curso_rs=$rec_sab->getCurso();
                 if($curso_rs==2){$bloque_rs_toca=1;$parte_rs_toca=2;}
                 elseif($curso_rs==3){$bloque_rs_toca=2;$parte_rs_toca=1;}
@@ -5212,7 +5281,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $estudiante->setFolio('');
             //$estudiante->setSangreTipoId($this->getDoctrine()->getRepository('SieAppWebBundle:SangreTipo')->find($persona->getSangreTipo())->getId());
             $estudiante->setIdiomaMaternoId('0');
-            $estudiante->setSegipId($persona->getSegipId());
+            $estudiante->setSegipId('1');
             $estudiante->setComplemento($persona->getComplemento());
             $estudiante->setBolean(false);
             $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                            
@@ -5559,6 +5628,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
 
                         //idiomas
                         $idiomas = array();
+                        $idioma_frecuencia = array();
                             $query = "
                         SELECT it.id,it.idioma
                         FROM rude r
@@ -5698,7 +5768,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         $em->persist($newrudeidioma);
                         $em->flush();
                         //IDIOMA FRECUENCIA 
-                        foreach ($idioma_frecuencia as $p) {
+                        foreach ($idioma_frecuencia as $p) { //error 1
                             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
                             $query->execute();
                             $newrudeidioma = new RudeIdioma();
@@ -5894,6 +5964,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 //ELIMINAR RUDE
                 //buscar el id del rude
                 $result = $em->getRepository('SieAppWebBundle:Rude')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                $rude_eliminar = array();
                 foreach ($result as $results) {
                 $rude_eliminar[]=$results->getId();
             }   
@@ -6510,7 +6581,6 @@ public function verificar_formAction($id_curso){
     public function buscar_historial_estudiante_resultAction(Request $request) {
         $sesion = $request->getSession();
         $form = $request->get('form');
-
         $repository = $this->getDoctrine()->getRepository('SieAppWebBundle:Estudiante');
 
         $query = $repository->createQueryBuilder('e')
@@ -6536,9 +6606,8 @@ public function verificar_formAction($id_curso){
         return $this->render('SiePnpBundle:Default:resultstudent.html.twig',array('entities'=>$entities));
     }
 
-    public function buscar_historial_estudiante_result_listAction(Request $request, $idStudent) {
+    public function buscar_historial_estudiante_result_list_por_nombreAction(Request $request, $idStudent) {
         $em = $this->getDoctrine()->getManager();
-
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
        
         $rec_sab = $this->getDoctrine()->getRepository('SieAppWebBundle:PnpReconocimientoSaberes')->findOneBy(array(
@@ -6549,7 +6618,7 @@ public function verificar_formAction($id_curso){
 
         //$objInscriptions = $em->getRepository('SieAppWebBundle:Estudiante')->getHistoryInscription($idStudent);
         $db = $em->getConnection();
-        $query = "select gt.gestion as gestion,i.id as sie,i.institucioneducativa,n.nivel,g.grado,
+        $query = "SELECT gt.gestion as gestion,i.id as sie,i.institucioneducativa,n.nivel,g.grado,
                 p.paralelo,t.turno,m.estadomatricula,iec.ciclo_tipo_id as bloque,iec.grado_tipo_id as parte,ei.id as estudiante_inscripcion_id,iec.id as institucioneducativa_curso_id
                 from institucioneducativa i,institucioneducativa_curso iec, estudiante e, estudiante_inscripcion ei, gestion_tipo gt,nivel_tipo n,grado_tipo g,paralelo_tipo p,turno_tipo t,estadomatricula_tipo m
             where i.id=iec.institucioneducativa_id and ei.institucioneducativa_curso_id=iec.id and 
@@ -6570,13 +6639,14 @@ public function verificar_formAction($id_curso){
             $datos_filas["sie"] = $p["sie"];
             $datos_filas["institucioneducativa"] = $p["institucioneducativa"];
             $datos_filas["nivel"] = $p["nivel"];
-            $datos_filas["grado"] = $p["grado   "];
+            $datos_filas["grado"] = $p["grado"];
             $datos_filas["paralelo"] = $p["paralelo"];
             $datos_filas["turno"] = $p["turno"];
             $datos_filas["estadoMatricula"] = $p["estadomatricula"];
             $datos_filas["bloque"] = $p["bloque"];
             $datos_filas["parte"] = $p["parte"];
             $datos_filas["institucioneducativa_curso_id"] = $p["institucioneducativa_curso_id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["institucioneducativa_curso_id"]);
             $objInscriptions[] = $datos_filas;
         } 
 
@@ -6600,6 +6670,10 @@ public function crear_curso_automaticoAction(Request $request){
         $em = $this->getDoctrine()->getManager(); 
         ///datos de la institucionEducativaCurso: id del maestro_inscripcion,bloque,parte,ci
         $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($id_curso);
+        if(!$institucion_educativa){
+                return $this->redirectToRoute('logout');
+            }
+
         $id_maestro_inscripcion=$institucion_educativa->getMaestroInscripcionAsesor()->getId();
         $bloque_actual=$institucion_educativa->getCicloTipo()->getId();
         $parte_actual=$institucion_educativa->getGradoTipo()->getId();
@@ -6849,7 +6923,7 @@ public function crear_curso_automaticoAction(Request $request){
                 $id_estudiante=$estudiante_inscripcion->getEstudiante()->getId();
                 $id_estudiante_inscripcion=$estudiante_inscripcion->getId();
                 $matricula_estado_id=$estudiante_inscripcion->getEstadomatriculaTipo()->getId();
-                if($matricula_estado_id==61)$aprobo=0;//
+                if($matricula_estado_id!=62 )$aprobo=0;
                 // id de la tabla estudiante_asignatura
                 
                 if($aprobo==1){//Aprobo por esa razon se lo registra al estudiante en estudiantes inscripcion
@@ -7131,7 +7205,7 @@ public function crear_curso_automaticoAction(Request $request){
                             $params = array();
                             $stmt->execute($params);
                             $po = $stmt->fetchAll();
-                            $filas = array();
+                            $idioma_frecuencia = array();
                             $datos_filas = array();
                             foreach ($po as $p) {
                                 $datos_filas["id"] = $p["id"];
@@ -7260,20 +7334,20 @@ public function crear_curso_automaticoAction(Request $request){
                             $em->persist($newrudeidioma);
                             $em->flush();
                             //IDIOMA FRECUENCIA 
-                            if($idioma_frecuencia){
-                                foreach ($idioma_frecuencia as $p) {
-                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
-                                    $query->execute();
-                                    $newrudeidioma = new RudeIdioma();
-                                    $newrudeidioma->setRude($newrude);
-                                    $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
-                                    $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
-                                    $newrudeidioma->setFechaRegistro(new \DateTime('now'));
-                                    $newrudeidioma->setFechaModificacion(new \DateTime('now'));
-                                    $em->persist($newrudeidioma);
-                                    $em->flush();
-                                }
+                            
+                            foreach ($idioma_frecuencia as $p) {
+                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                                $query->execute();
+                                $newrudeidioma = new RudeIdioma();
+                                $newrudeidioma->setRude($newrude);
+                                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
+                                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                                $em->persist($newrudeidioma);
+                                $em->flush();
                             }
+                            
                             //SALUD 
                             if($centrosalud){
                                 foreach ($centrosalud as $p) {
@@ -8394,27 +8468,29 @@ public function rudeal_guardarAction(Request $request){
             $em->persist($newrudeidioma);
             $em->flush();
             //IDIOMA FRECUENCIA
-            foreach ($idioma_frecuencia as $p) {
-                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
-                $query->execute();
-                $newrudeidioma = new RudeIdioma();
-                $newrudeidioma->setRude($newrude);
-                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
-                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p));
-                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
-                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
-                $em->persist($newrudeidioma);
-                $em->flush();
-            }
+            if($idioma_frecuencia)
+                foreach ($idioma_frecuencia as $p) {
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                    $query->execute();
+                    $newrudeidioma = new RudeIdioma();
+                    $newrudeidioma->setRude($newrude);
+                    $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                    $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p));
+                    $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                    $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                    $em->persist($newrudeidioma);
+                    $em->flush();
+                }
             //SALUD
             //si es modificar primero debemos elimianar
             if($rude_id!=0){
                 //eliminamos todos los campos
                 $result=$em->getRepository('SieAppWebBundle:RudeCentroSalud')->findByrude($rude_id);
-                foreach ($result as $results) {
-                    $em->remove($results);
-                    $em->flush();
-                }
+                if($result)
+                    foreach ($result as $results) {
+                        $em->remove($results);
+                        $em->flush();
+                    }
             }
             foreach ($centrosalud as $p) {
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
@@ -8586,6 +8662,174 @@ order by rt.id,lt.lugar
 
         return $this->render('SiePnpBundle:Default:reporte_usuarios.html.twig',array(
         'filas'=>$filas));
+}
+public function cambiar_cursos_pedagogoAction(Request $request){
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    if($request->getMethod()=="POST") {
+        $cursos=$request->get("cursos");
+        $pedagogo_id=$request->get("pedagogo_id");
+         $em->getConnection()->beginTransaction();
+    
+        try{
+            foreach ($cursos as $curso){
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneById($curso);
+                $result->setObs($pedagogo_id);
+                $em->flush();    
+            }
+             $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'Cursos cambiados a Pedagogo con Exito!.'
+                    ); 
+                $em->getConnection()->commit();
+        }
+        catch (Exception $e) {
+            $em->getConnection()->rollBack();
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Existio un problema al Editar las notas.'
+                );      
+            throw $e;
+        }
+    }
+    
+
+     $userId = $this->session->get('userId');
+        $query = "
+               SELECT lt.lugar as lugar
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+        }
+        $lugar_usuario=strtoupper($lugar_usuario);
+        switch ($lugar_usuario) {
+            case 'CHUQUISACA':{$lugar_tipo_nombre_usu="CHUQUISACA";$lugar_tipo_id_usu=31654;$ie=80480300;$departamento_exp_usu=1;}break;
+            case 'LA PAZ':{$lugar_tipo_nombre_usu="LA PAZ";$lugar_tipo_id_usu=31655;$ie=80730794;$departamento_exp_usu=2;}break;
+            case 'COCHABAMBA':{$lugar_tipo_nombre_usu="COCHABAMBA";$lugar_tipo_id_usu=31656;$ie=80980569;$departamento_exp_usu=3;}break;
+            case 'ORURO':{$lugar_tipo_nombre_usu="ORURO";$lugar_tipo_id_usu=31657;$ie=81230297;$departamento_exp_usu=4;}break;
+            case 'POTOSI':{$lugar_tipo_nombre_usu="POTOSI";$lugar_tipo_id_usu=31658;$ie=81480201;$departamento_exp_usu=5;}break;
+            case 'TARIJA':{$lugar_tipo_nombre_usu="TARIJA";$lugar_tipo_id_usu=31659;$ie=81730264;$departamento_exp_usu=6;}break;
+            case 'SANTA CRUZ':{$lugar_tipo_nombre_usu="SANTA CRUZ";$lugar_tipo_id_usu=31660;$ie=81981501;$departamento_exp_usu=7;}break;
+            case 'BENI':{$lugar_tipo_nombre_usu="BENI";$lugar_tipo_id_usu=31661;$ie=82230130;$departamento_exp_usu=8;}break;
+            case 'PANDO':{$lugar_tipo_nombre_usu="PANDO";$lugar_tipo_id_usu=31662;$ie=82480050;$departamento_exp_usu=9;}break;
+            default:
+                $lugar_tipo_id_usu=-1;
+                $departamento_exp_usu=-1;
+                $lugar_tipo_nombre_usu="Bolivia";
+                break;
+        }    
+    $roluser = $this->session->get('roluser');
+    $municipio_tipo="";
+    if($lugar_tipo_id_usu==-1)
+        $id_departamentos = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array(
+        'id' => array(31654,31655,31656,31657,31658,31659,31660,31661,31662)
+        ));
+    else
+        $id_departamentos = $em->getRepository('SieAppWebBundle:LugarTipo')->findById($lugar_tipo_id_usu);
+     return $this->render('SiePnpBundle:Default:cambiar_cursos_pedagogo.html.twig',array(
+        'id_departamentos'=>$id_departamentos,
+
+        ));
+}
+public function cambiar_cursos_pedagogo_encontradoAction($id_municipio,$id_departamento){
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    $departamento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($id_departamento);
+    $nombre_dep=$departamento->getLugar();
+        $nombre_dep=strtoupper($nombre_dep);
+         $query = "
+         SELECT p.paterno,p.materno,p.nombre,p.carnet,p.complemento,rt.rol,rt.id as rol_id,upper(lt.lugar) as lugar,u.esactivo,ur.esactivo,u.id as usuario_id
+from usuario u
+join usuario_rol ur on ur.usuario_id=u.id
+join persona p on u.persona_id=p.id
+join rol_tipo rt on ur.rol_tipo_id=rt.id
+join lugar_tipo lt on ur.lugar_tipo_id=lt.id
+where (ur.rol_tipo_id=21 or ur.rol_tipo_id=29) and u.esactivo and ur.esactivo and upper(lt.lugar)='$nombre_dep'
+order by rt.id,lt.lugar
+                ";
+                
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $pedagogos = array();
+    $datos_filas = array();
+    foreach ($po as $p){
+        if($p["rol_id"]==29){
+            $datos_filas["lugar"] = $p["lugar"];
+            $datos_filas["paterno"] = $p["paterno"];
+            $datos_filas["materno"] = $p["materno"];
+            $datos_filas["nombre"] = $p["nombre"];
+            $datos_filas["carnet"] = $p["carnet"];
+            $datos_filas["complemento"] = $p["complemento"];
+            $datos_filas["usuario_id"] = $p["usuario_id"];
+            $pedagogos[] = $datos_filas;
+        }
+    }
+    $id_municipio=$this->desencriptar($id_municipio);
+    $curso_existe=0;
+    $query = "SELECT ic.id,icd.obs,u.id as usuario_id,ped.nombre as ped_nombre,ped.paterno as ped_paterno,lt3.lugar as depto,lt2.lugar as provincia,lt1.lugar as municipio,
+    icd.localidad,p.carnet,p.complemento,p.nombre,p.paterno,p.materno,
+    ic.fecha_inicio,ic.fecha_fin,ic.ciclo_tipo_id as bloque,icd.id as curso_datos,
+    ic.grado_tipo_id as parte,icd.esactivo,icd.plancurricular_tipo_id,ct.ciclo as nciclo,gt.grado as ngrado
+    FROM institucioneducativa_curso ic
+    join institucioneducativa_curso_datos icd on icd.institucioneducativa_curso_id=ic.id
+    join maestro_inscripcion mi on ic.maestro_inscripcion_id_asesor=mi.id
+    join persona p on p.id=mi.persona_id
+    join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
+    join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+    join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
+    INNER JOIN ciclo_tipo ct ON ic.ciclo_tipo_id=ct.id
+    INNER JOIN grado_tipo gt ON ic.grado_tipo_id=gt.id
+        left join usuario u on icd.obs=u.id::text
+      left join persona ped on ped.id=u.persona_id
+    where icd.esactivo=false and icd.lugar_tipo_id_seccion=$id_municipio ";
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $curso = array();$cursos = array();
+    foreach ($po as $p) {
+        $curso["curso_datos"] = $p["curso_datos"];
+        $curso["carnet"] = $p["carnet"];
+        $curso["nciclo"] = $p["nciclo"];
+        $curso["ngrado"] = $p["ngrado"];
+        $curso["ped_nombre"] = $p["ped_nombre"];
+        $curso["ped_paterno"] = $p["ped_paterno"];
+        $curso["plan"] = $p["plancurricular_tipo_id"];
+        if ($p["ngrado"]=="Primero")$curso["ngrado"]=1;
+        if ($p["ngrado"]=="Segundo")$curso["ngrado"]=2;
+        $curso["complemento"] = $p["complemento"];
+        $curso["nombre"] = $p["nombre"];
+        $curso["paterno"] = $p["paterno"];
+        $curso["materno"] = $p["materno"];
+        $curso["fecha_inicio"] = $p["fecha_inicio"];
+        $curso["fecha_fin"] = $p["fecha_fin"];
+        $curso["bloque"] = $p["bloque"];
+        $curso["parte"] = $p["parte"];
+        $curso["id"] = $p["id"];
+        $curso["id_enc"] = $this->encriptar($p["id"]);
+        $curso["depto"] = $p["depto"];
+        $curso["provincia"] = $p["provincia"];
+        $curso["municipio"] = $p["municipio"];
+        $curso["localidad"] = $p["localidad"];
+        $curso["esactivo"] = $p["esactivo"];
+        $cursos[] = $curso;
+        $curso_existe=1;
+    }
+    return $this->render('SiePnpBundle:Default:cambiar_cursos_pedagogo_encontrado.html.twig',array(
+        'cursos'=>$cursos,
+        'curso_existe'=>$curso_existe,
+        'pedagogos'=>$pedagogos,
+        ));
 }
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes

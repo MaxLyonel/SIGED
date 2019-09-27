@@ -1,0 +1,18 @@
+    {% for flashMessage in app.session.flashbag.get('messageCommission') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h3 class="panel-title">Registrar Información de Comisión</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">           
+            {% include 'SieJuegosBundle:RegistryPersonComission:commissionForm.html.twig' with {'form': form} %}
+        </div><!-- /.panel-body -->        
+    </div>

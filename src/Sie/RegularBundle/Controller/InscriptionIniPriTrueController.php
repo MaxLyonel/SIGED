@@ -42,7 +42,7 @@ class InscriptionIniPriTrueController extends Controller {
     public function indexAction() {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
-
+        // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -220,7 +220,7 @@ class InscriptionIniPriTrueController extends Controller {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6 ))
+                ->setParameter('mat', array( 3,4,5,6,10 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
@@ -350,7 +350,7 @@ class InscriptionIniPriTrueController extends Controller {
       $arrStudentFecnac = array();
       $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
       list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
-      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-2016');
+      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
 
       //new student validation
         if ($tiempo[0]<=6){
@@ -1065,9 +1065,11 @@ class InscriptionIniPriTrueController extends Controller {
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('i.institucioneducativaTipo = :insteducativaTipo')
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('insteducativaTipo', 1)
                 ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();

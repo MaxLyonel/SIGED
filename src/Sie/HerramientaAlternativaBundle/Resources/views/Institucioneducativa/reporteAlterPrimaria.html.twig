@@ -1,0 +1,157 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Example of Bootstrap 3 Tabs Methods</title>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#myTab li:eq(0) a").tab('show');
+                });
+            </script>
+            <style type="text/css">
+                .bs-example{
+                    margin: 20px;
+                }
+
+
+            </style>
+        </head>
+
+        <h2><i class="fa fa-pencil-square-o"></i> Reportes Alternativa Primaria <span> </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                    <li>
+                    <i class="fa fa-pencil-square-o"></i>
+                    Reportes
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+
+    </div>
+
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+
+            <h3>{{ dataReport.rol }} - {{ dataReport.gestion }} - {{ dataReport.semestre }}
+                <a href="{{path('sie_alt_submenu_alterprimaria')}}" class="btn btn-primary btn-sm btn-stroke" title="Cambiar"> <i class="fa fa-undo" aria-hidden="true"></i></a>
+            </h3>
+
+        </div>
+        <div class="bs-example">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li><a data-toggle="tab" href="#sectionA">Reportes Alternativa Primaria </a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="sectionA" class="tab-pane fade in active">
+                            <h3>Reportes Alternativa Primaria </h3>
+
+
+                            <div class="col-md-12">
+
+                                <!-- Start list bank table -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title text-center"> Reportes - <b> </b></h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reporte Completo</span>
+
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_primaria_pdf', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_primaria_excel', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <!--/ End list bank table -->
+
+                            </div>
+
+
+                            <p>. </p>
+                        </div>
+                    </div>
+                </div>
+
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{% endblock %}
+

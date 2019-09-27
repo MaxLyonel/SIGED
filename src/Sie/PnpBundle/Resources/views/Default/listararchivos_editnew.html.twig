@@ -16,11 +16,52 @@
                         <input type="text" id="plan" name="plan" value="" required="required" style="display:none" />
                         <input type="text" id="ciclo_tipo_id" name="ciclo_tipo_id" value="" required="required" style="display:none" />
                         <input type="text" id="grado_tipo_id" name="grado_tipo_id" value="" required="required" style="display:none" />
-                        Fecha Inicio:
-                        <input type="text" id="fecha_inicio" class="form-control" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;<br>
-                        <input type="hidden" id="fecha_inicio_ant" class="form-control" name="fecha_inicio_ant" placeholder="Digite Fecha Final" required="required" value=""/>
-                        Fecha Fin:
-                        <input type="text" id="fecha_fin" class="form-control" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Departamento:</label>
+                            <div class="col-sm-8">
+                                 <input type="text" id="form_departamento" name="grado_tipo_id" value="" required="required"  style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" readonly="readonly" />
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Provincia:</label>
+                            <div class="col-sm-8">
+                                <select required="required" data-placeholder="Seleccionar"  id="form_provincia" class="form-control chosen-select" name="form_provincia">
+                                    <option value="">Provincia</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Municipio:</label>
+                            <div class="col-sm-8">
+                                <select required="required" data-placeholder="Seleccionar" id="form_municipio" class="form-control chosen-select" name="form_municipio" >
+                                    <option value=""></option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Localidad:</label>
+                            <div class="col-sm-8">
+                               <input required="required" type="text" maxlength="40" id="localidad" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="localidad" >
+                            </div>
+                        </div>
+                        <div class="row"></div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-5 control-label">Fecha Inicio:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="fecha_inicio" class="form-control" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>
+                                <input type="hidden" id="fecha_inicio_ant" class="form-control" name="fecha_inicio_ant" placeholder="Digite Fecha Final" required="required" value=""/>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-5 control-label">Fecha Fin:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="fecha_fin" class="form-control" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
+                            </div>
+                        </div>
+                        
                         <br><br>
                         <button type="submit" class="btn btn-success rounded btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
                     </form>
@@ -128,7 +169,7 @@
                                                         <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Impimir Consolidado"></a>
                                                         <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc,'val':0 }) }}" title="Ingresar Curso" ></a>
                                                         {% if fila.esactivo != 1 %}
-                                                            <a role="button" class="glyphicon glyphicon-edit btn btn-info btn-xs rounded" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}');" title="Editar Fechas"></a>
+                                                            <a role="button" class="glyphicon glyphicon-edit btn btn-info btn-xs rounded" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}','{{fila.depto}}','{{fila.depto_id}}','{{fila.provincia_id}}','{{fila.lugar_id}}','{{fila.localidad}}');" title="Editar Datos"></a>
                                                         {% endif %}
                                                     </td>
                                                     <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
@@ -296,6 +337,26 @@
 })();
 </script>
     <script type="text/javascript">
+      $("#form_provincia").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').trigger("chosen:updated");
+                    }
+                });            
+            });
     var espanol = {"sProcessing": "Procesando...",
                      "sLengthMenu": "Mostrar _MENU_ registros",
                      "sZeroRecords": "No se encontraron resultados",
@@ -353,8 +414,9 @@
         });#}
         
     });
-    function ver_fecha_fin(id,fecha_fin,fecha_inicio,plan,ciclo_tipo_id,grado_tipo_id){
+    function ver_fecha_fin(id,fecha_fin,fecha_inicio,plan,ciclo_tipo_id,grado_tipo_id,depto,depto_id,provincia_id,lugar_id,localidad){
          $('#Modal_fecha').modal('show');
+         $('#localidad').val(localidad);
          $('#curso_id').val(id);
          $('#fecha_fin').val(fecha_fin);
          $('#fecha_inicio_ant').val(fecha_inicio);
@@ -362,6 +424,50 @@
          $('#plan').val(plan);
          $('#ciclo_tipo_id').val(ciclo_tipo_id);
          $('#grado_tipo_id').val(grado_tipo_id);
+         $('#form_departamento').val(depto);
+         $('#form_provincia').html("<option>Seleccionar</option>");
+          var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: depto_id });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_provincia").empty();                       
+                        var $province_selector = $('#form_provincia');
+
+                        $province_selector.html('<option value="">Provincia</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            if(datos[i].id==provincia_id)
+                                $province_selector.append('<option selected value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                            else
+                                $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_provincia').trigger("chosen:updated");
+                        $('#form_municipio').html("<option>Municipio</option>");
+                    }
+                });
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: provincia_id });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            if(datos[i].id==lugar_id)
+                                $province_selector.append('<option selected value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        else
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').trigger("chosen:updated");
+                    }
+                });                  
     }
 
     function validar_fecha(){
