@@ -74,41 +74,97 @@
                             </tr>
                             
                              <tr>
-                                <th>Estudiante Modificado</th>
+                                <th>Datos Modificados</th>
                                 <td>
-                                <table>
+                                <table border='1'>
                                     <tbody>
                                         <tr>
+                                            <th></th>
+                                            <td>Dato Anterior</td>
+                                            <td>Dato Actual</td>
+                                        </tr>
+                                        <tr>
                                             <th>CI</th>
+                                            <td>{{ oldDataStudent.carnetIdentidad }}</td>
                                             <td>{{ objStudent.carnetIdentidad }}</td>
                                         </tr>
                                         <tr>
                                             <th>Complemento</th>
+                                            <td>{{ oldDataStudent.complemento }}</td>
                                             <td>{{ objStudent.complemento }}</td>
+                                            
                                         </tr>
                                         <tr>
                                             <th>Cod. Rude</th>
-                                            <td>{{ objStudent.codigoRude }}</td>
+                                            <td>{{ oldDataStudent.genero }}</td>
+                                            <td>{{ objStudent.generoTipo }}</td>
+                                            
                                         </tr>
                                         <tr>
                                             <th>Paterno</th>
+                                            <td>{{ oldDataStudent.paterno }}</td>
                                             <td>{{ objStudent.paterno }}</td>
+                                            
                                         </tr>
                                         <tr>
                                             <th>Materno</th>
+                                            <td>{{ oldDataStudent.materno }}</td>
                                             <td>{{ objStudent.materno }}</td>
+                                            
                                         </tr>
                                         <tr>
                                             <th>Nombre(s)</th>
-                                            <td>{{ objStudent.nombre }}</td>
+                                            <td>{{ oldDataStudent.nombre }}</td>
+                                            <td>{{ objStudent.nombre }}</td>                                            
                                         </tr>
+
+                                        <tr>
+                                            <th>Pais</th>
+                                            <td>{{ oldDataStudent.pais }}</td>
+                                            <td>{{ objStudent.paisTipo }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Departamento</th>
+                                            <td>{{ oldDataStudent.lugarNacTipo }}</td>
+                                            <td>{{ objStudent.lugarNacTipo }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Provincia</th>
+                                            <td>{{ oldDataStudent.lugarProvNacTipo }}</td>
+                                            <td>{{ objStudent.lugarProvNacTipo }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Localidad</th>
+                                            <td>{{ oldDataStudent.localidad }}</td>
+                                            <td>{{ objStudent.localidadNac }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Oficialia</th>
+                                            <td>{{ oldDataStudent.oficialia }}</td>
+                                            <td>{{ objStudent.oficialia }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Partida</th>
+                                            <td>{{ oldDataStudent.libro }}</td>
+                                            <td>{{ objStudent.libro }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Partida</th>
+                                            <td>{{ oldDataStudent.partida }}</td>
+                                            <td>{{ objStudent.partida }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <td>{{ oldDataStudent.folio }}</td>
+                                            <td>{{ objStudent.folio }}</td>
+                                        </tr>
+
+
                                     </tbody>
                                 </table>
 
                                 </td>
                             </tr>
-
-
                         </tbody>
                     </table>
 

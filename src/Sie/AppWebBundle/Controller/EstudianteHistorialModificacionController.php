@@ -111,18 +111,19 @@ class EstudianteHistorialModificacionController extends Controller{
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find($id);
-
+        //  dump(json_decode( $entity->getDatoAnterior(),true));die;
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find EstudianteHistorialModificacion entity.');
         }
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($entity->getEstudiante()->getId());
-
-        $deleteForm = $this->createDeleteForm($id);
+// dump($objStudent);die;
+        // $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('SieAppWebBundle:EstudianteHistorialModificacion:show.html.twig', array(
-            'entity'      => $entity,
-            'objStudent'      => $objStudent,
-            'delete_form' => $deleteForm->createView(),
+            'entity'         => $entity,
+            'objStudent'     => $objStudent,
+            'oldDataStudent' => json_decode( $entity->getDatoAnterior(),true),
+            // 'delete_form' => $deleteForm->createView(),
         ));
     }
 

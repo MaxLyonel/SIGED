@@ -58,41 +58,55 @@ class SpecialModificationDataStudentController extends Controller{
         $form = $request->get('form');
         // create db conexion
         $em = $this->getDoctrine()->getManager();
-        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['codeRude']));
-        // do the validation
-        switch($form['arrOption']){
-            case '':
-            // no values selected - option
-                $sw = false;
-                $message = 'Debe seleccionar un valor en el combo';
-                $typeMessage = 'warning';
-                $compleMessage = 'Alerta';
-            break;
-            case 0:
-            // case general
-            // check if the student is bachiller
-            $objBachillerStudent = $this->getInscription($form,$form['arrOption']);
-            if(!$objBachillerStudent){
-                $sw = false;
-                $message = 'El estudiante no es bachiller';
-                $typeMessage = 'warning';
-                $compleMessage = 'Alerta';
-            }else{
-                $sw = true;
+        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>trim($form['codeRude'])));
+        if($objStudent){
+            // do the validation
+            switch($form['arrOption']){
+                case '':
+                // no values selected - option
+                    $sw = false;
+                    $message = 'Debe seleccionar un valor en el combo';
+                    $typeMessage = 'warning';
+                    $compleMessage = 'Alerta';
+                break;
+                case 0:
+                // case general
+                // check if the student is bachiller
+                $objBachillerStudent = $this->getInscription($form,$form['arrOption']);
+                if(!$objBachillerStudent){
+                    $sw = false;
+                    $message = 'El estudiante no es bachiller';
+                    $typeMessage = 'warning';
+                    $compleMessage = 'Alerta';
+                }else{
+                    $message = 'error general';
+                    $typeMessage = 'warning';
+                    $compleMessage = 'good';
+                    $sw = true;
+                }
+                break;
+                case 1:
+                // case homologation
+                $objBachillerStudent = $this->getInscription($form,$form['arrOption']);
+                if($objBachillerStudent[0]['gestion'] == $this->session->get('currentyear')){
+                    $sw = false;
+                    $message = 'El estudiante cuenta con inscripcion en la presente gestion';
+                    $typeMessage = 'warning';
+                    $compleMessage = 'Alerta';
+                }else{
+                    $message = 'error homologation';
+                    $typeMessage = 'warning';
+                    $compleMessage = 'good';
+                    $sw = true;
+                }
+                break;
             }
-            break;
-            case 1:
-            // case homologation
-            $objBachillerStudent = $this->getInscription($form,$form['arrOption']);
-            if($objBachillerStudent[0]['gestion'] == $this->session->get('currentyear')){
-                $sw = false;
-                $message = 'El estudiante cuenta con inscripcion en la presente gestion';
-                $typeMessage = 'warning';
-                $compleMessage = 'Alerta';
-            }else{
-                $sw = true;
-            }
-            break;
+        }else{
+            $message = 'Estudiante no existe';
+            $typeMessage = 'warning';
+            $compleMessage = 'Error';
+            $sw = true;
+
         }
         $this->addFlash('messageModStudent', $message);
         
@@ -124,7 +138,7 @@ class SpecialModificationDataStudentController extends Controller{
                 ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
-                ->setParameter('id', $data['codeRude']);
+                ->setParameter('id', trim($data['codeRude']));
         if(!$sw){
             $query = $query
             ->andwhere('iec.nivelTipo = :nivel')
@@ -252,6 +266,28 @@ class SpecialModificationDataStudentController extends Controller{
             // update student data
             $resultSegip = $this->saveResultSegipService($form);
             if($resultSegip || $resultSegip == 2){
+                //GET OLD DATA
+                $oldDataStudent2 =json_encode( array(
+                    'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
+                    'complemento'=>$objStudent->getComplemento(),
+                    'genero'=>$objStudent->getGeneroTipo()->getGenero(),
+                    'paterno'=>$objStudent->getPaterno(),
+                    'materno'=>$objStudent->getMaterno(),
+                    'nombre'=>$objStudent->getNombre(),
+                    'fecharesoladm'=>$objStudent->getFechaNacimiento(),
+                    'pais'=>$objStudent->getPaisTipo()->getPais(),
+                    'paisId'=>$objStudent->getPaisTipo()->getId(),
+                    'lugarNacTipo'=>$objStudent->getLugarNacTipo()->getLugar(),
+                    'lugarNacTipoId'=>$objStudent->getLugarNacTipo()->getId(),
+                    'lugarProvNacTipo'=>$objStudent->getLugarProvNacTipo()->getLugar(),
+                    'lugarProvNacTipoId'=>$objStudent->getLugarProvNacTipo()->getId(),
+                    'localidad'=>$objStudent->getLocalidadNac(),
+                    'oficialia'=>$objStudent->getOficialia(),
+                    'libro'=>$objStudent->getLibro(),
+                    'partida'=>$objStudent->getPartida(),
+                    'folio'=>$objStudent->getFolio(),
+                ));
+
                 $oldDataStudent = clone $objStudent;
                 $oldDataStudent = json_encode((array)$oldDataStudent);
                 
@@ -262,9 +298,19 @@ class SpecialModificationDataStudentController extends Controller{
                 $objStudent->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
                 $objStudent->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
                 $objStudent->getFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+                
                 $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($form['pais']) );
-                $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']) );
-                $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia']) );
+                
+                if(isset($form['departamento'])){
+                    $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']) );
+                }else{
+                    $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
+                }
+                if(isset($form['provincia'])){
+                    $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia']) );
+                }else{
+                    $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
+                }
                 $objStudent->setLocalidadNac($form['localidad']);
                 $objStudent->setOficialia($form['oficialia']);
                 $objStudent->setLibro($form['libro']);
@@ -273,7 +319,7 @@ class SpecialModificationDataStudentController extends Controller{
                 $em->flush();
                 // save log data
                 $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
-                $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent);
+                $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
                 $objEstudianteHistorialModificacion->setResolucion($form['resoladm']);
                 $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($form['fecharesoladm']));
                 $objEstudianteHistorialModificacion->setJustificacion($form['obs']);
