@@ -290,7 +290,7 @@ class EstudianteNotasController extends Controller {
          */
         $estadosGenerales = null;
         if($gestion == 2019){
-            $estadosGenerales = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,22,3,6)));
+            $estadosGenerales = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(4,5,22,3,6)));
         }
 
         $em->getConnection()->commit();
