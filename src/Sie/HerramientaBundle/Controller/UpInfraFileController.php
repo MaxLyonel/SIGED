@@ -34,22 +34,25 @@ class UpInfraFileController extends Controller{
             return $this->redirect($this->generateUrl('login'));
         }
 
-        switch ($this->session->get('roluser')) {
-            case 8:
-                //user nacional
-                # code...
-                $template = 'index.html.twig';
-                $form = $this->lookforSieForm(array())->createView();
-                break;
-            case 9:
-                //user ue
-                # code...
-                return $this->redirectToRoute('upinfrafile_lookfor_data');
-                break;
-            default:
-                # code...
-                break;
-        }
+        $template = 'index.html.twig';
+        $form = $this->lookforSieForm(array())->createView();
+
+        // switch ($this->session->get('roluser')) {
+        //     case 8:
+        //         //user nacional
+        //         # code...
+        //         $template = 'index.html.twig';
+        //         $form = $this->lookforSieForm(array())->createView();
+        //         break;
+        //     case 9:
+        //         //user ue
+        //         # code...
+        //         return $this->redirectToRoute('upinfrafile_lookfor_data');
+        //         break;
+        //     default:
+        //         # code...
+        //         break;
+        // }
 
 
         
@@ -60,8 +63,15 @@ class UpInfraFileController extends Controller{
 
     private function lookforSieForm($data){
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('upinfrafile_lookfor_data'))
-                ->add('sie','text',array('label'=>'SIE', 'attr'=>array('placeholder'=>'Ingrese SIE', 'class'=>'form-control')))
+                ->setAction($this->generateUrl('upinfrafile_lookfor_data'));
+        if($this->session->get('roluser')==9)
+            $form = $form
+                ->add('sie','text',array('label'=>'SIE','data'=>$this->session->get('ie_id'), 'attr'=>array('placeholder'=>'Ingrese SIE', 'class'=>'form-control','readonly'=>true)));
+        else{
+            $form = $form
+                ->add('sie','text',array('label'=>'SIE', 'attr'=>array('placeholder'=>'Ingrese SIE', 'class'=>'form-control')));
+        }
+        $form = $form
                 ->add('find','submit',array('label'=>'Buscar','attr'=>array('class'=>'btn btn-success','onclick'=>'')))
                 ->getForm();
         return $form;
