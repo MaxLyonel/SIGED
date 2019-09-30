@@ -18,9 +18,9 @@
                     <div class="panel-heading no-padding">
                         <ul class="nav nav-tabs">
                         	{% for h in historial %}
-                        		{% if h.orden != 5 and h.orden != 4 %}
+                        		{% if h.orden in [1,2,6] %}
 	                        		<li {% if loop.index == 1 %} class="nav-border nav-border-top-lilac active" {% else %} class="nav-border nav-border-top-lilac" {% endif %} >
-	                                    <a href="component-tabsaccordion.html#tab{{ h.orden }}" data-toggle="tab" aria-expanded="true">
+	                                    <a href="component-tabsaccordion.html#tab{{ loop.index + 1 }}" data-toggle="tab" aria-expanded="true">
 	                                        <i class="fa fa-user"></i>
 	                                        <div>
 	                                            <span class="text-strong"> {{ h.rol }}</span>
@@ -38,7 +38,8 @@
                     <div class="panel-body">
                         <div class="tab-content">
                         	{% for h in historial %}
-	                            <div {% if loop.index == 1 %} class="tab-pane fade in active" {% else %} class="tab-pane fade" {% endif %} id="tab{{ h.orden }}">
+                        		{% if h.orden in [1,2,6] %}
+	                            <div {% if loop.index == 1 %} class="tab-pane fade in active" {% else %} class="tab-pane fade" {% endif %} id="tab{{ loop.index + 1 }}">
 	                                {% if h.orden == 1 %} {# unidad educativa #}
 										<div class="row">
 										    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -146,7 +147,7 @@
 										    </div>
 										</div>
 	                                {% endif %}
-	                                {% if h.orden == 2 %} {# distrito #}
+	                                {% if h.orden == 2 and h.datos != null %} {# distrito #}
 										<div class="form-group">
 										    <p><b>¿El trámite es procedente?</b></p>
 										    <div class="radio">
@@ -165,11 +166,11 @@
 											    <p><b>¿Qué desea hacer con el trámite?</b></p>
 											    <div class="radio">
 											        <label class="radio-inline">
-											            <input type="radio" {% if h.datos.subsanable == 'SI' %} checked {% else %} disabled {% endif %}>
+											            <input type="radio" {% if h.datos.finalizar == 'NO' %} checked {% else %} disabled {% endif %}>
 											            Devolver trámite a la Unidad Educativa
 											        </label>
 											        <label class="radio-inline">
-											            <input type="radio" {% if h.datos.subsanable == 'NO' %} checked {% else %} disabled {% endif %}>
+											            <input type="radio" {% if h.datos.finalizar == 'SI' %} checked {% else %} disabled {% endif %}>
 											            Finalizar y cerrar trámite
 											        </label>
 											    </div>
@@ -187,7 +188,7 @@
 											</div>
 										{% endif %}
 	                                {% endif %}
-	                                {% if h.orden == 3 %} {# departamento #}
+	                                {% if h.orden == 6 %} {# departamento #}
 										<div class="form-group">
 										    <label>¿Aprobar trámite?</label>
 										    <div class="radio">
@@ -226,7 +227,7 @@
 											</div>
 										{% endif %}
 	                                {% endif %}
-	                                {% if h.orden == 4 %}
+	                                {# {% if h.orden == 4 %}
 										modifica calificaciones sie
 	                                {% endif %}
 	                                {% if h.orden == 5 %}
@@ -234,9 +235,10 @@
 	                                {% endif %}
 	                                {% if h.orden == 6 %}
 										imprime libreta actualizada
-	                                {% endif %}
+	                                {% endif %} #}
 
 	                            </div>
+	                            {% endif %}
                         	{% endfor %}
                         </div>
                     </div><!-- /.panel-body -->

@@ -423,7 +423,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div v-if="gestion >= 2014" class="modal-footer">
                         Estado matricula:
                         <b>
                         <span v-bind:class="{tachado: actualEstadomatricula != nuevoEstadomatricula }">${this.actualEstadomatricula}</span>
@@ -643,6 +643,9 @@
                             idEstudianteAsignatura: idEstudianteAsignatura
                         }
 
+                        // console.log(this.gestion);
+                        var me = this;
+
                         if(index == -1){
                             const {value: calificacion} = Swal.fire({
                                 title: 'Agregar calificación',
@@ -659,11 +662,23 @@
                                     if (value == 0) {
                                         return 'La calificación no puede ser cero!'
                                     }
-                                    if (value > 100) {
-                                        return 'La calificación no puede ser mayor a 100!'
-                                    }
+
                                     if (nuevaNota.nota == value) {
                                         return 'La nueva calificación no puede ser igual a la calificación actual'
+                                    }
+
+                                    // NOTAS TRIMESTRALES
+                                    if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
+                                        return 'La calificación no puede ser mayor a 60!'   
+                                    }
+
+                                    if ((idNotaTipo == 27 || idNotaTipo == 28 || idNotaTipo == 29) && value > 10) {
+                                        return 'La calificación no puede ser mayor a 10!'   
+                                    }
+
+                                    // NOTAS BIMESTRALES
+                                    if ((idNotaTipo == 1 || idNotaTipo == 2 || idNotaTipo == 3 || idNotaTipo == 4) && value > 100) {
+                                        return 'La calificación no puede ser mayor a 100!'
                                     }
 
                                     nuevaNota.notaNueva = value;
@@ -701,6 +716,20 @@
                                     }
                                     if (nuevaNota.nota == value) {
                                         return 'La nueva calificación no puede ser igual a la calificación actual'
+                                    }
+
+                                    // NOTAS TRIMESTRALES
+                                    if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
+                                        return 'La calificación no puede ser mayor a 60!'   
+                                    }
+
+                                    if ((idNotaTipo == 27 || idNotaTipo == 28 || idNotaTipo == 29) && value > 10) {
+                                        return 'La calificación no puede ser mayor a 10!'   
+                                    }
+
+                                    // NOTAS BIMESTRALES
+                                    if ((idNotaTipo == 1 || idNotaTipo == 2 || idNotaTipo == 3 || idNotaTipo == 4) && value > 100) {
+                                        return 'La calificación no puede ser mayor a 100!'
                                     }
 
                                     // nuevaNota.notaNueva = value;
@@ -880,6 +909,70 @@
                                 }
                             });
                         }
+                    }else{
+                        $.each(this.datos.cuantitativas, function(index, val) {
+                            nulos = 0;
+                            suma1t = 0;
+                            suma2t = 0;
+                            suma3t = 0;
+                            promedioAnual = 0;
+                            reforzamiento = 0;
+                            promedioFinal = 0;
+                            $.each(val['notas'], function(index2, val2) {
+                                if (val2['idNotaTipo'] != 6 && val2['idNotaTipo'] != 7 && val2['idNotaTipo'] != 8 && val2['idNotaTipo'] != 9 && val2['idNotaTipo'] != 11) {
+                                    var valor = val2['notaNueva'];
+                                    if(valor == ''){
+                                        valor = val2['nota'];
+                                        if (valor == '') {
+                                            valor = 0;
+                                            nulos = nulos + 1;
+                                        }
+                                    }
+
+                                    if (val2['idNotaTipo'] == 27 || val2['idNotaTipo'] == 30) {
+                                        suma1t = suma1t + valor;
+                                    }
+                                    if (val2['idNotaTipo'] == 28 || val2['idNotaTipo'] == 31) {
+                                        suma2t = suma2t + valor;
+                                    }
+                                    if (val2['idNotaTipo'] == 29 || val2['idNotaTipo'] == 32) {
+                                        suma3t = suma3t + valor;
+                                    }
+                                }
+
+                                if (val2['idNotaTipo'] == 6) {
+                                    me.datos.cuantitativas[index].notas[index2].notaNueva = suma1t;
+                                }
+                                if (val2['idNotaTipo'] == 7) {
+                                    me.datos.cuantitativas[index].notas[index2].notaNueva = suma2t;
+                                }
+                                if (val2['idNotaTipo'] == 8) {
+                                    me.datos.cuantitativas[index].notas[index2].notaNueva = suma3t;
+                                }
+
+
+
+                                if (val2['idNotaTipo'] == 9) {
+                                    promedioAnual = Math.round((suma1t + suma2t + suma3t)/3);
+                                    me.datos.cuantitativas[index].notas[index2].notaNueva = promedioAnual;
+                                }else{
+                                    if (val2['idNotaTipo'] == 10) {
+                                        reforzamiento = valor;
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = reforzamiento;
+                                    }else{
+                                        if (val2['idNotaTipo'] == 11 && reforzamiento != 0) {
+                                            promedioFinal = promedioAnual + reforzamiento;
+                                            me.datos.cuantitativas[index].notas[index2].notaNueva = promedioFinal;
+                                        }
+                                    }
+                                }
+                            });
+                        });
+
+                        // var cantidadMaterias = this.datos.cuantitativas.length;
+                        // if(cantidadMaterias == cantidadPromedios){
+
+                        // }
                     }
                 },
                 agregarNotaCualitativa: function(idEstudianteNotaCualitativa,idInscripcion,idNotaTipo,idFila,notaCualitativa,notaCuantitativa,notaTipo,idEstudianteNotaCualitativa){
