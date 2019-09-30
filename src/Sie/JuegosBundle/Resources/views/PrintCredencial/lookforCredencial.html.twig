@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-12">
+    {% if objComisionJuegosDatos %}
+            
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <a class="btn btn-block btn-sm btn-info btn-push" href="{{ path('printCredencial_donwload', {'selectedReport': form.typeOption, 'id':entity.id} )}}"><i class="fa fa-download"></i> Descargar Credencial</a>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
+
+        {% if form.typeOption == 0 %}
+            {% include 'SieJuegosBundle:PrintCredencial:student.html.twig'  %}
+        {% endif %}
+        {% if form.typeOption == 1 %}
+            {% include 'SieJuegosBundle:PrintCredencial:accompanist.html.twig'  %}
+        {% endif %}
+        
+        {% if form.typeOption == 2 %}
+            {% include 'SieJuegosBundle:RegistryPersonComission:dataPerson.html.twig'  %}
+        {% endif %}
+        
+            {# with {'dataInscription': dataInscriptionR} #}
+    {% else %}
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <strong>Datos no encontrados</strong>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+<div class="row">
+            
+        
+     <div class="col-md-12">
+        <div id="resultCommission">
+            </div> 
+    </div> 
+</div>
+
+
+
+

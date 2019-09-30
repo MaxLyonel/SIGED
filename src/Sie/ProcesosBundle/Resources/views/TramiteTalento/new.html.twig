@@ -23,7 +23,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Solicitud Talento Extraordinario</h3>
+                                <h3 class="panel-title">Inicio de trámite para Talento Extraordinario</h3>
                             </div>
                             {#<div class="col-md-6 text-right">
                                 <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
@@ -51,19 +51,19 @@
                             <div class="row">
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="nombre">Nombre</label>
+                                        <label for="nombre">Nombres</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="paterno">Paterno</label>
+                                        <label for="paterno">Apellido Paterno</label>
                                         <input type="text" class="form-control noedit" id="paterno" name="paterno">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="materno">Materno</label>
+                                        <label for="materno">Apellido Materno</label>
                                         <input type="text" class="form-control noedit" id="materno" name="materno">
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
-                                                <label for="cedula">Cédula Identidad</label>
+                                                <label for="cedula">Cédula de Identidad</label>
                                                 <input type="text" class="form-control noedit" id="cedula" name="cedula">
                                             </div>
                                         </div>
@@ -83,7 +83,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                                         <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                     </div>
                                     <div class="form-group">
                                         <input type="hidden" id="centro_inscripcion" name="centro_inscripcion" value="{{ centro_inscripcion }}">
-                                        <label for="centro">Centro que Inicio el Trámite</label>
+                                        <label for="centro">Centro Educativo donde iniciara el trámite</label>
                                         <input type="text" class="form-control" id="centro" name="centro" value="{{ centro }}" readonly>
                                     </div>
                                     {# <div class="form-group">
@@ -147,7 +147,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Confirmar</h4>
+                    <h4 class="modal-title">Alerta</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="tramite_st" value="0">
@@ -204,6 +204,8 @@
                     },
                     success: function (data) {
                         $("#carga").empty();
+                        var lista = "";
+                        var error = false;
                         if (data.msg == 'exito') {
                             $("#nombre").val(data.estudiante.nombre);
                             $("#paterno").val(data.estudiante.paterno);
@@ -214,14 +216,34 @@
                             $("#institucion_educativa").val(data.estudiante.institucion_educativa);
                             $("#estudiante_id").val(data.estudiante.estudiante_id);
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
-                        } else if (data.msg == 'nocurso' || data.msg == 'noins' || data.msg == 'noest') {
-                            $("#modalNotificacion").modal('show');
-                            mesage('warning', 'Notificación', '<h4>El Estudiante no cumple con las siguientes condiciones</h4>'+
-                            '<ul><li>Debe estar en Educación Regular.</li>'+
-                            '<li>Debe estar inscrito en la gestión actual.</li></ul>', false, 2);
+                        } else if (data.msg == 'noest') {
+                            lista += '<li><b>No se encontró al Estudiante en el sistema.</b></li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'noins') {
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
+                            lista += '<li><b>Debe estar inscrito en la gestión actual.</b></li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'noue') {
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li><b>Debe estar inscrito en su Unidad Educativa.</b></li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
                         } else if (data.msg == 'existe') {
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li><b>El trámite ya fue solicitado con anterioridad.</b></li>';
+                            error = true;
+                        }
+                        if (error) {
                             $("#modalNotificacion").modal('show');
-                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.', false, 2);
+                            $("#mensaje").html('<div class="alert alert-warning" role="alert"><h4>El Estudiante no cumple con las siguientes condiciones</h4><ul>'+lista+'</ul></div>');
                         }
                         $("#buscar").attr('disabled', false);
                     },
@@ -243,8 +265,7 @@
             } else if(flag == 2) {
                 $("#mensaje").html('<div class="alert alert-'+ tipo +'" role="alert">\n' + msg +' </div>');
             } else {
-                $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
-                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+                $("#envio").html(msg);
             }
             if (estado == true) {
                 setTimeout(function () { $("#carga").empty(); $("#envio").empty(); }, 3500);
@@ -267,10 +288,10 @@
             event.preventDefault();
             $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
             $("#tramite_st").val(0);
+            $("#guardar").show();
             $("#modalConfirm").modal("show");
         });
 
-        // $("#registro").submit( function (event) {
         function sendTramite() {
             $("#guardar").attr('disabled', true);
             $.ajax({
@@ -281,13 +302,13 @@
                     $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
-                    $("#guardar").attr('disabled', true);
                     $("#envio").empty();
-                    if (data.estado == 200) {
+                    if (data.estado == 200) {                        
                         clearInput();
+                        $("#guardar").hide();
                         $("#tramite_st").val(1);
                         $("#tramite_id").val(data.tramite);
-                        mesage('info', 'Notificación', data.msg, false, 1);
+                        mesage('info', 'Notificación', '<div class="alert alert-info" role="alert"><strong>Notificación</strong> '+ data.msg +' </div><p>A continuación complete los datos requeridos en base al Informe Psicopedagógico.</p>', false, 1);
                         // location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
                         mesage('danger', 'Alerta', 'No se pudo iniciar el trámite de Talento Extraordinario', false, 1);

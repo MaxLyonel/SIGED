@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Solicitud de Talento</h3>
+                                <h3 class="panel-title">Inicio de trámite para Talento Extraordinario</h3>
                             </div>
                         </div>
                     </div>
@@ -46,19 +46,19 @@
                             <form id="registro" autocomplete="off">
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="nombre">Nombre</label>
+                                        <label for="nombre">Nombres</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="paterno">Paterno</label>
+                                        <label for="paterno">Apellido Paterno</label>
                                         <input type="text" class="form-control noedit" id="paterno" name="paterno">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="materno">Materno</label>
+                                        <label for="materno">Apellido Materno</label>
                                         <input type="text" class="form-control noedit" id="materno" name="materno">
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
-                                                <label for="cedula">Cédula Identidad</label>
+                                                <label for="cedula">Cédula de Identidad</label>
                                                 <input type="text" class="form-control noedit" id="cedula" name="cedula">
                                             </div>
                                         </div>
@@ -78,7 +78,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                                         <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
                                         <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
                                     </div>
                                     <div class="form-group">
-                                        <label for="centro_inscripcion">Centro Inscripción</label>
+                                        <label for="centro_inscripcion">Centro Educativo donde remitirá el trámite</label>
                                         <select class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
                                             <option value="" selected disabled>Seleccione...</option>
                                             {% for item in centros %}
@@ -108,7 +108,7 @@
                                     </div> #}
                                 </div>
                                 <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -128,6 +128,24 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Alerta</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <input type="hidden" id="tramite_id">
+                    <div id="envio"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="guardar" onclick="sendTramite()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -168,13 +186,13 @@
                     url: Routing.generate('talento_extraordinario_search_tool'),
                     data: {'rude': rude, 'flujotipo_id': $('#flujotipo_id').val()},
                     beforeSend: function () {
-                        $("#carga").empty();
-                        $("#carga").append('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                        $("#carga").html('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
                         clearInput();
                     },
                     success: function (data) {
                         $("#carga").empty();
                         var lista = "";
+                        var error = false;
                         if (data.msg == 'exito') {
                             $("#nombre").val(data.estudiante.nombre);
                             $("#paterno").val(data.estudiante.paterno);
@@ -186,28 +204,34 @@
                             $("#estudiante_id").val(data.estudiante.estudiante_id);
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
                         } else if (data.msg == 'noest') {
-                            lista += '<li><b>No se encontro al estudiante en el sistema.</b></li>';
+                            lista += '<li><b>No se encontró al Estudiante en el sistema.</b></li>';
                             lista += '<li>Debe estar inscrito en la gestión actual.</li>';
                             lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
                             lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
                         } else if (data.msg == 'noins') {
-                            lista += '<li>No se encontro al estudiante en el sistema.</li>';
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
                             lista += '<li><b>Debe estar inscrito en la gestión actual.</b></li>';
                             lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
                             lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
                         } else if (data.msg == 'noue') {
-                            lista += '<li>No se encontro al estudiante en el sistema.</li>';
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
                             lista += '<li>Debe estar inscrito en la gestión actual.</li>';
                             lista += '<li><b>Debe estar inscrito en su Unidad Educativa.</b></li>';
                             lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
                         } else if (data.msg == 'existe') {
-                            lista += '<li>No se encontro al estudiante en el sistema.</li>';
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
                             lista += '<li>Debe estar inscrito en la gestión actual.</li>';
                             lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
                             lista += '<li><b>El trámite ya fue solicitado con anterioridad.</b></li>';
+                            error = true;
                         }
-                        $("#modalNotificacion").modal('show');
-                        $("#mensaje").html('<div class="alert alert-warning" role="alert"><h4>El Estudiante no cumple con las siguientes condiciones</h4><ul>'+lista+'</ul></div>');
+                        if (error) {
+                            $("#modalNotificacion").modal('show');
+                            $("#mensaje").html('<div class="alert alert-warning" role="alert"><h4>El Estudiante no cumple con las siguientes condiciones</h4><ul>'+lista+'</ul></div>');
+                        }
                         $("#buscar").attr('disabled', false);
                     },
                     error: function (error) {
@@ -216,14 +240,18 @@
                 });
             } else {
                 $("#carga").empty();
-                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false);
+                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false, 0);
                 $('#rude').focus();
             }
         }
 
-        function mesage(tipo, titulo, msg, estado) {
-            $("#carga").append('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+        function mesage(tipo, titulo, msg, estado, flag) {
+            if(flag == 0) {
+                $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            } else {
+                $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' + msg +' </div>');
+            }
             if (estado == true) {
                 setTimeout(function () { $("#carga").empty(); }, 3500);
             }
@@ -241,31 +269,48 @@
             $("#estudiante_ins_id").val('');
         }
 
-        $("#registro").submit( function (event) {
+        $("#registro").submit(function (event) {
             event.preventDefault();
+            $("#envio").html('<h5>¿Está seguro(a) de iniciar el trámite con la información ingresada?</h5>');
+            $("#tramite_st").val(0);
+            $("#guardar").show();
+            $("#modalConfirm").modal("show");
+        });
+
+        function sendTramite() {
             $("#guardar").attr('disabled', true);
             $.ajax({
                 type: 'post',
                 url: Routing.generate('talento_extraordinario_save_tool'),
                 data: {'solicitud': {'estudiante_id': $("#estudiante_id").val(), 'estudiante_ins_id': $("#estudiante_ins_id").val(), 'flujotipo_id': $("#flujotipo_id").val(), 'centro_inscripcion': $("#centro_inscripcion").val()}},
                 beforeSend: function () {
-                    $("#carga").empty();
-                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                    $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
-                    $("#guardar").attr('disabled', false);
                     $("#carga").empty();
                     if (data.estado == 200) {
                         clearInput();
-                        location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+                        $("#guardar").hide();
+                        $("#tramite_st").val(1);
+                        $("#tramite_id").val(data.tramite);
+                        mesage('info', 'Notificación', data.msg, false, 1);
+                        // location.href = "{ { path('wf_tramite_index', {'tipo':1}) }}";
                     } else {
-                        mesage('danger', 'Alerta', data.msg, false);
+                        mesage('danger', 'Alerta', data.msg, false, 1);
+                        $("#guardar").attr('disabled', false);
                     }
                 },
                 error: function (error) {
                     $("#guardar").attr('disabled', false);
                 }
             });
-        });
+        };
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val() == 1) {
+                location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+            }
+        }
     </script>
 {% endblock %}

@@ -11,7 +11,7 @@
                     <a href="{{path('wf_tramite_index', {'tipo':2})}}">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-                <li class="active">Supletorio</li>
+                <li class="active">Supletoria</li>
             </ol>
         </div>
     </div>
@@ -23,7 +23,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Acta Supletorio</h3>
+                                <h3 class="panel-title">Acta Supletoria</h3>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                                 </div> -->
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label for="grado_acelerar"><b>Grados a Acelerar</b></label><br>
+                                        <label for="grado_acelerar"><b>Grados que va Acelerar</b></label><br>
                                         {# <input type="text" class="form-control numeric" id="grado_acelerar" name="grado_acelerar" value="{{ grado_acelerar }}" disabled> #}
                                         <span>{{ grado_acelerar }}</span>
                                     </div>
@@ -92,7 +92,8 @@
                             <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                             <input type="hidden" id="notificar" name="notificar" value="{{ notificar }}">
                             <input type="hidden" id="devolucion" name="devolucion" value="{{ devolucion }}">
-                            <h4>{% if actas|length == 1 %}Acta Supletorio por Grado {% else %} Actas Supletorios por Grado {% endif %}</h4>
+                            <p class="float-left"><b class="text-danger">Nota:</b> Registre las calificaciones de las áreas de  saberes y conocimientos que corresponda, el cual se  constituirá en el Acta Supletoria, documento oficial que deberá ser firmada por las autoridades respectivas.</p>
+                            <h4>{% if actas|length == 1 %}Acta Supletoria por Grado {% else %} Actas Supletorias por Grado {% endif %}</h4>
                             <div class="row" id="tbl_cumano">
                                 {% for acta in actas %}
                                 <input type="hidden" id="iec_id{{loop.index}}" value="{{ acta.curso.iec_id }}">
@@ -127,7 +128,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 5px 8px 5px 8px; border: none" colspan="2">
-                                                    <span id="estado"><b class="text-primary">Disponible</b></span>
+                                                    <span id="estado"><b class="text-primary">&nbsp;</b></span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -147,7 +148,7 @@
                                                     <td>{{loop.index}}</td>
                                                     <td><span>{{currentmateria.asignatura}}</span></td>
                                                     <td>
-                                                        <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" required>
+                                                        <input type="number" class="form-control number-only" maxlength="3" min="1" max="100" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" onkeyup="validate(event)" required>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -255,9 +256,9 @@
                                             <tr>
                                                 <td style="padding: 5px 8px; border: none" colspan="2">
                                                     {% if acta.curso.iec_id == 0 %}
-                                                    <span id="estado{{loop.index}}"><b class="text-danger">No disponible</b></span>
+                                                    <span id="estado{{loop.index}}"><b class="text-danger">La Unidad Educativa no cuenta con el grado donde se quiere hacer la aceleración.</b></span>
                                                     {% else %}
-                                                    <span id="estado{{loop.index}}"><b class="text-primary">Disponible</b></span>
+                                                    <span id="estado{{loop.index}}"><b class="text-primary">&nbsp;</b></span>
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -278,7 +279,7 @@
                                                     <td>{{loop.index}}</td>
                                                     <td><span>{{currentmateria.asignatura}}</span></td>
                                                     <td>
-                                                        <input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" required>
+                                                        <input type="number" class="form-control number-only" maxlength="3" min="51" max="100" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" onkeyup="validate(event)" required>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -297,7 +298,7 @@
                             <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="acta_supletorio">Acta Supletorio</label>
+                                        <label for="acta_supletorio">Acta Supletoria</label>
                                         <input type="file" class="form-control myfiles" id="acta_supletorio" name="acta_supletorio" accept=".pdf,.doc,.docx" required>
                                     </div>
                                 </div>
@@ -305,7 +306,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="cedula"><b>Comisión Técnica Pedagógica</b></label>
+                                        <label for="cedula"><b>Comisión Técnica Pedagógica (agregue la nómina)</b></label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="cedula" placeholder="Buscar por Cédula de Identidad" autocomplete="off">
                                             <div class="input-group-addon" onclick="searchClick()" style="cursor: pointer"><i class="fa fa-search"></i></div>
@@ -325,7 +326,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <h5 class="float-left"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="table-responsive">
@@ -410,7 +410,7 @@
             $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
             if (flag) {
-                $("#envio").append('<center><a href="reporte/supletorio?idtramite='+$("#tramite_id").val()+'" class="" target="_blank"><i class="fa fa-file-pdf-o"></i> Imprimir Acta Supletorio</a></center>');
+                $("#envio").append('<center><a href="reporte/supletorio?idtramite='+$("#tramite_id").val()+'" class="" target="_blank"><i class="fa fa-file-pdf-o"></i> Imprimir Acta Supletoria</a></center>');
             }
             if (estado == true) {
                 setTimeout(function () { $("#envio").empty(); }, 3500);
@@ -430,7 +430,7 @@
                 mesage('warning', 'Notificación', 'Debe agregar la comisión técnica pedagógica.', false, false);
                 return false;
             }
-            $("#envio").html('<h5>¿Está seguro(a) de haber llenado las notas coherentemente? verifique antes de enviar.</h5>');
+            $("#envio").html('<h5>¿Está seguro(a) de enviar el trámite con la información ingresada?</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
             $("#guardar").show();
@@ -494,7 +494,7 @@
                         },
                         success: function (data) {
                             $("#envio").empty();
-                            $("#guardar").attr('disabled', true);
+                            $("#guardar").hide();
                             if (data.estado == 200) {
                                 clearInput();
                                 $("#tramite_st").val(1);
@@ -511,7 +511,7 @@
                 } else {
                     $("#tramite_st").val(0);
                     $("#modalConfirm").modal('show');
-                    mesage('warning', 'Notificación', 'Algún acta supletorio, no cuenta con asignaturas.', false, false);
+                    mesage('warning', 'Notificación', 'Algún acta supletoria, no cuenta con asignaturas.', false, false);
                 }
             } else {
                 $("#tramite_st").val(0);
@@ -580,19 +580,19 @@
                     },
                     success: function (data) {
                         if (data.iec_id == 0 && data.materiasnotas.length==0) {
-                            $("#estado"+index).html('<b class="text-danger">No disponible</b>');
+                            $("#estado"+index).html('<b class="text-danger">No cuenta con el curso</b>');
                             $("#sel_paralelo"+index).val('');
                             $("#sel_turno"+index).val('');
                         } else {
                             $("#iec_id"+index).val(data.iec_id);
-                            $("#estado"+index).html('<b class="text-primary">Disponible</b>');
+                            $("#estado"+index).html('<b class="text-primary">&nbsp;</b>');
                             var asignaturanota = '';
                             data.materiasnotas.forEach(function(item, posicion) {
                                 asignaturanota += '<tr>';
                                 asignaturanota += '<td>'+(posicion+1)+'</td>';
                                 asignaturanota += '<td><span>'+item.asignatura+'</span></td>';
                                 asignaturanota += '<td>';
-                                    asignaturanota += '<input type="number" class="form-control" maxlength="3" min="1" max="100" step="1" data-id="'+item.iecoId+'" data-idm="'+item.id+'" id="form_'+item.iecoId+'" name="currentmaterias['+item.iecoId+']" required>';
+                                    asignaturanota += '<input type="number" class="form-control number-only" maxlength="3" min="51" max="100" step="1" data-id="'+item.iecoId+'" data-idm="'+item.id+'" id="form_'+item.iecoId+'" name="currentmaterias['+item.iecoId+']" onkeyup="validate(event)" required>';
                                 asignaturanota += '</td></tr>';
                             });
                             $("#tbl_aceleracion"+index).html(asignaturanota);
@@ -668,5 +668,15 @@
         $("#tbl_comision").on('click', '.delete-row', function(){
             $(this).parents("tr").remove();
         });
+
+        function validate(evt) {
+            if(evt.target.value != "") {
+                if(evt.target.value>100)
+                    evt.target.value = 100;
+                return false;
+            } else {
+                return true;
+            }
+        }
     </script>
 {% endblock %}

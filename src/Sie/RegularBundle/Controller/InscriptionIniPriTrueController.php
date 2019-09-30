@@ -42,7 +42,7 @@ class InscriptionIniPriTrueController extends Controller {
     public function indexAction() {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
-
+        return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));

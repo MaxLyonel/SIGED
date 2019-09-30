@@ -23,7 +23,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Verificación de Acta</h3>
+                                <h3 class="panel-title">Verificación de Acta Supletoria</h3>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                                         {% endif %}
                                     </div>
                                     {# <div class="form-group">
-                                        <label for="acta_supletorio">Acta Supletorio</label>
+                                        <label for="acta_supletorio">Acta Supletoria</label>
                                         <input type="hidden" class="form-control" id="acta_supletorio" name="acta_supletorio" value="{{ acta_supletorio }}">
                                         <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ acta_supletorio )}}" target="_blank">Documento adjunto</a>
                                     </div> #}
@@ -106,7 +106,7 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <h4>{% if actas|length == 1 %} Acta Supletorio por Grado {% else %} Actas Supletorios por Grado {% endif %}</h4>
+                                    <h4>{% if actas|length == 1 %} Acta Supletoria por Grado {% else %} Actas Supletorias por Grado {% endif %}</h4>
                                     <div class="row" id="tbl_cumano">
                                         {% for acta in actas %}
                                         <div class="col-md-6">
@@ -228,9 +228,9 @@
                                                     <tr>
                                                         <td style="padding: 2px 8px; border: none" colspan="2">
                                                             {% if cursoactual.iec_id == 0 %}
-                                                            <span id="estado"><b class="text-danger">No disponible</b></span>
+                                                            <span id="estado"><b class="text-danger">La Unidad Educativa no cuenta con el grado donde se quiere hacer la aceleración</b></span>
                                                             {% else %}
-                                                            <span id="estado"><b class="text-primary">Disponible</b></span>
+                                                            <span id="estado"><b class="text-primary">&nbsp;</b></span>
                                                             {% endif %}
                                                         </td>
                                                     </tr>
@@ -260,7 +260,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <h5 class="float-right"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
+                            {# <h5 class="float-right"><b class="text-danger">Nota:</b> Verifique toda la información antes de proceder con la finalización del trámite.</h5> #}
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -276,7 +276,7 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Confirmar</h4>
+                    <h4 class="modal-title">Alerta</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="tramite_st" value="0">
@@ -294,7 +294,7 @@
     {{parent()}}
     <script>
         $(document).ready(function() {
-            $("#envio").html('<h5>¿Está seguro(a) de haber revisado la información? verifique antes de enviar.</h5>');
+            $("#envio").html('<h5>¿Está seguro(a) de finalizar u observar el trámite?</h5>');
             $('.myfiles').change(function() {
                 if(this.files[0].size > 2057157) {
                     $(this).val('');
@@ -333,7 +333,7 @@
 
         $("#form_verifica").submit(function (event) {
             event.preventDefault();
-            $("#envio").html('<h5>¿Está seguro(a) de haber revisado la información? verifique antes de enviar.</h5>');
+            $("#envio").html('<h5>¿Está seguro(a) de finalizar u observar el trámite?</h5>');
             $("#tramite_st").val(0);
             $("#guardar").attr('disabled', false);
             $("#modalConfirm").modal('show');
@@ -362,8 +362,8 @@
                     success: function (data) {
                         $("#envio").empty();
                         if (data.estado == 200) {
-                            $("#guardar").attr('disabled', true);
                             clearInput();
+                            $("#guardar").hide();
                             $("#tramite_st").val(1);
                             mesage('info', 'Notificación', data.msg, false);
                             //location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
@@ -443,12 +443,12 @@
                     },
                     success: function (data) {
                         if (data.iec_id == 0) {
-                            $("#estado").html('<b class="text-danger">No disponible</b>');
+                            $("#estado").html('<b class="text-danger">La Unidad Educativa no cuenta con el grado donde se quiere hacer la aceleración.</b>');
                             $("#sel_paralelo").val('');
                             $("#sel_turno").val('');
                         } else {
                             $("#iec_id").val(data.iec_id);
-                            $("#estado").html('<b class="text-primary">Disponible</b>');
+                            $("#estado").html('<b class="text-primary">&nbsp;</b>');
                         }
                     }
                 });

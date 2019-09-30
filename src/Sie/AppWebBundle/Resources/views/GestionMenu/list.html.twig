@@ -62,14 +62,18 @@
                                             <tr>
                                                 <td data-title="N°">{{ loop.index }}</td>
                                                 <td data-title="Objeto">{{ objeto }}</td>
-                                                <td data-title="Menu">{{ menu }}</td>
+                                                <td data-title="Menu">{{ menu.nombre }}</td>
                                                 <td data-title="Path">{{ menu.ruta }}</td>
                                                 <td data-title="Estado">
-                                                    {% if menuObjeto.esactivo == 1 %}
-                                                        <a href="{{ path('gestionmenu_estado', { 'id': menuObjeto.id }) }}" class="btn btn-xs btn-success">Activo</a>
-                                                    {% else %}
-                                                        <a href="{{ path('gestionmenu_estado', { 'id': menuObjeto.id }) }}" class="btn btn-xs btn-danger">Inactivo</a>
-                                                    {% endif %}
+                                                    <div id="estados_{{menuObjeto.id}}">
+                                                        {% if menuObjeto.esactivo == 1 %}
+                                                            {# <a href="{{ path('gestionmenu_estado', { 'id': menuObjeto.id }) }}" class="btn btn-xs btn-success">Activo</a> #}
+                                                            <button id="estado_{{menuObjeto.id}}" onclick="cambiarEstadoMenu({{menuObjeto.id}})" class="btn btn-xs btn-success">Activo</button>
+                                                        {% else %}
+                                                            {# <a href="{{ path('gestionmenu_estado', { 'id': menuObjeto.id }) }}" class="btn btn-xs btn-danger">Inactivo</a> #}
+                                                            <button id="estado_{{menuObjeto.id}}" onclick="cambiarEstadoMenu({{menuObjeto.id}})" class="btn btn-xs btn-danger">Inactivo</button>
+                                                        {% endif %}
+                                                    </div>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -84,5 +88,29 @@
             </div>
         </div>
     </div> 
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    var cambiarEstadoMenu = function(id){
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('gestionmenu_estado', {'id': id}),
+
+            beforeSend: function () {
+                $("#estados_"+id).empty();
+                $("#estados_"+id).html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:25px;" /></div>');  
+            },
+            success: function () {
+                $("#estados_"+id).empty();
+                $("#estados_"+id).html('<span class="text-success">¡Cambio realizado!</span>');
+            },
+            error: function () {
+                $("#estados_"+id).empty();
+                $("#estados_"+id).html('<span class="text-danger">¡Error!</span>');
+            }
+        });
+    };
+</script>
 {% endblock %}
 
