@@ -36,6 +36,10 @@ sie_juegos_clasificacion_lista_deportistas_inscritos_fase_nacional:
     path:    /lista/deportistas/clasificados/fase/nacional/{fase}/{usuario}
     defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasClasificadosNacionalDescargaPdf } 
 
+sie_juegos_clasificacion_seguimiento_deportistas_inscritos_fase_nacional:
+    path:    /lista/deportistas/clasificados/seguimiento/fase/nacional/{fase}/{usuario}
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasClasificadosSeguimientoDescargaPdf } 
+
 sie_juegos_clasificacion_lista_deportistas_aspirantes_fase:
     path:    /lista/deportistas/aspirante/fase/{fase}/{usuario}
     defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasAspirantesDescargaPdf }

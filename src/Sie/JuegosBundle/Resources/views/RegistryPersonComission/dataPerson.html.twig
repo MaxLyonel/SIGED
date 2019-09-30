@@ -14,49 +14,19 @@
         </div><!-- /.panel-heading -->
         <div class="panel-body no-padding">
             {% if entity %}
-                
-                    <div class="form-body">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-4">
-                                <strong>Carnet Identidad: </strong></br>{{entity.carnet}}
-                                </div>
-                                <div class="col-md-4">
-                                <strong>complemento: </strong></br>{{entity.complemento}}
-                                </div>
-                                <div class="col-md-4">
-                                <strong>Fecha Nacimiento: </strong></br>{{entity.fechaNacimiento | date('d-m-Y')}}
-                                </div>
-                            </div>
-                        </div>
+                {% include 'SieJuegosBundle:RegistryPersonComission:personInfo.html.twig' with {'entity': entity} %}                
+                    <!-- /.form-body -->
 
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-4">
-                                <strong>Nombre: </strong></br>{{entity.nombre}}
-                                </div>
-                                <div class="col-md-4">
-                                <strong>Paterno: </strong></br>{{entity.paterno}}
-                                </div>
-                                <div class="col-md-4">
-                                <strong>Materno: </strong></br>{{entity.materno}}
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div><!-- /.form-body -->
-
-                    {% if objComisionJuegosDatos %}
+                    {% if objComisionJuegosDatos and ratificar != true %}
                         <div class="form-body">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                    <strong>Comision: </strong></br>{{objComisionJuegosDatos.comisionTipo}}
+                                        <strong>Comision: </strong></br>{{objComisionJuegosDatos.comisionTipo}}
                                     </div>
                                     <div class="col-md-6">
-                                    <strong>Departamento: </strong></br>{{objComisionJuegosDatos.lugarTipo}}
-                                    </div>
-                                    
+                                        <strong>Departamento: </strong></br>{{objComisionJuegosDatos.lugarTipo}}
+                                    </div>                                    
                                 </div>
                             </div>                        
                         </div><!-- /.form-body -->

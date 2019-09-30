@@ -239,16 +239,16 @@ class EstudianteDatopersonalController extends Controller {
             
 
             try {
-                $entityEstudianteDatoPersonal = $em->getRepository('SieAppWebBundle:JdpEstudianteDatopersonal')->findOneBy(array('estudiante' => $estudianteId));
+                $entityEstudianteDatoPersonal = $em->getRepository('SieAppWebBundle:JdpEstudianteDatopersonal')->findOneBy(array('estudiante' => $estudianteId, 'gestionTipo' => $gestionActual));
                 if(count($entityEstudianteDatoPersonal)<=0){
-                   $entityEstudianteDatopersonal = new JdpEstudianteDatopersonal();
-                }                      
-                $form = $this->createCreateDatosForm($entityEstudianteDatopersonal);
+                   $entityEstudianteDatoPersonal = new JdpEstudianteDatopersonal();
+                }                    
+                $form = $this->createCreateDatosForm($entityEstudianteDatoPersonal);
                 $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     if (null != $form->get('foto')->getData()) {
-                        $file = $entityEstudianteDatopersonal->getFoto();
+                        $file = $entityEstudianteDatoPersonal->getFoto();
 
                         $filename = md5(uniqid()) . '.' . $file->guessExtension();
                         
@@ -257,7 +257,7 @@ class EstudianteDatopersonalController extends Controller {
                             $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/fotos_juegos';
                             $file->move($adjuntoDir, $filename);
 
-                            $entityEstudianteDatopersonal->setFoto($filename);
+                            $entityEstudianteDatoPersonal->setFoto($filename);
                             
                         } else {
                             $this->get('session')->getFlashBag()->set(
@@ -278,12 +278,12 @@ class EstudianteDatopersonalController extends Controller {
                 $entityEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $estudianteId));
 
 
-                $entityEstudianteDatopersonal->setEstudiante($entityEstudiante);
+                $entityEstudianteDatoPersonal->setEstudiante($entityEstudiante);
                 //$entityEstudianteDatopersonal->setEstatura($estatura);
                 //$entityEstudianteDatopersonal->setTalla($talla);
                 //$entityEstudianteDatopersonal->setPeso($peso);                                                                
                 $em = $this->getDoctrine()->getManager(); 
-                $em->persist($entityEstudianteDatopersonal);
+                $em->persist($entityEstudianteDatoPersonal);
                 $em->flush(); 
                 $em->getConnection()->commit();
                 $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Registro guardado de forma correcta'));  

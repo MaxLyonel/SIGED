@@ -10,9 +10,21 @@ reporte_regular_informacion_general_unidad_educativa:
     path:     /informacion/general/regular/unidad/educativa
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativa }
 
+reporte_informacion_general_institutos_tecnicos:
+    path:     /informacion/general/institutos/tecnicos
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicos }
+
 reporte_regular_informacion_general_unidad_educativa_lista_print_xls:
     path:     /informacion/general/regular/unidad/educativa/lista/print/xls
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativaListaPrintXls }
+
+reporte_informacion_general_ritt_lista_print_xls:
+    path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintXls }
+
+reporte_informacion_general_ritt_lista_print_pdf:
+    path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintPdf }
 
 reporte_regular_informacion_general_chart:
     path:     /informacion/general/regular/chart
@@ -93,6 +105,18 @@ reporte_especial_centro_educativo_xls:
 reporte_adultos_index:
     path:     /adultos
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex }
+
+reporte_superior_directorio_itts:
+    path:     /directorio/itts/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioItts }
+
+reporte_superior_directorio_itts_busqueda:
+    path:     /directorio/itts/busqueda/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsBusquedaSuperior }
+
+reporte_superior_directorio_itts_detalle:
+    path:     /directorio/itts/detalle/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsDetalleSuperior }
 
 reporte_diversa_index:
     path:     /diversa

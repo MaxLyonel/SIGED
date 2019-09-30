@@ -30,6 +30,7 @@ class UnificacionRudeController extends Controller {
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        // return $this->redirectToRoute('principal_web');
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
@@ -165,7 +166,7 @@ class UnificacionRudeController extends Controller {
         
         $validado = 0;        
         //*******VERIFICANDO QUE LOS DATOS NOMBRES APELLIDOS SEAN IGUALES        
-        if  (      (trim($studenta->getNombre()) == trim($studentb->getNombre()))
+        if(      (trim($studenta->getNombre()) == trim($studentb->getNombre()))
                 && (trim($studenta->getPaterno()) == trim($studentb->getPaterno()))
                 && (trim($studenta->getMaterno()) == trim($studentb->getMaterno()))
                 && (trim($studenta->getgeneroTipo()) == trim($studentb->getgeneroTipo()))
@@ -174,242 +175,235 @@ class UnificacionRudeController extends Controller {
             $validado = 1;
         }elseif($onoffcalidad == "t") {
             $validado = 1;
-        }
-        else {
+        }else {
             $validado = 0;
-            $message = 'Los datos personales no son los mismo.';
+            $message = 'Los datos personales no son los mismos.';
             $this->addFlash('validacionerror', $message);  
         }
         //*******VERIFICANDO QUE LOS DATOS NOMBRES APELLIDOS SEAN IGUALES
 
+        $dataInscriptiona = $this->getHistorial($rudea);
+        $dataInscriptionb = $this->getHistorial($rudeb);
 
         if ($validado == 1){
-            //*******VERIFICANDO QUE ALGUN RUDE ESTE VACIO AUTOMATICAMENTE LO MARCA COMO INCORRECTO
-            $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rudea . "') order by gestion_tipo_id_raep desc;");
-            $query->execute();               
-            $dataInscriptiona = $query->fetchAll();
-            $countHistorya = count($dataInscriptiona);
-
-            $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rudeb . "') order by gestion_tipo_id_raep desc;");
-            $query->execute();               
-            $dataInscriptionb = $query->fetchAll();
-            $countHistoryb = count($dataInscriptionb);
-            
-            if (($countHistorya == 0) && ($countHistoryb == 0)) {
+            if((count($dataInscriptiona) == 0) && (count($dataInscriptionb) == 0)) {
                 $message = 'Ninguno de los rudes presenta historial.';
                 $this->addFlash('notihistory', $message);            
                 return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-            } else {
-                if (($countHistorya == 0) && ($countHistoryb > 0)) {
-                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude sin historial como el rude incorrecto.'); 
-                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
+            }else{
+                 //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
+                $validaEstadosRegular = $this->getVerificaEstadosGestion($rudea,$rudeb);
+                if (count($validaEstadosRegular) > 0) {
+                    $message = "Se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
+                    $this->addFlash('validacionerror', $message);
+                    $validado = 0;
                 }
-                if (($countHistoryb == 0) && ($countHistorya > 0)) {
-                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude sin historial como el rude incorrecto.'); 
-                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
-                }
-            }//*******VERIFICANDO QUE ALGUN RUDE ESTE VACIO AUTOMATICAMENTE LO MARCA COMO INCORRECTO
 
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
-            $tramitea=$this->get('seguimiento')->getDiploma($rudea);
-            $tramiteb=$this->get('seguimiento')->getDiploma($rudeb);
-
-            $arrudea = array();
-            $arrudeb = array();
-            $message = null;
-
-            if ($tramitea && $tramiteb) {
-                $message = 'Ambos rudes cuentan con tramite de diplomas, por lo que no pueden ser unificados.</br>Para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones correspondiente a uno de los rudes.';
-                $this->addFlash('notihistory', $message);
-                return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-            } else {
-                if ($tramitea == false  && $tramiteb == true) {
-                    $arrudea['Diplomas'] = 0;
-                    $arrudeb['Diplomas'] = 1;
-
-                    //return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
-                }
-                if ($tramitea == true  && $tramiteb == false) {
-                    $arrudea['Diplomas'] = 1;
-                    $arrudeb['Diplomas'] = 0;
+                //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON DOBLES INSCRIPCIONES EN LA MISMA UE Y GESTION
+                $validaDobleInscripcionRegular = $this->getVerificaDobleInscripcion($rudea,$rudeb);
+                if (count($validaDobleInscripcionRegular) > 0) {
+                    $message = "Se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion']." SIE:". $validaDobleInscripcionRegular[0]['institucioneducativa_id'];
+                    $this->addFlash('validacionerror', $message);
+                    $validado = 0;
                 }
             }
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
 
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN JUEGOS
-            $juegosa=$this->get('seguimiento')->getJuegos($rudea);
-            $juegosb=$this->get('seguimiento')->getJuegos($rudeb);
-            
-            if ($juegosa && $juegosb) {
-                $message = 'Ambos rudes cuentan con historial en juegos.';
-                $this->addFlash('notihistory', $message);
-                return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-            } else {
-                if ($juegosa == false  && $juegosb == true) {
-                    $arrudea['Juegos'] = 0;
-                    $arrudeb['Juegos'] = 1;
+            if($validado == 1){
+                //*******VERIFICANDO QUE ALGUN RUDE ESTE VACIO AUTOMATICAMENTE LO MARCA COMO INCORRECTO
+                if ((count($dataInscriptiona) == 0) && (count($dataInscriptionb) > 0)) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude sin historial como el rude incorrecto.'); 
+                    $corr = 'b';
+                    $inc = 'a';
+                    goto corrinc;
                 }
-                if ($juegosa == true  && $juegosb == false) {
+                if ((count($dataInscriptionb) == 0) && (count($dataInscriptiona) > 0)) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude sin historial como el rude incorrecto.'); 
+                    $corr = 'a';
+                    $inc = 'b';
+                    goto corrinc;
+                }
+
+                //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
+                $tramitea=$this->get('seguimiento')->getDiploma($rudea);
+                $tramiteb=$this->get('seguimiento')->getDiploma($rudeb);
+                $arrudea = array();
+                $arrudeb = array();
+                $message = null;
+                if ($tramitea && $tramiteb) {
+                    $message = 'Ambos rudes cuentan con tramite de diplomas, por lo que no pueden ser unificados.</br>Para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones correspondiente a uno de los rudes.';
+                    $this->addFlash('notihistory', $message);
+                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+                }else {
+                    if ($tramitea == false  && $tramiteb == true) {
+                        $arrudea['Diplomas'] = 0;
+                        $arrudeb['Diplomas'] = 1;
+                    }
+                    if ($tramitea == true  && $tramiteb == false) {
+                        $arrudea['Diplomas'] = 1;
+                        $arrudeb['Diplomas'] = 0;
+                    }
+                }
+
+                //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN JUEGOS
+                $juegosa=$this->get('seguimiento')->getJuegos($rudea);
+                $juegosb=$this->get('seguimiento')->getJuegos($rudeb);
+    
+                if ($juegosa && $juegosb){
+                    /* $message = 'Ambos rudes cuentan con historial en juegos.';
+                    $this->addFlash('notihistory', $message);
+                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' ); */
                     $arrudea['Juegos'] = 1;
-                    $arrudeb['Juegos'] = 0;
+                    $arrudeb['Juegos'] = 1;
+                }else{
+                    if ($juegosa == false  && $juegosb == true) {
+                        $arrudea['Juegos'] = 0;
+                        $arrudeb['Juegos'] = 1;
+                    }
+                    if ($juegosa == true  && $juegosb == false) {
+                        $arrudea['Juegos'] = 1;
+                        $arrudeb['Juegos'] = 0;
+                    }
                 }
-            }
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN JUEGOS
 
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN OLIMPIADAS
-            $olimpiadasa=$this->get('seguimiento')->getOlimpiadas($rudea);
-            $olimpiadasb=$this->get('seguimiento')->getOlimpiadas($rudeb);
+                //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN OLIMPIADAS
+                $olimpiadasa=$this->get('seguimiento')->getOlimpiadas($rudea);
+                $olimpiadasb=$this->get('seguimiento')->getOlimpiadas($rudeb);
 
-            if ($olimpiadasa && $olimpiadasb) {
-                $message = 'Ambos rudes cuentan con historial en olimpiadas.';
-                $this->addFlash('notihistory', $message);
-                return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-            } else {
-                if ($olimpiadasa == false  && $olimpiadasb == true) {
-                    $arrudea['Olimpiadas'] = 0;
-                    $arrudeb['olimpiadas'] = 1;
-                }
-                if ($olimpiadasa == true  && $olimpiadasb == false) {
+                if ($olimpiadasa && $olimpiadasb) {
+                   /*  $message = 'Ambos rudes cuentan con historial en olimpiadas.';
+                    $this->addFlash('notihistory', $message);
+                    return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' ); */
                     $arrudea['Olimpiadas'] = 1;
-                    $arrudeb['Olimpiadas'] = 0;
+                    $arrudeb['olimpiadas'] = 1;
+                }else{
+                    if ($olimpiadasa == false  && $olimpiadasb == true) {
+                        $arrudea['Olimpiadas'] = 0;
+                        $arrudeb['olimpiadas'] = 1;
+                    }
+                    if ($olimpiadasa == true  && $olimpiadasb == false) {
+                        $arrudea['Olimpiadas'] = 1;
+                        $arrudeb['Olimpiadas'] = 0;
+                    }
                 }
-            }
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN OLIMPIADAS
 
-            //*******VERIFICANDO QUE ALGUNO DE LOS RUDES NO TENGA DATOS EN BACHILER DESTACADO
-            $bdestacadoa=$this->get('seguimiento')->getBachillerDestacado($rudea);
-            $bdestacadob=$this->get('seguimiento')->getBachillerDestacado($rudeb);
-            //dump($bdestacadoa,$bdestacadob);die;
-            if ($bdestacadoa && $bdestacadob) {
-                $message = 'Ambos rudes cuentan con historial en Bachiller Destacado, por lo que no pueden unificarse';
-                $this->addFlash('notihistory', $message);            
-                return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-            } else {
-                if ($bdestacadoa == false  && $bdestacadob == true) {
-                    $arrudea['Bachiller Destacado'] = 0;
-                    $arrudeb['Bachiller Destacado'] = 1;
-                }
-                if ($bdestacadoa == true  && $bdestacadob == false) {
-                    $arrudea['Bachiller Destacado'] = 1;
-                    $arrudeb['Bachiller Destacado'] = 0;
-                }
-            }
-            if (count($arrudea)>0 or count($arrudeb)>0){
-                //dump($arrudea,$arrudeb);die;
-                if(in_array(1,$arrudea) and in_array(1,$arrudeb)){
-                    $msg = '<strong>RUDE:</strong> '. $rudea;
-                    foreach($arrudea as $key => $valor ){
-                        if($valor == 1){
-                            $msg = $msg . '</br>-' . $key . '</br>';
-                        }
-                    }
-                    $msg = $msg . '<strong>RUDE:</strong> ' . $rudeb;
-                    foreach($arrudeb as $key => $valor ){
-                        if($valor == 1){
-                            $msg = $msg . '</br>-' . $key . '</br>';
-                        }
-                    }
-                    $this->addFlash('notihistory', 'Ambos rudes cuentan con historial:</br></br>'. $msg .'</br>Por lo que no pueden unificarse.</br>Si uno de los rudes cuenta con trámite en Diplomas, para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones.');
+                //*******VERIFICANDO QUE ALGUNO DE LOS RUDES NO TENGA DATOS EN BACHILER DESTACADO
+                $bdestacadoa=$this->get('seguimiento')->getBachillerDestacado($rudea);
+                $bdestacadob=$this->get('seguimiento')->getBachillerDestacado($rudeb);
+
+                if ($bdestacadoa && $bdestacadob) {
+                    $message = 'Ambos rudes cuentan con historial en Bachiller Destacado, por lo que no pueden unificarse';
+                    $this->addFlash('notihistory', $message);            
                     return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
                 }else{
-                    if(in_array(1,$arrudea)){
-                        $rudecor =$rudea;
-                        $rudeinc =$rudeb;
-                        $array = $arrudea;
-                    }else{
-                        $rudecor =$rudeb;
-                        $rudeinc =$rudea;
-                        $array = $arrudeb;
+                    if ($bdestacadoa == false  && $bdestacadob == true) {
+                        $arrudea['Bachiller Destacado'] = 0;
+                        $arrudeb['Bachiller Destacado'] = 1;
                     }
-                    $msg = "";
-                    foreach($array as $key => $valor ){
-                        if($valor == 1){
-                            $msg = $msg . '</br>-' . $key . '</br>';
-                        }
+                    if ($bdestacadoa == true  && $bdestacadob == false) {
+                        $arrudea['Bachiller Destacado'] = 1;
+                        $arrudeb['Bachiller Destacado'] = 0;
                     }
-                    $this->addFlash('autoselcorr', 'Se ha seleccionado al rude con historial en:'. $msg .' Como el rude correcto.'); 
-                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudecor,'rudeinc' => $rudeinc));
                 }
                 
-            }
-            if($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1){
-                if ($studenta->getSegipId() == 1){
-                    $rudecor =$rudea;
-                    $rudeinc =$rudeb;
+                //*******VERIFICANDO QUE ALGUNO DE LOS RUDES TENGA T,J,O,B***********//
+                $sw=0;
+                if (count($arrudea)>0 or count($arrudeb)>0){
+                    if(in_array(1,$arrudea) and in_array(1,$arrudeb)){
+                        //dump($arrudea,$arrudeb);die;
+                        if((isset($arrudea['Diplomas']) and $arrudea['Diplomas'] == 1 and isset($arrudeb['Bachiller Destacado']) and $arrudeb['Bachiller Destacado']==1) or (isset($arrudeb['Diplomas']) and $arrudeb['Diplomas'] == 1 and isset($arrudea['Bachiller Destacado']) and $arrudea['Bachiller Destacado']==1)){
+                            $msg = "Diplomas y Bachiller Destacado";
+                            $this->addFlash('notihistory', 'Ambos rudes cuentan con historial en: '. $msg .'</br>Por lo que no pueden unificarse.</br>Para poder unificar, debe anular el/los trámite(s) de Diplomas en legalizaciones.');
+                            return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+                        }
+                        $sw=1;
+                        $msg = '<strong>RUDE:</strong> '. $rudea;
+                        foreach($arrudea as $key => $valor ){
+                            if($valor == 1){
+                                $msg = $msg . '</br>-' . $key . '</br>';
+                            }
+                        }
+                        $msg = $msg . '<strong>RUDE:</strong> ' . $rudeb;
+                        foreach($arrudeb as $key => $valor ){
+                            if($valor == 1){
+                                $msg = $msg . '</br>-' . $key . '</br>';
+                            }
+                        }
+                        $this->addFlash('autoselcorr', '<strong>TOME NOTA: </strong>Los rudes cuentan con historial en:</br></br>'. $msg); 
+                    }else{
+                        if(in_array(1,$arrudea)){
+                            $corr = 'a';
+                            $inc = 'b';
+                            $array = $arrudea;
+                        }else{
+                            $corr = 'b';
+                            $inc = 'a';
+                            $array = $arrudeb;
+                        }
+                        $msg = "";
+                        foreach($array as $key => $valor ){
+                            if($valor == 1){
+                                $msg = $msg . '</br>-' . $key . '</br>';
+                            }
+                        }
+                        $this->addFlash('autoselcorr', 'Se ha seleccionado al rude con historial en:'. $msg .' Como el rude correcto.'); 
+                        goto corrinc;
+                    }
                 }
-                if ($studentb->getSegipId() == 1){
-                    $rudecor =$rudeb;
-                    $rudeinc =$rudea;
+                if(($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1) and $sw == 0){
+                    if ($studenta->getSegipId() == 1 and $studentb->getSegipId() == 0){
+                        $corr = $rudea;
+                        $inc = $rudeb;
+                    } 
+                    if ($studentb->getSegipId() == 1 and $studenta->getSegipId() == 0){
+                        $corr = $rudeb;
+                        $inc = $rudea;
+                    }
+                    $this->addFlash('autoselcorr', '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'); 
+                    //goto corrinc;
                 }
-                $this->addFlash('autoselcorr', 'Se ha seleccionado al rude con el Carnet de Identidad validado por Segip como el rude correcto.'); 
-                return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudecor,'rudeinc' => $rudeinc));
-            }
-
-            //*******FIN VERIFICANDO QUE ALGUNO DE LOS RUDES NO TENGA DATOS EN BACHILER DESTACADO
-        }
-
-        $dataInscriptionaR = array();
-        $dataInscriptionaA = array();
-        $dataInscriptionaE = array();
-        $dataInscriptionaP = array();
-        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rudea . "') order by gestion_tipo_id_raep desc;");
-        $query->execute();               
-        $dataInscriptiona = $query->fetchAll();
-        foreach ($dataInscriptiona as $key => $inscriptiona) {
-            switch ($inscriptiona['institucioneducativa_tipo_id_raep']) {
-                case '1':
-                    $dataInscriptionaR[$key] = $inscriptiona;
-                break;
-                case '2':
-                    $dataInscriptionaA[$key] = $inscriptiona;
-                break;
-                case '4':
-                    $dataInscriptionaE[$key] = $inscriptiona;
-                break;
-                case '5':
-                    $dataInscriptionaP[$key] = $inscriptiona;
-                break;
-            }
-        }
-
-        $dataInscriptionbR = array();
-        $dataInscriptionbA = array();
-        $dataInscriptionbE = array();
-        $dataInscriptionbP = array();
-        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rudeb . "') order by gestion_tipo_id_raep desc;");
-        $query->execute();               
-        $dataInscriptionb = $query->fetchAll();
-        foreach ($dataInscriptionb as $key => $inscriptionb) {
-            switch ($inscriptionb['institucioneducativa_tipo_id_raep']) {
-                case '1':
-                    $dataInscriptionbR[$key] = $inscriptionb;
-                break;
-                case '2':
-                    $dataInscriptionbA[$key] = $inscriptionb;
-                break;
-                case '4':
-                    $dataInscriptionbE[$key] = $inscriptionb;
-                break;
-                case '5':
-                    $dataInscriptionbP[$key] = $inscriptionb;
-                break;
             }
         }
 
         return $this->render('SieRegularBundle:UnificacionRude:resulthistoriales.html.twig', array(
-                    'validado' => $validado,
+                'validado' => $validado,
+                'studenta' => $studenta,
+                'dataInscriptionaR' => isset($dataInscriptiona['R'])?$dataInscriptiona['R']:array(),
+                'dataInscriptionaA' => isset($dataInscriptiona['A'])?$dataInscriptiona['A']:array(),
+                'dataInscriptionaE' => isset($dataInscriptiona['E'])?$dataInscriptiona['E']:array(),
+                'dataInscriptionaP' => isset($dataInscriptiona['P'])?$dataInscriptiona['P']:array(),
+                'studentb' => $studentb,
+                'dataInscriptionbR' => isset($dataInscriptionb['R'])?$dataInscriptionb['R']:array(),
+                'dataInscriptionbA' => isset($dataInscriptionb['A'])?$dataInscriptionb['A']:array(),
+                'dataInscriptionbE' => isset($dataInscriptionb['E'])?$dataInscriptionb['E']:array(),
+                'dataInscriptionbP' => isset($dataInscriptionb['P'])?$dataInscriptionb['P']:array()
+            ));
+        
+        corrinc:
+            if($corr == 'a'){
+                $studentCorr =$studenta;
+                $dataInscriptionCorr = $dataInscriptiona;
+                $studentIncc =$studentb;
+                $dataInscriptionIncc = $dataInscriptionb;
+            }else{
+                $studentCorr =$studentb;
+                $dataInscriptionCorr = $dataInscriptionb;
+                $studentIncc =$studenta;
+                $dataInscriptionIncc = $dataInscriptiona;
+            }
+            return $this->render('SieRegularBundle:UnificacionRude:resulthistorialescorinc.html.twig', array(                   
+                'validado' => 1,
+                'studentCorr' => $studentCorr,
+                'dataInscriptionCorrR' => isset($dataInscriptionCorr['R'])?$dataInscriptionCorr['R']:array(),
+                'dataInscriptionCorrA' => isset($dataInscriptionCorr['A'])?$dataInscriptionCorr['A']:array(),
+                'dataInscriptionCorrE' => isset($dataInscriptionCorr['E'])?$dataInscriptionCorr['E']:array(),
+                'dataInscriptionCorrP' => isset($dataInscriptionCorr['P'])?$dataInscriptionCorr['P']:array(),
+                'studentIncc' => $studentIncc,
+                'dataInscriptionInccR' => isset($dataInscriptionIncc['R'])?$dataInscriptionIncc['R']:array(),
+                'dataInscriptionInccA' => isset($dataInscriptionIncc['A'])?$dataInscriptionIncc['A']:array(),
+                'dataInscriptionInccE' => isset($dataInscriptionIncc['E'])?$dataInscriptionIncc['E']:array(),
+                'dataInscriptionInccP' => isset($dataInscriptionIncc['P'])?$dataInscriptionIncc['P']:array()
+            ));
 
-                    'studenta' => $studenta,
-                    'dataInscriptionaR' => $dataInscriptionaR,
-                    'dataInscriptionaA' => $dataInscriptionaA,
-                    'dataInscriptionaE' => $dataInscriptionaE,
-                    'dataInscriptionaP' => $dataInscriptionaP,
-                    'studentb' => $studentb,
-                    'dataInscriptionbR' => $dataInscriptionbR,
-                    'dataInscriptionbA' => $dataInscriptionbA,
-                    'dataInscriptionbE' => $dataInscriptionbE,
-                    'dataInscriptionbP' => $dataInscriptionbP
-        ));
     }
     
     public function unificarvercorincAction($rudecor, $rudeinc) {
@@ -419,11 +413,7 @@ class UnificacionRudeController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
-        $val = 1;        
-        if ($this->session->get('roluser') == 8){
-            $val = 0;
-        }
+
         $rudecor = trim($rudecor);
         $rudeinc = trim($rudeinc);
 
@@ -433,158 +423,90 @@ class UnificacionRudeController extends Controller {
         $studentCorr = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudecor));
         $studentIncc = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudeinc));
 
-        $dataInscriptionCorrR = array();
-        $dataInscriptionCorrA = array();
-        $dataInscriptionCorrE = array();
-        $dataInscriptionCorrP = array();
-
-        $dataInscriptionInccR = array();
-        $dataInscriptionInccA = array();
-        $dataInscriptionInccE = array();
-        $dataInscriptionInccP = array();
-
-        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rudecor . "') order by gestion_tipo_id_raep desc;");
-        $query->execute();               
-        $dataInscriptionCorr = $query->fetchAll();
-        foreach ($dataInscriptionCorr as $key => $inscriptionCorr) {
-            switch ($inscriptionCorr['institucioneducativa_tipo_id_raep']) {
-                case '1':
-                    $dataInscriptionCorrR[$key] = $inscriptionCorr;
-                break;
-                case '2':
-                    $dataInscriptionCorrA[$key] = $inscriptionCorr;
-                break;
-                case '4':
-                    $dataInscriptionCorrE[$key] = $inscriptionCorr;
-                break;
-                case '5':
-                    $dataInscriptionCorrP[$key] = $inscriptionCorr;
-                break;
-            }
-        }
-
-        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rudeinc . "') order by gestion_tipo_id_raep desc;");
-        $query->execute();               
-        $dataInscriptionIncc = $query->fetchAll();
-        foreach ($dataInscriptionIncc as $key => $inscriptionIncc) {
-            switch ($inscriptionIncc['institucioneducativa_tipo_id_raep']) {
-                case '1':
-                    $dataInscriptionInccR[$key] = $inscriptionIncc;
-                break;
-                case '2':
-                    $dataInscriptionInccA[$key] = $inscriptionIncc;
-                break;
-                case '4':
-                    $dataInscriptionInccE[$key] = $inscriptionIncc;
-                break;
-                case '5':
-                    $dataInscriptionInccP[$key] = $inscriptionIncc;
-                break;
-            }
-        }
-        //dump($dataInscriptionCorr,$dataInscriptionIncc);die;               
-        //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        
-        $validado = 1;
-        //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        $validaEstadosRegular = $this->getVerificaEstadosGestion($rudecor,$rudeinc);
-
-        if (count($validaEstadosRegular) > 0) {
-            $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
-            $this->addFlash('notihistory', $message);
-            $validado = 0;
-            //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
-        }
-
-        //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON DOBLES INSCRIPCIONES EN LA MISMA UE Y GESTION
-        $validaDobleInscripcionRegular = $this->getVerificaDobleInscripcion($rudecor,$rudeinc);
-        //dump($validaDobleInscripcionRegular);die;
-
-        if (count($validaDobleInscripcionRegular) > 0) {
-            $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion'];
-            $this->addFlash('notihistory', $message);
-            $validado = 0;
-            //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
-        }
+        $dataInscriptionCorr = $this->getHistorial($rudecor);
+        $dataInscriptionIncc = $this->getHistorial($rudeinc);
 
         //*********** PARA ALTERNATIVA SE VERIFICA QUE ULTIMOS GRADOS TENGAN COERENCIA
-        $sqlInc = "SELECT max(anio)as maxanio
-                    FROM
-                    (SELECT 
-                    gestion, nivel, ciclo, grado,
-                    case when ciclo = '1' and grado = '1' then '1' else
-                    case when ciclo = '1' and grado = '2' then '2' else 
-                    case when ciclo = '2' and grado = '1' then '3' else
-                    case when ciclo = '2' and grado = '2' then '4' else 
-                    case when ciclo = '2' and grado = '3' then '5' end end end end
-                    end as anio
-                    FROM (
-                    SELECT
-                    gestion_tipo_id_raep as gestion, superior_facultad_area_tipo_a as nivel, 
-                    superior_especialidad_tipo_id_a as ciclo, superior_acreditacion_tipo_id_a as grado
-                    FROM sp_genera_estudiante_historial('".$rudeinc."') 
-                    WHERE superior_facultad_area_tipo_a = 15
-                    ) a
-                    ) b";
-        $queryveraltInc = $em->getConnection()->prepare($sqlInc);
-        $queryveraltInc->execute();
-        $maxanioInc = $queryveraltInc->fetchAll();
-        if ($maxanioInc){
-            $maxInc = $maxanioInc[0]['maxanio'];
-        } else {
-            $maxInc = '0';
-        }
-
-        $sqlCor = "SELECT max(anio)as maxanio
-                    FROM
-                    (SELECT 
-                    gestion, nivel, ciclo, grado,
-                    case when ciclo = '1' and grado = '1' then '1' else
-                    case when ciclo = '1' and grado = '2' then '2' else 
-                    case when ciclo = '2' and grado = '1' then '3' else
-                    case when ciclo = '2' and grado = '2' then '4' else 
-                    case when ciclo = '2' and grado = '3' then '5' end end end end
-                    end as anio
-                    FROM (
-                    SELECT
-                    gestion_tipo_id_raep as gestion, superior_facultad_area_tipo_a as nivel, 
-                    superior_especialidad_tipo_id_a as ciclo, superior_acreditacion_tipo_id_a as grado
-                    FROM sp_genera_estudiante_historial('".$rudecor."') 
-                    WHERE superior_facultad_area_tipo_a = 15
-                    ) a
-                    ) b";
-        $queryveraltCor = $em->getConnection()->prepare($sqlCor);
-        $queryveraltCor->execute();
-        $maxanioCor = $queryveraltCor->fetchAll();
-        if ($maxanioCor){
-            $maxCor = $maxanioCor[0]['maxanio'];
-        } else {
-            $maxCor = '0';
-        }
-
+        /* $maxInc = $this->getMaxAnioAlternativa($rudeinc);
+        $maxCor = $this->getMaxAnioAlternativa($rudecor);
         if ($validado == 0){
             if (($maxInc != '0') && ($maxCor != '0')){
-                if ($maxanioCor < $maxanioInc){
+                if ($maxCor < $maxInc){
                     $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
                     $this->addFlash('notihistory', $message);
                     $validado = 0;
                 }
             }
-        }   
-
+        } */  
+        
+        $validado = 1;
+       
         return $this->render('SieRegularBundle:UnificacionRude:resulthistorialescorinc.html.twig', array(                   
                     'validado' => $validado,
                     'studentCorr' => $studentCorr,
-                    'dataInscriptionCorrR' => $dataInscriptionCorrR,
-                    'dataInscriptionCorrA' => $dataInscriptionCorrA,
-                    'dataInscriptionCorrE' => $dataInscriptionCorrE,
-                    'dataInscriptionCorrP' => $dataInscriptionCorrP,
+                    'dataInscriptionCorrR' => isset($dataInscriptionCorr['R'])?$dataInscriptionCorr['R']:array(),
+                    'dataInscriptionCorrA' => isset($dataInscriptionCorr['A'])?$dataInscriptionCorr['A']:array(),
+                    'dataInscriptionCorrE' => isset($dataInscriptionCorr['E'])?$dataInscriptionCorr['E']:array(),
+                    'dataInscriptionCorrP' => isset($dataInscriptionCorr['P'])?$dataInscriptionCorr['P']:array(),
                     'studentIncc' => $studentIncc,
-                    'dataInscriptionInccR' => $dataInscriptionInccR,
-                    'dataInscriptionInccA' => $dataInscriptionInccA,
-                    'dataInscriptionInccE' => $dataInscriptionInccE,
-                    'dataInscriptionInccP' => $dataInscriptionInccP
+                    'dataInscriptionInccR' => isset($dataInscriptionIncc['R'])?$dataInscriptionIncc['R']:array(),
+                    'dataInscriptionInccA' => isset($dataInscriptionIncc['A'])?$dataInscriptionIncc['A']:array(),
+                    'dataInscriptionInccE' => isset($dataInscriptionIncc['E'])?$dataInscriptionIncc['E']:array(),
+                    'dataInscriptionInccP' => isset($dataInscriptionIncc['P'])?$dataInscriptionIncc['P']:array()
         ));
+    }
+
+    public function getMaxAnioAlternativa($rude){
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT case when max(anio) isnull then '0' else max(anio) end as maxanio
+                FROM
+                (SELECT 
+                gestion, nivel, ciclo, grado,
+                case when ciclo = '1' and grado = '1' then '1' else
+                case when ciclo = '1' and grado = '2' then '2' else 
+                case when ciclo = '2' and grado = '1' then '3' else
+                case when ciclo = '2' and grado = '2' then '4' else 
+                case when ciclo = '2' and grado = '3' then '5' end end end end
+                end as anio
+                FROM (
+                SELECT
+                gestion_tipo_id_raep as gestion, superior_facultad_area_tipo_a as nivel, 
+                superior_especialidad_tipo_id_a as ciclo, superior_acreditacion_tipo_id_a as grado
+                FROM sp_genera_estudiante_historial('".$rude."') 
+                WHERE superior_facultad_area_tipo_a = 15
+                ) a
+                ) b");
+        $query->execute();
+        $maxanio = $query->fetchAll();
+        return $maxanio['maxanio'];
+    }
+
+    public function getHistorial($rude){
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc;");
+        $query->execute();               
+        $dataInscription = $query->fetchAll();
+        $data = array();
+        foreach ($dataInscription as $key => $inscription) {
+            switch ($inscription['institucioneducativa_tipo_id_raep']) {
+                case '1':
+                    $data['R'][$key] = $inscription;
+                    break;
+                case '2':
+                    $data['A'][$key] = $inscription;
+                    break;
+                case '4':
+                    $data['E'][$key] = $inscription;
+                    break;
+                case '5':
+                    $data['P'][$key] = $inscription;
+                    break;
+            }
+        }
+        
+        return $data;
     }
 
     public function getVerificaEstadosGestion($rudecor,$rudeinc){
@@ -611,17 +533,17 @@ class UnificacionRudeController extends Controller {
         return $query->fetchAll();
     }
 
-    public function getVerificaDobleInscripcion($rudecor,$rudeinc){
+    public function getVerificaDobleInscripcion($rudea,$rudeb){
         
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select cast('Regular' as varchar) as subsistema, cast('Doble inscripcion en la misma Unidad Educativa ' as varchar) as observacion, gestion_rude_b as gestion,institucioneducativa_id_c as institucioneducativa_id,institucioneducativa_c as institucioneducativa,estadomatricula_rude_b,estadomatricula_rude_c,codigo_rude_b,codigo_rude_c
         from (
         select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_fin_r as estadomatricula_rude_b,institucioneducativa_id_raep as institucioneducativa_id_b,institucioneducativa_raep as institucioneducativa_b,codigo_rude_raep as codigo_rude_b
-        from sp_genera_estudiante_historial('". $rudecor ."') 
+        from sp_genera_estudiante_historial('". $rudea ."') 
         where institucioneducativa_tipo_id_raep = 1) b 
         INNER JOIN
         (select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_fin_r as estadomatricula_rude_c,institucioneducativa_id_raep as institucioneducativa_id_c,institucioneducativa_raep as institucioneducativa_c,codigo_rude_raep as codigo_rude_c
-        from sp_genera_estudiante_historial('". $rudeinc ."') 
+        from sp_genera_estudiante_historial('". $rudeb ."') 
         where institucioneducativa_tipo_id_raep = 1
         ) c  ON b.gestion_rude_b = c.gestion_rude_c AND b.institucioneducativa_id_b=c.institucioneducativa_id_c");
 
@@ -644,7 +566,6 @@ class UnificacionRudeController extends Controller {
 
         $studentDatPerInco = $em->getRepository('SieAppWebBundle:EstudianteDatopersonal')->findBy(array('estudiante' => $studentinc));        
         $studentPnpRecSabInco = $em->getRepository('SieAppWebBundle:PnpReconocimientoSaberes')->findBy(array('estudiante' => $studentinc));
-
         //*************GENERANDO BACKUP DEL RUDE INCORRECTO
         $sqlb = "select * from sp_genera_repaldo_rude('".$rudeinc."')";
         $queryverdipb = $em->getConnection()->prepare($sqlb);

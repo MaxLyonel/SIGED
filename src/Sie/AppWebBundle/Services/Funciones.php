@@ -998,10 +998,12 @@ class Funciones {
                 ->andWhere('it = :idTipo')
                 ->andWhere('iec.nivelTipo = :level')
                 ->andWhere('iec.gradoTipo in (:levels)')
+                ->andWhere('em.id in (:mat)')
                 ->setParameter('id', $data['codigoRude'])
                 ->setParameter('idTipo',1)
                 ->setParameter('levels',array(3,4,5,6))
                 ->setParameter('level', 13)
+                ->setParameter('mat', array(4,5,55,11))
                 ->orderBy('iec.gestionTipo', 'ASC')
                 ->addorderBy('ei.fechaInscripcion', 'ASC')
                 ->getQuery();
@@ -1047,10 +1049,11 @@ class Funciones {
     }
 
     public function getSpeciality($data){
+    //dump($data);die;
            $query = $this->em->createQueryBuilder()
                     ->select('esp')
                     ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico', 'ieeth')
-                    ->innerjoin('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
+                    ->innerjoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'esp', 'WITH', 'ieeth.especialidadTecnicoHumanisticoTipo = esp.id')
                     ->where('ieeth.institucioneducativa = :currentSie')
                     ->andwhere('ieeth.gestionTipo = :currentGestion')
                     ->setParameter('currentSie',$data['currentSie'])
@@ -1145,9 +1148,11 @@ class Funciones {
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
                 ->andWhere('it = :idTipo')
+                ->andWhere('em.id in(:estmat)')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->setParameter('id', $data['codigoRude'])
                 ->setParameter('idTipo',1)
+                ->setParameter('estmat',array(4,5,55,11))
                 ->setParameter('gestion',$data['gestion'])
                 ->orderBy('iec.gestionTipo', 'ASC')
                 ->addorderBy('ei.fechaInscripcion', 'ASC')
@@ -1251,20 +1256,23 @@ class Funciones {
     }
 
     public function getTheCurrentYear($fechanacimiento, $fechaLimit){
+        $dias = explode("-", $fechanacimiento, 3);
+        $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+        $edad = (int)((time()-$dias)/31556926 );
+        return $edad;        
+        // list($dia,$mes,$anno) = explode("-",$fechanacimiento);
+        // list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+
+
+        // $ano_diferencia = $annoLimit - $anno;
+        // $mes_diferencia = $mesLimit - $mes;
+        // $dia_diferencia = $diaLimit - $dia;
         
-        list($dia,$mes,$anno) = explode("-",$fechanacimiento);
-        list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
+        // if ($dia_diferencia < 0 && $mes_diferencia <= 0){
+        //     $ano_diferencia--;
+        // }
 
-
-        $ano_diferencia = $annoLimit - $anno;
-        $mes_diferencia = $mesLimit - $mes;
-        $dia_diferencia = $diaLimit - $dia;
-        
-        if ($dia_diferencia < 0 && $mes_diferencia <= 0){
-            $ano_diferencia--;
-        }
-
-        return $ano_diferencia;
+        // return $ano_diferencia;
     }    
 
 
@@ -1484,7 +1492,7 @@ class Funciones {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->andwhere('iec.gestionTipo = :gestion')
                 ->setParameter('id', $form['codigoRude'])
-                ->setParameter('mat', array(4, 5, 11))
+                ->setParameter('mat', array(4, 5, 11, 61, 62, 63))
                 ->setParameter('gestion', $this->session->get('currentyear'))
                 ->orderBy('ei.fechaInscripcion', 'DESC')
                 ->getQuery();

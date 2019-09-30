@@ -173,7 +173,12 @@
 
         var registerNivelation = function(){
 
-        	   formData = $('#regularizationFormId').serialize();
+        	  if($('#form_observation').val()==''){
+              $("#form_observation").focus(); 
+              alert('Debe registrar la obervacion de nivelación');
+              return false;
+            }
+            formData = $('#regularizationFormId').serialize();
           
             $.ajax({
               type: 'post',

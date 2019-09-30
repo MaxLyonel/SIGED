@@ -1,0 +1,36 @@
+ <div class="form-body">
+    <div class="form-group">
+        <div class="row">
+            <div class="row" style="text-align: center"><img width="400" height="350" src="{{asset('uploads/documento_persona/'~ pathToShowImg ~'')}}" alt=""></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+            <strong>Carnet Identidad: </strong></br>{{entity.carnet}}
+            </div>
+            <div class="col-md-4">
+            <strong>complemento: </strong></br>{{entity.complemento}}
+            </div>
+            <div class="col-md-4">
+            {# <strong>Fecha Nacimiento: </strong></br>{{entity.fechaNacimiento | date('d-m-Y')}} #}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+            <strong>Nombre: </strong></br>{{entity.nombre}}
+            </div>
+            <div class="col-md-4">
+            <strong>Paterno: </strong></br>{{entity.paterno}}
+            </div>
+            <div class="col-md-4">
+            <strong>Materno: </strong></br>{{entity.materno}}
+            </div>
+        </div>
+    </div>
+    
+</div>

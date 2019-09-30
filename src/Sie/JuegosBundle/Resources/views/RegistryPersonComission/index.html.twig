@@ -17,6 +17,9 @@
                         <div class="pull-left">
                             <h3 class="panel-title">Busqueda</h3>
                         </div>
+                        <div class="pull-right">
+                            <a href="{{path('listPersonRegister_index')}}">Retornar</a>
+                        </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body no-padding">
@@ -137,12 +140,13 @@
         if(!nombre){
             message+='\nCampo Requerido NOMBRE';
         }
+        /*
         if(!paterno){
             message+='\nCampo Requerido PATERNO';
         }
         if(!materno){
             message+='\nCampo Requerido MATERNO';
-        }
+        }*/
         if(!fechaNacimiento){
             message+='\nCampo Requerido FECHA NACIMIENTO';
         }
@@ -193,12 +197,16 @@
                
     };
     var saveCommission = function(){
-        var formData = $('#idCommissionData').serialize();
+        var formData = new FormData(document.getElementById("idCommissionData"));
        if(confirm('is good??')){
            $.ajax({
                     type: 'post',
-                    url: Routing.generate('registrypersoncomission_saveCommission'),
                     data: formData,
+                    dataType: 'html',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    url: Routing.generate('registrypersoncomission_saveCommission'),
                     beforeSend: function () {
                         $('#resultPerson').empty();
                         $('#resultPerson').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');

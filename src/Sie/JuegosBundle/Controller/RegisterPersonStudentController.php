@@ -20,6 +20,7 @@ use Sie\AppWebBundle\Entity\JdpPersonaInscripcionJuegos;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Sie\JuegosBundle\Controller\RegistroController as registroController;
 
 class RegisterPersonStudentController extends Controller{
 
@@ -569,13 +570,13 @@ class RegisterPersonStudentController extends Controller{
     private function getComisionInscripcion($arrData){
         $em = $this->getDoctrine()->getManager();        
         $queryEntidad = $em->getConnection()->prepare("
-            select string_agg(cast(pij.id as varchar), ',') as ids, eij.posicion, coalesce(eeij.equipo_id,0) as equipo, p.nombre, p.paterno, p.materno, p.carnet, p.complemento, ct.comision from jdp_estudiante_inscripcion_juegos as eij 
+            select string_agg(cast(pij.id as varchar), ',') as ids, eij.posicion, coalesce(eeij.equipo_id,0) as equipo, p.id, p.nombre, p.paterno, p.materno, p.carnet, p.complemento, ct.comision, coalesce(p.foto,'') as foto from jdp_estudiante_inscripcion_juegos as eij 
             inner join jdp_persona_inscripcion_juegos as pij on pij.estudiante_inscripcion_juegos_id = eij.id
             inner join persona as p on p.id = pij.persona_id
             inner join jdp_comision_tipo as ct on ct.id = pij.comision_tipo_id
             left join jdp_equipo_estudiante_inscripcion_juegos as eeij on eeij.estudiante_inscripcion_juegos_id = eij.id
             where eij.id in (".implode(",", $arrData).")
-            group by eij.posicion, coalesce(eeij.equipo_id,0), p.nombre, p.paterno, p.materno, p.carnet, p.complemento, ct.comision
+            group by eij.posicion, coalesce(eeij.equipo_id,0), p.id, p.nombre, p.paterno, p.materno, p.carnet, p.complemento, p.foto, ct.comision
         ");
         $queryEntidad->execute();
         $objInscritos = $queryEntidad->fetchAll();
@@ -596,11 +597,13 @@ class RegisterPersonStudentController extends Controller{
 		        $jsonIdInscription = json_encode($arrIdInscription);
 	        	$jsonPersonaInscripcionJuegosId=json_encode(explode(",", $value["ids"]));
 	        	if($value){
+		        	$arrCouchs[$key]['id'] = base64_encode($value["id"]);
 		        	$arrCouchs[$key]['carnet'] = $value["carnet"];
 		        	$arrCouchs[$key]['complemento'] = $value["complemento"];
 		        	$arrCouchs[$key]['paterno'] = $value["paterno"];
 		        	$arrCouchs[$key]['materno'] = $value["materno"];
 		        	$arrCouchs[$key]['nombre'] = $value["nombre"];
+		        	$arrCouchs[$key]['foto'] = $value["foto"];
 		        	$arrCouchs[$key]['comision'] = $value["comision"];
 		        	$arrCouchs[$key]['idRemove'] = base64_encode($jsonPersonaInscripcionJuegosId);
 	        	}   	
@@ -766,12 +769,67 @@ class RegisterPersonStudentController extends Controller{
     }
 
 
+    public function registerPersonFotoAction(Request $request){
+        $msg_correcto = "";
+        $msg_incorrecto = "";    	      
+        $em = $this->getDoctrine()->getManager();
+        $key = $request->get('key');
+        $form = $request->get('formFoto'.$key);
+        $file = $request->files->get('formFoto'.$key);
+        // dump($request);dump($key);dump($form);dump($file['foto']);dump($this->container->getParameter('kernel.root_dir'));die;
+        if($form and $file){
+            $foto = $file['foto'];
+            $personaId = base64_decode($form['id']);
+            $entidadPersona = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
+            $cedula = $entidadPersona->getCarnet();
+            $complemento = $entidadPersona->getComplemento();
+            $ci = '';
+            if ($complemento == ""){
+                $ci = $cedula;
+            } else {
+                $ci = $cedula.'-'.$complemento;
+            }
+            $adjuntoDireccion = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
+            $adjuntoNombre = $ci.'_fotografia_'.$personaId.'.'.$foto->guessExtension();
+            // $strm = fopen($foto->getRealPath(),'rb');
+            $em->getConnection()->beginTransaction();
+            try{        
+                $entidadPersona->setFoto($ci.'/'.$adjuntoNombre);
+                $em->persist($entidadPersona);
 
+                $foto->move($adjuntoDireccion, $adjuntoNombre);
+                if (!file_exists($adjuntoDireccion.'/'.$adjuntoNombre)){
+                    $em->getConnection()->rollback();
+                    $msg_incorrecto = "Error, fotografia no registrada";
+                } 
+
+                $em->flush(); 
+                $em->getConnection()->commit();
+                $msg_correcto = "Modificado correctamente";
+                      
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $msg_incorrecto = "Error al realizar la modificación, intente nuevamente";
+            }
+        } else {
+            $msg_incorrecto = "Error al procesar el formulario, intente nuevamente";
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(
+            array(
+                'msg_correcto' => $msg_correcto, 
+                'msg_incorrecto' => $msg_incorrecto
+            )
+        );
+    }
 
     public function registerPersonJsonAction(Request $request){
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $sesion = $request->getSession();
+        $id_usuario = $this->session->get('userId');
     	// dump($request);die;
     	//get the send values
     	$form = $request->get('form');
@@ -816,7 +874,19 @@ class RegisterPersonStudentController extends Controller{
             $estudianteInscripcionJuegosEntity = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->find($arrIdInscription[0]);
             $faseId = $estudianteInscripcionJuegosEntity->getFaseTipo()->getId();
             $pruebaId = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getId();
+            $nivelId = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
             $reglaPrueba = $reglaController->getPruebaRegla($gestionActual,$faseId,$pruebaId);
+
+            $registroController = new registroController();
+            $registroController->setContainer($this->container);
+
+            $faseActivo = $registroController->getFaseActivo($faseId, $nivelId, $fechaActual);
+   
+                if (!$faseActivo) {
+                    return $response->setData(array(
+                        'msg_incorrecto' => 'Inscripción cerrada'
+                    ));
+                }
 
             if(count($arrCouchs) < $reglaPrueba->getComisionCupoPresentacion()){
                 foreach ($arrIdInscription as $key => $value) {

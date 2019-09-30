@@ -9,9 +9,10 @@
                         <h4 class="modal-title">Comisión</h4>
                     </div>
                     <div class="modal-body no-padding">
-                        <div class="row">                             
+                        <div class="row" id="tablecouch">  
+                            {% if 1 == 2 %}
                             <div class="table-responsive mb-20">
-                                <table class="table" id="tablecouch">
+                                <table class="table">
                                     <thead>
                                         <tr>
                                             <th>Carnet</th>
@@ -37,7 +38,7 @@
                                             {% else %}
                                                 {% set ci = data.carnet~'-'~data.complemento%}
                                             {% endif %}
-                                            <tr id="row{{ key }}">
+                                            <tr >
                                                 <td>{{carnet}}</td>
                                                 <td>{{complemento}}</td>
                                                 <td>{{paterno}}</td>
@@ -52,49 +53,115 @@
                                             </tr>
                                         {%endfor%}
                                     </tbody>
-                                </table>
+                                </table>                                
                             </div><!-- /.table-responsive -->
-                                <!--/ End basic table -->                       
+                            {% endif %}
+                                <!--/ End basic table -->    
+                            {% for key, data in dataComision %}
+                                {% set comision = data.comision %}
+                                {% set id = data.id %}
+                                {% set nombre = data.nombre %}
+                                {% set paterno = data.paterno %}
+                                {% set materno = data.materno %}
+                                {% set persona = nombre ~" "~ paterno ~" "~ materno %}
+                                {% set carnet = data.carnet %}
+                                {% set idRemove = data.idRemove %}
+                                {% set complemento = data.complemento %}                                            
+                                {% if data.complemento == "" %}
+                                    {% set ci = data.carnet %}
+                                {% else %}
+                                    {% set ci = data.carnet~'-'~data.complemento%}
+                                {% endif %}                                         
+                                {% if data.foto == "" %}
+                                    {% set foto = "user.png" %}
+                                {% else %}
+                                    {% set foto = data.foto %}
+                                {% endif %}
+                                <div id="row{{ key }}" class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                    <div class="panel panel-bg-teal rounded shadow">
+                                        <div class="panel-body">
+                                            <form id="formFoto{{ key }}" name="formFoto{{ key }}" data-toggle="validator" role="form" enctype="multipart/form-data">
+                                                <input type="hidden" name="formFoto{{ key }}[id]" id="id{{ key }}" value="{{ id }}" />
+                                                <ul class="inner-all list-unstyled">
+                                                    <li class="text-center">  
+                                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                            <div id="img{{ key }}" class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100px; height: 100px;">
+                                                                <img src="{{ asset('uploads/documento_persona/'~foto) }}" alt="">
+                                                            </div>
+                                                            <div>
+                                                                <span class="btn btn-info btn-file">
+                                                                    <span class="fileinput-new">Seleccionar</span>
+                                                                    <span class="fileinput-exists">Cambiar</span>
+                                                                    <input name="formFoto{{ key }}[foto]" id="foto{{ key }}" type="file" required />
+                                                                </span>
+                                                                <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="text-center">
+                                                        <h4 class="text-capitalize">{{ ci }}</h4>
+                                                        <p class="text-muted text-capitalize">{{ persona }}</p>
+                                                    </li>
+                                                    <li class="text-center">
+                                                        <p>
+                                                            {{ comision }}
+                                                        </p>
+                                                    </li>
+                                                    <li class="text-center">
+                                                        <button name="formFoto{{ key }}[actualizar]" id="actualiza{{ key }}" type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-form" onclick="confirmaFoto('{{ key }}')" >
+                                                            Actualizar
+                                                        </button>
+                                                        <button name="formFoto{{ key }}[eliminar]" id="eliminar{{ key }}" type="button" class="btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-form" onclick="removeCouch('{{idRemove}}',{{key}});" >
+                                                            Eliminar
+                                                        </button>
+                                                    </li>
+                                                </ul><!-- /.list-unstyled -->
+                                            </form>
+                                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel -->
+                                </div>                                
+                            {% endfor %}                   
                         </div>
-
-                        {% if showOptionRegister %}
-                        <!-- Start condensed table -->                        
-                            {{form_start(form,{'attr':{'id':'formLookForPersonId' }} )}}
+                        <div class="row">  
+                            {% if showOptionRegister %}
+                            <!-- Start condensed table -->                        
                                 <div class="panel panel-info rounded shadow">
-                                    <div class="panel-heading">
-                                        <div class="pull-left">
-                                            <h4 class="panel-title">Buscar persona</h4>
-                                        </div>                                    
-                                        <div class="clearfix"></div>
-                                    </div><!-- /.panel-heading -->
-                                    <div class="panel-body no-padding">
-                                        <div class="form-body">     
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{form_widget(form.carnet)}}
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        {{form_widget(form.complemento)}}
-                                                    </div>
-                                                </div>
+                                    {{form_start(form,{'attr':{'id':'formLookForPersonId' }} )}}
+                                        <div class="panel-heading">
+                                            <div class="pull-left">
+                                                <h4 class="panel-title">Buscar persona</h4>
                                             </div>                                    
-                                        </div><!-- /.form-body -->
-                                        <div class="form-footer">
-                                            <div class="pull-right">
-                                                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
-                                                {{form_widget(form.find)}}                                        
-                                            </div>
                                             <div class="clearfix"></div>
-                                        </div><!-- /.form-footer -->   
-                                    </div><!-- /.panel-body -->
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body no-padding">
+                                            <div class="form-body">     
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            {{form_widget(form.carnet)}}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{form_widget(form.complemento)}}
+                                                        </div>
+                                                    </div>
+                                                </div>                                    
+                                            </div><!-- /.form-body -->
+                                            <div class="form-footer">
+                                                <div class="pull-right">
+                                                    <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                                    {{form_widget(form.find)}}                                        
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div><!-- /.form-footer -->   
+                                        </div><!-- /.panel-body -->
+                                    {{form_end(form)}}
                                 </div>
-                            {{form_end(form)}}
-                        {% else %}
-                            <div class="alert alert-warning">
-                                <strong>Entrenador registrado</strong> 
-                            </div>                            
-                        {% endif %}
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <strong>Entrenador registrado</strong> 
+                                </div>                            
+                            {% endif %}
+                        </div>
                     </div>
 					<div id="idPersonData">
 					</div>
