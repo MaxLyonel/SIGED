@@ -72,6 +72,14 @@ class PrintCredencialController extends Controller{
             ));    
     }
 
+    public function indexMasivoAction(Request $request){
+
+        //validation if the user is logged
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+        return $this->render('SieJuegosBundle:PrintCredencial:index_masivo.html.twig');    
+    }
 
     private function indexForm(){
         $arrCriteria = array('Estudiante','Acompañante','Delegado, Jefe de mision y organizador','Salud','Apoyo','Prensa','Invitado');
@@ -301,6 +309,7 @@ class PrintCredencialController extends Controller{
             case 5:
                 # code...
                 $reportDownload = 'jdp_crd_prensa_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                
                 break;
 
             case 6:
@@ -312,7 +321,7 @@ class PrintCredencialController extends Controller{
                 # code...
                 break;
         }
-        //dump(($this->container->getParameter('urlreportweb') . $reportDownload));die;
+        
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'juegos_credencial_'.$id .'_2019.pdf'));
@@ -322,12 +331,7 @@ class PrintCredencialController extends Controller{
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
-
-
-
-        // return $this->render('SieJuegosBundle:PrintCredencial:donwload.html.twig', array(
-        //         // ...
-        //     ));    
+   
     }
 
 }
