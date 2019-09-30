@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba;
+use Sie\AppWebBundle\Entity\UploadFileControl;
 use \Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -77,14 +77,15 @@ class UpInfraFileController extends Controller{
         $form['gestion'] = $this->session->get('currentyear');
         
         return $this->render('SieHerramientaBundle:UpInfraFile:lookforData.html.twig', array(
-                'form' => $this->creeateFormUpFile()->createview(),
+                'form' => $this->creeateFormUpFile(json_encode($form))->createview(),
         ));    
     }
 
 
-    private function creeateFormUpFile(){
+    private function creeateFormUpFile($jsondata){
         return $this->createFormBuilder()
         ->add('upfile', 'file', array() )
+        ->add('dataUe', 'hidden', array('mapped' => false, 'data' => $jsondata))
         ->add('sendata', 'submit', array('label'=>'Subir Archivo', 'attr'=>array('class'=>'btn btn-primary', 'id'=>'btnGuardar')))
         ->getForm();
     }
@@ -94,11 +95,13 @@ class UpInfraFileController extends Controller{
         $infoFile = $request->files;
         $arrFile = $_FILES['form'];
         $arrForm = $request->get('form');
+        $arrDataUe = json_decode($arrForm['dataUe'],true);
+        $sieUpload = $arrDataUe['sie'];
+
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $sw = false;
-        // dump($arrFile);
-        // dump($arrFile['name']['upfile']);
+
 
         $strName = $arrFile['name']['upfile'];
         $last_word_start = strrpos ( $strName , ".") + 1;
@@ -107,11 +110,13 @@ class UpInfraFileController extends Controller{
         $aValidTypes = array('emp');
         if (!in_array(strtolower($fileType), $aValidTypes)) {
             $sw = true;
-            $this->addFlash('warningcons', 'El archivo que intenta subir No tiene la extension correcta');
+            $this->addFlash('warningupfileinfra', 'El archivo que intenta subir No tiene la extension correcta');
+            $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+            return $this->returnResponse($arrData);
         }
         // //validate the files weight
         // if (!( 10001 < $oFile->getSize()) && !($oFile->getSize() < 2000000000)) {
-        //     $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir no tiene el tamaño correcto');
+        //     $session->getFlashBag()->add('warningupfileinfra', 'El archivo que intenta subir no tiene el tamaño correcto');
         //     return $this->redirect($this->generateUrl('consolidation_sie_web'));
         // }
         // //make the temp dir name
@@ -121,7 +126,9 @@ class UpInfraFileController extends Controller{
         // nothing to do     
         }else{
             $sw = true;
-            $this->addFlash('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+            $this->addFlash('warningupfileinfra', 'Problemas con permisos al intenar subir el archivo emp');
+            $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+            return $this->returnResponse($arrData);
         }
 
         //check if the file exist to create the same
@@ -134,9 +141,11 @@ class UpInfraFileController extends Controller{
         move_uploaded_file($arrFile['tmp_name']['upfile'], $dirtmp.'/'.$arrFile['name']['upfile']);
         // unzip the infra file
         if (!$result = exec('unzip ' . $dirtmp . '/' . $strName . ' -d ' . $dirtmp . '/')) {
-            $this->addFlash('warningcons', 'El archivo ' . $strName . ' tiene problemas para descomprimirse');
+            $this->addFlash('warningupfileinfra', 'El archivo ' . $strName . ' tiene problemas para descomprimirse');
             system('rm -fr ' . $dirtmp);
-            return $this->redirect($this->generateUrl('consolidation_sie_web'));
+            // return $this->redirect($this->generateUrl('consolidation_sie_web'));
+            $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+                return $this->returnResponse($arrData);
         } 
 
 
@@ -144,9 +153,6 @@ class UpInfraFileController extends Controller{
         $aDataFileUnzip = explode('/', $result);        
         $nameFileUnZip = str_replace(' ', '\ ', $aDataFileUnzip[sizeof($aDataFileUnzip) - 1]);
         $decodeFile = substr($nameFileUnZip,0,strlen($nameFileUnZip)-4);
-        // dump($decodeFile);
-        // dump($nameFileUnZip);
-        // die;
         //convert the file to base64
         system('base64 -d -i ' . $dirtmp . '/' . $nameFileUnZip . ' >  ' . $dirtmp . '/' . $nameFileUnZip . '.txt',$output);
         //convert file to UTF8
@@ -156,75 +162,147 @@ class UpInfraFileController extends Controller{
         // $fileInfoContent = file_get_contents($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 1].'.txt');
         $fileInfoContent = file_get_contents($dirtmp . '/' . $decodeFile);
         $arrFileInfoContent = json_decode($fileInfoContent,true);
-        
-        dump($arrFileInfoContent);
+        // to validate the correct LE jurisdiccion_geografica
+        //get the infor about the UE
+        $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sieUpload);
+        // dump($objUe->getLeJuridicciongeografica()->getId());
+        // die;
+        if($objUe->getLeJuridicciongeografica()->getId() == $arrFileInfoContent['cabecera']['jurisdiccion_geografica_id']){
+            // nothing to do 
+        }else{
+            system('rm -fr ' . $dirtmp);
+            $sw = true;
+            $this->addFlash('warningupfileinfra', 'Codigo SIE no pertenece al local educativo');
+            $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+            return $this->returnResponse($arrData);
+        }
+
         // create the  year main directory
-        $pathMainDir = $this->get('kernel')->getRootDir() . '/../web/uploads/filesInfra/archivos/';
-        $pathYearDir = $pathMainDir.$arrFileInfoContent['cabecera']['gestion_tipo_id'];
+        $pathMainDir   = $this->get('kernel')->getRootDir() . '/../web/uploads/filesInfra/archivos/';
+        $pathYearDir   = $pathMainDir.$arrFileInfoContent['cabecera']['gestion_tipo_id'];
+        $pathDirToSave = $arrFileInfoContent['cabecera']['gestion_tipo_id'];
+
+
+
         if(!file_exists($pathYearDir)){
             mkdir($pathYearDir, 0770);
         }else{
             if (!is_readable($pathYearDir)) {
-                $this->addFlash('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                $this->addFlash('warningupfileinfra', 'Problemas con permisos al intenar subir el archivo emp');
                 system('rm -fr ' . $dirtmp);
+                $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+                return $this->returnResponse($arrData);
             }
         }
         // create distrito dir
         $pathDistritoDir = $pathYearDir.'/'.$arrFileInfoContent['cabecera']['codigo_distrito'];
+        $pathDirToSave  = $pathDirToSave .'/'.$arrFileInfoContent['cabecera']['codigo_distrito'];
         if(!file_exists($pathDistritoDir)){
             mkdir($pathDistritoDir, 0770);
         }else{
             if (!is_readable($pathDistritoDir)) {
-                $this->addFlash('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                $this->addFlash('warningupfileinfra', 'Problemas con permisos al intenar subir el archivo emp');
                 system('rm -fr ' . $dirtmp);
+                $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+                return $this->returnResponse($arrData);
             }
         }
         // create cod local educativo dir
         $pathLocalEduDir = $pathDistritoDir.'/'.$arrFileInfoContent['cabecera']['jurisdiccion_geografica_id'];
+        $pathDirToSave = $pathDirToSave.'/'.$arrFileInfoContent['cabecera']['jurisdiccion_geografica_id'];
         if(!file_exists($pathLocalEduDir)){
             mkdir($pathLocalEduDir, 0770);
         }else{
             if (!is_readable($pathLocalEduDir)) {
-                $this->addFlash('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                $this->addFlash('warningupfileinfra', 'Problemas con permisos al intenar subir el archivo emp');
                 system('rm -fr ' . $dirtmp);
+                $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+                return $this->returnResponse($arrData);
             }
         }
         // create operativo directory
         $pathOperativoDir = $pathLocalEduDir.'/'.$arrFileInfoContent['cabecera']['operativo_tipo_id'];
+        $pathDirToSave = $pathDirToSave.'/'.$arrFileInfoContent['cabecera']['operativo_tipo_id'];
         if(!file_exists($pathOperativoDir)){
             mkdir($pathOperativoDir, 0770);
         }else{
             if (!is_readable($pathOperativoDir)) {
-                $this->addFlash('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                $this->addFlash('warningupfileinfra', 'Problemas con permisos al intenar subir el archivo emp');
                 system('rm -fr ' . $dirtmp);
+                $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+                return $this->returnResponse($arrData);
             }
         }
-        dump($pathOperativoDir);
+        
+
+        // save into db info about the file
+        //look for row on the db with the head data
+        $objUploadFile = $em->getRepository('SieAppWebBundle:UploadFileControl')->findOneBy(array(
+            'codUe'     => $arrFileInfoContent['cabecera']['jurisdiccion_geografica_id'],
+            // 'operativo' => $arrFileInfoContent['cabecera']['operativo_tipo_id'],
+            'operativo' => 7,
+            'gestion'   => $arrFileInfoContent['cabecera']['gestion_tipo_id']
+        ));
+        
+        //validate if the file was uploaded
+        if ($objUploadFile) {
+            if ($objUploadFile->getEstadoFile()) {
+                $sw = true;
+                system('rm -fr ' . $dirtmp);
+                $this->addFlash('warningupfileinfra', 'Archivo no cargado. El archivo que intenta subir ya fue cargado al repositorio');
+                $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+                return $this->returnResponse($arrData);
+                // return $this->redirect($this->generateUrl('consolidation_sie_web'));
+            } else {
+
+                $objUploadFile->setEstadoFile(1);
+                $objUploadFile->setDateUpload(new \DateTime('now'));
+                $objUploadFile->setRemoteAddr($_SERVER['REMOTE_ADDR']);
+                $objUploadFile->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+                $em->persist($objUploadFile);
+                $em->flush();
+            }
+        }else{
+
+                $objUploadFileNew = new UploadFileControl();
+                $objUploadFileNew->setCodUe($arrFileInfoContent['cabecera']['jurisdiccion_geografica_id']);
+                $objUploadFileNew->setBimestre($arrFileInfoContent['cabecera']['operativo_tipo_id']);
+                // $objUploadFileNew->setOperativo($arrFileInfoContent['cabecera']['operativo_tipo_id']);
+                $objUploadFileNew->setOperativo(7);
+                $objUploadFileNew->setVersion($arrFileInfoContent['cabecera']['version']);
+                $objUploadFileNew->setEstadoFile(1);
+                $objUploadFileNew->setGestion($arrFileInfoContent['cabecera']['gestion_tipo_id']);
+                $objUploadFileNew->setDistrito($arrFileInfoContent['cabecera']['codigo_distrito']);
+                $objUploadFileNew->setPath('/consolidacion_online/' .$pathDirToSave. '/' . $decodeFile);
+                $objUploadFileNew->setDateUpload(new \DateTime('now'));
+                $objUploadFileNew->setRemoteAddr($_SERVER['REMOTE_ADDR']);
+                $objUploadFileNew->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+                $em->persist($objUploadFileNew);
+                $em->flush();
+
+        }
         //move the file on the new local path
         // check if the file exists to move it
         if(is_readable($dirtmp) && is_readable($pathOperativoDir)){
-          rename($dirtmp, $pathOperativoDir);  
+          rename($dirtmp, $pathOperativoDir);
         }else{
-            $this->addFlash('warningcons', 'Problemas al intenar subir el archivo emp');
-            system('rm -fr ' . $dirtmp);
-        }
+            $this->addFlash('warningupfileinfra', 'Problemas al intenar subir el archivo emp');
+          system('rm -fr ' . $dirtmp);
+        }       
+        $this->addFlash('warningupfileinfra', 'Archivo subido y registrado');
+        $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'success');
+        return $this->returnResponse($arrData);
+      
+    }
+    private function returnResponse($data){
 
-       
-        die;
-
-
-
-
-
-
-        
-        $rolUser = $this->session->get('roluser');
+         $rolUser = $this->session->get('roluser');
          return $this->render('SieHerramientaBundle:UpInfraFile:upinfrafile.html.twig', array(
-            'sw' => $sw, 
-            'roluser' => $rolUser, 
+            'sw' => $data['sw'], 
+            'roluser' => $data['rolUser'], 
+            'messageType' => $data['messageType'], 
         )); 
 
-      
     }
 
 
