@@ -52,11 +52,9 @@
 <script>
 
     function guardarMenu() {
-
         var menu = $('#form_nombre').val();
         var icono  = $('#form_icono').val();
         var imagen = '{{ asset("img/loading96.gif") }}';
-
         if (menu == '') {
             swal("Debe Introducir un nombre para el Menú Principal");
             return false;
@@ -65,12 +63,8 @@
             swal("Debe Seleccionar un Icono");
             return false;
         }
-
         var formData = $('#formSistema').serialize();
-
-
         $('#modal').modal('hide');
-
             $.ajax({
                 type: 'post',
                 url: "{{ path('gestionmenuprincipal_createmenuprincipal') }}",
@@ -97,16 +91,11 @@
                         $(".alert").slideUp(1000);
                     });
                 }
-
-
             });
-
     }
     $( document ).ready(function() {
         $('.icp-auto').iconpicker();
     });
-
-
 </script>
 
 

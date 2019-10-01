@@ -273,13 +273,15 @@
                             <span class="selected"></span>
                         </a>
                     </li>
-                    
-                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  12 ,'userId':app.session.get('userId')  })) }}
-                   {# <li class="panel">
-                            <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">
-                                <i class="fa fa-bar-chart-o"></i> Áreas <i class="fa fa-caret-down"></i>
+                   {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  12 ,'userId':app.session.get('userId')  })) }}
+                    {# {% if(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  12 ,'userId':app.session.get('userId')  })=='') %}
+                         {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  12 ,'userId':app.session.get('userId')  })) }}
+                    {% else %}
+                        <li class="panel">
+                            <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menu">
+                                Sistema de Menús <i class="fa fa-caret-down"></i>
                             </a>
-                            <ul class="collapse nav" id="menuAreas">
+                            <ul class="collapse nav" id="menu">
                                 <li>
                                     <a href="{{ path('gestionmenu_administra_sistema') }}">
                                         <i class="fa fa-edit"></i> gestion Sistemas
@@ -312,8 +314,12 @@
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
-                    </li>#}
-                
+                    </li>
+                    {% endif %} #}
+                   
+                    
+                   
+              
                 </ul>
 
                 <!-- /.sidebar-menu -->

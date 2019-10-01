@@ -80,9 +80,7 @@ class GestionMenuController extends Controller {
         return $this->render('SieAppWebBundle:GestionMenu:sistema.html.twig', array('sistema'=>$sistema));
     }
     public function administraSistemanuevoAction(){
-
         $form = $this->createFormBuilder()
-            //->setAction($this->generateUrl('gestionmenu_administra_sistema_create'))
             ->add('sistema', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('abreviatura', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true,'max_length' => 5)))
             ->add('observaciones', 'textarea', array( 'required' => false,'attr' => array('class' => 'form-control','enabled' => true)))
@@ -90,14 +88,12 @@ class GestionMenuController extends Controller {
             ->add('url', 'text', array('attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label'=> 'Guardar', 'attr'=>array('class'=>'btn btn-primary ','onclick'=>'guardarSistemanuevo()')))
             ->getForm();
-        return $this->render('SieAppWebBundle:GestionMenu:nuevoSistema.html.twig',array(
-            'form'=>$form->createView()
-        ));
+        return $this->render('SieAppWebBundle:GestionMenu:nuevoSistema.html.twig',array('form'=>$form->createView()));
     }
 
     public function administraSistemacreateAction(Request $request){
         $form = $request->get('form');
-        $sistemanom               = $form['sistema'];
+        $sistemanom              = $form['sistema'];
         $observaciones           = $form['observaciones'];
         $abre                    = $form['abreviatura'];
         $abreviatura             =strtoupper($abre);
@@ -106,7 +102,6 @@ class GestionMenuController extends Controller {
         $url                     = $form['url'];
         $em = $this->getDoctrine()->getManager();
         $sistema=new SistemaTipo();
-       // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_tipo');")->execute();
         $tamaño=strlen($abreviatura);
         if($tamaño > 5){
             $mensaje = 'La Abreviatura: ' . $sistema->getAbreviatura() . 'solo debe contener como máximo 5 letras';
@@ -115,24 +110,34 @@ class GestionMenuController extends Controller {
                 ->add('error', $mensaje);
         }
         else{
-            $sistema->setSistema($sistemanombre);
-            $sistema->setAbreviatura($abreviatura);
-            $sistema->setObs($observaciones);
-            $sistema->setBundle($bundle);
-            $sistema->setUrl($url);
-            $em->persist($sistema);
-            $em->flush();
-            $mensaje = 'El Sistema ' . $sistema->getSistema() . ' Fue Registrado con éxito';
-            $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-        }
-        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
+            $em->getConnection()->beginTransaction();
+            try {
+                $sistema->setSistema($sistemanombre);
+                $sistema->setAbreviatura($abreviatura);
+                $sistema->setObs($observaciones);
+                $sistema->setBundle($bundle);
+                $sistema->setUrl($url);
+                $em->persist($sistema);
+                $em->flush();
+                $mensaje = 'El Sistema ' . $sistema->getSistema() . ' Fue Registrado con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+                $em->getConnection()->commit();
+                $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
                                                 ORDER BY 2');
-        $query->execute();
-        $listasistema = $query->fetchAll();
-        return $this->render('SieAppWebBundle:GestionMenu:listaSistemas.html.twig',array('listasistema'=>$listasistema));
+                $query->execute();
+                $listasistema = $query->fetchAll();
+                return $this->render('SieAppWebBundle:GestionMenu:listaSistemas.html.twig',array('listasistema'=>$listasistema));
+            }catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $mensaje = 'Ocurrio un error en el registro';
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('error', $mensaje);
+            }
+        }
     }
 
     public function administraSistemaeditAction(Request $request){
@@ -241,21 +246,12 @@ class GestionMenuController extends Controller {
     // Administracion de Menús
     public function nuevomenuAction(){
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT menu_nivel_tipo FROM menu_nivel_tipo 
-                                                WHERE menu_nivel_tipo.id>=100
-                                                ORDER BY 1");
-        $query->execute();
-        $listaicono= $query->fetchAll();
-        $icono = array();
-        for ($i = 0; $i < count($listaicono); $i++) {
-            $icono[$listaicono[$i]['menu_nivel_tipo']] = $listaicono[$i]['menu_nivel_tipo'];
-        }
         $form = $this->createFormBuilder()
             ->add('nombre', 'text', array( 'attr' => array('class' => 'form-control')))
             ->add('icono', 'text', array('attr' => array('class' => 'form-horizontal icp icp-auto','autocomplete'=>'off')))
             ->add('guardar', 'button', array('label'=> 'Guardar Menú', 'attr'=>array('class'=>'btn btn-primary','onclick'=>'guardarMenu()')))
             ->getForm();
-        return $this->render('SieAppWebBundle:GestionMenu:nuevoMenu.html.twig',array('form'=>$form->createView(),'listaicono'=>$listaicono));
+        return $this->render('SieAppWebBundle:GestionMenu:nuevoMenu.html.twig',array('form'=>$form->createView()));
     }
     public function createMenuAction(Request $request){
         $em = $this->getDoctrine()->getManager();
@@ -586,7 +582,6 @@ class GestionMenuController extends Controller {
     //MODULO ASIGNACION ROL-SISTEMA
 
     public function asignarrolsistemaAction(Request $request){
-
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('SELECT stipo.id,stipo.sistema from sistema_tipo stipo
                                                 ORDER BY 1');
@@ -1594,10 +1589,10 @@ ORDER BY 2,3,4");
         $query->execute();
         $subsistemas = $query->fetch();
         $cadena=$subsistemas['sub_sistema'];
-        $sistemas = explode(",", $cadena);
+        $sistemas = explode(",", $cadena);//dump($subsistemas['sub_sistema']);die;
         $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.id=$idsistema");
         $query->execute();
-        $abreviatura = $query->fetch();
+        $abreviatura = $query->fetch(); 
         for ($i = 0; $i < count($sistemas); $i++) {
             if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
             { $sw=1; break; }
