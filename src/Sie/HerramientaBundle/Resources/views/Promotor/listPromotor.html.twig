@@ -127,10 +127,15 @@
         }
 
         var registerPromotor = function(){
+
+            var nameCDL = $('#form_nombreclub').val();
+            if(!(nameCDL.length > 0)){
+                alert('El Nombre de Club es obligatorio...');
+                return false;
+            }
+            
             var dataForm = $('#registerPromotorId').serialize();
             
-             
-
             swal({
     		    title: "¿Está segura/o de agregar al promotor?",
     		    icon: "warning",

@@ -30,7 +30,7 @@ class UnificacionRudeController extends Controller {
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        return $this->redirectToRoute('principal_web');
+        // return $this->redirectToRoute('principal_web');
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
@@ -350,16 +350,16 @@ class UnificacionRudeController extends Controller {
                     }
                 }
                 if(($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1) and $sw == 0){
-                    if ($studenta->getSegipId() == 1){
-                        $corr = 'a';
-                        $inc = 'b';
+                    if ($studenta->getSegipId() == 1 and $studentb->getSegipId() == 0){
+                        $corr = $rudea;
+                        $inc = $rudeb;
                     } 
-                    if ($studentb->getSegipId() == 1){
-                        $corr = 'b';
-                        $inc = 'a';
+                    if ($studentb->getSegipId() == 1 and $studenta->getSegipId() == 0){
+                        $corr = $rudeb;
+                        $inc = $rudea;
                     }
-                    $this->addFlash('autoselcorr', 'Se ha seleccionado al rude con el Carnet de Identidad validado por Segip como el rude correcto.'); 
-                    goto corrinc;
+                    $this->addFlash('autoselcorr', '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'); 
+                    //goto corrinc;
                 }
             }
         }

@@ -18,7 +18,7 @@
     <!-- Start page header -->
     <div id="tour-6" class="header-content">
         <h2><i class="fa fa-th-large"></i>Matrícula Educativa<span>Subsistema de Educación Alternativa</span></h2>
-        <div" class="breadcrumb-wrapper hidden-xs">
+        <div class="breadcrumb-wrapper hidden-xs">
             <!--<span class="label">Info.:</span>-->
             <ol class="breadcrumb">
                 <li class="active">Gestión: {{gestion}}</li>
@@ -76,34 +76,48 @@
                                     <tr>
                                         <th class="text-center" style="width:250px" >Reportes Generales</th>
                                         <th >Descarga</th>
+                                        <th style="width:15px"></th>
+                                        {# <th >Estado Matricula</th> #}
                                     </tr>
                                     <tr>
                                         <td>Estadistica</td>
                                         <td>
                                             <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
                                             <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
-
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEstadoMatriculaPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEstadoMatriculaXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
                                     <tr>
                                         <td>Especialidades</td>
                                         <td>
-
                                             <button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
                                             <button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialidadPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialidadlXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
 
                                 </table>
@@ -121,57 +135,60 @@
                                     <tr>
                                         <th class="text-center" style="width:250px">Reportes Especificos</th>
                                         <th>Descarga</th>
+                                        <th style="width:15px"></th>
+                                        {# <th >Estado Matricula</th> #}
                                     </tr>
-
                                     <tr>
-
                                         <td>Estadistica Completa</td>
                                         <td>
                                             <button id="tour-13" onclick="document.forms['formEstadisticaCompletoPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
                                             <button id="tour-14" onclick="document.forms['formEstadisticaCompletoXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
-
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEstadoMatriculaCompletoPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEstadoMatriculaCompletoXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
-
                                     <tr>
-
                                         <td>Especialidades Completa</td>
                                         <td>
                                             <button id="tour-13" onclick="document.forms['formEspEstadisticaCompletoPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
                                             <button id="tour-14" onclick="document.forms['formEspEstadisticaCompletoXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
-
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialidadCompletoPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialidadCompletoXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
-
                                     <tr>
-
                                         <td>Cant. CEAs con Especialidades</td>
                                         <td>
                                             <button id="tour-13" onclick="document.forms['formEspCentrosPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
                                             <button id="tour-14" onclick="document.forms['formEspCentrosXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
-
                                         </td>
                                     </tr>
-
-
                                     <tr>
                                         <td>
                                             <select width="250px" style="width: 250px" id="listaesp" class="form-control btn-dpl" name="listaesp" onchange="this.form.submit();">
@@ -180,10 +197,8 @@
                                                     <option value="{{ item.id }}">{{ item.especialidad }}</option>
                                                 {% endfor %}
                                             </select>
-
                                         </td>
                                         <td>
-
                                             <button id="tour-13" onclick="document.forms['formEspecialidadPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
@@ -191,16 +206,21 @@
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEspecialidadEstadoMatriculaPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEspecialidadEstadoMatriculaXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
-
                                     <tr>
                                         <td>
-
                                             <input type="text" width="250px" style="width: 250px" id="sie" name="sie" required="required" class="form-control" placeholder="Inserte SIE para especialidades" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
-
                                         </td>
                                         <td>
-
                                             <button id="tour-13" onclick="cargaSie();document.forms['formCentroPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
@@ -208,13 +228,19 @@
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="cargaSie();document.forms['formCentroEspecialidadPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="cargaSie();document.forms['formCentroEspecialidadXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
-
                                     <tr>
                                         <td>
-
                                             <input type="text" width="250px" style="width: 250px" id="sie2" name="sie2" required="required" class="form-control" placeholder="Inserte SIE para estadisticas" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
-
                                         </td>
                                         <td>
                                             <button id="tour-13" onclick="cargaSie2();document.forms['formCentroEstPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
@@ -224,6 +250,15 @@
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
                                         </td>
+                                        {# <td></td>
+                                        <td>
+                                            <button id="tour-13" onclick="cargaSie2();document.forms['formCentroEstadoMatriculaPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="cargaSie2();document.forms['formCentroEstadoMatriculaXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td> #}
                                     </tr>
                                 </table>
                                 <div>
@@ -284,7 +319,7 @@
                         </div>
                     </div>
                 </div>
-
+                {# reportes generales #}
                 <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_pdf') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
                     <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
@@ -309,7 +344,6 @@
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                 </form>
-
                 {#reporte nuevo completo#}
                 <form name="formEstadisticaCompletoPdf" id="formEstadisticaCompletoPdf" role="form" action="{{ path('estadistica_alternativa_informacion_completa_print_pdf') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
@@ -335,14 +369,6 @@
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                 </form>
-
-
-
-
-
-
-
-
                 <form name="formEspCentrosPdf" id="formEspCentrosPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_centro_print_pdf') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
                     <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
@@ -398,7 +424,96 @@
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                     <input type="hidden" id="siecentroestx" name="siecentroestx" />
                 </form>
-
+                {# estado matricula ###############################################}
+                {# reportes generales estado matricula #}
+                <form name="formEstadisticaEstadoMatriculaPdf" id="formEstadisticaEstadoMatriculaPdf" role="form" action="{{ path('estadistica_alternativa_estadomatricula_general_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                    <input type="hidden" name="tipo" value="pdf" />     
+                </form> 
+                <form name="formEstadisticaEstadoMatriculaXls" id="formEstadisticaEstadoMatriculaXls" role="form" action="{{ path('estadistica_alternativa_estadomatricula_general_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                    <input type="hidden" name="tipo" value="xls" />
+                </form>
+                <form name="formEstadisticaEspecialidadPdf" id="formEstadisticaEspecialidadPdf" role="form" action="{{ path('estadistica_esp_alternativa_estadomatricula_general_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="pdf" />
+                </form>
+                <form name="formEstadisticaEspecialidadlXls" id="formEstadisticaEspecialidadlXls" role="form" action="{{ path('estadistica_esp_alternativa_estadomatricula_general_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="xls" />
+                </form>
+                {#reporte nuevo completo estado matricula#}
+                <form name="formEstadisticaEstadoMatriculaCompletoPdf" id="formEstadisticaCompletoPdf" role="form" action="{{ path('estadistica_alternativa_estadomatricula_completa_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="pdf" />
+                </form>
+                <form name="formEstadisticaEstadoMatriculaCompletoXls" id="formEstadisticaEstadoMatriculaCompletoXls" role="form" action="{{ path('estadistica_alternativa_estadomatricula_completa_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="xls"/>
+                </form>
+                <form name="formEstadisticaEspecialidadCompletoPdf" id="formEstadisticaEspecialidadCompletoPdf" role="form" action="{{ path('estadistica_esp_alternativa_estadomatricula_completa_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="pdf"/>
+                </form>
+                <form name="formEstadisticaEspecialidadCompletoXls" id="formEstadisticaEspecialidadCompletoXls" role="form" action="{{ path('estadistica_esp_alternativa_estadomatricula_completa_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="xls"/>
+                </form>
+                {# estado matricula por sie y especialidad#}
+                <form name="formEspecialidadEstadoMatriculaPdf" id="formEspecialidadEstadoMatriculaPdf" role="form" action="{{ path('estadistica_especialidad_estadomatricula_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="pdf" />
+                    <input type="hidden" id="idesp" name="idesp" class ="esp"/>
+                </form>
+                <form name="formEspecialidadEstadoMatriculaXls" id="formEspecialidadEstadoMatriculaXls" role="form" action="{{ path('estadistica_especialidad_estadomatricula_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />
+                    <input type="hidden" name="tipo" value="xls" />
+                    <input type="hidden" id="idesp" name="idesp" class="esp"/>
+                </form>
+                <form name="formCentroEspecialidadPdf" id="formCentroEspecialidadPdf" role="form" action="{{ path('estadistica_busqueda_especialidad_estadomatricula_centro_print') }}" method="POST" >
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="tipo" value="pdf" />
+                    <input type="hidden" id="sie1" name="sie1" class ="sie1" />
+                </form>
+                <form name="formCentroEspecialidadXls" id="formCentroEspecialidadXls" role="form" action="{{ path('estadistica_busqueda_especialidad_estadomatricula_centro_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="tipo" value="xls" />
+                    <input type="hidden" id="sie1" name="sie1"  class ="sie1"/>
+                </form>
+                <form name="formCentroEstadoMatriculaPdf" id="formCentroEstadoMatriculaPdf" role="form" action="{{ path('estadistica_busqueda_estadomatricula_est_centro_print') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="tipo" value="pdf" />
+                    <input type="hidden" id="sie2" name="sie2"  class ="sie2"/>
+                </form>
+                <form name="formCentroEstadoMatriculaXls" id="formCentroEstadoMatriculaXls" role="form" action="{{ path('estadistica_busqueda_estadomatricula_est_centro_print') }}" method="POST" >
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="tipo" value="xls" />
+                    <input type="hidden" id="sie2" name="sie2"  class ="sie2"/>
+                </form>
 
             {% endif %}
             {% if infoEntidad is defined %}
@@ -641,8 +756,9 @@
                 var value= $(this).val();
                 $("#idesp").val(value);
                 $("#idespx").val(value);
-                var  a=$("#idesp").val();
-                //alert(a);
+                $(".esp").val(value);
+                var  a=$("#ides").val();
+               // alert(a);
             })
         });
 
@@ -741,12 +857,21 @@
             //alert(sie);
             $("#siecentrop").val(sie);
             $("#siecentrox").val(sie);
+            $(".sie1").val(sie);
         };
         function cargaSie2(){
             var sie2 = $('#sie2').val();
-            //alert(sie);
             $("#siecentroestp").val(sie2);
             $("#siecentroestx").val(sie2);
+            $(".sie2").val(sie2);
+        };
+        function validar(){
+            if($('#sie').val() == ""){
+                alert('Ingrese codigo SIE');
+                return false;
+            }else{
+                return true;
+            }
         };
         //$(function() {
           //  $('#sie').change(function() {

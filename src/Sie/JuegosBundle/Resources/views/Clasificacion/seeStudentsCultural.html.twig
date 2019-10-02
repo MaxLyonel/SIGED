@@ -130,7 +130,7 @@
             <div class="panel panel-teal shadow">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h3 class="panel-title">Deportistas Registrados</h3>
+                        <h3 class="panel-title">Estudiantes Registrados</h3>
                     </div><!-- /.pull-left -->
                     <div class="pull-right">
                     </div><!-- /.pull-right -->
@@ -138,7 +138,12 @@
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
                     <ul class="list-unstyled list-real-estate">
-                        <div id="listaInscritos"></div> 
+                        <div id="listaInscritos">
+                            {% for estKey, dataEst in objCultural %}
+                                <!--<li id="list{{estKey}}" class="list-group-item no-padding">{{dataEst}}<div class="pull-right"><a href="#" onclick="getEliminarInscripcion('{{estKey}}');"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>-->
+                                <li id="list{{estKey}}" class="list-group-item no-padding">{{dataEst}}</li>
+                            {% endfor %}
+                        </div> 
                     </ul>
                 </div><!-- /.panel-body -->
             </div>

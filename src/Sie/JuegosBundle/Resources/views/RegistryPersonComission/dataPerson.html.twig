@@ -17,17 +17,16 @@
                 {% include 'SieJuegosBundle:RegistryPersonComission:personInfo.html.twig' with {'entity': entity} %}                
                     <!-- /.form-body -->
 
-                    {% if objComisionJuegosDatos %}
+                    {% if objComisionJuegosDatos and ratificar != true %}
                         <div class="form-body">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                    <strong>Comision: </strong></br>{{objComisionJuegosDatos.comisionTipo}}
+                                        <strong>Comision: </strong></br>{{objComisionJuegosDatos.comisionTipo}}
                                     </div>
                                     <div class="col-md-6">
-                                    <strong>Departamento: </strong></br>{{objComisionJuegosDatos.lugarTipo}}
-                                    </div>
-                                    
+                                        <strong>Departamento: </strong></br>{{objComisionJuegosDatos.lugarTipo}}
+                                    </div>                                    
                                 </div>
                             </div>                        
                         </div><!-- /.form-body -->

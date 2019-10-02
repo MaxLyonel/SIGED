@@ -14,3 +14,19 @@ tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad:
     path:     /certificado/tecnico/emitido/descarga/especialidad
     defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaEspecialidad }
 
+tramite_estadistica_certificado_tecnico_emitido_descarga_general_completa:
+    path:     /certificado/tecnico/emitido/descarga/general/completa
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaGeneralCompleta }
+
+tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad_completa:
+    path:     /certificado/tecnico/emitido/descarga/especialidad/completa
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaEspecialidadCompleta }
+
+tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad_institucional:
+    path:     /certificado/tecnico/emitido/descarga/especialidad/institucional
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaEspecialidadInstitucional }
+
+tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad_seleccion:
+    path:     /certificado/tecnico/emitido/descarga/especialidad/seleccion
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaEspecialidadSeleccion }
+
