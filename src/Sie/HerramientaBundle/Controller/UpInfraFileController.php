@@ -172,6 +172,23 @@ class UpInfraFileController extends Controller{
         // $fileInfoContent = file_get_contents($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 1].'.txt');
         $fileInfoContent = file_get_contents($dirtmp . '/' . $decodeFile);
         $arrFileInfoContent = json_decode($fileInfoContent,true);
+        // validate the sie and sies on the file
+        $answer = true;
+        while($arrSie = current($arrFileInfoContent['cabecera']['institucioneducativa']) && $answer){
+            
+            if($arrSie['institucioneducativa']==$arrDataUe['sie']){
+                $answer=false;
+            }
+            next($arrFileInfoContent['cabecera']['institucioneducativa']);
+        }
+        if($answer){
+            system('rm -fr ' . $dirtmp);
+            $sw = true;
+            $this->addFlash('warningupfileinfra', 'Codigo SIE no pertenece al local educativo');
+            $arrData = array('sw'=>$sw,'rolUser'=>$this->session->get('roluser'),'messageType'=>'warning');
+            return $this->returnResponse($arrData);
+        }
+        
         // to validate the correct LE jurisdiccion_geografica
         //get the infor about the UE
         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sieUpload);
