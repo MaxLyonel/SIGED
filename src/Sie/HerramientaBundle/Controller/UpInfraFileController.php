@@ -315,5 +315,63 @@ class UpInfraFileController extends Controller{
 
     }
 
+            /**
+         * save the log information about sie file donwload
+         * @param  [type] $form [description]
+         * @return [type]       [description]
+         */
+
+        private function saveInstitucioneducativaOperativoLog($data){
+          // dump($data);
+          //get the correct operativo log tipo id to save on the log table
+          switch ($data['operativoLogTipo']) {            
+            case "0":
+              # code...
+              $operativoLogTipo = 6;
+              break;
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+              # code...
+              $operativoLogTipo = 2;
+              break;
+            
+            default:
+              # code...
+              $operativoLogTipo = 2;
+              break;
+          }
+          
+            //conexion to DB
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try {
+              //save the log data
+              $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+              $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($operativoLogTipo));
+              $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+              $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+              $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']));
+              $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+              $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['bimestre']));
+              $objDownloadFilenewOpe->setDescripcion('...');
+              $objDownloadFilenewOpe->setEsexitoso('t');
+              $objDownloadFilenewOpe->setEsonline('t');
+              $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+              $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+              $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+              $em->persist($objDownloadFilenewOpe);
+              $em->flush();
+               $em->getConnection()->commit();
+              //dump($data);die;
+              return 'krlos';
+            } catch (Exception $e) {
+              $em->getConnection()->rollback();
+              echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            }
+        }
+
 
 }

@@ -112,9 +112,11 @@ class DownloadInfraFileController extends Controller{
     // }
 
     public function downloadFileAction(Request $request, $file,$datadownload) {
-      // dump($datadownload);die;
-      $form = json_decode($datadownload,true);
-      $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
+        // dump($datadownload);die;
+        $form = json_decode($datadownload,true);
+        //get the user info
+        $objUser = $this->getUserInfoDownload($form);
+        $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
         //get path of the file
         //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
         $dir = '/archivos/descargas/ifr/';
@@ -122,6 +124,7 @@ class DownloadInfraFileController extends Controller{
         $file = base64_decode($file);
         $file = preg_replace('/\s+/', '', $file);
         $file = str_replace('%20', '', $file);
+        
         // dump($file);
         // die;
         //create response to donwload the file
@@ -173,7 +176,116 @@ class DownloadInfraFileController extends Controller{
       }
       // die('krlos');
       return 'done';
-    }    
+    }
+
+    private function getUserInfoDownload($data){
+        
+        //creaet db conexion
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+         $query = "
+            SELECT 
+              usuario.id as usuarioid, 
+              persona.id as personaid,
+              persona.carnet,
+              persona.complemento, 
+              persona.nombre, 
+              persona.paterno, 
+              persona.materno, 
+              persona.count_edit,              
+              usuario.username,
+              usuario.esactivo as usuarioesactivo,
+              array_agg(cast(cargo_tipo.cargo as varchar)) as cargo
+            FROM 
+              maestro_inscripcion INNER JOIN persona
+                    ON persona.id = maestro_inscripcion.persona_id  
+              INNER JOIN public.cargo_tipo
+                    ON maestro_inscripcion.cargo_tipo_id = cargo_tipo.id
+              LEFT JOIN public.usuario
+                    ON usuario.persona_id = persona.id  
+            WHERE    
+              (maestro_inscripcion.institucioneducativa_id = '".$data['sie']."') and 
+              (maestro_inscripcion.gestion_tipo_id = '". $data['gestion'] ."') and
+              ((maestro_inscripcion.cargo_tipo_id = 1) or (maestro_inscripcion.cargo_tipo_id = 12))
+            GROUP BY
+              usuario.id, 
+              persona.id, 
+              persona.carnet, 
+              persona.nombre, 
+              persona.paterno, 
+              persona.materno, 
+              persona.count_edit,              
+              usuario.username,
+              usuario.esactivo
+            ORDER BY persona.nombre, persona.paterno, persona.materno ";
+
+        $prepareQuery = $db->prepare($query);
+        $params = array();
+        $prepareQuery->execute($params);
+        $objUser = $prepareQuery->fetch();
+
+        return $objUser;
+
+    }
+
+        /**
+         * save the log information about sie file donwload
+         * @param  [type] $form [description]
+         * @return [type]       [description]
+         */
+
+        private function saveInstitucioneducativaOperativoLog($data){
+          // dump($data);
+          //get the correct operativo log tipo id to save on the log table
+          switch ($data['operativoLogTipo']) {            
+            case "0":
+              # code...
+              $operativoLogTipo = 6;
+              break;
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+              # code...
+              $operativoLogTipo = 2;
+              break;
+            
+            default:
+              # code...
+              $operativoLogTipo = 2;
+              break;
+          }
+          
+            //conexion to DB
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try {
+              //save the log data
+              $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+              $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($operativoLogTipo));
+              $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+              $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+              $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']));
+              $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+              $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['bimestre']));
+              $objDownloadFilenewOpe->setDescripcion('...');
+              $objDownloadFilenewOpe->setEsexitoso('t');
+              $objDownloadFilenewOpe->setEsonline('t');
+              $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+              $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+              $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+              $em->persist($objDownloadFilenewOpe);
+              $em->flush();
+               $em->getConnection()->commit();
+              //dump($data);die;
+              return 'krlos';
+            } catch (Exception $e) {
+              $em->getConnection()->rollback();
+              echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            }
+        }    
+
 
 
 
