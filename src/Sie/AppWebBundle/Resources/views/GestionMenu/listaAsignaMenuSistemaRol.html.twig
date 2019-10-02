@@ -17,7 +17,6 @@
                         <th>Rol</th>
                         <th>Permisos</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,24 +28,24 @@
                     <td>{{ sistemamenupermiso.rol  }}
                     <td>
                       {% if sistemamenupermiso._create == 1 %}
-                          <button {#onclick="cambiaestado_create({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}  class="btn btn-xs btn-success">C</button>
+                          <button class="btn btn-xs btn-success">C</button>
                       {% else %}
-                          <button {#onclick="cambiaestado_create({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}   class="btn btn-xs btn-danger">C</button>
+                          <button class="btn btn-xs btn-danger">C</button>
                       {% endif %}
                       {% if sistemamenupermiso._read == 1 %}
-                          <button  {#onclick="cambiaestado_read({{ sistemamenupermiso.id }}, {{ id_sistema }})" #} class="btn btn-xs btn-success">R</button>
+                          <button  class="btn btn-xs btn-success">R</button>
                       {% else %}
-                          <button {#onclick="cambiaestado_read({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}  class="btn btn-xs btn-danger">R</button>
+                          <button  class="btn btn-xs btn-danger">R</button>
                       {% endif %}
                       {% if sistemamenupermiso._update == 1 %}
-                          <button {#onclick="cambiaestado_update({{ sistemamenupermiso.id }}, {{ id_sistema }})"#}  class="btn btn-xs btn-success">U</button>
+                          <button class="btn btn-xs btn-success">U</button>
                       {% else %}
-                          <button {# onclick="cambiaestado_update({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}   class="btn btn-xs btn-danger">U</button>
+                          <button class="btn btn-xs btn-danger">U</button>
                       {% endif %}
                       {% if sistemamenupermiso._delete == 1 %}
-                          <button {# onclick="cambiaestado_delete({{ sistemamenupermiso.id }}, {{ id_sistema }})"#}  class="btn btn-xs btn-success">D</button>
+                          <button class="btn btn-xs btn-success">D</button>
                       {% else %}
-                          <button {#onclick="cambiaestado_delete({{ sistemamenupermiso.id }}, {{ id_sistema }})" #} class="btn btn-xs btn-danger">D</button>
+                          <button class="btn btn-xs btn-danger">D</button>
                       {% endif %}
                     </td>
                     <td>
@@ -55,9 +54,6 @@
                         {% else %}
                         <button  onclick="cambiaestado({{ sistemamenupermiso.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>
                         {% endif %}
-                    </td>
-                    <td>
-                       <button class="btn btn-danger btn-xs" onclick="elimina_menu_sistema_rol({{sistemamenupermiso.id  }},{{id_sistema}})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
                     </td>
                   </tr>
                 {% endfor %}
