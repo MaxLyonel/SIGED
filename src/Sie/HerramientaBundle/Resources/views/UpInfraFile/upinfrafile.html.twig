@@ -1,28 +1,23 @@
 <div class="col-lg-12">
     <div class="portlet portlet-red">
+
+    {% for flashMessage in app.session.flashbag.get('warningupfileinfra') %}
+        <div class="alert alert-{{messageType}} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
         <div class="portlet-heading">
             <div class="portlet-title">
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <strong>Correcto:</strong> Archivo cargado.
-                </div>
             </div>
-          
             <div class="clearfix"></div>
         </div>
         <div id="formControls" class="panel-collapse collapse in">
             <div class="portlet-body">
                 <form class="form-horizontal">
-                	{% if sw %}
-                    <div class="form-group">
-                    	 <p><a href="{{ path('olim_download_observation', {'nameFile': nameFile } )}}" targer="_blank" class="btn btn-block btn-danger"><i class="fa fa-download fa-fw"></i> Descargar Archivo con observaciones</a></p>
-                    </div>
-                   {% endif %}
-					{% if roluser == 8 %}
-					   <p><a href="{{ path('upinfrafile_index' )}}" targer="_blank" class="btn btn-block btn-primary"><i class="fa fa-cloud-upload"></i> Subir otro archivo</a></p>
-                    {% else %}
-                       <p><a href="{{ path('upinfrafile_lookfor_data' )}}" targer="_blank" class="btn btn-block btn-primary"><i class="fa fa-cloud-upload"></i> Subir otro archivo</a></p>
-                    {% endif %}
+                    <p><a href="{{ path('upinfrafile_index' )}}" targer="_blank" class="btn btn-block btn-primary"><i class="fa fa-cloud-upload"></i> Volver a subir archivo</a></p>
 
                  </form>
             </div>

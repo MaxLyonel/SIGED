@@ -222,3 +222,7 @@ sie_newrequestbth:
 sie_upinfrafile:
      resource: "@SieHerramientaBundle/Resources/config/routing/upinfrafile.yml"
      prefix:   /sie/upinfrafile
+
+sie_downloadinfrafile:
+     resource: "@SieHerramientaBundle/Resources/config/routing/downloadinfrafile.yml"
+     prefix:   /sie/downloadinfrafile
