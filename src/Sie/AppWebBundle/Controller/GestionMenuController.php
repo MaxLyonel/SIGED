@@ -1446,7 +1446,7 @@ class GestionMenuController extends Controller {
         $id_sistema = $request->get('id_sistema');
         $id_rol = $request->get('id_rol');
         $tipo_menu = $request->get('tipo_menu');
-        $em = $this->getDoctrine()->getManager(); //dump($tipo_menu);die;
+        $em = $this->getDoctrine()->getManager(); 
         //Se sabe que es padre, entonces buscamos los submenus
         if ($tipo_menu==0) {
             $query = $em->getConnection()->prepare("SELECT menu_sistema.menu_tipo_id
@@ -1455,7 +1455,6 @@ class GestionMenuController extends Controller {
             $query->execute();
             $menutipo = $query->fetch();
             $menutipoid = $menutipo['menu_tipo_id'];
-
             $query = $em->getConnection()->prepare("SELECT COUNT (msr.id) AS hcant FROM menu_sistema_rol  msr 
                                                 INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
                                                 INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
@@ -1485,11 +1484,9 @@ class GestionMenuController extends Controller {
             $em->flush();
             $mensaje = 'La asignación fue eliminada con éxito';
         }
-
         $request->getSession()
             ->getFlashBag()
             ->add('exito', $mensaje);
-
         $query = $em->getConnection()->prepare("SELECT msr.id,st.sistema,mt.detalle_menu,mt.icono,mt.ruta,mt.menu_tipo_id,rt.rol,rt.id as rol_id,msr.esactivo
                                                 FROM menu_sistema_rol msr
                                                 INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
@@ -1502,7 +1499,6 @@ class GestionMenuController extends Controller {
         $query->execute();
         $sistemamenupermiso = $query->fetchAll();
         return $this->render('SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig', array('listaSistemamenurol'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));
-        /*return $this->render('SieAppWebBundle:GestionMenu:listaAsignaMenuSistemaRol.html.twig', array('sistemamenupermiso'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));*/
     }
     public function verificasubmenusAction(Request $request){
         $em=$this->getDoctrine()->getManager();
@@ -1593,7 +1589,6 @@ class GestionMenuController extends Controller {
     }
 //LISTA DE MENUS X SISTEMA
     public function listasistemamenurolAction(Request $request){
-
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('SELECT stipo.id,stipo.sistema from sistema_tipo stipo
                                                     ORDER BY 1');
@@ -1684,7 +1679,6 @@ class GestionMenuController extends Controller {
     }
 
     public function validamenusasigandosAction(Request $request){
-        //dump($request);die;
         $idmenu = $request->get('idmenu');
         $idsistema = $request->get('id_sistema');
         $em = $this->getDoctrine()->getManager();

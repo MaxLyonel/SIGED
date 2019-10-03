@@ -29,7 +29,7 @@
                 <thead>
                     <tr>
                         <th style="min-width: 10px" ><strong>No</strong>.</th>
-                        <th><strong>Sistema</strong></th>
+                        {#<th><strong>Sistema</strong></th> #}
                         <th><strong>Rol</strong></th>
                         <th style="min-width: 10px"><strong>Opciones</strong></th>
                     </tr>
@@ -38,14 +38,11 @@
                 {% for rolesasigandos in rolesasigandos %}
                     <tr>
                         <td class="text-center">{{ loop.index }}</td>
-                        <td data-title="Sistema">{{ rolesasigandos.sistema }}</td>
+                        {# <td data-title="Sistema">{{ rolesasigandos.sistema }}</td> #}
                         <td data-title="Icono" >{{ rolesasigandos.rol }}</td>
-
                         <td data-title="Opciones" class="text-center" >
                             {#<i class="glyphicon glyphicon-arrow-left"></i>#}
                             <button class="btn btn-danger btn-xs" onclick="elimina_sistema_rol({{ rolesasigandos.id }},{{id_sistema}});" title="Asignar"><i class="glyphicon glyphicon-share-alt"></i></button>
-                            {#<button class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" #}{#onclick="editarMenusSistemaSelec({{ menusasignados.id }},{{ id_sistema }})" #}{#title="Editar"><i class="fa fa-pencil"></i></button>
-                            <button class="btn btn-warning btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" #}{#onclick="elimina_menusistema({{ menusasignados.id }},{{id_sistema}});" #}{#title="Asignar"><i class="glyphicon glyphicon-arrow-right"></i></button>#}
                         </td>
                     </tr>
                 {% endfor %}
@@ -61,7 +58,6 @@
     function elimina_sistema_rol(idrol,id_sistema) {
         swal({
             title: "¿Está Segura/o de eliminar el Rol Asignado?",
-            //text: "El Sistema seleccionado será eliminado Permanentemente",
             icon: "warning",
             buttons: true,
             dangerMode: true,

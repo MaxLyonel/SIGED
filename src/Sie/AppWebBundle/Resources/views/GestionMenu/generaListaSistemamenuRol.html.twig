@@ -30,7 +30,6 @@
                 <td>{{ reg.rol }}</td>
                 <td>
                 {% if reg.esactivo == 1 %}
-                    {#<a class="btn btn-xs btn-success" href="cambiaestadosistemamenurol, 'idSistema': sistema.id" onclick="return confirm('¿Está seguro/a de Eliminar el Sistema?')"   title="Eliminar"><i class="glyphicon glyphicon-trash"></i></a>#}
                     <button onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-success">Activo</button>
                 {% else %}
                     <button  onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>

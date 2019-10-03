@@ -31,7 +31,7 @@
                 <div class="pull-right">
                    {# aqui mandarle idsistema,idrol,idobjeto,idmenuObjeto#}
                    {# onclick="gestionarmenu({{ menuObjeto.id }},{{ menuObjeto.idmo }})"#}
-                <button class="btn btn-warning" onclick="nuevosubmenu({{ idsistema }},{{ idrol }},{{ idmo }},{{ idmenu }})" class="btn btn-teal"{# data-toggle="modal" data-target=".bs-example-modal-table"#}><i class="fa fa-plus"></i> Adicionar Sub Menú</button>
+                <button class="btn btn-warning" onclick="nuevosubmenu({{ idsistema }},{{ idrol }},{{ idmo }},{{ idmenu }})" class="btn btn-teal"{# data-toggle="modal" data-target=".bs-example-modal-table"#}><i class="fa fa-plus"></i> Adicionar Sub Menúdd</button>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -136,11 +136,9 @@
 
 
     function nuevosubmenu(idsistema,idrol,idmo,idmenu) {
-
         var formData = {
             idsistema:idsistema,idrol:idrol,idmo:idmo,idmenu:idmenu
         };
-
         $.ajax({
             type: 'get',
             /*url: Routing.generate('gestion_submenu_nuevo'),*/
@@ -163,45 +161,35 @@
         });
         return false;
     }
-
-
-
     var addpop = function(idmt){
+        xhr5 = $.ajax({
+            type: 'post',
+            data: ({idmt: idmt}),
+            url: "{{ path('gestionmenu_editarsubmenu') }}",
+            beforeSend: function () {
 
-        //alert("editar submenu");
-            xhr5 = $.ajax({
-                type: 'post',
-                data: ({idmt: idmt}),
-                url: "{{ path('gestionmenu_editarsubmenu') }}",
-                beforeSend: function () {
+                $('.arrow-before').hide();
+                $('.arrow-after').hide();
+                $("#"+idmt).empty();
+                $('#before'+idmt).fadeIn();
+                $('#after'+idmt).fadeIn();
+                $('#'+idmt).fadeIn();
+                $('#'+idmt).append("<div style='background:#FFFFFF; text-align:center; color:#286AFB'><div style='padding:10px 0px 10px 0px;'>Cargando Formulario<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+            },
+            success: function (data) {
+                $("#"+idmt).empty();
+                $("#"+idmt).append(data);
 
-                    $('.arrow-before').hide();
-                    $('.arrow-after').hide();
-                    $("#"+idmt).empty();
-                    $('#before'+idmt).fadeIn();
-                    $('#after'+idmt).fadeIn();
-                    $('#'+idmt).fadeIn();
-                    $('#'+idmt).append("<div style='background:#FFFFFF; text-align:center; color:#286AFB'><div style='padding:10px 0px 10px 0px;'>Cargando Formulario<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                $('#'+idmt).fadeIn();
+            },
+            statusCode: {
+                500: function () {
+
                 },
-                success: function (data) {
-                    $("#"+idmt).empty();
-                    $("#"+idmt).append(data);
+                404: function () {
 
-                    $('#'+idmt).fadeIn();
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
                 }
-            });
-
+            }
+        });
     }
-
-
-
-
 </script>
