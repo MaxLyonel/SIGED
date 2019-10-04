@@ -1527,10 +1527,10 @@ class GestionMenuController extends Controller {
                                                 ORDER BY 4");
         $query->execute();
         $menu_arboles = $query->fetchAll();
-        $query = $em->getConnection()->prepare("SELECT TRIM(usuario_rol.sub_sistema)as sub_sistema
-                                                FROM usuario_rol
-                                                WHERE  usuario_rol.rol_tipo_id=$rol_tipo_id
-                                                AND usuario_rol.usuario_id=$userId");
+        $query = $em->getConnection()->prepare("SELECT TRIM(rtip.sub_sistema)as sub_sistema
+                                             FROM usuario_rol u INNER JOIN rol_tipo rtip on u.rol_tipo_id = rtip.id
+                                             WHERE  u.rol_tipo_id = $rol_tipo_id
+                                             AND u.usuario_id=$userId");
         $query->execute();
         $subsistemas = $query->fetch();
         $cadena=$subsistemas['sub_sistema'];
