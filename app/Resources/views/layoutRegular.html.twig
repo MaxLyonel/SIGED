@@ -266,7 +266,7 @@
                         {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
                         {% if app.session.get('roluser') ==  8 %}   
                             <li>
-                                    <a href="{{path('sie_gestion_menu_principal')}}">
+                                    <a href="{{path('sie_gestion_menu_principal')}}" target="_blank">
                                 <i class="fa fa-gear"></i> Gestión de Menús
                             </li>
                         {% endif %}  

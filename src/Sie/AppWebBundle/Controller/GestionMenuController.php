@@ -81,11 +81,11 @@ class GestionMenuController extends Controller {
     }
     public function administraSistemanuevoAction(){
         $form = $this->createFormBuilder()
-            ->add('sistema', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true)))
-            ->add('abreviatura', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true,'max_length' => 5)))
+            ->add('sistema', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true,'autocomplete' =>'off')))
+            ->add('abreviatura', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true,'max_length' => 5,'autocomplete' =>'off')))
             ->add('observaciones', 'textarea', array( 'required' => false,'attr' => array('class' => 'form-control','enabled' => true)))
-            ->add('bundle', 'text', array('attr' => array('class' => 'form-control','enabled' => true)))
-            ->add('url', 'text', array('attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('bundle', 'text', array('attr' => array('class' => 'form-control','enabled' => true,'autocomplete' =>'off')))
+            ->add('url', 'text', array('attr' => array('class' => 'form-control','enabled' => true,'autocomplete' =>'off')))
             ->add('guardar', 'button', array('label'=> 'Guardar', 'attr'=>array('class'=>'btn btn-primary ','onclick'=>'guardarSistemanuevo()')))
             ->getForm();
         return $this->render('SieAppWebBundle:GestionMenu:nuevoSistema.html.twig',array('form'=>$form->createView()));
@@ -247,7 +247,7 @@ class GestionMenuController extends Controller {
     public function nuevomenuAction(){
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('nombre', 'text', array( 'attr' => array('class' => 'form-control')))
+            ->add('nombre', 'text', array( 'attr' => array('class' => 'form-control','autocomplete'=>'off')))
             ->add('icono', 'text', array('attr' => array('class' => 'form-horizontal icp icp-auto','autocomplete'=>'off')))
             ->add('guardar', 'button', array('label'=> 'Guardar Menú', 'attr'=>array('class'=>'btn btn-primary','onclick'=>'guardarMenu()')))
             ->getForm();
@@ -304,11 +304,6 @@ class GestionMenuController extends Controller {
                                                 WHERE menu_nivel_tipo.id >= 100
                                                 ORDER BY 1");
         $query->execute();
-        $listaicono= $query->fetchAll();
-        $iconoArray = array();
-        for ($i = 0; $i < count($listaicono); $i++) {
-            $iconoArray[$listaicono[$i]['menu_nivel_tipo']] = $listaicono[$i]['menu_nivel_tipo'];
-        }
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('gestionmenu_editmenu'))
             ->add('detalle_menu', 'text', array( 'required' => true, 'data' =>$detalle_menu , 'attr' => array('class' => 'form-control','enabled' => true)))
@@ -409,14 +404,9 @@ class GestionMenuController extends Controller {
                                                 WHERE menu_nivel_tipo.id >= 100
                                                 ORDER BY 1");
         $query->execute();
-        $listaicono= $query->fetchAll();
-        $icono = array();
-        for ($i = 0; $i < count($listaicono); $i++) {
-            $icono[$listaicono[$i]['menu_nivel_tipo']] = $listaicono[$i]['menu_nivel_tipo'];
-        }
         $form = $this->createFormBuilder()
-            ->add('nombre', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-            ->add('ruta', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('nombre', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true,'autocomplete'=>'off')))
+            ->add('ruta', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true,'autocomplete'=>'off')))
             ->add('icono', 'text', array('attr' => array('class' => 'form-horizontal icp icp-auto','autocomplete'=>'off')))
             ->add('orden', 'hidden', array( 'required' => true, 'data'=>$orden, 'attr' => array('class' => 'form-control','disabled' => false)))
             ->add('observaciones', 'textarea', array( 'required' => false, 'attr' => array('class' => 'form-control','enabled' => true,'rows'=>'3','cols'=>'40')))
@@ -905,22 +895,17 @@ class GestionMenuController extends Controller {
         $query = $em->getConnection()->prepare("SELECT COUNT(*) from menu_sistema_rol WHERE menu_sistema_rol.menu_sistema_id= $idmenu ");
         $query->execute();
         $cantidadmenuroles = $query->fetch();
-
-        //dump($cantidadmenuroles['count']);die;
-
         if($cantidadmenuroles['count'] > 0){
             $mensaje = 'El Menú ' . $menutipo->getDetalleMenu() . 'Se encuentra con Roles Asignados No se puede eliminar';
             $request->getSession()
                 ->getFlashBag()
                 ->add('error', $mensaje);
-
             $query = $em->getConnection()->prepare("SELECT menu_sistema.id, menu_tipo.detalle_menu,menu_tipo.icono,menu_sistema.fecha_creacion,menu_sistema.fecha_fin 
                                                 from menu_sistema  INNER JOIN menu_tipo on menu_sistema.menu_tipo_id = menu_tipo.\"id\"   
                                                 WHERE sistema_tipo_id=$id_sistema ORDER BY 1");
             $query->execute();
             $menusasignados = $query->fetchAll();
             return new Response('');
-//            return $this->render('SieAppWebBundle:GestionMenu:listaMenusAsignados.html.twig',array( 'menusasignados' => $menusasignados,'id_sistema'=>$id_sistema));
         } else {
             $em->remove($menutipo);
             $em->flush();
@@ -934,27 +919,18 @@ class GestionMenuController extends Controller {
             $query->execute();
             $menusasignados = $query->fetchAll();
             return new Response('');
-//            return $this->render('SieAppWebBundle:GestionMenu:listaMenusAsignados.html.twig',array( 'menusasignados' => $menusasignados,'id_sistema'=>$id_sistema));
 
         }
     }
-
-
-
-
     //MODULO ASIGNACION MENU - SISTEMA -ROL
 
     public function asignamenusistemarolAction(Request $request){
-
         $id_usuario = $this->session->get('userId');
-
-
         $em = $this->getDoctrine()->getManager();
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-
-        $query = $em->getConnection()->prepare("SELECT st.\"id\",st.sistema FROM sistema_tipo st ORDER BY 1 ");
+        $query = $em->getConnection()->prepare("SELECT st.id,st.sistema FROM sistema_tipo st ORDER BY 1 ");
         $query->execute();
         $sistema = $query->fetchAll();
         $sistArray = array();
