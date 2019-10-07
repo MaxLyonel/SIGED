@@ -1,0 +1,143 @@
+                <div class="modal-dialog modal-lg" id="sis">
+                    <div class="modal-content modal-primary">
+                        <div class="modal-header  ">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="fa fa-pencil"></i> <strong>Nuevo Sistema</strong> </h4>
+                        </div>
+                        <div class="modal-body">
+                            {{form_start(form,{'attr':{'id':'formMenu','class':'form-horizontal form-group has-primary'} })}}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Sistema</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Abreviatura</strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group has-primary">
+                                        {{form_widget(form.sistema)}}
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group has-primary">
+                                        {{form_widget(form.abreviatura)}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Bundle</strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group has-primary">
+                                        {{form_widget(form.bundle)}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Url</strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group has-primary">
+                                        {{form_widget(form.url)}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <strong>Observaciones</strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group has-primary">
+                                        {{form_widget(form.observaciones)}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="pull-right">
+                                    {{form_widget(form.guardar)}}
+                                </div>
+                            </div>
+                                {{form_end(form)}}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+<script>
+    function guardarSistemanuevo() {
+
+        var sistema = $('#form_sistema').val();
+        var bundle  = $('#form_bundle').val();
+        var abreviatura  = $('#form_abreviatura').val();
+        var imagen = '{{ asset("img/loading96.gif") }}';
+
+        if (sistema == '') {
+           swal("Debe Introducir un Sistema");
+            return false;
+        }
+        if (bundle == '') {
+            swal("Debe Introducir un Bundle");
+            return false;
+        }
+        if (abreviatura == '') {
+            swal("Debe Introducir una Abreviatura");
+            return false;
+        }
+
+       var formData = $('#formMenu').serialize();
+        $('#modal').modal('hide');
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_administra_sistema_create') }}",
+            data:formData,
+            beforeSend: function () {
+                swal({
+                    title: "Guardando...",
+                    text: "Espere un momento por favor",
+                    icon: imagen,
+                    buttons: false
+                });
+            },
+            success: function (data) {
+                $('#listasistemas').empty();
+                $('#listasistemas').append(data);
+
+            },
+            complete: function () {
+                swal.stopLoading();
+                swal.close();
+                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                    $(".alert").slideUp(1000);
+                });
+            }
+        });
+
+
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
