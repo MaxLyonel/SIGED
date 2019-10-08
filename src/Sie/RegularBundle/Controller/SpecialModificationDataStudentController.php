@@ -38,7 +38,7 @@ class SpecialModificationDataStudentController extends Controller{
     }
 
     private function craeteformsearch() {
-        $arrOptions = array('General','Homologacion');
+        $arrOptions = array('Concluyó el Bachillerato','Tiene registro en gestiones pasadas');
         $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('specialmodificationdata_student_lookfor_student'))
                 ->add('codeRude', 'text', array('label' => 'RUDE', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase','placeholder'=>'RUDE')))
