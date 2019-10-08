@@ -244,7 +244,7 @@ class SpecialModificationDataStudentController extends Controller{
                  ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                  ->add('resoladm', 'text', array('required' => false, 'mapped' => false, 'label' => 'Resolucion Administrativa', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                  ->add('fecharesoladm', 'text', array('required' => false, 'mapped' => false, 'label' => 'Fecha Resolucion Administrativa', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
-                 ->add('obs', 'textarea', array('required' => false, 'mapped' => false, 'label' => 'Observacion', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
+                 ->add('obs', 'textarea', array('required' => false, 'mapped' => false, 'label' => 'Justivicativo', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                  ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateDataStudent()')))
                  ->getForm();
         
