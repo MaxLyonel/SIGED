@@ -54,6 +54,8 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
                 ->where('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
+                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')
+                ->andWhere('ie.estadoinstitucionTipo=10')
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
                 ->distinct('ie.id')
@@ -71,6 +73,8 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->where('ie.id = :codigo')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
+                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')
+                ->andWhere('ie.estadoinstitucionTipo=10')
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
                 ->setParameter('codigo', $request->getSession()->get('ie_id'))
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
