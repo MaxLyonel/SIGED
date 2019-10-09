@@ -1,0 +1,15 @@
+specialmodificationdata_student_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:index }
+
+specialmodificationdata_student_lookfor_student:
+    path:     /lookforStudent
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:lookforStudent }
+    options:
+        expose: true
+
+specialmodificationdata_student_updateDataStudent:
+    path:     /updateDataStudent
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:updateDataStudent }
+    options:
+        expose: true        

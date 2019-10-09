@@ -1,0 +1,226 @@
+{% extends 'layoutGestmenu.html.twig' %}
+{% block contentoption %}
+    {#-{{ menuanterior.id }} id del menu anterior  -{{ idmenu }} #}
+    <div class="header-content">
+        <h2><i class="fa fa-th animated flip"></i><strong>Sub Menús de : {{ menuanterior.detalle_menu }}  </strong> </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-th animated flip"></i>
+                    <a href="{{ path('gestionmenu')}}"> Menús Principales </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-angle-right"></i>
+                    Sub Menú
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <div id="mensajes">
+        {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if app.session.flashBag.has('error') %}
+            <div class="alert alert-danger">
+                {% for msg in app.session.flashBag.get('error') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+<div class="body-content animated fadeIn">
+    <div class="row">
+
+<div class="container">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+
+            <h5><strong>Lista de Sub Menús</strong></h5>
+        </div>
+        <div class="panel-body">
+            <div class="pull-right">
+                <button class="btn btn-info" onclick="nuevoSubMenu({{ idmenu }},{{ idnivel }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table"><i class="fa fa-plus"></i> Adicionar Sub Menús</button>
+            </div>
+            <br>
+
+            <div id="submenus" class="body-content  animated fadeIn">
+                <div class="table-responsive">
+                    <table id="myTable" class="table table-bordered table-hover cf dataTable table-primary ">
+                        <thead>
+                        <tr>
+                            <th style="min-width: 10px"><strong>No.</strong></th>
+                            <th><strong>Detalle</strong></th>
+                            <th><strong>Icono</strong></th>
+                            <th><strong>Ruta</strong></th>
+                            {#<th><strong>Orden</strong></th>#}
+                            <th><strong>Observaciones</strong></th>
+                            {#<th><strong>Nivel</strong></th>#}
+                            {#<th>Id menuTipo</th>#}
+                            <th class="text-center"><strong>Opciones</strong></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for menu in menu %}
+                            <tr>
+                                <td class="text-center">{{ loop.index }}</td>
+                                <td data-title="Detalle">{{ menu.detalle_menu }}</td>
+                                <td class="text-center"><i class="fa {{ menu.icono }}"></i></td>
+                                <td data-title="Ruta" >{{ menu.ruta }}</td>
+                                {#<td class="text-center" >{{ menu.orden }}</td>#}
+                                <td data-title="Obs" >{{ menu.obs }}</td>
+                                {#<td data-title="Obs" >{{ menu.menu_nivel_tipo_id }}</td>#}
+                                {#<td class="text-center" >{{ menu.menu_nivel_tipo_id }}</td>#}
+                                <td class="text-center">
+                                    {% if menu.ruta == '#' %}
+                                        <a  href="{{ path('gestionmenu_submenus',{'id':menu.id,'nivel':menu.menu_nivel_tipo_id}) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Ver Sub Menús" ><i class="fa fa-eye"></i></a>
+                                    {% else %}
+                                        <button  class="btn btn-default btn-xs"  disabled="true" href="{{ path('gestionmenu_submenus',{'id':menu.id,'nivel':menu.menu_nivel_tipo_id}) }}" ><i class="fa fa-eye"></i></button>
+                                    {% endif %}
+                                    <button class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="updatesubMenuseleccionado({{ idmenu }},{{ menu.id }},{{ menu.menu_nivel_tipo_id }});" title="Editar Sub Menú"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-xs"  onclick="eliminaSubMenu({{ menu.id }},{{ menu.menu_nivel_tipo_id }},{{ idmenu }});" title="Eliminar Sub Menú"><i class="glyphicon glyphicon-trash"></i></button>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+</div>
+
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div>
+
+
+
+
+
+{% endblock %}
+
+
+
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+       function nuevoSubMenu(idmenu,idnivel){
+            var formData = {
+                idmenu:idmenu,idnivel:idnivel
+            };
+            //alert(formData);
+            $.ajax({
+                type: 'post',
+                url: "{{ path('gestion_sub_menu_nuevo') }}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
+
+       var updatesubMenuseleccionado = function (id_menuprincipal,idmenu_sub,idnivel ){
+
+           $.ajax({
+               type: 'post',
+               url: "{{ path('gestionmenu_editarsubmenu') }}",
+               data:({id_menuprincipal:id_menuprincipal,idmenu_sub: idmenu_sub,idnivel:idnivel }),
+               beforeSend: function () {
+                   //alert(id_menu);
+                   $('#modal').empty();
+               },
+               success: function (data) {
+                   $('#modal').empty();
+                   $('#modal').append(data);
+               },
+
+               statusCode: {
+                   500: function () {
+                   },
+                   404: function () {
+                   }
+               }
+           });
+       }
+
+       function eliminaSubMenu (id,nivel,idmenu) {
+           swal({
+               title: "¿Está Segura/o de eliminar el Sub Menú?",
+               text: "El Sub Menú seleccionado será eliminado permanentemente",
+               icon: "warning",
+               buttons: true,
+               dangerMode: true,
+               buttons: ["Cancelar", "Continuar"],
+           })
+               .then(function(willDelete)  {
+                   if (willDelete) {
+                       var imagen = '{{ asset("img/loading96.gif") }}';
+                       $.ajax({
+                           type: 'post',
+                           url: "{{ path('gestionmenu_elimina_submenu') }}",
+                           data: ({id: id,nivel:nivel,idmenu:idmenu}),
+                           beforeSend: function () {
+                               swal({
+                                   title: "Eliminando...",
+                                   text: "Espere un momento por favor",
+                                   icon: imagen,
+                                   buttons: false
+                               });
+                           },
+                           success: function (data) {
+                               $('#submenus').empty();
+                               $('#submenus').append(data);
+                           },
+                           error: function () {
+                           },
+                           complete: function () {
+                               swal.stopLoading();
+                               swal.close();
+                               $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                                   $(".alert").slideUp(1000);
+                               });
+                           }
+                       });
+
+                   }
+               });
+
+       }
+
+           $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+               $(".alert").slideUp(1000);
+           });
+
+
+
+    </script>
+
+
+{% endblock %}
+
+

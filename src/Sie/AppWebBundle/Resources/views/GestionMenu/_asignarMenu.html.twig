@@ -1,0 +1,169 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>  Asignación de Menú</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            {{form_start(form,{'attr':{'id':'formMenu','onsubmit':'return validateFormulario()'} })}}
+            <div class="col-lg-3 col-md-6">
+                {{form_label(form.sistema)}}
+                {{form_widget(form.sistema)}}
+            </div>
+            <div class="col-lg-3 col-md-6">
+                {{form_label(form.nombre)}}
+                {{form_widget(form.nombre)}}
+            </div>
+            <div class="col-lg-3 col-md-6">
+                {{form_label(form.Fecha_Inicio)}}
+                {{form_widget(form.Fecha_Inicio)}}
+            </div>
+            <div class="col-lg-3 col-md-6">
+                {{form_label(form.Fecha_Fin)}}
+                {{form_widget(form.Fecha_Fin)}}
+            </div>
+            {{form_end(form)}}
+        </div>
+
+
+        <div class="row" id="roles">
+            <div class="col-xs-12 col-lg-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4><i class="fa fa-home fa-fw"></i>Roles</h4>
+                                </div>
+                                <div class="portlet-widgets"><!-- Button Dropdown --></div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <br/>
+                                <div class="row" id="menuroles">
+                                    <div class="col-md-12">
+                                        {#<div id="no-more-tables">
+                                            <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                                                <thead class="">
+                                                <tr class="">
+                                                    <th>No.</th>
+                                                    <th>Rol</th>
+                                                    <th>Permisos</th>
+                                                </tr>
+                                                </thead>#}{#
+                                                <tbody>
+                                                 {% for roles in roles %}
+                                                    <tr>
+                                                        <td data-title="No.">{{ loop.index }}</td>
+                                                        <td data-title="Detalle">{{ roles.rol }}</td>
+                                                        <td> C R U D</td>
+                                                    </tr>
+                                                {% endfor %}#}{#
+                                                </tbody>
+                                            </table>
+                                        </div>#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 norelative">
+                    <a href="{#{{path('students_inscriptions_index')}}#}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+{% block javascripts%}
+
+<script>
+
+  function cargarRoles() {
+
+        var sistema = $('#form_sistema').val();
+        //var xhr2;
+       // alert(sistema);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('gestionmenu_cargar_roles', {'sistema': sistema}),
+            beforeSend: function () {
+
+                $("#menuroles").empty();
+                $("#menuroles").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" />Cargando Roles</div>');
+            },
+            success: function (data) {
+                //alert("hola");
+                $("#menuroles").empty();
+                $("#menuroles").append(data);
+                /// alert(data.roles);
+
+            }
+        });
+    }
+
+
+  /*  var xhr1;
+    function validateForm() {
+        var sistema = $('#form_sistema').val();
+        var rol = $('#form_rol').val();
+        //$('#sis').val(sistema);
+        //alert(rol);
+
+        if (sistema == '') {
+            alert('Debe seleccionar un Sistema');
+            return false;
+        }
+
+        if (rol == '') {
+            alert('Debe seleccionar un Rol');
+            return false;
+        }
+
+        if (xhr1 && xhr1.readyState != 4) {
+            xhr1.abort();
+        }
+
+        var formData = $('#formMenus').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('gestion_listar_menus'),
+            data: formData,
+            beforeSend: function () {
+                $("#divMenus").empty();
+                $("#divMenus").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#divMenus").empty();
+                $("#divMenus").append(data);
+                $('.chosen-select').chosen({allow_single_deselect: false});
+                $('.chosen-container').css('width', '100%');
+                //$(".tooltips").tooltip();
+            },
+            error: function (data) {
+                $("#divMenus").empty();
+                $("#divMenus").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El Sistema no existe o no hay conexion con el servidor</div>');
+            }
+        });
+        return false;
+    }*/
+
+</script>
+{% endblock %}

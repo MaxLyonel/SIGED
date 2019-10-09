@@ -110,14 +110,16 @@ class ListPersonRegisterController extends Controller{
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control'),
                 'data' => $em->getReference("SieAppWebBundle:LugarTipo",$data[0]['lugarTipoId'])
                 ))
-        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:ComisionTipo', 'empty_value'=>'Selecionar Comisión',
+        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('ct')
                         ->where('ct.nivelTipoId = :levelId')
-                        ->setParameter('levelId','12')
+                        ->andWhere('ct.esactivo = :esactivo')
+                        ->setParameter('levelId','13')
+                        ->setParameter('esactivo','t')
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision', 'attr'=>array('class'=>'form-control'),
-                'data' => $em->getReference("SieAppWebBundle:ComisionTipo",$data[0]['comisionTipoId'])
+                'data' => $em->getReference("SieAppWebBundle:JdpComisionTipo",$data[0]['comisionTipoId'])
             ))
         ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
         ->add('obs', 'text', array('label' => 'Observacion', 'required' => true, 'attr'=> array('class'=>'form-control')))
@@ -132,17 +134,19 @@ class ListPersonRegisterController extends Controller{
 
     private function delegadoInfo($delegadoId=null){
         $em = $this->getDoctrine()->getManager();
-         $entity = $em->getRepository('SieAppWebBundle:Persona');
+        $entity = $em->getRepository('SieAppWebBundle:Persona');
         $query = $entity->createQueryBuilder('per')
                 ->select('per.id as personId, per.carnet, per.complemento, per.paterno, per.materno,per.nombre,jdij.id as id, IDENTITY(jdij.comisionTipo) as comisionTipoId, IDENTITY(jdij.lugarTipo) as lugarTipoId, ct.comision as comisionTipo, lt.lugar as lugarTipo, jdij.rutaImagen, jdij.obs')  
                 ->join('SieAppWebBundle:JdpDelegadoInscripcionJuegos', 'jdij', 'WITH', 'per.id = jdij.persona')
-                ->join('SieAppWebBundle:ComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
-                ->join('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jdij.lugarTipo = lt.id');
-         if($delegadoId){
-          $query = $query  
-                 ->where('jdij.id = :delegadoId')
+                ->join('SieAppWebBundle:JdpComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
+                ->join('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jdij.lugarTipo = lt.id')
+                ->where('ct.nivelTipoId = :nivelId')
+                ->setParameter('nivelId','13');
+        if($delegadoId){
+            $query = $query  
+                 ->andWhere('jdij.id = :delegadoId')
                  ->setParameter('delegadoId', $delegadoId);
-         }
+        }
          $query = $query
                 ->orderBy('lt.lugar', 'ASC')
                 ->getQuery();

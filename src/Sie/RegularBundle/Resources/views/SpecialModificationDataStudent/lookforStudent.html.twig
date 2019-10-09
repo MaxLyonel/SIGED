@@ -1,0 +1,134 @@
+
+
+    {% if sw %}
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('warningremoveins') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-list"></i> Resultado de la Busqueda
+                    </div>
+                    <div class="panel-body">
+                        {{form_start(form,{'attr':{'data-toggle': 'validator','form':'role', 'id':'formdataStudentId'} })}}
+                        <div class="row">
+                            <div class="col-sm-3">
+                                {{form_label(form.ci)}}
+                                {{form_widget(form.ci)}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.complemento)}}
+                                {{form_widget(form.complemento)}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.generoTipo)}}
+                                {{form_widget(form.generoTipo)}}
+                            </div>
+                        </div>
+                        </br>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                {{form_label(form.paterno)}} 
+                                {{form_widget(form.paterno)}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.materno)}}
+                                {{form_widget(form.materno)}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.nombre)}} (*)
+                                {{form_widget(form.nombre)}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.fechaNacimiento)}}
+                                {{form_widget(form.fechaNacimiento)}}
+                            </div>
+                        </div>
+                        </br>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                {{form_label(form.pais)}} (*)
+                                {{form_widget(form.pais,{'attr': {'onchange':'dep(this.value)'}  }   )}}
+
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.departamento)}}
+                                {{form_widget(form.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.provincia)}}
+                                {{form_widget(form.provincia)}}
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_label(form.localidad)}}
+                                {{form_widget(form.localidad)}}
+                            </div>
+                        </div>
+                            </br>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{form_label(form.oficialia)}}
+                                    {{form_widget(form.oficialia)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form.libro)}}
+                                    {{form_widget(form.libro)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form.partida)}}
+                                    {{form_widget(form.partida)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form.folio)}}
+                                    {{form_widget(form.folio)}}
+                                </div>
+                            </div>
+                            </br>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{form_label(form.resoladm)}}
+                                    {{form_widget(form.resoladm)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form.fecharesoladm)}} </br>(dd-mm-aaaa)
+                                    {{form_widget(form.fecharesoladm)}}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{form_label(form.obs)}}
+                                    {{form_widget(form.obs)}}
+                                </div>
+                            </div>                        
+
+                            </br>
+                            {{form_widget(form.save)}}
+                            {{form_end(form)}}
+
+                  
+                       
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% else %}
+
+    {% for flashMessage in app.session.flashbag.get('messageModStudent') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>{{compleMessage}}!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}    
+{% endif %}

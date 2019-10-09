@@ -367,3 +367,7 @@ sie_regular_review_up_sie_file:
 sie_regular_reactivar_bth:
      resource: "@SieRegularBundle/Resources/config/routing/reactivarBTH.yml"
      prefix:   /sie/reactivarbth
+
+sie_regular_specialmodificationdata_student:
+     resource: "@SieRegularBundle/Resources/config/routing/specialmodificationdatastudent.yml"
+     prefix:   /sie/modificationdata

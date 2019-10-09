@@ -424,7 +424,7 @@ class ComisionController extends Controller {
             $form->handleRequest($request);
             $comisionId = $entityComisionJuegosDatos->getComisionTipoId();
 
-            $entityComisionTipo = $em->getRepository('SieAppWebBundle:ComisionTipo')->findOneBy(array('id' => $comisionId));
+            $entityComisionTipo = $em->getRepository('SieAppWebBundle:JdpComisionTipo')->findOneBy(array('id' => $comisionId));
 
             $nivel = $entityComisionTipo->getNivelTipoId();
 
@@ -1618,7 +1618,7 @@ class ComisionController extends Controller {
             $entityDatos = $em->getRepository('SieAppWebBundle:ComisionJuegosDatos')->findOneBy(array('id'=>$inscripcion));
             $comision = $entityDatos->getComisionTipoId();  
 
-            $entityComision = $em->getRepository('SieAppWebBundle:ComisionTipo')->findOneBy(array('id'=>$comision));
+            $entityComision = $em->getRepository('SieAppWebBundle:JdpComisionTipo')->findOneBy(array('id'=>$comision));
             $nivel = $entityComision->getNivelTipoId();  
 
             $fase = $entityDatos->getFaseTipo()->getId();   

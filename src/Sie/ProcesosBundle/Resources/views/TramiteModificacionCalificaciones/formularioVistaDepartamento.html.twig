@@ -38,13 +38,12 @@
             <div class="panel-body">
                 <form action="{{path('tramite_modificacion_calificaciones_deriva_departamento')}}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="idTramite" value="{{idTramite}}">
-                    <input type="hidden" name="estadomatricula" value="{{estadomatricula}}">
                     <div class="form-group">
                         <label>¿Aprobar trámite?</label>
                         <div class="radio">
                             <label class="radio-inline">
                                 <input type="radio" name="aprueba" value="SI" required id="aprueba1">
-                                Si <span class="badge badge-info">{{msg}}</span>
+                                Si
                             </label>
                             <label class="radio-inline">
                                 <input type="radio" name="aprueba" value="NO" required id="aprueba2">
@@ -56,26 +55,24 @@
                         <label>Observación</label>
                         <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
                     </div>
-                    {% if estadomatricula != 4 %}
-                        <div id="divRA" style="display:none">
-                            <h5><b>Resolución Administrativa</b> </h5>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label>Nro. de R.A.</label>
-                                    <input type="text" name="nroResAdm" id="nroResAdm" class="form-control" placeholder="Ejm. 001/2019">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label>Fecha de R.A.</label>
-                                    <input type="text" name="fechaResAdm" id="fechaResAdm" class="form-control" placeholder="dd-mm-yyyy">
-                                </div>
+                    <div id="divRA" style="display:none">
+                        <h5><b>Resolución Administrativa</b> </h5>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label>Nro. de R.A.</label>
+                                <input type="text" name="nroResAdm" id="nroResAdm" class="form-control" placeholder="Ejm. 001/2019">
                             </div>
-                            <div class="form-group">
-                                <label>Adjuntar R.A.</label>
-                                <input type="file" id="resAdm" name="resAdm" required onchange="cargarArchivo(event);">
+                            <div class="form-group col-md-4">
+                                <label>Fecha de R.A.</label>
+                                <input type="text" name="fechaResAdm" id="fechaResAdm" class="form-control" placeholder="dd-mm-yyyy">
                             </div>
-                            <br>
                         </div>
-                    {% endif %}
+                        <div class="form-group">
+                            <label>Adjuntar R.A.</label>
+                            <input type="file" id="resAdm" name="resAdm" required onchange="cargarArchivo(event);">
+                        </div>
+                        <br>
+                    </div>
                     <div class="form-group">
                         <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Enviar</button>

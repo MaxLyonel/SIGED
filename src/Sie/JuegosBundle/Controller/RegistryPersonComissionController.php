@@ -84,8 +84,10 @@ class RegistryPersonComissionController extends Controller{
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $nivelId = 13;
+
         return $this->render('SieJuegosBundle:RegistryPersonComission:indexDelegacionDepartamental.html.twig', array(
-                'form'=> $this->formFindPersonDelegado()->createView()
+                'form'=> $this->formFindPersonDelegado($nivelId)->createView()
             ));    
     }
 
@@ -98,10 +100,11 @@ class RegistryPersonComissionController extends Controller{
         return $form;
     }
 
-    private function formFindPersonDelegado(){
+    private function formFindPersonDelegado($nivelId){
         $form = $this->createFormBuilder()
                 ->add('cifind', 'text', array('label' => 'carnet Identidad', 'attr' => array('placeholder' => 'Ingresar CI', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('complemento', 'text', array('label' => 'complemento', 'attr' => array('placeholder' => 'Ingresar Complemento','class' => 'form-control', 'required' => false,'style' => 'text-transform:uppercase', 'maxlength'=>'2')))
+                ->add('nivel', 'hidden', array('attr'=>array('value'=>$nivelId)))  
                 ->add('find','button',array('label'=>'Buscar','attr'=>array('class'=>'btn btn-success','onclick'=>'buscaDelegado()')))
                 ->getForm();
         return $form;
@@ -129,20 +132,52 @@ class RegistryPersonComissionController extends Controller{
         $entity = false;
         $pathToShowImg = false;
         $form = false;
+        $ratificar = false;
 
         if($dataPerson){    
             $entity = $em->getRepository('SieAppWebBundle:Persona')->find($dataPerson['id']);
             
-            
+            if($entity) {
+                $pathToShowImg = $entity->getFoto();
+            }
+
             if($objComisionJuegosDatos){
                 $message = 'Datos existentes';
                 $this->addFlash('lookForDataMessage', $message);
                 $typeMessage = 'success';
             }else{
-                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                // $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                $jdij = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos');
+                $query = $jdij->createQueryBuilder('jdij')
+                    ->select('jdij')
+                    ->join('SieAppWebBundle:JdpComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
+                    ->where('jdij.persona = :persona')
+                    ->andWhere('ct.nivelTipoId = :nivelId')
+                    ->setParameter('persona', $entity)
+                    ->setParameter('nivelId', 13)
+                    ->getQuery();
+
+                $objComisionJuegosDatos = $query->getResult();
+
                 if($objComisionJuegosDatos){
                     // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
+                    $ratificar = false;
+                } else {
+                    
+                    $jdij = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos');
+                    $query = $jdij->createQueryBuilder('jdij')
+                    ->select('jdij')
+                    ->join('SieAppWebBundle:JdpComisionTipo', 'ct', 'WITH', 'jdij.comisionTipo = ct.id')
+                    ->where('jdij.persona = :persona')
+                    ->andWhere('ct.nivelTipoId = :nivelId')
+                    ->setParameter('persona', $entity)
+                    ->setParameter('nivelId', 12)
+                    ->getQuery();
+
+                    $objComisionJuegosDatos = $query->getResult();
+                    
+                    $ratificar = true;
+                    
                 }
 
                 $message = 'Registre datos de comision';
@@ -150,7 +185,6 @@ class RegistryPersonComissionController extends Controller{
                 $typeMessage = 'warning';
 
             }
-            // dump($objComisionJuegosDatos);die;
             $form = $this->formRegisterCommission($entity)->createView();
         }else{
             $message = 'Registre datos de la Persona';
@@ -158,7 +192,11 @@ class RegistryPersonComissionController extends Controller{
             $typeMessage = 'warning';
             $form = $this->formFindPersonBySegip()->createView();
         }
-        // die;
+        
+        if($objComisionJuegosDatos){
+            $objComisionJuegosDatos = $objComisionJuegosDatos[0];
+        }
+        
         return $this->render('SieJuegosBundle:RegistryPersonComission:lookForData.html.twig', array(
                 'entity' => $entity,
                 'form' => $form,
@@ -166,7 +204,7 @@ class RegistryPersonComissionController extends Controller{
                 'objComisionJuegosDatos' => $objComisionJuegosDatos,
                 'typeMessage' => $typeMessage,
                 'pathToShowImg' => $pathToShowImg,
-
+                'ratificar' => $ratificar,
             ));    
     }
 
@@ -186,6 +224,7 @@ class RegistryPersonComissionController extends Controller{
         $em = $this->getDoctrine()->getManager();
         // get send data        
         $form = $request->get('form');
+        $formData = $request->get('form');
         $dataPerson = $this->getPerson($form);
         
         $objComisionJuegosDatos = false;
@@ -202,7 +241,27 @@ class RegistryPersonComissionController extends Controller{
                 $this->addFlash('lookForDataMessage', $message);
                 $typeMessage = 'success';
             }else{
-                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
+                //dump($objComisionJuegosDatos);die;
+                if (count($objComisionJuegosDatos)>0){
+                    $val = true;
+                    $datos = array();
+                    foreach ($objComisionJuegosDatos as $registro) {
+                        $nivelId = $registro->getComisionTipo()->getNivelTipoId();
+                        //dump($nivelId);dump((int)$formData['nivel']);die;
+                        if ($nivelId == (int)$formData['nivel']){
+                            $val = false;
+                            $datos = $registro;
+                        }
+                    }                 
+                    if($val){
+                        $objComisionJuegosDatos = array();
+                    } else {
+                        $objComisionJuegosDatos = $datos;
+                    }
+                }
+                
+                
                 // if($objComisionJuegosDatos){
                 //     list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
                 //     $pathToShowImg = '../..'.$pathImg;
@@ -383,13 +442,13 @@ class RegistryPersonComissionController extends Controller{
                         ->orderBy('lt.id', 'ASC');
             }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
         ))
-        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:ComisionTipo', 'empty_value'=>'Selecionar Comisión',
+        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
 
             'query_builder' => function(EntityRepository $e){
                 return $e->createQueryBuilder('ct')
                         ->where('ct.nivelTipoId = :levelId')
-                        ->andWhere('ct.estado = true')
-                        ->setParameter('levelId','12')
+                        ->andWhere('ct.esactivo = true')
+                        ->setParameter('levelId','13')
                         ->orderBy('ct.comision', 'ASC');
             }, 'property' => 'comision','attr'=>array('class'=>'form-control')))
         ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
@@ -405,32 +464,62 @@ class RegistryPersonComissionController extends Controller{
         // create db conexion
         $em=$this->getDoctrine()->getManager();
         $arrOption=array('personId'=>$personId, 'departamentoId' => $departamentoId);
-        $form = $this->createFormBuilder()        
-        ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
-            'query_builder' => function(EntityRepository $e)use ($arrOption){
-                return $e->createQueryBuilder('lt')
-                        ->where('lt.paisTipoId = :paisId')
-                        ->andwhere('lt.lugarNivel = :levelId')
-                        ->andwhere('lt.codigo = :departamentoId')
-                        ->setParameter('paisId','1')
-                        ->setParameter('levelId','6')
-                        ->setParameter('departamentoId',$arrOption['departamentoId'])
-                        ->orderBy('lt.lugar', 'ASC');
-            }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
-        ))
-        ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
-            'query_builder' => function(EntityRepository $e){
-                return $e->createQueryBuilder('ct')
-                        ->where('ct.nivelTipoId = :levelId')
-                        ->andWhere('ct.estado = true')
-                        ->andWhere('ct.id in (103,105,106,107)')
-                        ->setParameter('levelId','12')
-                        ->orderBy('ct.comision', 'ASC');
-            }, 'property' => 'comision','attr'=>array('class'=>'form-control', 'required' => true)))
-        ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
-        ->add('personId', 'hidden', array('data'=>$personId , 'mapped'=>false))        
-        ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-primary','onclick'=>'saveDelegado()')))
-        ->getForm();
+        $nivelId = 13;
+        if ($nivelId == 12){
+            $form = $this->createFormBuilder()        
+            ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
+                'query_builder' => function(EntityRepository $e)use ($arrOption){
+                    return $e->createQueryBuilder('lt')
+                            ->where('lt.paisTipoId = :paisId')
+                            ->andwhere('lt.lugarNivel = :levelId')
+                            ->andwhere('lt.codigo = :departamentoId')
+                            ->setParameter('paisId','1')
+                            ->setParameter('levelId','6')
+                            ->setParameter('departamentoId',$arrOption['departamentoId'])
+                            ->orderBy('lt.lugar', 'ASC');
+                }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
+            ))
+            ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
+                'query_builder' => function(EntityRepository $e){
+                    return $e->createQueryBuilder('ct')
+                            ->where('ct.nivelTipoId = :levelId')
+                            ->andWhere('ct.esactivo = true')
+                            ->andWhere('ct.id in (103,105,106,107)')
+                            ->setParameter('levelId','12')
+                            ->orderBy('ct.comision', 'ASC');
+                }, 'property' => 'comision','attr'=>array('class'=>'form-control', 'required' => true)))
+            ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
+            ->add('personId', 'hidden', array('data'=>$personId , 'mapped'=>false))        
+            ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-primary','onclick'=>'saveDelegado()')))
+            ->getForm();
+        } else {
+            $form = $this->createFormBuilder()        
+            ->add('departamento', 'entity', array('label'=>'departamento','class' => 'SieAppWebBundle:LugarTipo', 'empty_value'=>'Selecionar Departamento',
+                'query_builder' => function(EntityRepository $e)use ($arrOption){
+                    return $e->createQueryBuilder('lt')
+                            ->where('lt.paisTipoId = :paisId')
+                            ->andwhere('lt.lugarNivel = :levelId')
+                            ->andwhere('lt.codigo = :departamentoId')
+                            ->setParameter('paisId','1')
+                            ->setParameter('levelId','6')
+                            ->setParameter('departamentoId',$arrOption['departamentoId'])
+                            ->orderBy('lt.lugar', 'ASC');
+                }, 'property' => 'lugar','attr'=>array('class'=>'form-control')
+            ))
+            ->add('comisionTipo', 'entity', array('label'=>'Comisión','class' => 'SieAppWebBundle:JdpComisionTipo', 'empty_value'=>'Selecionar Comisión',
+                'query_builder' => function(EntityRepository $e){
+                    return $e->createQueryBuilder('ct')
+                            ->where('ct.nivelTipoId = :levelId')
+                            ->andWhere('ct.esactivo = true')
+                            ->andWhere('ct.id in (146,154,150,156,152,153,122,151)')
+                            ->setParameter('levelId','13')
+                            ->orderBy('ct.comision', 'ASC');
+                }, 'property' => 'comision','attr'=>array('class'=>'form-control', 'required' => true)))
+            ->add('photoperson', 'file', array('label' => 'Fotografía', 'required' => true))
+            ->add('personId', 'hidden', array('data'=>$personId , 'mapped'=>false))        
+            ->add('regCommission','button',array('label'=>'Regstrar Comisión','attr'=>array('class'=>'btn btn-primary','onclick'=>'saveDelegado()')))
+            ->getForm();
+        }
         return $form;
     }
 
@@ -493,14 +582,31 @@ class RegistryPersonComissionController extends Controller{
         // create db conexin 
         $em = $this->getDoctrine()->getManager();
         $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findBy(array('lugarTipo' => $form['departamento'], 'comisionTipo' => $form['comisionTipo']));
-
         try {
             // save the commission data
 
             if(count($pruebaEntity)>0){
-                $message = 'Datos no registrados, ya no cuenta con cupo para el tipo de delegado seleccionado';
-                $this->addFlash('messageCommission', $message);
-                $typeMessage = 'danger';
+                if(count($pruebaEntity) >= ($pruebaEntity[0]->getComisionTipo()->getCantidad())){
+                    $message = 'Datos no registrados, ya no cuenta con cupo para el tipo de delegado seleccionado';
+                    $this->addFlash('messageCommission', $message);
+                    $typeMessage = 'danger';
+                } else {
+                    $typeMessage = 'success';
+
+                    $swSaveCommission = $this->saveCommissionData($form);            
+                    // check if it was donce the save
+                    if($swSaveCommission){
+                        // save message
+                        $message = 'Datos registrados';
+                        $this->addFlash('messageCommission', $message);
+                        $typeMessage = 'success';
+                    }else{
+                        // no save message
+                        $message = 'Datos no registrados';
+                        $this->addFlash('messageCommission', $message);
+                        $typeMessage = 'danger';
+                    }
+                }
             } else {
                 $swSaveCommission = $this->saveCommissionData($form);
             
@@ -549,8 +655,8 @@ class RegistryPersonComissionController extends Controller{
         // dump($form);
         // dump($arrParametros);
         // die;
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
-        // $answerSegip = true;
+        //$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+         $answerSegip = true;
         if($answerSegip){
             // save the person data
             $swSavePerson = $this->savePerson($form);
@@ -587,6 +693,7 @@ class RegistryPersonComissionController extends Controller{
     }
 
     private function saveCommissionData($form){
+        
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $swAnswer = false;
@@ -604,22 +711,30 @@ class RegistryPersonComissionController extends Controller{
                 $ci = $cedula.'-'.$complemento;
             }
 
-            // create the img path
-            // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
-            $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
+            $namePhoto = "";
 
-            // if (!file_exists($dirtmp)) {
-            //     mkdir($dirtmp, 0775);
-            // }
+            if($form['photoData']['photoperson'] != null) {
+                // create the img path
+                // $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/documento_persona/'.$objPerson->getCarnet();
+                $dirtmp = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_persona/'.$ci.'/';
 
-            // get info about the img
-            $imgExtension = $form['photoData']['photoperson']->getMimeType();
-            list($typeImg, $extensionImg) = explode('/', $imgExtension);
-            // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
-            $namePhoto = $ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+                // if (!file_exists($dirtmp)) {
+                //     mkdir($dirtmp, 0775);
+                // }
 
-            //move the file on the img path
-            $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+                // get info about the img
+                $imgExtension = $form['photoData']['photoperson']->getMimeType();
+                list($typeImg, $extensionImg) = explode('/', $imgExtension);
+                // $namePhoto = $objPerson->getCarnet().'_fotografía_'.$form['personId'].'.'.$extensionImg;
+                $namePhoto = $ci.'/'.$ci.'_fotografia_'.$personaId.'.'.$extensionImg;
+
+                //move the file on the img path
+                $movefile = $form['photoData']['photoperson']->move($dirtmp, $namePhoto);
+            } else {
+                if($objPerson) {
+                    $namePhoto = $objPerson->getFoto();
+                }
+            }
 
             // save the commision to the person choose
             $objComisionJuegosDatos = new JdpDelegadoInscripcionJuegos();
@@ -627,22 +742,17 @@ class RegistryPersonComissionController extends Controller{
             $objComisionJuegosDatos->setPersona($objPerson);
             $objComisionJuegosDatos->setComisionTipo($em->getRepository('SieAppWebBundle:JdpComisionTipo')->find($form['comisionTipo']));
             $objComisionJuegosDatos->setLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento']));
-            $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));
-            // $objComisionJuegosDatos->setRutaImagen($dirtmp.'/'.$namePhoto);            
-            $objComisionJuegosDatos->setRutaImagen($ci.'/'.$namePhoto);            
+            $objComisionJuegosDatos->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->currentyear));           
             $objComisionJuegosDatos->setObs(isset($form['obs'])?strtoupper(mb_strtoupper($form['obs'], 'utf8')):'');
+            $objComisionJuegosDatos->setRutaImagen($namePhoto);
             $em->persist($objComisionJuegosDatos);
-
-            $objPerson->setFoto($ci.'/'.$namePhoto);            
+            $objPerson->setFoto($namePhoto);
             $em->persist($objPerson);
-
             $em->flush(); 
             $swAnswer = true;
-            
         } catch (Exception $e) {
             $swAnswer = false;
         }
-
         return $swAnswer;
     }
 
@@ -654,7 +764,7 @@ class RegistryPersonComissionController extends Controller{
         $swAnswer = false;
         try {
             $objPerson = new Persona();
-            $objPerson->setSegipId(1);
+            $objPerson->setSegipId(0);
             $objPerson->setCarnet($form['ci']);
             $objPerson->setComplemento($form['complemento']);
             $objPerson->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
