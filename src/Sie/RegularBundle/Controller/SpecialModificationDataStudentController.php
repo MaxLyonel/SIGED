@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEliminados;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion; 
@@ -55,10 +57,18 @@ class SpecialModificationDataStudentController extends Controller{
 
     public function lookforStudentAction(Request $request){
         //get the send data
-        $form = $request->get('form');
+        $response = new JsonResponse();
+        $form['codeRude'] = $request->get('codigoRude');
+        $form['arrOption'] = $request->get('arraOptionBuscar');
+
+// dump($request);
+// dump($form);
+// die;
+        // $form = $request->get('form');
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>trim($form['codeRude'])));
+        
         if($objStudent){
             // do the validation
             switch($form['arrOption']){
@@ -110,17 +120,48 @@ class SpecialModificationDataStudentController extends Controller{
         }
         $this->addFlash('messageModStudent', $message);
         
-        
+         $arrStudent =( array(
+                    'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
+                    'complemento'=>$objStudent->getComplemento(),
+                    'genero'=>$objStudent->getGeneroTipo()->getGenero(),
+                    'paterno'=>$objStudent->getPaterno(),
+                    'materno'=>$objStudent->getMaterno(),
+                    'nombre'=>$objStudent->getNombre(),
+                    'fechaNacimiento'=>$objStudent->getFechaNacimiento()->format('d-m-Y'),
+                    'pais'=>$objStudent->getPaisTipo()->getPais(),
+                    'paisId'=>$objStudent->getPaisTipo()->getId(),
+                    'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
+                    'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
+                    'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
+                    'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
+
+                    'generoTipo'=>($objStudent->getGeneroTipo()==NULL)?'':$objStudent->getGeneroTipo()->getGenero(),
+                    'generoTipoId'=>($objStudent->getGeneroTipo()==NULL)?'':$objStudent->getGeneroTipo()->getId(),
+
+                    'localidad'=>$objStudent->getLocalidadNac(),
+                    'oficialia'=>$objStudent->getOficialia(),
+                    'libro'=>$objStudent->getLibro(),
+                    'partida'=>$objStudent->getPartida(),
+                    'folio'=>$objStudent->getFolio(),
+                ));
         // dump($objStudent);
         // dump($form);
         // die;
-
-        return $this->render('SieRegularBundle:SpecialModificationDataStudent:lookforStudent.html.twig', array(
-                'compleMessage' => $compleMessage,
-                'typeMessage'   => $typeMessage,
-                'form'          => $this->studentForm($objStudent)->createView(),
-                'sw'            => $sw,
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'codigoRude'=>$objStudent->getCodigoRude(),
+            'studentId'=>$objStudent->getId(),
+            'student'=> $arrStudent
         ));
+       
+        return $response;        
+
+        // return $this->render('SieRegularBundle:SpecialModificationDataStudent:lookforStudent.html.twig', array(
+        //         'compleMessage' => $compleMessage,
+        //         'typeMessage'   => $typeMessage,
+        //         'form'          => $this->studentForm($objStudent)->createView(),
+        //         'sw'            => $sw,
+        // ));
     }
 
     private function getInscription($data, $sw){

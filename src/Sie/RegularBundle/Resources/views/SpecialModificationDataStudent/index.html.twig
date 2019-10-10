@@ -1,3 +1,4 @@
+
 {% extends 'layoutRegular.html.twig' %}
 {% block stylesheets %}
     {{parent()}}
@@ -5,6 +6,9 @@
         .higherWider {
             width:800px;
             margin-top:100px;
+        }
+        [v-cloak]{
+            display: none;
         }
     </style>
 
@@ -42,60 +46,256 @@
     </div>
 
     <!-- /.row -->
+    <div id="app">
+    <div v-cloak>
 
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            <div class="panel panel-icon panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-search"></i>
-                    <div class="pull-right">
-                        <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a>
-                    </div>                                        
-                </div>
-                <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-search"></i>
+                        <div class="pull-right">
+                            <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a>
+                        </div>                                        
+                    </div>
+                    <div class="panel-body">
+                        <!-- form to search student -->
+                        <div class="form-group row buscador">
+                            
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="" placeholder="Código rude">
+                            </div>
 
-                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idFormFindStudent'} } )}}
-                            <div class="form-body">
-                                <div class="form-group no-margin">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            {{form_widget(form.codeRude)}}
-                                        </div>
-                                        <div class="col-md-2">
-                                            {{form_widget(form.arrOption)}}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{form_widget(form.find)}}
-                                        </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right">
+                                <select id="form_arrOption" name="form[arrOption]" required="required" class="form-control col-lg-6 col-md-6 col-sm-6" v-model="optionBuscar">
+                                    <option value="" selected="selected">Seleccionar Opción</option>
+                                    <option value="0">Concluyó el Bachillerato</option>
+                                    <option value="1">Tiene registro en gestiones pasadas</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> </button>
+                            </div>
+                        </div>
+                        <!-- end form to search student -->
+                                                      
+
+                            <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
+                            <div v-if="buscando" class="text-center">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                            </div>
+                            <!-- && !buscando -->
+                            <div v-if="studentId != ''  ">
+                                <!-- <div v-if="buscando"> -->
+                                </br></br>
+                                    <p class="encabezado bg-primary">MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO
+                                        <a class="btn btn-default" data-toggle="modal" href='#modalEstudiante'> <i class="fa fa-pencil"></i> </a>
+                                    </p>
+                                    <table class="table table-primary" border="0" >
+                                        <tr>
+                                            <!-- <th>Código Rude</th>
+                                            <td>${codigoRude}</td> -->
+                                            <th>Carnet</th>
+                                            <td>${dataStudent.carnetIdentidad}</td>
+                                            <th>Complemento</th>
+                                            <td>${dataStudent.complemento}</td>
+                                            <th>Fecha Nacimiento</th>
+                                            <td>${dataStudent.fechaNacimiento}</td>
+                                            <td rowspan="2" align="right">
+                                                
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Paterno</th>
+                                            <td>${dataStudent.paterno}</td>
+                                            <th>Materno</th>
+                                            <td>${dataStudent.materno}</td>
+                                            <th>Nombre(s)</th>
+                                            <td>${dataStudent.nombre}</td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <p class="encabezado bg-primary">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</p>
+                                    <table class="table table-primary" border="0">
+                                        <tr>
+                                            <th colspan="2">Genero</th>
+                                            <td colspan="3">${dataStudent.generoTipo}</td>
+                                            <td colspan="4" align="right">
+                                                <button type="button" class="btn btn-default">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pais</th>
+                                            <td>${dataStudent.pais}</td>
+                                            <th>Departamento</th>
+                                            <td>${dataStudent.lugarNacTipo}</td>
+                                            <th>Provincia</th>
+                                            <td>${dataStudent.lugarProvNacTipo}</td>
+                                            <th>Localidad</th>
+                                            <td>${dataStudent.localidad}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Oficialia</th>
+                                            <td>${dataStudent.oficialia}</td>
+                                            <th>Libro</th>
+                                            <td>${dataStudent.libro}</td>
+                                            <th>Partida</th>
+                                            <td>${dataStudent.Partida}</td>
+                                            <th>Folio</th>
+                                            <td>${dataStudent.Folio}</td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <p class="encabezado bg-primary">DATOS REQUERIDOS PARA LA MODIFICACIÓN</p>
+                                    <table class="table table-primary">
+                                        <tr>
+                                            <th>Resolucion Administrativa</th>
+                                            <td>
+                                                <input type="text" id="form_resoladm" name="form[resoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}">
+                                            </td>
+                                            <th>Fecha Resolucion</th>
+                                            <td>
+                                                <input type="text" id="form_fecharesoladm" name="form[fecharesoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Justivicativo</th>
+                                            <td colspan="4">
+                                                <textarea id="form_obs" name="form[obs]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,25}"></textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                  
+                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button>
                                     </div>
-                                </div><!-- /.form-group -->
-                                <div class="form-group no-margin">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                        </div>
-                                        <div class="col-md-6">
-                                        </div>
-                                    </div>
-
-                                </div><!-- /.form-group -->
-                              
-                            </div><!-- /.form-body -->
-                            <div class="form-footer">
-                                <!-- <button type="submit" class="btn btn-success">Submit</button> -->
-                            </div><!-- /.form-footer -->
-                        {{form_end(form)}}
-                   
+                              <!-- </div> -->
+                            </div>
+                  
+                       
+                    </div>
                 </div>
+                <div id="dataStudent"></div>
             </div>
-            <div id="dataStudent"></div>
         </div>
-    </div>
+
+</div>
 </div>
 
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
     <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                codigoRude:'',
+                gestion:'',
+                arraOptionBuscar:'',
+                rudeBuscar:'',
+                optionBuscar:'',
+                studentId:'',
+                buscando:false,
+                respuesta:'',
+                dataStudent: {},
+                dataStudentModif: {},                            
+                
+            },
+            methods: {
+                buscarEstudiante: function(){
+                    this.buscando = true;
+                    this.studentId = true;
+                    this.codigoRude = '';
+                    this.estudiante = '';
+                    this.respuesta = '';
+                    this.arraOptionBuscar = '';
+                    
+
+                    if (this.rudeBuscar.length == 0) {
+                        this.respuesta = 'Debe ingresar un código RUDE válido';
+                        this.buscando = false;
+                        return;
+                    }
+
+                    if (this.rudeBuscar.length < 13) {
+                        this.respuesta = 'El código RUDE ingresado no es válido';
+                        this.buscando = false;
+                        return;
+                    }
+                    if(this.optionBuscar == ''){
+                        this.respuesta = 'Debe ingresar un opcion de busqueda';
+                        this.buscando = false;
+                    }
+
+                    axios.get(Routing.generate('specialmodificationdata_student_lookfor_student', {
+                        codigoRude: this.rudeBuscar,
+                        arraOptionBuscar: this.optionBuscar                        
+                    }))
+                    .then(response => {
+                        if (response.status == 200) {
+                            
+                            this.codigoRude = response.data.codigoRude;
+                            this.estudiante = response.data.estudiante;
+                            this.studentId = response.data.studentId;
+                            this.dataStudent = response.data.student;
+                            this.dataStudentModif = response.data.student;
+                            this.buscando = false;
+                        console.log(this.dataStudent);
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });
+                }
+            },
+            mounted(){
+                
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         var lookforStudent = function () {
