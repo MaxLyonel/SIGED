@@ -1,0 +1,132 @@
+<div class="modal-dialog modal-lg" id="sistemamenus">
+    <div class="modal-content modal-primary">
+                    <div class="modal-header  ">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="fa fa-pencil"></i>
+                            <strong>Modificar Informacion de: <p class="text-warning"> {{ menuseleccionado.detalle_menu }}</p></strong> </h4>
+                    </div>
+                    <div class="modal-body">
+
+                        {{form_start(form,{'attr':{'id':'formMenuAsiganado','class':'form-horizontal form-group has-primary'}})}}
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <strong>Detalle Menú</strong>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{form_widget(form.detalle_menu)}}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                            <strong>Icono</strong>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{form_widget(form.icono)}}
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Fecha de Inicio</strong>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Fecha Final</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id='sandbox-container'>
+                                <div class="input-daterange" id="datepicker">
+                                    <div class="col-md-6">
+                                        {{form_widget(form.fechaInicio)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{form_widget(form.fechaFin)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                                {{form_widget(form.guardar)}}
+                        </div>
+                        {{form_end(form)}}
+                    </div>
+    </div>
+</div>
+
+<script>
+
+    function guardarmenuasignado() {
+        $('#modal').modal('hide');
+        var formData = $('#formMenuAsiganado').serialize();
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_editmenusistemaasignado') }}",
+            /*url: Routing.generate('gestionmenuprincipal_createprueba'),*/
+            data:formData,
+            beforeSend: function () {
+                $("#menusasignados").empty();
+                //$("#listasistemas").append('<div class="text-center"><img src="{#{{asset('img/loading.gif')}}#}" /></div>');
+            },
+            success: function (data) {
+                $('#menusasignados').empty();
+                $('#menusasignados').append(data);
+            }
+        });
+    }
+
+
+
+
+</script>
+
+
+<script type="text/javascript">
+
+    $('.calendario').datepicker({
+
+        format: 'dd-mm-yyyy',
+
+        todayBtn: 'linked'
+
+    });
+
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+        //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
+    $( document ).ready(function() {
+        $('.icp-auto').iconpicker();
+    });
+
+
+</script>
+

@@ -151,9 +151,14 @@ class TramiteAceleracionController extends Controller
                 return $response->setData(array('msg' => 'notalento'));
             }
             $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));//Evaluar 'estadomatriculaTipo' => 4
-            if (!empty($einscripcion_result)){
+            if (!empty($einscripcion_result)) {
+                // Verifica si la Unidad Educativa es regular
                 if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativaTipo()->getId() != 1) {
                     return $response->setData(array('msg' => 'noregular'));
+                }
+                // Verifica si el Estudiante está inscrito en su Unidad Educativa
+                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
+                    return $response->setData(array('msg' => 'noue'));
                 }
                 $estudianteinscripcion_id = $einscripcion_result->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
@@ -167,7 +172,6 @@ class TramiteAceleracionController extends Controller
                     ->getQuery()
                     ->getResult();
                 $valida = 0;
-                // dump($resultDatos);die;
                 foreach ($resultDatos as $item) {
                     $datos = json_decode($item->getdatos());
                     if ($datos->estudiante_id == $estudiante_result->getId()) {
@@ -243,22 +247,22 @@ class TramiteAceleracionController extends Controller
         $leteral = '';
         switch ($grado) {
             case 1:
-                $leteral = 'Primero de '.($nivel==12?'primaria':'secundaria');
+                $leteral = 'Primero de '.($nivel==12?'Primaria Comunitaria Vocacional':'Secundaria Comunitaria Productiva');
                 break;
             case 2:
-                $leteral = 'Segundo de '.($nivel==12?'primaria':'secundaria');
+                $leteral = 'Segundo de '.($nivel==12?'Primaria Comunitaria Vocacional':'Secundaria Comunitaria Productiva');
                 break;
             case 3:
-                $leteral = 'Tercero de '.($nivel==12?'primaria':'secundaria');
+                $leteral = 'Tercero de '.($nivel==12?'Primaria Comunitaria Vocacional':'Secundaria Comunitaria Productiva');
                 break;
             case 4:
-                $leteral = 'Cuarto de '.($nivel==12?'primaria':'secundaria');
+                $leteral = 'Cuarto de '.($nivel==12?'Primaria Comunitaria Vocacional':'Secundaria Comunitaria Productiva');
                 break;
             case 5:
-                $leteral = 'Quinto de '.($nivel==12?'primaria':'secundaria');
+                $leteral = 'Quinto de '.($nivel==12?'Primaria Comunitaria Vocacional':'Secundaria Comunitaria Productiva');
                 break;
             default:
-                $leteral = 'Sexto de '.($nivel==12?'primaria':'secundaria');
+                $leteral = 'Sexto de '.($nivel==12?'Primaria Comunitaria Vocacional':'Secundaria Comunitaria Productiva');
                 break;
         }
         return $leteral;
@@ -647,7 +651,7 @@ class TramiteAceleracionController extends Controller
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
         }
-        $observaciones = 'Llenado del Acta Supletorio';
+        $observaciones = 'Llenado del Acta Supletoria';
         $tipotramite_id = $tipotramite->getId();
         $evaluacion = '';
         $distrito_id = 0;
@@ -1370,12 +1374,12 @@ class TramiteAceleracionController extends Controller
         );
         // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetAuthor('Adal');
-        $pdf->SetTitle('Acta Supletorio');
+        $pdf->SetTitle('Acta Supletoria');
         $pdf->SetSubject('Report PDF');
         $pdf->SetPrintHeader(false);
         $pdf->SetPrintFooter(true, -10);
         // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
-        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
+        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIA');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 10, 10, true);
 

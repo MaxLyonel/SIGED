@@ -23,7 +23,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Devolución de Aceleración</h3>
+                                <h3 class="panel-title">Devolución del trámite de Aceleración Educativa</h3>
                             </div>
                         </div>
                     </div>
@@ -44,13 +44,13 @@
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="paterno">Paterno</label>
+                                        <label for="paterno">Apellido Paterno</label>
                                         <input type="text" class="form-control noedit" id="paterno" name="paterno" value="{{ estudiante.paterno }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="materno">Materno</label>
+                                        <label for="materno">Apellido Materno</label>
                                         <input type="text" class="form-control noedit" id="materno" name="materno" value="{{ estudiante.materno }}">
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                                         <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento }}">
                                     </div>
                                 </div>
@@ -147,11 +147,11 @@
                                 <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
-                                        <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="informe_comision">Informe Complementario</label>
-                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" {% if primer_tramite == 'SI' %} disabled {% endif %} required>
+                                        <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf" {% if primer_tramite == 'SI' %} disabled {% endif %} required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">

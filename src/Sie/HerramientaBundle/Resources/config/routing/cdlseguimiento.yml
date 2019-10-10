@@ -33,3 +33,31 @@ cdl_seguimiento_estudiantes_clubes_lectura:
 cdl_seguimiento_lecturas_productos:
     path:  /lecturasproductos
     defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:LecturasProductos }
+
+cdl_seguimiento_buscar_area:
+    path:  /buscararea
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:buscraDistrito }
+
+cdl_seguimiento_lista_lecturas:
+    path:  /listalecturas
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:listaLecturas }
+
+cdl_seguimiento_lista_descarga:
+    path:  /listalecturasdescarga
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:listaLecturasDescarga }
+
+cdl_seguimiento_uesconcdl_descarga:
+    path:  /uesconcdldescarga
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:uesConCdlDescarga }
+
+cdl_seguimiento_uessincdl_descarga:
+    path:  /uessincdldescarga
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:uesSinCdlDescarga }
+
+cdl_seguimiento_cdl_descarga:
+    path:  /cdldescarga
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:cdlDescarga }
+
+cdl_seguimiento_estudiantes_cdl_descarga:
+    path:  /estudiantescdldescarga
+    defaults: { _controller: SieHerramientaBundle:CdlSeguimiento:estudiantesCdlDescarga }

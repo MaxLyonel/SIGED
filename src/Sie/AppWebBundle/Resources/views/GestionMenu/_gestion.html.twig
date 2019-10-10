@@ -1,0 +1,114 @@
+{% extends 'layoutGestmenu.html.twig' %}
+{% block contentoption %}
+    <style>
+        *{margin:0; padding:0;font-family:Arial, sans-serif;border:0;font-weight:400;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+
+        h1 {text-align:center;margin:30px 0 10px 0}
+        .picker {position:relative;width:90%;margin:0 auto}
+        .inputpicker {width:100%;padding:10px;background:#f2f2f2}
+
+        .oculto {width:100%;background:#f2f2f2;border-radius:0 0 10px 10px;padding:10px;overflow:auto;max-height:200px;display:none}
+        .oculto ul {display:inline;float:left;width:100%;margin:0;padding:0}
+        .oculto ul li {margin:0;padding:0;display:block;width:30px;height:30px;text-align:center;font-size:15px;font-family:"fontawesome";float:left;cursor:pointer;color:#666;line-height:30px;transition:0.2s all}
+        .oculto ul li:hover {background:#FFF;color:#000}
+    </style>
+
+
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/css/jquery.fonticonpicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/jquery.fonticonpicker.js') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/jquery.fonticonpicker.min.js') }}" />
+
+
+    <!-- required default theme -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/themes/grey-theme/jquery.fonticonpicker.grey.css') }}" />
+    <!-- optional themes -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/themes/dark-grey-theme/jquery.fonticonpicker.darkgrey.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/demo/fontello-7275ca86/css/fontello.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('webGestmenu/demo/icomoon/icomoon.css') }}" />
+
+    <script type="text/javascript" src="{{ asset('webGestmenu/jquery.fonticonpicker.min.js') }}"></script>#}
+
+
+
+<body>
+
+<!-- SELECT element -->
+<select id="e1_element" name="e1_element" class="myselect">
+    <option value="">No icon</option>
+
+    <option value="">  </option>
+    <option>icon-search</option>
+    <option>icon-right-dir</option>
+    <option>icon-star</option>
+    <option>icon-cancel</option>
+    <option>icon-help-circled</option>
+    <option>icon-info-circled</option>
+    <option>icon-eye</option>
+    <option>icon-tag</option>
+    <option>icon-bookmark</option>
+    <option>icon-heart</option>
+    <option>icon-thumbs-down-alt</option>
+    <option>icon-upload-cloud</option>
+    <option>icon-phone-squared</option>
+    <option>icon-cog</option>
+    <option>icon-wrench</option>
+    <option>icon-volume-down</option>
+    <option>icon-down-dir</option>
+    <option>icon-up-dir</option>
+    <option>icon-left-dir</option>
+    <option>icon-thumbs-up-alt</option>
+</select>
+<!-- JavaScript -->
+
+<div class="picker">
+    <input type="text" readonly class="inputpicker" placeholder="Haz click aqu&iacute; para elegir tu icono preferido...">
+</div>
+
+
+</body>
+
+{% endblock %}
+{% block javascripts%}
+<script>
+    $(document).ready(function()
+    {
+        $(".picker").each(function()
+        {
+            div=$(this);
+            if (icos)
+            {
+                var iconos="<ul>";
+                for (var i=0; i<icos.length; i++) { iconos+="<li><i data-valor='"+icos[i]+"' class='fa "+icos[i]+"'></i></li>"; }
+                iconos+="</ul>";
+            }
+            div.append("<div class='oculto'>"+iconos+"</div>");
+            $(".inputpicker").click(function()
+            {
+                $(".oculto").fadeToggle("fast");
+            });
+            $(document).on("click",".oculto ul li",function()
+            {
+                $(".inputpicker").val($(this).find("i").data("valor"));
+                $(".oculto").fadeToggle("fast");
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+
+{#{% block javascripts%}
+    <script>
+        jQuery(document).ready(function($) {
+            $('#e1_element').fontIconPicker();
+
+        });
+    </script>
+
+
+{% endblock %}#}
+
+
+
+
+

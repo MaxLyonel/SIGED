@@ -2,15 +2,12 @@ Sie\AppWebBundle\Entity\MenuObjeto:
     type: entity
     table: menu_objeto
     indexes:
-        IDX_F40CBE4E21FC73D2:
-            columns:
-                - menu_tipo_id
-        IDX_F40CBE4E428EA8F1:
-            columns:
-                - objeto_tipo_id
         IDX_F40CBE4E34C419BF:
             columns:
                 - sistema_tipo_id
+        IDX_F40CBE4E428EA8F1:
+            columns:
+                - objeto_tipo_id
     id:
         id:
             type: smallint
@@ -21,6 +18,12 @@ Sie\AppWebBundle\Entity\MenuObjeto:
             generator:
                 strategy: SEQUENCE
     fields:
+        menuTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: menu_tipo_id
         fcreacion:
             type: date
             nullable: true
@@ -40,13 +43,13 @@ Sie\AppWebBundle\Entity\MenuObjeto:
             unsigned: false
             comment: ''
     manyToOne:
-        menuTipo:
-            targetEntity: MenuTipo
+        sistemaTipo:
+            targetEntity: SistemaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                menu_tipo_id:
+                sistema_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         objetoTipo:
@@ -56,15 +59,6 @@ Sie\AppWebBundle\Entity\MenuObjeto:
             inversedBy: null
             joinColumns:
                 objeto_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        sistemaTipo:
-            targetEntity: SistemaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                sistema_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

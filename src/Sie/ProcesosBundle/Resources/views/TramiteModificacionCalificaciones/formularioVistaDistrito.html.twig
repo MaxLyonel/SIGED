@@ -7,6 +7,20 @@
         .jupper{
             text-transform: uppercase;
         }
+        .aviso{
+            /* border: 1px solid #CCCCCC; */
+            /* background: #EEEEEE; */
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        ul{
+            margin-left: -25px;
+            text-align: justify;
+        }
+        textarea{
+            resize: vertical;
+            max-height: 200px;
+        }
     </style>
     <div class="header-content">
         <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
@@ -36,48 +50,78 @@
                 <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario de recepción y verificación Distrito </h3>
             </div>
             <div class="panel-body">
-                <form action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="idTramite" value="{{idTramite}}">
-                    <div class="form-group">
-                        <label>¿El trámite es procedente?</label>
-                        <div class="radio">
-                            <label class="radio-inline">
-                                <input type="radio" name="procedente" value="SI" required id="procedente1">
-                                Si
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="procedente" value="NO" required id="procedente2">
-                                No
-                            </label>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <form action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="idTramite" value="{{idTramite}}">
+                            <div class="form-group">
+                                <label>¿El trámite es procedente?</label>
+                                <div class="radio">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="procedente" value="SI" required id="procedente1">
+                                        Si
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="procedente" value="NO" required id="procedente2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="divFinalizar" style="display:none">
+                                <label>¿Qué desea hacer con el trámite?</label>
+                                <div class="radio">
+                                    <label class="radio-inline">
+                                        <input type="radio" checked="checked" name="finalizar" value="NO" required>
+                                        Devolver trámite a la Unidad Educativa
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="finalizar" value="SI" required>
+                                        Finalizar y cerrar trámite
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Observación</label>
+                                <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Adjuntar informe (Opcional)</label>
+                                <input type="file" name="informe" id="informe" onchange="cargarArchivo(event);">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="aviso" style="display:none">
+                            <h4>Nota:</h4>
+                            <ul>
+                                <li>
+                                    Si la solicitud corresponde al bimestre anterior del operativo declarado por la Unidad Educativa, en ese caso adjuntará el informe correspondiente que aprueba la modificación a realizar y concluirá el trámite respectivo.
+                                </li>
+                                <li>
+                                    Si la modificación de trámite, corresponde a calificaciones anteriores a 2 o más bimestres o a una gestión cerrada, remitirá a la Dirección Departamental de Educación con el informe correspondiente.
+                                </li>
+                            </ul>
+                            {% if aprobarDistrito == true %}
+                                <div class="alert alert-success">
+                                    <strong>Aviso!</strong> De acuerdo a las consideraciones anteriores
+                                    <p>El trámite <strong>SERÁ APROBADO</strong> de forma directa.</p>
+                                </div>
+                            {% endif %}
+                            {% if aprobarDistrito == false %}
+                                <div class="alert alert-info"> 
+                                    <strong>Aviso!</strong> De acuerdo a las consideraciones anteriores
+                                    <p>El trámite será derivado a la <strong>DIRECCIÓN DEPARTAMENTAL</strong> para su aprobación.</p>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="form-group" id="divFinalizar" style="display:none">
-                        <label>¿Qué desea hacer con el trámite?</label>
-                        <div class="radio">
-                            <label class="radio-inline">
-                                <input type="radio" checked="checked" name="subsanable" value="SI" required>
-                                Devolver trámite a la Unidad Educativa
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="subsanable" value="NO" required>
-                                Finalizar y cerrar trámite
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Observación</label>
-                        <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Adjuntar informe (Opcional)</label>
-                        <input type="file" name="informe" onchange="cargarArchivo(event);">
-                        <br>
-                    </div>
-                    <div class="form-group">
-                        <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -91,12 +135,16 @@
         function validarRadio(){
             if($('#procedente1').is(':checked')){
                 $('#divFinalizar').css('display','none');
-                // $('input[name="subsanable"]').removeAttr('required');
+                $('.aviso').css('display','block');
+                // $('input[name="finalizar"]').removeAttr('required');
+                $('#informe').attr('required','required');
             }else{
                 if($('#procedente2').is(':checked')){
                     $('#divFinalizar').css('display','block');
+                    $('.aviso').css('display','none');
+                    $('#informe').removeAttr('required');
                 }
-                // $('input[name="subsanable"]').attr('required','required');
+                // $('input[name="finalizar"]').attr('required','required');
             }
         }
         $('input[name="procedente"]').on('change', function(){

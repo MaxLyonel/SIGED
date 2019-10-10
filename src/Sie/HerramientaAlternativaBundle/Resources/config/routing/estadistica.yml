@@ -65,3 +65,31 @@ estadistica_busqueda_est_centro_print_pdf:
 estadistica_busqueda_est_centro_print_xls:
     path:     /informacion/centro/busquedaest/print/xls
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:centroAltEstPrintXls }
+
+estadistica_alternativa_estadomatricula_general_print:
+    path:     /informacion/general/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaGralPrint }
+
+estadistica_esp_alternativa_estadomatricula_general_print:
+    path:     /informacion/especialidad/general/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaEspecialidadGralPrint }
+
+estadistica_alternativa_estadomatricula_completa_print:
+    path:     /informacion/completa/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaCompletaPrint }
+
+estadistica_esp_alternativa_estadomatricula_completa_print:
+    path:     /informacion/especialidad/completa/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaEspecialidadCompletoPrint }
+
+estadistica_especialidad_estadomatricula_print:
+    path:     /informacion/especialidad/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaPorEspecialidadPrint }
+
+estadistica_busqueda_especialidad_estadomatricula_centro_print:
+    path:     /informacion/centro/especialidad/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaEspecialidadCeaPrint }
+
+estadistica_busqueda_estadomatricula_est_centro_print:
+    path:     /informacion/centro/estadomatricula/print
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:estadoMatriculaPorCeaPrint }

@@ -147,16 +147,18 @@
                     </div>
                 </div>  
 
-                <form name="formEstadisticaXls" id="formEstadisticaXls" role="form" action="{{ path('sie_herramienta_estadistica_bth_unidadeducativa_xlsx') }}" method="POST">  
+                <form name="formEstadisticaXls" id="formEstadisticaXls" role="form" action="{{ path('cdl_seguimiento_estudiantes_cdl_descarga') }}" method="POST">  
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
+                    <input type="hidden" name="tipo" value="xls" />
                 </form>   
 
-                <form name="formEstadisticaPdf" id="formEstadisticaPdf" role="form" action="{{ path('sie_herramienta_estadistica_bth_unidadeducativa_pdf') }}" method="POST">  
+                <form name="formEstadisticaPdf" id="formEstadisticaPdf" role="form" action="{{ path('cdl_seguimiento_estudiantes_cdl_descarga') }}" method="POST">  
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
+                    <input type="hidden" name="tipo" value="xlsx" />
                 </form>                   
             {% else %}
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -243,6 +245,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">                   
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-default shadow">
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">    
+                                        <div id="chartContainerNivelGrado" style="height: 300px;"> </div> 
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
                 {% else %}
                     {% if infoEstadistica is defined %}
                         {% include 'SieAppWebBundle:Reporte:DirectorioDetalleRegular.html.twig' with {'entityUnidadEducativa': infoEstadistica} %}
@@ -312,11 +326,18 @@
                 {% endif %} 
             {% endautoescape %}
 
+            {% autoescape %}
+                {% if datoGraficoNivelGrado is defined %}
+                    {{ datoGraficoNivelGrado|raw }}   
+                {% endif %} 
+            {% endautoescape %}
+
             $(function () {
                 chartContainerNivelLoad(); 
                 chartContainerGeneroLoad(); 
                 chartContainerDependenciaLoad(); 
-                chartContainerAreaLoad(); 
+                chartContainerAreaLoad();
+                chartContainerNivelGradoLoad(); 
             });  
 
             function seeGraphic (infoTipo,infoCodigo,infoRol) {
