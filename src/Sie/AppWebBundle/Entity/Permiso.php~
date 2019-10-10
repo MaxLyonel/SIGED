@@ -276,4 +276,32 @@ class Permiso
     {
         return $this->menuObjeto;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\MenuSistema
+     */
+    private $menuSistemaRol;
+
+
+    /**
+     * Set menuSistemaRol
+     *
+     * @param \Sie\AppWebBundle\Entity\MenuSistema $menuSistemaRol
+     * @return Permiso
+     */
+    public function setMenuSistemaRol(\Sie\AppWebBundle\Entity\MenuSistemaRol $menuSistemaRol = null)
+    {
+        $this->menuSistemaRol = $menuSistemaRol;
+    
+        return $this;
+    }
+
+    /**
+     * Get menuSistemaRol
+     *
+     * @return \Sie\AppWebBundle\Entity\MenuSistema 
+     */
+    public function getMenuSistemaRol()
+    {
+        return $this->menuSistemaRol;
+    }
 }

@@ -51,6 +51,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
                 break;
             case '172.20.196.9:8015':
                 $sysname = 'ALTERNATIVA';
@@ -282,12 +283,20 @@ class DefaultController extends Controller {
                 //$sysbutton = true;
                 //$layout = 'layoutHerramientaAlternativa.html.twig';
                 //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                $sysname = 'procesos';
+                $sysname = 'PROCESOS';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutProcesos.html.twig';
                 $this->session->set('pathSystem', "SieProcesosBundle");
-                break;                
+                break;
+
+                //$sysname = 'REGULAR';
+                //$sysporlet = 'blue';
+                //$sysbutton = true;
+                //$layout = 'layoutRegular.html.twig';
+                //$this->session->set('pathSystem', "SieRegularBundle");
+                //$this->session->set('sistemaid', 1);
+                //break;
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';

@@ -1,10 +1,6 @@
 Sie\AppWebBundle\Entity\Permiso:
     type: entity
     table: permiso
-    indexes:
-        IDX_FD7AAB9E6FB5AA13:
-            columns:
-                - menu_objeto_id
     id:
         id:
             type: integer
@@ -21,6 +17,12 @@ Sie\AppWebBundle\Entity\Permiso:
             length: 45
             fixed: false
             comment: ''
+        menuSistemaRolId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: menu_sistema_rol_id
         create:
             type: boolean
             nullable: true
@@ -47,14 +49,4 @@ Sie\AppWebBundle\Entity\Permiso:
             length: null
             fixed: false
             comment: ''
-    manyToOne:
-        menuObjeto:
-            targetEntity: MenuObjeto
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                menu_objeto_id:
-                    referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

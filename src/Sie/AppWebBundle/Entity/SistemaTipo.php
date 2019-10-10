@@ -29,15 +29,6 @@ class SistemaTipo
      */
     private $abreviatura;
 
-    /**
-     * @var string
-     */
-    private $bundle;
-
-    /**
-     * @var string
-     */
-    private $url;
 
     /**
      * Get id
@@ -117,6 +108,39 @@ class SistemaTipo
     {
         return $this->abreviatura;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\MenuNivelTipo
+     */
+    private $nivelSistemaTipo;
+
+
+    /**
+     * Set nivelSistemaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\MenuNivelTipo $nivelSistemaTipo
+     * @return SistemaTipo
+     */
+    public function setNivelSistemaTipo(\Sie\AppWebBundle\Entity\MenuNivelTipo $nivelSistemaTipo = null)
+    {
+        $this->nivelSistemaTipo = $nivelSistemaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get nivelSistemaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\MenuNivelTipo 
+     */
+    public function getNivelSistemaTipo()
+    {
+        return $this->nivelSistemaTipo;
+    }
+    /**
+     * @var string
+     */
+    private $bundle;
+
 
     /**
      * Set bundle
@@ -140,6 +164,11 @@ class SistemaTipo
     {
         return $this->bundle;
     }
+    /**
+     * @var string
+     */
+    private $url;
+
 
     /**
      * Set url
@@ -163,5 +192,4 @@ class SistemaTipo
     {
         return $this->url;
     }
-
 }

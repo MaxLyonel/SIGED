@@ -80,4 +80,32 @@ class RolPermiso
     {
         return $this->permiso;
     }
+    /**
+     * @var integer
+     */
+    private $permisoId;
+
+
+    /**
+     * Set permisoId
+     *
+     * @param integer $permisoId
+     * @return RolPermiso
+     */
+    public function setPermisoId($permisoId)
+    {
+        $this->permisoId = $permisoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get permisoId
+     *
+     * @return integer 
+     */
+    public function getPermisoId()
+    {
+        return $this->permisoId;
+    }
 }

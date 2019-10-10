@@ -718,3 +718,5 @@ class SeguimientoController extends Controller {
         }
     }
 }
+
+

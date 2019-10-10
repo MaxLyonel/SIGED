@@ -1,0 +1,251 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-cc-amex animated flip"></i>Modificación de Datos
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar </a>
+                    </li>
+
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningremoveins') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-search"></i>
+                    <div class="pull-right">
+                        <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a>
+                    </div>                                        
+                </div>
+                <div class="panel-body">
+
+                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idFormFindStudent'} } )}}
+                            <div class="form-body">
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{form_widget(form.codeRude)}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{form_widget(form.arrOption)}}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{form_widget(form.find)}}
+                                        </div>
+                                    </div>
+                                </div><!-- /.form-group -->
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                        </div>
+                                        <div class="col-md-6">
+                                        </div>
+                                    </div>
+
+                                </div><!-- /.form-group -->
+                              
+                            </div><!-- /.form-body -->
+                            <div class="form-footer">
+                                <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                            </div><!-- /.form-footer -->
+                        {{form_end(form)}}
+                   
+                </div>
+            </div>
+            <div id="dataStudent"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+
+
+        var lookforStudent = function () {
+            //get the values
+           var rude = $('#form_codeRude').val();
+           var selectOption = $('#form_arrOption').val();
+            
+            if (rude.length <= 0) {
+                alert("Necesita código RUDE para realizar la busqueda");
+                return false;
+            }
+            if (selectOption == '') {
+                alert("Necesita seleccionar criterio de busqueda");
+                return false;
+            }
+            
+            dataForm = $('#idFormFindStudent').serialize();
+            $.ajax({
+                type: 'post',
+                data: dataForm,
+                url: Routing.generate('specialmodificationdata_student_lookfor_student'),
+                beforeSend: function () {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+                // formdataId
+        var updateDataStudent = function(){
+            var message = '';
+            if($('#form_resoladm').val()==''){
+                message+= '- Necesita Resolucion Administrativa\n';
+            }
+            if($('#form_fecharesoladm').val()==''){
+                message+= '- Necesita Fecha Resolucion Administrativa\n';
+            }
+            if($('#form_obs').val()==''){
+                message+= '- Necesita registrar justificativo\n';
+            }            
+            if(message){
+                alert(message);
+                return false;
+            }
+            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
+              alert('Revise formato de Fecha Resolucion Administrativa (dd-mm-aaaa)');
+              return false;
+            }
+            
+            var dataForm = $('#formdataStudentId').serialize();
+            if (confirm('¿Esta seguro de realizar el cambio?')) {
+                    $.ajax({
+                        type: 'post',
+                        data: dataForm,
+                        url: Routing.generate('specialmodificationdata_student_updateDataStudent'),
+                        beforeSend: function () {
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append(data);
+                        },
+                        statusCode: {
+                            500: function () {
+
+                            },
+                            404: function () {
+
+                            }
+                        }
+                    });
+            } else {
+              return false;
+            }
+        }
+
+
+function validarFormatoFecha(campo) {
+      var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+      if ((campo.match(RegExPattern)) && (campo!='')) {
+            return true;
+      } else {
+            return false;
+      }
+}        
+
+
+        function dep(es) {
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos_st', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias_st', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }        
+
+
+
+
+
+
+
+
+    </script>
+{%endblock%}

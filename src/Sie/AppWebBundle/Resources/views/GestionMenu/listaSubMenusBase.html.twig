@@ -1,0 +1,84 @@
+{% if app.session.flashBag.has('exito') %}
+    <div class="alert alert-success">
+        {% for msg in app.session.flashBag.get('exito') %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ msg }}
+        {% endfor %}
+    </div>
+{% endif %}
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-danger">
+            {% for msg in app.session.flashBag.get('error') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+ {% block stylesheets %}
+     <head>
+         <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+         <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+
+     </head>
+ {% endblock %}
+
+<div id="submenus" class="body-content  animated fadeIn">
+    <div class="row">
+        <div class="table-responsive">
+            <table id="myTable" class="table table-bordered table-hover cf dataTable table-primary">
+                <thead>
+                <tr>
+                    <th style="min-width: 10px"><strong>No.</strong></th>
+                    <th><strong>Detalle</strong></th>
+                    <th><strong>Icono</strong></th>
+                    <th><strong>Ruta</strong></th>
+                    {# <th class="text-center"><strong>Orden</strong></th> #}
+                    <th><strong>Observaciones</strong></th>
+                    {#<th class="text-center"><strong>Nivel</strong></th>#}
+                    {#<th>Id menuTipo</th>#}
+                    <th><strong>Opciones</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for menu in menu %}
+                    <tr>
+                        <td class="text-center">{{ loop.index }}</td>
+                        <td data-title="Detalle">{{ menu.detalle_menu }}</td>
+                        <td class="text-center"><i class="fa {{ menu.icono }}"></i></td>
+                        <td data-title="Ruta" >{{ menu.ruta }}</td>
+                       {# <td class="text-center" >{{ menu.orden }}</td> #}
+                        <td data-title="Obs" >{{ menu.obs }}</td>
+                        {#<td data-title="Obs" >{{ menu.menu_nivel_tipo_id }}</td>#}
+                        {#<td class="text-center" >{{ menu.menu_nivel_tipo_id }}</td>#}
+                        <td data-title="Opciones">
+                            {% if menu.ruta == '#' %}
+                                <a  class="btn btn-success btn-xs" href="{{ path('gestionmenu_submenus',{'id':menu.id,'nivel':menu.menu_nivel_tipo_id}) }}" ><i class="fa fa-eye"></i></a>
+                            {% else %}
+                                <button  class="btn btn-default btn-xs"  disabled="true" href="{{ path('gestionmenu_submenus',{'id':menu.id,'nivel':menu.menu_nivel_tipo_id}) }}" ><i class="fa fa-eye"></i></button>
+                            {% endif %}
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="updatesubMenuseleccionado({{ idmenu }},{{ menu.id }},{{ menu.menu_nivel_tipo_id }});" title="Editar"><i class="fa fa-pencil"></i></button>
+
+                            <button class="btn btn-danger btn-xs"  onclick="eliminaSubMenu({{ menu.id }},{{ menu.menu_nivel_tipo_id }},{{ idmenu }});" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+{% block javascripts %}
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+    <script src="{{ asset('js/initialize.js')}}"></script>
+
+{% endblock %}

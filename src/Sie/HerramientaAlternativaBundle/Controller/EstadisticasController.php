@@ -2385,8 +2385,298 @@ union all
         return $response;
     }
 
+    /**
+     * Imprime estado de matricula general segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaGralPrintAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        //dump($codigoArea,$tipoArchivo,$gestion,$periodo);die;
+        //dump($codigo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
 
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
 
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_estado_matricula_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&codigo='.$codigoArea.'&periodo='.$periodo));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estado de matricula general completa segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaCompletaPrintAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        //dump($codigoArea,$tipoArchivo,$gestion,$periodo);die;
+        //dump($codigo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_estado_matricula_completo_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&codigo='.$codigoArea.'&periodo='.$periodo));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estado de matricula general tecnica segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaEspecialidadGralPrintAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        //dump($codigoArea,$tipoArchivo,$gestion,$periodo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_especialidad_estado_matricula_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&codigo='.$codigoArea.'&periodo='.$periodo));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estado de matricula tecnica completo segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaEspecialidadCompletoPrintAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        //dump($codigoArea,$tipoArchivo,$gestion,$periodo);die;
+        //dump($codigo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_especialidad_estado_matricula_completo_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&codigo='.$codigoArea.'&periodo='.$periodo));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estado de matricula por especialidad segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaPorEspecialidadPrintAction(Request $request) {
+        
+        $codigoArea = $request->get('codigo');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        $especialidad = $request->get('idesp');
+        //dump($codigoArea,$tipoArchivo,$gestion,$periodo,$especialidad);die;
+        //dump($codigo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_por_especialidad_estado_matricula_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&codigo='.$codigoArea.'&periodo='.$periodo.'&especialidad='.$especialidad));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estado de matricula especialidad por cea segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaEspecialidadCeaPrintAction(Request $request) {
+        
+        $sie = $request->get('sie1');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        //dump($tipoArchivo,$gestion,$periodo,$sie);die;
+        //dump($codigo);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$sie.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_especialidad_estado_matricula_ceas_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&sie='.$sie.'&periodo='.$periodo));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime estado de matricula general por sie segun el tipo de formato PDF/XLSX
+     * Pvargas
+     * @param Request $request
+     * @return type
+     */
+    public function estadoMatriculaPorCeaPrintAction(Request $request) {
+        
+        $sie = $request->get('sie2');
+        $tipoArchivo = $request->get('tipo');
+        $gestion = $request->get('gestion');
+        $periodo = $request->get('periodo');
+        //dump($tipoArchivo,$gestion,$periodo,$sie);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($tipoArchivo == 'pdf') {
+            $contentType = 'application/pdf';
+        } else {
+            //$contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $contentType = 'application/xls';
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //dump($gestion,$codigoArea);die;
+        $arch = 'MinEdu_'.$sie.'_'.$gestionActual.'_'.date('YmdHis').'.'. $tipoArchivo;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'est_alternativa_estado_matricula_ceas_v1_pvc.rptdesign&__format='. $tipoArchivo .'&gestion='.$gestion.'&sie='.$sie.'&periodo='.$periodo));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 
 
 
