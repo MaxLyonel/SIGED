@@ -1408,20 +1408,6 @@ class TramiteAceleracionController extends Controller
         //{{absolute_url(asset(\'webEspecial/img/logo/html/logo-white.png\'))}}
         //<span style="font-size: 8px">(Aceleración Educativa)</span>
         //
-        $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
-        $image_path = str_replace("/app_dev.php", "", $image_path);
-        $cabecera = '<table border="0">';
-        $cabecera .='<tr>';
-            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="'.$image_path.'" width="64" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
-            $cabecera .='<td width="70%" align="center"><h2>ACTA SUPLETORIA DE PROMOCIÓN PARA<br>TALENTO EXTRAORDINARIO</h2></td>';
-            $cabecera .='<td width="15%" align="right"><img src="http://172.20.0.114/index.php?data='.$tramite_id.'" width="66" height="66"></td>';
-        $cabecera .='</tr>';
-        $cabecera .='<tr>';
-            $cabecera .='<td width="50%"><b>Fecha de Trámite: </b>'.$resultDatos[1]->getFechaRegistro()->format('d/m/Y').'</td>';
-            $cabecera .='<td width="50%" align="right"><b>Nro. Trámite: </b>'.$tramite_id.'&nbsp;&nbsp;&nbsp;&nbsp;</td>';
-        $cabecera .='</tr>';
-        $cabecera .='</table>';
-        $pdf->writeHTML($cabecera, true, false, true, false, '');
 
         $inscripcion_actual_n = $inscripcion_actual_g = '';
         if ($datos2 and $datos2->curso_asignatura_notas) {
@@ -1456,52 +1442,29 @@ class TramiteAceleracionController extends Controller
             ->getQuery()
             ->getSingleResult();
         $queryEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->createQueryBuilder('est')
-            ->select("est.codigoRude, est.carnetIdentidad, est.complemento, CONCAT(est.paterno, ' ', est.materno, ' ', est.nombre) AS estudiante")
+            ->select("est.codigoRude, est.carnetIdentidad, est.complemento, dep.sigla as expedido, CONCAT(est.paterno, ' ', est.materno, ' ', est.nombre) AS estudiante")
+            ->join('SieAppWebBundle:DepartamentoTipo', 'dep', 'WITH', 'est.expedido = dep.id')
             ->where('est.id = :estudiante_id')
             ->setParameter('estudiante_id', $datos1->estudiante_id)
             ->getQuery()
             ->getSingleResult();
         // dump(json_decode($datos2->curso_asignatura_notas));die;
-        $datosTramite='<table border="0" cellpadding="2" style="font-size: 8.5px">';
-        // Datos del estudiante
-        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>1. Datos del Estudiante</b></td></tr>';
-        $datosTramite.='<tr><td><b>Código RUDE:</b></td><td colspan="3">'.$queryEstudiante['codigoRude'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryEstudiante['estudiante'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryEstudiante['carnetIdentidad'].'</td><td><b>Complemento:</b></td><td>'.$queryEstudiante['complemento'].'</td></tr>';
-        // Datos de la unidad educativa
-        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>2. Datos de la Unidad Educativa</b></td></tr>';
-        $datosTramite.='<tr><td><b>Unidad Educativa:</b></td><td colspan="3">'.$queryMaestroUE['sie'].' - '.$queryMaestroUE['institucioneducativa'].'</td></tr>';
-        // $datosTramite.='<tr></tr>';
-        // Localtizacion
-        $datosTramite.='<tr><td><b>Departamento:</b></td><td>'.$queryMaestroUE['departamento'].'</td><td><b>Distrito:</b></td><td>'.$queryMaestroUE['distrito'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Inscripción Actual:</b></td><td colspan="2">'.$inscripcion_actual_n.'</td><td>'.$inscripcion_actual_g.'</td></tr>';
-        // $datosTramite.='<tr><td><b>Departamento:</b></td><td>'.$queryMaestroUE['departamento'].'</td><td><b>Localidad:</b></td><td>'.$queryMaestroUE['localidad'].'</td></tr>';
-        // $datosTramite.='<tr><td><b>Cantón:</b></td><td>'.$queryMaestroUE['canton'].'</td><td><b>Zona:</b></td><td>'.$queryMaestroUE['zona'].'</td></tr>';
-        // $datosTramite.='<tr><td><b>Distrito:</b></td><td>'.$queryMaestroUE['distrito'].'</td><td><b>Dirección:</b></td><td>'.$queryMaestroUE['direccion'].'</td></tr>';
 
-        // Datos de talento extraordinario
-        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>3. Datos del Director(a)</b></td></tr>';
-        $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryMaestroUE['maestro'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
-        $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $datos1->estudiante_id));
-        // Datos del director
-        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
-        $datosTramite.='<tr><td><b>Tipo de Talento Extraordinario:</b></td><td>'.strtoupper($estudiante_talento->getTalentoTipo()).'</td><td><b>Puede Acelerar:</b></td><td>'.($estudiante_talento->getAcelera()==true?'SI':'NO').'</td></tr>';
-        $datosTramite.='<tr><td><b>Tramitó en Centro Educativo:</b></td><td colspan="3">'.$estudiante_talento->getInstitucioneducativa()->getId().' - '.$estudiante_talento->getInstitucioneducativa()->getInstitucioneducativa().'</td></tr>';
-        $datosTramite.='</table><br><br>';
-        $pdf->writeHTML($datosTramite, false, false, true, false, '');
-        $array_ctp = json_decode($datos2->comision)!=null?json_decode($datos2->comision):array();
-        $lista_comision = "";
-        foreach ($array_ctp as $key => $value) {
-            if ($key == 0){
-                $lista_comision .= $value->nombre;
-            } else {
-                $lista_comision .= ", ".$value->nombre;
-            }
-        }
-        $pdf->writeHTML('<span style="font-size: 8.5px"><b>Comisión Técnica Pedagógica: </b>'.$lista_comision.'</span><br><br>', false, false, true, false, '');
+        $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
+        $image_path = str_replace("/app_dev.php", "", $image_path);
+        $cabecera = '<table border="0">';
+        $cabecera .='<tr>';
+            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="'.$image_path.'" width="60" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
+            $cabecera .='<td width="70%" align="center"><h2>ACTA SUPLETORIA DE PROMOCIÓN PARA<br>TALENTO EXTRAORDINARIO</h2></td>';
+            $cabecera .='<td width="15%" align="right"><img src="http://172.20.0.114/index.php?data='.$queryEstudiante['codigoRude'].'|'.$queryEstudiante['carnetIdentidad'].'|'.'Aceleración_Educativa'.'|'.$tramite_id.'" width="66" height="66"></td>';
+        $cabecera .='</tr>';
+        $cabecera .='<tr>';
+            $cabecera .='<td width="50%"><b>Fecha de Trámite: </b>'.$resultDatos[1]->getFechaRegistro()->format('d/m/Y').'</td>';
+            $cabecera .='<td width="50%" align="right"><b>Nro. Trámite: </b>'.$tramite_id.'&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+        $cabecera .='</tr>';
+        $cabecera .='</table>';
+        $pdf->writeHTML($cabecera, true, false, true, false, '');
 
-        $pdf->writeHTML('<span style="font-size: 8px">RESULTADOS DE LA EVALUACIÓN DE LA COMISIÓN TÉCNICA PEDAGÓGICA:</span>', true, false, true, false, '');//$html, true, 0, true, true
         $exist_primaria = $exist_secundaria = false;
         $cantidad_primaria = $cantidad_secundaria = 0;
         $grados_primaria = $grados_secundaria = '';
@@ -1596,11 +1559,56 @@ class TramiteAceleracionController extends Controller
                 }
             }
         }
+        $custom_fs = '8.5px';
+        if ($exist_secundaria) {
+            $custom_fs = '8.3px';
+        }
+        
+        $datosTramite='<table border="0" cellpadding="1.5" style="font-size: '.$custom_fs.'">';
+        // Datos del estudiante
+        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>1. Datos del Estudiante</b></td></tr>';
+        $datosTramite.='<tr><td><b>Código RUDE:</b></td><td colspan="3">'.$queryEstudiante['codigoRude'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryEstudiante['estudiante'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryEstudiante['carnetIdentidad'].' '.$queryEstudiante['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryEstudiante['complemento'].'</td></tr>';
+        // Datos de la unidad educativa
+        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>2. Datos de la Unidad Educativa</b></td></tr>';
+        $datosTramite.='<tr><td><b>Unidad Educativa:</b></td><td colspan="3">'.$queryMaestroUE['sie'].' - '.$queryMaestroUE['institucioneducativa'].'</td></tr>';
+        // $datosTramite.='<tr></tr>';
+        // Localtizacion
+        $datosTramite.='<tr><td><b>Departamento:</b></td><td>'.$queryMaestroUE['departamento'].'</td><td><b>Distrito:</b></td><td>'.$queryMaestroUE['distrito'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Inscripción Actual:</b></td><td colspan="2">'.$inscripcion_actual_n.'</td><td>'.$inscripcion_actual_g.'</td></tr>';
+        // $datosTramite.='<tr><td><b>Departamento:</b></td><td>'.$queryMaestroUE['departamento'].'</td><td><b>Localidad:</b></td><td>'.$queryMaestroUE['localidad'].'</td></tr>';
+        // $datosTramite.='<tr><td><b>Cantón:</b></td><td>'.$queryMaestroUE['canton'].'</td><td><b>Zona:</b></td><td>'.$queryMaestroUE['zona'].'</td></tr>';
+        // $datosTramite.='<tr><td><b>Distrito:</b></td><td>'.$queryMaestroUE['distrito'].'</td><td><b>Dirección:</b></td><td>'.$queryMaestroUE['direccion'].'</td></tr>';
+
+        // Datos de talento extraordinario
+        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>3. Datos del Director(a)</b></td></tr>';
+        $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryMaestroUE['maestro'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
+        $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $datos1->estudiante_id));
+        // Datos del director
+        $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
+        $datosTramite.='<tr><td><b>Tipo de Talento Extraordinario:</b></td><td>'.strtoupper($estudiante_talento->getTalentoTipo()).'</td><td><b>Puede Acelerar:</b></td><td>'.($estudiante_talento->getAcelera()==true?'SI':'NO').'</td></tr>';
+        $datosTramite.='<tr><td><b>Tramitó en Centro Educativo:</b></td><td colspan="3">'.$estudiante_talento->getInstitucioneducativa()->getId().' - '.$estudiante_talento->getInstitucioneducativa()->getInstitucioneducativa().'</td></tr>';
+        $datosTramite.='</table><br><br>';
+        $pdf->writeHTML($datosTramite, false, false, true, false, '');
+        $array_ctp = json_decode($datos2->comision)!=null?json_decode($datos2->comision):array();
+        $lista_comision = "";
+        foreach ($array_ctp as $key => $value) {
+            if ($key == 0){
+                $lista_comision .= $value->nombre;
+            } else {
+                $lista_comision .= ", ".$value->nombre;
+            }
+        }
+        $pdf->writeHTML('<span style="font-size: '.$custom_fs.'"><b>Comisión Técnica Pedagógica: </b>'.$lista_comision.'</span><br><br>', false, false, true, false, '');
+
+        $pdf->writeHTML('<span style="font-size: 8px">RESULTADOS DE LA EVALUACIÓN DE LA COMISIÓN TÉCNICA PEDAGÓGICA:</span>', true, false, true, false, '');//$html, true, 0, true, true
+
         if ($exist_primaria) {
-            $actaSupletorio='<table border="0.5" cellpadding="2" style="font-size: 8.5px">';
+            $actaSupletorio='<table border="0.5" cellpadding="2" style="font-size: '.$custom_fs.'">';
             $actaSupletorio.='<tr><td width="100%" height="12" style="line-height: 12px;"><b>Nivel: </b>'.$primaria['nivel'].'</td></tr>';
-            $actaSupletorio.='<tr style="background-color:#ddd;"><td width="55%" align="center" height="28" style="line-height: 28px;" rowspan="2"><b>Áreas curriculares</b></td><td width="45%" align="center" colspan="'.$cantidad_primaria.'"><b>Valoración
-                Cuantitativa</b></td></tr>';
+            $actaSupletorio.='<tr style="background-color:#ddd;"><td width="55%" align="center" height="28" style="line-height: 28px;" rowspan="2"><b>Áreas curriculares</b></td><td width="45%" align="center" colspan="'.$cantidad_primaria.'"><b>Grado(s) a Promover</b></td></tr>';
             $actaSupletorio.='<tr style="background-color:#ddd;">'.$grados_primaria.'</tr>';
             foreach ($primaria['asignatura'] as $key => $iteman) {
                 $actaSupletorio.='<tr>';
@@ -1617,10 +1625,9 @@ class TramiteAceleracionController extends Controller
             $pdf->writeHTML($actaSupletorio, false, false, true, false, '');
         }
         if ($exist_secundaria) {
-            $actaSupletorio='<table border="0.5" cellpadding="2" style="font-size: 8.5px">';
+            $actaSupletorio='<table border="0.5" cellpadding="2" style="font-size: '.$custom_fs.'">';
             $actaSupletorio.='<tr><td width="100%" height="12" style="line-height: 12px;"><b>Nivel: </b>'.$secundaria['nivel'].'</td></tr>';
-            $actaSupletorio.='<tr style="background-color:#ddd;"><td width="55%" align="center" height="28" style="line-height: 28px;" rowspan="2"><b>Áreas curriculares</b></td><td width="45%" align="center" colspan="'.$cantidad_secundaria.'"><b>Valoración
-                Cuantitativa</b></td></tr>';
+            $actaSupletorio.='<tr style="background-color:#ddd;"><td width="55%" align="center" height="28" style="line-height: 28px;" rowspan="2"><b>Áreas curriculares</b></td><td width="45%" align="center" colspan="'.$cantidad_secundaria.'"><b>Grado(s) a Promover</b></td></tr>';
             $actaSupletorio.='<tr style="background-color:#ddd;">'.$grados_secundaria.'</tr>';
             foreach ($secundaria['asignatura'] as $key => $iteman) {
                 $actaSupletorio.='<tr>';
@@ -1662,23 +1669,24 @@ class TramiteAceleracionController extends Controller
             $pdf->writeHTML($actaSupletorio, true, false, true, false, '');
         } */
         $pdf->writeHTML('<span>Grado al que estará inscrito: &nbsp;<b>'.$datos1->grado_inscripcion.'.</b><br></span><br>', false, false, true, false, '');
-        $pdf->writeHTML('<span>Para su consideración y fines consiguientes, firman los responsables del proceso de Aceleración Educativa.<br/><br/><br/></span>', true, false, true, false, '');
+        $pdf->writeHTML('<span>Para su consideración y fines consiguientes, firman los responsables del proceso de Aceleración Educativa.</span>', true, false, true, false, '');
         
-        /* $firmas='<table cellpadding="0.5" style="font-size: 8.2px;">';
-        $firmas.='<tr><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________<br/>Directora(or) Unidad Educativa</td><td align="center">&nbsp;&nbsp;&nbsp;____________________________<br/>Directora(or) Distrital de Educación</td><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________<br/>Representante de la Comisión Técnica Pedagógica de la Unidad Educativa</td><td align="center">&nbsp;&nbsp;_____________________________<br/>Madre, Padre de familia, apoderado o tutor del Estudiante</td></tr>';
-        $firmas.='<tr><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td></tr>';
-        $firmas.='<tr><td align="center">Sello y Firma</td><td align="center">Sello y Firma</td><td align="center">Firma</td><td align="center">Firma</td></tr>';
-        $firmas.='</table>'; */
-        $firmas='<table cellpadding="0.5" style="font-size: 8.2px;">';
-        $firmas.='<tr><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_____________________________<br/>Directora(or) Unidad Educativa</td><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;________________________________<br/>Directora(or) Distrital de Educación</td><td align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________________<br/>Representante de la Comisión Técnica Pedagógica de la Unidad Educativa</td></tr>';
-        $firmas.='<tr><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td><td>Nombre:<br/>C.I.:</td></tr>';
-        $firmas.='<tr><td align="center">Sello y Firma</td><td align="center">Sello y Firma</td><td align="center">Firma</td></tr>';
+        /* $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
+        $firmas.='<tr><td align="center">___________________________________<br/>Representante de la Comisión Técnica <br>Pedagógica de la Unidad Educativa</td><td align="center">_____________________________<br/>Directora(or) Unidad Educativa</td><td align="center">________________________________<br/>Directora(or) Distrital de Educación</td></tr>';
+        $firmas.='<tr><td align="center">'.$array_ctp[0]->nombre.'</td><td align="center">'.$queryMaestroUE['maestro'].'</td><td>Nombre:</td></tr>';
+        $firmas.='<tr><td align="center">Firma</td><td align="center">Sello y Firma</td><td>&nbsp;</td></tr>';
+        $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
+        $firmas.='</table>';
+        $pdf->writeHTML($firmas, true, false, true, false, ''); */
+        $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
+        $firmas.='<tr><td align="center" width="35%"><br/><br/><br/>___________________________________<br/>Representante de la Comisión Técnica <br>Pedagógica de la Unidad Educativa<br>'.$array_ctp[0]->nombre.'<br>Firma</td>
+        <td align="center" width="35%"><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br><br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
+        <td align="center" width="30%"><br/><br/><table border="1"><tr><td><br/><br/><br/><br/><br/>VoBo<br/>Directora(or) Distrital de Educación</td></tr></table></td></tr>';
+        $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
         $firmas.='</table>';
         $pdf->writeHTML($firmas, true, false, true, false, '');
-        $lugar_fecha='<span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span>';
-        $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $lugar_fecha, $border = 0, $ln = 0, $fill = 0, $reseth = true,
-            $align = 'R', $autopadding = true
-        );
+        //$lugar_fecha='<span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span>';
+        //$pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $lugar_fecha, $border = 0, $ln = 0, $fill = 0, $reseth = true, $align = 'R', $autopadding = false);
         $pdf->Output("acta_supletorio.pdf", 'I');
     }
 
