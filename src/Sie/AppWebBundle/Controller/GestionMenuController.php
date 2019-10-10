@@ -27,19 +27,11 @@ use Symfony\Component\PropertyInfo\Tests\Fixtures\Dummy;
  * Gestión de Menú Controller.
  */
 class GestionMenuController extends Controller {
-
     public $session;
     public $idInstitucion;
-
-    /**
-     * the class constructor
-     */
     public function __construct() {
-        //init the session values
         $this->session = new Session();
-        //$this->session->set('sistemaid', 1);
     }
-
     /**
      * Muestra el listado de Menús
      */
@@ -48,14 +40,19 @@ class GestionMenuController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare('SELECT mt.id, mt.detalle_menu,mt.ruta,mt.icono, mt.menu_nivel_tipo_id  
-          FROM menu_tipo mt 
-          WHERE mt.menu_nivel_tipo_id = 1
-          ORDER BY 1');
-        $query->execute();
-        $menu= $query->fetchAll();
-        return $this->render('SieAppWebBundle:GestionMenu:index.html.twig', array('menu' => $menu));
+        $id_rol = $this->session->get('roluser');
+        if($id_rol==8){
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->getConnection()->prepare('SELECT mt.id, mt.detalle_menu,mt.ruta,mt.icono, mt.menu_nivel_tipo_id  
+              FROM menu_tipo mt 
+              WHERE mt.menu_nivel_tipo_id = 1
+              ORDER BY 1');
+            $query->execute();
+            $menu= $query->fetchAll();
+            return $this->render('SieAppWebBundle:GestionMenu:index.html.twig', array('menu' => $menu));
+        }else{
+            return $this->render('SieAppWebBundle:GestionMenu:inicio.html.twig');
+        }
     }
     public function inicioAction() {
         $id_usuario = $this->session->get('userId');
