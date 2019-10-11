@@ -339,6 +339,33 @@ class SpecialModificationDataStudentController extends Controller{
 
     }
 
+    public function getDeptoAction(Request $request){
+        $response = new JsonResponse();
+        $paisId = $request->get('paisId');
+        $em = $this->getDoctrine()->getManager();
+        // get departamento
+        if ($paisId == 1) {
+            $condition = array('lugarNivel' => 1, 'paisTipoId' => $paisId);
+        } else {
+            $condition = array('lugarNivel' => 8, 'id' => '79355');
+        }
+        $objDepto = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy($condition);
+        $arrDepto = array();
+        foreach ($objDepto as $depto) {
+            $arrDepto[]=array('deptoId'=>$depto->getId(),'depto'=>$depto->getLugar());
+        }
+
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'arrDepto' => $arrDepto,
+        ));
+       
+        return $response;        
+
+
+    }
+
+
      public function departamentosAction($pais) {
         $em = $this->getDoctrine()->getManager();
         if ($pais == 1) {

@@ -560,13 +560,25 @@
                     });
                     console.log(me.dataStudentModif.paisId);
                     if(me.dataStudentModif.paisId == 1){
-                        
-                        $.each(this.DBDepto, function (i, value) {
-                                me.dataStudentModif.lugarNacTipo = value.depto;
-                            
-                        });                                            
+                         axios.post(Routing.generate('specialmodificationdata_get_depto', me.dataStudentModif ))
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.DBDepto = response.data.arrDepto;
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
 
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
                     }else{
+                        this.DBDepto = '';
+                        this.DBProvincia = '';
                         me.dataStudentModif.lugarNacTipoId ='';
                         me.dataStudentModif.lugarProvNacTipoId ='';
                     }
