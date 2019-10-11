@@ -1164,7 +1164,7 @@
             <script src="{{ asset('js/initialize.js')}}"></script>
             <!--/ END GOOGLE ANALYTICS -->
             <script>
-                $('#nro').click(function(){
+               {#  $('#nro').click(function(){
                     formData = {flujotipo: 6,rol: '{{app.session.get('roluser')}}',usuario: '{{app.session.get('userId')}}'};
                     //alert('{{app.session.get('roluser')}}');
                     $.ajax({
@@ -1177,7 +1177,7 @@
                             });
                         },
                     }); 
-                });
+                }); #}
             </script>
         {% endblock %}
     </body>
