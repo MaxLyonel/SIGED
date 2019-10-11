@@ -1,0 +1,217 @@
+{% if id == 34 %} {# ampliacion de nivel #}
+    {{ form_widget(form.form_34) }}
+    <td>
+        <ul>
+            {% for n in ieNivel %}
+                <li type=square>{{ n.nivel }}</li>
+            {% endfor %}
+        </ul>
+    </td>
+    <td>
+        {% for a in form.nivelampliar %}
+            <div class="ckbox ckbox-primary">
+                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {{ form_label(a) }}
+            </div>
+        {% endfor %}
+    </td>
+{% elseif id == 35 %}{# Reduccion de Nivel #}
+    {{ form_widget(form.form_35) }}
+    <td>
+        <ul>
+            {% for n in ieNivel %}
+                <li type=square>{{ n.nivel }}</li>
+            {% endfor %}
+        </ul>
+    </td>
+    <td>
+        {% for a in form.nivelreducir %}
+            <div class="ckbox ckbox-primary">
+                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {{ form_label(a) }}
+            </div>
+        {% endfor %}
+    </td>
+{% elseif id == 36 %}{# cambio de dependencia #}
+    <td>
+        
+    </td>
+    <td>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="col-md-5">
+                    {{ form_label(form.dependencia) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.dependencia) }}
+                </div>
+            </div>
+            <div class="form-group col-md-6" id="convenio" style="display:none">
+                <div class="col-md-5">
+                    {{ form_label(form.conveniotipo) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.conveniotipo) }}
+                </div>
+            </div>
+        </div>
+    </td>
+{% elseif id == 37 %}{# cambio de nombre #}
+    <td>
+        
+    </td>
+    <td>
+        <div class="row">
+            <div class="form-group  col-md-12">
+                <div class="col-md-3">
+                    {{ form_label(form.institucioneducativa) }}
+                </div>
+                <div class="col-md-9">
+                    {{ form_widget(form.institucioneducativa) }}
+                </div>
+            </div>
+        </div>
+    </td>
+{% elseif id == 38 %}{# cambio de jurisdiccion administrativa #}
+    <td>
+        
+    </td>
+    <td>
+        <div class="row">
+            <div class="form-group  col-md-6">
+                <div class="col-md-5">
+                    {{ form_label(form.distrito) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.distrito) }}
+                </div>
+            </div>
+        </div>
+    </td>
+{% elseif id == 39 %}{# Fusion #}
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+{% elseif id == 40 %} {# desglose #}
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+{% elseif id == 41 %} {# cambio de infraestructura #}
+    <td>
+        
+    </td>
+    <td>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">  
+                        {{ form_label(form.lejurisdiccion) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.lejurisdiccion,{'attr':{'oninput':'buscarEdificioEscolar(this.value)'} }) }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.departamento) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.departamento,{'attr':{'onchange':'provincia(this.value)'}}) }}
+                    </div>
+                </div>
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.provincia) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.provincia,{'attr':{'onchange':'municipio(this.value)'}}) }}
+                    </div>
+                </div>
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.municipio) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.municipio,{'attr':{'onchange':'comunidad(this.value)'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.comunidad) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.comunidad) }}
+                    </div>
+                </div>
+                {# <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.canton) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.canton,{'attr':{'onchange':'localidad(this.value)'}}) }}
+                    </div>
+                </div>
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.localidad) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.localidad) }}
+                    </div>
+                </div> #}
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.zona) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.zona) }}
+                    </div>
+                </div>
+                <div class="form-group  col-md-12">
+                    <div class="col-md-5">
+                        {{ form_label(form.direccion) }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form_widget(form.direccion) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+{% elseif id == 42 %} {# cierre temporal #}
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+{% elseif id == 43 %} {# cierre definitivo #}
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+{% elseif id == 44 %}{# Reapertura #}
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+{% elseif id == 45 %}{# nuevo certifcado rue #}
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+{% endif %}
