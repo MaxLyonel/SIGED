@@ -557,8 +557,20 @@
                             me.dataStudentModif.pais = value.pais;
                             me.dataModifyToSend.push({'paisId':me.dataStudentModif.paisId})
                         }
-                    });                    
+                    });
                     console.log(me.dataStudentModif.paisId);
+                    if(me.dataStudentModif.paisId == 1){
+                        
+                        $.each(this.DBDepto, function (i, value) {
+                                me.dataStudentModif.lugarNacTipo = value.depto;
+                            
+                        });                                            
+
+                    }else{
+                        me.dataStudentModif.lugarNacTipoId ='';
+                        me.dataStudentModif.lugarProvNacTipoId ='';
+                    }
+                    
                 },
                 setDepto: function(){
                     var me = this;
