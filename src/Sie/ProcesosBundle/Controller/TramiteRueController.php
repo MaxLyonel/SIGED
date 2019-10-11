@@ -2449,5 +2449,244 @@ class TramiteRueController extends Controller
         }
         
     }
+
+
+        public function tramiteTareaRitt($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
+    {
+        $em = $this->getDoctrine()->getManager();
+        //dump($lugarTipo);die;
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$usuario,'rolTipo'=>$rol));            
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getCodigo();
+        //dump($usuariorol);die;
+        //dump((int)$idlugarusuario);die;
+         /**tareas devuelta por condicion**/
+        $wftareac = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->createQueryBuilder('wf')
+                ->select('fp.id,wf.condicion')
+                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wf.flujoProceso')
+                ->where('wf.condicionTareaSiguiente =' . $tarea_actual)
+                ->getQuery()
+                ->getResult();
+        /**tarea devuelta**/
+        $fp = $em->getRepository('SieAppWebBundle:FlujoProceso')->createQueryBuilder('fp')
+                ->select('fp.id')
+                ->where('fp.tareaSigId =' . $tarea_actual)
+                ->getQuery()
+                ->getResult();
+        /**tarea anterior**/
+        $tarea = 'td.flujo_proceso_id='. $tarea_ant;
+        if($wftareac and $fp){
+            $tarea = "(" . $tarea . " or (td.flujo_proceso_id=". $wftareac[0]['id'] ." and td.valor_evaluacion='". $wftareac[0]['condicion'] ."') or td.flujo_proceso_id=". $fp[0]['id']. ")";
+        }elseif ($wftareac){
+            $tarea = "(" . $tarea . " or (td.flujo_proceso_id=". $wftareac[0]['id'] ." and td.valor_evaluacion='". $wftareac[0]['condicion'] ."'))";
+        }elseif ($fp){
+            $tarea = "(" . $tarea . " or td.flujo_proceso_id=". $fp[0]['id']. ")";
+        }
+        //dump($wftareac);die;
+        /**si la tarea anterior tiene evaluacion **/
+        $query1 = $em->getConnection()->prepare('select * from flujo_proceso where id=' . $tarea_ant . ' and es_evaluacion=true');
+        $query1->execute();
+        $evaluacion = $query1->fetchAll();
+        if($rol == 7){ // departamental
+            if ($evaluacion)
+            {
+                
+                $query = $em->getConnection()->prepare("select t.id,t.td_id,ie.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
+                from
+                (select se.institucioneducativa_id, se.sede,ie.institucioneducativa
+                from ttec_institucioneducativa_sede se
+                join institucioneducativa ie on se.institucioneducativa_id=ie.id
+                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
+                left join tramite t on ie.id=t.institucioneducativa_id
+                where t.fecha_fin is null and se.estado =true and ie.institucioneducativa_tipo_id in (7,8,9) and ie.estadoinstitucion_tipo_id=10 and le.lugar_tipo_id_localidad in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in(select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where codigo='". (int)$idlugarusuario ."' and lugar_nivel_id=1))))))ie
+                left join
+                (select t.id,td.id as td_id,t.institucioneducativa_id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                from tramite t
+                join tramite_detalle td on cast(t.tramite as int)=td.id
+                join tramite_tipo tt on t.tramite_tipo=tt.id
+                join usuario u on td.usuario_remitente_id=u.id
+                join persona p on p.id=u.persona_id
+                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . "))t on ie.institucioneducativa_id=t.institucioneducativa_id");
+            }else{
+                $query = $em->getConnection()->prepare("select t.id,t.td_id,ie.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
+                from
+                (select se.institucioneducativa_id, se.sede,ie.institucioneducativa
+                from ttec_institucioneducativa_sede se
+                join institucioneducativa ie on se.institucioneducativa_id=ie.id
+                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
+                left join tramite t on ie.id=t.institucioneducativa_id
+                where t.fecha_fin is null and se.estado =true and ie.institucioneducativa_tipo_id in (7,8,9) and ie.estadoinstitucion_tipo_id=10 and le.lugar_tipo_id_localidad in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in(select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where codigo='". (int)$idlugarusuario ."' and lugar_nivel_id=1))))))ie
+                left join
+                (select t.id,td.id as td_id,t.institucioneducativa_id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                from tramite t
+                join tramite_detalle td on cast(t.tramite as int)=td.id
+                join tramite_tipo tt on t.tramite_tipo=tt.id
+                join usuario u on td.usuario_remitente_id=u.id
+                join persona p on p.id=u.persona_id
+                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea .")t on ie.institucioneducativa_id=t.institucioneducativa_id");
+            }
+        }elseif($rol == 8){ 
+            if ($evaluacion)
+            {
+                
+                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,lt4.lugar,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
+                join institucioneducativa ie on t.institucioneducativa_id=ie.id
+                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
+                left join lugar_tipo lt on lt.id = le.lugar_tipo_id_localidad
+                left join lugar_tipo lt1 on lt1.id = lt.lugar_tipo_id
+                left join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
+                left join lugar_tipo lt3 on lt3.id = lt2.lugar_tipo_id
+                left join lugar_tipo lt4 on lt4.id = lt3.lugar_tipo_id
+                join tramite_tipo tt on t.tramite_tipo=tt.id
+                join usuario u on td.usuario_remitente_id=u.id
+                join persona p on p.id=u.persona_id
+                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . ")");
+            }else{
+                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,lt4.lugar,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
+                join institucioneducativa ie on t.institucioneducativa_id=ie.id
+                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
+                left join lugar_tipo lt on lt.id = le.lugar_tipo_id_localidad
+                left join lugar_tipo lt1 on lt1.id = lt.lugar_tipo_id
+                left join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
+                left join lugar_tipo lt3 on lt3.id = lt2.lugar_tipo_id
+                left join lugar_tipo lt4 on lt4.id = lt3.lugar_tipo_id
+                join tramite_tipo tt on t.tramite_tipo=tt.id
+                join usuario u on td.usuario_remitente_id=u.id
+                join persona p on p.id=u.persona_id
+                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea);
+            }
+        }
+        $query->execute();
+        $tramites = $query->fetchAll();
+        //dump($tramites);die;
+        $data['tramites'] = $tramites;
+        return $data;
+    }
+
+    public function guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id)
+    {
+
+        //dump($datos);die;
+        $tramiteDetalle = new TramiteDetalle();
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
+        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
+        
+        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
+        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(1);
+        
+        //insert tramite
+        if($flujoproceso->getOrden() == 1 and $idtramite == ""){
+            
+            $tramite = new Tramite();
+            $wfSolicitudTramite = new WfSolicitudTramite();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite');")->execute();
+            $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->find($flujotipo);
+            $tramitetipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($tipotramite);
+            //dump($tramitetipo);die;
+            $tramite->setFlujoTipo($flujotipo);
+            $tramite->setTramiteTipo($tramitetipo);
+            $tramite->setFechaTramite(new \DateTime(date('Y-m-d')));
+            $tramite->setFechaRegistro(new \DateTime(date('Y-m-d')));
+            $tramite->setEsactivo(true);
+            $tramite->setGestionId((new \DateTime())->format('Y'));
+            
+            switch ($tabla) {
+                case 'institucioneducativa':
+                    if ($id_tabla){
+                        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
+                        $tramite->setInstitucioneducativa($institucioneducativa);
+                    }
+                    break;
+                case 'estudiante_inscripcion':
+                    $estudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($id_tabla);
+                    $tramite->setestudianteInscripcion($estudiante);
+                    break;
+                case 'apoderado_inscripcion':
+                    $apoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($id_tabla);
+                    $tramite->setApoderadoInscripcion($apoderado);
+                    break;
+                case 'maestro_inscripcion':
+                    $maestro = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($id_tabla);
+                    $tramite->setMaestroInscripcion($maestro);
+                    break;
+            }
+            $em->persist($tramite);
+            $em->flush();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_solicitud_tramite');")->execute();
+            //dump($tramite);die;
+            if ($datos){
+                //datos propios de la solicitud
+                $wfSolicitudTramite->setTramite($tramite);
+                $wfSolicitudTramite->setDatos($datos);
+                $wfSolicitudTramite->setEsValido(true);
+                $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
+                $wfSolicitudTramite->setLugarTipoId($lugarTipo_id);
+                $em->persist($wfSolicitudTramite);
+                $em->flush();
+            }
+        }else{
+            /*$query = $em->getConnection()->prepare('select * from tramite_detalle where flujo_proceso_id='. $flujoproceso->getTareaAntId());
+            $query->execute();
+            $tramiteD = $query->fetchAll();*/
+            //dump($idtramite);die;
+            //Modificacion de datos propios de la solicitud
+            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+
+        }
+        //insert tramite_detalle
+        //dump($tramiteD);die;
+        $tramiteDetalle->setObs($observacion);
+        $tramiteDetalle->setTramite($tramite);
+        $tramiteDetalle->setTramiteEstado($tramiteestado);
+        $tramiteDetalle->setFlujoProceso($flujoproceso);
+        $tramiteDetalle->setFechaRegistro(new \DateTime(date('Y-m-d')));
+        $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
+        $tramiteDetalle->setFechaRecepcion(new \DateTime(date('Y-m-d')));
+        $tramiteDetalle->setUsuarioRemitente($usuario);
+        /** */
+        if ($idtramite!="")
+        {
+            $td_anterior = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+            $tramiteDetalle->setTramiteDetalle($td_anterior);
+        }
+        //dump($flujoproceso);die;
+        if ($flujoproceso->getEsEvaluacion() == true) 
+        {
+            $tramiteDetalle->setValorEvaluacion($varevaluacion);
+        }
+        if($flujoproceso->getWfAsignacionTareaTipo()->getId() == 3) //asignacion por seleccion
+        {
+               if($idtramite != "")
+               {
+                    $query = $em->getConnection()->prepare('select * from tramite_detalle where id='. (int)$tramite->getTramite().' and tramite_id='.$idtramite);
+                    $query->execute();
+                    $td = $query->fetchAll();
+                    $tramiteD = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['id']);
+                    $tramiteD->setUsuarioDestinatario($usuario);
+                    //$em->persist($tramiteD);
+                    $em->flush();
+               }
+        }else{ //si es directa o randomica
+            //dump($uDestinatario);die;
+            $uDestinatario = $em->getRepository('SieAppWebBundle:Usuario')->find($uDestinatario);
+            //dump($uDestinatario);die;
+            $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
+        }
+        $em->persist($tramiteDetalle);
+        $em->flush();
+        if ($flujoproceso->getTareaSigId() == null)
+        {
+            $tramite->setFechaFin(new \DateTime(date('Y-m-d')));
+        }
+        $tramite->setTramite($tramiteDetalle->getId());
+        //$em->persist($tramite);
+        $em->flush();
+        //dump((new \DateTime())->format('Y'));die;
+        //guardar datos del propios del tramite
+        $mensaje = 'El trámite se guardo correctamente';
+        return $mensaje;
+    }    
     
 }

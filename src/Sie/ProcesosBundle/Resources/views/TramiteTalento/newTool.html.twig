@@ -95,7 +95,7 @@
                                         <select class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
                                             <option value="" selected disabled>Seleccione...</option>
                                             {% for item in centros %}
-                                            <option value="{{item.id}}">{{item.institucioneducativa}}</option>
+                                            <option value="{{item.id}}">{{item.id}} - {{item.institucioneducativa}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
