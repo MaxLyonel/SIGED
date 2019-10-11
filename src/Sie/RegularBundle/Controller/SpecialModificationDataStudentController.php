@@ -191,6 +191,7 @@ class SpecialModificationDataStudentController extends Controller{
 
                     'generoTipo'=>($objStudent->getGeneroTipo()==NULL)?'':$objStudent->getGeneroTipo()->getGenero(),
                     'generoTipoId'=>($objStudent->getGeneroTipo()==NULL)?'':$objStudent->getGeneroTipo()->getId(),
+                    'pasaporte'=>$objStudent->getPasaporte(),
 
                     'localidad'=>$objStudent->getLocalidadNac(),
                     'oficialia'=>$objStudent->getOficialia(),
@@ -362,6 +363,29 @@ class SpecialModificationDataStudentController extends Controller{
        
         return $response;        
 
+
+    }
+
+    public function getProvinciaAction(Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $response = new JsonResponse();
+        $lugarNacTipoId = $request->get('lugarNacTipoId');
+
+        // / get provincias
+        $objProv = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $lugarNacTipoId));
+
+        $arrProvincia = array();
+        foreach ($objProv as $prov) {
+            $arrProvincia[] = array('provinciaId'=>$prov->getid(), 'provincia'=>$prov->getlugar());
+        }
+
+          $response->setStatusCode(200);
+        $response->setData(array(
+            'arrProvincia' => $arrProvincia,
+        ));
+       
+        return $response;
 
     }
 

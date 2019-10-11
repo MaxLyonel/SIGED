@@ -153,17 +153,25 @@
                                         </tr>
                                     </table>
                                     <br>
-                                    <p class="encabezado bg-primary">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS
+                                    <p class="encabezado bg-primary">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO
                                         <a class="btn btn-default" data-toggle="modal" href='#modalEstudianteTwo'> <i class="fa fa-pencil"></i> </a>
                                     </p>
                                     <table class="table table-primary" border="0">
                                         <tr>
-                                            <th colspan="2">Genero</th>
+                                            <th colspan="2">Género</th>
                                             <td colspan="3">
                                                 ${dataStudent.generoTipo}
                                                 </br>
                                                 <p v-if="dataStudent.generoTipo != dataStudentModif.generoTipo " class="text-green">
                                                     <strong>${dataStudentModif.generoTipo}</strong>
+                                                </p>
+                                            </td>
+                                            <th colspan="2">Pasaporte</th>
+                                            <td colspan="3">
+                                                ${dataStudent.pasaporte}
+                                                </br>
+                                                <p v-if="dataStudent.pasaporte != dataStudentModif.pasaporte " class="text-green">
+                                                    <strong>${dataStudentModif.pasaporte}</strong>
                                                 </p>
                                             </td>
                                         </tr>
@@ -313,7 +321,7 @@
                                                                 </div>
                                                               </div>
                                                               
-                                                              <button type="button" class="btn btn-primary" v-on:click="registryFormOne();">verificar SEGIP</button>
+                                                              <button type="button" class="btn btn-primary" v-on:click="registryFormOne();">verificar</button>
                                                               <button type="button" class="btn btn-danger" v-on:click="clearSegip();">Cancelar</button>
                                                               </br>
                                                               </br>
@@ -339,19 +347,25 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                            <h4 class="modal-title">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</h4>
+                                                            <h4 class="modal-title">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO</h4>
                                                         </div>
                                                         <div class="modal-body">
 
                                                            <form>
                                                               <div class="form-row">
-                                                                <div class="form-group col-md-12">
+                                                                <div class="form-group col-md-6">
                                                                   <label for="inputEmail4">Genero</label>
 
                                                                   <select name="arrGenero" id="idarrGenero" v-model="dataStudentModif.generoTipoId" class="custom-select form-control" v-on:change="setGenero();">  
                                                                     <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
                                                                   </select>
                                                                 </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                  <label for="Nombre(s)">Pasaporte</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="" v-model="dataStudentModif.pasaporte">
+                                                                </div>                                                              
+                                                                
                                                               </div>
 
                                                               <div class="form-row">
@@ -558,7 +572,7 @@
                             me.dataModifyToSend.push({'paisId':me.dataStudentModif.paisId})
                         }
                     });
-                    console.log(me.dataStudentModif.paisId);
+                    
                     if(me.dataStudentModif.paisId == 1){
                          axios.post(Routing.generate('specialmodificationdata_get_depto', me.dataStudentModif ))
                             .then(response => {
@@ -589,9 +603,38 @@
                     $.each(this.DBDepto, function (i, value) {
                         if(me.dataStudentModif.lugarNacTipoId == value.deptoId) {
                             me.dataStudentModif.lugarNacTipo = value.depto;
-                            me.dataModifyToSend.push({'lugarNacTipoId':me.dataStudentModif.lugarNacTipoId});
-                        }
-                    });                    
+                            /*me.dataModifyToSend.push({'lugarNacTipoId':me.dataStudentModif.lugarNacTipoId});*/
+                        }                        
+                    });  
+                    
+                    if(me.dataStudentModif.paisId == 1 && me.dataStudentModif.lugarNacTipoId>0){
+                         axios.post(Routing.generate('specialmodificationdata_get_provincia', me.dataStudentModif ))
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.DBProvincia = response.data.arrProvincia;
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+                    }else{
+                        this.DBDepto = '';
+                        this.DBProvincia = '';
+                        me.dataStudentModif.lugarNacTipoId ='';
+                        me.dataStudentModif.lugarProvNacTipoId ='';
+                    }
+
+
+
+
+
                 },
                 setProvincia: function(){
                     var me = this;
@@ -682,6 +725,7 @@
                     if(this.dataStudentModif.libro != this.dataStudent.libro)sw = true;
                     if(this.dataStudentModif.partida != this.dataStudent.partida)sw = true;
                     if(this.dataStudentModif.folio != this.dataStudent.folio)sw = true;
+                    if(this.dataStudentModif.pasaporte != this.dataStudent.pasaporte)sw = true;
 
                     if(sw){
                         this.swTwo = true;
@@ -703,6 +747,7 @@
                     this.dataStudentModif.libro = this.dataStudent.libro;
                     this.dataStudentModif.partida = this.dataStudent.partida;
                     this.dataStudentModif.folio = this.dataStudent.folio;
+                    this.dataStudentModif.pasaporte = this.dataStudent.pasaporte;
                     this.swTwo = false;
                     $('#modalEstudianteTwo').modal('hide');
 

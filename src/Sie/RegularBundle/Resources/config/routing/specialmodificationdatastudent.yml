@@ -31,6 +31,12 @@ specialmodificationdata_get_depto:
     path:     /getDepto
     defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:getDepto }
     options:
-        expose: true        
+        expose: true
+
+specialmodificationdata_get_provincia:
+    path:     /getProvincia
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:getProvincia }
+    options:
+        expose: true
         
         
