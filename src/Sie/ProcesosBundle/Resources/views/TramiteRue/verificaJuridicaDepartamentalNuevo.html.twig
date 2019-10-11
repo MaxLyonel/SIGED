@@ -57,7 +57,7 @@
                                                 </div>
                                                 <div id="collapse1" class="panel-collapse collapse">
                                                     <div class="panel-body">
-                                                        {% include 'SieHerramientaBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                        {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -189,7 +189,7 @@
                     <div class="panel-footer">
                         <div class="form-group col-md-12">
                             {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
-                            <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                            <a href="{{path('wf_tramite_index',{'tipo':2})}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
 					    </div>
                         <div class="clearfix"></div>
                     </div>

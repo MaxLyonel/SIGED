@@ -1460,6 +1460,26 @@ class Funciones {
     }
 
     /**
+     * Servicio para validar si el estudiante tiene un documento emitido
+     * @param  [type] $codigoRude       [Rude del estudiante]
+     * @return [object]                 [listado de documentos del estudiante]
+     */
+    public function validarDocumentoEstudiante($codigoRude){
+        $query = $this->em->getConnection()->prepare("
+                    select *
+                    from documento as d
+                    inner join tramite as t on t.id = d.tramite_id
+                    inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
+                    inner join estudiante as e on e.id = ei.estudiante_id
+                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1
+                    ");
+
+        $query->execute();
+        $documentos = $query->fetchAll();
+
+        return $documentos;
+    }
+    /**
      * Servicio para eliminar especialidades bth
      * @param  [integer] $codsie     [Id de inscripcion del estudiante]
      * @param  [integer] $gestion    [id de la gestion]
@@ -1515,7 +1535,6 @@ class Funciones {
         }
                 
     }    
-
 
 
 }

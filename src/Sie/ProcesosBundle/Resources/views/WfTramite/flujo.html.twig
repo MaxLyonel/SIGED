@@ -135,6 +135,9 @@
                         {% set sw = 0 %}
                         {% for f in flujo %}
                             {% if f.es_evaluacion =="1" %}
+                                {% if f.tarea_ant_id == null %}
+                                    st->{{f.id}}
+                                {% endif %}
                                 {{f.id}}->c{{f.id}}
                                 {% if f.condicion == "SI" %}
                                     c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}

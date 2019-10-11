@@ -115,7 +115,10 @@ e=>end: Fin|past
 {% for f in flujo %}
     {% if f.es_evaluacion =="1" %}
         {#{% if sw == 0 %}#}
-        {% if f.id == 48 %}
+        {% if f.tarea_ant_id == null %}
+            st->{{f.id}}
+        {% endif %}
+        {% if f.id == 55 %}
             {{f.id}}(right)->c{{f.id}}
             {% set sw = 1 %}
         {% else %}
@@ -124,7 +127,7 @@ e=>end: Fin|past
         {% endif %}
         {#{% endif %}#}
         {% if f.condicion == "SI" %}
-            {% if f.id == 48 %}
+            {% if f.id == 55 %}
                 c{{f.id}}(yes,top)->{{f.condicion_tarea_siguiente}}
             {% else %}
                 c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}

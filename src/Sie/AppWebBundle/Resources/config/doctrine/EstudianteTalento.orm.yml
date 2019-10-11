@@ -1,0 +1,91 @@
+Sie\AppWebBundle\Entity\EstudianteTalento:
+    type: entity
+    table: estudiante_talento
+    indexes:
+        IDX_FA38B6A11EEFD20:
+            columns:
+                - usuario_registro_id
+        IDX_FA38B6A1DADD026:
+            columns:
+                - usuario_modificacion_id
+        IDX_FA38B6A13AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_FA38B6A159590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        acelera:
+            type: boolean
+            nullable: true
+            comment: ''
+        talentoTipo:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: talento_tipo
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        informe:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        usuarioRegistro:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_registro_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioModificacion:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_modificacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

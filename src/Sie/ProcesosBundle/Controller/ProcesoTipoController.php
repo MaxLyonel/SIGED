@@ -61,7 +61,7 @@ class ProcesoTipoController extends Controller
             $tarea = $query->fetchAll();
             if(!$tarea){
                 $entity->setProcesoTipo(strtoupper($form->getData()->getProcesoTipo()));
-                $entity->setObs(strtoupper($form->getData()->getObs()));
+                $entity->setObs(mb_strtoupper($form->getData()->getObs(),'UTF-8'));
                 $em->persist($entity);
                 $em->flush();
                 $mensaje = 'La tarea ' . $entity->getProcesoTipo() . ' se registró con éxito';
@@ -202,7 +202,7 @@ class ProcesoTipoController extends Controller
         if ($editForm->isValid()) {
             //dump($request);die;
             $form = $request->get('sie_appwebbundle_procesotipo');
-            $entity->setProcesoTipo(strtoupper($form['procesoTipo']));
+            $entity->setProcesoTipo(mb_strtoupper($form['procesoTipo'],'UTF-8'));
             $entity->setObs(strtoupper($form['obs']));
             //dump($entity);die;
             $em->flush();

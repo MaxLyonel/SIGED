@@ -64,6 +64,9 @@ e=>end: Fin|past
 {% set sw = 0 %}
 {% for f in flujo %}
     {% if f.es_evaluacion =="1" %}
+        {% if f.tarea_ant_id == null %}
+            st->{{f.id}}
+        {% endif %}
         {% if sw == 0 %}
             {{f.id}}->c{{f.id}}
             {% set sw = 1 %}

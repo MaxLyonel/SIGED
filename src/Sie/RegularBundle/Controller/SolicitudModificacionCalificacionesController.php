@@ -1258,9 +1258,9 @@ class SolicitudModificacionCalificacionesController extends Controller {
                             case 'cualitativa_primaria_secundaria':
                             case 'cualitativa_inicial':
                                     if($ds->getEstudianteNotaId() != null){
-                                        $this->get('notas')->modificarNotaCualitativa($ds->getEstudianteNotaId(), $ds->getNotaCualitativaNew());
+                                        $this->get('notas')->modificarNotaCualitativa($ds->getEstudianteNotaId(), $ds->getNotaCualitativaNew(),0);
                                     }else{
-                                        $this->get('notas')->registrarNotaCualitativa($ds->getNotaTipoId(),$solicitud->getEstudianteInscripcionId(),$ds->getNotaCualitativaNew());
+                                        $this->get('notas')->registrarNotaCualitativa($ds->getNotaTipoId(),$solicitud->getEstudianteInscripcionId(),$ds->getNotaCualitativaNew(),0);
                                     }
                         }
                     }

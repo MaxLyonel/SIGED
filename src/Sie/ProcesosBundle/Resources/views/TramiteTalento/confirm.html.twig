@@ -1,0 +1,161 @@
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutEspecialSie.html.twig' %} #}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_index', {'tipo':1}) }}">Bandeja</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Finalizar</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Finalizar Trámite</h3>
+                            </div>
+                            {#<div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
+                            </div>#}
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="rude">Código RUDE</label>
+                                    <input type="text" class="form-control" id="rude" value="{{ rude }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estudiante">Nombre del Estudiante</label>
+                                    <input type="text" class="form-control" id="estudiante" value="{{ estudiante }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label for="es_talento">¿Es Talento Extraordinario?</label>
+                                    <input type="text" class="form-control" id="es_talento" value="{{ es_talento }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label for="tipo_talento">Tipo de Talento Extraordinario</label>
+                                    <input type="text" class="form-control" id="tipo_talento" value="{{ tipo_talento }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                {# <h4>Documento: <a href="{{asset('uploads/archivos/flujos/'~institucion~'/talento/'~ documento )}}" target="_blank">Informe Psicopedagógico</a></h4> #}
+                                <h4>Documento: <a href="{{asset('uploads/archivos/flujos/tramite/talento/'~ documento )}}" target="_blank">Informe Psicopedagógico</a></h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-primary" onclick="openModal()">Confirmar</button>
+                            </div>
+                            {# <form id="confirmar" action="" autocomplete="off">
+                                <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
+                                <div class="col-md-12 text-center">
+                                    <h4>¿Está seguro(a) de confirmar la conclusión del trámite?</h4>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary" id="confirma">Confirmar</button>
+                                </div>
+                            </form> #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <form id="confirmar">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Alerta</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
+                        <input type="hidden" id="tramite_st" value="0">
+                        <div id="carga"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="confirma">Aceptar</button>
+                        <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() {
+            $("#carga").html('<h5>¿Está seguro(a) de finalizar el trámite?</h5>');
+        });
+
+        $("#confirmar").submit(function (event) {
+            event.preventDefault();
+            $("#confirma").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_confirm'),
+                data: {'tramite_id': $('#tramite_id').val()},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#carga").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    if (data.estado == 200) {
+                        $("#confirma").hide();
+                        mesage('info', data.msg);
+                        $("#tramite_st").val(1);
+                    } else {
+                        mesage('warning', data.msg);
+                        $("#confirma").attr('disabled', true);
+                    }
+                },
+                error: function (error) {
+                    $("#confirma").attr('disabled', true);
+                }
+            });
+        });
+
+        function mesage(tipo, msg) {
+            $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">'+ msg +' </div>');
+        }
+
+        function openModal() {
+            $("#confirma").attr('disabled', false);
+            $("#tramite_st").val(0);
+            $("#carga").html('<h5>¿Está seguro(a) de finalizar el trámite?</h5>');
+            $("#modalConfirm").modal('show');
+        }
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val()==1) {
+                location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+            }
+        }
+    </script>
+{% endblock %}
+
+
