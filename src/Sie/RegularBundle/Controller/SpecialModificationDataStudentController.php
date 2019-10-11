@@ -119,11 +119,46 @@ class SpecialModificationDataStudentController extends Controller{
 
         }
         $this->addFlash('messageModStudent', $message);
-        
+        // get Genero to the student
+        $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
+        $arrGenero = array();
+        foreach ($objGenero as $value) {
+            if($value->getId()<3){
+                $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());                
+            }
+        }
+        //get pais
+        $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+        $arrPais = array();
+        foreach ($objPais as $value) {
+            $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
+        }
+        // get departamento
+        if ($objStudent->getPaisTipo()->getId() == 1) {
+            $condition = array('lugarNivel' => 1, 'paisTipoId' => $objStudent->getPaisTipo()->getId());
+        } else {
+            $condition = array('lugarNivel' => 8, 'id' => '79355');
+        }
+        $objDepto = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy($condition);
+        $arrDepto = array();
+        foreach ($objDepto as $depto) {
+            $arrDepto[]=array('deptoId'=>$depto->getId(),'depto'=>$depto->getLugar());
+        }
+
+        // get provincias
+        $objProv = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $objStudent->getLugarNacTipo()->getId()));
+
+        $arrProvincia = array();
+        foreach ($objProv as $prov) {
+            $arrProvincia[] = array('provinciaId'=>$prov->getid(), 'provincia'=>$prov->getlugar());
+        }
+                
          $arrStudent =( array(
+                    'estudianteId'=>$objStudent->getId(),
                     'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
                     'complemento'=>$objStudent->getComplemento(),
                     'genero'=>$objStudent->getGeneroTipo()->getGenero(),
+                    'generoId'=>$objStudent->getGeneroTipo()->getId(),
                     'paterno'=>$objStudent->getPaterno(),
                     'materno'=>$objStudent->getMaterno(),
                     'nombre'=>$objStudent->getNombre(),
@@ -144,6 +179,7 @@ class SpecialModificationDataStudentController extends Controller{
                     'partida'=>$objStudent->getPartida(),
                     'folio'=>$objStudent->getFolio(),
                 ));
+         $arrStudentModif = $arrStudent;
         // dump($objStudent);
         // dump($form);
         // die;
@@ -151,7 +187,12 @@ class SpecialModificationDataStudentController extends Controller{
         $response->setData(array(
             'codigoRude'=>$objStudent->getCodigoRude(),
             'studentId'=>$objStudent->getId(),
-            'student'=> $arrStudent
+            'student'=> $arrStudent,
+            'studentModif'=> $arrStudentModif,
+            'arrGenero' => $arrGenero,
+            'arrPais' => $arrPais,
+            'arrDepto' => $arrDepto,
+            'arrProvincia' => $arrProvincia,
         ));
        
         return $response;        
@@ -163,6 +204,129 @@ class SpecialModificationDataStudentController extends Controller{
         //         'sw'            => $sw,
         // ));
     }
+
+    public function updateStudentAction(Request $request){
+dump($request);die;
+        $response = new JsonResponse();
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        //get send values
+        $estudianteId = $request->get('estudianteId');
+        $carnetIdentidad=$request->get('carnetIdentidad');
+        $complemento=$request->get('complemento');
+        $generoId=$request->get('generoId');
+        $paterno=$request->get('paterno');
+        $materno=$request->get('materno');
+        $nombre=$request->get('nombre');
+        $fechaNacimiento=$request->get('fechaNacimiento');
+        $paisId=$request->get('paisId');
+        $lugarNacTipoId=$request->get('lugarNacTipoId');
+        $lugarProvNacTipoId=$request->get('lugarProvNacTipoId');
+        $localidad=$request->get('localidad');
+        $oficialia=$request->get('oficialia');
+        $libro=$request->get('libro');
+        $partida=$request->get('partida');
+        $folio=$request->get('folio');
+        
+        //get the info data
+        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId);
+        // update student data
+            
+                //GET OLD DATA
+                $oldDataStudent2 =json_encode( array(
+                    'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
+                    'complemento'=>$objStudent->getComplemento(),
+                    'genero'=>$objStudent->getGeneroTipo()->getGenero(),
+                    'paterno'=>$objStudent->getPaterno(),
+                    'materno'=>$objStudent->getMaterno(),
+                    'nombre'=>$objStudent->getNombre(),
+                    'fechaNacimiento'=>$objStudent->getFechaNacimiento(),
+                    'pais'=>$objStudent->getPaisTipo()->getPais(),
+                    'paisId'=>$objStudent->getPaisTipo()->getId(),
+                    'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
+                    'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
+                    'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
+                    'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
+                    'localidad'=>$objStudent->getLocalidadNac(),
+                    'oficialia'=>$objStudent->getOficialia(),
+                    'libro'=>$objStudent->getLibro(),
+                    'partida'=>$objStudent->getPartida(),
+                    'folio'=>$objStudent->getFolio(),
+                ));
+
+                $oldDataStudent = clone $objStudent;
+                $oldDataStudent = json_encode((array)$oldDataStudent);
+                
+                $objStudent->setCarnetIdentidad($carnetIdentidad);
+                $objStudent->setComplemento($complemento);
+                $objStudent->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId) );
+                $objStudent->setPaterno(mb_strtoupper($paterno, 'utf8'));
+                $objStudent->setMaterno(mb_strtoupper($materno, 'utf8'));
+                $objStudent->setNombre(mb_strtoupper($nombre, 'utf8'));
+                $objStudent->getFechaNacimiento(new \DateTime($fechaNacimiento));
+                
+                $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId) );
+                
+                if(isset($form['departamento'])){
+                    $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId) );
+                }else{
+                    $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
+                }
+                if(isset($form['provincia'])){
+                    $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId) );
+                }else{
+                    $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
+                }
+                $objStudent->setLocalidadNac($localidad);
+                $objStudent->setOficialia($oficialia);
+                $objStudent->setLibro($libro);
+                $objStudent->setPartida($partida);
+                $objStudent->setFolio($folio);
+                $em->flush();
+                // // save log data
+                // $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
+                // $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
+                // $objEstudianteHistorialModificacion->setResolucion($form['resoladm']);
+                // $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($form['fecharesoladm']));
+                // $objEstudianteHistorialModificacion->setJustificacion($form['obs']);
+                // $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($objStudent->getId()));
+                // $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
+                // $objEstudianteHistorialModificacion->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                // $em->persist($objEstudianteHistorialModificacion);
+                // $em->flush();
+
+
+                 $response->setStatusCode(200);
+                        $response->setData(array(
+                            'good'=>'good',
+                            'studentId'=>$objStudent->getId(),
+                        ));
+                       
+                        return $response;
+
+    }
+
+     public function departamentosAction($pais) {
+        $em = $this->getDoctrine()->getManager();
+        if ($pais == 1) {
+            $condition = array('lugarNivel' => 1, 'paisTipoId' => $pais);
+        } else {
+            $condition = array('lugarNivel' => 8, 'id' => '79355');
+        }
+
+
+        $dep = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy($condition);
+        $departamento = array();
+        foreach ($dep as $d) {
+            $departamento[$d->getId()] = $d->getLugar();
+        }
+
+        $dto = $departamento;
+        $response = new JsonResponse();
+        return $response->setData(array('departamento' => $dto));
+    }
+
+
 
     private function getInscription($data, $sw){
         $em = $this->getDoctrine()->getManager();
@@ -426,6 +590,35 @@ class SpecialModificationDataStudentController extends Controller{
         }
         $em->flush();
         return $answerSegip;
-    }    
+    }  
+
+    public function valsegipAction(Request $request){
+        $response = new JsonResponse();
+        //get the send values
+        $carnet = $request->get('carnet');
+        $complemento = $request->get('complemento');
+        $fechaNacimiento = $request->get('fechaNacimiento');
+        $paterno = $request->get('paterno');
+        $materno = $request->get('materno');
+        $nombre = $request->get('nombre');
+
+        $arrParametros = array(
+                'complemento'=>$complemento,
+                'primer_apellido'=>$paterno,
+                'segundo_apellido'=>$materno,
+                'nombre'=>$nombre,
+                'fecha_nacimiento'=>$fechaNacimiento);
+
+        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
+        
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'answerSegip'=>$answerSegip,
+        ));
+       
+        return $response;  
+    }
+
+    
 
 }

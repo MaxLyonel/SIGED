@@ -91,18 +91,36 @@
                                 <!-- <div v-if="buscando"> -->
                                 </br></br>
                                     <p class="encabezado bg-primary">MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO
-                                        <a class="btn btn-default" data-toggle="modal" href='#modalEstudiante'> <i class="fa fa-pencil"></i> </a>
+                                        <a class="btn btn-default" data-toggle="modal" href='#modalEstudianteOne'> <i class="fa fa-pencil"></i> </a>
                                     </p>
                                     <table class="table table-primary" border="0" >
                                         <tr>
                                             <!-- <th>Código Rude</th>
                                             <td>${codigoRude}</td> -->
                                             <th>Carnet</th>
-                                            <td>${dataStudent.carnetIdentidad}</td>
+                                            <td>
+                                                ${dataStudent.carnetIdentidad}
+                                                </br>
+                                                <p v-if="dataStudent.carnetIdentidad != dataStudentModif.carnetIdentidad " class="text-green">
+                                                    ${dataStudentModif.carnetIdentidad}
+                                                </p>
+                                            </td>
                                             <th>Complemento</th>
-                                            <td>${dataStudent.complemento}</td>
+                                            <td>
+                                                ${dataStudent.complemento}
+                                                </br>
+                                                <p v-if="dataStudent.complemento != dataStudentModif.complemento " class="text-green">
+                                                    ${dataStudentModif.complemento}
+                                                </p>
+                                            </td>
                                             <th>Fecha Nacimiento</th>
-                                            <td>${dataStudent.fechaNacimiento}</td>
+                                            <td>
+                                                ${dataStudent.fechaNacimiento}
+                                                </br>
+                                                <p v-if="dataStudent.fechaNacimiento != dataStudentModif.fechaNacimiento " class="text-green">
+                                                    ${dataStudentModif.fechaNacimiento}
+                                                </p>
+                                            </td>
                                             <td rowspan="2" align="right">
                                                 
                                             </td>
@@ -110,45 +128,114 @@
                                         </tr>
                                         <tr>
                                             <th>Paterno</th>
-                                            <td>${dataStudent.paterno}</td>
+                                            <td>
+                                                ${dataStudent.paterno}
+                                                  </br>
+                                                <p v-if="dataStudent.paterno != dataStudentModif.paterno " class="text-green">
+                                                    ${dataStudentModif.paterno}
+                                                </p>
+                                            </td>
                                             <th>Materno</th>
-                                            <td>${dataStudent.materno}</td>
+                                            <td>
+                                                ${dataStudent.materno}
+                                                  </br>
+                                                <p v-if="dataStudent.materno != dataStudentModif.materno " class="text-green">
+                                                    ${dataStudentModif.materno}
+                                                </p>
+                                            </td>
                                             <th>Nombre(s)</th>
-                                            <td>${dataStudent.nombre}</td>
+                                            <td>
+                                                ${dataStudent.nombre}
+                                                  </br>
+                                                <p v-if="dataStudent.nombre != dataStudentModif.nombre " class="text-green">
+                                                    ${dataStudentModif.nombre}
+                                                </p>
+                                            </td>
                                         </tr>
                                     </table>
                                     <br>
-                                    <p class="encabezado bg-primary">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</p>
+                                    <p class="encabezado bg-primary">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS
+                                        <a class="btn btn-default" data-toggle="modal" href='#modalEstudianteTwo'> <i class="fa fa-pencil"></i> </a>
+                                    </p>
                                     <table class="table table-primary" border="0">
                                         <tr>
                                             <th colspan="2">Genero</th>
-                                            <td colspan="3">${dataStudent.generoTipo}</td>
-                                            <td colspan="4" align="right">
-                                                <button type="button" class="btn btn-default">
-                                                    <i class="fa fa-pencil"></i>
-                                                </button>
-                                                
+                                            <td colspan="3">
+                                                ${dataStudent.generoTipo}
+                                                </br>
+                                                <p v-if="dataStudent.generoTipo != dataStudentModif.generoTipo " class="text-green">
+                                                    ${dataStudentModif.generoTipo}
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Pais</th>
-                                            <td>${dataStudent.pais}</td>
+                                            <td>
+                                                ${dataStudent.pais}
+                                                </br>
+                                                <p v-if="dataStudent.pais != dataStudentModif.pais " class="text-green">
+                                                    ${dataStudentModif.pais}
+                                                </p>
+                                            </td>
                                             <th>Departamento</th>
-                                            <td>${dataStudent.lugarNacTipo}</td>
+                                            <td>
+                                                ${dataStudent.lugarNacTipo}
+                                                </br>
+                                                <p v-if="dataStudent.lugarNacTipo != dataStudentModif.lugarNacTipo " class="text-green">
+                                                    ${dataStudentModif.lugarNacTipo}
+                                                </p>
+                                            </td>
                                             <th>Provincia</th>
-                                            <td>${dataStudent.lugarProvNacTipo}</td>
+                                            <td>
+                                                ${dataStudent.lugarProvNacTipo}
+                                                </br>
+                                                <p v-if="dataStudent.lugarProvNacTipo != dataStudentModif.lugarProvNacTipo " class="text-green">
+                                                    ${dataStudentModif.lugarProvNacTipo}
+                                                </p>
+
+                                            </td>
                                             <th>Localidad</th>
-                                            <td>${dataStudent.localidad}</td>
+                                            <td>
+                                                ${dataStudent.localidad}
+                                                </br>
+                                                <p v-if="dataStudent.localidad != dataStudentModif.localidad " class="text-green">
+                                                    ${dataStudentModif.localidad}
+                                                </p>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Oficialia</th>
-                                            <td>${dataStudent.oficialia}</td>
+                                            <td>
+                                                ${dataStudent.oficialia}
+                                                 </br>
+                                                <p v-if="dataStudent.oficialia != dataStudentModif.oficialia " class="text-green">
+                                                    ${dataStudentModif.oficialia}
+                                                </p>
+                                            </td>
                                             <th>Libro</th>
-                                            <td>${dataStudent.libro}</td>
+                                            <td>
+                                                ${dataStudent.libro}
+                                                 </br>
+                                                <p v-if="dataStudent.libro != dataStudentModif.libro " class="text-green">
+                                                    ${dataStudentModif.libro}
+                                                </p>
+                                            </td>
                                             <th>Partida</th>
-                                            <td>${dataStudent.Partida}</td>
+                                            <td>
+                                                ${dataStudent.partida}
+                                                 </br>
+                                                <p v-if="dataStudent.partida != dataStudentModif.partida " class="text-green">
+                                                    ${dataStudentModif.partida}
+                                                </p>
+                                            </td>
                                             <th>Folio</th>
-                                            <td>${dataStudent.Folio}</td>
+                                            <td>
+                                                ${dataStudent.folio}
+                                                 </br>
+                                                <p v-if="dataStudent.folio != dataStudentModif.folio " class="text-green">
+                                                    ${dataStudentModif.folio}
+                                                </p>
+                                            </td>
                                         </tr>
                                     </table>
                                     <br>
@@ -157,24 +244,169 @@
                                         <tr>
                                             <th>Resolucion Administrativa</th>
                                             <td>
-                                                <input type="text" id="form_resoladm" name="form[resoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}">
+                                                <input type="text" id="form_resoladm" name="form[resoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}" v-model="resolucionAmd">
                                             </td>
                                             <th>Fecha Resolucion</th>
                                             <td>
-                                                <input type="text" id="form_fecharesoladm" name="form[fecharesoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}">
+                                                <input type="text" id="form_fecharesoladm" name="form[fecharesoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}" v-model="fechaResolucion">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Justivicativo</th>
+                                            <th>Justificativo</th>
                                             <td colspan="4">
-                                                <textarea id="form_obs" name="form[obs]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,25}"></textarea>
+                                                <textarea id="form_obs" name="form[obs]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,25}" v-model="justificativo"></textarea>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <th>Subir Resolucion</th>
+                                            <td colspan="4">
+                                                <input type="file" id="exampleInputFile">
+                                            </td>
+                                        </tr>
+
                                     </table>
                                   
                                      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                        <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button>
+                                        <button v-on:click="updateStudent()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button>
                                     </div>
+
+
+
+                                            <div class="modal fade in" id="modalEstudianteOne"  tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" style="width:800px" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title">MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                           <form>
+                                                              <div class="form-row">
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="inputEmail4">Carnet Identidad</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="Carnet Identidad" v-model="dataStudentModif.carnetIdentidad">
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="complemento">Complemento</label>
+                                                                  <input type="input" class="form-control" id="Complemento" placeholder="Complemento" v-model="dataStudentModif.complemento">
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="Fecha">Fecha Nacimiento</label>
+                                                                  <input type="input" class="form-control" id="complemento" placeholder="Fecha Nacimiento" v-model="dataStudentModif.fechaNacimiento">
+                                                                </div>
+                                                              </div>
+
+                                                              <div class="form-row">
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="inputEmail4">Paterno</label>
+                                                                  <input type="input" class="form-control" id="inputEmail4" placeholder="Paterno" v-model="dataStudentModif.paterno">
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="Materno">Materno</label>
+                                                                  <input type="input" class="form-control" id="materno" placeholder="Materno" v-model="dataStudentModif.materno">
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="Nombre(s)">Nombre(s)</label>
+                                                                  <input type="input" class="form-control" id="nombres" placeholder="Nombre(s)" v-model="dataStudentModif.nombre">
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <button type="button" class="btn btn-primary" v-on:click="registryFormOne();">verificar SEGIP</button>
+                                                              <button type="button" class="btn btn-danger" v-on:click="clearSegip();">Cancelar</button>
+                                                              <p v-if="responseSegip==1">validation segip incorrecta, datos no modificados!!!</p>
+                                                              <p v-if="responseSegip==2">validation segip correct!!!</p>
+                                                              <p v-else="responseSegip==''"></p>
+                                                            </form>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal fade" id="modalEstudianteTwo">
+                                                <div class="modal-dialog" style="width:800px">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                           <form>
+                                                              <div class="form-row">
+                                                                <div class="form-group col-md-12">
+                                                                  <label for="inputEmail4">Genero</label>
+
+                                                                  <select name="arrGenero" id="idarrGenero" v-model="dataStudentModif.generoTipoId" class="custom-select form-control" v-on:change="setGenero();">  
+                                                                    <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
+                                                                  </select>
+                                                                </div>
+                                                              </div>
+
+                                                              <div class="form-row">
+                                                                <div class="form-group col-md-2">
+                                                                  <label for="inputEmail4">pais</label>
+                                                                  
+                                                                  <select name="arrPais" id="idarrPais" v-model="dataStudentModif.paisId" class="custom-select form-control" v-on:change="setPais();">  
+                                                                    <option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
+                                                                  </select>
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                  <label for="Materno">Departamento</label>
+
+                                                                  <select name="arrPais" id="idarrPais" v-model="dataStudentModif.lugarNacTipoId" class="custom-select form-control" v-on:change="setDepto();">  
+                                                                    <option v-for="item in DBDepto"  :value="item.deptoId">${ item.depto }</option>
+                                                                  </select>
+
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                  <label for="Nombre(s)">Provincia</label>
+                                                                  
+                                                                  <select name="arrPais" id="idarrPais" v-model="dataStudentModif.lugarProvNacTipoId" class="custom-select form-control" v-on:change="setProvincia();">  
+                                                                    <option v-for="item in DBProvincia"  :value="item.provinciaId">${ item.provincia }</option>
+                                                                  </select>
+
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="Nombre(s)">Localidad</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="" v-model="dataStudentModif.localidad">
+                                                                </div>
+                                                              </div>
+
+                                                              <div class="form-row">
+                                                                <div class="form-group col-md-2">
+                                                                  <label for="inputEmail4">Oficialia</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="" v-model="dataStudentModif.oficialia">
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                  <label for="Materno">Libro</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="" v-model="dataStudentModif.libro">
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                  <label for="Nombre(s)">Partida</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="" v-model="dataStudentModif.partida">
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                  <label for="Nombre(s)">Folio</label>
+                                                                  <input type="input" class="form-control" id="" placeholder="" v-model="dataStudentModif.folio">
+                                                                </div>
+                                                              </div>
+
+                                                              <button type="button" class="btn btn-primary" v-on:click="registryFormTwo();">Registro Previo</button>
+                                                              <button type="button" class="btn btn-danger" v-on:click="clearFormTwo();">Cancelar</button>
+                                                              <p v-if="responseFormTwo!=''">
+                                                                No existe cambios en el formulario...
+                                                              </p>
+                                                            </form>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
                               <!-- </div> -->
                             </div>
                   
@@ -201,15 +433,29 @@
             data: {
                 codigoRude:'',
                 gestion:'',
+                item:'',
                 arraOptionBuscar:'',
                 rudeBuscar:'',
                 optionBuscar:'',
                 studentId:'',
                 buscando:false,
+                // swOne:false,
+                // swTwo:false,
+                responseSegip:'',
+                responseFormTwo:'',
                 respuesta:'',
                 dataStudent: {},
                 dataStudentModif: {},                            
+                DBGenero: {},
+                DBPais: {},
+                DBDepto: {},
+                DBProvincia: {},
+                dataModifyToSend:[],
+                resolucionAmd:'',
+                fechaResolucion:'',
+                justificativo:'',
                 
+
             },
             methods: {
                 buscarEstudiante: function(){
@@ -219,6 +465,7 @@
                     this.estudiante = '';
                     this.respuesta = '';
                     this.arraOptionBuscar = '';
+                    this.item = '';
                     
 
                     if (this.rudeBuscar.length == 0) {
@@ -248,7 +495,11 @@
                             this.estudiante = response.data.estudiante;
                             this.studentId = response.data.studentId;
                             this.dataStudent = response.data.student;
-                            this.dataStudentModif = response.data.student;
+                            this.dataStudentModif = response.data.studentModif;
+                            this.DBGenero = response.data.arrGenero;
+                            this.DBPais = response.data.arrPais;
+                            this.DBDepto = response.data.arrDepto;
+                            this.DBProvincia = response.data.arrProvincia;
                             this.buscando = false;
                         console.log(this.dataStudent);
                             $('[data-toggle="tooltip"]').tooltip();
@@ -263,7 +514,166 @@
                         console.log(e);
                         this.buscando = false;
                     });
+                },
+                setGenero: function(){
+                    var me = this;
+                    $.each(this.DBGenero, function (i, value) {
+                        if(me.dataStudentModif.generoTipoId == value.generoId) {
+                            me.dataStudentModif.generoTipo = value.genero;
+                        }
+                    });                    
+                },
+                setPais: function(){
+                    var me = this;
+                    $.each(this.DBPais, function (i, value) {
+                        if(me.dataStudentModif.paisId == value.paisId) {
+                            me.dataStudentModif.pais = value.pais;
+                            me.dataModifyToSend.push({'paisId':me.dataStudentModif.paisId})
+                        }
+                    });                    
+                },
+                setDepto: function(){
+                    var me = this;
+                    $.each(this.DBDepto, function (i, value) {
+                        if(me.dataStudentModif.lugarNacTipoId == value.deptoId) {
+                            me.dataStudentModif.lugarNacTipo = value.depto;
+                            me.dataModifyToSend.push({'lugarNacTipoId':me.dataStudentModif.lugarNacTipoId});
+                        }
+                    });                    
+                },
+                setProvincia: function(){
+                    var me = this;
+                    $.each(this.DBProvincia, function (i, value) {
+                        if(me.dataStudentModif.lugarProvNacTipoId == value.provinciaId) {
+                            me.dataStudentModif.lugarProvNacTipo = value.provincia;
+                            me.dataModifyToSend.push({'provinciaId':me.dataStudentModif.lugarProvNacTipoId})
+                        }
+                    });                    
+                },                 
+                               
+
+                registryFormOne: function(){
+                    var sw = false;
+                    this.responseSegip='';
+
+                    if(this.dataStudentModif.carnetIdentidad != this.dataStudent.carnetIdentidad)sw = true;
+                    if(this.dataStudentModif.complemento != this.dataStudent.complemento)sw = true;
+                    if(this.dataStudentModif.fechaNacimiento != this.dataStudent.fechaNacimiento)sw = true;
+                    if(this.dataStudentModif.paterno != this.dataStudent.paterno)sw = true;
+                    if(this.dataStudentModif.materno != this.dataStudent.materno)sw = true;
+                    if(this.dataStudentModif.nombre != this.dataStudent.nombre)sw = true;
+                        
+                    if(sw){
+
+                        axios.get(Routing.generate('specialmodificationdata_val_segip', {
+                            carnet: this.dataStudentModif.carnetIdentidad,
+                            complemento: this.dataStudentModif.complemento,                        
+                            fechaNacimiento: this.dataStudentModif.fechaNacimiento,                        
+                            paterno: this.dataStudentModif.paterno,                        
+                            materno: this.dataStudentModif.materno,                        
+                            nombre: this.dataStudentModif.nombre
+                        }))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.responseSegip=1;
+                                if(response.data.answerSegip){
+                                    // the data student is correct
+                                    this.responseSegip=2;
+                                }
+                                console.log(response.data.answerSegip);
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                            if( response.status == 202){
+                                this.respuesta = response.data;
+                            }
+
+                            this.buscando = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            this.buscando = false;
+                        });
+                    }else{
+                        this.responseSegip='';
+                        console.log('no change');
+                        // disable button
+                    }
+                    // this.swOne = sw;
+
+
+                },
+                clearSegip: function(){
+                    this.responseSegip='';
+                    this.dataStudentModif.carnetIdentidad = this.dataStudent.carnetIdentidad;
+                    this.dataStudentModif.complemento = this.dataStudent.complemento;
+                    this.dataStudentModif.fechaNacimiento = this.dataStudent.fechaNacimiento;
+                    this.dataStudentModif.paterno = this.dataStudent.paterno;
+                    this.dataStudentModif.materno = this.dataStudent.materno;
+                    this.dataStudentModif.nombre = this.dataStudent.nombre;
+                    $('#modalEstudianteOne').modal('hide');
+
+                },
+                registryFormTwo: function(){
+                    var sw=false;
+                    if(this.dataStudentModif.generoTipo != this.dataStudent.generoTipo)sw = true;
+                    if(this.dataStudentModif.pais != this.dataStudent.pais)sw = true;
+                    if(this.dataStudentModif.lugarNacTipo != this.dataStudent.lugarNacTipo)sw = true;
+                    if(this.dataStudentModif.lugarProvNacTipo != this.dataStudent.lugarProvNacTipo)sw = true;
+                    if(this.dataStudentModif.localidad != this.dataStudent.localidad)sw = true;
+                    if(this.dataStudentModif.oficialia != this.dataStudent.oficialia)sw = true;
+                    if(this.dataStudentModif.libro != this.dataStudent.libro)sw = true;
+                    if(this.dataStudentModif.partida != this.dataStudent.partida)sw = true;
+                    if(this.dataStudentModif.folio != this.dataStudent.folio)sw = true;
+
+                    if(sw){
+                        $('#modalEstudianteTwo').modal('hide');
+                    }else{
+                        this.responseFormTwo='no existen cambios';
+                    }
+
+                },
+                clearFormTwo: function(){
+
+                    this.dataStudentModif.generoTipo = this.dataStudent.generoTipo;
+                    this.dataStudentModif.pais = this.dataStudent.pais;
+                    this.dataStudentModif.lugarNacTipo = this.dataStudent.lugarNacTipo;
+                    this.dataStudentModif.lugarProvNacTipo = this.dataStudent.lugarProvNacTipo;
+                    this.dataStudentModif.localidad = this.dataStudent.localidad;
+                    this.dataStudentModif.oficialia = this.dataStudent.oficialia;
+                    this.dataStudentModif.libro = this.dataStudent.libro;
+                    this.dataStudentModif.partida = this.dataStudent.partida;
+                    this.dataStudentModif.folio = this.dataStudent.folio;
+
+                    $('#modalEstudianteTwo').modal('hide');
+
+                },
+                updateStudent: function(){
+                    
+
+                     axios.post(Routing.generate('specialmodificationdata_update_student', this.dataStudentModif,this.resoladm, this.fechaResolucion ,this.justificativo))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.responseSegip=1;
+                                if(response.data.answerSegip){
+                                    // the data student is correct
+                                    this.responseSegip=2;
+                                }
+                                console.log(response.data.answerSegip);
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                            if( response.status == 202){
+                                this.respuesta = response.data;
+                            }
+
+                            this.buscando = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            this.buscando = false;
+                        });
+
                 }
+
             },
             mounted(){
                 

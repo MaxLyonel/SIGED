@@ -12,4 +12,17 @@ specialmodificationdata_student_updateDataStudent:
     path:     /updateDataStudent
     defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:updateDataStudent }
     options:
-        expose: true        
+        expose: true
+
+specialmodificationdata_val_segip:
+    path:     /valsegip
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:valsegip }
+    options:
+        expose: true         
+
+
+specialmodificationdata_update_student:
+    path:     /updateStudent
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:updateStudent }
+    options:
+        expose: true           
