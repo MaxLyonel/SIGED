@@ -46,7 +46,8 @@ class TramiteTalentoExtraordinarioController extends Controller {
         if ($rol != 9 || $flujotipo_id==null) {
             return $this->redirect($this->generateUrl('wf_tramite_index'));
         }//dump($request->getSession()->get('pathSystem'));die;
-        //$autorizados = ['82230104', '80480250', '80980495', '80980579', '80900074', '40730256', '80730696', '81220087', '81230262', '82480035', '61470053', '81480136', '81480196', '81410158', '71980052', '81980780', '61900026', '81730091', '61710057', '81710072'];
+        // $acreditados = ['82230104', '80480250', '80980495', '80980579', '80900074', '40730256', '80730696', '81220087', '81230262', '82480035', '61470053', '81480136', '81480196', '81410158', '71980052', '81980780', '61900026', '81730091', '61710057', '81710072'];
+        $acreditados = ['82230104', '40730256', '81220087', '81480196', '81410158', '71980052', '81980780', '61900026'];
         if ($request->getSession()->get('pathSystem') == "SieHerramientaBundle") {
             $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
                 ->select('ie.id, ie.institucioneducativa')
@@ -54,10 +55,12 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
                 ->where('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
-                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')
-                ->andWhere('ie.estadoinstitucionTipo=10')
+                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')//Autorizado
+                ->andWhere('ie.estadoinstitucionTipo=10')//Autorizado
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
+                ->andWhere('ie.id in (:acreditados)')//Autorizado
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
+                ->setParameter('acreditados', $acreditados)//Autorizado
                 ->distinct('ie.id')
                 ->orderBy("ie.institucioneducativa")
                 ->getQuery()
@@ -73,11 +76,13 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->where('ie.id = :codigo')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
-                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')
-                ->andWhere('ie.estadoinstitucionTipo=10')
+                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')//Autorizado
+                ->andWhere('ie.estadoinstitucionTipo=10')//Autorizado
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
+                ->andWhere('ie.id in (:acreditados)')//Autorizado
                 ->setParameter('codigo', $request->getSession()->get('ie_id'))
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
+                ->setParameter('acreditados', $acreditados)//Autorizado
                 ->distinct('ie.id')
                 ->getQuery()
                 ->getResult();
@@ -231,7 +236,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
         if ($ieducativa) {
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
-        }dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
+        }//dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
         $result = $this->get('wftramite')->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             $msg = $result['msg'];
