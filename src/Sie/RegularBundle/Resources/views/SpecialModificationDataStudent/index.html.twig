@@ -55,7 +55,7 @@
                     <div class="panel-heading">
                         <i class="fa fa-search"></i>
                         <div class="pull-right">
-                            <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a>
+                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
                         </div>                                        
                     </div>
                     <div class="panel-body">
@@ -321,7 +321,7 @@
                                                                     <strong>Alerta:</strong> validation segip incorrecta, datos no modificados!!!
                                                                 </div>                                                              
                                                                 <div class="alert alert-success" v-if="responseSegip==2">
-                                                                    <strong>BIEN:</strong> validation segip correct!!!
+                                                                    <strong>BIEN:</strong> validation segip correcta!!!
                                                                 </div>
                                                                 <div class="alert alert-danger" v-if="responseSegip==3">
                                                                     <strong>Alerta:</strong>   No se detectan cambios!!!
@@ -551,12 +551,14 @@
                 },
                 setPais: function(){
                     var me = this;
+                    
                     $.each(this.DBPais, function (i, value) {
                         if(me.dataStudentModif.paisId == value.paisId) {
                             me.dataStudentModif.pais = value.pais;
                             me.dataModifyToSend.push({'paisId':me.dataStudentModif.paisId})
                         }
                     });                    
+                    console.log(me.dataStudentModif.paisId);
                 },
                 setDepto: function(){
                     var me = this;
@@ -607,6 +609,7 @@
                                     // the data student is correct
                                     this.responseSegip=2;
                                     this.swOne = true;
+                                    $('#modalEstudianteOne').modal('hide');
                                 }
                                 console.log(response.data.answerSegip);
                                 $('[data-toggle="tooltip"]').tooltip();
