@@ -267,14 +267,20 @@
                                         <tr>
                                             <th>Subir Resolucion</th>
                                             <td colspan="4">
-                                                <input type="file" id="exampleInputFile">
+                                                {# <input type="file" > #}
+                                                <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
                                             </td>
                                         </tr>
 
                                     </table>
                                   
                                      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" v-if="swOne || swTwo">
-                                        <button v-on:click="updateStudent()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button>
+                                       <table>
+                                        <tr>
+                                         <td><button v-on:click="updateStudent()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button></td>
+                                         <td><button v-on:click="cancelupdateStudent()" type="button" class="btn btn-danger"><i class="fa fa-remove"> Cancelar Cambios</i> </button></td>
+                                        </tr>
+                                       </table> 
                                      </div>
                                      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" v-else>                                        
                                      </div>
@@ -321,7 +327,7 @@
                                                                 </div>
                                                               </div>
                                                               
-                                                              <button type="button" class="btn btn-primary" v-on:click="registryFormOne();">verificar</button>
+                                                              <button type="button" class="btn btn-primary" v-on:click="registryFormOne();">verifica</button>
                                                               <button type="button" class="btn btn-danger" v-on:click="clearSegip();">Cancelar</button>
                                                               </br>
                                                               </br>
@@ -477,6 +483,9 @@
                 DBDepto: {},
                 DBProvincia: {},
                 dataModifyToSend:[],
+                archivoAdjunto:'',
+                informe:''
+
                
             },
             methods: {
@@ -488,6 +497,7 @@
                     this.respuesta = '';
                     this.arraOptionBuscar = '';
                     this.item = '';
+                    this.informe = '';
                     
 
                     if (this.rudeBuscar.length == 0) {
@@ -754,7 +764,7 @@
                 },
                 updateStudent: function(){
 
-                    console.log(this.dataStudentModif.resolucionAdm);
+                    /*console.log(this.dataStudentModif.resolucionAdm);*/
                     if(this.dataStudentModif.resolucionAdm == ''){
                         this.respuesta = 'Debe ingresar la Resolucion Administrativa';
                         this.buscando = false;
@@ -771,6 +781,16 @@
                         return false;
                     }
 
+                    /*validate the file attached*/
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                          'Adjuntar Informe',
+                          'Debe adjuntar un escaneado del informe, puede ser un archivo de imagen o PDF',
+                          'warning'
+                        );
+                        return;
+                    }
+
 
                     Swal.fire({
                         title: '¿Enviar Cambios?',
@@ -783,28 +803,11 @@
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.value) {
-                            /*var data = new FormData();
-                            data.append('idTramite', this.idTramite);
-                            data.append('idInscripcion', this.idInscripcion);
-                            data.append('codigoRude', this.codigoRude);
-                            data.append('estudiante', this.estudiante);
-                            data.append('sie', this.sie);
-                            data.append('institucioneducativa', this.institucioneducativa);
-                            data.append('nivel', this.nivel);
-                            data.append('grado', this.grado);
-                            data.append('paralelo', this.paralelo);
-                            data.append('turno', this.turno);
-                            data.append('gestion', this.gestion);
-
-                            data.append('flujoTipo', this.flujoTipo);
-                            data.append('notas', JSON.stringify(this.notas));
-                            data.append('notasCualitativas', JSON.stringify(this.notasCualitativas));
-                            data.append('justificacion', this.justificacion);
+                            var data = new FormData();
+                            data.append('datos', JSON.stringify(this.dataStudentModif));
                             data.append('informe', this.informe);
-
-                            this.formularioEnviado = true;
-                            */
-                             axios.post(Routing.generate('specialmodificationdata_update_student', this.dataStudentModif))
+                                                        
+                             axios.post(Routing.generate('specialmodificationdata_update_student'), data)
                             .then(response => {
                                 if (response.status == 200) {
                                     this.responseSegip=1;
@@ -828,17 +831,44 @@
 
                             
                         }
-                    })
+                    })                   
 
+                },
+                cancelupdateStudent: function(){
 
+                    this.respuesta = 'Modificacion cancelada';
+                    this.buscando = false;
+                    this.studentId = '';
+                    return false;
 
-
-                    
-                    
-
-                    
-
-                }
+                },
+                getImage: function(event){
+                    var informe = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informe = '';
+                        return false;
+                    }else{
+                        var megas = (informe.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informe = '';
+                            return false;
+                        }
+                    }
+                    this.informe = event.target.files[0];
+                },                
 
             },
             mounted(){

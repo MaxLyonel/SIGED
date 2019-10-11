@@ -202,7 +202,7 @@ class SpecialModificationDataStudentController extends Controller{
                     'resolucionAdm'=>'',
                     'fecharesolAdm'=>'',
                     'justificativo'=>'',
-                    'archivoadjunto'=>'',
+                    // 'archivoadjunto'=>'',
 
 
                 ));
@@ -236,7 +236,8 @@ class SpecialModificationDataStudentController extends Controller{
     }
 
     public function updateStudentAction(Request $request){
-
+dump($request);
+die;
         $response = new JsonResponse();
         // create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -286,6 +287,7 @@ class SpecialModificationDataStudentController extends Controller{
                     'libro'=>$objStudent->getLibro(),
                     'partida'=>$objStudent->getPartida(),
                     'folio'=>$objStudent->getFolio(),
+                    'pasaporte'=>$objStudent->getPasaporte(),
                 ));
 
                 $oldDataStudent = clone $objStudent;
