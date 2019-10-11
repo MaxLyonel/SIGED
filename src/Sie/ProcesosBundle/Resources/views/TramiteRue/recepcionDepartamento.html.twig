@@ -1,0 +1,298 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index',{'tipo':2})}}">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12">  
+                            {% if app.session.flashBag.has('exito') %}
+                                <div class="alert alert-success">
+                                    {% for msg in app.session.flashBag.get('exito') %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {{ msg }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if app.session.flashBag.has('error') %}
+                                <div class="alert alert-danger">
+                                    {% for msg in app.session.flashBag.get('error') %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {{ msg }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div id="msg"></div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">{{tarea}}</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="panel-group">
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="pull-left">
+                                                    <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->   
+                                <div class="panel-body">
+                                    <div class="row">
+                                        {{ form_start(form) }}
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                            <div class="col-md-9">
+                                                {% for a in form.varevaluacion %}
+                                                    <div class="col-md-3 rdio rdio-primary circle">
+                                                        {{ form_widget(a,{'attr':{'class':'varevaluacion'}}) }}
+                                                        {{ form_label(a) }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="row" id="informe" style="display:none">
+                        <div class="col-md-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">DATOS DEL INFORME</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->   
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.informesubdireccion) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.informesubdireccion) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.fechainformesubdireccion) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.fechainformesubdireccion) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.adjuntoinformesubdireccion) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.adjuntoinformesubdireccion) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.informejuridica) }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form_widget(form.informejuridica) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.fechainformejuridica) }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form_widget(form.fechainformejuridica) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.adjuntoinformejuridica) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.adjuntoinformejuridica) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.observacion) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.observacion) }}
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="row" id="resolucion" style="display:none">
+                        <div class="col-md-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">DATOS DE LA RESOLUCIÓN ADMINISTRATIVA</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->   
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.resolucion) }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form_widget(form.resolucion) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.fecharesolucion) }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form_widget(form.fecharesolucion) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.adjuntoresolucion) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.adjuntoresolucion) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                </div><!-- /.panel-body -->
+                <div class="panel-footer">
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.guardar) }}
+                        {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                        <a href="{{path('wf_tramite_index')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {{ form_end(form) }}
+            </div>  
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $( document ).ready(function() {
+            $(".varevaluacion").prop('checked',false);
+            $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                format:'dd-mm-yyyy',
+                titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                weekStart: 0
+            };
+            $('.date').datepicker({
+                orientation: "auto left",
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true,
+                language: 'es'
+            });
+        });
+        $('input[type="file"]').change(function(){
+	        // this.files[0].size recupera el tamaño del archivo
+	        alert(this.files[0].size);
+        	var fileName = this.files[0].name;
+	        var fileSize = this.files[0].size;
+            var sizePermitido = 3 * (1024 * 1024)
+            
+        	if(fileSize > sizePermitido){
+    	    	alert('El archivo no debe superar los 3MB');
+	    	    this.value = '';
+    		    this.files[0].name = '';
+        	}
+        });
+
+        $('.varevaluacion').click(function(){
+            $('#informe').show();
+            if ($("#form_varevaluacion_0").is(':checked')){
+                $('#resolucion').show();
+                $("#form_informesubdireccion").attr('required',true);
+                $("#form_fechainformesubdireccion").attr('required',true);
+                $("#form_adjuntoinformesubdireccion").attr('required',true);
+                $("#form_informejuridica").attr('required',true);
+                $("#form_fechainformejuridica").attr('required',true);
+                $("#form_adjuntoinformejuridica").attr('required',true);
+                $("#form_resolucion").attr('required',true);
+                $("#form_fecharesolucion").attr('required',true);
+                $("#form_adjuntoresolucion").attr('required',true);
+                $("#form_observacion").attr('required',false);
+            }
+            if ($("#form_varevaluacion_1").is(':checked')){
+                $('#resolucion').hide();
+                $("#form_informesubdireccion").attr('required',false);
+                $("#form_fechainformesubdireccion").attr('required',false);
+                $("#form_adjuntoinformesubdireccion").attr('required',false);
+                $("#form_informejuridica").attr('required',false);
+                $("#form_fechainformejuridica").attr('required',false);
+                $("#form_adjuntoinformejuridica").attr('required',false);
+                $("#form_resolucion").attr('required',false);
+                $("#form_fecharesolucion").attr('required',false);
+                $("#form_adjuntoresolucion").attr('required',false);
+                $("#form_observacion").attr('required',true);
+            }
+        });
+    
+        $(function(){
+            $(".validar").keydown(function(event){
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        }); 
+    </script>
+{% endblock %}
