@@ -1691,7 +1691,7 @@ class TramiteAceleracionController extends Controller
         $pdf->writeHTML($firmas, true, false, true, false, '');
         //$lugar_fecha='<span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span>';
         //$pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $lugar_fecha, $border = 0, $ln = 0, $fill = 0, $reseth = true, $align = 'R', $autopadding = false);
-        $pdf->Output("acta_supletorio.pdf", 'I');
+        $pdf->Output($queryMaestroUE['sie']."Acta_Supletoria_".date('YmdHis').".pdf", 'I');
     }
 
     public function buscaCTPAction(Request $request) {
