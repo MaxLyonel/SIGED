@@ -29,22 +29,16 @@ Sie\AppWebBundle\Entity\SistemaTipo:
             length: 5
             fixed: true
             comment: ''
-        abreviatura:
-            type: string
-            nullable: true
-            length: 5
-            fixed: true
-            comment: ''
         bundle:
             type: string
             nullable: true
             length: 100
-            fixed: true
-            comment: '' 
+            fixed: false
+            comment: ''
         url:
             type: string
             nullable: true
             length: 100
-            fixed: true
-            comment: ''            
+            fixed: false
+            comment: ''
     lifecycleCallbacks: {  }

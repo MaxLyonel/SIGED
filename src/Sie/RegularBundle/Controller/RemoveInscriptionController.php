@@ -389,6 +389,12 @@ class RemoveInscriptionController extends Controller {
             }
             $em->flush();
 
+            $objCdlInscripcion = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->findBy(array('estudianteInscripcion' => $eiid ));
+            foreach ($objCdlInscripcion as $element) {
+                $em->remove($element);
+            }
+            $em->flush();            
+
 
             if ($objRude) {
                 $em->remove($objRude);

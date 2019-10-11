@@ -220,4 +220,32 @@ class MenuObjeto
     {
         return $this->sistemaTipo;
     }
+    /**
+     * @var integer
+     */
+    private $menuTipoId;
+
+
+    /**
+     * Set menuTipoId
+     *
+     * @param integer $menuTipoId
+     * @return MenuObjeto
+     */
+    public function setMenuTipoId($menuTipoId)
+    {
+        $this->menuTipoId = $menuTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get menuTipoId
+     *
+     * @return integer 
+     */
+    public function getMenuTipoId()
+    {
+        return $this->menuTipoId;
+    }
 }

@@ -38,7 +38,7 @@ class SpecialModificationDataStudentController extends Controller{
     }
 
     private function craeteformsearch() {
-        $arrOptions = array('General','Homologacion');
+        $arrOptions = array('Concluyó el Bachillerato','Tiene registro en gestiones pasadas');
         $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('specialmodificationdata_student_lookfor_student'))
                 ->add('codeRude', 'text', array('label' => 'RUDE', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase','placeholder'=>'RUDE')))
@@ -244,7 +244,7 @@ class SpecialModificationDataStudentController extends Controller{
                  ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                  ->add('resoladm', 'text', array('required' => false, 'mapped' => false, 'label' => 'Resolucion Administrativa', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                  ->add('fecharesoladm', 'text', array('required' => false, 'mapped' => false, 'label' => 'Fecha Resolucion Administrativa', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
-                 ->add('obs', 'textarea', array('required' => false, 'mapped' => false, 'label' => 'Observacion', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
+                 ->add('obs', 'textarea', array('required' => false, 'mapped' => false, 'label' => 'Justivicativo', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                  ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateDataStudent()')))
                  ->getForm();
         
@@ -277,10 +277,10 @@ class SpecialModificationDataStudentController extends Controller{
                     'fecharesoladm'=>$objStudent->getFechaNacimiento(),
                     'pais'=>$objStudent->getPaisTipo()->getPais(),
                     'paisId'=>$objStudent->getPaisTipo()->getId(),
-                    'lugarNacTipo'=>$objStudent->getLugarNacTipo()->getLugar(),
-                    'lugarNacTipoId'=>$objStudent->getLugarNacTipo()->getId(),
-                    'lugarProvNacTipo'=>$objStudent->getLugarProvNacTipo()->getLugar(),
-                    'lugarProvNacTipoId'=>$objStudent->getLugarProvNacTipo()->getId(),
+                    'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
+                    'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
+                    'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
+                    'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
                     'localidad'=>$objStudent->getLocalidadNac(),
                     'oficialia'=>$objStudent->getOficialia(),
                     'libro'=>$objStudent->getLibro(),
