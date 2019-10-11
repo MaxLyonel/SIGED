@@ -88,6 +88,16 @@ class SpecialModificationDataStudentController extends Controller{
                     $message = 'El estudiante no es bachiller';
                     $typeMessage = 'warning';
                     $compleMessage = 'Alerta';
+
+                    $response->setStatusCode(200);
+                    $response->setData(array(
+                        'status'=>'error',
+                        'message'=>$message,
+                        'swerror'=>$sw,
+                    ));
+                    return $response;  
+
+
                 }else{
                     $message = 'error general';
                     $typeMessage = 'warning';
@@ -103,8 +113,16 @@ class SpecialModificationDataStudentController extends Controller{
                     $message = 'El estudiante cuenta con inscripcion en la presente gestion';
                     $typeMessage = 'warning';
                     $compleMessage = 'Alerta';
+                    $response->setStatusCode(200);
+                    $response->setData(array(
+                        'status'=>'error',
+                        'message'=>$message,
+                        'swerror'=>$sw,
+                    ));
+                    return $response;  
+
                 }else{
-                    $message = 'error homologation';
+                    $message = 'correct the case is by homologation';
                     $typeMessage = 'warning';
                     $compleMessage = 'good';
                     $sw = true;
@@ -118,6 +136,7 @@ class SpecialModificationDataStudentController extends Controller{
             $sw = true;
 
         }
+        
         $this->addFlash('messageModStudent', $message);
         // get Genero to the student
         $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
@@ -178,6 +197,13 @@ class SpecialModificationDataStudentController extends Controller{
                     'libro'=>$objStudent->getLibro(),
                     'partida'=>$objStudent->getPartida(),
                     'folio'=>$objStudent->getFolio(),
+
+                    'resolucionAdm'=>'',
+                    'fecharesolAdm'=>'',
+                    'justificativo'=>'',
+                    'archivoadjunto'=>'',
+
+
                 ));
          $arrStudentModif = $arrStudent;
         // dump($objStudent);
@@ -193,6 +219,9 @@ class SpecialModificationDataStudentController extends Controller{
             'arrPais' => $arrPais,
             'arrDepto' => $arrDepto,
             'arrProvincia' => $arrProvincia,
+            'status'=>'error',
+            'message'=>$message,
+            'swerror'=>$sw,
         ));
        
         return $response;        
@@ -206,7 +235,7 @@ class SpecialModificationDataStudentController extends Controller{
     }
 
     public function updateStudentAction(Request $request){
-dump($request);die;
+
         $response = new JsonResponse();
         // create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -227,6 +256,10 @@ dump($request);die;
         $libro=$request->get('libro');
         $partida=$request->get('partida');
         $folio=$request->get('folio');
+
+        $resolucionAdm = $request->get('resolucionAdm');
+        $fecharesolAdm = $request->get('fecharesolAdm');
+        $justificativo = $request->get('justificativo');
         
         //get the info data
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId);
@@ -267,12 +300,12 @@ dump($request);die;
                 
                 $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId) );
                 
-                if(isset($form['departamento'])){
+                if(isset($lugarNacTipoId)){
                     $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId) );
                 }else{
                     $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
                 }
-                if(isset($form['provincia'])){
+                if(isset($lugarProvNacTipoId)){
                     $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId) );
                 }else{
                     $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
@@ -283,17 +316,17 @@ dump($request);die;
                 $objStudent->setPartida($partida);
                 $objStudent->setFolio($folio);
                 $em->flush();
-                // // save log data
-                // $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
-                // $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
-                // $objEstudianteHistorialModificacion->setResolucion($form['resoladm']);
-                // $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($form['fecharesoladm']));
-                // $objEstudianteHistorialModificacion->setJustificacion($form['obs']);
-                // $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($objStudent->getId()));
-                // $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
-                // $objEstudianteHistorialModificacion->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
-                // $em->persist($objEstudianteHistorialModificacion);
-                // $em->flush();
+                // save log data
+                $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
+                $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
+                $objEstudianteHistorialModificacion->setResolucion($resolucionAdm);
+                $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($fecharesolAdm));
+                $objEstudianteHistorialModificacion->setJustificacion($justificativo);
+                $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId));
+                $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
+                $objEstudianteHistorialModificacion->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                $em->persist($objEstudianteHistorialModificacion);
+                $em->flush();
 
 
                  $response->setStatusCode(200);
