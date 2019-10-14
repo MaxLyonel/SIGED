@@ -10,6 +10,12 @@
         [v-cloak]{
             display: none;
         }
+        .tachado{
+            text-decoration: line-through;
+            /* color: #D5956E; */
+            color:  #D51528;
+            opacity: 0.4;
+        }        
     </style>
 
 {% endblock %}
@@ -98,7 +104,7 @@
                                             <td>${codigoRude}</td> -->
                                             <th>Carnet</th>
                                             <td>
-                                                ${dataStudent.carnetIdentidad}
+                                                <span v-bind:class="{tachado: dataStudent.carnetIdentidad != dataStudentModif.carnetIdentidad }"> ${dataStudent.carnetIdentidad}</span>
                                                 </br>
                                                 <p v-if="dataStudent.carnetIdentidad != dataStudentModif.carnetIdentidad " class="text-green">
                                                     <strong>${dataStudentModif.carnetIdentidad}</strong>
@@ -106,7 +112,7 @@
                                             </td>
                                             <th>Complemento</th>
                                             <td>
-                                                ${dataStudent.complemento}
+                                                <span v-bind:class="{tachado: dataStudent.complemento != dataStudentModif.complemento  }"> ${dataStudent.complemento}</span>
                                                 </br>
                                                 <p v-if="dataStudent.complemento != dataStudentModif.complemento " class="text-green">
                                                     <strong>${dataStudentModif.complemento}</strong>
@@ -114,7 +120,7 @@
                                             </td>
                                             <th>Fecha Nacimiento</th>
                                             <td>
-                                                ${dataStudent.fechaNacimiento}
+                                                <span v-bind:class="{tachado: dataStudent.fechaNacimiento != dataStudentModif.fechaNacimiento}"> ${dataStudent.fechaNacimiento}</span>
                                                 </br>
                                                 <p v-if="dataStudent.fechaNacimiento != dataStudentModif.fechaNacimiento " class="text-green">
                                                     <strong>${dataStudentModif.fechaNacimiento}</strong>
@@ -128,7 +134,7 @@
                                         <tr>
                                             <th>Paterno</th>
                                             <td>
-                                                ${dataStudent.paterno}
+                                                <span v-bind:class="{tachado: dataStudent.paterno != dataStudentModif.paterno }"> ${dataStudent.paterno}</span>
                                                   </br>
                                                 <p v-if="dataStudent.paterno != dataStudentModif.paterno " class="text-green">
                                                     <strong>${dataStudentModif.paterno}</strong>
@@ -136,7 +142,7 @@
                                             </td>
                                             <th>Materno</th>
                                             <td>
-                                                ${dataStudent.materno}
+                                                <span v-bind:class="{tachado: dataStudent.materno != dataStudentModif.materno }"> ${dataStudent.materno}</span>
                                                   </br>
                                                 <p v-if="dataStudent.materno != dataStudentModif.materno " class="text-green">
                                                     <strong>${dataStudentModif.materno}</strong>
@@ -144,7 +150,7 @@
                                             </td>
                                             <th>Nombre(s)</th>
                                             <td>
-                                                ${dataStudent.nombre}
+                                                <span v-bind:class="{tachado: dataStudent.nombre != dataStudentModif.nombre }"> ${dataStudent.nombre}</span>
                                                   </br>
                                                 <p v-if="dataStudent.nombre != dataStudentModif.nombre " class="text-green">
                                                     <strong>${dataStudentModif.nombre}</strong>
@@ -160,7 +166,7 @@
                                         <tr>
                                             <th colspan="2">Género</th>
                                             <td colspan="3">
-                                                ${dataStudent.generoTipo}
+                                                <span v-bind:class="{tachado: dataStudent.generoTipo != dataStudentModif.generoTipo}"> ${dataStudent.generoTipo}</span>
                                                 </br>
                                                 <p v-if="dataStudent.generoTipo != dataStudentModif.generoTipo " class="text-green">
                                                     <strong>${dataStudentModif.generoTipo}</strong>
@@ -168,7 +174,7 @@
                                             </td>
                                             <th colspan="2">Pasaporte</th>
                                             <td colspan="3">
-                                                ${dataStudent.pasaporte}
+                                                <span v-bind:class="{tachado: dataStudent.pasaporte != dataStudentModif.pasaporte}"> ${dataStudent.pasaporte}</span>
                                                 </br>
                                                 <p v-if="dataStudent.pasaporte != dataStudentModif.pasaporte " class="text-green">
                                                     <strong>${dataStudentModif.pasaporte}</strong>
@@ -178,7 +184,7 @@
                                         <tr>
                                             <th>Pais</th>
                                             <td>
-                                                ${dataStudent.pais}
+                                               <span v-bind:class="{tachado: dataStudent.pais != dataStudentModif.pais }"> ${dataStudent.pais}</span> 
                                                 </br>
                                                 <p v-if="dataStudent.pais != dataStudentModif.pais " class="text-green">
                                                     <strong>${dataStudentModif.pais}</strong>
@@ -186,7 +192,7 @@
                                             </td>
                                             <th>Departamento</th>
                                             <td>
-                                                ${dataStudent.lugarNacTipo}
+                                                <span v-bind:class="{tachado: dataStudent.lugarNacTipo != dataStudentModif.lugarNacTipo  }"> ${dataStudent.lugarNacTipo}</span> 
                                                 </br>
                                                 <p v-if="dataStudent.lugarNacTipo != dataStudentModif.lugarNacTipo " class="text-green">
                                                     <strong>${dataStudentModif.lugarNacTipo}</strong>
@@ -194,7 +200,7 @@
                                             </td>
                                             <th>Provincia</th>
                                             <td>
-                                                ${dataStudent.lugarProvNacTipo}
+                                                <span v-bind:class="{tachado: dataStudent.lugarProvNacTipo != dataStudentModif.lugarProvNacTipo  }"> ${dataStudent.lugarProvNacTipo}</span>
                                                 </br>
                                                 <p v-if="dataStudent.lugarProvNacTipo != dataStudentModif.lugarProvNacTipo " class="text-green">
                                                     <strong>${dataStudentModif.lugarProvNacTipo}</strong>
@@ -203,7 +209,7 @@
                                             </td>
                                             <th>Localidad</th>
                                             <td>
-                                                ${dataStudent.localidad}
+                                                <span v-bind:class="{tachado: dataStudent.localidad != dataStudentModif.localidad   }"> ${dataStudent.localidad}</span>
                                                 </br>
                                                 <p v-if="dataStudent.localidad != dataStudentModif.localidad " class="text-green">
                                                     <strong>${dataStudentModif.localidad}</strong>
@@ -213,7 +219,7 @@
                                         <tr>
                                             <th>Oficialia</th>
                                             <td>
-                                                ${dataStudent.oficialia}
+                                                <span v-bind:class="{tachado: dataStudent.oficialia != dataStudentModif.oficialia    }"> ${dataStudent.oficialia}</span>
                                                  </br>
                                                 <p v-if="dataStudent.oficialia != dataStudentModif.oficialia " class="text-green">
                                                     <strong>${dataStudentModif.oficialia}</strong>
@@ -221,7 +227,7 @@
                                             </td>
                                             <th>Libro</th>
                                             <td>
-                                                ${dataStudent.libro}
+                                                <span v-bind:class="{tachado: dataStudent.libro != dataStudentModif.libro }"> ${dataStudent.libro}</span>
                                                  </br>
                                                 <p v-if="dataStudent.libro != dataStudentModif.libro " class="text-green">
                                                     <strong>${dataStudentModif.libro}</strong>
@@ -229,7 +235,7 @@
                                             </td>
                                             <th>Partida</th>
                                             <td>
-                                                ${dataStudent.partida}
+                                                <span v-bind:class="{tachado: dataStudent.partida != dataStudentModif.partida }"> ${dataStudent.partida}</span>
                                                  </br>
                                                 <p v-if="dataStudent.partida != dataStudentModif.partida " class="text-green">
                                                     <strong>${dataStudentModif.partida}</strong>
@@ -237,7 +243,7 @@
                                             </td>
                                             <th>Folio</th>
                                             <td>
-                                                ${dataStudent.folio}
+                                                <span v-bind:class="{tachado: dataStudent.folio != dataStudentModif.folio }"> ${dataStudent.folio}</span>
                                                  </br>
                                                 <p v-if="dataStudent.folio != dataStudentModif.folio " class="text-green">
                                                     <strong>${dataStudentModif.folio}</strong>
