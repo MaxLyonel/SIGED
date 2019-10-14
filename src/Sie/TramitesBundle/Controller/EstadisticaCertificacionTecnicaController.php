@@ -59,7 +59,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $entityCertTecAltLista = $this->certificadoTecnicoAlternativaLista($nivelArea, $codigoArea, $gestionActual);
 
         $entityCertTecAltEstadistica = $this->certificadoTecnicoAlternativaEstadistica($nivelArea, $codigoArea, $gestionActual);
-        //dump($nivelArea);dump($codigoArea);dump($gestionActual);die;
+        //dump($nivelArea);dump($codigoArea);dump($gestionActual);dump($entityCertTecAltEstadistica);die;
 
         if(count($entityCertTecAltLista)>0 and isset($entityCertTecAltLista)){
             $totalgeneral = 0;
@@ -76,8 +76,9 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
         $entityGestion = $defaultTramiteController->getGestiones(2013);
+        $entityEspecialidad = $this->getEspecialidades();
 
-        // dump($entityCertTecAltLista);dump($entityCertTecAltEstadistica);die;
+        //dump($entityEspecialidad);dump($entityGestion);die;
 
         $chartController = new chartController();
         $chartController->setContainer($this->container);
@@ -108,7 +109,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         
         // dump($chartGenero);dump($chartDependencia);dump($chartNivel);die;
 
-        if ($nivelArea == 4){
+        if ($nivelArea == 3){
             $entityCertTecAltLista = array();
         }
 
@@ -128,6 +129,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
                 'datoGraficoDependencia2'=>$chartDependencia2,
                 'fechaEstadistica'=>$fechaActual,
                 'infoGestion'=>$entityGestion,
+                'infoEspecialidad'=>$entityEspecialidad,
             ));
         } else {
             return $this->render($this->session->get('pathSystem') . ':Estadistica:certificacionTecnicaAlternativa.html.twig', array(
@@ -149,7 +151,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que muestra los roles del usuario
+    // Funcion que muestra las gestiones mayores o iguales al parametro enviado
     // PARAMETROS: gestionId (gestion cuando se inicio el sistema)
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -159,6 +161,26 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $query = $entity->createQueryBuilder('gt')
                 ->where('gt.id >= :id')
                 ->setParameter('id', $gestionId)
+                ->getQuery();
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            return array();
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que muestra las especialidades
+    // PARAMETROS: gestionId (gestion cuando se inicio el sistema)
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    function getEspecialidades() {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo');
+        $query = $entity->createQueryBuilder('sest')
+                ->innerJoin('SieAppWebBundle:SuperiorFacultadAreaTipo', 'sfat', 'WITH', 'sfat.id = sest.superiorFacultadAreaTipo')
+                ->where('sfat.codigo in (18,19,20,21,22,23,24,25)')
                 ->getQuery();
         try {
             return $query->getResult();
@@ -550,24 +572,24 @@ class EstadisticaCertificacionTecnicaController extends Controller {
                     , gt.id, gt.genero
                 )
 
-                select institucioneducativa_id as lugar_id, institucioneducativa_id as lugar_codigo, institucioneducativa_id as lugar_nombre, 1 as tipo_id, 'Sexo' as tipo_nombre, periodo_id, periodo
+                select institucioneducativa_id as lugar_id, institucioneducativa_id as lugar_codigo, institucioneducativa as lugar_nombre, 1 as tipo_id, 'Sexo' as tipo_nombre, periodo_id, periodo
                 , genero_id as id, genero as nombre, 0 as sub_id, '' as sub_nombre, sum(cantidad) as cantidad, cordx, cordy  
                 from tabla as t 
                 group by institucioneducativa_id, institucioneducativa, periodo_id, periodo, genero_id, genero, cordx, cordy 
                 
                 union all
                 
-                select institucioneducativa_id as lugar_id, institucioneducativa_id as lugar_codigo, institucioneducativa_id as lugar_nombre, 2 as tipo_id, 'Dependencia' as tipo_nombre, periodo_id, periodo
+                select institucioneducativa_id as lugar_id, institucioneducativa_id as lugar_codigo, institucioneducativa as lugar_nombre, 2 as tipo_id, 'Dependencia' as tipo_nombre, periodo_id, periodo
                 , dependencia_id as id, dependencia as nombre, 0 as sub_id, '' as sub_nombre, sum(cantidad) as cantidad, cordx, cordy  
                 from tabla as t 
-                group by institucioneducativa_id, institucioneducativa_id, periodo_id, periodo, dependencia_id, dependencia, cordx, cordy 
+                group by institucioneducativa_id, institucioneducativa, periodo_id, periodo, dependencia_id, dependencia, cordx, cordy 
                 
                 union all
                 
-                select institucioneducativa_id as lugar_id, institucioneducativa_id as lugar_codigo, institucioneducativa_id as lugar_nombre, 3 as tipo_id, 'Acreditación' as tipo_nombre, periodo_id, periodo
+                select institucioneducativa_id as lugar_id, institucioneducativa_id as lugar_codigo, institucioneducativa as lugar_nombre, 3 as tipo_id, 'Acreditación' as tipo_nombre, periodo_id, periodo
                 , acreditacion_codigo as id, acreditacion as nombre, 0 as sub_id, '' as sub_nombre, sum(cantidad) as cantidad, cordx, cordy  
                 from tabla as t 
-                group by institucioneducativa_id, institucioneducativa_id, periodo_id, periodo, acreditacion_codigo, acreditacion, cordx, cordy 
+                group by institucioneducativa_id, institucioneducativa, periodo_id, periodo, acreditacion_codigo, acreditacion, cordx, cordy 
                             
                 order by tipo_id, id
             ");
@@ -836,13 +858,18 @@ class EstadisticaCertificacionTecnicaController extends Controller {
 
         if ($request->isMethod('POST')) {
             $gestion = $request->get('gestion');
-            $codigoArea = base64_decode($request->get('codigo'));
             $nivelArea = $request->get('nivel');
+            if ($nivelArea == 4){
+                $codigoArea = $request->get('codigo');
+            } else {
+                $codigoArea = base64_decode($request->get('codigo'));
+            }
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
             $nivelArea = 0;
         }
+        //dump($gestion);dump($nivelArea);dump($codigoArea);die;
 
         $em = $this->getDoctrine()->getManager();
         $formato = 'pdf';
@@ -874,6 +901,10 @@ class EstadisticaCertificacionTecnicaController extends Controller {
 
         if ($nivelArea == 3){
             $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Completo_Distrital_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+        
+        if ($nivelArea == 4){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Institucional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
         }
 
         $arch = 'certTec_especialidad_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.'.$formato;
@@ -907,17 +938,20 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         if ($request->isMethod('POST')) {
             $gestion = $request->get('gestion');
             $codigoArea = base64_decode($request->get('codigo'));
+            $especialidad = $request->get('especialidad');
             $nivelArea = $request->get('nivel');
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
             $nivelArea = 0;
+            $especialidad = 0;
         }
+        //dump($especialidad);die;
 
         $em = $this->getDoctrine()->getManager();
         $formato = 'pdf';
         $contentType = 'application/pdf';
-        $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion.'&especialidad='.$especialidad;
 
         if (isset($_POST['botonPdf'])) {      
             $formato = 'pdf';
@@ -935,19 +969,19 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         }
 
         if ($nivelArea == 1){
-            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion.'&especialidad='.$especialidad;
         }
 
         if ($nivelArea == 2){
-            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Departamental_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Departamental_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion.'&especialidad='.$especialidad;
         }
 
         if ($nivelArea == 3){
-            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Distrital_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Distrital_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion.'&especialidad='.$especialidad;
         }
         
         if ($nivelArea == 4){
-            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Institucional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Seleccion_Institucional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion.'&especialidad='.$especialidad;
         }
 
         $arch = 'certTec_especialidad_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.'.$formato;
@@ -961,7 +995,6 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-
 }
 
 
