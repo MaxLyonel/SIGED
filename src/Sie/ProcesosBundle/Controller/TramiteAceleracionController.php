@@ -782,14 +782,20 @@ class TramiteAceleracionController extends Controller
             ->getQuery()
             ->getResult();
         $datos1 = json_decode($resultDatos[0]->getdatos());
-        $datos2 = json_decode($resultDatos[1]->getdatos());
+        $datos2 = json_decode($resultDatos[1]->getdatos());//dump($datos2->curso_asignatura_notas, count(json_decode($datos2->curso_asignatura_notas)));die;
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
 
         $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
         
-        $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        // Obtiene el ultimo código SIE
+        $curso_asignatura = json_decode($datos2->curso_asignatura_notas);
+        $posicion_sie = count($curso_asignatura);
+        $codigo_sie = $curso_asignatura[$posicion_sie-1]->curso->sie;
+        $institucion_e = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($codigo_sie);
+        $nombre_ie = $institucion_e->getInstitucioneducativa();
+        // $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
@@ -861,7 +867,7 @@ class TramiteAceleracionController extends Controller
         }
         $cursoActual = array(
             'codigo_sie' => $codigo_sie,
-            'nombre_sie' => $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+            'nombre_sie' => $nombre_ie,//$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
             'nivel_id' => $nivel_id,
             'nivel' => ($nivel_tipo)?$nivel_tipo->getNivel():'',
             'grado_id' => $grado_id,
