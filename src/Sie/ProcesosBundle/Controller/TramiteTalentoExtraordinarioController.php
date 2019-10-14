@@ -49,10 +49,14 @@ class TramiteTalentoExtraordinarioController extends Controller {
         // $acreditados = ['82230104', '80480250', '80980495', '80980579', '80900074', '40730256', '80730696', '81220087', '81230262', '82480035', '61470053', '81480136', '81480196', '81410158', '71980052', '81980780', '61900026', '81730091', '61710057', '81710072'];
         $acreditados = ['82230104', '40730256', '81220087', '81480196', '81410158', '71980052', '81980780', '61900026'];
         if ($request->getSession()->get('pathSystem') == "SieHerramientaBundle") {
+            $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
+            $departamento_id = $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId();
+
             $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
                 ->select('ie.id, ie.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ie.id = iec.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
+                //->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'ljg', 'with', 'ie.leJuridicciongeografica = ljg.id')
                 ->where('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
                 ->andWhere('ie.institucioneducativaAcreditacionTipo=1')//Autorizado
