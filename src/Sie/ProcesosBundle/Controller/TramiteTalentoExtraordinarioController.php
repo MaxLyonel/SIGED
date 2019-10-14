@@ -105,6 +105,11 @@ class TramiteTalentoExtraordinarioController extends Controller {
         if (!empty($estudiante_result)){
             $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
             if (!empty($einscripcion_result)){
+                //Valida si el Estudiante inscrito en la UnidadEducativa y Centro Acreditado con TE estan en el mismo departamento.
+                $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
+                if ($dpto_unidadeducativa and $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId() != $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId()) {
+                    return $response->setData(array('msg' => 'nodpto'));
+                }
                 $estudianteinscripcion_id = $einscripcion_result->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
@@ -164,6 +169,15 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
                     return $response->setData(array('msg' => 'noue'));
                 }
+                //Valida si el Estudiante está inscrito en nivel primaria o secundaria
+                if ($einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 11) {
+                    return $response->setData(array('msg' => 'nops'));
+                }
+                //Valida si la UnidadEducativa esta en el mismo departamento que el Centro Acreditado con TE
+                /* $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
+                if ($dpto_unidadeducativa and $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId() != $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId()) {
+                    return $response->setData(array('msg' => 'nodpto'));
+                } */
                 $estudianteinscripcion_id = $einscripcion_result->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
