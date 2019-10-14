@@ -276,7 +276,10 @@
                                   
                                      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" v-if="swOne || swTwo">
                                        <table>
-                                        <tr>
+                                        <tr v-if="showbuttonPDF">
+                                          <tH><a href="#"> <i class="fa fa-download"> DESCARGAR MODIFICACIÓN</i> </a></tH>
+                                        </tr>
+                                        <tr v-else>
                                          <td><button v-on:click="updateStudent()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button></td>
                                          <td><button v-on:click="cancelupdateStudent()" type="button" class="btn btn-danger"><i class="fa fa-remove"> Cancelar Cambios</i> </button></td>
                                         </tr>
@@ -484,7 +487,8 @@
                 DBProvincia: {},
                 dataModifyToSend:[],
                 archivoAdjunto:'',
-                informe:''
+                informe:'',
+                showbuttonPDF:false
 
                
             },
@@ -498,7 +502,9 @@
                     this.arraOptionBuscar = '';
                     this.item = '';
                     this.informe = '';
-                    
+                    this.showbuttonPDF=false;
+                    this.swOne=false;
+                    this.swTwo=false;                    
 
                     if (this.rudeBuscar.length == 0) {
                         this.respuesta = 'Debe ingresar un código RUDE válido';
@@ -768,24 +774,39 @@
                     if(this.dataStudentModif.resolucionAdm == ''){
                         this.respuesta = 'Debe ingresar la Resolucion Administrativa';
                         this.buscando = false;
+                        Swal.fire(
+                              'Debe ingresar la Resolucion Administrativa',
+                              'Campo requerido!',                              
+                              'warning'
+                            );                        
                         return false;
                     }
                     if(this.dataStudentModif.fecharesolAdm == ''){
                         this.respuesta = 'Debe ingresar la Fecha de Resolucion Administrativa';
                         this.buscando = false;
+                        Swal.fire(
+                              'Debe ingresar la Fecha de Resolucion Administrativa',
+                              'Campo requerido!',                              
+                              'warning'
+                            );                        
                         return false;
                     }
                     if(this.dataStudentModif.justificativo == ''){
                         this.respuesta = 'Debe ingresar el Justificativo';
                         this.buscando = false;
+                        Swal.fire(
+                              'Debe ingresar el Justificativo',
+                              'Campo requerido!',                              
+                              'warning'
+                            );                        
                         return false;
                     }
 
                     /*validate the file attached*/
                     if (typeof this.informe != 'object') {
                         Swal.fire(
-                          'Adjuntar Informe',
-                          'Debe adjuntar un escaneado del informe, puede ser un archivo de imagen o PDF',
+                          'Adjuntar Resolucion Administrativa',
+                          'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
                           'warning'
                         );
                         return;
@@ -810,10 +831,9 @@
                              axios.post(Routing.generate('specialmodificationdata_update_student'), data)
                             .then(response => {
                                 if (response.status == 200) {
-                                    this.responseSegip=1;
-                                    if(response.data.answerSegip){
-                                        // the data student is correct
-                                        //this.responseSegip=2;
+                                    this.showbuttonPDF = false;
+                                    if(response.data.showbuttonPDF){
+                                       this.showbuttonPDF = response.data.showbuttonPDF
                                     }
                                     console.log(response.data.answerSegip);
                                     $('[data-toggle="tooltip"]').tooltip();
@@ -821,7 +841,6 @@
                                 if( response.status == 202){
                                     this.respuesta = response.data;
                                 }
-
                                 this.buscando = false;
                             })
                             .catch(e => {
@@ -839,6 +858,28 @@
                     this.respuesta = 'Modificacion cancelada';
                     this.buscando = false;
                     this.studentId = '';
+                    this.swOne=false;
+                    this.swTwo=false;
+
+                    this.dataStudentModif.generoTipo = this.dataStudent.generoTipo;
+                    this.dataStudentModif.pais = this.dataStudent.pais;
+                    this.dataStudentModif.lugarNacTipo = this.dataStudent.lugarNacTipo;
+                    this.dataStudentModif.lugarProvNacTipo = this.dataStudent.lugarProvNacTipo;
+                    this.dataStudentModif.localidad = this.dataStudent.localidad;
+                    this.dataStudentModif.oficialia = this.dataStudent.oficialia;
+                    this.dataStudentModif.libro = this.dataStudent.libro;
+                    this.dataStudentModif.partida = this.dataStudent.partida;
+                    this.dataStudentModif.folio = this.dataStudent.folio;
+                    this.dataStudentModif.pasaporte = this.dataStudent.pasaporte;
+
+                    this.responseSegip='';
+                    this.dataStudentModif.carnetIdentidad = this.dataStudent.carnetIdentidad;
+                    this.dataStudentModif.complemento = this.dataStudent.complemento;
+                    this.dataStudentModif.fechaNacimiento = this.dataStudent.fechaNacimiento;
+                    this.dataStudentModif.paterno = this.dataStudent.paterno;
+                    this.dataStudentModif.materno = this.dataStudent.materno;
+                    this.dataStudentModif.nombre = this.dataStudent.nombre;                    
+
                     return false;
 
                 },

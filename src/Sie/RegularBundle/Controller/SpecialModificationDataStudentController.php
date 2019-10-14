@@ -236,32 +236,80 @@ class SpecialModificationDataStudentController extends Controller{
     }
 
     public function updateStudentAction(Request $request){
-dump($request);
-die;
+
         $response = new JsonResponse();
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         //get send values
-        $estudianteId = $request->get('estudianteId');
-        $carnetIdentidad=$request->get('carnetIdentidad');
-        $complemento=$request->get('complemento');
-        $generoId=$request->get('generoId');
-        $paterno=$request->get('paterno');
-        $materno=$request->get('materno');
-        $nombre=$request->get('nombre');
-        $fechaNacimiento=$request->get('fechaNacimiento');
-        $paisId=$request->get('paisId');
-        $lugarNacTipoId=$request->get('lugarNacTipoId');
-        $lugarProvNacTipoId=$request->get('lugarProvNacTipoId');
-        $localidad=$request->get('localidad');
-        $oficialia=$request->get('oficialia');
-        $libro=$request->get('libro');
-        $partida=$request->get('partida');
-        $folio=$request->get('folio');
 
-        $resolucionAdm = $request->get('resolucionAdm');
-        $fecharesolAdm = $request->get('fecharesolAdm');
-        $justificativo = $request->get('justificativo');
+        $jsonData = $request->get('datos');
+        $arrData = json_decode($jsonData,true);
+        
+
+        $estudianteId = $arrData['estudianteId'];
+        $carnetIdentidad=$arrData['carnetIdentidad'];
+        $complemento=$arrData['complemento'];
+        $generoId=$arrData['generoId'];
+        $paterno=$arrData['paterno'];
+        $materno=$arrData['materno'];
+        $nombre=$arrData['nombre'];
+        $fechaNacimiento=$arrData['fechaNacimiento'];
+        $paisId=$arrData['paisId'];
+        $lugarNacTipoId=$arrData['lugarNacTipoId'];
+        $lugarProvNacTipoId=$arrData['lugarProvNacTipoId'];
+        $localidad=$arrData['localidad'];
+        $oficialia=$arrData['oficialia'];
+        $libro=$arrData['libro'];
+        $partida=$arrData['partida'];
+        $folio=$arrData['folio'];
+
+        $resolucionAdm = $arrData['resolucionAdm'];
+        $fecharesolAdm = $arrData['fecharesolAdm'];
+        $justificativo = $arrData['justificativo'];
+
+        // check if the file exists
+        if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                $type = $file['type'];
+                $size = $file['size'];
+                $tmp_name = $file['tmp_name'];
+                $name = $file['name'];
+                $extension = explode('.', $name);
+                $extension = $extension[count($extension)-1];
+                $new_name = date('YmdHis').'.'.$extension;
+
+                // GUARDAMOS EL ARCHIVO
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/dataStudentModify/' .date('Y');
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/dataStudentModify/' .date('Y').'/'.$estudianteId;
+                if (!file_exists($directoriomove)) {
+                    mkdir($directoriomove, 0775, true);
+                }
+
+                $archivador = $directoriomove.'/'.$new_name;
+                //unlink($archivador);
+                if(!move_uploaded_file($tmp_name, $archivador)){
+                    $response->setStatusCode(500);
+                    return $response;
+                }
+
+                // CREAMOS LOS DATOS DE LA IMAGEN
+                $informe = array(
+                    'name' => $name,
+                    'type' => $type,
+                    'tmp_name' => 'nueva_ruta',
+                    'size' => $size,
+                    'new_name' => $new_name
+                );
+            }else{
+                $informe = null;
+            }
+
+        try {
         
         //get the info data
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId);
@@ -328,17 +376,31 @@ die;
                 $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId));
                 $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
                 $objEstudianteHistorialModificacion->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                $objEstudianteHistorialModificacion->setUrlDocumento($archivador);
+                
                 $em->persist($objEstudianteHistorialModificacion);
                 $em->flush();
 
 
                  $response->setStatusCode(200);
                         $response->setData(array(
-                            'good'=>'good',
+                            'status'=>true,
+                            'message'=>'Datos regsitrados',
                             'studentId'=>$objStudent->getId(),
+                            'showbuttonPDF' => true,
                         ));
                        
                         return $response;
+              } catch (Exception $e) {
+                    echo 'error to save the inforamation';
+                     $response->setStatusCode(200);
+                        $response->setData(array(
+                            'status'=>false,
+                            'message'=>'error en el regsitro',
+                            'studentId'=>$objStudent->getId(),
+                            'showbuttonPDF' => false,
+                        ));
+            }                           
 
     }
 
