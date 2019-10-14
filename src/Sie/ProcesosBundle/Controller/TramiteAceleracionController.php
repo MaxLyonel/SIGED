@@ -1382,6 +1382,7 @@ class TramiteAceleracionController extends Controller
         $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIA');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 10, 10, true);
+        $pdf->SetAutoPageBreak(true, 8);
 
         $em = $this->getDoctrine()->getManager();
         $tramite_id = $request->get('idtramite');//1670899;
@@ -1427,7 +1428,7 @@ class TramiteAceleracionController extends Controller
             ->select("lt4.lugar AS departamento, lt3.lugar AS provincia, lt2.lugar AS seccion, lt1.lugar AS canton, lt.lugar AS localidad,
                         dist.distrito, orgt.orgcurricula,
                         inst.id as sie, inst.institucioneducativa,
-                        jg.direccion, jg.zona, CONCAT(prs.paterno, ' ', prs.materno, ' ', prs.nombre) AS maestro, prs.carnet, prs.complemento")
+                        jg.direccion, jg.zona, CONCAT(prs.paterno, ' ', prs.materno, ' ', prs.nombre) AS maestro, prs.carnet, dep.sigla as expedido, prs.complemento")
             ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
@@ -1436,6 +1437,7 @@ class TramiteAceleracionController extends Controller
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
             ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.institucioneducativa = inst.id')
             ->innerJoin('SieAppWebBundle:Persona', 'prs', 'WITH', 'mi.persona = prs.id')
+            ->join('SieAppWebBundle:DepartamentoTipo', 'dep', 'WITH', 'prs.expedido = dep.id')
             ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
             ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
             ->where('inst.id = :idInstitucion')
@@ -1588,7 +1590,7 @@ class TramiteAceleracionController extends Controller
         // Datos de talento extraordinario
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>3. Datos del Director(a)</b></td></tr>';
         $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryMaestroUE['maestro'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].' '.$queryMaestroUE['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
         $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $datos1->estudiante_id));
         // Datos del director
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
@@ -1683,9 +1685,9 @@ class TramiteAceleracionController extends Controller
         $firmas.='</table>';
         $pdf->writeHTML($firmas, true, false, true, false, ''); */
         $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
-        $firmas.='<tr><td align="center" width="35%"><br/><br/><br/>___________________________________<br/>Representante de la Comisión Técnica <br>Pedagógica de la Unidad Educativa<br>'.$array_ctp[0]->nombre.'<br>Firma</td>
-        <td align="center" width="35%"><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br><br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
-        <td align="center" width="30%"><br/><br/><table border="1"><tr><td><br/><br/><br/><br/><br/>VoBo<br/>Directora(or) Distrital de Educación</td></tr></table></td></tr>';
+        $firmas.='<tr><td align="center" width="36%"><br/><br/><br/><br/>___________________________________<br/>Representante de la Comisión Técnica <br>Pedagógica de la Unidad Educativa<br>'.$array_ctp[0]->nombre.'<br>Firma</td>
+        <td align="center" width="36%"><br/><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br><br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
+        <td align="center" width="28%"><br/><br/><table border="1"><tr><td><br/><br/><br/><br/><br/><br/>VoBo<br/>Directora(or) Distrital de Educación</td></tr></table></td></tr>';
         $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
         $firmas.='</table>';
         $pdf->writeHTML($firmas, true, false, true, false, '');

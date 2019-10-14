@@ -3490,7 +3490,8 @@ class TCPDF {
 	 * @public
 	 */
 	public function Footer() {
-		$cur_y = $this->y;
+		$cur_y = $this->y - 8;
+		$this->SetFont('helvetica', '', 7);
 		$this->SetTextColorArray($this->footer_text_color);
 		//set style for cell border
 		$line_width = (0.85 / $this->k);
