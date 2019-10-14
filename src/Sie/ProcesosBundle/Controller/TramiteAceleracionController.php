@@ -1382,7 +1382,7 @@ class TramiteAceleracionController extends Controller
         $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIA');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 10, 10, true);
-        $pdf->SetAutoPageBreak(true, 10);
+        $pdf->SetAutoPageBreak(true, 8);
 
         $em = $this->getDoctrine()->getManager();
         $tramite_id = $request->get('idtramite');//1670899;
