@@ -161,9 +161,9 @@ class TramiteTalentoExtraordinarioController extends Controller {
             $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
             if (!empty($einscripcion_result)) {
                 //Valida si el Estudiante está inscrito en su Unidad Educativa
-                // if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
-                //     return $response->setData(array('msg' => 'noue'));
-                // }
+                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
+                    return $response->setData(array('msg' => 'noue'));
+                }
                 $estudianteinscripcion_id = $einscripcion_result->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
