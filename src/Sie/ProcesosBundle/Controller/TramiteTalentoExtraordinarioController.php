@@ -56,15 +56,18 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->select('ie.id, ie.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ie.id = iec.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
-                //->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'ljg', 'with', 'ie.leJuridicciongeografica = ljg.id')
+                ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'ljg', 'with', 'ie.leJuridicciongeografica = ljg.id')
+                ->innerJoin('SieAppWebBundle:DistritoTipo', 'dt', 'with', 'ljg.distritoTipo = dt.id')
                 ->where('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
                 ->andWhere('ie.institucioneducativaAcreditacionTipo=1')//Autorizado
                 ->andWhere('ie.estadoinstitucionTipo=10')//Autorizado
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
                 ->andWhere('ie.id in (:acreditados)')//Autorizado
+                ->andWhere('dt.departamentoTipo = :dptoTipo')//Autorizado
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
                 ->setParameter('acreditados', $acreditados)//Autorizado
+                ->setParameter('dptoTipo', $departamento_id)//Autorizado
                 ->distinct('ie.id')
                 ->orderBy("ie.institucioneducativa")
                 ->getQuery()
