@@ -220,24 +220,48 @@
                             lista += '<li><b>No se encontró al Estudiante en el sistema.</b></li>';
                             lista += '<li>Debe estar inscrito en la gestión actual.</li>';
                             lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El estudiante debe estar en nivel Primaria o Secundaria.</li>';
+                            lista += '<li>La Unidad Educativa y el Centro de Educación Especial no estan en el mismo departamento.</li>';
                             lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
                             error = true;
                         } else if (data.msg == 'noins') {
                             lista += '<li>No se encontró al Estudiante en el sistema.</li>';
                             lista += '<li><b>Debe estar inscrito en la gestión actual.</b></li>';
                             lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El estudiante debe estar en nivel Primaria o Secundaria.</li>';
+                            lista += '<li>La Unidad Educativa y el Centro de Educación Especial no estan en el mismo departamento.</li>';
                             lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
                             error = true;
                         } else if (data.msg == 'noue') {
                             lista += '<li>No se encontró al Estudiante en el sistema.</li>';
                             lista += '<li>Debe estar inscrito en la gestión actual.</li>';
                             lista += '<li><b>Debe estar inscrito en su Unidad Educativa.</b></li>';
+                            lista += '<li>El estudiante debe estar en nivel Primaria o Secundaria.</li>';
+                            lista += '<li>La Unidad Educativa y el Centro de Educación Especial no estan en el mismo departamento.</li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'nops') {
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li><b>El estudiante debe estar en nivel Primaria o Secundaria.</b></li>';
+                            lista += '<li>La Unidad Educativa y el Centro de Educación Especial no estan en el mismo departamento.</li>';
+                            lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
+                            error = true;
+                        } else if (data.msg == 'nodpto') {
+                            lista += '<li>No se encontró al Estudiante en el sistema.</li>';
+                            lista += '<li>Debe estar inscrito en la gestión actual.</li>';
+                            lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El estudiante debe estar en nivel Primaria o Secundaria.</li>';
+                            lista += '<li><b>La Unidad Educativa y el Centro de Educación Especial no estan en el mismo departamento.</b></li>';
                             lista += '<li>El trámite ya fue solicitado con anterioridad.</li>';
                             error = true;
                         } else if (data.msg == 'existe') {
                             lista += '<li>No se encontró al Estudiante en el sistema.</li>';
                             lista += '<li>Debe estar inscrito en la gestión actual.</li>';
                             lista += '<li>Debe estar inscrito en su Unidad Educativa.</li>';
+                            lista += '<li>El estudiante debe estar en nivel Primaria o Secundaria.</li>';
+                            lista += '<li>La Unidad Educativa y el Centro de Educación Especial no estan en el mismo departamento.</li>';
                             lista += '<li><b>El trámite ya fue solicitado con anterioridad.</b></li>';
                             error = true;
                         }
