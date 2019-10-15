@@ -1505,7 +1505,9 @@ class TramiteAceleracionController extends Controller
             'nota6' => array('','','','','','','','','','','','','','')
         );
         $posicion_asig = 0;
-        foreach (json_decode($datos2->curso_asignatura_notas) as $indice => $item_nota) {//5 cursos
+        $cursoAasignaturaNotas = json_decode($datos2->curso_asignatura_notas);
+        $cantidadCursos = count($cursoAasignaturaNotas);
+        foreach ($cursoAasignaturaNotas as $indice => $item_nota) {//5 cursos
             $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($item_nota->curso->nivel_id);
             $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($item_nota->curso->grado_id);
             if ($item_nota->curso->nivel_id == 12) {
@@ -1546,10 +1548,10 @@ class TramiteAceleracionController extends Controller
                 $exist_secundaria = true;
                 $secundaria['nivel'] = strtoupper($nivel_tipo->getNivel());
                 $grados_secundaria.='<td align="center"><b>'.$grado_tipo->getGrado().'</b></td>';
-                foreach ($item_nota->asignatura_notas as $key => $iteman) {//10 11 12 asignaturas
-                    if (in_array($iteman->asignatura, $secundaria['asignatura'])) {
-                        # code...
-                        /* switch ($item_nota->curso->grado_id) {
+                if($cantidadCursos == 1) {
+                    foreach ($item_nota->asignatura_notas as $key => $iteman) {
+                        $secundaria['asignatura'][$key] = $iteman->asignatura;
+                        switch ($item_nota->curso->grado_id) {
                             case '1':
                                 $secundaria['nota1'][$key] = $iteman->nota;
                                 break;
@@ -1571,65 +1573,47 @@ class TramiteAceleracionController extends Controller
                             default:
                                 # code...
                                 break;
-                        } */
-                    } else {
-                        $secundaria['asignatura_id'][$posicion_asig] = $iteman->asignatura_id;
-                        $secundaria['asignatura'][$posicion_asig] = $iteman->asignatura;
-                        /* switch ($item_nota->curso->grado_id) {
-                            case '1':
-                                $secundaria['nota1'][$posicion_asig] = $iteman->nota;
-                                break;
-                            case '2':
-                                $secundaria['nota2'][$posicion_asig] = $iteman->nota;
-                                break;
-                            case '3':
-                                $secundaria['nota3'][$posicion_asig] = $iteman->nota;
-                                break;
-                            case '4':
-                                $secundaria['nota4'][$posicion_asig] = $iteman->nota;
-                                break;
-                            case '5':
-                                $secundaria['nota5'][$posicion_asig] = $iteman->nota;
-                                break;
-                            case '6':
-                                $secundaria['nota6'][$posicion_asig] = $iteman->nota;
-                                break;
-                            default:
-                                # code...
-                                break;
-                        } */
-                        $posicion_asig++;
-                    }
-                }
-                // llenado de notas
-                foreach ($secundaria['asignatura_id'] as $pos => $itemid) {
-                    foreach ($item_nota->asignatura_notas as $key => $iteman) {
-                        if ($itemid == $iteman->asignatura_id) {
-                            switch ($item_nota->curso->grado_id) {
-                                case '1':
-                                    $secundaria['nota1'][$pos] = $iteman->nota;
-                                    break;
-                                case '2':
-                                    $secundaria['nota2'][$pos] = $iteman->nota;
-                                    break;
-                                case '3':
-                                    $secundaria['nota3'][$pos] = $iteman->nota;
-                                    break;
-                                case '4':
-                                    $secundaria['nota4'][$pos] = $iteman->nota;
-                                    break;
-                                case '5':
-                                    $secundaria['nota5'][$pos] = $iteman->nota;
-                                    break;
-                                case '6':
-                                    $secundaria['nota6'][$pos] = $iteman->nota;
-                                    break;
-                                default:
-                                    # code...
-                                    break;
-                            }
                         }
                     }
+                } else {
+                    foreach ($item_nota->asignatura_notas as $key => $iteman) {//10 11 12 asignaturas
+                        if (in_array($iteman->asignatura, $secundaria['asignatura'])) {
+                        } else {
+                            $secundaria['asignatura_id'][$posicion_asig] = $iteman->asignatura_id;
+                            $secundaria['asignatura'][$posicion_asig] = $iteman->asignatura;
+                            $posicion_asig++;
+                        }
+                    }
+                    // llenado de notas
+                    foreach ($secundaria['asignatura_id'] as $pos => $itemid) {
+                        foreach ($item_nota->asignatura_notas as $key => $iteman) {
+                            if ($itemid == $iteman->asignatura_id) {
+                                switch ($item_nota->curso->grado_id) {
+                                    case '1':
+                                        $secundaria['nota1'][$pos] = $iteman->nota;
+                                        break;
+                                    case '2':
+                                        $secundaria['nota2'][$pos] = $iteman->nota;
+                                        break;
+                                    case '3':
+                                        $secundaria['nota3'][$pos] = $iteman->nota;
+                                        break;
+                                    case '4':
+                                        $secundaria['nota4'][$pos] = $iteman->nota;
+                                        break;
+                                    case '5':
+                                        $secundaria['nota5'][$pos] = $iteman->nota;
+                                        break;
+                                    case '6':
+                                        $secundaria['nota6'][$pos] = $iteman->nota;
+                                        break;
+                                    default:
+                                        # code...
+                                        break;
+                                }
+                            }
+                        }
+                    }   
                 }
             }
         }
@@ -1706,19 +1690,21 @@ class TramiteAceleracionController extends Controller
             foreach ($secundaria['asignatura'] as $key => $iteman) {
                 $actaSupletorio.='<tr>';
                 $actaSupletorio.='<td>'.$iteman.'</td>';
-                $actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';
-                $actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';
-                $actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';
-                $actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';
-                $actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';
-                $actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';
-
-                /* if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
-                if($secundaria['nota2'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';}
-                if($secundaria['nota3'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';}
-                if($secundaria['nota4'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';}
-                if($secundaria['nota5'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';}
-                if($secundaria['nota6'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';} */
+                if($cantidadCursos == 1) {
+                    if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
+                    if($secundaria['nota2'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';}
+                    if($secundaria['nota3'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';}
+                    if($secundaria['nota4'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';}
+                    if($secundaria['nota5'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';}
+                    if($secundaria['nota6'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';}
+                } else {
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';
+                }
                 $actaSupletorio.='</tr>';
             }
             $actaSupletorio.='</table>';
