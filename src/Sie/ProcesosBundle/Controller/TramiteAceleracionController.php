@@ -1507,7 +1507,7 @@ class TramiteAceleracionController extends Controller
         $posicion_asig = 0;
         $cursoAasignaturaNotas = json_decode($datos2->curso_asignatura_notas);
         $cantidadCursos = count($cursoAasignaturaNotas);
-        $secundaria2 = $secundaria3 = $secundaria4 = $secundaria5 = 0;
+        $secundaria1 = $secundaria2 = $secundaria3 = $secundaria4 = $secundaria5 = 0;
         foreach ($cursoAasignaturaNotas as $indice => $item_nota) {//5 cursos
             $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($item_nota->curso->nivel_id);
             $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($item_nota->curso->grado_id);
@@ -1592,6 +1592,7 @@ class TramiteAceleracionController extends Controller
                                 switch ($item_nota->curso->grado_id) {
                                     case '1':
                                         $secundaria['nota1'][$pos] = $iteman->nota;
+                                        $secundaria1 = 1;
                                         break;
                                     case '2':
                                         $secundaria['nota2'][$pos] = $iteman->nota;
@@ -1702,7 +1703,7 @@ class TramiteAceleracionController extends Controller
                     if($secundaria['nota4'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';}
                     if($secundaria['nota5'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';}
                     if($secundaria['nota6'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';}
-                } else if(($cantidadCursos == 2 and $secundaria2==1 and $secundaria3==1)) {
+                } else if($secundaria1==0 and $secundaria2==1 and ($secundaria3==1 or $secundaria4==1 or $secundaria5==1)) {
                     if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
                     $actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';
                     $actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';
