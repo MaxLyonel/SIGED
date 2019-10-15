@@ -144,14 +144,14 @@
 										                <div class="requisitos">
 										                    <div class="checkbox">
 										                        <label style="margin-left:-20px;">
-										                        	{% if h.datos.checkInforme %}
+										                        	{% if h.datos.checkInforme is defined and h.datos.checkInforme %}
 										                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
 																	{% else %}
 										                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
 										                        	{% endif %}
 										                            &nbsp;Informe técnico &nbsp;&nbsp;
 
-										                            {% if h.datos.informe is not null %}
+										                            {% if h.datos.informe is defined and h.datos.informe is not null %}
 										                            	<a class="btn btn-primary" href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.institucioneducativa_id ~ '/' ~ h.datos.informe.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-1x"></i> Ver adjunto </b></a>
 										                            {% else %}
 										                            	<span class="text-danger">No se adjunto el informe</span>
@@ -160,7 +160,7 @@
 										                    </div>
 										                    <div class="checkbox">
 										                        <label style="margin-left:-20px;">
-										                        	{% if h.datos.checkCuaderno %}
+										                        	{% if h.datos.checkCuaderno is defined and h.datos.checkCuaderno %}
 										                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
 																	{% else %}
 										                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
@@ -170,7 +170,7 @@
 										                    </div>
 										                    <div class="checkbox">
 										                        <label style="margin-left:-20px;">
-										                        	{% if h.datos.checkFormulario %}
+										                        	{% if h.datos.checkFormulario is defined and h.datos.checkFormulario %}
 										                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
 																	{% else %}
 										                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
@@ -241,11 +241,11 @@
 											    <p><b>¿Qué desea hacer con el trámite?</b></p>
 											    <div class="radio">
 											        <label class="radio-inline">
-											            <input type="radio" {% if h.datos.finalizar == 'NO' %} checked {% else %} disabled {% endif %}>
+											            <input type="radio" {% if h.datos.finalizar is defined and h.datos.finalizar == 'NO' %} checked {% else %} disabled {% endif %}>
 											            Devolver trámite a la Unidad Educativa
 											        </label>
 											        <label class="radio-inline">
-											            <input type="radio" {% if h.datos.finalizar == 'SI' %} checked {% else %} disabled {% endif %}>
+											            <input type="radio" {% if h.datos.finalizar is defined and h.datos.finalizar == 'SI' %} checked {% else %} disabled {% endif %}>
 											            Finalizar y cerrar trámite
 											        </label>
 											    </div>

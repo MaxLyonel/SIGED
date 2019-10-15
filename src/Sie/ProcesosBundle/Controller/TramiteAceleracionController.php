@@ -1696,7 +1696,7 @@ class TramiteAceleracionController extends Controller
             foreach ($secundaria['asignatura'] as $key => $iteman) {
                 $actaSupletorio.='<tr>';
                 $actaSupletorio.='<td>'.$iteman.'</td>';
-                if(($cantidadCursos == 1) or ($cantidadCursos == 3 and $secundaria3==1 and $secundaria4==1 and $secundaria5==1) or ($cantidadCursos == 2 and $secundaria4==1 and $secundaria5==1)) {
+                if(($cantidadCursos == 1) or ($cantidadCursos == 3 and $secundaria3==1 and $secundaria4==1 and $secundaria5==1) or ($cantidadCursos == 2 and $secundaria3==1 and $secundaria4==1) or ($cantidadCursos == 2 and $secundaria4==1 and $secundaria5==1)) {
                     if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
                     if($secundaria['nota2'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';}
                     if($secundaria['nota3'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';}
