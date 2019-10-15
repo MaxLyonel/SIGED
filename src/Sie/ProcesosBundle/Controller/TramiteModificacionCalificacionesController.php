@@ -328,6 +328,9 @@ class TramiteModificacionCalificacionesController extends Controller {
             $notas = json_decode($request->get('notas'),true);
             $notasCualitativas = json_decode($request->get('notasCualitativas'),true);
             $justificacion = mb_strtoupper($request->get('justificacion'),'utf-8');
+            $checkInforme = $request->get('checkInforme');
+            $checkCuaderno = $request->get('checkCuaderno');
+            $checkFormulario = $request->get('checkFormulario');
 
             // ARMAMOS EL ARRAY DE LA DATA
             $data = array(
@@ -345,6 +348,9 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'notas'=> $notas,
                 'notasCualitativas'=>$notasCualitativas,
                 'justificacion'=>$justificacion,
+                'checkInforme'=>$checkInforme,
+                'checkCuaderno'=>$checkCuaderno,
+                'checkFormulario'=>$checkFormulario,
                 'informe'=>$informe
             );
 
@@ -492,7 +498,8 @@ class TramiteModificacionCalificacionesController extends Controller {
             //             inner join rol_tipo rt on fp.rol_tipo_id = rt.id
             //             left JOIN wf_solicitud_tramite wf on td.id=wf.tramite_detalle_id
             //             where ((wf.id is not null and wf.es_valido is true) or td.id is not null) 
-            //             and td.tramite_id = ". $idTramite ." 
+            //             and td.tramite_id = ". $idTramite ."
+            //             and td.tramite_estado_id != 3
             //             order by td.id asc
             //             ");
 
@@ -706,6 +713,9 @@ class TramiteModificacionCalificacionesController extends Controller {
             $idTramite = $request->get('idTramite');
             $procedente = $request->get('procedente');
             $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
+            $checkInforme = $request->get('checkInforme');
+            $checkCuaderno = $request->get('checkCuaderno');
+            $checkFormulario = $request->get('checkFormulario');
             $finalizar = $request->get('finalizar');
 
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
@@ -776,6 +786,9 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'procedente'=>$procedente,
                 'finalizar'=>$finalizar,
                 'observacion'=>$observacion,
+                'checkInforme'=>($checkInforme == null)?false:true,
+                'checkCuaderno'=>($checkCuaderno == null)?false:true,
+                'checkFormulario'=>($checkFormulario == null)?false:true,
                 'informe'=>$informe
             ), JSON_UNESCAPED_UNICODE);
 
@@ -964,6 +977,10 @@ class TramiteModificacionCalificacionesController extends Controller {
 
             $idTramite = $request->get('idTramite');
             $aprueba = $request->get('aprueba');
+            $checkInforme = $request->get('checkInforme');
+            $checkCuaderno = $request->get('checkCuaderno');
+            $checkFormulario = $request->get('checkFormulario');
+            $checkInformeDistrito = $request->get('checkInformeDistrito');
             $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
 
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
@@ -1066,6 +1083,10 @@ class TramiteModificacionCalificacionesController extends Controller {
                 $datos = json_encode(array(
                     'sie'=>$sie,
                     'aprueba'=>$aprueba,
+                    'checkInforme'=>($checkInforme == null)?false:true,
+                    'checkCuaderno'=>($checkCuaderno == null)?false:true,
+                    'checkFormulario'=>($checkFormulario == null)?false:true,
+                    'checkInformeDistrito'=>($checkInformeDistrito == null)?false:true,
                     'observacion'=>$observacion,
                     'resAdm'=>$resAdm,
                     'nroResAdm'=>$request->get('nroResAdm'),
