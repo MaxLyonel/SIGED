@@ -1419,7 +1419,7 @@ class TramiteAceleracionController extends Controller
         //{{absolute_url(asset(\'webEspecial/img/logo/html/logo-white.png\'))}}
         //<span style="font-size: 8px">(Aceleración Educativa)</span>
         //
-
+        //dump(json_decode($datos2->curso_asignatura_notas));die;
         $inscripcion_actual_n = $inscripcion_actual_g = '';
         if ($datos2 and $datos2->curso_asignatura_notas) {
             $curso_actual = json_decode($datos2->curso_asignatura_notas)[0]->curso;
@@ -1492,6 +1492,7 @@ class TramiteAceleracionController extends Controller
         );
         $secundaria = array(
             'nivel' => '',
+            'asignatura_id' => array(),
             'asignatura' => array(),
             'nota1' => array('','','','','','','','','','','','','',''),
             'nota2' => array('','','','','','','','','','','','','',''),
@@ -1500,6 +1501,7 @@ class TramiteAceleracionController extends Controller
             'nota5' => array('','','','','','','','','','','','','',''),
             'nota6' => array('','','','','','','','','','','','','','')
         );
+        $posicion_asig = 0;
         foreach (json_decode($datos2->curso_asignatura_notas) as $indice => $item_nota) {
             $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($item_nota->curso->nivel_id);
             $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($item_nota->curso->grado_id);
@@ -1542,8 +1544,14 @@ class TramiteAceleracionController extends Controller
                 $secundaria['nivel'] = strtoupper($nivel_tipo->getNivel());
                 $grados_secundaria.='<td align="center"><b>'.$grado_tipo->getGrado().'</b></td>';
                 foreach ($item_nota->asignatura_notas as $key => $iteman) {
+                    if (in_array($iteman->asignatura, $secundaria['asignatura'])) {
+                        # code...
+                    } else {
+                        $secundaria['asignatura'][$posicion_asig] = $iteman->asignatura;
+                        $posicion_asig++;
+                    }
                     // if ($indice == 0) {
-                        $secundaria['asignatura'][$key] = $iteman->asignatura;
+                        //$secundaria['asignatura'][$posicion_asig] = $iteman->asignatura;
                     // }
                     switch ($item_nota->curso->grado_id) {
                         case '1':
