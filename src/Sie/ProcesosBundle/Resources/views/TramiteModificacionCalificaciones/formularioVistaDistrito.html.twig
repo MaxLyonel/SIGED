@@ -21,6 +21,21 @@
             resize: vertical;
             max-height: 200px;
         }
+        .ayuda{
+            font-size: 1.5rem;
+            color: #14A1DA;
+        }
+        .requisitos{
+            background: #EEEEEE;
+            padding: 5px;
+            padding-left: 50px;
+            box-shadow: 4px 4px #DDDDDD;
+            margin-bottom: 15px;
+        }
+        .requisitos > .checkbox > label{
+            color: #2A3271;
+            font-size: 1.2rem !important;
+        }
     </style>
     <div class="header-content">
         <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
@@ -34,7 +49,7 @@
                 </li>
                 <li>
                     <i class="fa fa-file"></i>
-                    Solicitud de Modificaciòn y/o Adiciòn de Calificaciones
+                    Adición y/o Modificación de Calificaciones
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Formulario recepción distrito</li>
@@ -52,10 +67,33 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <form action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
+                        <form id="formDistrito" action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="idTramite" value="{{idTramite}}">
+                            
+                            <label>¿Que requisitos presentó la Unidad Educativa?</label>
+                            <div class="requisitos">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="checkInforme" id="checkInforme">
+                                        Informe técnico
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="checkCuaderno" id="checkCuaderno">
+                                        Registro o cuaderno pedagógico
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="checkFormulario" id="checkFormulario">
+                                        Formulario de adición y/o modificación de calificaciones
+                                    </label>
+                                </div>
+                            </div>
+                            
                             <div class="form-group">
-                                <label>¿El trámite es procedente?</label>
+                                <label>¿El trámite es procedente?  <i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="El trámite es procedente si cumple con todos los requisitos y no tiene ninguna observación"></i> </label>
                                 <div class="radio">
                                     <label class="radio-inline">
                                         <input type="radio" name="procedente" value="SI" required id="procedente1">
@@ -72,21 +110,37 @@
                                 <label>¿Qué desea hacer con el trámite?</label>
                                 <div class="radio">
                                     <label class="radio-inline">
-                                        <input type="radio" checked="checked" name="finalizar" value="NO" required>
+                                        <input type="radio" checked="checked" name="finalizar" value="NO" required id="devolver">
                                         Devolver trámite a la Unidad Educativa
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="finalizar" value="SI" required>
+                                        <input type="radio" name="finalizar" value="SI" required id="finalizar">
                                         Finalizar y cerrar trámite
                                     </label>
                                 </div>
                             </div>
+                            {# <div class="aviso" style="display:none">
+                                {% if aprobarDistrito == true %}
+                                    <div class="alert alert-success">
+                                        <strong>Aviso!</strong> 
+                                        <p>De acuerdo al protocolo de adición y/o modificación de calificaciones, el trámite será <strong>APROBADO</strong> en la
+                                        <strong>DIRECCIÓN DISTRITAL</strong> correspondiente</p>
+                                    </div>
+                                {% endif %}
+                                {% if aprobarDistrito == false %}
+                                    <div class="alert alert-warning"> 
+                                        <strong>Aviso!</strong> 
+                                        <p>De acuerdo al protocolo de adición y/o modificación de calificaciones, el trámite será <strong>APROBADO</strong> en la
+                                        <strong>DIRECCIÓN DEPARTAMENTAL</strong> correspondiente</p>
+                                    </div>
+                                {% endif %}
+                            </div> #}
                             <div class="form-group">
                                 <label>Observación</label>
                                 <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label>Adjuntar informe (Opcional)</label>
+                                <label>Adjuntar informe <i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="Debe adjuntar un archivo pdf o una imagen, el tamaño del archivo debe ser menor a 2MB"></i> <span class="msgOpcional" style="display:none">(Opcional)</span></label>
                                 <input type="file" name="informe" id="informe" onchange="cargarArchivo(event);">
                                 <br>
                             </div>
@@ -98,25 +152,27 @@
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <div class="aviso" style="display:none">
-                            <h4>Nota:</h4>
+                            {# <h4>Nota:</h4>
                             <ul>
                                 <li>
-                                    Si la solicitud corresponde al bimestre anterior del operativo declarado por la Unidad Educativa, en ese caso adjuntará el informe correspondiente que aprueba la modificación a realizar y concluirá el trámite respectivo.
+                                    Si la trámite corresponde al bimestre anterior del operativo declarado por la Unidad Educativa, en ese caso adjuntará el informe correspondiente que aprueba la modificación a realizar y concluirá el trámite respectivo.
                                 </li>
                                 <li>
                                     Si la modificación de trámite, corresponde a calificaciones anteriores a 2 o más bimestres o a una gestión cerrada, remitirá a la Dirección Departamental de Educación con el informe correspondiente.
                                 </li>
-                            </ul>
+                            </ul> #}
                             {% if aprobarDistrito == true %}
                                 <div class="alert alert-success">
-                                    <strong>Aviso!</strong> De acuerdo a las consideraciones anteriores
-                                    <p>El trámite <strong>SERÁ APROBADO</strong> de forma directa.</p>
+                                    <strong>Aviso importante !</strong> 
+                                    <p>De acuerdo al protocolo de adición y/o modificación de calificaciones, el trámite será <strong>APROBADO</strong> en la
+                                    <strong>DIRECCIÓN DISTRITAL</strong> correspondiente</p>
                                 </div>
                             {% endif %}
                             {% if aprobarDistrito == false %}
-                                <div class="alert alert-info"> 
-                                    <strong>Aviso!</strong> De acuerdo a las consideraciones anteriores
-                                    <p>El trámite será derivado a la <strong>DIRECCIÓN DEPARTAMENTAL</strong> para su aprobación.</p>
+                                <div class="alert alert-warning"> 
+                                    <strong>Aviso importante !</strong> 
+                                    <p>De acuerdo al protocolo de adición y/o modificación de calificaciones, el trámite será <strong>APROBADO</strong> en la
+                                    <strong>DIRECCIÓN DEPARTAMENTAL</strong> correspondiente</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -132,17 +188,21 @@
     {{parent()}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript">
+        var aprobarDistrito = '{{aprobarDistrito}}';
+
         function validarRadio(){
             if($('#procedente1').is(':checked')){
                 $('#divFinalizar').css('display','none');
                 $('.aviso').css('display','block');
                 // $('input[name="finalizar"]').removeAttr('required');
                 $('#informe').attr('required','required');
+                $('.msgOpcional').css('display','none');
             }else{
                 if($('#procedente2').is(':checked')){
                     $('#divFinalizar').css('display','block');
                     $('.aviso').css('display','none');
                     $('#informe').removeAttr('required');
+                    $('.msgOpcional').css('display','inline-block');
                 }
                 // $('input[name="finalizar"]').attr('required','required');
             }
@@ -176,6 +236,75 @@
                 }
             }
             this.informe = event.target.files[0];
+        }
+
+
+        document.getElementById("formDistrito").addEventListener("submit", submit);
+
+        function submit(e) {
+            // Cancelams el envio a la espera de que valide el formulario
+            e.preventDefault();
+
+            if($('#procedente1').is(':checked')){
+                var texto = '';
+                if (aprobarDistrito == true) {
+                    var titulo = '¿Aprobar trámite?';
+                    var textoBoton = 'Si, aprobar trámite';
+                    var tipo = 'aprobar';
+                }else{
+                    var titulo = '¿Enviar trámite?';
+                    var textoBoton = 'Si, enviar trámite';
+                    var tipo = 'enviar';
+                }
+
+                if (!$('#checkInforme').is(':checked') || !$('#checkCuaderno').is(':checked') || !$('#checkFormulario').is(':checked')) {
+                    texto = texto + '<div style="text-align:left !important"> ¿Esta seguro de '+ tipo +' el trámite? porque la unidad educativa no presento: </div> <div class="alert alert-warning" style="text-align:justify !important; margin-top:10px;">';
+
+                    if(!$('#checkInforme').is(':checked')){
+                        texto = texto + '<div> <i class="fa fa-file"></i> &nbsp; Informe técnico </div>';
+                    }
+                    if(!$('#checkCuaderno').is(':checked')){
+                        texto = texto + '<div> <i class="fa fa-file"></i> &nbsp; Registro o cuaderno pedagógico </div>';
+                    }
+                    if(!$('#checkFormulario').is(':checked')){
+                        texto = texto + '<div> <i class="fa fa-file"></i> Formulario de adición y/o modificación de calificaciones  </div>';
+                    }
+
+                    texto = texto + '</div> Si continua... '
+                }
+
+                if (aprobarDistrito == true) {
+                    texto = texto + 'El trámite será aprobado por la DIRECCIÓN DISTRITAL';
+                }else{
+                    texto = texto +'El trámite será enviado a la DIRECCIÓN DEPARTAMENTAL';
+                }
+
+            }else{
+                if($('#devolver').is(':checked')){
+                    var titulo = '¿Devolver trámite?';
+                    var texto = 'El trámite será devuelto a la UNIDAD EDUCATIVA';
+                    var textoBoton = 'Si, devolver trámite';
+                }else{
+                    var titulo = '¿Finalizar trámite?';
+                    var texto = 'El trámite será finalizado';
+                    var textoBoton = 'Si, finalizar trámite';
+                }
+            }
+         
+            Swal.fire({
+              title: titulo,
+              html: texto,
+              type: 'question',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: textoBoton,
+              cancelButtonText: 'Cancelar'
+            }).then((result) => {
+              if (result.value) {
+                    document.forms["formDistrito"].submit();
+              }
+            })   
         }
 
     </script>
