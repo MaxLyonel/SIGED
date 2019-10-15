@@ -140,7 +140,11 @@
                                 {% endif %}
                                 {{f.id}}->c{{f.id}}
                                 {% if f.condicion == "SI" %}
-                                    c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
+                                    {% if f.condicion_tarea_siguiente == null %}
+                                        c{{f.id}}(yes)->e    
+                                    {% else %}
+                                        c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
+                                    {% endif %}
                                 {% else %}
                                     {% if f.condicion_tarea_siguiente == null %}
                                         c{{f.id}}(no)->e
