@@ -30,7 +30,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for data in objComisionJuegosDatos %}
+                            {% for key,data in objComisionJuegosDatos %}
+                                {% if key != 0 %}
                                 <tr>
                                 <th scope="row">{{loop.index}}</th>
                                 <td> {{data['0'].codigoRude}} </td>
@@ -38,7 +39,7 @@
                                 <td> {{data['2'].id}} {{data['2'].institucioneducativa}}</td>
                                 <td> {{data['1'].pruebaTipo.prueba}} </td>
                                 </tr>
-                            
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                         </table>

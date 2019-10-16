@@ -1,0 +1,270 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index',{'tipo':2})}}">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if app.session.flashBag.has('exito') %}
+                                <div class="alert alert-success">
+                                    {% for msg in app.session.flashBag.get('exito') %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {{ msg }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if app.session.flashBag.has('error') %}
+                                <div class="alert alert-danger">
+                                    {% for msg in app.session.flashBag.get('error') %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {{ msg }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">{{tarea}}</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="panel-group">
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="pull-left">
+                                                    <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">  
+                            {{ form_start(form,{ 'attr': {'role': 'form','onsubmit':'return validacion()'}}) }}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                            <div class="col-md-9">
+                                                {% for a in form.varevaluacion %}
+                                                    <div class="col-md-3 rdio rdio-primary circle">
+                                                        {{ form_widget(a) }}
+                                                        {{ form_label(a) }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3">
+                                                {{ form_label(form.observacion) }}
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ form_widget(form.observacion) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="form-group col-md-3">
+                            {{ form_label(form.guardar) }}
+                            {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                            <a href="{{path('wf_tramite_index',{'tipo':2})}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                        </div>
+                        <div class="clearfix"></div>
+			        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('#form_tramitetipo').change(function(){
+            if($('#form_tramitetipo').val()!=27){
+                $('#codrue').show();
+                $('#form_buscar').show();
+                $('#form_idrue').val('');
+            }else{
+                $('#codrue').hide();
+                $('#form_buscar').hide();
+                $('#form_institucionEducativa').val('');
+                $("#form_dependenciaTipo").val('');
+                $('#form_idrue').val('');
+            }
+        });
+
+        {# $('#form_buscar').click(function(){
+            var formData = {idrue: $('#form_idrue').val()};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_buscar_rue')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#form_institucionEducativa').val('');
+                    $("#form_dependenciaTipo").val('');
+                    $("#form_tipoeducacion").val('');
+                },
+                success: function (data) {
+                    if (data.msg){
+                        $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                    }else{
+                        $('#form_institucionEducativa').val(data.ie);
+                        $("#form_dependenciaTipo").val(data.dep);
+                        $("#form_tipoeducacion").val(data.ietipo);
+                    }
+                },
+            });
+        });  #}
+        function provincia(d) {
+            //alert(d);
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#form_municipio").empty();
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_distrito").empty();
+                    $("#form_provincia").append('<option value="">Buscando...</option>');
+                    $("#form_municipio").append('<option value="">Buscando...</option>');
+                    $("#form_canton").append('<option value="">Buscando...</option>');
+                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                    $("#form_distrito").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $("#form_municipio").empty();
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_distrito").empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_distrito").append('<option value="">Seleccionar...</option>');
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $.each(data.distrito, function (i, value) {
+                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function municipio(p) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p}),
+                beforeSend: function () {
+                    $("#form_municipio").empty();
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_municipio").append('<option value="">Buscando...</option>');
+                    $("#form_canton").append('<option value="">Buscando...</option>');
+                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_municipio").empty();
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.municipio, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function canton(m) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m}),
+                beforeSend: function () {
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_canton").append('<option value="">Buscando...</option>');
+                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.canton, function (i, value) {
+                        $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                    });
+
+                }
+            });
+        }
+
+        function localidad(c) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c}),
+                beforeSend: function () {
+                    $("#form_localidad").empty();
+                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_localidad").empty();
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.localidad, function (i, value) {
+                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $("#form_localidad").selectpicker('refresh');
+                }
+            });
+        } 
+        $(function(){
+            $(".validar").keydown(function(event){
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        }); 
+    </script>
+    {% endblock %}

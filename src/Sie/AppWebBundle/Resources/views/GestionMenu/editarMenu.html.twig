@@ -1,0 +1,94 @@
+
+
+<div class="modal-dialog" id="sis">
+    <div class="modal-content modal-primary">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title"><i class="fa fa-pencil"></i> Modificar Menú Principal:<strong> <em> {{ menu.detalleMenu}} </em> </strong></h4>
+        </div>
+
+        <div class="modal-body">
+            {{form_start(form,{'attr':{'class':'form-horizontal form-group','onsubmit':'return validateFormulario()'} })}}
+                {{ form_widget(form.id_menu) }}
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Nombre de Menú</strong>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group has-primary">
+                        {{form_widget(form.detalle_menu)}}
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-6">
+
+                    <strong>Seleccione el Icono </strong>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group has-primary">
+                        {{form_widget(form.icono)}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="pull-right">
+                    {{form_widget(form.guardar)}}
+                </div>
+            </div>
+            {{form_end(form)}}
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    function guardarMenuEditado() {
+        var formData = $('#formMenu').serialize();
+        //alert(formData);
+        $('#modal').modal('hide');
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_editmenu') }}",
+
+            data:formData,
+            beforeSend: function () {
+
+                $("#submenus").empty();
+                $("#submenus").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+
+            },
+            success: function (data) {
+                swal({
+                    title: "Good job!",
+                    text: "You clicked the button!",
+                    icon: "success",
+                    button: "Aww yiss!",
+                });
+                $('#submenus').empty();
+                $('#submenus').append(data);
+
+
+                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                    $(".alert").slideUp(1000);
+                });
+
+            }
+        });
+    }
+    $( document ).ready(function() {
+        $('.icp-auto').iconpicker();
+    });
+
+</script>
+
+

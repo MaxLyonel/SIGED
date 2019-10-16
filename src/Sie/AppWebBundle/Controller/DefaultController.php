@@ -44,14 +44,6 @@ class DefaultController extends Controller {
 
         //settear variables a usar antes de la interfaz login
         switch ($request->server->get('HTTP_HOST')) {
-            case 'procesos.local':
-            case '172.20.196.7':
-                $sysname = 'PROCESOS';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutProcesos.html.twig';
-                $this->session->set('pathSystem', "SieProcesosBundle");
-                break;
             case '172.20.196.9:8011':
             case 'siged.sie.gob.bo':
                 $sysname = 'REGULAR';
@@ -59,6 +51,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
                 break;
             case '172.20.196.9:8015':
                 $sysname = 'ALTERNATIVA';
@@ -290,12 +283,20 @@ class DefaultController extends Controller {
                 //$sysbutton = true;
                 //$layout = 'layoutHerramientaAlternativa.html.twig';
                 //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                $sysname = 'procesos';
+                $sysname = 'PROCESOS';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutProcesos.html.twig';
                 $this->session->set('pathSystem', "SieProcesosBundle");
-                break;                
+                break;
+
+                //$sysname = 'REGULAR';
+                //$sysporlet = 'blue';
+                //$sysbutton = true;
+                //$layout = 'layoutRegular.html.twig';
+                //$this->session->set('pathSystem', "SieRegularBundle");
+                //$this->session->set('sistemaid', 1);
+                //break;
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';

@@ -72,9 +72,17 @@ class PrintCredencialController extends Controller{
             ));    
     }
 
+    public function indexMasivoAction(Request $request){
+
+        //validation if the user is logged
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+        return $this->render('SieJuegosBundle:PrintCredencial:index_masivo.html.twig');    
+    }
 
     private function indexForm(){
-        $arrCriteria = array('Estudiante','Acompañante','Delegado, Jefe de mision y organizador');
+        $arrCriteria = array('Estudiante','Acompañante','Delegado, Jefe de mision y organizador','Salud','Apoyo','Prensa','Invitado');
     
     return $this->createFormBuilder()
         ->add('carnetRude', 'text', array('label'=>'CI/RUDE:', 'attr'=>array('class'=>'form-control','placeholder'=>'Carnet Identidad/Rude')))
@@ -108,45 +116,46 @@ class PrintCredencialController extends Controller{
         $objComisionJuegosDatos = false;
         $entity = false;
         $pathToShowImg = false;
+        $ratificar = false;
         $typeMessage = 'success';
         
         switch ($form['typeOption']) {
             case 0:
-                //get student data
-                $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['carnetRude']));
+                $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('carnetIdentidad'=>$form['carnetRude']));
+                if(!$entity) {
+                    $entity = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['carnetRude']));
+                }
                 $objComisionJuegosDatos = $this->getCurrentInscriptionsByGestoinValida($form['carnetRude'],$this->session->get('currentyear'));                
                 break;
             case 1:
                 $objComisionJuegosDatos = array();
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
                 $objDatosAll = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->findBy(array('persona'=>$entity->getId()));
-                // dump($this->session->get('currentyear'));
-                foreach ($objDatosAll as $key => $value) {
-                    $objComisionJuegosDatos[] = $this->getJuegosInscriptionsByGestoinValida($value->getEstudianteInscripcionJuegos()->getId(),$this->session->get('currentyear'));
+                
+                if ($objDatosAll) {
+                    $objComisionJuegosDatos[]=$objDatosAll[0];
+                    foreach ($objDatosAll as $key => $value) {
+                        $objComisionJuegosDatos[] = $this->getJuegosInscriptionsByGestoinValida($value->getEstudianteInscripcionJuegos()->getId(),$this->session->get('currentyear'));
+                        
+                    }
                 }
                 break;
-            case 2:
-                # code...
+            default:
                 $message = 'Datos existentes';
                 $typeMessage = 'success';
                 $this->addFlash('lookForDataMessage', $message);
                 $data = $this->getDelegadoData($form);
                 $entity = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$form['carnetRude'], 'complemento'=>$form['complemento']));
-                $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
-                if($objComisionJuegosDatos){
-                    // list($pathSever,$pathImg) = explode('web', $objComisionJuegosDatos->getRutaImagen());
-                    $pathToShowImg = $objComisionJuegosDatos->getRutaImagen();
+                if($entity){
+                    $objComisionJuegosDatos = $em->getRepository('SieAppWebBundle:JdpDelegadoInscripcionJuegos')->findOneBy(array('persona'=>$entity->getId()));
+                    if($objComisionJuegosDatos){
+                        $pathToShowImg = $entity->getFoto();
+                    }
                 }
-                break;
-            
-            default:
-                # code...
+                
                 break;
         }
 
-        // dump($form['typeOption']);
-        // dump($objComisionJuegosDatos);
-        // die;
         return $this->render('SieJuegosBundle:PrintCredencial:lookforCredencial.html.twig', array(
                 'entity' => $entity,
                 'form' => $form,
@@ -154,7 +163,7 @@ class PrintCredencialController extends Controller{
                 'objComisionJuegosDatos' => $objComisionJuegosDatos,
                 'typeMessage' => $typeMessage,
                 'pathToShowImg' => $pathToShowImg,
-                // 'typeOption' => $form['typeOption'],
+                'ratificar' => $ratificar,
             ));    
     }
     private function getJuegosInscriptionsByGestoinValida($id, $gestion) {
@@ -185,7 +194,7 @@ class PrintCredencialController extends Controller{
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('mat', array( 3,4,5,6,10 ))
-                ->setParameter('faseTipo', 2)
+                ->setParameter('faseTipo', 4)
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
@@ -206,11 +215,9 @@ class PrintCredencialController extends Controller{
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('i,jeij')
+                ->select('i,jeij,e')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
-
                 ->leftjoin('SieAppWebBundle:JdpEstudianteInscripcionJuegos', 'jeij', 'WITH', 'ei.id = jeij.estudianteInscripcion')
-
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
                 ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
@@ -276,24 +283,45 @@ class PrintCredencialController extends Controller{
             // STUDENT
             case 0:
                 # code...
-                $reportDownload = 'jdp_crd_deportista_v1.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
+                $reportDownload = 'jdp_crd_deportista_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
                 break;
             // acompaniante    
             case 1:
                 # code...
-                $reportDownload = 'jdp_crd_delegado_v1.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
+                $reportDownload = 'jdp_crd_delegado_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
                 break;
             // Delegado
             case 2:
                 # code...
-                $reportDownload = 'jdp_crd_organizador_v1.rptdesign&id='.$id .'&codges='.$this->session->get('currentyear').'&codniv=12&&__format=pdf&';
+                $reportDownload = 'jdp_crd_organizador_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+
+            case 3:
+                # code...
+                $reportDownload = 'jdp_crd_salud_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
                 break;
             
+            case 4:
+                # code...
+                $reportDownload = 'jdp_crd_apoyo_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+            
+            case 5:
+                # code...
+                $reportDownload = 'jdp_crd_prensa_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                
+                break;
+
+            case 6:
+                # code...
+                $reportDownload = 'jdp_crd_invitado_v1.rptdesign&id='.$id .'&codniv=13&codges='.$this->session->get('currentyear').'&&__format=pdf&';
+                break;
+
             default:
                 # code...
                 break;
         }
-
+        
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'juegos_credencial_'.$id .'_2019.pdf'));
@@ -303,12 +331,7 @@ class PrintCredencialController extends Controller{
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
-
-
-
-        // return $this->render('SieJuegosBundle:PrintCredencial:donwload.html.twig', array(
-        //         // ...
-        //     ));    
+   
     }
 
 }

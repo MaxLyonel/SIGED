@@ -1,0 +1,131 @@
+{% block contentoption %}
+<div class="row" id="arbol">
+    <div class="col-md-12">
+        <!-- Start horizontal form -->
+        <div class="panel panel-info rounded shadow">
+            <div class="panel-heading   ">
+                <div class="pull-left">
+                    <h3 class="panel-title">Asignacion de Menús</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body no-padding" style="display: block;">
+
+                        <!-- /.form-group -->
+
+                        <table id="myTable" class="table table-bordered table-hover cf dataTable table-primary">
+                            <thead class="">
+                            <tr class="">
+                                <th>No. </th>
+                                <th>Menú</th>
+                                <th>icono</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Sleccionar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for arbolmenu in arbolmenu %}
+
+                                <tr>
+                                    <td data-title="N°">{{ loop.index }}</td>
+                                    <td><input id="forms_detallemenu_{{arbolmenu.id}}" name="forms[detallemenu][{{arbolmenu.id}}]" type="text" value="{{ arbolmenu.detalle_menu }}" class="form-control" maxlength="8" /></td>
+                                    <td><input id="forms_icono_{{arbolmenu.id}}" name="forms[icono][{{arbolmenu.id}}]" type="text" value="{{arbolmenu.icono}}" class="form-control" /></td>
+                                    <td><input id="forms_fechainicio_{{arbolmenu.id}}" name="forms[fechainicio][{{arbolmenu.id}}]" type="text" value="{{arbolmenu.fecha_inicio}}" class="form-control" /></td>
+                                    <td><input id="forms_fechafin_{{arbolmenu.id}}" name="forms[fechafin][{{arbolmenu.id}}]" type="text" value="{{arbolmenu.fecha_fin}}" class="form-control" /></td>
+
+
+
+                                    <td>
+                                        <form id="menuId_{{arbolmenu.id}}" method="post">
+                                            <input type="hidden" name="forms[id]" id="forms_id_{{arbolmenu.id}}" value="{{arbolmenu.id}}">
+                                            <input type="hidden" name="forms[idsistema]" id="forms_id_{{id_sistema}}" value="{{id_sistema}}">
+                                            <input type="checkbox" id="select_{{ arbolmenu.id }}"> </input>
+
+                                            <button type="button" class="btn btn-warning btn-md " data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="guardamenuseleccionado({{arbolmenu.id}})"> Asignar</button>
+
+
+
+                                        </form>
+                                    </td>
+
+                                   {# <td data-title="Opciones">
+                                        <input type="checkbox" class="estados" id="estado_{{arbolmenu.id}}_{{id_sistema}}">
+                                    </td>#}
+
+
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+
+                    <div class="form-footer" id="resultado">
+                        <div class="col-sm-offset-3">
+                            <button type="submit" class="btn btn-success">Sign in</button>
+                        </div>
+                    </div><!-- /.form-footer -->
+
+
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+        <!--/ End horizontal form -->
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+<script>
+
+    var guardamenuseleccionado = function(id){
+        alert(id);
+       // id_l = $('#forms_id_'+id).val();
+       // alert(id_l);
+        detalle_menu = $('#forms_detallemenu_'+id).val();
+        icono = $('#forms_icono_'+id).val();
+        fecha_inicio=$('#forms_fechainicio_'+id).val();
+        fecha_final=$('#forms_fechafin_'+id).val();
+
+
+     formData = $('#menuId_'+id)
+         .append('<input type="hidden" name="forms[detallemenu]"    id="forms_detallemenu"  value="'+detalle_menu+'">')
+         .append('<input type="hidden" name="forms[icono]"          id="forms_icono"        value="'+icono+'">')
+         .append('<input type="hidden" name="forms[fechainicio]"    id="forms_fechainicio"  value="'+fecha_inicio+'">')
+         .append('<input type="hidden" name="forms[fechafinal]"     id="forms_fechafinal"   value="'+fecha_final+'">')
+         .serialize();
+     $.ajax({
+         type: 'post',
+         url: Routing.generate('gestionmenu_guardar_menu_sistema'),
+         data: formData,
+
+         //data: {id_l:id_l},
+         beforeSend: function () {
+             //alert(formData);
+             //$("#getStudentsId").empty();
+             //$("#getStudentsId").append('<div class="text-center"><img src="{#{{asset('img/loading.gif')}}#}" class="" /></div>');
+            },
+            success: function (data) {
+
+                //$("#getStudentsId").empty();
+                //$("#getStudentsId").append(data);
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+
+                }
+            }
+        });
+
+
+    }
+</script>
+
