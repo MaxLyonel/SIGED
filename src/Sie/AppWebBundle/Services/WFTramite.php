@@ -373,7 +373,7 @@ class WFTramite {
     /**
     * funcion que elimina tramite enviado
     */
-    public function eliminarTramteEnviado($idtramite,$idusuario)
+    public function eliminarTramiteEnviado($idtramite,$idusuario)
     {
                 
         $this->em->getConnection()->beginTransaction();
