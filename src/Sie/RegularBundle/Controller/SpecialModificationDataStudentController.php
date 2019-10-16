@@ -136,6 +136,8 @@ class SpecialModificationDataStudentController extends Controller{
             $sw = true;
 
         }
+        // check if the student has a certification
+        $swCertification = $this->getStudentCertification($form);
         
         $this->addFlash('messageModStudent', $message);
         // get Genero to the student
@@ -233,6 +235,40 @@ class SpecialModificationDataStudentController extends Controller{
         //         'form'          => $this->studentForm($objStudent)->createView(),
         //         'sw'            => $sw,
         // ));
+    }
+    /*
+        select * from estudiante as e
+        inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
+        inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+        left join tramite as t on t.estudiante_inscripcion_id = ei.id
+        left join documento as d on d.tramite_id = t.id and d.documento_tipo_id in (1,9,6,7,8) and d.documento_estado_id = 1
+        where e.codigo_rude = '809805692014006342' and iec.gestion_tipo_id = 2019
+    */
+
+    private function getStudentCertification($data){
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('e')
+                ->innerjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->innerjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Tramite', 't', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->leftjoin('SieAppWebBundle:Documento', 'd', 'WITH', 't.id = d.tramite')
+                ->where('e.codigoRude = :id')
+                ->andwhere('d.documentoTipo IN (:document)')
+                ->andwhere('d.documentoEstado = :docestatus')
+                ->setParameter('id', trim($data['codeRude']))
+                ->setParameter('document', array(1,6,7,8,9))
+                ->setParameter('docestatus', 1);
+        $query = $query            
+                ->getQuery();
+
+        $objTramite = $query->getResult();
+        dump($objTramite);
+        die;
+
     }
 
     public function updateStudentAction(Request $request){
