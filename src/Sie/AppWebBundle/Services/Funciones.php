@@ -1528,5 +1528,54 @@ class Funciones {
                 
     }    
 
+    /**
+     * [existeInscripcionSimilarAprobado description]
+     * @param  integer    $idInscripcion [inscripcion del estudiante para verificar si existe otra inscripcion similar con los diferentes estados]
+     * @return boolean    response [true=si existe otra inscripcion similar, false=no existe inscripcion similar]
+     */
+    public function existeInscripcionSimilarAprobado($idInscripcion){
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $estudiante = $inscripcion->getEstudiante()->getId();
+        $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
 
+        /* ESTADOS
+
+        4 EFECTIVO
+        5 PROMOVIDO
+        24 APROBADO HOMOLOGACION
+        26 PROMOVIDO POST-BACHILLERATO
+        37 PROMOVIDO
+        45 APROBADO HOMOLOGACION
+        46 EFECTIVO
+        55 PROMOVIDO BACHILLER DE EXCELENCIA
+        56 PROMOVIDO POR NIVELACION
+        57 PROMOVIDO POR REZAGO ESCOLAR
+        58 PROMOVIDO TALENTO EXTRAORDINARIO
+        */
+
+        $otraInscripcion = $this->em->createQueryBuilder()
+                        ->select('ei')
+                        ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->where('ei.estudiante = :estudiante')
+                        ->andWhere('ei.id != :idInscripcion')
+                        ->andWhere('ei.estadomatriculaTipo IN (:estados)')
+                        ->andWhere('iec.nivelTipo = :nivel')
+                        ->andWhere('iec.gradoTipo = :grado')
+                        ->setParameter('estudiante', $estudiante)
+                        ->setParameter('idInscripcion', $idInscripcion)
+                        ->setParameter('estados', array(4,5,24,26,37,45,46,55,56,57,58)) // Estados que deveria validar
+                        ->setParameter('nivel', $nivel)
+                        ->setParameter('grado', $grado)
+                        ->getQuery()
+                        ->getResult();
+
+        $response = false;
+        if ($otraInscripcion) {
+            $response = true;
+        }
+
+        return $response;
+    }
 }
