@@ -255,7 +255,11 @@
 
                                     
                                     <table class="table table-primary" v-if="swCertification">
-                                    <p class="encabezado bg-primary">DATOS REQUERIDOS PARA LA MODIFICACIÓN</p>
+                                        <tr>
+                                            <td>
+                                            <p class="encabezado bg-primary">DATOS REQUERIDOS PARA LA MODIFICACIÓN</p>
+                                            </td>
+                                        </tr>                                    
                                         <tr>
                                             <th>Resolucion Administrativa</th>
                                             <td>
@@ -504,7 +508,7 @@
             methods: {
                 buscarEstudiante: function(){
                     this.buscando = true;
-                    this.studentId = true;
+                    this.studentId = false;
                     this.codigoRude = '';
                     this.estudiante = '';
                     this.respuesta = '';
