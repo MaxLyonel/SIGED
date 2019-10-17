@@ -711,6 +711,22 @@ class TramiteModificacionCalificacionesController extends Controller {
         try {
 
             $idTramite = $request->get('idTramite');
+
+            /*----------  VERIFICACION  ----------*/
+            // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
+            // PARA EVITAR DOBLE PROMOCION
+            $respuesta = $this->calcularNuevoEstado($idTramite);
+            if ($respuesta['nuevoEstado'] == 5) {
+                $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
+                if ($inscripcionSimilar) {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('errorTAMC', 'El trámite no puede ser aprobado, porque la solicitud modificará el estado de matrícula de la inscripción a promovido, pero el estudiante ya tiene otra inscripción del mismo nivel y grado con estado promovido o efectivo.');
+                    return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                }
+            }
+            /*=====  End of VERIFICACION  ======*/
+
             $procedente = $request->get('procedente');
             $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
             $checkInforme = $request->get('checkInforme');
@@ -976,6 +992,23 @@ class TramiteModificacionCalificacionesController extends Controller {
             $em->getConnection()->beginTransaction();
 
             $idTramite = $request->get('idTramite');
+
+            /*----------  VERIFICACION  ----------*/
+            // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
+            // PARA EVITAR DOBLE PROMOCION
+            $respuesta = $this->calcularNuevoEstado($idTramite);
+            if ($respuesta['nuevoEstado'] == 5) {
+                $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
+                if ($inscripcionSimilar) {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('errorTAMC', 'El trámite no puede ser aprobado, porque la solicitud modificará el estado de matrícula de la inscripción a promovido, pero el estudiante ya tiene otra inscripción del mismo nivel y grado con estado promovido o efectivo.');
+                    return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                }
+            }
+            /*=====  End of VERIFICACION  ======*/
+            
+
             $aprueba = $request->get('aprueba');
             $checkInforme = $request->get('checkInforme');
             $checkCuaderno = $request->get('checkCuaderno');
@@ -1168,6 +1201,11 @@ class TramiteModificacionCalificacionesController extends Controller {
     =            FUNCIONES COMPLEMENTARIAS            =
     =================================================*/
     
+    /**
+     * Funcion para consolidar las calificaciones del tramite a la base de datos
+     * @param  integer $idTramite       id del trámite
+     * @return boolean                  true cuando la modificacion es exitosa y false si da error
+     */
     private function modificarCalificacionesSIE($idTramite){
         $em = $this->getDoctrine()->getManager();
         $historial = $this->historial($idTramite);
@@ -1239,6 +1277,152 @@ class TramiteModificacionCalificacionesController extends Controller {
         $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
 
         return true;
+    }
+
+    /**
+     * Funcion para calcular el nuevo estado de matricula con las notas de la solicitud
+     * @param  integer $idTramite     id del tramite
+     * @return array                  [idInscripcion: inscripcion del estudiante, nuevoEstado: nuevo estado de matricula]
+     */
+    public function calcularNuevoEstado($idTramite){
+        try {
+            $historial = $this->historial($idTramite);
+            $datosNotas = null;
+            $idInscripcion = null;
+            foreach ($historial as $h) {
+                if($h['orden'] == 1){
+                    $idInscripcion = $h['datos']['idInscripcion'];
+                    $datosNotas = $h['datos']['notas'];
+                }
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+            $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            
+            // OOBTENEMOS EL TIPO DE NOTA BIMESTRE O TRIMESTRE
+            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+            $array = [];
+            $arrayPromedios = [];
+            $cont = 0;
+            $asignaturas = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$idInscripcion));
+            $notas = [];
+            if ($tipo == 'Bimestre') {
+                /*----------  NOTAS BIMESTRALES  ----------*/
+                $notas = array(1,2,3,4);
+                $notaMinima = 51;
+            }
+            if ($tipo == 'Trimestre') {
+                /*----------  NOTAS TRIMESTRALES  ----------*/
+                $notas = array(30,27,31,28,32,29,10);
+                $notaMinima = 36;
+            }
+
+            // RECORREMOS LAS ASIGNATURAS Y VERIFICAMOS LAS CALIFICACIONES
+            foreach ($asignaturas as $a) {
+                $suma = 0;
+                $array[$cont] = array('id'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId(),'asignatura'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getAsignatura());                
+                // GENERAMOS UN ARRAY CON LAS CALIFICACIONES
+                foreach ($notas as $n) {
+                    $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>$n));
+                    if ($nota) {
+                        // VERIFICAMOS SI EXISTE UNA NOTA PARA EDITAR EN EL TRAMITE
+                        $notaSolicitud = 0;
+                        foreach ($datosNotas as $dn) {
+                            if ($dn['idEstudianteNota'] == $nota->getId()) {
+                                $notaSolicitud = $dn['notaNueva'];
+                            }
+                        }
+
+                        if ($notaSolicitud == 0) {
+                            // VERIFICAMOS SI EXISTE UNA NOTA PARA ADICIONAR
+                            foreach ($datosNotas as $dn) {
+                                if ($dn['idEstudianteAsignatura'] == $a->getId() and $dn['idNotaTipo'] == $n) {
+                                    $notaSolicitud = $dn['notaNueva'];
+                                }
+                            }
+                        }
+                    }else{
+                        // VERIFICAMOS SI EXISTE UNA NOTA PARA ADICIONAR
+                        foreach ($datosNotas as $dn) {
+                            if ($dn['idEstudianteAsignatura'] == $a->getId() and $dn['idNotaTipo'] == $n) {
+                                $notaSolicitud = $dn['notaNueva'];
+                            }
+                        }
+                    }
+
+                    if ($notaSolicitud != 0) {
+                        $array[$cont][$n] = $notaSolicitud;
+                    }else{
+                        if ($nota) {
+                            $array[$cont][$n] = $nota->getNotaCuantitativa();
+                        }else{
+                            $array[$cont][$n] = 0;
+                        }
+                    }
+                }
+
+                // GENERAMOS EL ARRAY DE PROMEDIOS BIMESTRALES
+                if ($tipo == 'Bimestre') {
+                    if ($array[$cont]['1'] != 0 and $array[$cont]['2'] != 0 and $array[$cont]['3'] != 0 and $array[$cont]['4'] != 0) {
+                        $suma = $array[$cont]['1'] + $array[$cont]['2'] + $array[$cont]['3'] + $array[$cont]['4'];
+                        $promedio = round($suma/4);
+                        if ($gestion != 2018 or ($gestion == 2018 and $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() != 1052 and $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() != 1053)) {
+                                $arrayPromedios[] = $promedio;
+                        }
+                    }
+                }
+
+                // GENERAMOS EL ARRAY DE PROMEDIOS TRIMESTRALES
+                if ($tipo == 'Trimestre') {
+                    $prompt = 0;
+                    $promst = 0;
+                    $promtt = 0;
+                    $promAnual = 0;
+                    $promFinal = 0;
+
+                    $prompt = $array[$cont]['30'] + $array[$cont]['27'];
+                    $promst = $array[$cont]['31'] + $array[$cont]['28'];
+                    $promtt = $array[$cont]['32'] + $array[$cont]['29'];
+
+                    $promAnual = round(($prompt + $promst + $promtt) / 3);
+                    if ($promAnual < 36 and $array[$cont]['10'] != 0) {
+                        $promFinal = $promAnual + $array[$cont]['10'];
+                        $arrayPromedios[] = $promFinal;
+                    }else{
+                        $arrayPromedios[] = $promAnual;
+                    }
+                }
+
+                $cont++;
+            }
+
+            // VERIFICAMOS LOS PROMEDIOS
+            $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
+            if ((count($asignaturas) == count($arrayPromedios)) or ($gestion == 2018 and (count($asignaturas) == count($arrayPromedios) - 2))) {
+                $nuevoEstado = 5; // APROBADO
+                $contadorReprobados = 0;
+                foreach ($arrayPromedios as $ap) {
+                    if ($ap < $notaMinima) {
+                        $contadorReprobados++;
+                    }
+                }
+                if ($contadorReprobados > 0) {
+                    $nuevoEstado == 11; // REPROBADO
+                }
+            }
+
+            return array(
+                'nuevoEstado'=>$nuevoEstado,
+                'idInscripcion'=>$idInscripcion
+            );
+
+        } catch (Exception $e) {
+            
+        }
     }
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
