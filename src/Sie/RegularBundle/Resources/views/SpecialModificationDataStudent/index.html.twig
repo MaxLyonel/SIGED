@@ -252,8 +252,10 @@
                                         </tr>
                                     </table>
                                     <br>
+
+                                    
+                                    <table class="table table-primary" v-if="swCertification">
                                     <p class="encabezado bg-primary">DATOS REQUERIDOS PARA LA MODIFICACIÓN</p>
-                                    <table class="table table-primary">
                                         <tr>
                                             <th>Resolucion Administrativa</th>
                                             <td>
@@ -494,7 +496,8 @@
                 dataModifyToSend:[],
                 archivoAdjunto:'',
                 informe:'',
-                showbuttonPDF:false
+                showbuttonPDF:false,
+                swCertification:false,
 
                
             },
@@ -546,7 +549,9 @@
                                 this.DBPais = response.data.arrPais;
                                 this.DBDepto = response.data.arrDepto;
                                 this.DBProvincia = response.data.arrProvincia;
+                                this.swCertification = response.data.swCertification;
                                 this.buscando = false;
+                                
                                 /*console.log(this.dataStudent);*/
                                 $('[data-toggle="tooltip"]').tooltip();
                             }else{
@@ -563,6 +568,7 @@
                                 this.buscando = false;
                                 this.respuesta = response.data.message;
                                 this.buscando = false;
+                                this.swCertification = false;
                                 return;
                             }
                         }
@@ -776,18 +782,23 @@
                 },
                 updateStudent: function(){
 
-                    /*console.log(this.dataStudentModif.resolucionAdm);*/
-                    if(this.dataStudentModif.resolucionAdm == ''){
-                        this.respuesta = 'Debe ingresar la Resolucion Administrativa';
-                        this.buscando = false;
-                        Swal.fire(
-                              'Debe ingresar la Resolucion Administrativa',
-                              'Campo requerido!',                              
-                              'warning'
-                            );                        
-                        return false;
-                    }
-                    if(this.dataStudentModif.fecharesolAdm == ''){
+                  
+                    console.log(this.swCertification);
+                    if(this.swCertification){
+
+                          /*console.log(this.dataStudentModif.resolucionAdm);*/
+                        if(this.dataStudentModif.resolucionAdm == ''){
+                            this.respuesta = 'Debe ingresar la Resolucion Administrativa';
+                            this.buscando = false;
+                            Swal.fire(
+                                'Debe ingresar la Resolucion Administrativa',
+                                'Campo requerido!',                              
+                                'warning'
+                                );                        
+                            return false;
+                        }
+
+                        if(this.dataStudentModif.fecharesolAdm == ''){
                         this.respuesta = 'Debe ingresar la Fecha de Resolucion Administrativa';
                         this.buscando = false;
                         Swal.fire(
@@ -796,29 +807,31 @@
                               'warning'
                             );                        
                         return false;
-                    }
-                    if(this.dataStudentModif.justificativo == ''){
-                        this.respuesta = 'Debe ingresar el Justificativo';
-                        this.buscando = false;
-                        Swal.fire(
-                              'Debe ingresar el Justificativo',
-                              'Campo requerido!',                              
-                              'warning'
-                            );                        
-                        return false;
-                    }
+                        }
+                        if(this.dataStudentModif.justificativo == ''){
+                            this.respuesta = 'Debe ingresar el Justificativo';
+                            this.buscando = false;
+                            Swal.fire(
+                                'Debe ingresar el Justificativo',
+                                'Campo requerido!',                              
+                                'warning'
+                                );                        
+                            return false;
+                        }
 
-                    /*validate the file attached*/
-                    if (typeof this.informe != 'object') {
-                        Swal.fire(
-                          'Adjuntar Resolucion Administrativa',
-                          'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
-                          'warning'
-                        );
-                        return;
+                        /*validate the file attached*/
+                        if (typeof this.informe != 'object') {
+                            Swal.fire(
+                            'Adjuntar Resolucion Administrativa',
+                            'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
+                            'warning'
+                            );
+                            return;
+                        }
+                    }else{
+                       this.informe = ''; 
                     }
-
-
+                    
                     Swal.fire({
                         title: '¿Enviar Cambios?',
                         text: "esta seguro de realizar los cambios",

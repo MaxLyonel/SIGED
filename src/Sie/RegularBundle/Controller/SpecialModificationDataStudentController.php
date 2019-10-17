@@ -138,7 +138,7 @@ class SpecialModificationDataStudentController extends Controller{
         }
         // check if the student has a certification
         $swCertification = $this->getStudentCertification($form);
-        
+
         $this->addFlash('messageModStudent', $message);
         // get Genero to the student
         $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
@@ -225,6 +225,7 @@ class SpecialModificationDataStudentController extends Controller{
             'status'=>'error',
             'message'=>$message,
             'swerror'=>$sw,
+            'swCertification'=>$swCertification,
         ));
        
         return $response;        
@@ -248,6 +249,7 @@ class SpecialModificationDataStudentController extends Controller{
     private function getStudentCertification($data){
         // create db conexion
         $em = $this->getDoctrine()->getManager();
+        $answer = false;
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
@@ -266,8 +268,11 @@ class SpecialModificationDataStudentController extends Controller{
                 ->getQuery();
 
         $objTramite = $query->getResult();
-        dump($objTramite);
-        die;
+        if(sizeof($objTramite)>0){
+            $answer = true;
+        }
+        return $answer;
+        
 
     }
 
@@ -280,6 +285,9 @@ class SpecialModificationDataStudentController extends Controller{
 
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
+        // dump($jsonData);
+        // dump($arrData);
+        // die;
         
 
         $estudianteId = $arrData['estudianteId'];
@@ -343,6 +351,7 @@ class SpecialModificationDataStudentController extends Controller{
                 );
             }else{
                 $informe = null;
+                $archivador = 'empty';
             }
 
         try {
@@ -387,12 +396,12 @@ class SpecialModificationDataStudentController extends Controller{
                 
                 $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId) );
                 
-                if(isset($lugarNacTipoId)){
+                if(isset($lugarNacTipoId) && $lugarNacTipoId!=''){
                     $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId) );
                 }else{
                     $objStudent->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
                 }
-                if(isset($lugarProvNacTipoId)){
+                if(isset($lugarProvNacTipoId) && $lugarProvNacTipoId!=''){
                     $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId) );
                 }else{
                     $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
