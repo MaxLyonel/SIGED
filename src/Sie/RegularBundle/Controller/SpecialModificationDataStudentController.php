@@ -167,11 +167,14 @@ class SpecialModificationDataStudentController extends Controller{
         }
 
         // get provincias
-        $objProv = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $objStudent->getLugarNacTipo()->getId()));
-
         $arrProvincia = array();
-        foreach ($objProv as $prov) {
-            $arrProvincia[] = array('provinciaId'=>$prov->getid(), 'provincia'=>$prov->getlugar());
+        if($objStudent->getLugarNacTipo()!== null){
+
+            $objProv = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $objStudent->getLugarNacTipo()->getId()));            
+            // reload the provicnas values
+            foreach ($objProv as $prov) {
+                $arrProvincia[] = array('provinciaId'=>$prov->getid(), 'provincia'=>$prov->getlugar());
+            }
         }
                 
          $arrStudent =( array(
