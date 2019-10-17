@@ -252,10 +252,11 @@
                                                 <td class="table-cell" style="vertical-align:middle">${cualitativa.bimestre}</td>
                                                 <td>${cualitativa.notaCualitativa}</td>
                                                 <td>
-                                                    <textarea class="form-control input-sm jupper jnumbersletters" cols="17" rows="4" v-model="cualitativa.notaNuevaCualitativa" v-on:keypress="validarNotaCualitativa();" v-on:keyup="validarValorNotaCualitativa(cualitativa)"></textarea>
+                                                    ${cualitativa.notaNuevaCualitativa}
+                                                    {# <textarea class="form-control input-sm jupper jnumbersletters" cols="17" rows="4" v-model="cualitativa.notaNuevaCualitativa" v-on:keypress="validarNotaCualitativa();" v-on:keyup="validarValorNotaCualitativa(cualitativa)"></textarea> #}
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-default btn-xs" v-on:click="eliminarNotaCualitativa(cualitativa)"> <i class="fa fa-remove"></i>  </button>
+                                                    <button type="button" class="btn btn-default btn-xs text-danger" v-on:click="eliminarNotaCualitativa(cualitativa)"> <i class="fa fa-minus-circle"></i> Quitar </button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -281,8 +282,8 @@
                                                 <div class="checkbox">
                                                     <label style="margin-left:-20px;">
                                                         <input type="checkbox" v-model="checkInforme" disabled style="display:none">
-                                                        <i v-if="informe == ''" class="fa fa-square" style="color:#FFFFFF"></i>
-                                                        <i v-else class="fa fa-check-square" style="color:#3083FA"></i>
+                                                        <i v-if="informe == ''" class="fa fa-square-o" style="color:#AAAAAA"></i>
+                                                        <i v-else class="fa fa-check-square-o"></i>
                                                         &nbsp;Informe técnico
                                                         <input type="file" id="image" name="image" @change="getImage" accept="file/*" style="display:none">
                                                         <label for="image"> <i class="fa fa-upload"></i> 
@@ -358,7 +359,7 @@
                                 Código Rude
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="buscarEstudiante()">
+                                <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="buscarEstudiante()" placeholder="Ingrese el Código RUDE a buscar">
                             </div>
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                 <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
@@ -1083,6 +1084,9 @@
                                 if (!value) {
                                     return 'Ingrese una valoración!'
                                 }
+
+                                value = value.toUpperCase();
+
                                 if (value.length < 15) {
                                     return 'La valoración debe tener al menos 15 digitos!'
                                 }
@@ -1112,6 +1116,9 @@
                                     this.eliminarNotaCualitativa(this.notasCualitativas[index]);
                                     return;
                                 }
+
+                                value = value.toUpperCase();
+
                                 if (value.length < 15) {
                                     return 'La valoración debe tener al menos 15 digitos!'
                                 }
@@ -1266,7 +1273,7 @@
                     // VALIDAMOS LOS DOCUMENTOS MINIMOS
                     if (!this.checkInforme || !this.checkCuaderno || !this.checkFormulario) {
                         Swal.fire(
-                          'Documentos!',
+                          'Requisitos!',
                           'Debe seleccionar todos los requisitos mínimos establecidos.',
                           'warning'
                         );

@@ -1,4 +1,14 @@
 <p style="font-size:1.5em; font-weight:bold">Trámite Nro. {{ idTramite }}</p>
+
+{% if app.session.flashBag.has('errorTAMC') %}
+	<div class="alert alert-warning">
+		{% for msg in app.session.flashBag.get('errorTAMC') %}
+	    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    	<strong>Nota !</strong> {{msg}}
+		{% endfor %}
+	</div>
+{% endif %}
+
 <div class="panel panel-primary">
 	<div class="panel-heading" data-action="collapse" style="cursor:pointer">
 		<div class="pull-left">
