@@ -111,18 +111,6 @@
                                                     {% endif %}
                                                 {% endif %}
 
-                                                {% if participanteObservado %}
-                                                    <div class="btn-group">
-                                                        <buttom type="buttom" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                            Datos no validados <span class="caret"></span>
-                                                        </buttom>
-                                                        <ul class="dropdown-menu pull-right">
-                                                            <li class="btnValidar" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"><a>Validar</a></li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                    {% set registro = false %}
-                                                {% endif %}
 
                                                 {% if participante.carnet_identidad == "" %}
                                                     <span class="label label-danger rounded">Sin C.I.</span>
@@ -147,10 +135,22 @@
                                                 {% endif %}
 
                                                 {% if registro %}
-                                                    <div class="ckbox ckbox-info">
-                                                        <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
-                                                        <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
-                                                    </div>
+                                                    {% if participanteObservado %}
+                                                        <div class="btn-group">
+                                                            <buttom type="buttom" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                Datos no validados <span class="caret"></span>
+                                                            </buttom>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li class="btnValidar" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"><a>Validar</a></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                    {% else %}
+                                                        <div class="ckbox ckbox-info">
+                                                            <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
+                                                            <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
+                                                        </div>
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                         </tr>
