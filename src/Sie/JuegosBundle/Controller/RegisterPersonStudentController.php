@@ -1024,10 +1024,33 @@ class RegisterPersonStudentController extends Controller{
 
 
     public function removeCouchAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
     	//get the send data
     	$jsonIdRemove = base64_decode($request->get('jsonIdRemove'));
     	$arrIdRemove = json_decode($jsonIdRemove, true);
-    	$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
+        
+        $registroController = new registroController();
+        $registroController->setContainer($this->container);
+        $fase = 4;
+        $nivel = 12;
+
+        if(count($arrIdRemove)>0){
+            $objJdpPersonaInscripcionJuegos = $em->getRepository('SieAppWebBundle:JdpPersonaInscripcionJuegos')->find($arrIdRemove[0]);
+            $fase = $objJdpPersonaInscripcionJuegos->getEstudianteInscripcionJuegos()->getFaseTipo()->getId();
+            $nivel = $objJdpPersonaInscripcionJuegos->getEstudianteInscripcionJuegos()->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
+        }
+
+        $faseActivo = $registroController->getFaseActivo($fase, $nivel, $fechaActual);
+        
+        $response = new JsonResponse();
+        
+        if (!$faseActivo) {
+            return $response->setData(array(
+                'msg_incorrecto' => 'Inscripción cerrada'
+            ));
+        }
         
     	try {
 	    	foreach ($arrIdRemove as $key => $value) {
@@ -1042,7 +1065,6 @@ class RegisterPersonStudentController extends Controller{
     		$arrTransactionData = array('msg_correcto' => '', 'msg_incorrecto' => 'Error, intene nuevamente' );
         }
 
-        $response = new JsonResponse();
         return $response->setData($arrTransactionData); 
     }
 

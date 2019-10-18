@@ -142,6 +142,11 @@
                                                   {% endif %}
                                                 {% endif %}
 
+                                                {% if participanteObservado %}
+                                                    <span class="label label-danger rounded">Datos no validados</span>
+                                                    {% set registro = false %}
+                                                {% endif %}
+
                                                 {% if participante.carnet_identidad == "" %}
                                                     <span class="label label-danger rounded">Sin C.I.</span>
                                                     {% set registro = false %}
