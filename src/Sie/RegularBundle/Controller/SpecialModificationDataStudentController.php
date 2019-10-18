@@ -455,21 +455,25 @@ class SpecialModificationDataStudentController extends Controller{
 
                  $response->setStatusCode(200);
                         $response->setData(array(
-                            'status'=>true,
-                            'message'=>'Datos regsitrados',
-                            'studentId'=>$objStudent->getId(),
-                            'showbuttonPDF' => true,
+                            'status'                 => true,
+                            'showbuttonPDF'          => true,
+                            'message'                => 'Datos regsitrados',
+                            'studentId'              => $objStudent->getId(),
+                            'studentHistModId' => $objEstudianteHistorialModificacion->getId(),
+                            'urlreport'=> $this->generateUrl('donwload_studentHistModification', array('id'=>$objEstudianteHistorialModificacion->getId(),'studentId'=>$objStudent->getId())),
                         ));
                        
                         return $response;
               } catch (Exception $e) {
                     echo 'error to save the inforamation';
-                     $response->setStatusCode(200);
+                     $response->setStatusCode(500);
                         $response->setData(array(
                             'status'=>false,
                             'message'=>'error en el regsitro',
                             'studentId'=>$objStudent->getId(),
                             'showbuttonPDF' => false,
+                            'studentHistModId' => false,
+                            'urlreport'=>false,
                         ));
             }                           
 

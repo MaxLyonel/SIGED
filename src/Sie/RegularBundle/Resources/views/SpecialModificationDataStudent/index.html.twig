@@ -265,7 +265,7 @@
                                             <td>
                                                 <input type="text" id="form_resoladm" name="form[resoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}" v-model="dataStudentModif.resolucionAdm">
                                             </td>
-                                            <th>Fecha Resolucion</th>
+                                            <th>Fecha Resolucion</br>dd-mm-aa</th>
                                             <td>
                                                 <input type="text" id="form_fecharesoladm" name="form[fecharesoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}" v-model="dataStudentModif.fecharesolAdm">
                                             </td>
@@ -279,7 +279,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Adjuntar Informe</th>
+                                            <th>Adjuntar Solictud de modificaci&oacute;n</th>
                                             <td colspan="4">
                                                 {# <input type="file" > #}
                                                 <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -291,7 +291,11 @@
                                      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" v-if="swOne || swTwo">
                                        <table>
                                         <tr v-if="showbuttonPDF">
-                                          <tH><a href="#"> <i class="fa fa-download"> DESCARGAR MODIFICACIÓN</i> </a></tH>
+                                          <tH>
+                                            <a v-bind:href="urlreport">
+                                                    <i class="fa fa-download"> DESCARGAR MODIFICACIÓN</i>
+                                            </a></br>
+                                          </tH>
                                         </tr>
                                         <tr v-else>
                                          <td><button v-on:click="updateStudent()" type="button" class="btn btn-primary"><i class="fa fa-save"> Guardar Cambios</i> </button></td>
@@ -487,6 +491,8 @@
                 rudeBuscar:'',
                 optionBuscar:'',
                 studentId:'',
+                studentHistModId:false,
+                urlreport: '',
                 buscando:false,
                 swOne:false,
                 swTwo:false,
@@ -511,6 +517,7 @@
                 buscarEstudiante: function(){
                     this.buscando = true;
                     this.studentId = false;
+                    this.studentHistModId = false;                    
                     this.codigoRude = '';
                     this.estudiante = '';
                     this.respuesta = '';
@@ -824,6 +831,7 @@
                         }
 
                         if(this.dataStudentModif.fecharesolAdm == ''){
+                        
                         this.respuesta = 'Debe ingresar la Fecha de Resolucion Administrativa';
                         this.buscando = false;
                         Swal.fire(
@@ -832,6 +840,15 @@
                               'warning'
                             );                        
                         return false;
+                        }else{
+                            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
+                                Swal.fire(
+                                'Revise formato de Fecha Resolucion Administrativa (dd-mm-aaaa)',
+                                'Campo requerido!',                              
+                                'warning'
+                                );  
+                                return false;
+                            }
                         }
 
                     }
@@ -855,8 +872,13 @@
                             .then(response => {
                                 if (response.status == 200) {
                                     this.showbuttonPDF = false;
+                                    this.studentHistModId = false;
+                                    this.studentId = false;
                                     if(response.data.showbuttonPDF){
-                                       this.showbuttonPDF = response.data.showbuttonPDF
+                                       this.showbuttonPDF = response.data.showbuttonPDF;
+                                       this.studentHistModId = response.data.studentHistModId;
+                                       this.studentId = response.data.studentId;
+                                       this.urlreport = response.data.urlreport;
                                     }
                                     console.log(response.data.answerSegip);
                                     $('[data-toggle="tooltip"]').tooltip();
@@ -946,7 +968,14 @@
         });        
 
 
-
+    function validarFormatoFecha(campo) {
+        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+        if ((campo.match(RegExPattern)) && (campo!='')) {
+                return true;
+        } else {
+                return false;
+        }
+    }    
 
 
 
@@ -1057,14 +1086,7 @@
         }
 
 
-function validarFormatoFecha(campo) {
-      var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
-      if ((campo.match(RegExPattern)) && (campo!='')) {
-            return true;
-      } else {
-            return false;
-      }
-}        
+    
 
 
         function dep(es) {
