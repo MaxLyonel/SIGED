@@ -118,3 +118,9 @@ tramite_anula:
     defaults: { _controller: SieTramitesBundle:Tramite:anulaGuarda }
     options:
          expose: true  
+
+tramite_dato_personal_verifica:
+    path:     /dato/persona/verifica
+    defaults: { _controller: SieTramitesBundle:Tramite:datoPersonalVerifica }
+    options:
+         expose: true  

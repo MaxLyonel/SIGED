@@ -42,6 +42,7 @@
                                     <tr>
                                         <th style="width:50px; text-align:center;">#</th>
                                         <th style="text-align:center;">Trámite</th>
+                                        <th style="text-align:center;">Documento</th>
                                         <th style="text-align:center;">Código RUDE</th>
                                         <th style="text-align:center;">C.I.</th>
                                         <th style="text-align:center;">Paterno</th>
@@ -61,6 +62,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Trámite</th>
+                                        <th>Documento</th>
                                         <th>Código RUDE</th>
                                         <th>C.I.</th>
                                         <th>Paterno</th>
@@ -90,6 +92,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>{{ participante.tramite_id }}</td>
+                                            <td>{{ participante.documento_serie_id }}</td>
                                             <td>{{ participante.codigo_rude }}</td>
                                             <td>{{ participante.carnet_identidad }}</td>
                                             <td>{{ participante.paterno }}</td>
@@ -140,7 +143,15 @@
                                                 {% endif %}
 
                                                 {% if participanteObservado %}
-                                                    <span class="label label-danger rounded">Datos no validados</span>
+                                                    <div class="btn-group">
+                                                        <buttom type="buttom" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                            Datos no validados <span class="caret"></span>
+                                                        </buttom>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li class="btnValidar" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"><a>Validar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    </br></br>
                                                     {% set registro = false %}
                                                 {% endif %}
 
@@ -170,7 +181,7 @@
                                                         <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
                                                     </div>
                                                 {% else %}
-                                                    <button type="button" value="{{ participante.tramite_id|base64_encode }}" class="btn btn-danger btn-stroke btn-xs">Anular</buttom>
+                                                    <button type="button" value="{{ participante.tramite_id|base64_encode }}" class="btn btn-danger btn-stroke btn-xs btnAnular">Anular</buttom>
                                                 {% endif %}
                                             </td>
                                         </tr>

@@ -423,7 +423,7 @@
             });
 
             
-            $('#tablaParticipantes tbody').on("click", "button", function(){    
+            $('#tablaParticipantes tbody').on("click", ".btnAnular", function(){    
                 var data = table.row( $(this).parents('tr')).data();
                 var r = confirm("¿ Desea anular el trámite "+data[1]+" ?");
                 if (r == true) {              
@@ -456,7 +456,47 @@
                 } else {
                     return false; 
                 }
-            });             
+            });     
+            
+            $('#tablaParticipantes tbody').on("click", ".btnValidar", function(){    
+                var r = confirm("¿ Desea validar los datos personales ?");
+                var div = $(this).closest('tr').find("td").eq(10).children("div");
+                var btn = $(this).closest('tr').find("td").eq(0).children("buttom");
+                var tr = $(this).closest('tr');
+                var contDiv = $(this).closest('tr').find("td").eq(10).children("div").html();  
+                var td = $(this).closest('tr').find("td").eq(10);
+                var val = $(this).attr("value");
+                var id = $(this).attr("id");
+                if (r == true) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ path('tramite_dato_personal_verifica') }}",
+                        data: {'val': val},
+                        beforeSend: function () {
+                            div.html("Verificando ...");
+                        },
+                        success: function (data) {
+                            if(data.estado){
+                                tr.toggleClass("text-danger");    
+                                btn.removeClass("btn-danger");    
+                                btn.addClass("btn-teal");  
+                                td.html("<div class='ckbox ckbox-info'><input name='participantes[]' id='"+id+"' value='"+val+"'  type='checkbox' onchange='validarMarcar(this);'><label for='"+id+"'></label></div>");  
+                            } else {
+                                div.html(contDiv); 
+                            }                       
+                        },
+                        error: function(xhr) {
+                            div.html(contDiv);  
+                        },
+                    })
+                    .fail(function( jqXHR, textStatus, errorThrown ) {
+                        div.html(contDiv);  
+                    });  
+                    return true; 
+                } else {
+                    return false; 
+                }                
+            });  
         });   
     </script>
 {% endblock %}
