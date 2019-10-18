@@ -157,3 +157,7 @@ download_archs_olimpiadas_robotica_txt:
 donwload_listainscritosestudiantesolim:
     path: /listainscritosestudiantesolim/{codges}/{coddis}
     defaults: { _controller: SieAppWebBundle:Download:listainscritosestudiantesolim }
+        
+donwload_studentHistModification:
+    path:     /downstudentHistModification/{id}/{studentId}
+    defaults: { _controller: SieAppWebBundle:Download:downstudentHistModification }

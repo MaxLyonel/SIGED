@@ -110,14 +110,24 @@ class TramiteTalentoExtraordinarioController extends Controller {
         $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
         $estudiante = array();
         if (!empty($estudiante_result)){
-            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
-            if (!empty($einscripcion_result)){
+            // $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
+            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+                ->select('eins')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+                ->where('eins.estudiante='.$estudiante_result->getId())
+                ->andWhere('eins.estadomatriculaTipo=4')
+                ->andWhere('ie.institucioneducativaTipo=1')
+                ->orderBy("eins.id", "DESC")
+                ->getQuery()
+                ->getResult();
+            if (count($einscripcion_result)>0) {
                 //Valida si el Estudiante inscrito en la UnidadEducativa y Centro Acreditado con TE estan en el mismo departamento.
                 $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
-                if ($dpto_unidadeducativa and $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId() != $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId()) {
+                if ($dpto_unidadeducativa and $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId() != $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId()) {
                     return $response->setData(array('msg' => 'nodpto'));
                 }
-                $estudianteinscripcion_id = $einscripcion_result->getId();
+                $estudianteinscripcion_id = $einscripcion_result[0]->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
@@ -150,7 +160,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
                     'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento()->format('d/m/Y'),
                     'estudiante_ins_id' => $estudianteinscripcion_id,
                     'estudiante_id' => $estudiante_result->getId(),
-                    'institucion_educativa' => $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                    'institucion_educativa' => $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
                 );
             } else {
                 $msg = 'noins';
@@ -170,22 +180,32 @@ class TramiteTalentoExtraordinarioController extends Controller {
         $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
         $estudiante = array();
         if (!empty($estudiante_result)){
-            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
-            if (!empty($einscripcion_result)) {
+            // $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
+            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+                ->select('eins')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+                ->where('eins.estudiante='.$estudiante_result->getId())
+                ->andWhere('eins.estadomatriculaTipo=4')
+                ->andWhere('ie.institucioneducativaTipo=1')
+                ->orderBy("eins.id", "DESC")
+                ->getQuery()
+                ->getResult();
+            if (count($einscripcion_result)>0) {
                 //Valida si el Estudiante está inscrito en su Unidad Educativa
-                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
+                if ($einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
                     return $response->setData(array('msg' => 'noue'));
                 }
                 //Valida si el Estudiante está inscrito en nivel primaria o secundaria
-                if ($einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 11) {
+                if ($einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 11) {
                     return $response->setData(array('msg' => 'nops'));
                 }
                 //Valida si la UnidadEducativa esta en el mismo departamento que el Centro Acreditado con TE
                 /* $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
-                if ($dpto_unidadeducativa and $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId() != $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId()) {
+                if ($dpto_unidadeducativa and $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId() != $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId()) {
                     return $response->setData(array('msg' => 'nodpto'));
                 } */
-                $estudianteinscripcion_id = $einscripcion_result->getId();
+                $estudianteinscripcion_id = $einscripcion_result[0]->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
@@ -218,7 +238,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
                     'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento()->format('d/m/Y'),
                     'estudiante_ins_id' => $estudianteinscripcion_id,
                     'estudiante_id' => $estudiante_result->getId(),
-                    'institucion_educativa' => $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                    'institucion_educativa' => $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
                 );
             } else {
                 $msg = 'noins';
