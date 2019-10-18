@@ -155,9 +155,11 @@ class SpecialModificationDataStudentController extends Controller{
             $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
         }
         // get departamento
-        if ($objStudent->getPaisTipo()->getId() == 1) {
-            $condition = array('lugarNivel' => 1, 'paisTipoId' => $objStudent->getPaisTipo()->getId());
-        } else {
+        if($objStudent->getPaisTipo() !== null){
+            if ($objStudent->getPaisTipo()->getId() == 1) {
+                $condition = array('lugarNivel' => 1, 'paisTipoId' => $objStudent->getPaisTipo()->getId());
+            } 
+        }else{
             $condition = array('lugarNivel' => 8, 'id' => '79355');
         }
         $objDepto = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy($condition);
@@ -364,30 +366,82 @@ class SpecialModificationDataStudentController extends Controller{
         // update student data
             
                 //GET OLD DATA
-                $oldDataStudent2 =json_encode( array(
-                    'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
-                    'complemento'=>$objStudent->getComplemento(),
-                    'genero'=>$objStudent->getGeneroTipo()->getGenero(),
-                    'paterno'=>$objStudent->getPaterno(),
-                    'materno'=>$objStudent->getMaterno(),
-                    'nombre'=>$objStudent->getNombre(),
-                    'fechaNacimiento'=>$objStudent->getFechaNacimiento(),
-                    'pais'=>$objStudent->getPaisTipo()->getPais(),
-                    'paisId'=>$objStudent->getPaisTipo()->getId(),
-                    'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
-                    'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
-                    'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
-                    'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
-                    'localidad'=>$objStudent->getLocalidadNac(),
-                    'oficialia'=>$objStudent->getOficialia(),
-                    'libro'=>$objStudent->getLibro(),
-                    'partida'=>$objStudent->getPartida(),
-                    'folio'=>$objStudent->getFolio(),
-                    'pasaporte'=>$objStudent->getPasaporte(),
-                ));
+        $oldDataStudentPrev = array();
+        if($carnetIdentidad!=$objStudent->getCarnetIdentidad()){
+            $oldDataStudentPrev[] = array('campo'=>'Carnet Identidad','anterior'=>$objStudent->getCarnetIdentidad(),'nuevo'=>$carnetIdentidad);
+        }
+        if($complemento!=$objStudent->getComplemento()){
+            $oldDataStudentPrev[] = array('campo'=>'Complemento','anterior'=>$objStudent->getComplemento(),'nuevo'=>$complemento);
+        }
+        if($generoId!=$objStudent->getGeneroTipo()->getId()){
+            $oldDataStudentPrev[] = array('campo'=>'Género','anterior'=>$objStudent->getGeneroTipo()->getId(),'nuevo'=>$generoId);
+        }
+        if($paterno!=$objStudent->getPaterno()){
+            $oldDataStudentPrev[] = array('campo'=>'Paterno','anterior'=>$objStudent->getPaterno(),'nuevo'=>$paterno);
+        }
+        if($materno!=$objStudent->getMaterno()){
+            $oldDataStudentPrev[] = array('campo'=>'Materno','anterior'=>$objStudent->getMaterno(),'nuevo'=>$materno);
+        }
+        if($nombre!=$objStudent->getNombre()){
+            $oldDataStudentPrev[] = array('campo'=>'Nombre','anterior'=>$objStudent->getNombre(),'nuevo'=>$nombre);
+        }
+        if($fechaNacimiento!=$objStudent->getFechaNacimiento()->format('d-m-Y')){
+            $oldDataStudentPrev[] = array('campo'=>'Fecha Nacimiento','anterior'=>$objStudent->getFechaNacimiento()->format('d-m-Y'),'nuevo'=>$fechaNacimiento);
+        }
+        if($paisId!=$objStudent->getPaisTipo()->getId()){
+            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>$objStudent->getPaisTipo()->getId(),'nuevo'=>$paisId);
+        }
+        if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
+            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getId(),'nuevo'=>$lugarNacTipoId);
+        }
+        if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
+            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getId(),'nuevo'=>$lugarProvNacTipoId);
+        }
+        if($localidad!=$objStudent->getLocalidadNac()){
+            $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>$objStudent->getLocalidadNac(),'nuevo'=>$localidad);
+        }
+        if($oficialia!=$objStudent->getOficialia()){
+            $oldDataStudentPrev[] = array('campo'=>'Oficialia','anterior'=>$objStudent->getOficialia(),'nuevo'=>$oficialia);
+        }
+        if($libro!=$objStudent->getLibro()){
+            $oldDataStudentPrev[] = array('campo'=>'Libro','anterior'=>$objStudent->getLibro(),'nuevo'=>$libro);
+        }
+        if($partida!=$objStudent->getPartida()){
+            $oldDataStudentPrev[] = array('campo'=>'Partida','anterior'=>$objStudent->getPartida(),'nuevo'=>$partida);
+        }
+        if($folio!=$objStudent->getFolio()){
+            $oldDataStudentPrev[] = array('campo'=>'Folio','anterior'=>$objStudent->getFolio(),'nuevo'=>$folio);
+        }
+        if($pasaporte!=$objStudent->getPasaporte()){
+            $oldDataStudentPrev[] = array('campo'=>'Pasaporte','anterior'=>$objStudent->getPasaporte(),'nuevo'=>$pasaporte);
+        }
 
-                $oldDataStudent = clone $objStudent;
-                $oldDataStudent = json_encode((array)$oldDataStudent);
+        $oldDataStudent2 = json_encode($oldDataStudentPrev);
+
+        // $oldDataStudent2 =json_encode( array(
+        //     'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
+        //     'complemento'=>$objStudent->getComplemento(),
+        //     'genero'=>$objStudent->getGeneroTipo()->getGenero(),
+        //     'paterno'=>$objStudent->getPaterno(),
+        //     'materno'=>$objStudent->getMaterno(),
+        //     'nombre'=>$objStudent->getNombre(),
+        //     'fechaNacimiento'=>$objStudent->getFechaNacimiento(),
+        //     'pais'=>$objStudent->getPaisTipo()->getPais(),
+        //     'paisId'=>$objStudent->getPaisTipo()->getId(),
+        //     'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
+        //     'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
+        //     'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
+        //     'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
+        //     'localidad'=>$objStudent->getLocalidadNac(),
+        //     'oficialia'=>$objStudent->getOficialia(),
+        //     'libro'=>$objStudent->getLibro(),
+        //     'partida'=>$objStudent->getPartida(),
+        //     'folio'=>$objStudent->getFolio(),
+        //     'pasaporte'=>$objStudent->getPasaporte(),
+        // ));
+
+                // $oldDataStudent = clone $objStudent;
+                // $oldDataStudent = json_encode((array)$oldDataStudent);
                 
                 $objStudent->setCarnetIdentidad($carnetIdentidad);
                 $objStudent->setComplemento($complemento);
