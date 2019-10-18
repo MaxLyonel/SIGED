@@ -270,6 +270,8 @@
                                                 <input type="text" id="form_fecharesoladm" name="form[fecharesoladm]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,15}" v-model="dataStudentModif.fecharesolAdm">
                                             </td>
                                         </tr>
+                                    </table>
+                                    <table class="table table-primary" >
                                         <tr>
                                             <th>Justificativo</th>
                                             <td colspan="4">
@@ -277,7 +279,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Adjuntar Resolucion</th>
+                                            <th>Adjuntar Informe</th>
                                             <td colspan="4">
                                                 {# <input type="file" > #}
                                                 <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -787,7 +789,26 @@
                 updateStudent: function(){
 
                   
-                    console.log(this.swCertification);
+                    if(this.dataStudentModif.justificativo == ''){
+                        this.respuesta = 'Debe ingresar el Justificativo';
+                        this.buscando = false;
+                        Swal.fire(
+                            'Debe ingresar el Justificativo',
+                            'Campo requerido!',                              
+                            'warning'
+                            );                        
+                        return false;
+                    }
+
+                    /*validate the file attached*/
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Resolucion Administrativa',
+                        'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }
                     if(this.swCertification){
 
                           /*console.log(this.dataStudentModif.resolucionAdm);*/
@@ -812,26 +833,7 @@
                             );                        
                         return false;
                         }
-                        if(this.dataStudentModif.justificativo == ''){
-                            this.respuesta = 'Debe ingresar el Justificativo';
-                            this.buscando = false;
-                            Swal.fire(
-                                'Debe ingresar el Justificativo',
-                                'Campo requerido!',                              
-                                'warning'
-                                );                        
-                            return false;
-                        }
 
-                        /*validate the file attached*/
-                        if (typeof this.informe != 'object') {
-                            Swal.fire(
-                            'Adjuntar Resolucion Administrativa',
-                            'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
-                            'warning'
-                            );
-                            return;
-                        }
                     }else{
                        this.informe = ''; 
                     }

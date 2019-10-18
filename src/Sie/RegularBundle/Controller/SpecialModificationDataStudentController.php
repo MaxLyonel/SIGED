@@ -414,6 +414,28 @@ class SpecialModificationDataStudentController extends Controller{
                 $objStudent->setLibro($libro);
                 $objStudent->setPartida($partida);
                 $objStudent->setFolio($folio);
+                //validate segip
+                if($carnetIdentidad){
+                    // set the valuest to validate on segip
+                    $arrParametros = array('complemento'=>$complemento,
+                        'primer_apellido'=>$paterno,
+                        'segundo_apellido'=>$materno,
+                        'nombre'=>$nombre,
+                        'fecha_nacimiento'=>$fechaNacimiento);
+                    // call to segip function
+                    $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnetIdentidad,$arrParametros,'prod', 'academico');
+
+                }
+                // set the correct segip id on student table 
+                if($answerSegip===true){
+                    $objStudent->setSegipId(1);       
+                }else{
+                    $objStudent->setSegipId(0);       
+                }
+
+
+
+
                 $em->flush();
                 // save log data
                 $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
