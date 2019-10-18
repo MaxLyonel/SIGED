@@ -1231,7 +1231,7 @@ class DownloadController extends Controller {
 
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'mod_student_'.$id.'_'.$studentId. '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_modificacion_datos_v1_pvc.rptdesign&id=' . $id.'&estudiante_id='. $studentId.'&lk='. $link . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_modificacion_datos_v2_pvc.rptdesign&id=' . $id.'&estudiante_id='. $studentId.'&lk='. $link . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
