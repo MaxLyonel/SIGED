@@ -1633,7 +1633,7 @@ class TramiteAceleracionController extends Controller
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>1. Datos del Estudiante</b></td></tr>';
         $datosTramite.='<tr><td><b>Código RUDE:</b></td><td colspan="3">'.$queryEstudiante['codigoRude'].'</td></tr>';
         $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryEstudiante['estudiante'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryEstudiante['carnetIdentidad'].' '.$queryEstudiante['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryEstudiante['complemento'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Identidad:</b></td><td>'.$queryEstudiante['carnetIdentidad'].' '.$queryEstudiante['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryEstudiante['complemento'].'</td></tr>';
         // Datos de la unidad educativa
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>2. Datos de la Unidad Educativa</b></td></tr>';
         $datosTramite.='<tr><td><b>Unidad Educativa:</b></td><td colspan="3">'.$queryMaestroUE['sie'].' - '.$queryMaestroUE['institucioneducativa'].'</td></tr>';
@@ -1648,7 +1648,7 @@ class TramiteAceleracionController extends Controller
         // Datos de talento extraordinario
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>3. Datos del Director(a)</b></td></tr>';
         $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryMaestroUE['maestro'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].' '.$queryMaestroUE['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Identidad:</b></td><td>'.$queryMaestroUE['carnet'].' '.$queryMaestroUE['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
         $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $datos1->estudiante_id));
         // Datos del director
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
