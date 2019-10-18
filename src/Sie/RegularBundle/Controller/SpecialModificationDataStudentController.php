@@ -291,7 +291,6 @@ class SpecialModificationDataStudentController extends Controller{
         // dump($jsonData);
         // dump($arrData);
         // die;
-        
 
         $estudianteId = $arrData['estudianteId'];
         $carnetIdentidad=$arrData['carnetIdentidad'];
@@ -309,6 +308,7 @@ class SpecialModificationDataStudentController extends Controller{
         $libro=$arrData['libro'];
         $partida=$arrData['partida'];
         $folio=$arrData['folio'];
+        $pasaporte = $arrData['pasaporte'];
 
         $resolucionAdm = $arrData['resolucionAdm'];
         $fecharesolAdm = $arrData['fecharesolAdm'];
@@ -396,6 +396,7 @@ class SpecialModificationDataStudentController extends Controller{
                 $objStudent->setMaterno(mb_strtoupper($materno, 'utf8'));
                 $objStudent->setNombre(mb_strtoupper($nombre, 'utf8'));
                 $objStudent->getFechaNacimiento(new \DateTime($fechaNacimiento));
+                $objStudent->setPasaporte($pasaporte);
                 
                 $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId) );
                 
