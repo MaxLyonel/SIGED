@@ -327,12 +327,12 @@ class SpecialModificationDataStudentController extends Controller{
                 $new_name = date('YmdHis').'.'.$extension;
 
                 // GUARDAMOS EL ARCHIVO
-                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/dataStudentModify/' .date('Y');
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentModify/' .date('Y');
                 if (!file_exists($directorio)) {
                     mkdir($directorio, 0775, true);
                 }
 
-                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/dataStudentModify/' .date('Y').'/'.$estudianteId;
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentModify/' .date('Y').'/'.$estudianteId;
                 if (!file_exists($directoriomove)) {
                     mkdir($directoriomove, 0775, true);
                 }
