@@ -810,7 +810,7 @@
                     /*validate the file attached*/
                     if (typeof this.informe != 'object') {
                         Swal.fire(
-                        'Adjuntar Resolucion Administrativa',
+                        'Adjuntar Resolucion',
                         'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
                         'warning'
                         );
@@ -820,10 +820,10 @@
 
                           /*console.log(this.dataStudentModif.resolucionAdm);*/
                         if(this.dataStudentModif.resolucionAdm == ''){
-                            this.respuesta = 'Debe ingresar la Resolucion Administrativa';
+                            this.respuesta = 'Debe ingresar la Resolucion ';
                             this.buscando = false;
                             Swal.fire(
-                                'Debe ingresar la Resolucion Administrativa',
+                                'Debe ingresar la Resolucion ',
                                 'Campo requerido!',                              
                                 'warning'
                                 );                        
@@ -832,10 +832,10 @@
 
                         if(this.dataStudentModif.fecharesolAdm == ''){
                         
-                        this.respuesta = 'Debe ingresar la Fecha de Resolucion Administrativa';
+                        this.respuesta = 'Debe ingresar la Fecha de Resolucion ';
                         this.buscando = false;
                         Swal.fire(
-                              'Debe ingresar la Fecha de Resolucion Administrativa',
+                              'Debe ingresar la Fecha de Resolucion ',
                               'Campo requerido!',                              
                               'warning'
                             );                        
@@ -843,7 +843,7 @@
                         }else{
                             if(!validarFormatoFecha($('#form_fecharesoladm').val())){
                                 Swal.fire(
-                                'Revise formato de Fecha Resolucion Administrativa (dd-mm-aaaa)',
+                                'Revise formato de Fecha Resolucion  (dd-mm-aaaa)',
                                 'Campo requerido!',                              
                                 'warning'
                                 );  

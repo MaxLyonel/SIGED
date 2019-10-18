@@ -160,4 +160,4 @@ donwload_listainscritosestudiantesolim:
         
 donwload_studentHistModification:
     path:     /downstudentHistModification/{id}/{studentId}
-    defaults: { _controller: SieRegularBundle:Download:downstudentHistModification }    
+    defaults: { _controller: SieAppWebBundle:Download:downstudentHistModification }
