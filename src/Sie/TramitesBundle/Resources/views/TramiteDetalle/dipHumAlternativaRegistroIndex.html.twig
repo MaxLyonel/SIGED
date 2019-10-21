@@ -111,7 +111,6 @@
                                                     {% endif %}
                                                 {% endif %}
 
-
                                                 {% if participante.carnet_identidad == "" %}
                                                     <span class="label label-danger rounded">Sin C.I.</span>
                                                     {% set registro = false %}
@@ -144,7 +143,6 @@
                                                                 <li class="btnValidar" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"><a>Validar</a></li>
                                                             </ul>
                                                         </div>
-                                                        </br>
                                                     {% else %}
                                                         <div class="ckbox ckbox-info">
                                                             <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
@@ -158,7 +156,6 @@
                                 </tbody>
                             </table>
                         </div><!-- /.panel-body -->
-
                     </div>
                 </form>
             </div>

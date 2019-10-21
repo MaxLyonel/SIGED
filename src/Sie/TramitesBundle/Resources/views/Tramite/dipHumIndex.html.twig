@@ -483,6 +483,7 @@
                                 td.html("<div class='ckbox ckbox-info'><input name='participantes[]' id='"+id+"' value='"+val+"'  type='checkbox' onchange='validarMarcar(this);'><label for='"+id+"'></label></div>");  
                             } else {
                                 div.html(contDiv); 
+                                alert("Datos no validados, el trámite debe ser anulado para que las instancias correspondientes subsanen los datos registrados");
                             }                       
                         },
                         error: function(xhr) {
