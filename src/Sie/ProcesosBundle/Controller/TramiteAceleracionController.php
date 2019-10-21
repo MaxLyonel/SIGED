@@ -782,14 +782,20 @@ class TramiteAceleracionController extends Controller
             ->getQuery()
             ->getResult();
         $datos1 = json_decode($resultDatos[0]->getdatos());
-        $datos2 = json_decode($resultDatos[1]->getdatos());
+        $datos2 = json_decode($resultDatos[1]->getdatos());//dump($datos2->curso_asignatura_notas, count(json_decode($datos2->curso_asignatura_notas)));die;
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
 
         $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
         
-        $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        // Obtiene el ultimo código SIE
+        $curso_asignatura = json_decode($datos2->curso_asignatura_notas);
+        $posicion_sie = count($curso_asignatura);
+        $codigo_sie = $curso_asignatura[$posicion_sie-1]->curso->sie;
+        $institucion_e = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($codigo_sie);
+        $nombre_ie = $institucion_e->getInstitucioneducativa();
+        // $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
@@ -861,7 +867,7 @@ class TramiteAceleracionController extends Controller
         }
         $cursoActual = array(
             'codigo_sie' => $codigo_sie,
-            'nombre_sie' => $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+            'nombre_sie' => $nombre_ie,//$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
             'nivel_id' => $nivel_id,
             'nivel' => ($nivel_tipo)?$nivel_tipo->getNivel():'',
             'grado_id' => $grado_id,
@@ -1281,6 +1287,7 @@ class TramiteAceleracionController extends Controller
     private function getAsignaturasPerStudent($sie, $nivel, $grado, $paralelo, $turno) {
         $em = $this->getDoctrine()->getManager();
         try {
+            $especialidades = ['1039'];//, '1038'
             $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
             $query = $entity->createQueryBuilder('iec')
                 ->select('ast.id', 'ast.asignatura, ieco.id as iecoId')
@@ -1293,12 +1300,14 @@ class TramiteAceleracionController extends Controller
                 ->andwhere('iec.gradoTipo = :grado')
                 ->andwhere('iec.paraleloTipo = :paralelo')
                 ->andwhere('iec.turnoTipo = :turno')
+                ->andwhere('ast.id not in (:especialidades)')
                 ->setParameter('sie', $sie)
                 ->setParameter('gestion', $this->session->get('currentyear'))
                 ->setParameter('nivel', $nivel)
                 ->setParameter('grado', $grado)
                 ->setParameter('paralelo', $paralelo)
                 ->setParameter('turno', $turno)
+                ->setParameter('especialidades', $especialidades)
                 ->orderBy('at.id,ast.id')
                 ->getQuery();
             return $query->getResult();
@@ -1382,6 +1391,7 @@ class TramiteAceleracionController extends Controller
         $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIA');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 10, 10, true);
+        $pdf->SetAutoPageBreak(true, 8);
 
         $em = $this->getDoctrine()->getManager();
         $tramite_id = $request->get('idtramite');//1670899;
@@ -1412,7 +1422,7 @@ class TramiteAceleracionController extends Controller
         //{{absolute_url(asset(\'webEspecial/img/logo/html/logo-white.png\'))}}
         //<span style="font-size: 8px">(Aceleración Educativa)</span>
         //
-
+        //dump(json_decode($datos2->curso_asignatura_notas));die;
         $inscripcion_actual_n = $inscripcion_actual_g = '';
         if ($datos2 and $datos2->curso_asignatura_notas) {
             $curso_actual = json_decode($datos2->curso_asignatura_notas)[0]->curso;
@@ -1427,7 +1437,7 @@ class TramiteAceleracionController extends Controller
             ->select("lt4.lugar AS departamento, lt3.lugar AS provincia, lt2.lugar AS seccion, lt1.lugar AS canton, lt.lugar AS localidad,
                         dist.distrito, orgt.orgcurricula,
                         inst.id as sie, inst.institucioneducativa,
-                        jg.direccion, jg.zona, CONCAT(prs.paterno, ' ', prs.materno, ' ', prs.nombre) AS maestro, prs.carnet, prs.complemento")
+                        jg.direccion, jg.zona, CONCAT(prs.paterno, ' ', prs.materno, ' ', prs.nombre) AS maestro, prs.carnet, dep.sigla as expedido, prs.complemento")
             ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
@@ -1436,6 +1446,7 @@ class TramiteAceleracionController extends Controller
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
             ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.institucioneducativa = inst.id')
             ->innerJoin('SieAppWebBundle:Persona', 'prs', 'WITH', 'mi.persona = prs.id')
+            ->join('SieAppWebBundle:DepartamentoTipo', 'dep', 'WITH', 'prs.expedido = dep.id')
             ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
             ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
             ->where('inst.id = :idInstitucion')
@@ -1484,6 +1495,7 @@ class TramiteAceleracionController extends Controller
         );
         $secundaria = array(
             'nivel' => '',
+            'asignatura_id' => array(),
             'asignatura' => array(),
             'nota1' => array('','','','','','','','','','','','','',''),
             'nota2' => array('','','','','','','','','','','','','',''),
@@ -1492,7 +1504,11 @@ class TramiteAceleracionController extends Controller
             'nota5' => array('','','','','','','','','','','','','',''),
             'nota6' => array('','','','','','','','','','','','','','')
         );
-        foreach (json_decode($datos2->curso_asignatura_notas) as $indice => $item_nota) {
+        $posicion_asig = 0;
+        $cursoAasignaturaNotas = json_decode($datos2->curso_asignatura_notas);
+        $cantidadCursos = count($cursoAasignaturaNotas);
+        $secundaria1 = $secundaria2 = $secundaria3 = $secundaria4 = $secundaria5 = 0;
+        foreach ($cursoAasignaturaNotas as $indice => $item_nota) {//5 cursos
             $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($item_nota->curso->nivel_id);
             $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($item_nota->curso->grado_id);
             if ($item_nota->curso->nivel_id == 12) {
@@ -1533,33 +1549,77 @@ class TramiteAceleracionController extends Controller
                 $exist_secundaria = true;
                 $secundaria['nivel'] = strtoupper($nivel_tipo->getNivel());
                 $grados_secundaria.='<td align="center"><b>'.$grado_tipo->getGrado().'</b></td>';
-                foreach ($item_nota->asignatura_notas as $key => $iteman) {
-                    // if ($indice == 0) {
+                if($cantidadCursos == 1) {
+                    foreach ($item_nota->asignatura_notas as $key => $iteman) {
                         $secundaria['asignatura'][$key] = $iteman->asignatura;
-                    // }
-                    switch ($item_nota->curso->grado_id) {
-                        case '1':
-                            $secundaria['nota1'][$key] = $iteman->nota;
-                            break;
-                        case '2':
-                            $secundaria['nota2'][$key] = $iteman->nota;
-                            break;
-                        case '3':
-                            $secundaria['nota3'][$key] = $iteman->nota;
-                            break;
-                        case '4':
-                            $secundaria['nota4'][$key] = $iteman->nota;
-                            break;
-                        case '5':
-                            $secundaria['nota5'][$key] = $iteman->nota;
-                            break;
-                        case '6':
-                            $secundaria['nota6'][$key] = $iteman->nota;
-                            break;
-                        default:
-                            # code...
-                            break;
+                        switch ($item_nota->curso->grado_id) {
+                            case '1':
+                                $secundaria['nota1'][$key] = $iteman->nota;
+                                break;
+                            case '2':
+                                $secundaria['nota2'][$key] = $iteman->nota;
+                                break;
+                            case '3':
+                                $secundaria['nota3'][$key] = $iteman->nota;
+                                break;
+                            case '4':
+                                $secundaria['nota4'][$key] = $iteman->nota;
+                                break;
+                            case '5':
+                                $secundaria['nota5'][$key] = $iteman->nota;
+                                break;
+                            case '6':
+                                $secundaria['nota6'][$key] = $iteman->nota;
+                                break;
+                            default:
+                                # code...
+                                break;
+                        }
                     }
+                } else {
+                    foreach ($item_nota->asignatura_notas as $key => $iteman) {//10 11 12 asignaturas
+                        if (in_array($iteman->asignatura, $secundaria['asignatura'])) {
+                        } else {
+                            $secundaria['asignatura_id'][$posicion_asig] = $iteman->asignatura_id;
+                            $secundaria['asignatura'][$posicion_asig] = $iteman->asignatura;
+                            $posicion_asig++;
+                        }
+                    }
+                    // llenado de notas
+                    foreach ($secundaria['asignatura_id'] as $pos => $itemid) {
+                        foreach ($item_nota->asignatura_notas as $key => $iteman) {
+                            if ($itemid == $iteman->asignatura_id) {
+                                switch ($item_nota->curso->grado_id) {
+                                    case '1':
+                                        $secundaria['nota1'][$pos] = $iteman->nota;
+                                        $secundaria1 = 1;
+                                        break;
+                                    case '2':
+                                        $secundaria['nota2'][$pos] = $iteman->nota;
+                                        $secundaria2 = 1;
+                                        break;
+                                    case '3':
+                                        $secundaria['nota3'][$pos] = $iteman->nota;
+                                        $secundaria3 = 1;
+                                        break;
+                                    case '4':
+                                        $secundaria['nota4'][$pos] = $iteman->nota;
+                                        $secundaria4 = 1;
+                                        break;
+                                    case '5':
+                                        $secundaria['nota5'][$pos] = $iteman->nota;
+                                        $secundaria5 = 1;
+                                        break;
+                                    case '6':
+                                        $secundaria['nota6'][$pos] = $iteman->nota;
+                                        break;
+                                    default:
+                                        # code...
+                                        break;
+                                }
+                            }
+                        }
+                    }   
                 }
             }
         }
@@ -1588,7 +1648,7 @@ class TramiteAceleracionController extends Controller
         // Datos de talento extraordinario
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>3. Datos del Director(a)</b></td></tr>';
         $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryMaestroUE['maestro'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].' '.$queryMaestroUE['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
         $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $datos1->estudiante_id));
         // Datos del director
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
@@ -1636,12 +1696,28 @@ class TramiteAceleracionController extends Controller
             foreach ($secundaria['asignatura'] as $key => $iteman) {
                 $actaSupletorio.='<tr>';
                 $actaSupletorio.='<td>'.$iteman.'</td>';
-                if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
-                if($secundaria['nota2'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';}
-                if($secundaria['nota3'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';}
-                if($secundaria['nota4'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';}
-                if($secundaria['nota5'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';}
-                if($secundaria['nota6'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';}
+                if(($cantidadCursos == 1) or ($cantidadCursos == 3 and $secundaria3==1 and $secundaria4==1 and $secundaria5==1) or ($cantidadCursos == 2 and $secundaria3==1 and $secundaria4==1) or ($cantidadCursos == 2 and $secundaria4==1 and $secundaria5==1)) {
+                    if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
+                    if($secundaria['nota2'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';}
+                    if($secundaria['nota3'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';}
+                    if($secundaria['nota4'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';}
+                    if($secundaria['nota5'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';}
+                    if($secundaria['nota6'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';}
+                } else if($secundaria1==0 and $secundaria2==1 and ($secundaria3==1 or $secundaria4==1 or $secundaria5==1)) {
+                    if($secundaria['nota1'][$key]!='') {$actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';}
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';
+                } else {
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota1'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota2'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota3'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota4'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota5'][$key].'</td>';
+                    $actaSupletorio.='<td align="center">'.$secundaria['nota6'][$key].'</td>';
+                }
                 $actaSupletorio.='</tr>';
             }
             $actaSupletorio.='</table>';
@@ -1683,10 +1759,10 @@ class TramiteAceleracionController extends Controller
         $firmas.='</table>';
         $pdf->writeHTML($firmas, true, false, true, false, ''); */
         $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
-        $firmas.='<tr><td align="center" width="35%"><br/><br/><br/>___________________________________<br/>Representante de la Comisión Técnica <br>Pedagógica de la Unidad Educativa<br>'.$array_ctp[0]->nombre.'<br>Firma</td>
-        <td align="center" width="35%"><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br><br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
-        <td align="center" width="30%"><br/><br/><table border="1"><tr><td><br/><br/><br/><br/><br/>VoBo<br/>Directora(or) Distrital de Educación</td></tr></table></td></tr>';
-        $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
+        $firmas.='<tr><td align="center" width="36%"><br/><br/><br/><br/>___________________________________<br/>Representante de la Comisión Técnica <br>Pedagógica de la Unidad Educativa<br>'.$array_ctp[0]->nombre.'<br>Firma</td>
+        <td align="center" width="36%"><br/><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br><br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
+        <td align="center" width="28%"><br/><br/><table border="1"><tr><td><br/><br/><br/><br/><br/><br/>VoBo<br/>Directora(or) Distrital de Educación</td></tr></table></td></tr>';
+        // $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
         $firmas.='</table>';
         $pdf->writeHTML($firmas, true, false, true, false, '');
         //$lugar_fecha='<span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span>';
