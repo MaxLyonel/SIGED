@@ -99,8 +99,8 @@ class SpecialModificationDataStudentController extends Controller{
 
 
                 }else{
-                    $message = 'error general';
-                    $typeMessage = 'warning';
+                    $message = 'bien';
+                    $typeMessage = 'success';
                     $compleMessage = 'good';
                     $sw = true;
                 }
@@ -155,10 +155,13 @@ class SpecialModificationDataStudentController extends Controller{
             $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
         }
         // get departamento
+        // dump($objStudent->getPaisTipo());die;
         if($objStudent->getPaisTipo() !== null){
             if ($objStudent->getPaisTipo()->getId() == 1) {
                 $condition = array('lugarNivel' => 1, 'paisTipoId' => $objStudent->getPaisTipo()->getId());
-            } 
+            }else{
+                $condition = array('lugarNivel' => 8, 'id' => '0');
+            }
         }else{
             $condition = array('lugarNivel' => 8, 'id' => '79355');
         }
@@ -493,7 +496,7 @@ class SpecialModificationDataStudentController extends Controller{
 
                 $em->flush();
                 // save log data
-                $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
+                $objEstudianteHistorialModificacion = new objEstudianteHistorialModificacion();
                 $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
                 $objEstudianteHistorialModificacion->setResolucion($resolucionAdm);
                 $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($fecharesolAdm));
@@ -623,11 +626,11 @@ class SpecialModificationDataStudentController extends Controller{
                 ->setParameter('id', trim($data['codeRude']));
         if(!$sw){
             $query = $query
-            ->andwhere('iec.nivelTipo = :nivel')
-            ->andwhere('iec.gradoTipo = :grado')
+            ->andwhere('iec.nivelTipo IN (:nivel)')
+            ->andwhere('iec.gradoTipo IN (:grado)')
             ->andwhere('ei.estadomatriculaTipo IN (:mat)')
-            ->setParameter('nivel', 13)
-            ->setParameter('grado', 6) 
+            ->setParameter('nivel', array(3,13))
+            ->setParameter('grado', array(4,6) ) 
             ->setParameter('mat', array( 5,26,55,57,58)) ;
         }
         $query = $query            
@@ -635,7 +638,6 @@ class SpecialModificationDataStudentController extends Controller{
                 ->getQuery();
 
         $objInfoInscription = $query->getResult();
-       
         return  $objInfoInscription;
     }
 
