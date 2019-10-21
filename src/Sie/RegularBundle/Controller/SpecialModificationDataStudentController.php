@@ -445,14 +445,15 @@ class SpecialModificationDataStudentController extends Controller{
 
                 // $oldDataStudent = clone $objStudent;
                 // $oldDataStudent = json_encode((array)$oldDataStudent);
-                
+                $arrUpdateFechaNac = explode('-', $fechaNacimiento);
+
                 $objStudent->setCarnetIdentidad($carnetIdentidad);
                 $objStudent->setComplemento($complemento);
                 $objStudent->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId) );
                 $objStudent->setPaterno(mb_strtoupper($paterno, 'utf8'));
                 $objStudent->setMaterno(mb_strtoupper($materno, 'utf8'));
                 $objStudent->setNombre(mb_strtoupper($nombre, 'utf8'));
-                $objStudent->getFechaNacimiento(new \DateTime($fechaNacimiento));
+                $objStudent->setFechaNacimiento(new \DateTime($arrUpdateFechaNac[2].'-'.$arrUpdateFechaNac[1].'-'. $arrUpdateFechaNac[0]));
                 $objStudent->setPasaporte($pasaporte);
                 
                 $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId) );
@@ -490,16 +491,14 @@ class SpecialModificationDataStudentController extends Controller{
                 }else{
                     $objStudent->setSegipId(0);       
                 }
-
-
-
-
+                $em->persist($objStudent);
                 $em->flush();
+                $arrfecharesolAdm = explode('-', $fecharesolAdm);
                 // save log data
-                $objEstudianteHistorialModificacion = new objEstudianteHistorialModificacion();
+                $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
                 $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
                 $objEstudianteHistorialModificacion->setResolucion($resolucionAdm);
-                $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($fecharesolAdm));
+                $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($arrfecharesolAdm[2].'-'.$arrfecharesolAdm[1].'-'. $arrfecharesolAdm[0]));
                 $objEstudianteHistorialModificacion->setJustificacion($justificativo);
                 $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId));
                 $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
