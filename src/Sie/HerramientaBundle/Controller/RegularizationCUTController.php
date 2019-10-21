@@ -526,14 +526,26 @@ class RegularizationCUTController extends Controller{
                     $sie = $objStudentInscription[0]['sie'];
                     $gestion = $objStudentInscription[0]['gestion'];
                     
-                    $sieAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
-                        'institucioneducativaId'=>$sie,
-                        'gestionTipoId'=>$gestion,
-                        'institucioneducativaHumanisticoTecnicoTipo'=>1, // plena
-                        // 'esimpreso'=>true
-                    ));
+                    // $sieAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
+                    //     'institucioneducativaId'=>$sie,
+                    //     'gestionTipoId'=>$gestion,
+                    //     'institucioneducativaHumanisticoTecnicoTipo'=>1, // plena
+                    //     // 'esimpreso'=>true
+                    // ));
+                    // check if the UE is 1 or 7 (plena or transformation bth)
+                    $sieAutorizado = $em->createQueryBuilder()
+                    ->select('ieht')
+                    ->from('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico','ieht')
+                    ->where('ieht.institucioneducativaId = :sie')
+                    ->andwhere('ieht.gestionTipoId = :gestion')
+                    ->andwhere('ieht.institucioneducativaHumanisticoTecnicoTipo IN (:typeUE) ')
+                    ->setParameter('sie',$sie)
+                    ->setParameter('gestion',$gestion)
+                    ->setParameter('typeUE',array(1,7))
+                    ->getQuery()
+                    ->getResult();
 
-                    if($sieAutorizado){
+                    if(sizeof($sieAutorizado)){
                     // if(in_array($sie, $this->arrSie2018)){
 
                         // check if the user has permissions
