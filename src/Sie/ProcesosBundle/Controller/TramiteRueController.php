@@ -265,6 +265,15 @@ class TramiteRueController extends Controller
                 );
                 break;
             case 42://cierre temporal
+                $form = $form
+                    ->add('nuevo_distrito','entity',array('label'=>'Nuevo Distrito:','required'=>true,'multiple' => false,'attr' => array('class' => 'form-control'),'empty_value'=>'Seleccione nuevo distrito','class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $dt){
+                        return $dt->createQueryBuilder('dt')->where('dt.departamentoTipo = :id')->setParameter('id',$this->iddep)->orderBy('dt.distrito','ASC');},'property'=>'distrito'))
+                    ->getForm();
+                $data = array(
+                    'form' => $form->createView(),
+                    'id' => $id,
+                    'estado'=>$ie->estadoinstitucionTipo()->getEstado()
+                );
                 break;
             case 43://cierre definitivo
                 break;
@@ -423,20 +432,32 @@ class TramiteRueController extends Controller
                 break;
             case 40://desglose
                 break;
-            case 41://cambio de infraestructura
+            case 41://cambio de infraestructura F-P-C
+                $requisitos = array('legal'=>true,'infra'=>true,'admi'=>false);
                 $form = $form
-                ->add('lejurisdiccion', 'text', array('label' => 'Código Edificio Educativo:','required'=>false,'attr' => array('class' => 'form-control validar','maxlength'=>8)))
-                ->add('departamento','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
-                    return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
-                ->add('provincia', 'choice', array('label' => 'Provincia:','required'=>false,'attr' => array('class' => 'form-control')))
-                ->add('municipio', 'choice', array('label' => 'Municipio:','required'=>false, 'attr' => array('class' => 'form-control')))
-                ->add('comunidad', 'choice', array('label' => 'Comunidad:','required'=>false, 'attr' => array('class' => 'form-control')))
-                /* ->add('canton', 'choice', array('label' => 'Cantón:','required'=>false, 'attr' => array('class' => 'form-control')))
-                ->add('localidad', 'choice', array('label' => 'Localidad/Comunidad:','required'=>false,'attr' => array('class' => 'form-control'))) */
-                ->add('zona', 'text', array('label' => 'Zona:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))//
-                ->add('direccion', 'text', array('label' => 'Dirección:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')));//
+                    ->add('i_solicitud_infra', 'file', array('label' => 'Adjuntar Solicitud de Cambio de Infraestructura (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_certificacion_infra', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
+                if($ie->getDependenciaTipo()->getId() == 2){
+                    $form = $form
+                    ->add('i_certificacionconvenio_infra', 'file', array('label' => 'Adjuntar Certificación de convenio emitida por el reponsable de la Entidad Prestadora de Servicios (solo convenio) (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
+                }
+                $form = $form
+                    ->add('i_resolucion_infra', 'file', array('label' => 'Adjuntar Fotocopia legalizada de la Resolucion Administrativa de Autorización de funcionamiento emitida por la DDE (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar resolución",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_certificadorue_infra', 'checkbox', array('label' => 'Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).','required'  => true))
+                    ->add('ii_folio_infra', 'checkbox', array('label' => 'Copia legalizada del testimonio o folio real emitido por Derechos Reales a nombre de la Entidad prestadora de servicio (fiscal o convenio) o propietario (persona natural o jurídica, en caso de Unidad Educativa Provada).','required'  => true))
+                    ->add('ii_nrofolio_infra', 'text', array('label' => 'Nro. de Folio:','required'=>false,'attr' => array('class' => 'form-control validar','maxlength'=>10)))
+                    ->add('ii_planos_infra', 'checkbox', array('label' => 'Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal para infraestructura','required'  => true))
+                    ->getForm();
+                $data = array(
+                    'form' => $form->createView(),
+                    'id' => $id,
+                    'tramitetipo' => $tramitetipo,
+                    'requisitos' => $requisitos,
+                    'dependencia' => $ie->getDependenciaTipo()
+                );
                 break;
             case 42://cierre temporal
+
                 break;
             case 43://cierre definitivo
                 break;
@@ -1832,11 +1853,16 @@ class TramiteRueController extends Controller
         
     }
 
-    public function provinciasAction($idDepartamento){
+    public function provinciasAction($idDepartamento,$censo){
         //dump($idDepartamento);die;
-    	$em = $this->getDoctrine()->getManager();
-        //$prov = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $idDepartamento));
-        $prov = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 9, 'lugarTipo' => $idDepartamento));
+        $em = $this->getDoctrine()->getManager();
+        if($censo == 2001){
+            $nivel = 2;
+        }else{
+            $nivel = 9;
+        }
+        
+        $prov = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idDepartamento));
     	$provincia = array();
     	foreach($prov as $p){
             if($p->getLugar() != "NO EXISTE EN CNPV 2001"){
@@ -1844,7 +1870,7 @@ class TramiteRueController extends Controller
             }
         }
         
-        /**
+        /* *
          * distitos
          */
         $dep = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idDepartamento);
@@ -1866,10 +1892,14 @@ class TramiteRueController extends Controller
     	return $response->setData(array('provincia' => $provincia, 'distrito' => $distritoArray));
     }
 
-    public function municipiosAction($idProvincia){
+    public function municipiosAction($idProvincia,$censo){
     	$em = $this->getDoctrine()->getManager();
-        //$mun = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 3, 'lugarTipo' => $idProvincia));
-        $mun = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 10, 'lugarTipo' => $idProvincia));
+        if($censo == 2001){
+            $nivel = 3;
+        }else{
+            $nivel = 10;
+        }
+        $mun = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idProvincia));
     	$municipio = array();
     	foreach($mun as $m){
             if($m->getLugar() != "NO EXISTE EN CNPV 2001"){
@@ -1880,21 +1910,29 @@ class TramiteRueController extends Controller
     	return $response->setData(array('municipio' => $municipio));
     }
 
-    public function comunidadAction($idMunicipio){
-    	$em = $this->getDoctrine()->getManager();
-    	$can = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 11, 'lugarTipo' => $idMunicipio));
+    public function comunidadAction($idMunicipio,$censo){
+        //dump($idMunicipio,$censo,'entra');die;
+        $em = $this->getDoctrine()->getManager();
+        if($censo == 2012){
+            $nivel = 11;
+        }
+    	$com = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idMunicipio));
     	$canton = array();
-    	foreach($can as $c){
+    	foreach($com as $c){
             if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
-    		    $canton[$c->getid()] = $c->getlugar();
+    		    $comunidad[$c->getid()] = $c->getlugar();
             }
     	}
     	$response = new JsonResponse();
-    	return $response->setData(array('comunidad' => $canton));
+    	return $response->setData(array('comunidad' => $comunidad));
     }
-    public function cantonesAction($idMunicipio){
-    	$em = $this->getDoctrine()->getManager();
-    	$can = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 4, 'lugarTipo' => $idMunicipio));
+    public function cantonesAction($idMunicipio,$censo){
+        //dump($idMunicipio,$censo);die;
+        $em = $this->getDoctrine()->getManager();
+        if($censo == 2001){
+            $nivel = 4;
+        }
+    	$can = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idMunicipio));
     	$canton = array();
     	foreach($can as $c){
             if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
@@ -1905,9 +1943,12 @@ class TramiteRueController extends Controller
     	return $response->setData(array('canton' => $canton));
     }
 
-    public function localidadesAction($idCanton){
-    	$em = $this->getDoctrine()->getManager();
-    	$loc = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 5, 'lugarTipo' => $idCanton));
+    public function localidadesAction($idCanton,$censo){
+        $em = $this->getDoctrine()->getManager();
+        if($censo == 2001){
+            $nivel = 5;
+        }
+    	$loc = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idCanton));
     	$localidad = array();
     	foreach($loc as $l) {
             if($l->getLugar() != "NO EXISTE EN CNPV 2001"){

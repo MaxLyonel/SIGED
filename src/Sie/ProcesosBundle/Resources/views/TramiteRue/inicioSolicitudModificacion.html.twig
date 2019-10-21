@@ -587,36 +587,67 @@
             //alert(d);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d}),
+                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_provincia").empty();
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_localidad").empty();
-                    //$("#form_distrito").empty();
-                    $("#form_provincia").append('<option value="">Buscando...</option>');
-                    $("#form_municipio").append('<option value="">Buscando...</option>');
-                    $("#form_comunidad").append('<option value="">Buscando...</option>');
-                    //$("#form_localidad").append('<option value="">Buscando...</option>');
-                    //$("#form_distrito").append('<option value="">Buscando...</option>');
+                    $("#form_lejurisdiccion").val('');
+                    if(censo == 2001){
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        //$("#form_distrito2001").empty();
+                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                        //$("#form_distrito2001").append('<option value="">Buscando...</option>');
+                    }else if (censo == 2012){
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        //$("#form_distrito2012").empty();
+                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                        //$("#form_distrito2012").append('<option value="">Buscando...</option>');
+                    }
+                    
                 },
                 success: function (data) {
-                    $("#form_provincia").empty();
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_localidad").empty();
-                    //$("#form_distrito").empty();
-                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
-                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
-                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
-                    //$("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    //$("#form_distrito").append('<option value="">Seleccionar...</option>');
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    /*$.each(data.distrito, function (i, value) {
-                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                    });*/
+                    if(censo == 2001){
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        //$("#form_distrito2001").empty();
+                        $("#form_provincia2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        //$("#form_distrito2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*$.each(data.distrito, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });*/
+                    }else if (censo == 2012){
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        //$("#form_distrito2012").empty();
+                        $("#form_provincia2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        //$("#form_distrito2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*$.each(data.distrito, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });*/
+                    }
+                    
                 }
             });
         }
@@ -624,69 +655,91 @@
         function municipio(p,censo) {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p}),
+                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_canton").empty();
-                    //$("#form_localidad").empty();
-                    $("#form_municipio").append('<option value="">Buscando...</option>');
-                    $("#form_comunidad").append('<option value="">Buscando...</option>');
-                    //$("#form_canton").append('<option value="">Buscando...</option>');
-                    //$("#form_localidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }else if (censo == 2012){
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_canton").empty();
-                    //$("#form_localidad").empty();
-                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
-                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
-                    //$("#form_canton").append('<option value="">Seleccionar...</option>');
-                    //$("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.municipio, function (i, value) {
-                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
-                    });
+                    if(censo == 2001){
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }else if (censo == 2012){
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
                 }
             });
         }
 
         function comunidad(p,censo) {
+            alert(censo);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p}),
+                url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_comunidad").empty();
-                    $("#form_comunidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2012){
+                        $("#form_comunidad2012").empty();
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_comunidad").empty();
-                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.comunidad, function (i, value) {
-                        $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
+                    if(censo == 2012){
+                        $("#form_comunidad2012").empty();
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.comunidad, function (i, value) {
+                            $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
                 }
             });
         }
         function canton(m,censo) {
+            alert(censo);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m}),
+                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_canton").append('<option value="">Buscando...</option>');
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_canton").append('<option value="">Seleccionar...</option>');
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.canton, function (i, value) {
-                        $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
-                    });
-
+                    if(censo == 2001){
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.canton, function (i, value) {
+                            $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
                 }
             });
         }
@@ -694,18 +747,22 @@
         function localidad(c,censo) {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c}),
+                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_localidad").empty();
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_localidad2001").empty();
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_localidad").empty();
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.localidad, function (i, value) {
-                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $("#form_localidad").selectpicker('refresh');
+                    if(censo == 2001){
+                        $("#form_localidad2001").empty();
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.localidad, function (i, value) {
+                            $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_localidad2001").selectpicker('refresh');
+                    }
                 }
             });
         } 
