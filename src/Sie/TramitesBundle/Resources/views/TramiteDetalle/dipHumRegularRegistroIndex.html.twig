@@ -144,7 +144,6 @@
                                                                 <li class="btnValidar" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"><a>Validar</a></li>
                                                             </ul>
                                                         </div>
-                                                        <div class="clearfix"></div>
                                                     {% else %}
                                                         <div class="ckbox ckbox-info">
                                                             <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
