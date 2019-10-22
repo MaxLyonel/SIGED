@@ -306,8 +306,11 @@ class SpecialModificationDataStudentController extends Controller{
         $nombre=$arrData['nombre'];
         $fechaNacimiento=$arrData['fechaNacimiento'];
         $paisId=$arrData['paisId'];
+        $pais=$arrData['pais'];        
         $lugarNacTipoId=$arrData['lugarNacTipoId'];
+        $lugarNacTipo=$arrData['lugarNacTipo'];
         $lugarProvNacTipoId=$arrData['lugarProvNacTipoId'];
+        $lugarProvNacTipo=$arrData['lugarProvNacTipo'];
         $localidad=$arrData['localidad'];
         $oficialia=$arrData['oficialia'];
         $libro=$arrData['libro'];
@@ -391,22 +394,22 @@ class SpecialModificationDataStudentController extends Controller{
             $oldDataStudentPrev[] = array('campo'=>'Fecha Nacimiento','anterior'=>$objStudent->getFechaNacimiento()->format('d-m-Y'),'nuevo'=>$fechaNacimiento);
         }
         if($paisId!=$objStudent->getPaisTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>$objStudent->getPaisTipo()->getId(),'nuevo'=>$paisId);
+            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>$objStudent->getPaisTipo(),'nuevo'=>$pais);
         }
         if($objStudent->getLugarNacTipo() !== null ){
             if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
-                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getId(),'nuevo'=>$lugarNacTipoId);
+                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo(),'nuevo'=>$lugarNacTipo);
             }            
         }else{
-            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>0,'nuevo'=>$lugarNacTipoId);
+            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>0,'nuevo'=>$lugarNacTipo);
 
         }
         if($objStudent->getLugarProvNacTipo() !== null ){
             if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
-                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getId(),'nuevo'=>$lugarProvNacTipoId);
+                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo(),'nuevo'=>$lugarProvNacTipo);
             }
         }else{
-            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>0,'nuevo'=>$lugarProvNacTipoId);
+            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>0,'nuevo'=>$lugarProvNacTipo);
         }
         if($localidad!=$objStudent->getLocalidadNac()){
             $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>$objStudent->getLocalidadNac(),'nuevo'=>$localidad);
