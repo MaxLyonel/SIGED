@@ -398,7 +398,7 @@ class SpecialModificationDataStudentController extends Controller{
         }
         if($objStudent->getLugarNacTipo() !== null ){
             if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
-                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo(),'nuevo'=>$lugarNacTipo);
+                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getLugar(),'nuevo'=>$lugarNacTipo);
             }            
         }else{
             $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>0,'nuevo'=>$lugarNacTipo);
@@ -406,7 +406,7 @@ class SpecialModificationDataStudentController extends Controller{
         }
         if($objStudent->getLugarProvNacTipo() !== null ){
             if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
-                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo(),'nuevo'=>$lugarProvNacTipo);
+                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getLugar(),'nuevo'=>$lugarProvNacTipo);
             }
         }else{
             $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>0,'nuevo'=>$lugarProvNacTipo);
