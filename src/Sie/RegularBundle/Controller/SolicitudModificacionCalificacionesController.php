@@ -1367,7 +1367,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         $notaSolicitud = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitudDetalle')->findOneBy(array(
                             'estudianteNotaSolicitud'=>$idSolicitud,
                             'estudianteAsignaturaId'=>$a->getId(),
-                            'notaTipo'=>$n,
+                            'notaTipoId'=>$n,
                             'valoracionTipo'=>'cuantitativa'
                         ));
                     }
