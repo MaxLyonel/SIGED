@@ -483,7 +483,11 @@ class SpecialModificationDataStudentController extends Controller{
                 }else{
                     $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
                 }
-                $objStudent->setLocalidadNac($localidad);
+                if ($paisId==1) {
+                    $objStudent->setLocalidadNac($localidad);
+                }else{
+                    $objStudent->setLocalidadNac('');
+                }                
                 $objStudent->setOficialia($oficialia);
                 $objStudent->setLibro($libro);
                 $objStudent->setPartida($partida);
