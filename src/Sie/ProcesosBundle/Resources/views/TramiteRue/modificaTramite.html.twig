@@ -293,26 +293,37 @@
             </div>
         </div>
     </td>
-{% elseif id == 42 %} {# cierre temporal #}
+{% elseif id == 42 or id == 43 %} {# cierre temporal #}
     <td>
-        
+        {% if estadoinstitucion.id == 10 %}
+            {{estadoinstitucion.estadoinstitucion|upper}}
+        {% else %}
+            <span class="label label-danger">LA UNIDAD EDUCATIVA EST CERRADA</span>
+        {% endif %}
     </td>
     <td>
-        
-    </td>
-{% elseif id == 43 %} {# cierre definitivo #}
-    <td>
-        
-    </td>
-    <td>
-        
+        {% if estadoinstitucion.id == 10 %}
+            <div class="col-md-12 ckbox ckbox-primary">
+                {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                {{ form_label(form.estadoinstitucion) }}                                                            
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 44 %}{# Reapertura #}
     <td>
-        
+        {% if estadoinstitucion.id == 19 %}
+            {{estadoinstitucion.estadoinstitucion|upper}}
+        {% else %}
+            <span class="label label-danger">LA UNIDAD EDUCATIVA SE ENCUENTRA ABIERTA</span>
+        {% endif %}
     </td>
     <td>
-        
+        {% if estadoinstitucion.id == 19 %}
+            <div class="col-md-12 ckbox ckbox-primary">
+                {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                {{ form_label(form.estadoinstitucion) }}                                                            
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 45 %}{# nuevo certifcado rue #}
     <td>

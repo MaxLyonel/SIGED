@@ -607,33 +607,64 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    {% elseif id == 42 %} {# cierre temporal #}
+                                    {% elseif id in [42,43] %} {# cierre temporal #}
                                         <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3-{{id}}">
-                                        </div>
-                                    {% elseif id == 43 %} {# cierre definitivo #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_cierre) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_cierre) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_resolucion_cierre) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_resolucion_cierre) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_archivos_cierre) }}&nbsp;
+                                                        {{ form_label(form.i_archivos_cierre) }}                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_cierre) }}&nbsp;
+                                                        {{ form_label(form.i_certificadorue_cierre) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% elseif id == 44 %}{# Reapertura #}
                                         <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_apertura) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_apertura) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% elseif id == 45 %}{# nuevo certifcado rue #}
                                         <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_nuevorue) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_nuevorue) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 </div><!-- /.panel-body -->

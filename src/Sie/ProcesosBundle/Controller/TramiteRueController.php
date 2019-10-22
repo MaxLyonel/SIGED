@@ -126,11 +126,12 @@ class TramiteRueController extends Controller
             return $tr->createQueryBuilder('tr')
                 ->where('tr.obs = :rue')
                 //->andWhere('tr.id not in (:tipo)')
-                ->andWhere('tr.id in (34,35,36,37,38,41)')
+                ->andWhere('tr.id in (34,35,36,37,38,41,42,43,44,45)')
                 ->setParameter('rue','RUE')
                 //->setParameter('tipo',$this->tramiteTipoArray)
                 ->orderBy('tr.tramiteTipo','ASC');},
             'property'=>'tramiteTipo','empty_value' => 'Seleccione tipo de trámite'))
+        ->add('tr', 'text')
         ->add('observacion','textarea',array('label'=>'JUSTIFICACIÓN:','required'=>false,'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
         ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
         ->getForm();
@@ -265,21 +266,40 @@ class TramiteRueController extends Controller
                 );
                 break;
             case 42://cierre temporal
-                $form = $form
-                    ->add('nuevo_distrito','entity',array('label'=>'Nuevo Distrito:','required'=>true,'multiple' => false,'attr' => array('class' => 'form-control'),'empty_value'=>'Seleccione nuevo distrito','class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $dt){
-                        return $dt->createQueryBuilder('dt')->where('dt.departamentoTipo = :id')->setParameter('id',$this->iddep)->orderBy('dt.distrito','ASC');},'property'=>'distrito'))
-                    ->getForm();
+            case 43://cierre definitivo
+                if($ie->getEstadoinstitucionTipo()->getId() == 10){
+                    $form = $form
+                        ->add('estadoinstitucion', 'checkbox', array('label' => 'CERRADA','required'  => true))
+                        ->getForm()
+                        ->createView();    
+                }else{
+                    $form = null;
+                }
                 $data = array(
-                    'form' => $form->createView(),
+                    'form' => $form,
                     'id' => $id,
-                    'estado'=>$ie->estadoinstitucionTipo()->getEstado()
+                    'estadoinstitucion'=>$ie->getEstadoinstitucionTipo()
                 );
                 break;
-            case 43://cierre definitivo
-                break;
             case 44://Reapertura
+                if($ie->getEstadoinstitucionTipo()->getId() == 19){
+                    $form = $form
+                        ->add('estadoinstitucion', 'checkbox', array('label' => 'ABIERTA','required'  => true))
+                        ->getForm()
+                        ->createView();    
+                }else{
+                    $form = null;
+                }
+                $data = array(
+                    'form' => $form,
+                    'id' => $id,
+                    'estadoinstitucion'=>$ie->getEstadoinstitucionTipo()
+                );
                 break;
             case 45://nuevo certifcado rue
+                $data = array(
+                    'id' => $id,
+                );
                 break;
         }
         
@@ -298,13 +318,13 @@ class TramiteRueController extends Controller
         switch ($id){
             case 34://ampliacion de nivel
                 $form = $form
-                ->add('i_solicitud_ampliar', 'file', array('label' => 'Adjuntar Solicitud de Ampliación de Nivel (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
-                ->add('i_alquiler_ampliar', 'choice', array('label' => 'Infraestructura arrendada:','multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
-                ->add('i_contrato_ampliar', 'file', array('label' => 'Adjuntar Copia notariada de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
-                ->add('i_certificado_ampliar', 'checkbox', array('label' => 'Original de Certificado RUE','required'  => true))
-                ->add('ii_planos_ampliar', 'checkbox', array('label' => 'Planos arquitectónicos','required'  => true))
-                ->add('ii_infra_ampliar', 'checkbox', array('label' => 'Actualización de datos de infraestructura en el SIE','required'  => true))
-                ->getForm();
+                    ->add('i_solicitud_ampliar', 'file', array('label' => 'Adjuntar Solicitud de Ampliación de Nivel (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_alquiler_ampliar', 'choice', array('label' => 'Infraestructura arrendada:','multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
+                    ->add('i_contrato_ampliar', 'file', array('label' => 'Adjuntar Copia notariada de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_certificado_ampliar', 'checkbox', array('label' => 'Original de Certificado RUE','required'  => true))
+                    ->add('ii_planos_ampliar', 'checkbox', array('label' => 'Planos arquitectónicos','required'  => true))
+                    ->add('ii_infra_ampliar', 'checkbox', array('label' => 'Actualización de datos de infraestructura en el SIE','required'  => true))
+                    ->getForm();
                 $requisitos = array('legal'=>true,'infra'=>true,'admi'=>false);
                 $data = array(
                     'form' => $form->createView(),
@@ -439,7 +459,7 @@ class TramiteRueController extends Controller
                     ->add('i_certificacion_infra', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
                 if($ie->getDependenciaTipo()->getId() == 2){
                     $form = $form
-                    ->add('i_certificacionconvenio_infra', 'file', array('label' => 'Adjuntar Certificación de convenio emitida por el reponsable de la Entidad Prestadora de Servicios (solo convenio) (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
+                        ->add('i_certificacionconvenio_infra', 'file', array('label' => 'Adjuntar Certificación de convenio emitida por el reponsable de la Entidad Prestadora de Servicios (solo convenio) (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
                 }
                 $form = $form
                     ->add('i_resolucion_infra', 'file', array('label' => 'Adjuntar Fotocopia legalizada de la Resolucion Administrativa de Autorización de funcionamiento emitida por la DDE (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar resolución",'accept'=>"application/pdf,.img,.jpg")))
@@ -457,13 +477,44 @@ class TramiteRueController extends Controller
                 );
                 break;
             case 42://cierre temporal
-
-                break;
             case 43://cierre definitivo
+                $requisitos = array('legal'=>true,'infra'=>false,'admi'=>false);
+                $form = $form
+                    ->add('i_solicitud_cierre', 'file', array('label' => 'Adjuntar Solicitud de cierre temporal o definitivo (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_resolucion_cierre', 'file', array('label' => 'Adjuntar Fotocopia legalizada de la Resolucion Administrativa de Autorización de apertura y funcionamiento de la unidad educativa (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar resolución",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_archivos_cierre', 'checkbox', array('label' => 'Archivos electrónicos e impresos actulizados de toda la documentación d elos estudiantes que cursaron sus estudios en la unidad educativa (RUDE, centralizador de calificaciones, boletines y otros).','required'  => true))
+                    ->add('i_certificadorue_cierre', 'checkbox', array('label' => 'Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).','required'  => true))
+                    ->getForm();
+                $data = array(
+                    'form' => $form->createView(),
+                    'id' => $id,
+                    'tramitetipo' => $tramitetipo,
+                    'requisitos' => $requisitos,
+                );
                 break;
             case 44://Reapertura
+                $requisitos = array('legal'=>true,'infra'=>false,'admi'=>false);
+                $form = $form
+                    ->add('i_solicitud_apertura', 'file', array('label' => 'Adjuntar Solicitud de Reapertura (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                    ->getForm();
+                $data = array(
+                    'form' => $form->createView(),
+                    'id' => $id,
+                    'tramitetipo' => $tramitetipo,
+                    'requisitos' => $requisitos,
+                );
                 break;
             case 45://nuevo certifcado rue
+                $requisitos = array('legal'=>true,'infra'=>false,'admi'=>false);
+                $form = $form
+                    ->add('i_solicitud_nuevorue', 'file', array('label' => 'Adjuntar Informe Técnico circunstanciado de extravío del Original del Certificado RUE (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                    ->getForm();
+                $data = array(
+                    'form' => $form->createView(),
+                    'id' => $id,
+                    'tramitetipo' => $tramitetipo,
+                    'requisitos' => $requisitos,
+                );
                 break;
         }
         

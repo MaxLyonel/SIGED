@@ -350,6 +350,7 @@
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <div class="table-responsive col-md-12">
+                                                    {{ form_widget(form.tr) }}
                                                     <table class="table table-bordered table-striped" id="tabla">
                                                         <tr>
                                                             <th>Tipo de trámite</th> 
@@ -777,7 +778,6 @@
         $("#form_tramites").change(function(){
             //alert('entra');  
             var id = $(this).val();
-                
             if(id){
                 var tramitetipo = $('#form_tramites option:selected').text();
                 if ( $("#fila_"+ id).length ) {
@@ -791,13 +791,25 @@
                     beforeSend: function () {
                     },
                     success: function (data) {
-                        var tr ='<tr id="fila_'+id+'"><td>'+tramitetipo+'</td>'+data+
-                                '<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+id+'" data-placement="top" title="Requisitos" onclick="requisitos('+id+')"><i class="glyphicon glyphicon-plus"></i></button>'+
-                                '</td>'+
-                                '<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+id+')"><i class="glyphicon glyphicon-minus"></i></button>'+
-                                '</td></tr>';
+                        var tr ='<tr id="fila_'+id+'"><td>'+tramitetipo+'</td>'+data;
+                        if(id == 44 && {{institucioneducativa.estadoinstitucionTipo.id}} == 10){
+                            tr = tr+'<td></td>';
+                        }else{
+                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+id+'" data-placement="top" title="Requisitos" onclick="requisitos('+id+')"><i class="glyphicon glyphicon-plus"></i></button>'+
+                                '</td>';
+                        }
+                        tr = tr+'<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+id+')"><i class="glyphicon glyphicon-minus"></i></button>'+
+                            '</td></tr>';
                         $('#tabla').append(tr);
                         $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+id+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        if ($('#form_tr').val() == "") {
+                            trArray = [Number(id)];
+                        }else{
+                            trArray = JSON.parse($('#form_tr').val());
+                            trArray.push(Number(id));
+                        }
+                        //console.log(trArray);
+                        $('#form_tr').val(JSON.stringify(trArray));
                         //$('.container').css('background','rgba(0, 0, 0, 0.5)');
                     },
                 });
@@ -859,6 +871,11 @@
         function borrarFila(id){
             $('#fila_'+id).remove();
             $('#modal_'+id).remove();
+            var array = JSON.parse($('#form_tr').val());
+            //console.log(array);
+            var index = array.indexOf(id);
+            array.splice(index, 1);
+            $('#form_tr').val(JSON.stringify(array));
         }
        {#  $(document).on('click', '.borrar', function (event) {
             console.log($(this).closest('tr').0.id);
