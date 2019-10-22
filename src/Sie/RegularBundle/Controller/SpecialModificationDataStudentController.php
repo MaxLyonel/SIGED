@@ -415,7 +415,7 @@ class SpecialModificationDataStudentController extends Controller{
                 $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>'','nuevo'=>mb_strtoupper($lugarProvNacTipo, 'utf8'));
             }
             if($localidad!=$objStudent->getLocalidadNac()){
-                $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>$objStudent->getLocalidadNac(),'nuevo'=>$localidad);
+                $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>mb_strtoupper($objStudent->getLocalidadNac(), 'utf8'),'nuevo'=>mb_strtoupper($localidad, 'utf8'));
             }
         }
         if($oficialia!=$objStudent->getOficialia()){
