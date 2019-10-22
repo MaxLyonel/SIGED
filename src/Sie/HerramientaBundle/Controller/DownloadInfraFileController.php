@@ -76,17 +76,17 @@ class DownloadInfraFileController extends Controller{
         }
         // generate the ifr file
         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_infraestructura_txt('" . $form['sie'] . "','" . $form['gestion'] . "');");        
-        // $query->execute();
-        dump(is_readable($mainPath.$form['sie'].'_2019_2019-09-12_b64.ifr'));
+        $query->execute();
+        //dump(is_readable($mainPath.$form['sie'].'_2019_2019-09-12_b64.ifr'));
         // get the sie data
         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-
+	$filesName = date('Y_Y-m-d').'.ifr';
    
         return $this->render('SieHerramientaBundle:DownloadInfraFile:generate.html.twig', array(
             'uEducativa'   => $objUe[0],
             'datadownload' => json_encode($form),
             // 'file'         => base64_encode($ifrFile),
-            'file'         => base64_encode($form['sie'].'_2019_2019-09-12_b64.ifr'),
+            'file'         => base64_encode($form['sie'].'_'.$filesName),
         ));
     }
     
@@ -112,14 +112,13 @@ class DownloadInfraFileController extends Controller{
     // }
 
     public function downloadFileAction(Request $request, $file,$datadownload) {
-        // dump($datadownload);die;
         $form = json_decode($datadownload,true);
         //get the user info
         $objUser = $this->getUserInfoDownload($form);
         $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
         //get path of the file
-        //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
-        $dir = '/archivos/descargas/ifr/';
+        $dir = $this->get('kernel')->getRootDir() . '/../web/files/archivos_ifr/ifr/';
+        //$dir = '/archivos/descargas/ifr/';
         //remove space on the post values
         $file = base64_decode($file);
         $file = preg_replace('/\s+/', '', $file);
