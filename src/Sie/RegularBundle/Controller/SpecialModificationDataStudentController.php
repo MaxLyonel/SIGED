@@ -398,18 +398,18 @@ class SpecialModificationDataStudentController extends Controller{
         }
         if($objStudent->getLugarNacTipo() !== null ){
             if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
-                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getLugar(),'nuevo'=>$lugarNacTipo);
+                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>mb_strtoupper($objStudent->getLugarNacTipo()->getLugar(), 'utf8') ,'nuevo'=>mb_strtoupper($lugarNacTipo, 'utf8'));
             }            
         }else{
-            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>0,'nuevo'=>$lugarNacTipo);
+            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>'','nuevo'=>mb_strtoupper($lugarNacTipo, 'utf8'));
 
         }
         if($objStudent->getLugarProvNacTipo() !== null ){
             if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
-                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getLugar(),'nuevo'=>$lugarProvNacTipo);
+                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>mb_strtoupper($objStudent->getLugarProvNacTipo()->getLugar(), 'utf8')  ,'nuevo'=>mb_strtoupper($lugarProvNacTipo, 'utf8'));
             }
         }else{
-            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>0,'nuevo'=>$lugarProvNacTipo);
+            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>'','nuevo'=>mb_strtoupper($lugarProvNacTipo, 'utf8'));
         }
         if($localidad!=$objStudent->getLocalidadNac()){
             $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>$objStudent->getLocalidadNac(),'nuevo'=>$localidad);
