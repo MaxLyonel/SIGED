@@ -367,8 +367,7 @@ class SpecialModificationDataStudentController extends Controller{
         //get the info data
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId);
         // update student data
-            
-                //GET OLD DATA
+        //GET OLD DATA
         $oldDataStudentPrev = array();
         if($carnetIdentidad!=$objStudent->getCarnetIdentidad()){
             $oldDataStudentPrev[] = array('campo'=>'Carnet Identidad','anterior'=>$objStudent->getCarnetIdentidad(),'nuevo'=>$carnetIdentidad);
@@ -394,11 +393,20 @@ class SpecialModificationDataStudentController extends Controller{
         if($paisId!=$objStudent->getPaisTipo()->getId()){
             $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>$objStudent->getPaisTipo()->getId(),'nuevo'=>$paisId);
         }
-        if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getId(),'nuevo'=>$lugarNacTipoId);
+        if($objStudent->getLugarNacTipo() !== null ){
+            if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
+                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getId(),'nuevo'=>$lugarNacTipoId);
+            }            
+        }else{
+            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>0,'nuevo'=>$lugarNacTipoId);
+
         }
-        if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getId(),'nuevo'=>$lugarProvNacTipoId);
+        if($objStudent->getLugarProvNacTipo() !== null ){
+            if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
+                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getId(),'nuevo'=>$lugarProvNacTipoId);
+            }
+        }else{
+            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>0,'nuevo'=>$lugarProvNacTipoId);
         }
         if($localidad!=$objStudent->getLocalidadNac()){
             $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>$objStudent->getLocalidadNac(),'nuevo'=>$localidad);
@@ -474,6 +482,7 @@ class SpecialModificationDataStudentController extends Controller{
                 $objStudent->setPartida($partida);
                 $objStudent->setFolio($folio);
                 //validate segip
+                $answerSegip = false;
                 if($carnetIdentidad){
                     // set the valuest to validate on segip
                     $arrParametros = array('complemento'=>$complemento,
@@ -493,12 +502,17 @@ class SpecialModificationDataStudentController extends Controller{
                 }
                 $em->persist($objStudent);
                 $em->flush();
-                $arrfecharesolAdm = explode('-', $fecharesolAdm);
+                
                 // save log data
                 $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
                 $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
                 $objEstudianteHistorialModificacion->setResolucion($resolucionAdm);
-                $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($arrfecharesolAdm[2].'-'.$arrfecharesolAdm[1].'-'. $arrfecharesolAdm[0]));
+                if(isset($fecharesolAdm) && $fecharesolAdm!=''){   
+                    $arrfecharesolAdm = explode('-', $fecharesolAdm);
+                    $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($arrfecharesolAdm[2].'-'.$arrfecharesolAdm[1].'-'. $arrfecharesolAdm[0]));
+                }else{
+                    $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime('0001-01-01'));
+                }
                 $objEstudianteHistorialModificacion->setJustificacion($justificativo);
                 $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId));
                 $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
