@@ -395,7 +395,7 @@ class SpecialModificationDataStudentController extends Controller{
         }
 
         if($paisId!=$objStudent->getPaisTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>mb_strtoupper($objStudent->getPaisTipo()->getLugar(), 'utf8'),'nuevo'=>mb_strtoupper($pais, 'utf8'));
+            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>mb_strtoupper($objStudent->getPaisTipo()->getPais(), 'utf8'),'nuevo'=>mb_strtoupper($pais, 'utf8'));
         }
         if ($paisId==1) {
             # code...
