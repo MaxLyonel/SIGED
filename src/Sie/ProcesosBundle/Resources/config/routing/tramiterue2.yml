@@ -85,7 +85,7 @@ tramite_rue_le_buscar_municipios:
      defaults: { _controller: "SieProcesosBundle:TramiteRue:municipios" }
      options:
          expose: true
-tramite_rue_le_buscar_cantones:
+tramite_rue_le_buscar_cantones2:
      path:    /cantones/{idMunicipio}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:cantones" }
      options:

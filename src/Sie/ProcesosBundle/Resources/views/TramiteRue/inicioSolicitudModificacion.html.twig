@@ -153,13 +153,13 @@
                                                         {{ institucioneducativa.estadoinstitucionTipo.estadoinstitucion|upper }}
                                                     </div>
                                                 </div>
-                                                {% if institucioneducativa.convenioTipo.id not in  [0,99] %}
+                                                {% if institucioneducativa.dependenciaTipo.id == 2 %}
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-6">
                                                             <strong>CONVENIO:</strong>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ institucioneducativa.convenioTipo.convenio }}
+                                                            {{ institucioneducativa.convenioTipo.convenio|upper }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -183,19 +183,101 @@
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title">2. UBICACIÓN GEOGRAFICA</h3>
-                                    </div>
+                                        <h3 class="panel-title">2. UBICACIÓN GEOGRÁFICA</h3>
+                                    </div>                                    
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12" style="background:#E9F9FC">
+                                                <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>DEPARTAMENTO:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>PROVINCIA:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>MUNICIPIO:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ lugarTipo2012.lugartipo.lugar|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>COMUNIDAD:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ lugarTipo2012.lugar|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>ZONA:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ institucioneducativa.leJuridicciongeografica.zona|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>DIRECCIÓN:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ institucioneducativa.leJuridicciongeografica.direccion|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {% for a in form.area %}
+                                                        <div class="col-md-6 rdio rdio-primary circle">
+                                                            {{ form_widget(a) }}
+                                                            {{ form_label(a) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                    {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
+                                                        URBANO
+                                                    {% else %}
+                                                        RURAL
+                                                    {% endif %} #}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group col-md-12" style="background:#E9F9FC">
+                                                <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
+                                            </div>
                                             <div class="form-group col-md-12">
                                                 <div class="col-md-6">
                                                     <strong>DEPARTAMENTO:</strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>PROVINCIA:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugartipo.lugar }}
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12">
@@ -208,32 +290,10 @@
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <div class="col-md-6">
-                                                    <strong>ZONA:</strong>
+                                                    <strong>CANTÓN:</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.zona }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
-                                                        URBANO
-                                                    {% else %}
-                                                        RURAL
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>PROVINCIA:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugartipo.lugar }}
+                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar }}
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12">
@@ -242,6 +302,14 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugar }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-6">
+                                                    <strong>ZONA:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ institucioneducativa.leJuridicciongeografica.zona }}
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12">
@@ -258,7 +326,7 @@
                             </div>
                         </div>
                     </div>
-                    {{ form_start(form) }}
+                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data'}}) }}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-primary">
@@ -282,6 +350,7 @@
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <div class="table-responsive col-md-12">
+                                                    {{ form_widget(form.tr) }}
                                                     <table class="table table-bordered table-striped" id="tabla">
                                                         <tr>
                                                             <th>Tipo de trámite</th> 
@@ -291,6 +360,8 @@
                                                             <th>Eliminar</th>
                                                         </tr>
                                                     </table>
+                                                    <div id="requisitos">
+                                                    </div>
                                                 </div>    
                                             </div>
                                         </div>
@@ -335,15 +406,32 @@
             </div>
         </div>
     </div>
-    <div id="requisitos">
-    </div>
+    
     
 {% endblock %}
 {% block javascripts %}
     {{ parent() }} 
     <script>
         $( document ).ready(function() {
+            $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                format:'dd-mm-yyyy',
+                titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                weekStart: 0
+            };
+            $('.date').datepicker({
+                orientation: "auto left",
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true,
+                language: 'es'
+            });
         });
+        
         $('#form_siefusion').on('input',function(e){
             var formData = {idsiefusion: $(this).val(),iddistrito:'{{institucioneducativa.leJuridicciongeografica.lugarTipoIdDistrito}}'};
             //console.log($(this).val().length);
@@ -380,198 +468,302 @@
                     url: "{{path('tramite_rue_buscar_edificio')}}",
                     data: formData,
                     beforeSend: function () {
-                        $("#form_departamento").empty();
-                        $("#form_provincia").empty();
-                        $("#form_municipio").empty();
-                        $("#form_comunidad").empty();
+                        $("#form_departamento2012").empty();
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_departamento2001").empty();
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
                         //$("#form_distrito").empty();
                         $("#form_zona").empty();
                         $("#form_direccion").empty();
-                        $("#form_departamento").append('<option value="">Buscando...</option>');
-                        $("#form_provincia").append('<option value="">Buscando...</option>');
-                        $("#form_municipio").append('<option value="">Buscando...</option>');
-                        $("#form_comunidad").append('<option value="">Buscando...</option>');
+                        $("#form_departamento2012").append('<option value="">Buscando...</option>');
+                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                        $("#form_departamento2001").append('<option value="">Buscando...</option>');
+                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                        $("#form_zona").val('');
+                        $("#form_direccion").val('');
                         //$("#form_distrito").append('<option value="">Buscando...</option>');
                     },
                     success: function (data) {
+                        //console.log(data);
                         if(data.msg){
                             //$("#msgLe").append('hola');
-                            $("#form_departamento").empty();
-                            $("#form_departamento").append('<option value="">Seleccione...</option>');
                             $("#form_lejurisdiccion").val('');
-                            $("#form_provincia").empty();
-                            $("#form_municipio").empty();
-                            $("#form_comunidad").empty();
+                            $("#form_departamento2012").empty();
+                            $("#form_departamento2012").append('<option value="">Seleccione...</option>');
+                            $("#form_provincia2012").empty();
+                            $("#form_municipio2012").empty();
+                            $("#form_comunidad2012").empty();
+                            $("#form_departamento2001").empty();
+                            $("#form_departamento2001").append('<option value="">Seleccione...</option>');
+                            $("#form_provincia2001").empty();
+                            $("#form_municipio2001").empty();
+                            $("#form_canton2001").empty();
+                            $("#form_localidad2001").empty();
                             //$("#form_distrito").empty();
                             $("#form_zona").val('');
                             $("#form_direccion").val('');
-                            $.each(data.departamento, function (i, value) {
-                                $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                            $.each(data.lugar.c2012.dep.lista, function (i, value) {
+                                $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.dep.lista, function (i, value) {
+                                $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
                             });
                             alert(data.msg);
                         }else{
-                            $.each(data.departamento, function (i, value) {
-                                $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                            $.each(data.lugar.c2012.dep.lista, function (i, value) {
+                                $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            $.each(data.provincia, function (i, value) {
-                                $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                            $.each(data.lugar.c2012.prov.lista, function (i, value) {
+                                $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            $.each(data.municipio, function (i, value) {
-                                $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                            $.each(data.lugar.c2012.mun.lista, function (i, value) {
+                                $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            $.each(data.comunidad, function (i, value) {
-                                $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
+                            $.each(data.lugar.c2012.comu.lista, function (i, value) {
+                                $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            /*$.each(data.distrito, function (i, value) {
+                            $.each(data.lugar.c2001.dep.lista, function (i, value) {
+                                $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.prov.lista, function (i, value) {
+                                $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.mun.lista, function (i, value) {
+                                $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.can.lista, function (i, value) {
+                                $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.loc.lista, function (i, value) {
+                                $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            /*$.each(data.lugar.distrito, function (i, value) {
                                 $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
                             });*/
-                            $("#form_departamento").val(data.iddepartamento);
-                            $("#form_provincia").val(data.idprovincia);
-                            $("#form_municipio").val(data.idmunicipio);
-                            $("#form_comunidad").val(data.idcomunidad);
-                            //$("#form_distrito").val(data.iddistrito);
-                            $("#form_zona").val(data.zona);
-                            $("#form_direccion").val(data.direccion);
+                            $("#form_departamento2012").val(data.lugar.c2012.dep.id);
+                            $("#form_provincia2012").val(data.lugar.c2012.prov.id);
+                            $("#form_municipio2012").val(data.lugar.c2012.mun.id);
+                            $("#form_comunidad2012").val(data.lugar.c2012.comu.id);
+                            $("#form_departamento2001").val(data.lugar.c2001.dep.id);
+                            $("#form_provincia2001").val(data.lugar.c2001.prov.id);
+                            $("#form_municipio2001").val(data.lugar.c2001.mun.id);
+                            $("#form_canton2001").val(data.lugar.c2001.can.id);
+                            $("#form_localidad2001").val(data.lugar.c2001.loc.id);
+                            //$("#form_distrito").val(data.lugar.iddistrito);
+                            $("#form_zona").val(data.lugar.zona);
+                            $("#form_direccion").val(data.lugar.direccion);
                         }
                     }   
                 });
             }else{
-                $("#form_departamento").val('');
-                $('#form_departamento option[value=""]').text("Seleccione departamento");
-                $("#form_lejurisdiccion").val('');
-                $("#form_provincia").empty();
-                $("#form_municipio").empty();
-                $("#form_canton").empty();
-                $("#form_localidad").empty();
-                $("#form_distrito").empty();
+                //$("#form_lejurisdiccion").val('');
+                $("#form_departamento2012").val('');
+                $('#form_departamento2012 option[value=""]').text("Seleccione departamento");
+                $("#form_provincia2012").empty();
+                $("#form_municipio2012").empty();
+                $("#form_comunidad2012").empty();
+                $("#form_departamento2001").val('');
+                $('#form_departamento2001 option[value=""]').text("Seleccione departamento");
+                $("#form_provincia2001").empty();
+                $("#form_municipio2001").empty();
+                $("#form_canton2001").empty();
+                $("#form_localidad2001").empty();
+                //$("#form_distrito").empty();
                 $("#form_zona").val('');
                 $("#form_direccion").val('');   
             }
 
         }
-        function provincia(d) {
+        function provincia(d,censo) {
             //alert(d);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d}),
+                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_provincia").empty();
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_localidad").empty();
-                    //$("#form_distrito").empty();
-                    $("#form_provincia").append('<option value="">Buscando...</option>');
-                    $("#form_municipio").append('<option value="">Buscando...</option>');
-                    $("#form_comunidad").append('<option value="">Buscando...</option>');
-                    //$("#form_localidad").append('<option value="">Buscando...</option>');
-                    //$("#form_distrito").append('<option value="">Buscando...</option>');
+                    $("#form_lejurisdiccion").val('');
+                    if(censo == 2001){
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        //$("#form_distrito2001").empty();
+                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                        //$("#form_distrito2001").append('<option value="">Buscando...</option>');
+                    }else if (censo == 2012){
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        //$("#form_distrito2012").empty();
+                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                        //$("#form_distrito2012").append('<option value="">Buscando...</option>');
+                    }
+                    
                 },
                 success: function (data) {
-                    $("#form_provincia").empty();
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_localidad").empty();
-                    //$("#form_distrito").empty();
-                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
-                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
-                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
-                    //$("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    //$("#form_distrito").append('<option value="">Seleccionar...</option>');
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    /*$.each(data.distrito, function (i, value) {
-                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                    });*/
+                    if(censo == 2001){
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        //$("#form_distrito2001").empty();
+                        $("#form_provincia2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        //$("#form_distrito2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*$.each(data.distrito, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });*/
+                    }else if (censo == 2012){
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        //$("#form_distrito2012").empty();
+                        $("#form_provincia2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        //$("#form_distrito2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*$.each(data.distrito, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });*/
+                    }
+                    
                 }
             });
         }
 
-        function municipio(p) {
+        function municipio(p,censo) {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p}),
+                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_canton").empty();
-                    //$("#form_localidad").empty();
-                    $("#form_municipio").append('<option value="">Buscando...</option>');
-                    $("#form_comunidad").append('<option value="">Buscando...</option>');
-                    //$("#form_canton").append('<option value="">Buscando...</option>');
-                    //$("#form_localidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }else if (censo == 2012){
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_municipio").empty();
-                    $("#form_comunidad").empty();
-                    //$("#form_canton").empty();
-                    //$("#form_localidad").empty();
-                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
-                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
-                    //$("#form_canton").append('<option value="">Seleccionar...</option>');
-                    //$("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.municipio, function (i, value) {
-                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
-                    });
+                    if(censo == 2001){
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }else if (censo == 2012){
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
                 }
             });
         }
 
-        function comunidad(p) {
+        function comunidad(p,censo) {
+            alert(censo);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p}),
+                url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_comunidad").empty();
-                    $("#form_comunidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2012){
+                        $("#form_comunidad2012").empty();
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_comunidad").empty();
-                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.comunidad, function (i, value) {
-                        $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
+                    if(censo == 2012){
+                        $("#form_comunidad2012").empty();
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.comunidad, function (i, value) {
+                            $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
                 }
             });
         }
-        function canton(m) {
+        function canton(m,censo) {
+            alert(censo);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m}),
+                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_canton").append('<option value="">Buscando...</option>');
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_canton").append('<option value="">Seleccionar...</option>');
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.canton, function (i, value) {
-                        $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
-                    });
-
+                    if(censo == 2001){
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.canton, function (i, value) {
+                            $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
                 }
             });
         }
 
-        function localidad(c) {
+        function localidad(c,censo) {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c}),
+                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c,'censo':censo}),
                 beforeSend: function () {
-                    $("#form_localidad").empty();
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_localidad2001").empty();
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }
                 },
                 success: function (data) {
-                    $("#form_localidad").empty();
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.localidad, function (i, value) {
-                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $("#form_localidad").selectpicker('refresh');
+                    if(censo == 2001){
+                        $("#form_localidad2001").empty();
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.localidad, function (i, value) {
+                            $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_localidad2001").selectpicker('refresh');
+                    }
                 }
             });
         } 
@@ -584,6 +776,7 @@
         });
         
         $("#form_tramites").change(function(){
+            //alert('entra');  
             var id = $(this).val();
             if(id){
                 var tramitetipo = $('#form_tramites option:selected').text();
@@ -598,13 +791,26 @@
                     beforeSend: function () {
                     },
                     success: function (data) {
-                        var tr ='<tr id="fila_'+id+'"><td>'+tramitetipo+'</td>'+data+
-                                '<td><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+id+'" data-placement="top" title="Requisitos" onclick="requisitos('+id+')"><i class="glyphicon glyphicon-plus"></i></button>'+
-                                '</td>'+
-                                '<td><button class="btn btn-xs btn-danger" onclick="borrarFila('+id+')"><i class="glyphicon glyphicon-minus"></i></button>'+
-                                '</td></tr>';
+                        var tr ='<tr id="fila_'+id+'"><td>'+tramitetipo+'</td>'+data;
+                        if(id == 44 && {{institucioneducativa.estadoinstitucionTipo.id}} == 10){
+                            tr = tr+'<td></td>';
+                        }else{
+                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+id+'" data-placement="top" title="Requisitos" onclick="requisitos('+id+')"><i class="glyphicon glyphicon-plus"></i></button>'+
+                                '</td>';
+                        }
+                        tr = tr+'<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+id+')"><i class="glyphicon glyphicon-minus"></i></button>'+
+                            '</td></tr>';
                         $('#tabla').append(tr);
-                        $('#requisitos').append('<div class="modal fade borrar" tabindex="-1" role="dialog" aria-hidden="true" id="modal_'+id+'"></div>');
+                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+id+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        if ($('#form_tr').val() == "") {
+                            trArray = [Number(id)];
+                        }else{
+                            trArray = JSON.parse($('#form_tr').val());
+                            trArray.push(Number(id));
+                        }
+                        //console.log(trArray);
+                        $('#form_tr').val(JSON.stringify(trArray));
+                        //$('.container').css('background','rgba(0, 0, 0, 0.5)');
                     },
                 });
             }
@@ -613,7 +819,7 @@
         function requisitos(id){
             //alert(id);
             var formData = {id: id,ie:'{{institucioneducativa.id}}'};
-            if ( $("#form_requisitos_"+ id).length ) {
+            if ( $("#modal_requisitos_"+ id).length ) {
                 return false;
             }
             $.ajax({
@@ -628,20 +834,48 @@
                     //console.log(data);
                     $('#modal_'+id).empty();
                     $('#modal_'+id).append(data);
+                     $('.date').datepicker({
+                        orientation: "auto left",
+                        forceParse: false,
+                        autoclose: true,
+                        todayHighlight: true,
+                        language: 'es'
+                    });
                 },
             });
         }
 
         function guardarRequisitos(id){
             //alert('entra');
-            var form = $('#form_requisitos_'+id).serialize();
-            $('#form_'+id).val(form);
-            console.log(form);
+            //var fileName = $('#form_i_solicitud_ampliar').files[0].name;
+             //input.files[0]
+            //console.log( input.files[0]);
+            //data = new FormData();
+            //data.append( 'file', $( '#form_34_i_solicitud_ampliar' )[0].files[0] );
+            //var form = new FormData($('#form_requisitos_'+id));
+
+            //var paqueteDeDatos = new FormData($('#form_requisitos_'+id));
+            /* Todos los campos deben ser añadidos al objeto FormData. Para ello 
+            usamos el método append. Los argumentos son el nombre con el que se mandará el 
+            dato al script que lo reciba, y el valor del dato.
+            Presta especial atención a la forma en que agregamos el contenido 
+            del campo de fichero, con el nombre 'archivo'. */
+            //var form = $('#form_requisitos_'+id).serialize();
+            //paqueteDeDatos.append('i_solicitud_ampliar', $('#form_i_solicitud_ampliar')[0].files[0]);
+            //paqueteDeDatos.append('form', form);    
+            
+            //$('#form_form_'+id).val(paqueteDeDatos);
+            //console.log(paqueteDeDatos);
         }
 
         function borrarFila(id){
             $('#fila_'+id).remove();
             $('#modal_'+id).remove();
+            var array = JSON.parse($('#form_tr').val());
+            //console.log(array);
+            var index = array.indexOf(id);
+            array.splice(index, 1);
+            $('#form_tr').val(JSON.stringify(array));
         }
        {#  $(document).on('click', '.borrar', function (event) {
             console.log($(this).closest('tr').0.id);
