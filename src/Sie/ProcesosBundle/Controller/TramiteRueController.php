@@ -573,16 +573,18 @@ class TramiteRueController extends Controller
         $form = $request->get('form');
         $files = $request->files->get('form');
         //dump($request);die;
-        dump($form,$files);die;        
+        //dump($form,$files);die;
+        $tramites = json_decode($form['tr'],true);
+        //parse_str($form['tr'],$array); 
+        //dump($tramites);die;
         
         $em = $this->getDoctrine()->getManager();
 
-        $filename = $file['i_solicitud_ampliar']->getClientOriginalName();
-        dump($files);die;
+        //$filename = $file['i_solicitud_ampliar']->getClientOriginalName();
+        //dump($files);die;
         //parse_str($form['form_34'],$array); 
         //dump(unserialize($form['form_34']));die;
         //dump($_FILES);die;
-        $datos=array();
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $flujotipo = $form['flujotipo'];
@@ -599,11 +601,35 @@ class TramiteRueController extends Controller
          */
         
         //dump($form);die;
+        $tramites = $em->getRepository('SieAppWebBundle:TramiteTipo')->createQueryBuilder('tt')
+            ->select('tt.id,tt.tramiteTipo')
+            ->where('tt.id in (:id)')
+            ->setParameter('id',$tramites)
+            ->getQuery()
+            ->getResult();
+            
+        //dump($form,$files,$tramites);die;
         $datos = array();
-        foreach ($form['tramites'] as $tramite){
-            switch($tramite){
+        $datos['tramites'] = $tramites;
+        $datos['justificacion'] = $form['observacion'];
+        foreach ($tramites as $tramite){
+            switch($tramite['id']){
                 case 34://Ampliacion de Nivel
-                    $datos['nivelampliar']=$form['nivelampliar'];
+                    $nivel = $em->getRepository('SieAppWebBundle:NivelTipo')->createQueryBuilder('nt')
+                        ->select('nt.id,nt.nivel')
+                        ->where('nt.id in (:id)')
+                        ->setParameter('id',$form['nivelampliar'])
+                        ->getQuery()
+                        ->getResult();
+                    $datos['nivelampliar']=$nivel;
+                    $datos['i_alquiler_ampliar']=$form['i_alquiler_ampliar'];
+                    $datos['i_certificado_ampliar']=$form['i_certificado_ampliar'];
+                    $datos['ii_planos_ampliar']=$form['ii_planos_ampliar'];
+                    $datos['ii_infra_ampliar']=$form['ii_infra_ampliar'];
+                    //$datos['i_solicitud_ampliar']=$form['i_solicitud_ampliar'];
+                    if($form['i_alquiler_ampliar'] == 'SI'){
+                        //$datos['i_contrato_ampliar']=$form['i_contrato_ampliar'];
+                    }
                     break;
                 case 35: //Reduccion de Nivel
                     $datos['nivelreducir']=$form['nivelreducir'];
@@ -649,6 +675,7 @@ class TramiteRueController extends Controller
             }
         }
         //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        dump($datos);die;
         $query = $em->getConnection()->prepare('SELECT * 
                 FROM institucioneducativa ie
                 WHERE ie.id='. $tramite->getInstitucioneducativa()->getId());

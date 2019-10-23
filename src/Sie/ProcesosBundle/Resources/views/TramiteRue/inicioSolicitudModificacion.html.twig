@@ -430,6 +430,7 @@
                 todayHighlight: true,
                 language: 'es'
             });
+            $('#form_tr').empty(); 
         });
         
         $('#form_siefusion').on('input',function(e){
@@ -816,6 +817,8 @@
             }
         });
 
+        
+ 
         function requisitos(id){
             //alert(id);
             var formData = {id: id,ie:'{{institucioneducativa.id}}'};
