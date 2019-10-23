@@ -24,16 +24,6 @@
         .jupper{
             text-transform: uppercase;
         }
-        [v-cloak]{
-            display: none;
-        }
-        .estudiante{
-            padding: 10px;
-            background: #EEEEEE;
-            text-align: center;
-            font-weight: bold;
-            font-size: 17px;
-        }
         input[type='text']{
             /* background: #000000; */
             text-transform: uppercase;
@@ -62,7 +52,7 @@
         .cajaPromedio{
             font-weight: bold; 
             /* background:#DDDDDD; */
-            background:#DD5277;
+            background:#EAEAEA !important;
         }
         .cajaNota{
             cursor: pointer;
@@ -77,12 +67,15 @@
         .tachado{
             text-decoration: line-through;
             /* color: #D5956E; */
-            color:  #D51528;
+            /* color:  #D51528; */
+            color:  #555555;
             opacity: 0.4;
+            /* display: none; */
         }
+        /* nota seleccionada */
         .notaNueva{
             /* color: #1EB480; */
-            color: #7B7DA7;
+            /* color: #7B7DA7; */
             font-size: 1.2em;
         }
         .notaNuevaAprobado{
@@ -115,6 +108,10 @@
             width: fit-content;
             text-align: center;
         }
+        .vistaModificaciones{
+            float: right;
+            font-size: 1.2em;
+        }
     </style>
     <style type="text/css">
         .requisitos{
@@ -131,7 +128,7 @@
     </style>
 
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -172,34 +169,39 @@
                             <a class="btn btn-primary" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
                             <div class="clearfix"></div>
                             <div v-if="datos != ''">
-                                <table class="table table-condensed">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2">
-                                                <h5>Datos Estudiante</h5>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><th>Código Rude</th><td>${codigoRude}</td></tr>
-                                        <tr><th>Nombre completo</th><td>${estudiante}</td></tr>
-                                    </tbody>
-                                </table>
-                                <br>
-                                <table class="table table-condensed">
-                                    <thead>
-                                        <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><th>Código SIE</th><td>${sie}</td></tr>
-                                        <tr><th>Unidad Educativa</th><td>${institucioneducativa}</td></tr>
-                                        <tr><th>Nivel</th><td>${nivel}</td></tr>
-                                        <tr><th>Grado</th><td>${grado}</td></tr>
-                                        <tr><th>Paralelo</th><td>${paralelo}</td></tr>
-                                        <tr><th>Turno</th><td>${turno}</td></tr>
-                                        <tr><th>Gestión</th><td>${gestion}</td></tr>
-                                    </tbody>
-                                </table>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">
+                                                        <h5>Datos Estudiante</h5>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th>Código Rude</th><td>${codigoRude}</td></tr>
+                                                <tr><th>Nombre completo</th><td>${estudiante}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th>Código SIE</th><td>${sie}</td></tr>
+                                                <tr><th>Unidad Educativa</th><td>${institucioneducativa}</td></tr>
+                                                <tr><th>Nivel</th><td>${nivel}</td></tr>
+                                                <tr><th>Grado</th><td>${grado}</td></tr>
+                                                <tr><th>Paralelo</th><td>${paralelo}</td></tr>
+                                                <tr><th>Turno</th><td>${turno}</td></tr>
+                                                <tr><th>Gestión</th><td>${gestion}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <hr>
                                 <h5>
                                     <b>Detalle de calificaciones</b>
@@ -433,7 +435,12 @@
                         <h4 class="modal-title">Calificaciones</h4>
                     </div>
                     <div class="modal-body">
-                        <h4 class="bg-primary titulo">Cuantitativas <small> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small> </h4>
+                        <h4 class="bg-primary titulo">Cuantitativas <small style="float:right"> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small>
+                            {# <div class="vistaModificaciones">
+                                <i v-if="verModificaciones" class="fa fa-eye" v-on:click="verModificaciones = false"></i>
+                                <i v-else class="fa fa-eye-slash" v-on:click="verModificaciones = true"></i>
+                            </div> #}
+                        </h4>
                         <table class="table table-bordered" id="tablaNotas" style="background:#FFFFFF">
                             <thead>
                                 <tr>
@@ -446,11 +453,11 @@
                                     <td data-title="Área">
                                         <small>${a.asignatura}</small>
                                     </td>
-                                    <td v-for="n in a.notas" v-bind:id="n.idFila" align="center" v-bind:data-title="n.bimestre" v-on:click="agregarNota(n.idEstudianteNota,a.asignatura,n.bimestre,n.nota,n.id,n.idFila,n.idNotaTipo,n.idEstudianteAsignatura)" v-bind:class="claseNotaTipo(n.idNotaTipo)" >
+                                    <td v-for="n in a.notas" v-bind:id="n.idFila" align="center" v-bind:data-title="n.bimestre" v-on:click="agregarNota(n.idEstudianteNota,a.asignatura,n.bimestre,n.nota,n.id,n.idFila,n.idNotaTipo,n.idEstudianteAsignatura)" v-bind:class="claseNotaTipo(n.idNotaTipo)">
                                         <small v-if="datos.nivel == 11 || datos.nivel == 1 || datos.nivel == 403">${n.nota}</small>
                                         <div v-else>
                                             <span v-bind:class="{tachado: n.notaNueva != '' && n.nota != n.notaNueva}">${n.nota}</span>
-                                            <span v-if="n.nota != n.notaNueva" v-bind:class="{notaNueva: true, notaNuevaAprobado: n.idNotaTipo == 5 && n.notaNueva >= 51, notaNuevaReprobado: n.idNotaTipo == 5 && n.notaNueva < 51}"><b>${n.notaNueva}</b></span>
+                                            <span v-if="n.nota != n.notaNueva && verModificaciones" v-bind:class="{notaNueva: true, notaNuevaAprobado: n.idNotaTipo == 5 && n.notaNueva >= 51, notaNuevaReprobado: n.idNotaTipo == 5 && n.notaNueva < 51}">${n.notaNueva}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -466,7 +473,7 @@
                             </tbody>
                         </table>
                         <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
-                            <h4 class="bg-primary titulo">Cualitativas <small> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+                            <h4 class="bg-primary titulo">Cualitativas <small style="float:right"> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
                             <table v-if="datos.cualitativas != ''" class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
                                 <thead>
                                     <tr class="cf">
@@ -479,7 +486,7 @@
                                         <td data-title="Área">${c.notaTipo}</td>
                                         <td v-bind:id="c.idFila" align="center" class="select-nota" style="cursor:pointer" v-on:click="agregarNotaCualitativa(c.idEstudianteNotaCualitativa,idInscripcion,c.idNotaTipo,c.idFila,c.notaCualitativa,c.notaCuantitativa,c.notaTipo,c.idEstudianteNotaCualitativa)">
                                             <span v-bind:class="{tachado: c.notaCualitativaNueva != '' && c.notaCualitativa != c.notaCualitativaNueva}">${c.notaCualitativa}</span>
-                                            <span v-if="c.notaCualitativa != c.notaCualitativaNueva" v-bind:class="{notaNueva: true}"><b>${c.notaCualitativaNueva}</b></span>
+                                            <span v-if="c.notaCualitativa != c.notaCualitativaNueva" v-bind:class="{notaNueva: true}">${c.notaCualitativaNueva}</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -489,12 +496,17 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="gestion >= 2014" class="modal-footer">
-                        Estado matricula:
-                        <b>
-                        <span v-bind:class="{tachado: actualEstadomatricula != nuevoEstadomatricula }">${this.actualEstadomatricula}</span>
-                        <span v-if="actualEstadomatricula != nuevoEstadomatricula" >${this.nuevoEstadomatricula}</span>
-                        </b>
+                    <div class="modal-footer">
+                        <div class="pull-left">
+                            Estado matricula:
+                            <b>
+                            <span v-bind:class="{tachado: actualEstadomatricula != nuevoEstadomatricula }">${this.actualEstadomatricula}</span>
+                            <span v-if="actualEstadomatricula != nuevoEstadomatricula" >${this.nuevoEstadomatricula}</span>
+                            </b>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary" v-on:click="cerrarModal">Aceptar</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -518,6 +530,7 @@
                 rudeBuscar: '',
                 respuesta: '',
                 cargandoCalificaciones: false,
+                verModificaciones: true,
 
                 codigoRude: '',
                 estudiante: '',
@@ -557,6 +570,9 @@
                 checkFormulario: false
             },
             methods: {
+                cerrarModal: function(){
+                    $('#modalCalificaciones').modal('hide');
+                },
                 inArray: function(needle, haystack) {
                     var length = haystack.length;
                     for(var i = 0; i < length; i++) {
@@ -722,6 +738,8 @@
                         // console.log(this.gestion);
                         var me = this;
 
+                        $('body').removeClass('modal-open');
+
                         if(index == -1){
                             // AGREGAR CALIFICACION
                             const {value: calificacion} = Swal.fire({
@@ -765,9 +783,12 @@
                                     this.notas.push(nuevaNota);
                                     this.filas.push(idFila);
                                     $('#'+idFila).addClass('seleccionado');
+
+                                },
+                                onClose: () => {
+                                    $('body').addClass('modal-open');
                                 }
                             })
-
                         }else{
                             // MODIFICAR CALIFICACION
                             // Swal.fire(
@@ -814,14 +835,17 @@
                                     this.notas[index].notaNueva = value;
                                     this.validarValorNota(this.notas[index]);
 
+                                },
+                                onClose: () => {
+                                    $('body').addClass('modal-open');
                                 }
                             })
                             
                         }
 
-                        $(".swal2-input").focus(function(){    
-                          this.select();
-                        });
+                        // $(".swal2-input").focus(function(){    
+                        //   this.select();
+                        // });
                     }
 
                     $('[data-toggle="popover"]').popover();
@@ -908,7 +932,7 @@
                     var promedio;
                     var cantidadPromedios = 0;
                     var arrayPromedios = [];
-                    // CALCULO DE PROMEDIOS Y ESTADO DE MATRICULA PARA NOTAS BIMESTRALES
+                    // CÁLCULO DE PROMEDIOS Y ESTADO DE MATRICULA PARA NOTAS BIMESTRALES
                     if ((this.gestion >= 2014 && this.datos.operativo >= 4) || (this.gestion == 2013 && this.datos.grado == 1) ) {
                         $.each(this.datos.cuantitativas, function(index, val) {
                             nulos = 0;
@@ -995,6 +1019,7 @@
                             });
                         }
                     }else{
+                        // CÁLCULO DE PROMEDIOS Y ESTADO DE MATRICULA PARA NOTAS TRIMESTRALES
                         $.each(this.datos.cuantitativas, function(index, val) {
                             nulos = 0;
                             suma1t = 0;
@@ -1035,29 +1060,73 @@
                                     me.datos.cuantitativas[index].notas[index2].notaNueva = suma3t;
                                 }
 
-
-
                                 if (val2['idNotaTipo'] == 9) {
                                     promedioAnual = Math.round((suma1t + suma2t + suma3t)/3);
                                     me.datos.cuantitativas[index].notas[index2].notaNueva = promedioAnual;
                                 }else{
                                     if (val2['idNotaTipo'] == 10) {
-                                        reforzamiento = valor;
+                                        if (promedioAnual >= 36) {
+                                            reforzamiento = 0;
+                                        }else{
+                                            reforzamiento = valor;
+                                        }
                                         me.datos.cuantitativas[index].notas[index2].notaNueva = reforzamiento;
                                     }else{
-                                        if (val2['idNotaTipo'] == 11 && reforzamiento != 0) {
+                                        if (val2['idNotaTipo'] == 11 && reforzamiento != 0 && reforzamiento != '') {
                                             promedioFinal = promedioAnual + reforzamiento;
                                             me.datos.cuantitativas[index].notas[index2].notaNueva = promedioFinal;
+
+                                            arrayPromedios.push({
+                                                idAsignatura: val['idAsignatura'],
+                                                promedio: promedioFinal
+                                            });
+                                            // INCREMENTAMOS LA CANTIDAD DE PROMEDIOS
+                                            cantidadPromedios+=1;
+
+                                        }else{
+                                            if (val2['idNotaTipo'] == 11) {
+                                                me.datos.cuantitativas[index].notas[index2].notaNueva = 0;
+                                                
+                                                arrayPromedios.push({
+                                                    idAsignatura: val['idAsignatura'],
+                                                    promedio: promedioAnual
+                                                });
+                                                // INCREMENTAMOS LA CANTIDAD DE PROMEDIOS
+                                                cantidadPromedios+=1;
+                                            }
                                         }
                                     }
                                 }
                             });
                         });
 
-                        // var cantidadMaterias = this.datos.cuantitativas.length;
-                        // if(cantidadMaterias == cantidadPromedios){
-
-                        // }
+                        // CALCULAMOS EL ESTADO DE MATRÍCULA
+                        var cantidadMaterias = this.datos.cuantitativas.length;
+                        if(cantidadMaterias == cantidadPromedios){
+                            var me = this;
+                            $.each(this.estadosMatricula, function(index, val) {
+                                if (val['id'] == 5) {
+                                    me.nuevoEstadomatricula = val['estadoMatricula'];
+                                }
+                            });
+                            // CALCULAMOS EL ESTADO GENERAL DE ACUERDO AL PROMEDIO GENERAL ANUAL EN PRIMARIA en la gestion 2019
+                            $.each(arrayPromedios, function(index, val) {
+                                if(val.promedio < 36){
+                                    $.each(me.estadosMatricula, function(index, val) {
+                                        if (val['id'] == 11) {
+                                            me.nuevoEstadomatricula = val['estadoMatricula'];
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            var me = this;
+                            $.each(this.estadosMatricula, function(index, val) {
+                                if (val['estadoMatricula'] == me.actualEstadomatricula) {
+                                    me.nuevoEstadomatricula = val['estadoMatricula'];
+                                }
+                            });
+                        }
                     }
                 },
                 agregarNotaCualitativa: function(idEstudianteNotaCualitativa,idInscripcion,idNotaTipo,idFila,notaCualitativa,notaCuantitativa,notaTipo,idEstudianteNotaCualitativa){
@@ -1073,6 +1142,8 @@
                     }
 
                     var index = this.filasCualitativas.indexOf(idFila);
+
+                    $('body').removeClass('modal-open');
 
                     if(index == -1){
                         const {value: valoracion} = Swal.fire({
@@ -1101,6 +1172,11 @@
                                 this.notasCualitativas.push(nuevaNotaCualitativa);
                                 this.filasCualitativas.push(idFila);
                                 $('#'+idFila).addClass('seleccionado');
+
+                                $('body').addClass('modal-open');
+                            },
+                            onClose: () => {
+                                $('body').addClass('modal-open');
                             }
                         })
                     }else{
@@ -1128,6 +1204,11 @@
                                 // nuevaNota.notaNueva = value;
                                 this.notasCualitativas[index].notaNuevaCualitativa = value;
                                 this.validarValorNotaCualitativa(this.notasCualitativas[index]);
+
+                                $('body').addClass('modal-open');
+                            },
+                            onClose: () => {
+                                $('body').addClass('modal-open');
                             }
                         })
 
@@ -1264,7 +1345,7 @@
                     if (typeof this.informe != 'object') {
                         Swal.fire(
                           'Adjuntar Informe',
-                          'Debe adjuntar el informe técnico, puede ser un archivo de imagen o PDF',
+                          'Debe adjuntar el informe técnico, puede ser un archivo de imagen o PDF, y debe tener un tamaño menor a 2MB',
                           'warning'
                         );
                         return;
@@ -1324,6 +1405,8 @@
                                 // window.location.href = "{{path('wf_tramite_index', { tipo: 3 })}}";
                                 this.respuestaIdTramite = response.data.idTramite;
                                 this.urlreporte = response.data.urlreporte;
+
+                                document.location.href = "#tramiteEnviado";
                                 
                             })
                             .catch(e => {
