@@ -153,8 +153,8 @@
                     <tr>
                         <td data-title="Asignatura">
                             {% if a.idAsignatura == 1039 %}
-                                {% set asignaturaNombre = a.asignatura|split(':') %}
-                                {{asignaturaNombre[0]}} {% if asignaturaNombre[1]|length > 0 %} : <span style="color:#43C65E; font-weight:bold"> {{asignaturaNombre[1]|upper}}{% if asignaturaNombre[2] is defined and asignaturaNombre[2]|length > 0 %} :{{asignaturaNombre[2]|upper}} {% endif %} </span> {% endif %}
+                                {% set asignaturaNombre = a.asignatura|split('::') %}
+                                {{asignaturaNombre[0]}} {% if asignaturaNombre[1]|length > 0 %} : <span style="color:#43C65E; font-weight:bold"> {{asignaturaNombre[1]|upper}} </span> {% endif %}
                             {% else %}
                                 {{ a.asignatura }}
                             {% endif %}
