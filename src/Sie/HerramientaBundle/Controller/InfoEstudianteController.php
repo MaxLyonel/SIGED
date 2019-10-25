@@ -78,7 +78,7 @@ class InfoEstudianteController extends Controller {
                 ));
 
                 //send the values to the next steps
-                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa,'nivelId'=> $uEducativa['nivelId'],'gradoId'=> $uEducativa['gradoId']);
 
                 if($uEducativa['nivelId'] == 13 and $uEducativa['gradoId'] == 6){
                     $tieneSextoSec = true;

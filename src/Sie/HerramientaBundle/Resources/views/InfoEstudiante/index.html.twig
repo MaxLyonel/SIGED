@@ -71,7 +71,7 @@
                                                                                 {{paraleloKey}}
                                                                             </span>
                                                                         </div>
-                                                                      </a>
+                                                                      </a>                                                                      
                                                                         <!--div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
                                                                             <button type="button" class="btn btn-circle btn-warning btn-stroke" onclick="getStudents('{{dataParalelo.infoUe}}');" >
                                                                                 <i class="fa fa-group"></i>
@@ -110,6 +110,14 @@
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
+                                                                        {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId == 6 %}
+                                                                            
+                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
+                                                                                    <button class="btn btn-circle btn-success btn-stroke " onclick="getStudentsBth('{{dataParalelo.infoUe}}');">
+                                                                                    <i class="fa fa-group"></i>
+                                                                                    </button
+                                                                                </div>
+                                                                        {% endif %}
 
                                                                     </li>
                                                                 {% endfor %}
@@ -207,6 +215,33 @@
                 success: function (data) {
                     $("#idstudents").empty();
                     $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        
+        var getStudentsBth = function (infoUe) {
+
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_info_estudiante_see_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                    $('.tooltips').tooltip();
                 },
                 statusCode: {
                     500: function () {
