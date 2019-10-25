@@ -401,7 +401,7 @@ class Notas{
                     if($a['asignaturaId'] == 1039){
                         $especialidad = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
                         if($especialidad){
-                            $nombreAsignatura = $a['asignatura'].' '.$especialidad->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad();
+                            $nombreAsignatura = $a['asignatura'].':'.$especialidad->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad();
                         }
                     }
 
