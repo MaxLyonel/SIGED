@@ -1375,9 +1375,70 @@ class InfoEstudianteController extends Controller {
 
     }
 
+    private function getBthStudents($iecId){
+
+        $em = $this->getDoctrine()->getManager();
+        // get studen
+        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseBTH($iecId);
+        //get the students has BTH
+        $arrStudents = array();
+        if($objStudents){
+            foreach ($objStudents as $value) {
+                $arrStudents[] = array(
+                    
+                    'studentId'=>$value['id'],
+                    'carnetIdentidad'=>$value['carnetIdentidad'],
+                    'complemento'=>$value['complemento'],
+                    'codigoRude'=>$value['codigoRude'],
+                    'paterno'=>$value['paterno'],
+                    'materno'=>$value['materno'],
+                    'nombre'=>$value['nombre'],
+                    'estadomatricula'=>$value['estadomatricula'],
+                    'estadomatriculaId'=>$value['estadomatriculaId'],
+                    'eInsId'=>$value['eInsId'],
+                    'studentId'=>$value['id'],
+                    
+                );
+            }
+        }
+
+        return $arrStudents;
+
+
+    }
+    private function getSpeciality(){
+
+        $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
+        $objSpeciality = $this->get('funciones')->getSpeciality($arrdata);
+        $arrSpeciality = array();
+        if($objSpeciality){
+            foreach ($objSpeciality as $value) {
+                $arrSpeciality[]=array('specialtyId'=>$value->getId(), 'specialty'=>$value->getEspecialidad());
+            }
+        }
+        
+        return($arrSpeciality);        
+    }
+
     public function addupdateStudentbthAction(Request $request){
-        dump($request);
-        die;
+        //get the send values
+        $iecId = $request->get('iecId');
+        // create var to send the next values
+        $response = new JsonResponse();
+        // get students bth
+        $arrStudents = $this->getBthStudents($iecId);
+        // get specialities 
+        $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
+        $arrSpeciality = $this->getSpeciality();
+        
+        //return values
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'students'     => $arrStudents,
+            'swaddupdate'  => true,
+            'DBspeciality' => $arrSpeciality
+        ));
+        return $response;   
     }
 
 }

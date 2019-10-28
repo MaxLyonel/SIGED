@@ -804,30 +804,30 @@ class InstitucioneducativaRepository extends EntityRepository {
     }
 
 
-        public function getListStudentPerCourseBTH($iecId){
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb
-                ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, coalesce(eiht.horas,0) as horasPlena, coalesce(eiht.esvalido,false) as esvalidoPlena, case when eiht.id is null then false else true end as conespecialidad, case when eiht.esvalido = true then true else false end as imprimirCut")
-                ->from('SieAppWebBundle:Institucioneducativa', 'ie')
-                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ie.id = iec.institucioneducativa')
-                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'iec.id = ei.institucioneducativaCurso ')
-                ->leftjoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante = e.id')
-                ->leftjoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'iec.nivelTipo = nt.id')
-                ->leftjoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'iec.gradoTipo = gt.id')
-                ->leftJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'iec.paraleloTipo = pt.id')
-                ->leftjoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'iec.turnoTipo = tt.id')
-                ->leftjoin('SieAppWebBundle:PaisTipo', 'ptp', 'WITH', 'e.paisTipo = ptp.id')
-                ->leftjoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'e.lugarNacTipo = ltd.id')
-                ->leftjoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'e.lugarProvNacTipo = ltp.id')
-                ->leftjoin('SieAppWebBundle:generoTipo', 'g', 'WITH', 'e.generoTipo = g.id')
-                ->leftjoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'ei.estadomatriculaTipo = emt.id')
-                ->leftjoin('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico', 'eiht', 'WITH', 'eiht.estudianteInscripcion = ei.id')
-                ->where('iec.id = :iecId')
-                ->setParameter('sie', $iecId)
-                ->orderBy('e.paterno, e.materno')
-        ;
-        return $qb->getQuery()->getResult();
-    }
+    public function getListStudentPerCourseBTH($iecId){
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    $qb
+            ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, coalesce(eiht.horas,0) as horasPlena, coalesce(eiht.esvalido,false) as esvalidoPlena, case when eiht.id is null then false else true end as conespecialidad, case when eiht.esvalido = true then true else false end as imprimirCut")
+            ->from('SieAppWebBundle:Institucioneducativa', 'ie')
+            ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ie.id = iec.institucioneducativa')
+            ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'iec.id = ei.institucioneducativaCurso ')
+            ->leftjoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante = e.id')
+            ->leftjoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'iec.nivelTipo = nt.id')
+            ->leftjoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'iec.gradoTipo = gt.id')
+            ->leftJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'iec.paraleloTipo = pt.id')
+            ->leftjoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'iec.turnoTipo = tt.id')
+            ->leftjoin('SieAppWebBundle:PaisTipo', 'ptp', 'WITH', 'e.paisTipo = ptp.id')
+            ->leftjoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'e.lugarNacTipo = ltd.id')
+            ->leftjoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'e.lugarProvNacTipo = ltp.id')
+            ->leftjoin('SieAppWebBundle:generoTipo', 'g', 'WITH', 'e.generoTipo = g.id')
+            ->leftjoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'ei.estadomatriculaTipo = emt.id')
+            ->leftjoin('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico', 'eiht', 'WITH', 'eiht.estudianteInscripcion = ei.id')
+            ->where('iec.id = :iecId')
+            ->setParameter('iecId', $iecId)
+            ->orderBy('e.paterno, e.materno')
+    ;
+    return $qb->getQuery()->getResult();
+}
 
 
 
