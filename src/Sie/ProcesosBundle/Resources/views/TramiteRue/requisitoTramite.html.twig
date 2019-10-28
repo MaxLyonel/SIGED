@@ -212,19 +212,33 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_folio_dependencia) }}&nbsp;
+                                                            {{ form_label(form.i_folio_dependencia) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_nrofolio_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_nrofolio_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
                                                         <div class="col-md-6">
                                                             {{ form_label(form.i_esalquiler_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
                                                             {% for a in form.i_esalquiler_dependencia %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a) }}
+                                                                    {{ form_widget(a, {'attr':{'class':'alquilerDependencia'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
                                                     </div>
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group col-md-12" style="display:none" id="contratoDependencia">
                                                         <div class="col-md-6">
                                                             {{ form_label(form.i_contrato_dependencia) }}
                                                         </div>
@@ -697,6 +711,18 @@
             $('#contrato').hide();
             $('#form_i_contrato_ampliar').attr('required',false);
             $('#form_i_contrato_ampliar').val('');
+        }
+    });
+
+    $(".alquilerDependencia").change(function () {	 
+        if ($(this).val() == 'SI'){
+            $('#contratoDependencia').show();
+            $('#form_i_contrato_dependencia').attr('required',true);
+
+        }else{
+            $('#contratoDependencia').hide();
+            $('#form_i_contrato_dependencia').attr('required',false);
+            $('#form_i_contrato_dependencia').val('');
         }
     });
 </script>

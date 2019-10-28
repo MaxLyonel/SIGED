@@ -83,6 +83,15 @@
         
     </td>
 {% elseif id == 41 %} {# cambio de infraestructura #}
+    <style>
+        /* Tooltip */
+        .msg + .tooltip > .tooltip-inner {
+            background-color: #E9F9FC; 
+            color: #01B1E1; 
+            border: 1px solid #01B1E1; 
+            padding: 15px;
+        }
+    </style>
     <td>
         <div class="row">
             <div class="form-group col-md-12">
@@ -190,8 +199,9 @@
                 <div class="col-md-5">  
                     {{ form_label(form.lejurisdiccion) }}
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-7 form-inline">
                     {{ form_widget(form.lejurisdiccion,{'attr':{'oninput':'buscarEdificioEscolar(this.value)'} }) }}
+                    <span class="glyphicon glyphicon-question-sign msg" data-toggle="tooltip" title="Si la nueva infraestructura ya cuenta con un Código de local educativo." data-placement="top"></span>
                 </div>
             </div>
             <div class="col-md-12">

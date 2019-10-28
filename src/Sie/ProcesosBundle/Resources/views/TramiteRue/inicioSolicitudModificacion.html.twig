@@ -811,6 +811,7 @@
                         }
                         //console.log(trArray);
                         $('#form_tr').val(JSON.stringify(trArray));
+                        $('[data-toggle="tooltip"]').tooltip()
                         //$('.container').css('background','rgba(0, 0, 0, 0.5)');
                     },
                 });
@@ -880,7 +881,7 @@
             array.splice(index, 1);
             $('#form_tr').val(JSON.stringify(array));
         }
-       {#  $(document).on('click', '.borrar', function (event) {
+        {#  $(document).on('click', '.borrar', function (event) {
             console.log($(this).closest('tr').0.id);
             event.preventDefault();
             $(this).closest('tr').remove();

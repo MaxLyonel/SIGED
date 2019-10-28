@@ -357,6 +357,8 @@ class TramiteRueController extends Controller
                     $form = $form
                         ->add('i_solicitud_dependencia', 'file', array('label' => 'Adjuntar Solicitud de Cambio de Dependencia (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_actafundacion', 'file', array('label' => 'Adjuntar Acta de Fundación (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_folio_dependencia', 'checkbox', array('label' => 'Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.','required'  => false))
+                        ->add('i_nrofolio_dependencia', 'text', array('label' => 'Nro. de Folio Real:','required'=>true,'attr' => array('class' => 'form-control','maxlength'=>10)))
                         ->add('i_esalquiler_dependencia', 'choice', array('label' => 'Infraestructura arrendada:','multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
                         ->add('i_contrato_dependencia', 'file', array('label' => 'Adjuntar Copia notariada de contrato de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_dependencia', 'file', array('label' => 'Adjuntar convenio vigente de prestación de servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
@@ -371,7 +373,7 @@ class TramiteRueController extends Controller
                         ->add('fecha_fundaempresa', 'text', array('label' => 'Fecha de Inscripción:','required'=>false,'attr' => array('class' => 'form-control date')))
                         ->add('i_fotocopia_nit', 'checkbox', array('label' => 'Fotocopia legalizada del certificado del Número de Identificación Tributaria NIT, (si corresponde):','required'  => false))
                         ->add('nit_dependencia', 'text', array('label' => 'Nro. de N.I.T.:','required'=>false,'attr' => array('class' => 'form-control validar')))
-                        ->add('i_balance_apertura', 'checkbox', array('label' => 'Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde);','required'  => true))
+                        ->add('i_balance_apertura', 'checkbox', array('label' => 'Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).','required'  => true))
                         ->add('i_testimonioconvenio', 'text', array('label' => 'Nro. del Testimonio de personeria jurídica de la entidad prestadora de servicio:','required'=>true,'attr' => array('class' => 'form-control validar')))
                         ->add('fecha_testimonioconvenio', 'text', array('label' => 'Fecha del testimonio :','required'=>true,'attr' => array('class' => 'form-control date')))
                         ->add('i_certificadorue_dependencia', 'checkbox', array('label' => 'Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).','required'  => true))
@@ -568,23 +570,36 @@ class TramiteRueController extends Controller
         return $form;
     }
 
+    public function upload($file,$ie){
+        // check if the file exists
+        if(!empty($file)){
+            $new_name = date('YmdHis').rand(1,99).'.'.$file->getClientOriginalExtension();
+            $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$ie;
+            //$root_bth_path = 'uploads/archivos/flujos/'.$ie;
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
+            $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$ie.'/rue/';
+            //$destination_path = 'uploads/archivos/flujos/'.$ie.'/bth/';
+            if (!file_exists($directoriomove)) {
+                mkdir($directoriomove, 0775, true);
+            }
+            $file->move($directoriomove, $new_name);
+        }else{
+            $new_name='default-2x.pdf';
+        }
+        return $new_name;
+    }
     public function inicioSolicitudModificacionGuardarAction(Request $request)
     {
+        $this->session = $request->getSession();
         $form = $request->get('form');
         $files = $request->files->get('form');
-        //dump($request);die;
         //dump($form,$files);die;
         $tramites = json_decode($form['tr'],true);
-        //parse_str($form['tr'],$array); 
-        //dump($tramites);die;
         
         $em = $this->getDoctrine()->getManager();
 
-        //$filename = $file['i_solicitud_ampliar']->getClientOriginalName();
-        //dump($files);die;
-        //parse_str($form['form_34'],$array); 
-        //dump(unserialize($form['form_34']));die;
-        //dump($_FILES);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $flujotipo = $form['flujotipo'];
@@ -599,17 +614,52 @@ class TramiteRueController extends Controller
         /**
          * datos propios de la solicitud del formulario rue
          */
+        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1
+                FROM institucioneducativa ie
+                join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+                join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
+                join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
+                left join convenio_tipo ct on ct.id=ie.convenio_tipo_id
+                where ies.gestion_tipo_id=' . $this->session->get('currentyear') .'
+                and ie.id='. $form['idrue']);
+                $query->execute();
+        $institucioneducativa = $query->fetchAll();
+        $query = $em->getConnection()->prepare('SELECT nt.id,nt.nivel
+                FROM institucioneducativa_nivel_autorizado ien
+                join nivel_tipo nt on ien.nivel_tipo_id = nt.id
+                WHERE ien.institucioneducativa_id='. $form['idrue']);
+                $query->execute();
+        $ieNivelAutorizado = $query->fetchAll();
+        $query = $em->getConnection()->prepare('SELECT le.id,le.zona,le.direccion,le.distrito_tipo_id,dt.distrito,
+                lt.id as localidad2001_id,lt.lugar as localidad2001,lt1.id as canton2001_id,lt1.lugar as canton2001,lt2.id as municipio2001_id,lt2.lugar as municipio2001,lt3.id as provincia2001_id,lt3.lugar as provincia2001,lt4.id as departamento2001_id,lt4.lugar as departamento2001,lt.area2001,
+                lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012
+                FROM jurisdiccion_geografica le
+                join distrito_tipo dt on dt.id=le.distrito_tipo_id
+                join lugar_tipo lt on lt.id=le.lugar_tipo_id_localidad
+                join lugar_tipo lt1 on lt1.id=lt.lugar_tipo_id
+                join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+                join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
+                join lugar_tipo lt4 on lt4.id=lt3.lugar_tipo_id
+                join lugar_tipo lt5 on lt5.id=le.lugar_tipo_id_localidad2012
+                join lugar_tipo lt6 on lt6.id=lt5.lugar_tipo_id
+                join lugar_tipo lt7 on lt7.id=lt6.lugar_tipo_id
+                join lugar_tipo lt8 on lt8.id=lt7.lugar_tipo_id
+                WHERE le.id='. $institucioneducativa[0]['le_juridicciongeografica_id']);
+                $query->execute();
+        $le = $query->fetchAll();
         
-        //dump($form);die;
+        $id_tabla = $institucioneducativa[0]['id'];
+        $datos = array();
+        $datos['institucioneducativa']=$institucioneducativa[0];
+        $datos['jurisdiccion_geografica']=$le[0];
+        $datos['institucioneducativaNivel']=$ieNivelAutorizado;
         $tramites = $em->getRepository('SieAppWebBundle:TramiteTipo')->createQueryBuilder('tt')
             ->select('tt.id,tt.tramiteTipo')
             ->where('tt.id in (:id)')
             ->setParameter('id',$tramites)
             ->getQuery()
             ->getResult();
-            
-        //dump($form,$files,$tramites);die;
-        $datos = array();
+          
         $datos['tramites'] = $tramites;
         $datos['justificacion'] = $form['observacion'];
         foreach ($tramites as $tramite){
@@ -621,30 +671,71 @@ class TramiteRueController extends Controller
                         ->setParameter('id',$form['nivelampliar'])
                         ->getQuery()
                         ->getResult();
-                    $datos['nivelampliar']=$nivel;
-                    $datos['i_alquiler_ampliar']=$form['i_alquiler_ampliar'];
-                    $datos['i_certificado_ampliar']=$form['i_certificado_ampliar'];
-                    $datos['ii_planos_ampliar']=$form['ii_planos_ampliar'];
-                    $datos['ii_infra_ampliar']=$form['ii_infra_ampliar'];
-                    //$datos['i_solicitud_ampliar']=$form['i_solicitud_ampliar'];
+                    $datos[$tramite['tramiteTipo']]['nivelampliar']=$nivel;
+                    $datos[$tramite['tramiteTipo']]['i_alquiler_ampliar']=$form['i_alquiler_ampliar'];
+                    $datos[$tramite['tramiteTipo']]['i_certificado_ampliar']=$form['i_certificado_ampliar'];
+                    $datos[$tramite['tramiteTipo']]['ii_planos_ampliar']=$form['ii_planos_ampliar'];
+                    $datos[$tramite['tramiteTipo']]['ii_infra_ampliar']=$form['ii_infra_ampliar'];
+                    $datos[$tramite['tramiteTipo']]['i_solicitud_ampliar']=$this->upload($files['i_solicitud_ampliar'],$form['idrue']);
                     if($form['i_alquiler_ampliar'] == 'SI'){
-                        //$datos['i_contrato_ampliar']=$form['i_contrato_ampliar'];
+                        $datos[$tramite['tramiteTipo']]['i_contrato_ampliar']=$this->upload($files['i_contrato_ampliar'],$form['idrue']);
                     }
                     break;
                 case 35: //Reduccion de Nivel
                     $datos['nivelreducir']=$form['nivelreducir'];
                     break;
                 case 36://Cambio de Dependencia
-                    $datos['dependencia']=$form['dependencia'];
-                    if ($form['dependencia']==2){
-                        $datos['conveniotipo']=$form['conveniotipo'];
+                    $d = $em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneBy(array('id'=>$form['dependencia']));    
+                    $datos[$tramite['tramiteTipo']]['dependencia'] = array('id'=>$d->getId(),'dependencia'=>$d->getDependencia());
+                    if ($form['dependencia'][0]==2){
+                        $c = $em->getRepository('SieAppWebBundle:ConvenioTipo')->find($form['conveniotipo']);    
+                        $datos[$tramite['tramiteTipo']]['conveniotipo'] = array('id'=>$c->getId(),'convenio'=>$c->getConvenio());
+                        $datos[$tramite['tramiteTipo']]['i_solicitud_dependencia']=$this->upload($files['i_solicitud_dependencia'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_actafundacion']=$this->upload($files['i_actafundacion'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_folio_dependencia']=$form['i_folio_dependencia'];
+                        $datos[$tramite['tramiteTipo']]['i_nrofolio_dependencia']=$form['i_nrofolio_dependencia'];
+                        $datos[$tramite['tramiteTipo']]['i_esalquiler_dependencia']=$form['i_esalquiler_dependencia'];
+                        if($form['i_esalquiler_dependencia'] == 'SI'){
+                            $datos[$tramite['tramiteTipo']]['i_contrato_dependencia']=$this->upload($files['i_contrato_dependencia'],$form['idrue']);
+                        }
+                        $datos[$tramite['tramiteTipo']]['i_convenio_dependencia']=$this->upload($files['i_convenio_dependencia'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_certificacion_gam']=$this->upload($files['i_certificacion_gam'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_certificacionde_convenio']=$this->upload($files['i_certificacionde_convenio'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_convenio_administracion']=$form['i_convenio_administracion'];
+                        $datos[$tramite['tramiteTipo']]['i_acta_constitucion']=$form['i_acta_constitucion'];
+                        $datos[$tramite['tramiteTipo']]['i_registro_culto']=$form['i_registro_culto'];
+                        $datos[$tramite['tramiteTipo']]['i_org_nogubernamental']=$form['i_org_nogubernamental'];
+                        $datos[$tramite['tramiteTipo']]['i_form_fundaempresa']=$form['i_form_fundaempresa'];
+                        $datos[$tramite['tramiteTipo']]['nro_fundaempresa']=$form['nro_fundaempresa'];
+                        $datos[$tramite['tramiteTipo']]['fecha_fundaempresa']=$form['fecha_fundaempresa'];
+                        $datos[$tramite['tramiteTipo']]['i_fotocopia_nit']=$form['i_fotocopia_nit'];
+                        $datos[$tramite['tramiteTipo']]['nit_dependencia']=$form['nit_dependencia'];
+                        $datos[$tramite['tramiteTipo']]['i_balance_apertura']=$form['i_balance_apertura'];
+                        $datos[$tramite['tramiteTipo']]['i_testimonioconvenio']=$form['i_testimonioconvenio'];
+                        $datos[$tramite['tramiteTipo']]['fecha_testimonioconvenio']=$form['fecha_testimonioconvenio'];
+                    }else{
+                        $datos[$tramite['tramiteTipo']]['i_informe_dependencia']=$this->upload($files['i_informe_dependencia'],$form['idrue']);
                     }
+                    $datos[$tramite['tramiteTipo']]['i_certificadorue_dependencia']=$form['i_certificadorue_dependencia'];
                     break;
                 case 37://Cambio de Nombre
-                    $datos['nuevonombre']=$form['institucioneducativa'];
+                    $datos[$tramite['tramiteTipo']]['nuevo_nombre']=$form['nuevo_nombre'];
+                    $datos[$tramite['tramiteTipo']]['i_ley_cn']=$form['i_ley_cn'];
+                    $datos[$tramite['tramiteTipo']]['i_certificadorue_cn']=$form['i_certificadorue_cn'];
+                    $datos[$tramite['tramiteTipo']]['i_ley_cn']=$form['i_ley_cn'];
+                    $datos[$tramite['tramiteTipo']]['i_solicitud_cn']=$this->upload($files['i_solicitud_cn'],$form['idrue']);
+                    $datos[$tramite['tramiteTipo']]['i_certdefuncion_cn']=$this->upload($files['i_certdefuncion_cn'],$form['idrue']);
                     break;
                 case 38://Cambio de Jurisdiccion
-                    $datos['distrito']=$form['distrito'];
+                    $d = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($form['nuevo_distrito']);    
+                    $datos[$tramite['tramiteTipo']]['nuevo_distrito'] = array('id'=>$d->getId(),'nuevo_distrito'=>$d->getDistrito());
+                    $datos[$tramite['tramiteTipo']]['i_area_jur']=$form['i_area_jur'];
+                    $datos[$tramite['tramiteTipo']]['i_certificadorue_jur']=$form['i_certificadorue_jur'];
+                    $datos[$tramite['tramiteTipo']]['ii_planos_jur']=$form['ii_planos_jur'];
+                    $datos[$tramite['tramiteTipo']]['ii_inventario_jur']=$form['ii_inventario_jur'];
+                    $datos[$tramite['tramiteTipo']]['iii_partemensual_jur']=$form['iii_partemensual_jur'];
+                    $datos[$tramite['tramiteTipo']]['i_resolucion_jur']=$this->upload($files['i_resolucion_jur'],$form['idrue']);
+                    $datos[$tramite['tramiteTipo']]['i_certificacion_jur']=$this->upload($files['i_certificacion_jur'],$form['idrue']);
                     break;
                 case 39://Fusion
                     $datos['siefusion']=$form['siefusion'];
@@ -657,54 +748,53 @@ class TramiteRueController extends Controller
                     break;
                 case 41://Cambio de Infraestructura
                     if($form['lejurisdiccion']){
-                        $datos['lejurisdiccion']=$form['lejurisdiccion'];    
+                        $datos[$tramite['tramiteTipo']]['lejurisdiccion']=$form['lejurisdiccion'];    
                     }else{
-                        $datos['comunidad']=$form['comunidad'];
-                        $datos['zona']=$form['zona'];
-                        $datos['direccion']=$form['direccion'];
+                        $datos[$tramite['tramiteTipo']]['zona']=$form['zona'];
+                        $datos[$tramite['tramiteTipo']]['direccion']=$form['direccion'];
+                        $datos[$tramite['tramiteTipo']]['iddepartamento2001']=$form['departamento2001'];
+                        $datos[$tramite['tramiteTipo']]['departamento2001']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento2001'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idprovincia2001']=$form['provincia2001'];
+                        $datos[$tramite['tramiteTipo']]['provincia2001']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia2001'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idmunicipio2001']=$form['municipio2001'];
+                        $datos[$tramite['tramiteTipo']]['municipio2001']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['municipio2001'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idcanton2001']=$form['canton2001'];
+                        $datos[$tramite['tramiteTipo']]['canton2001']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['canton2001'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idlocalidad2001']=$form['localidad2001'];
+                        $datos[$tramite['tramiteTipo']]['localidad2001']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['localidad2001'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['iddepartamento2012']=$form['departamento2012'];
+                        $datos[$tramite['tramiteTipo']]['departamento2012']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento2012'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idprovincia2012']=$form['provincia2012'];
+                        $datos[$tramite['tramiteTipo']]['provincia2012']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia2012'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idmunicipio2012']=$form['municipio2012'];
+                        $datos[$tramite['tramiteTipo']]['municipio2012']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['municipio2012'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['idcomunidad2012']=$form['comunidad2012'];
+                        $datos[$tramite['tramiteTipo']]['comunidad2012']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['comunidad2012'])->getLugar();
+                        $datos[$tramite['tramiteTipo']]['i_certificadorue_infra']=$form['i_certificadorue_infra'];
+                        $datos[$tramite['tramiteTipo']]['ii_folio_infra']=$form['ii_folio_infra'];
+                        $datos[$tramite['tramiteTipo']]['ii_nrofolio_infra']=$form['ii_nrofolio_infra'];
+                        $datos[$tramite['tramiteTipo']]['ii_planos_infra']=$form['ii_planos_infra'];
+                        $datos[$tramite['tramiteTipo']]['i_certificacion_infra']=$this->upload($files['i_certificacion_infra'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_solicitud_infra']=$this->upload($files['i_solicitud_infra'],$form['idrue']);
+                        $datos[$tramite['tramiteTipo']]['i_resolucion_infra']=$this->upload($files['i_resolucion_infra'],$form['idrue']);
                     }
                     break;
                 case 42://Cierre Temporal
-                    break;
                 case 43://Cierre Definitivo
+                    $datos[$tramite['tramiteTipo']]['estadoinstitucion']=$form['estadoinstitucion'];
+                    $datos[$tramite['tramiteTipo']]['i_archivos_cierre']=$form['i_archivos_cierre'];
+                    $datos[$tramite['tramiteTipo']]['i_certificadorue_cierre']=$form['i_certificadorue_cierre'];
+                    $datos[$tramite['tramiteTipo']]['i_solicitud_cierre']=$this->upload($files['i_solicitud_cierre'],$form['idrue']);
+                    $datos[$tramite['tramiteTipo']]['i_resolucion_cierre']=$this->upload($files['i_resolucion_cierre'],$form['idrue']);
                     break;
                 case 44://Reapertura
                     break;
                 case 45://Nuevo Certificado RUE
+                    $datos[$tramite['tramiteTipo']]['i_solicitud_nuevorue']=$this->upload($files['i_solicitud_nuevorue'],$form['idrue']);
                     break;
             }
         }
-        //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        dump($datos);die;
-        $query = $em->getConnection()->prepare('SELECT * 
-                FROM institucioneducativa ie
-                WHERE ie.id='. $tramite->getInstitucioneducativa()->getId());
-                $query->execute();
-        $institucioneducativa = $query->fetchAll();
-        $query = $em->getConnection()->prepare('SELECT ien.nivel_tipo_id,nt.nivel
-                FROM institucioneducativa_nivel_autorizado ien
-                join nivel_tipo nt on ien.nivel_tipo_id = nt.id
-                WHERE ien.institucioneducativa_id='. $form['idrue']);
-                $query->execute();
-        $ieNivelAutorizado = $query->fetchAll();
-        $query = $em->getConnection()->prepare('SELECT *
-                FROM jurisdiccion_geografica le
-                WHERE le.id='. $tramite->getInstitucioneducativa()->getLeJuridicciongeografica()->getId());
-                $query->execute();
-        $le = $query->fetchAll();
-        if($institucioneducativa[0]['institucioneducativa_tipo_id']==4){
-            $query = $em->getConnection()->prepare('SELECT iea.especial_area_tipo_id
-                FROM institucioneducativa_area_especial_autorizado iea
-                WHERE iea.institucioneducativa_id='. $form['idrue']);
-                $query->execute();
-            $ieAreasAutorizado = $query->fetchAll();
-            $form['institucioneducativaAreaEspecial']=$ieAreasAutorizado;
-        }
-        $id_tabla = $institucioneducativa[0]['id'];
-        $form['institucioneducativa']=$institucioneducativa[0];
-        $form['jurisdiccion_geografica']=$le[0];
-        $form['institucioneducativaNivel']=$ieNivelAutorizado;
-        
+        //dump($datos);die;
         $datos = json_encode($datos);
 
         if ($form['idrue']){
@@ -748,6 +838,7 @@ class TramiteRueController extends Controller
          * obtiene datos de los anteriores formularios
          */
         $tareasDatos = $this->obtieneDatos($tramite);
+        dump($tareasDatos);die;
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
         $tipotramite = $tramite->getTramiteTipo()->getId();
@@ -788,11 +879,20 @@ class TramiteRueController extends Controller
     {
         
         $form = $request->get('form');
+        $file = $request->files->get('form');
         $em = $this->getDoctrine()->getManager();
-        dump($form);die;
+        //dump($form,$file);die;
         $datos=array();
         $datos['observacion']=$form['observacion'];
         $datos['varevaluacion1']=$form['varevaluacion1'];
+        $datos['requisitos']=$form['requisitos'];
+        if($form['varevaluacion1'] == 'SI'){
+            $datos['informedistrito']=$form['informedistrito'];
+            $datos['fechainformedistrito']=$form['fechainformedistrito'];
+            $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$form['idrue']);
+        }else{
+            $datos['varevaluacion2']=$form['varevaluacion2'];
+        }
         $datos = json_encode($datos);
         //dump($datos);die;
         $usuario = $this->session->get('userId');
@@ -813,7 +913,6 @@ class TramiteRueController extends Controller
                 $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
                 if($mensaje['dato'] == true){
                     $datos['varevaluacion2']=$form['varevaluacion2'];
-                    $varevaluacion2 = $form['varevaluacion2'];
                     $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
                     if($mensaje['dato'] == true){
                         $request->getSession()
@@ -868,6 +967,7 @@ class TramiteRueController extends Controller
          * obtiene datos de los anteriores formularios
          */
         $tareasDatos = $this->obtieneDatos($tramite);
+        //dump($tareasDatos);die;
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
         $tipotramite = $tramite->getTramiteTipo()->getId();
@@ -910,12 +1010,25 @@ class TramiteRueController extends Controller
     {
         
         $form = $request->get('form');
+        $files = $request->files->get('form');
         $em = $this->getDoctrine()->getManager();
-        //dump($form);die;
+        //dump($form,$files);die;
         $datos=array();
-        //$datos['observacion']=$form['observacion'];
-        //$datos['varevaluacion']=$form['varevaluacion'];
-        $datos = $form;
+        $datos['observacion']=$form['observacion'];
+        $datos['varevaluacion']=$form['varevaluacion'];
+        $datos['informesubdireccion']=$form['informesubdireccion'];
+        $datos['fechainformesubdireccion']=$form['fechainformesubdireccion'];
+        if($form['informesubdireccion']){
+            $datos['adjuntoinformesubdireccion']=$this->upload($files['adjuntoinformesubdireccion'],$form['idrue']);
+        }
+        if($form['varevaluacion'] == 'SI'){
+            $datos['informejuridica']=$form['informejuridica'];
+            $datos['fechainformejuridica']=$form['fechainformejuridica'];
+            $datos['adjuntoinformejuridica']=$this->upload($files['adjuntoinformejuridica'],$form['idrue']);
+            $datos['resolucion']=$form['resolucion'];
+            $datos['fecharesolucion']=$form['fecharesolucion'];
+            $datos['adjuntoresolucion']=$this->upload($files['adjuntoresolucion'],$form['idrue']);
+        }
         $datos = json_encode($datos);
         //dump($datos);die;
         $usuario = $this->session->get('userId');
@@ -962,6 +1075,7 @@ class TramiteRueController extends Controller
          * obtiene datos de los anteriores formularios
          */
         $tareasDatos = $this->obtieneDatos($tramite);
+        //dump($tareasDatos);die;
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
         $tipotramite = $tramite->getTramiteTipo()->getId();
@@ -1633,162 +1747,9 @@ class TramiteRueController extends Controller
         foreach($wfdatos as $wfd)
         {
             $datos = json_decode($wfd->getdatos(),true);
-            //dump($datos);die;
-            switch ($wfd->getTramiteDetalle()->getFlujoProceso()->getId()) {
-                case 64:
-                    $tarea = array();
-                    $institucioneducativa = $wfd->getTramiteDetalle()->getTramite()->getInstitucioneducativa();
-                    $tarea['tramitetipo'] = $em->getRepository('SieAppWebBundle:TramiteTipo')->findBy(array('id'=>$datos['tramites']));
-                    $tarea['idrue'] = $institucioneducativa->getId();
-                    $tarea['institucioneducativa'] = $institucioneducativa->getInstitucioneducativa();
-                    $tarea['codigoLe'] = $institucioneducativa->getLeJuridicciongeografica()->getId();
-                    $tarea['estado'] = $institucioneducativa->getEstadoInstitucionTipo()->getEstadoinstitucion();
-                    $tarea['dependencia'] = $institucioneducativa->getDependenciaTipo()->getDependencia();
-                    if($institucioneducativa->getDependenciaTipo()->getID()==2){
-                        $tarea['convenio'] = $institucioneducativa->getConvenioTipo()->getConvenio();
-                    }else{
-                        $tarea['convenio'] = '';
-                    }
-                    $tarea['distrito'] = $institucioneducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDistrito();
-                    $tarea['fechafundacion'] = $institucioneducativa->getFechaResolucion();
-                    $tarea['telefono'] = '';
-                    $nivel = $wfdatos = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->createQueryBuilder('na')
-                        ->select('nt')
-                        ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'with', 'nt.id = na.nivelTipo')
-                        ->where('na.institucioneducativa='.$institucioneducativa->getId())
-                        ->orderBy("nt.id")
-                        ->getQuery()
-                        ->getResult();
-                    $tarea['nivel'] = $nivel;
-                    $tarea['justificacion'] = $datos['observacion'];
-                    $tareasDatos[] = array('flujoProceso'=>$wfd->getTramiteDetalle()->getFlujoProceso(),'datos'=>$tarea);
-                    break;
-                case 65:
-                    //dump($datos);die;
-                    /* $tarea46['informe'] = $datos['informe'];
-                    $tarea46['fechainforme'] = $datos['fechainforme'];
-                    $tarea46['observacion'] = $datos['observacion'];
-                    $tareasDatos[] = array('flujoProceso'=>46,'datos'=>$tarea46,'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo()); */
-                    break;
-                case 66:
-                    //dump($datos);die;
-                    /* $tarea47['tipotramite'] = $wfd->getTramiteDetalle()->getTramite()->getTramiteTipo();
-                    $tarea47['turno'] = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($datos['turnotipo'])->getTurno();
-                    $tarea47['participantes'] = '';
-                    $tarea47['areaespecial'] = '';
-                    $tarea47['resolucion'] = '';
-                    $tarea47['iiia_acta'] = '';
-                    if ($wfd->getTramiteDetalle()->getTramite()->getInstitucioneducativa()){  //si es modificacion
-                        $le = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['jurisdiccion_geografica']['lugar_tipo_id_localidad']);
-                        //dump($le);die;
-                        $tarea47['tipoeducacion'] = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($datos['institucioneducativa']['institucioneducativa_tipo_id'])->getDescripcion();
-                        $tarea47['dependenciatipo'] = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($datos['institucioneducativa']['dependencia_tipo_id'])->getDependencia();
-                        $tarea47['niveltipo'] = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa'=>$datos['institucioneducativa']['id']));
-                        $tarea47['le'] = $datos['jurisdiccion_geografica']['id'];
-                        $tarea47['departamento'] = $le->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugar();
-                        $tarea47['provincia'] = $le->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugar();
-                        $tarea47['municipio'] = $le->getLugarTipo()->getLugarTipo()->getLugar();
-                        $tarea47['canton'] = $le->getLugarTipo()->getLugar();
-                        $tarea47['localidad'] = $le->getLugar();
-                        $tarea47['distrito'] = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($datos['jurisdiccion_geografica']['distrito_tipo_id'])->getDistrito();
-                        $tarea47['codrue'] = $datos['institucioneducativa']['id'];
-                        $tarea47['institucioneducativa'] = $datos['institucioneducativa']['institucioneducativa'];
-                        $tarea47['resolucion'] = $wfd->getTramiteDetalle()->getTramite()->getInstitucioneducativa()->getNroResolucion();
-                        $tarea47['zona'] = $datos['jurisdiccion_geografica']['zona'];
-                        $tarea47['direccion'] = $datos['jurisdiccion_geografica']['direccion'];
-                        if($datos['institucioneducativa']['institucioneducativa_tipo_id']==4){
-                            $tarea47['areaespecial'] = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa'=>$datos['institucioneducativa']['id'])); 
-                            unset($datos['institucioneducativaAreaEspecial']);
-                        }
-                        unset($datos['institucioneducativa'],$datos['jurisdiccion_geografica'],$datos['institucioneducativaNivel']);
-                    }else{   // si es nuevo
-                        $tarea47['tipoeducacion'] = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($datos['tipoeducacion'])->getDescripcion();
-                        $tarea47['dependenciatipo'] = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($datos['dependenciatipo'])->getDependencia();
-                        $tarea47['niveltipo'] = $em->getRepository('SieAppWebBundle:NivelTipo')->findBy(array('id'=>$datos['niveltipo']));
-                        $tarea47['le'] = $datos['lejurisdiccion'];
-                        $tarea47['codrue'] = '';
-                        $tarea47['departamento'] = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($datos['departamento'])->getDepartamento();
-                        $tarea47['provincia'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['provincia'])->getLugar();
-                        $tarea47['municipio'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['municipio'])->getLugar();
-                        $tarea47['canton'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['canton'])->getLugar();
-                        $tarea47['localidad'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['localidad'])->getLugar();
-                        $tarea47['distrito'] = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($datos['distrito'])->getDistrito();
-                        $tarea47['institucioneducativa'] = $datos['institucioneducativa'];
-                        $tarea47['zona'] = $datos['zona'];
-                        $tarea47['direccion'] = $datos['direccion'];
-                        unset($datos['tipoeducacion'],$datos['dependenciatipo'],$datos['niveltipo'],$datos['lejurisdiccion'],$datos['departamento'],$datos['provincia'],$datos['municipio'],$datos['canton'],$datos['localidad'],$datos['distrito'],$datos['institucioneducativa'],$datos['zona'],$datos['direccion']);
-                    }
-                    unset($datos['turnotipo']);
-                    $tarea47 = array_merge($tarea47, $datos); 
-                    //dump($tarea47);die;
-                    $tareasDatos[] = array('flujoProceso'=>47,'datos'=>$tarea47,'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo());
-                    break; */
-                case 67:
-                    //dump($datos);die;
-                    /* $tareasDatos[] = array('flujoProceso'=>48,'datos'=>$datos,'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo()); */
-                    break;
-                case 68:
-                    //dump($datos);die;
-                    /* $tareasDatos[] = array('flujoProceso'=>49,'datos'=>$datos, 'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo()); */
-                    break;
-                case 69:
-                    //dump($datos);die;
-                    if($datos['varevaluacion'] == "SI"){
-                        $tarea50['resolucion'] = $datos['resolucion'];
-                        $tarea50['fecharesolucion'] = $datos['fecharesolucion'];
-                        $tarea50['institucioneducativa'] = $datos['institucioneducativa'];
-                        $tarea50['lejurisdiccion'] = $datos['lejurisdiccion'];
-                        $tarea50['departamento'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['departamento'])->getLugar();
-                        $tarea50['provincia'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['provincia'])->getLugar();
-                        $tarea50['municipio'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['municipio'])->getLugar();
-                        $tarea50['canton'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['canton'])->getLugar();
-                        $tarea50['localidad'] = $em->getRepository('SieAppWebBundle:LugarTipo')->find($datos['localidad'])->getLugar();
-                        $tarea50['zona'] = $datos['zona'];
-                        $tarea50['direccion'] = $datos['direccion'];
-                        $tarea50['distrito'] = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($datos['distrito'])->getDistrito();
-                        $tarea50['dependencia'] = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($datos['dependencia'])->getDependencia();
-                        $tarea50['tipoeducacion'] = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($datos['tipoeducacion'])->getDescripcion();
-                        $tarea50['niveltipo'] = $em->getRepository('SieAppWebBundle:NivelTipo')->findBy(array('id'=>$datos['niveltipo']));
-                        $tarea50['tipobachillerato'] = $datos['tipobachillerato'];
-                        $tarea50['comparteLe'] = $datos['comparteLe'];
-                        $tarea50['formularios'] = $datos['formularios'];
-                        $tarea50['varevaluacion'] = $datos['varevaluacion'];
-                        $tarea50['observacion'] = $datos['observacion'];
-                        if($datos['tipoeducacion'] == 4){
-                            $tarea50['areaEspecialTipo'] = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findBy(array('id'=>$datos['areaEspecialTipo'])); 
-                        }
-                        if ($wfd->getTramiteDetalle()->getTramite()->getInstitucioneducativa()){  //si es modificacion
-                            $tarea50['idrue'] = $datos['idrue'];
-                        }else{
-                            $tarea50['idrue'] = "";
-                            $tarea50['director'] = $datos['director'];
-                            $tarea50['ci'] = $datos['ci'];
-                            $tarea50['tienecargo'] = $datos['tienecargo'];
-                            $tarea50['telefono'] = $datos['telefono'];
-                            $tarea50['otrotelefono'] = $datos['otrotelefono'];
-                            $tarea50['email'] = $datos['email'];
-                            $tarea50['fax'] = $datos['fax'];
-                            $tarea50['otropertenece'] = $datos['otropertenece'];
-                            $tarea50['casilla'] = $datos['casilla'];
-                        }
-                        $tareasDatos[] = array('flujoProceso'=>50,'datos'=>$tarea50, 'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo());
-                    }else{
-                        $tareasDatos[] = array('flujoProceso'=>50,'datos'=>$datos, 'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo());
-                    }
-                    //dump($tarea47);die;
-                    break;
-                    
-                case 70:
-                    //dump($datos);die;
-                    $tareasDatos[] = array('flujoProceso'=>53,'datos'=>$datos, 'tarea'=>$wfd->getTramiteDetalle()->getFlujoProceso()->getProceso()->getProcesoTipo());
-                    break;
-                case 71:
-                    break;
-                case 71:
-                    break;
-            }
+            $tareasDatos[] = array('flujoProceso'=>$wfd->getTramiteDetalle()->getFlujoProceso(),'datos'=>$datos);
         }
-
+        //dump($tareasDatos);die;
         return $tareasDatos;
     }
 
