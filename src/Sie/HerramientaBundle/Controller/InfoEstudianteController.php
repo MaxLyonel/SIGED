@@ -1363,4 +1363,21 @@ class InfoEstudianteController extends Controller {
 
     }
 
+    public function getStudentsBthAction(Request $request){
+        // get the send values
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        //view the template response
+        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:getStudentsBth.html.twig', array(
+            'infoUe' => $infoUe,
+            'iecId'  => $aInfoUeducativa['ueducativaInfoId']['iecId']
+        ));
+
+    }
+
+    public function addupdateStudentbthAction(Request $request){
+        dump($request);
+        die;
+    }
+
 }

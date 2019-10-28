@@ -109,3 +109,15 @@ herramienta_info_estudiante_cerrarSextoGrado:
     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:cerrarSextoGrado }
     options:
          expose: true
+
+herramienta_info_estudiante_optionsBth:
+    path:     /sie/getstudentsbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:getStudentsBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_addupdateStudentbth:
+    path:     /sie/addupdateStudentbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:addupdateStudentbth }
+    options:
+         expose: true

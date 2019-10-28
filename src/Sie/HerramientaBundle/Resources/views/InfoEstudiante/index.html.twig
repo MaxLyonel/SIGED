@@ -113,7 +113,7 @@
                                                                         {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId == 6 %}
                                                                             
                                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
-                                                                                    <button class="btn btn-circle btn-success btn-stroke " onclick="getStudentsBth('{{dataParalelo.infoUe}}');">
+                                                                                    <button class="btn btn-circle btn-success btn-stroke " onclick="optionsBth('{{dataParalelo.infoUe}}');">
                                                                                     <i class="fa fa-group"></i>
                                                                                     </button
                                                                                 </div>
@@ -155,6 +155,9 @@
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script>
         /**
          * this is to the tree menu option
@@ -228,12 +231,12 @@
         };
 
         
-        var getStudentsBth = function (infoUe) {
+        var optionsBth = function (infoUe) {
 
             $.ajax({
                 type: 'get',
                 data: ({infoUe: infoUe}),
-                url: Routing.generate('herramienta_info_estudiante_see_students'),
+                url: Routing.generate('herramienta_info_estudiante_optionsBth'),
                 beforeSend: function () {
                     $("#idstudents").empty();
                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
