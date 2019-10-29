@@ -849,6 +849,35 @@
             });
         }
 
+        function verRequisitos(id){
+            //alert(id);
+            var formData = {id: id,ie:'{{institucioneducativa.id}}'};
+            if ( $("#modal_requisitos_"+ id).length ) {
+                return false;
+            }
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_busca_requisitos')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal_'+id).empty();
+                    $("#modal_"+id).append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    //console.log(data);
+                    $('#modal_'+id).empty();
+                    $('#modal_'+id).append(data);
+                     $('.date').datepicker({
+                        orientation: "auto left",
+                        forceParse: false,
+                        autoclose: true,
+                        todayHighlight: true,
+                        language: 'es'
+                    });
+                },
+            });
+        }
+
         function guardarRequisitos(id){
             //alert('entra');
             //var fileName = $('#form_i_solicitud_ampliar').files[0].name;

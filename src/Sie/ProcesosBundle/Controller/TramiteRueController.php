@@ -409,7 +409,7 @@ class TramiteRueController extends Controller
                         ->add('i_copianit_cn', 'checkbox', array('label' => 'Copia computarizada del N.I.T., (si corresponde)','required'  => false))
                         ->add('i_nit_cn', 'text', array('label' => 'Nro. de N.I.T.:','required'=>false,'attr' => array('class' => 'form-control validar')))
                         ->add('i_nrotestimonio_cn', 'text', array('label' => 'Nro. de testimonio de poder de representante legal:','required'=>true,'attr' => array('class' => 'form-control validar')))
-                        ->add('i_fecha_testimonio_cn', 'text', array('label' => 'Fecha del testimonio :','required'=>true,'attr' => array('class' => 'form-control date')))
+                        ->add('i_fecha_testimonio_cn', 'text', array('label' => 'Fecha del testimonio:','required'=>true,'attr' => array('class' => 'form-control date')))
                         ->add('i_licenciafuncionamiento_cn', 'checkbox', array('label' => 'Copia legalizada de la Licencia de Funcionamiento Municipal.','required'  => true));
                 }
                 if($ie->getDependenciaTipo()->getId() == 3){
@@ -833,6 +833,7 @@ class TramiteRueController extends Controller
         $id = $request->get('id');
         $em = $this->getDoctrine()->getManager();
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
+        //dump($tramite);die;
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         /**
          * obtiene datos de los anteriores formularios

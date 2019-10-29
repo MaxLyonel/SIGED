@@ -315,11 +315,10 @@
                                                                         </td>
                                                                     {% elseif t.id == 37 %}{# cambio de nombre #}
                                                                         <td>
-                                                                            {{nombre_actual|upper}}
+                                                                            {{d.datos.institucioneducativa.institucioneducativa|upper}}
                                                                         </td>
                                                                         <td>
-                                                                            {{ form_label(form.nuevo_nombre) }}
-                                                                            {{ form_widget(form.nuevo_nombre) }}
+                                                                            {{d.datos[t.tramiteTipo].nuevo_nombre|upper}}
                                                                         </td>
                                                                     {% elseif t.id == 38 %}{# cambio de jurisdiccion administrativa #}
                                                                         <td>
@@ -357,7 +356,7 @@
                                                                                         <strong>DEPARTAMENTO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.departamento2001|upper }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.departamento2001|upper }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -365,7 +364,7 @@
                                                                                         <strong>PROVINCIA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.provincia2001 }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.provincia2001 }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -373,7 +372,7 @@
                                                                                         <strong>MUNICIPIO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.municipio2001 }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.municipio2001 }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -381,7 +380,7 @@
                                                                                         <strong>CANTÓN:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.canton2001 }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.canton2001 }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -389,7 +388,7 @@
                                                                                         <strong>LOCALIDAD:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.localidad2001 }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.localidad2001 }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -400,7 +399,7 @@
                                                                                         <strong>DEPARTAMENTO: </strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.departamento2012|upper }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.departamento2012|upper }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -408,7 +407,7 @@
                                                                                         <strong>PROVINCIA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.provincia2012|upper }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.provincia2012|upper }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -416,7 +415,7 @@
                                                                                         <strong>MUNICIPIO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.municipio2012|upper }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.municipio2012|upper }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -424,7 +423,7 @@
                                                                                         <strong>COMUNIDAD:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.comunidad2012|upper }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.comunidad2012|upper }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -435,7 +434,7 @@
                                                                                         <strong>ZONA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.zona }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.zona }}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
@@ -443,7 +442,7 @@
                                                                                         <strong>DIRECCIÓN:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-8">
-                                                                                        {{ jurisdiccion_geografica.direccion }}
+                                                                                        {{ d.datos.jurisdiccion_geografica.direccion }}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -465,42 +464,42 @@
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Departamento:</strong>
+                                                                                        <strong>DEPARTAMENTO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].departamento2001}}
+                                                                                        {{d.datos[t.tramiteTipo].departamento2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Provincia:</strong>
+                                                                                        <strong>PROVINCIA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].provincia2001}}
+                                                                                        {{d.datos[t.tramiteTipo].provincia2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Municipio:</strong>
+                                                                                        <strong>MUNICIPIO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].municipio2001}}
+                                                                                        {{d.datos[t.tramiteTipo].municipio2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Cantón:</strong>
+                                                                                        <strong>CANTON:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].canton2001}}
+                                                                                        {{d.datos[t.tramiteTipo].canton2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Localidad/Comunidad:</strong>
+                                                                                        <strong>LOCALIDAD:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].localidad2001}}
+                                                                                        {{d.datos[t.tramiteTipo].localidad2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
@@ -508,34 +507,34 @@
                                                                                 </div>
                                                                                 <div class="form-group col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Departamento:</strong>
+                                                                                        <strong>DEPARTAMENTO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].departamento2012}}
+                                                                                        {{d.datos[t.tramiteTipo].departamento2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Provincia:</strong>
+                                                                                        <strong>PROVINCIA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].provincia2012}}
+                                                                                        {{d.datos[t.tramiteTipo].provincia2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Municipio:</strong>
+                                                                                        <strong>MUNICIPIO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].municipio2012}}
+                                                                                        {{d.datos[t.tramiteTipo].municipio2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Comunidad:</strong>
+                                                                                        <strong>COMUNIDAD:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].comunidad2012}}
+                                                                                        {{d.datos[t.tramiteTipo].comunidad2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
@@ -543,37 +542,28 @@
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Zona:</strong>
+                                                                                        <strong>ZONA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].zona}}
+                                                                                        {{d.datos[t.tramiteTipo].zona}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
                                                                                     <div class="col-md-5">
-                                                                                        <strong>Dirección:</strong>
+                                                                                        <strong>DIRECCIÓN:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{datos[t.tramiteTipo].direccion}}
+                                                                                        {{d.datos[t.tramiteTipo].direccion}}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </td>
                                                                     {% elseif t.id == 42 or id == 43 %} {# cierre temporal #}
                                                                         <td>
-                                                                            {% if estadoinstitucion.id == 10 %}
-                                                                                {{estadoinstitucion.estadoinstitucion|upper}}
-                                                                            {% else %}
-                                                                                <span class="label label-danger">LA UNIDAD EDUCATIVA EST CERRADA</span>
-                                                                            {% endif %}
+                                                                            {{d.datos.institucioneducativa.estadoinstitucion|upper}}
                                                                         </td>
                                                                         <td>
-                                                                            {% if estadoinstitucion.id == 10 %}
-                                                                                <div class="col-md-12 ckbox ckbox-primary">
-                                                                                    {{ form_widget(form.estadoinstitucion) }}&nbsp;
-                                                                                    {{ form_label(form.estadoinstitucion) }}                                                            
-                                                                                </div>
-                                                                            {% endif %}
+                                                                            CERRADA
                                                                         </td>
                                                                     {% elseif t.id == 44 %}{# Reapertura #}
                                                                         <td>
@@ -592,12 +582,8 @@
                                                                             {% endif %}
                                                                         </td>
                                                                     {% elseif t.id == 45 %}{# nuevo certifcado rue #}
-                                                                        <td>
-                                                                            
-                                                                        </td>
-                                                                        <td>
-                                                                            
-                                                                        </td>
+                                                                        <td></td>
+                                                                        <td></td>
                                                                     {% endif %}
                                                                     <td>
                                                                         <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
