@@ -330,7 +330,7 @@ class WfTramiteController extends Controller
         }else{
             $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
         }
-        $usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tarea,'lugarTipoId'=>$lugarTipoUsuario));
+        $usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tarea,'lugarTipoId'=>$lugarTipoUsuario,'esactivo'=>true));
         //dump($usuarios);die;
         $usuario = array();
     	foreach($usuarios as $u){
