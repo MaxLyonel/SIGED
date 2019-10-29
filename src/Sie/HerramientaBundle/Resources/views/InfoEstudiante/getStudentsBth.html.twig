@@ -84,12 +84,13 @@
                                         </select>
                                     </td>
                                     <td>
-                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                        {# <button v-on:click="addupStudentbth(student.eInsId )" type="button" class="btn btn-xs btn-info"> <i class="fa fa-plus" ></i></button> #}
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1">                                         
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" align="right">
-                                        <button v-on:click="addupdateStudentbth()" type="button" class="btn btn-primary"> registrar</button>    
+                                        <button v-on:click="addupStudentbth()" type="button" class="btn btn-primary"> registrar</button>    
                                     </td>
                                 </tr>
                         </table>
@@ -124,17 +125,20 @@
                                     <th>CÓDIGO RUDE</th>
                                     <th>ESTUDIANTE</th>
                                     <th>ESTADO DE MATRÍCULA</th>
-                                    <th>OPCIONES</th>
+                                    <th>ESPECIALIDAD</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             {#init the array info student #}
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                <tr v-for="(student, index) in students">
+                                    <td>${ index+1 }</td>
+                                    <td>${ student.codigoRude }</td>
+                                    <td>${ student.paterno } ${ student.materno } ${ student.nombre }</td>
+                                    <td>${ student.estadomatricula }</td>
+                                    <td>${ student.specialty }</td>
+                                    <td><button v-on:click="deleteStudentbth('${ student.eInsId }')" type="button" class="btn btn-xs btn-danger"> <i class="fa fa-trash" ></i></button></td>
                                 </tr>
+                                
                         </table>
                     </div>  
                 </div>
@@ -155,8 +159,9 @@
                 iecId: '{{iecId}}',
                 swaddupdate:false,
                 swremove:false,
-                students:'',
-                DBspeciality:''
+                students: [],
+                DBspeciality:'',
+                selected:''
 
             },
             methods: {
@@ -186,7 +191,7 @@
                     });
                 },
                 removeStudentBth: function(){
-                    this.button = true;
+                    this.buscando = true;
                     this.swaddupdate = false;
                     this.swremove = false;
                     axios.get(Routing.generate('herramienta_info_estudiante_removeStudentBth', {
@@ -196,10 +201,29 @@
                         
                         if (response.status == 200) {
                             this.students = response.data.students;
-                            this.DBspeciality = response.data.DBspeciality;
-                            this.swaddupdate = true;
+                            //this.DBspeciality = response.data.DBspeciality;
+                            this.swaddupdate = false;
                             this.buscando = false;
-                            this.swaddupdate = true;
+                            this.swremove = response.data.swremove;
+                        }
+                        this.buscando = false;
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                },
+                addupStudentbth: function(eInsId){
+                    
+                    axios.get(Routing.generate('herramienta_info_estudiante_addupStudentbth', {
+                        eInsId: eInsId
+                    }))
+                    .then(response => {
+                        
+                        if (response.status == 200) {
+                            console.log(eInsId +' '+this.selected.specialtyId)
                         }
                         this.buscando = false;
                         if( response.status == 202){
@@ -209,7 +233,6 @@
                     .catch(e => {
                         console.log(e);
                     });                    
-
 
                 },
 

@@ -1420,7 +1420,12 @@ class InfoEstudianteController extends Controller {
         
         return($arrSpeciality);        
     }
-
+    
+    /**
+    *to do the add and/or update the speciality
+    *parameters: var iec id
+    *return json data(studnets, specialityies)
+    **/
     public function addupdateStudentbthAction(Request $request){
         //get the send values
         $iecId = $request->get('iecId');
@@ -1440,6 +1445,38 @@ class InfoEstudianteController extends Controller {
             'DBspeciality' => $arrSpeciality
         ));
         return $response;   
+    }
+
+    /**
+    *to do the removing the speciality
+    *parameters: var iec id
+    *return json data(studnets, specialityies)
+    **/
+    public function removeStudentBthAction(Request $request){
+        //get the send values
+        $iecId = $request->get('iecId');
+        // create var to send the next values
+        $response = new JsonResponse();
+        // get students bth
+        $arrStudents = $this->getBthStudents($iecId);
+        // get specialities 
+        $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
+        $arrSpeciality = $this->getSpeciality();
+        
+        //return values
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'students'     => $arrStudents,
+            'swremove'  => true,
+            'DBspeciality' => $arrSpeciality
+        ));
+        return $response;   
+    }    
+
+    public function addupStudentbthAction(Request $request){
+        // get the send values
+        dump($request);
+        die;
     }
 
 }
