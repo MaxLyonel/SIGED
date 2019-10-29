@@ -1,0 +1,228 @@
+<style type="text/css">
+    .btn-menu{
+        border: 1px solid #FFFFFF;
+        color: #FFFFFF;
+        border-radius: 50%;
+    }
+    .btn-menu:hover{
+        color: #FFFFFF;
+        /* border: 2px; */
+        box-shadow: 0px 2px 3px #90E6EA;
+    }
+</style>
+    <div id="app">
+        <div v-cloak>
+                
+            <div class="header-content">{# new options #}
+                <center>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <a v-on:click="addupdateStudentbth()" type="button" class=""> Adici&oacute;n/Modificaci&oacute;n</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <a v-on:click="removeStudentBth()" type="button" class=""> Elimaci&oacute;n</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                </center>
+            </div>{# end new options #}
+
+
+
+            <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> </div>
+            <div v-if="buscando" class="text-center">
+                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+            </div>
+
+
+
+
+            <div class="panel panel-primary" v-if="swaddupdate">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h5>Lista de inscritos</h5>
+                    </div>
+                    <div class="pull-right">
+
+                        <span style="font-size:1.2em">Opciones del curso:</span>
+                        <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
+                            <i class="fa fa-download" style="color:#FFFFFF"></i>
+                        </a>
+                    
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div id="no-more-tables">
+                        <table class="table table-bordered table-hover cf">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>CÓDIGO RUDE</th>
+                                    <th>ESTUDIANTE</th>
+                                    <th>ESTADO DE MATRÍCULA</th>
+                                    <th>ESPECIALIDAD</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            {#init the array info student #}
+                                <tr v-for="(student, index) in students">
+                                    <td>${ index+1 }</td>
+                                    <td>${ student.codigoRude }</td>
+                                    <td>${ student.paterno } ${ student.materno } ${ student.nombre }</td>
+                                    <td>${ student.estadomatricula }</td>
+                                    <td>${ student.specialty }</td>
+                                    <td>
+                                        <select name="arrSpeciality" id="specialityId"  class="custom-select form-control" >  
+                                            <option v-for="item in DBspeciality"  :value="item.specialtyId">${ item.specialty }</option>       
+                                        </select>
+                                    </td>
+                                    <td>
+                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" align="right">
+                                        <button v-on:click="addupdateStudentbth()" type="button" class="btn btn-primary"> registrar</button>    
+                                    </td>
+                                </tr>
+                        </table>
+                       
+                    </div>  
+                    
+                </div>
+            </div>
+
+
+            <div class="panel panel-primary" v-if="swremove">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h5>Lista de inscritos</h5>
+                    </div>
+                    <div class="pull-right">
+
+                        <span style="font-size:1.2em">Opciones del curso:</span>
+                        <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
+                            <i class="fa fa-download" style="color:#FFFFFF"></i>
+                        </a>
+                    
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div id="no-more-tables">
+                        <table class="table table-bordered table-hover cf">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>CÓDIGO RUDE</th>
+                                    <th>ESTUDIANTE</th>
+                                    <th>ESTADO DE MATRÍCULA</th>
+                                    <th>OPCIONES</th>
+                                </tr>
+                            </thead>
+                            {#init the array info student #}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                        </table>
+                    </div>  
+                </div>
+            </div>        
+
+
+    </div>{# end div cloak #}
+</div>{# end div app #}
+    <!-- /.row -->
+<script>
+
+ var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                buscando:false,
+                respuesta:'',
+                iecId: '{{iecId}}',
+                swaddupdate:false,
+                swremove:false,
+                students:'',
+                DBspeciality:''
+
+            },
+            methods: {
+                addupdateStudentbth: function(){
+                    this.buscando = true;
+                    this.swaddupdate = false;
+                    this.swremove = false;
+                    axios.get(Routing.generate('herramienta_info_estudiante_addupdateStudentbth', {
+                        iecId: '{{iecId}}'
+                    }))
+                    .then(response => {
+                        
+                        if (response.status == 200) {
+                            this.students = response.data.students;
+                            this.DBspeciality = response.data.DBspeciality;
+                            this.swaddupdate = true;
+                            this.buscando = false;
+                            this.swaddupdate = true;
+                        }
+                        this.buscando = false;
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                },
+                removeStudentBth: function(){
+                    this.button = true;
+                    this.swaddupdate = false;
+                    this.swremove = false;
+                    axios.get(Routing.generate('herramienta_info_estudiante_removeStudentBth', {
+                        iecId: '{{iecId}}'
+                    }))
+                    .then(response => {
+                        
+                        if (response.status == 200) {
+                            this.students = response.data.students;
+                            this.DBspeciality = response.data.DBspeciality;
+                            this.swaddupdate = true;
+                            this.buscando = false;
+                            this.swaddupdate = true;
+                        }
+                        this.buscando = false;
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });                    
+
+
+                },
+
+
+            },
+            mounted(){
+                
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+</script>

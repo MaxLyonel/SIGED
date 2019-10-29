@@ -1397,6 +1397,7 @@ class InfoEstudianteController extends Controller {
                     'estadomatriculaId'=>$value['estadomatriculaId'],
                     'eInsId'=>$value['eInsId'],
                     'studentId'=>$value['id'],
+                    'specialty'=>$value['especialidad'],
                     
                 );
             }
