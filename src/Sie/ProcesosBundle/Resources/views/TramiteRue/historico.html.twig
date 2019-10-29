@@ -284,18 +284,17 @@
                                                                     {% elseif t.id == 35 %}{# Reduccion de Nivel #}
                                                                         <td>
                                                                             <ul>
-                                                                                {% for n in ieNivel %}
-                                                                                    <li type=square>{{ n.nivel }}</li>
-                                                                                {% endfor %}
+                                                                                {% for n in d.datos.institucioneducativaNivel %}
+                                                                                    <li type=square>{{ n.nivel }}</li> 
+                                                                                {% endfor %}      
                                                                             </ul>
                                                                         </td>
                                                                         <td>
-                                                                            {% for a in form.nivelreducir %}
-                                                                                <div class="ckbox ckbox-primary">
-                                                                                    {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
-                                                                                    {{ form_label(a) }}
-                                                                                </div>
-                                                                            {% endfor %}
+                                                                            <ul>
+                                                                                {% for n in d.datos[t.tramiteTipo].nivelreducir %}
+                                                                                    <li type=square>{{ n.nivel }}</li> 
+                                                                                {% endfor %}
+                                                                            </ul>
                                                                         </td>
                                                                     {% elseif t.id == 36 %}{# cambio de dependencia #}
                                                                         <td>
@@ -558,7 +557,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </td>
-                                                                    {% elseif t.id == 42 or id == 43 %} {# cierre temporal #}
+                                                                    {% elseif t.id == 42 or t.id == 43 %} {# cierre temporal #}
                                                                         <td>
                                                                             {{d.datos.institucioneducativa.estadoinstitucion|upper}}
                                                                         </td>

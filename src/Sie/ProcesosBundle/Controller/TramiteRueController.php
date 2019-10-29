@@ -682,7 +682,21 @@ class TramiteRueController extends Controller
                     }
                     break;
                 case 35: //Reduccion de Nivel
-                    $datos['nivelreducir']=$form['nivelreducir'];
+                    $nivel = $em->getRepository('SieAppWebBundle:NivelTipo')->createQueryBuilder('nt')
+                        ->select('nt.id,nt.nivel')
+                        ->where('nt.id in (:id)')
+                        ->setParameter('id',$form['nivelreducir'])
+                        ->getQuery()
+                        ->getResult();
+                    $datos[$tramite['tramiteTipo']]['nivelreducir']=$nivel;
+                    $datos[$tramite['tramiteTipo']]['i_alquiler_reducir']=$form['i_alquiler_reducir'];
+                    $datos[$tramite['tramiteTipo']]['i_certificado_reducir']=$form['i_certificado_reducir'];
+                    $datos[$tramite['tramiteTipo']]['ii_planos_reducir']=$form['ii_planos_reducir'];
+                    $datos[$tramite['tramiteTipo']]['ii_infra_reducir']=$form['ii_infra_reducir'];
+                    $datos[$tramite['tramiteTipo']]['i_solicitud_reducir']=$this->upload($files['i_solicitud_reducir'],$form['idrue']);
+                    if($form['i_alquiler_reducir'] == 'SI'){
+                        $datos[$tramite['tramiteTipo']]['i_contrato_reducir']=$this->upload($files['i_contrato_reducir'],$form['idrue']);
+                    }
                     break;
                 case 36://Cambio de Dependencia
                     $d = $em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneBy(array('id'=>$form['dependencia']));    
@@ -839,7 +853,7 @@ class TramiteRueController extends Controller
          * obtiene datos de los anteriores formularios
          */
         $tareasDatos = $this->obtieneDatos($tramite);
-        dump($tareasDatos);die;
+        //dump($tareasDatos);die;
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
         $tipotramite = $tramite->getTramiteTipo()->getId();

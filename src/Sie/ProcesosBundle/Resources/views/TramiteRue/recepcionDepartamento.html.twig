@@ -219,6 +219,7 @@
             </div>  
         </div>
     </div>
+    {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }} 

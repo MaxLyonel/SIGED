@@ -25,7 +25,7 @@
     <td>
         {% for a in form.nivelreducir %}
             <div class="ckbox ckbox-primary">
-                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {{ form_widget(a,{'attr':{'class':'niveltipo','checked':'checked'}}) }}
                 {{ form_label(a) }}
             </div>
         {% endfor %}
