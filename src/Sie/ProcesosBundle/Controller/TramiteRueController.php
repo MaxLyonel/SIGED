@@ -1142,6 +1142,8 @@ class TramiteRueController extends Controller
         $observacion = $form['observacion'];
         $varevaluacion = $form['varevaluacion'];
         $lugar = $this->obtienelugar($idtramite);
+        $tareasDatos = $this->obtieneDatos($em->getRepository('SieAppWebBundle:Tramite')->find($idtramite));
+        //dump($tareasDatos);die;
         //dump($varevaluacion);die;
         $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         if($mensaje['dato'] == true){
@@ -1154,9 +1156,93 @@ class TramiteRueController extends Controller
                 if($mensaje['dato'] == true){
                     $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
                     if($mensaje['dato'] == true){
-                        $request->getSession()
+                        /**
+                         * Registrar en el RUE
+                         */
+                        $em->getConnection()->beginTransaction();
+                        try{
+                            $tareasDatos = $this->obtieneDatos($em->getRepository('SieAppWebBundle:Tramite')->find($idtramite));
+                            $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
+                            $iddistrito = $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'];
+                            
+                            foreach($tareasDatos[0]['datos']['tramites'] as $t){
+                                if($t['id'] == 34){#ampliacion de nivel
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    $em->flush();
+                                    $nuevoNivel = $tareasDatos[0]['datos'][$t['tramiteTipo']]['nivelampliar'];
+                                    //adiciona niveles nuevos
+                                    foreach($nuevoNivel as $n){
+                                        //dump($n);die;
+                                        $nivel = new InstitucioneducativaNivelAutorizado();
+                                        $nivel->setFechaRegistro(new \DateTime('now'));
+                                        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($n['id']));
+                                        $nivel->setInstitucioneducativa($institucioneducativa);
+                                        $em->persist($nivel);
+                                    }
+                                    $em->flush();
+                                }elseif($t['id'] == 35){#cambio de reduccion de nivel
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    $em->flush();
+                                    //elimina los niveles
+                                    $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $institucioneducativa->getId()));
+                                    if($nivelesElim){
+                                        foreach ($nivelesElim as $nivel) {
+                                            $em->remove($nivel);
+                                        }
+                                        $em->flush();
+                                    }
+                                    $nuevoNivel = $tareasDatos[0]['datos'][$t['tramiteTipo']]['nivelreducir'];
+                                    //adiciona niveles nuevos
+                                    foreach($nuevoNivel as $n){
+                                        //dump($n);die;
+                                        $nivel = new InstitucioneducativaNivelAutorizado();
+                                        $nivel->setFechaRegistro(new \DateTime('now'));
+                                        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($n['id']));
+                                        $nivel->setInstitucioneducativa($institucioneducativa);
+                                        $em->persist($nivel);
+                                    }
+                                    $em->flush();
+                                }elseif($t['id'] == 36){#cambio de dependencia
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    $institucioneducativa->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($tareasDatos[0]['datos'][$t['tramiteTipo']]['dependencia']['id']));
+                                    if($tareasDatos[0]['datos'][$t['tramiteTipo']]['dependencia']['id'] == 2){
+                                        $institucioneducativa->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($tareasDatos[0]['datos'][$t['tramiteTipo']]['conveniotipo']['id']));
+                                    }
+                                    $em->flush();
+                                }elseif($t['id'] == 38){#cambio de jurisdiccion administrativa
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    $jurisdicciongeografica = $institucioneducativa->getLeJuridiccionGeografica();
+                                    $jurisdicciongeografica->setLugarTipoIdDistrito($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('lugarNivel' => 7, 'codigo' => $tareasDatos[0]['datos'][$t['tramiteTipo']]['nuevo_distrito']['id']))->getId());
+                                    $jurisdicciongeografica->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($tareasDatos[0]['datos'][$t['tramiteTipo']]['nuevo_distrito']['id']));
+                                    $em->flush();
+                                }elseif($t['id'] == 41){#cambio de infraestructura
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    if(isset($tareasDatos[0]['datos'][$t['tramiteTipo']]['lejurisdiccion'])){
+                                        $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($tareasDatos[0]['datos'][$t['tramiteTipo']]['lejurisdiccion']));
+                                    }else{
+                                        $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($this->obtieneCodigoLe($tareasDatos[0]['datos'][$t['tramiteTipo']],$tareasDatos[0]['datos']['jurisdiccion_geografica'],$usuario)));
+                                    }
+                                    $em->flush();
+                                }
+                            }
+                            $em->getConnection()->commit();
+                            $request->getSession()
                                 ->getFlashBag()
-                                ->add('exito', $mensaje['msg']);            
+                                ->add('exito', $mensaje['msg']); 
+                        }catch (Exception $ex) {
+                            $b = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$usuario);
+                            $a = $this->get('wftramite')->eliminarTramiteRecibido($idtramite);
+                            $b = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$usuario);
+                            $em->getConnection()->rollback();
+                            $request->getSession()
+                                ->getFlashBag()
+                                ->add('error', $mensaje['msg']);
+                        }
                     }else{
                         //eliminar tramite recibido
                         $a = $this->get('wftramite')->eliminarTramiteRecibido($idtramite);
@@ -1542,17 +1628,17 @@ class TramiteRueController extends Controller
     }
 
     
-    public function obtieneCodigoLe($form,$id_usuario){
+    public function obtieneCodigoLe($le,$jur,$id_usuario){
         try {
-            
+            //dump($le);die;
             $em = $this->getDoctrine()->getManager();
             
-    		$sec = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['municipio']);
+    		$sec = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($le['idmunicipio2001']);
     		$secCod = $sec->getCodigo();
     		$proCod = $sec->getLugarTipo()->getCodigo();
             $depCod = $sec->getLugarTipo()->getLugarTipo()->getCodigo();
             
-    		$dis = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']);
+    		$dis = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($jur['distrito_tipo_id']);
     		$distrito = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('lugarNivel' => 7, 'codigo' => $dis->getId()));
             $query = $em->getConnection()->prepare('SELECT get_genera_codigo_le(:dep,:pro,:sec)');
             $query->bindValue(':dep', $depCod);
@@ -1563,12 +1649,13 @@ class TramiteRueController extends Controller
             // Registramos el local
     		$entity = new JurisdiccionGeografica();
             $entity->setId($codigolocal[0]["get_genera_codigo_le"]);
-            $entity->setLugarTipoLocalidad($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
+            $entity->setLugarTipoLocalidad($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($le['idlocalidad2001']));
+            $entity->setLugarTipoIdLocalidad2012($le['idcomunidad2012']);
             $entity->setLugarTipoIdDistrito($distrito->getId());
             $entity->setDistritoTipo($dis);
             $entity->setValidacionGeograficaTipo($em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneById(0));
-            $entity->setZona(mb_strtoupper($form['zona'], 'utf-8'));
-            $entity->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
+            $entity->setZona(mb_strtoupper($le['zona'], 'utf-8'));
+            $entity->setDireccion(mb_strtoupper($le['direccion'], 'utf-8'));
             $entity->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(1));
             $entity->setUsuarioId($id_usuario);
             $entity->setFechaRegistro(new \DateTime('now'));
