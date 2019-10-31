@@ -1377,11 +1377,23 @@ class InfoEstudianteController extends Controller {
 
     }
 
-    private function getBthStudents($iecId){
+    private function getBthStudents($iecId, $optionCallFunction){
 
         $em = $this->getDoctrine()->getManager();
-        // get studen
-        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseBTH($iecId);
+        switch ($optionCallFunction) {
+            case 1:
+                // get studen
+                $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseBTH($iecId);
+                break;
+            case 2:
+                // get studen
+                $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseOnlyBTH($iecId);
+                break;            
+            default:
+                # code...
+                break;
+        }
+        
         //get the students has BTH
         $arrStudents = array();
         if($objStudents){
@@ -1412,8 +1424,6 @@ class InfoEstudianteController extends Controller {
         }
 
         return $arrStudents;
-
-
     }
     private function getSpeciality(){
 
@@ -1440,7 +1450,7 @@ class InfoEstudianteController extends Controller {
         // create var to send the next values
         $response = new JsonResponse();
         // get students bth
-        $arrStudents = $this->getBthStudents($iecId);
+        $arrStudents = $this->getBthStudents($iecId,1);
         // dump($arrStudents);
         // die;
         // get specialities 
@@ -1465,10 +1475,14 @@ class InfoEstudianteController extends Controller {
     public function removeStudentBthAction(Request $request){
         //get the send values
         $iecId = $request->get('iecId');
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
         // create var to send the next values
         $response = new JsonResponse();
-        // get students bth
-        $arrStudents = $this->getBthStudents($iecId);
+        // get students bth        
+        $arrStudents = $this->getBthStudents($iecId,2);
+        $arrStudentsWithoutBTH = $this->getRemoveAsigBthStudents($iecId);
+        
         // get specialities 
         $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
         $arrSpeciality = $this->getSpeciality();
@@ -1476,12 +1490,47 @@ class InfoEstudianteController extends Controller {
         //return values
         $response->setStatusCode(200);
         $response->setData(array(
-            'students'     => $arrStudents,
+            'studentsBTH'     => $arrStudents,
+            'studentswithoutBTH'     => $arrStudentsWithoutBTH,
             'swremove'  => true,
             'DBspeciality' => $arrSpeciality
         ));
         return $response;   
+    }
+
+        private function getRemoveAsigBthStudents($iecId){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListRemoveAsigBthStudents($iecId);
+        //get the students has BTH
+        $arrStudents = array();
+        if($objStudents){
+            foreach ($objStudents as $value) {
+                $arrStudents[] = array(
+                    
+                    'studentId'=>$value['id'],
+                    'carnetIdentidad'=>$value['carnetIdentidad'],
+                    'complemento'=>$value['complemento'],
+                    'codigoRude'=>$value['codigoRude'],
+                    'paterno'=>$value['paterno'],
+                    'materno'=>$value['materno'],
+                    'nombre'=>$value['nombre'],
+                    'estadomatricula'=>$value['estadomatricula'],
+                    'estadomatriculaId'=>$value['estadomatriculaId'],
+                    'eInsId'=>$value['eInsId'],
+                    'studentId'=>$value['id'],
+                    
+                );
+            }
+        }
+
+        return $arrStudents;
     }    
+
+
+
+
 
     public function addupStudentbthAction(Request $request){
         // get the send values
@@ -1534,7 +1583,7 @@ class InfoEstudianteController extends Controller {
             $em->flush();
 
             // get the set data on students
-            $arrStudents = $this->getBthStudents($iecId);
+            $arrStudents = $this->getBthStudents($iecId,1);
             $response->setStatusCode(200);
             $response->setData(array(
                 'students'     => $arrStudents,
@@ -1553,6 +1602,7 @@ class InfoEstudianteController extends Controller {
         // // get the send values
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
+
         $eInsId = $arrData['eInsId'];
         $specialityId = $arrData['studentSpecialtyId'];
         $justificativo = $arrData['justificativo'];
@@ -1578,6 +1628,74 @@ class InfoEstudianteController extends Controller {
             );
         }
 
+        //get the info to do the remove about the student to remove
+        $arrInfoStudent = $this->getInfoStudent($eInsId);
+        if(sizeof($arrInfoStudent)>0){
+            foreach ($arrInfoStudent as $value) {                
+                // // remove the nota
+                $objStudentNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($value['enotaId']);
+                $arrEstudianteInscripcionHumnisticoTecnico['nota'][]= array('usuario'=> $objStudentNota->getUsuarioId(), 'notaTipo'=>$objStudentNota->getNotaTipo()->getId(), 'nota'=>$objStudentNota->getNotaCuantitativa());
+                $em->remove($objStudentNota);            
+                // // set the materia        
+                $arrEstudianteInscripcionHumnisticoTecnico['estudianteAsignatura']= $value['easigId'];
+                
+            }
+            // remove the materia 
+            if($arrEstudianteInscripcionHumnisticoTecnico['estudianteAsignatura']>0){
+                $objStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($arrEstudianteInscripcionHumnisticoTecnico['estudianteAsignatura']);
+                $em->remove($objStudentAsignatura);                
+            }
+        }
+
+        // check if the file exists
+        if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                $type = $file['type'];
+                $size = $file['size'];
+                $tmp_name = $file['tmp_name'];
+                $name = $file['name'];
+                $extension = explode('.', $name);
+                $extension = $extension[count($extension)-1];
+                $new_name = date('YmdHis').'.'.$extension;
+
+                $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId);
+
+                // GUARDAMOS EL ARCHIVO
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/bthGestionStudentSpeciality/' .date('Y');
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/bthGestionStudentSpeciality/' .date('Y').'/'.$objStudentInscription->getEstudiante()->getId();
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/bthGestionStudentSpeciality/' .date('Y').'/'.$objStudentInscription->getEstudiante()->getId().'/'.$eInsId;
+                if (!file_exists($directoriomove)) {
+                    mkdir($directoriomove, 0775, true);
+                }
+
+                $archivador = $directoriomove.'/'.$new_name;
+                //unlink($archivador);
+                if(!move_uploaded_file($tmp_name, $archivador)){
+                    $response->setStatusCode(500);
+                    return $response;
+                }
+
+                // CREAMOS LOS DATOS DE LA IMAGEN
+                $informe = array(
+                    'name' => $name,
+                    'type' => $type,
+                    'tmp_name' => 'nueva_ruta',
+                    'size' => $size,
+                    'new_name' => $new_name
+                );
+            }else{
+                $informe = null;
+                $archivador = 'empty';
+            }
+
         //set the backup info
         $objBthEstudianteInscripcionGestionEspecialidad = new BthEstudianteInscripcionGestionEspecialidad();
         $objBthEstudianteInscripcionGestionEspecialidad->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
@@ -1585,19 +1703,9 @@ class InfoEstudianteController extends Controller {
         $objBthEstudianteInscripcionGestionEspecialidad->setData(json_encode($arrEstudianteInscripcionHumnisticoTecnico));
         $objBthEstudianteInscripcionGestionEspecialidad->setFechaRegistro(new \DateTime('now'));
         $objBthEstudianteInscripcionGestionEspecialidad->setUsuarioId($this->session->get('userId'));
+        $objBthEstudianteInscripcionGestionEspecialidad->setJustificativo($justificativo);
+        $objBthEstudianteInscripcionGestionEspecialidad->setRutaArchivo($archivador);
         $em->persist($objBthEstudianteInscripcionGestionEspecialidad);
-
-
-        //get the info to do the remove about the student to remove
-        $arrInfoStudent = $this->getInfoStudent($eInsId);
-        if(sizeof($arrInfoStudent)>0){
-            // remove the nota
-            $objStudentNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($arrInfoStudent[0]['enotaId']);
-            $em->remove($objStudentNota);            
-            // remove the materia        
-            $objStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($arrInfoStudent[0]['easigId']);
-            $em->remove($objStudentAsignatura);                
-        }
 
         // remove the speciality
         $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$eInsId));
@@ -1605,7 +1713,7 @@ class InfoEstudianteController extends Controller {
         $em->flush();
 
 
-        $arrStudents = $this->getBthStudents($iecId);
+        $arrStudents = $this->getBthStudents($iecId,1);
 
 
         $response->setStatusCode(200);
@@ -1639,10 +1747,11 @@ class InfoEstudianteController extends Controller {
                 ->where('ei.id = :id')
                 ->andwhere('ieco.asignaturaTipo  = :asigTipo')
                 ->setParameter('id', $eInsId)
-                ->setParameter('asigTipo', 1037)
+                ->setParameter('asigTipo', 1039)
                 ->getQuery();
 
         $studentInscription = $query->getResult();
+
         return $studentInscription;
     }
 

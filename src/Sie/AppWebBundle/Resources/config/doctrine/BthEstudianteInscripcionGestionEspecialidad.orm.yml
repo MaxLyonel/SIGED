@@ -47,6 +47,12 @@ Sie\AppWebBundle\Entity\BthEstudianteInscripcionGestionEspecialidad:
             fixed: false
             comment: ''
             column: ruta_archivo
+        justificativo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
     manyToOne:
         estudianteInscripcion:
             targetEntity: EstudianteInscripcion

@@ -220,4 +220,32 @@ class BthEstudianteInscripcionGestionEspecialidad
     {
         return $this->operativoGestionEspecialidadTipo;
     }
+    /**
+     * @var string
+     */
+    private $justificativo;
+
+
+    /**
+     * Set justificativo
+     *
+     * @param string $justificativo
+     * @return BthEstudianteInscripcionGestionEspecialidad
+     */
+    public function setJustificativo($justificativo)
+    {
+        $this->justificativo = $justificativo;
+    
+        return $this;
+    }
+
+    /**
+     * Get justificativo
+     *
+     * @return string 
+     */
+    public function getJustificativo()
+    {
+        return $this->justificativo;
+    }
 }

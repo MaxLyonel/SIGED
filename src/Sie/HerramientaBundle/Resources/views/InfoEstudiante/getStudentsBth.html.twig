@@ -23,7 +23,7 @@
                         <tr>
                             <td>
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <a v-on:click="addupdateStudentbth()" type="button" class=""> Adici&oacute;n/Modificaci&oacute;n/Elimaci&oacute;n de Especialidad</a>
+                                    <a v-on:click="addupdateStudentbth()" type="button" class=""> Modificaci&oacute;n/Elimaci&oacute;n de Especialidad</a>
                                 </div>
                             </td>
                             <td>
@@ -51,10 +51,10 @@
                         </div>
                         <div class="pull-right">
 
-                            <span style="font-size:1.2em">Opciones del curso:</span>
+                            {# <span style="font-size:1.2em">Opciones del curso:</span>
                             <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                                 <i class="fa fa-download" style="color:#FFFFFF"></i>
-                            </a>
+                            </a> #}
                         
                         </div>
                         <div class="clearfix"></div>
@@ -161,11 +161,71 @@
                 </div>
 
 
+                <div class="panel panel-primary" v-if="swremove">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h5>Lista de Estudiante con Especialidades y Eliminados</h5>
+                        </div>
+                        <div class="pull-right">
 
+                            {# <span style="font-size:1.2em">Opciones del curso:</span>
+                            <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a> #}
+                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                        <strong class="text-primary" >Estudiantes con Especialidad</strong>
+                            <table class="table ">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>RUDE</th>
+                                        <th>ESTUDIANTE</th>
+                                        
+                                        <th>ESPECIALIDAD</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(studentbth, index) in studentsBTH">
+                                        <td>${ index+1 }</td>
+                                        <td> ${ studentbth.codigoRude }</td>
+                                        <td> ${ studentbth.paterno } ${ studentbth.materno } ${ studentbth.nombre }</td>
+                                        <td  class="text-primary">  ${ studentbth.specialty }</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6">
+                        <strong class="text-primary" >Estudiantes Especialidad Eliminada</strong>
+                            <table class="table ">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>RUDE</th>
+                                        <th>ESTUDIANTE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(studentwobth, index) in studentswithoutBTH">
+                                        <td>${ index+1 }</td>
+                                        <td> ${ studentwobth.codigoRude }</td>
+                                        <td> ${ studentwobth.paterno } ${ studentwobth.materno } ${ studentwobth.nombre }</td>
+                                    </tr>
+                                </tbody>
+                            </table>                        
+                        </div>
+                    </div>
 
+                    </div>                
+                </div>
 
-                
-                
+  
                         
 
         </div>
@@ -184,6 +244,8 @@
                 swaddupdate:false,
                 swremove:false,
                 students: [],
+                studentsBTH: [],
+                studentswithoutBTH: [],
                 DBspeciality:'',
                 eInsIdselected:'',
                 specialityIdselected:'',
@@ -228,7 +290,8 @@
                     .then(response => {
                         
                         if (response.status == 200) {
-                            this.students = response.data.students;
+                            this.studentsBTH = response.data.studentsBTH;
+                            this.studentswithoutBTH = response.data.studentswithoutBTH;                            
                             //this.DBspeciality = response.data.DBspeciality;
                             this.swaddupdate = false;
                             this.buscando = false;
@@ -305,6 +368,8 @@
                     var me = this;
                     me.students[index].deletebthOption = false;
                     me.students[index].mainoption = true;
+                    this.informe = '';
+                    me.student[index].justificativo = '';
                 },
                 cancelUpdateStudentBth:function(index){
                     var me = this;
@@ -312,6 +377,28 @@
                     me.students[index].mainoption = true;
                 },
                 doRemoveStudentBth:function(index){
+
+                    if(this.students[index].justificativo == ''){
+                        this.respuesta = 'Debe ingresar el Justificativo';
+                        this.buscando = false;
+                        Swal.fire(
+                            'Debe ingresar el Justificativo',
+                            'Campo requerido!',                              
+                            'warning'
+                            );                        
+                        return false;
+                    }
+
+                    /*validate the file attached*/
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Solicitud',
+                        'Debe adjuntar un escaneado de la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }
+
                     
                     Swal.fire({
                         title: '¿Enviar Cambios?',
