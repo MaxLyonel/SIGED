@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\BthEstudianteInscripcionGestionEspecialidad:
+    type: entity
+    table: bth_estudiante_inscripcion_gestion_especialidad
+    indexes:
+        IDX_55F96629A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_55F96629A07D41F4:
+            columns:
+                - operativo_gestion_especialidad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        data:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        rutaArchivo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: ruta_archivo
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        operativoGestionEspecialidadTipo:
+            targetEntity: OperativoGestionEspecialidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                operativo_gestion_especialidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

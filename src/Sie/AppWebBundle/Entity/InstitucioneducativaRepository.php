@@ -807,7 +807,7 @@ class InstitucioneducativaRepository extends EntityRepository {
     public function getListStudentPerCourseBTH($iecId){
     $qb = $this->getEntityManager()->createQueryBuilder();
     $qb
-            ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, coalesce(eiht.horas,0) as horasPlena, coalesce(eiht.esvalido,false) as esvalidoPlena, case when eiht.id is null then false else true end as conespecialidad, case when eiht.esvalido = true then true else false end as imprimirCut, etht.especialidad")
+            ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, coalesce(eiht.horas,0) as horasPlena, coalesce(eiht.esvalido,false) as esvalidoPlena, case when eiht.id is null then false else true end as conespecialidad, case when eiht.esvalido = true then true else false end as imprimirCut, etht.especialidad, etht.id as ethtId ")
             ->from('SieAppWebBundle:Institucioneducativa', 'ie')
             ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ie.id = iec.institucioneducativa')
             ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'iec.id = ei.institucioneducativaCurso ')
