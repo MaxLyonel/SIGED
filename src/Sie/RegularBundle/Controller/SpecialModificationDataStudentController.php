@@ -61,9 +61,6 @@ class SpecialModificationDataStudentController extends Controller{
         $form['codeRude'] = $request->get('codigoRude');
         $form['arrOption'] = $request->get('arraOptionBuscar');
 
-// dump($request);
-// dump($form);
-// die;
         // $form = $request->get('form');
         // create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -217,9 +214,7 @@ class SpecialModificationDataStudentController extends Controller{
 
                 ));
          $arrStudentModif = $arrStudent;
-        // dump($objStudent);
-        // dump($form);
-        // die;
+
         $response->setStatusCode(200);
         $response->setData(array(
             'codigoRude'=>$objStudent->getCodigoRude(),
@@ -238,12 +233,6 @@ class SpecialModificationDataStudentController extends Controller{
        
         return $response;        
 
-        // return $this->render('SieRegularBundle:SpecialModificationDataStudent:lookforStudent.html.twig', array(
-        //         'compleMessage' => $compleMessage,
-        //         'typeMessage'   => $typeMessage,
-        //         'form'          => $this->studentForm($objStudent)->createView(),
-        //         'sw'            => $sw,
-        // ));
     }
     /*
         select * from estudiante as e
@@ -435,28 +424,6 @@ class SpecialModificationDataStudentController extends Controller{
         }
 
         $oldDataStudent2 = json_encode($oldDataStudentPrev);
-
-        // $oldDataStudent2 =json_encode( array(
-        //     'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
-        //     'complemento'=>$objStudent->getComplemento(),
-        //     'genero'=>$objStudent->getGeneroTipo()->getGenero(),
-        //     'paterno'=>$objStudent->getPaterno(),
-        //     'materno'=>$objStudent->getMaterno(),
-        //     'nombre'=>$objStudent->getNombre(),
-        //     'fechaNacimiento'=>$objStudent->getFechaNacimiento(),
-        //     'pais'=>$objStudent->getPaisTipo()->getPais(),
-        //     'paisId'=>$objStudent->getPaisTipo()->getId(),
-        //     'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
-        //     'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
-        //     'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
-        //     'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
-        //     'localidad'=>$objStudent->getLocalidadNac(),
-        //     'oficialia'=>$objStudent->getOficialia(),
-        //     'libro'=>$objStudent->getLibro(),
-        //     'partida'=>$objStudent->getPartida(),
-        //     'folio'=>$objStudent->getFolio(),
-        //     'pasaporte'=>$objStudent->getPasaporte(),
-        // ));
 
                 // $oldDataStudent = clone $objStudent;
                 // $oldDataStudent = json_encode((array)$oldDataStudent);
@@ -662,6 +629,24 @@ class SpecialModificationDataStudentController extends Controller{
                 ->getQuery();
 
         $objInfoInscription = $query->getResult();
+        
+        if(!$sw && sizeof($objInfoInscription)>0){
+
+            if($objInfoInscription[0]['nivelId'] == 13){
+                if($objInfoInscription[0]['gradoId']==6){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            if($objInfoInscription[0]['nivelId'] == 3){
+                if($objInfoInscription[0]['gradoId']==4){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
         return  $objInfoInscription;
     }
 

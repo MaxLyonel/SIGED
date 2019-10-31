@@ -153,7 +153,7 @@
                     <tr>
                         <td data-title="Asignatura">
                             {% if a.idAsignatura == 1039 %}
-                                {% set asignaturaNombre = a.asignatura|split(':') %}
+                                {% set asignaturaNombre = a.asignatura|split('::') %}
                                 {{asignaturaNombre[0]}} {% if asignaturaNombre[1]|length > 0 %} : <span style="color:#43C65E; font-weight:bold"> {{asignaturaNombre[1]|upper}} </span> {% endif %}
                             {% else %}
                                 {{ a.asignatura }}
