@@ -730,11 +730,56 @@ class SolicitudBTHController extends Controller {
             $query->execute();
             $director = $query->fetch();
             $director_valido = $director['director_valido'];
-            if ($cantidad_estudiantes==0 or $director_valido==0){
+            // if ($cantidad_estudiantes==0 or $director_valido==0){
+            //     $tramite_iniciado=1;
+            // }else{
+            //     $tramite_iniciado=0;
+            // }
+            // validacion para Ue habilitadas
+            $ue = array(40730065,
+            40730070,
+            40730063,
+            40730068,
+            40730567,
+            40730071,
+            80980209,
+            80980266,
+            80980476,
+            80980573,
+            80980041,
+            80980117,
+            80980265,
+            80980313,
+            80980477,
+            80980517,
+            80980465,
+            80980259,
+            80980252,
+            81980588,
+            81980592,
+            81980643,
+            81980654,
+            81980649,
+            81970100,
+            81980606,
+            50730035,
+            70730042,
+            70730031,
+            70730068,
+            60630004,
+            60630001);
+            if (in_array($id_Institucion, $ue)){
+                $ue_valida = 1; //dump($id_Institucion);die;
+            }else{
+                $ue_valida = 0;
+            }
+            
+            if ($cantidad_estudiantes==0 or $director_valido==0 or $ue_valida == 0 ){
                 $tramite_iniciado=1;
             }else{
                 $tramite_iniciado=0;
-            }            
+            }
+            
             return $tramite_iniciado;
         }else{
             return $tramite_iniciado;
