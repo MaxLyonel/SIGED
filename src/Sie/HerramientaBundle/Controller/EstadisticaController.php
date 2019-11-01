@@ -1736,6 +1736,7 @@ class EstadisticaController extends Controller {
         /*
          * Define la zona horaria y halla la fecha actual
          */
+        //dump($request);die;
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
@@ -1755,9 +1756,9 @@ class EstadisticaController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-type', 'application/xls');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionUe_bth_v1_pvc.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
@@ -1857,6 +1858,7 @@ class EstadisticaController extends Controller {
         /*
          * Define la zona horaria y halla la fecha actual
          */
+        //dump($request);die;
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
@@ -1876,9 +1878,9 @@ class EstadisticaController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-type', 'application/xls');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
