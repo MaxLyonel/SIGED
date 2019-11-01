@@ -95,7 +95,7 @@
                                             <table v-if="student.deletebthOption" class="table table-bordered cf">
                                                 <tr>                                                    
                                                     <td>
-                                                        Adjuntar:
+                                                        Adjuntar Acta:
                                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
                                                     </td>
                                                 </tr>
@@ -396,7 +396,7 @@
                     /*validate the file attached*/
                     if (typeof this.informe != 'object') {
                         Swal.fire(
-                        'Adjuntar Solicitud',
+                        'Adjuntar Acta',
                         'Debe adjuntar un escaneado de la solicitud, puede ser un archivo de imagen o PDF',
                         'warning'
                         );
