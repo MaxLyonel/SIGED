@@ -139,3 +139,9 @@ herramienta_info_estudiante_doRemoveStudentBth:
     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:doRemoveStudentBth }
     options:
          expose: true
+
+herramienta_info_estudiante_operativoEspecialidadesBth:
+    path:     /sie/operativoEspecialidadesBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:operativoEspecialidadesBth }
+    options:
+         expose: true         

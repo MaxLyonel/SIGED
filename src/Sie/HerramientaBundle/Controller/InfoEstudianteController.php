@@ -17,6 +17,7 @@ use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEliminados;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico;
 use Sie\AppWebBundle\Entity\BthEstudianteInscripcionGestionEspecialidad;
+use Sie\AppWebBundle\Entity\BthControlOperativoModificacionEspecialidades;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
@@ -117,6 +118,15 @@ class InfoEstudianteController extends Controller {
                 $mostrarSextoCerrado = true;
             }
         }
+       
+        $entity = $em->getRepository('SieAppWebBundle:BthControlOperativoModificacionEspecialidades')->findOneBy(array('institucioneducativaId'=>$sie, 'gestionTipoId'=>$gestion,'estadoOperativo'=>true));
+        //dump($entity);die;
+        if($entity){
+            $estado = false;
+        }else{
+            $estado =  true;
+        }
+        //dump($estado);die;
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
@@ -127,7 +137,8 @@ class InfoEstudianteController extends Controller {
                     'exist' => $exist,
           //          'levelAutorizados' => $objInfoAutorizadaUe,
                     'odataUedu' => $odataUedu,
-                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'estado'=>$estado
         ));
     }
 
@@ -1755,6 +1766,32 @@ class InfoEstudianteController extends Controller {
         return $studentInscription;
     }
 
+    public function operativoEspecialidadesBthAction ( Request $request){ //dump ($request);die;
+        $em = $this->getDoctrine()->getManager();
+       
 
+        //bth_control_operativo_modificacion_especialidades
+        //$em->getConnection()->beginTransaction();
+        try {
+            $bthOperativo=new bthControlOperativoModificacionEspecialidades();
+            $bthOperativo->setInstitucioneducativaId($request->get('sie'));
+            $bthOperativo->setGestionTipoId($request->get('gestion'));
+            $bthOperativo->setInstitucioneducativaOperativoLogTipo ($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(9));
+            $bthOperativo->setEstadoOperativo(true);
+            $bthOperativo->setFechaCierre(new \DateTime('now'));
+           
+            $em->persist($bthOperativo);
+            $em->flush();
+            $res = 1;
+            $msg = "Se cerro el operativo correctamente";
+            return  new JsonResponse(array('estado' => $res, 'msg' => $msg));
+        }catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+            $res = 0;
+            $msg = "Error al cerrar el Operativo";
+            return  new JsonResponse(array('estado' => $res, 'msg' => $msg));
+        }
+
+    }
 
 }

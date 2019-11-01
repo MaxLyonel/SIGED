@@ -1238,6 +1238,34 @@ class DownloadController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+   
+
+     public function bthEspecialidadesAction(Request $request, $ue, $gestion) {
+        //dump($ue,$gestion);die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_espe_mod_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_modificacion_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    public function bthEspecialidadesEliminadasAction(Request $request, $ue, $gestion){
+        //dump($ue,$gestion);die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_espe_elim_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_eliminacion_v1_ma
+.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+        
+    }
 
 
 }
