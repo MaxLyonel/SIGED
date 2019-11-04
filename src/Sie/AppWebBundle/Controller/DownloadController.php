@@ -1210,16 +1210,38 @@ class DownloadController extends Controller {
         return $response;
     }
 
-    public function tramiteModificacionCalificacionesAction(Request $request, $idTramite) {
+    /*====================================================================================
+    =            REPORTES TRAMITE DE ADICION Y MODIFICACION DE CALIFICACIONES            =
+    ====================================================================================*/
+    
+    /*----------  FORMULARIO IMPRESO POR LA UNIDAD EDUCATIVA  ----------*/
+    
+    public function tramiteModificacionCalificacionesFormularioAction(Request $request, $idTramite, $codigoQR) {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'tramite_modificacion_calificaciones_' . $idTramite . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_tramite_modificacion_calificaciones_ue_gral_v1_jqc.rptdesign&id_tramite=' . $idTramite . '&&__format=pdf&'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'formulario_tramite_modificacion_calificaciones_'.$idTramite.'.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_formulario_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    /*----------  ACTA IMPRESA POR LA DIRECCION DEPARTAMENTAL  ----------*/
+    
+    public function tramiteModificacionCalificacionesActaAction(Request $request, $idTramite, $codigoQR) {
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'acta_tramite_modificacion_calificaciones_'.$idTramite.'.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_acta_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR .'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    
+    /*=====  End of REPORTES TRAMITE DE ADICION Y MODIFICACION DE CALIFICACIONES  ======*/
 
 }
