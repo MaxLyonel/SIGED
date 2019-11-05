@@ -824,6 +824,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico', 'eiht', 'WITH', 'eiht.estudianteInscripcion = ei.id')
                 ->leftjoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'etht', 'WITH', 'eiht.especialidadTecnicoHumanisticoTipo = etht.id')
                 ->where('iec.id = :iecId')
+                ->andWhere('etht.id IS NOT NULL')
                 ->setParameter('iecId', $iecId)
                 ->orderBy('e.paterno, e.materno')
         ;
