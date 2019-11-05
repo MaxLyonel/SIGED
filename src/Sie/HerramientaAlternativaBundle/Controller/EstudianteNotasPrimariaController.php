@@ -553,12 +553,16 @@ class EstudianteNotasPrimariaController extends Controller {
           }  
 
           if($contadorCeros == count($notas)){
-            $nuevoEstado = 3;
+            $nuevoEstado = 6; //NO INCORPORADO
           }else{
             if($contadorAprobados == count($notas)){
-              $nuevoEstado = 5;
+              $nuevoEstado = 5; // PROMOVIDO
             }else{
-              $nuevoEstado = 22;
+              if ($contadorCeros > 0) {
+                $nuevoEstado = 3; // RETIRADO
+              }else{
+                $nuevoEstado = 22; // POSTERGADO
+              }
             }
           }
 
