@@ -47,7 +47,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
             return $this->redirect($this->generateUrl('wf_tramite_index'));
         }//dump($request->getSession()->get('pathSystem'));die;
         // $acreditados = ['82230104', '80480250', '80980495', '80980579', '80900074', '40730256', '80730696', '81220087', '81230262', '82480035', '61470053', '81480136', '81480196', '81410158', '71980052', '81980780', '61900026', '81730091', '61710057', '81710072'];
-        $acreditados = ['82230104', '40730256', '81220087', '81480196', '81410158', '71980052', '81980780', '61900026'];
+        $acreditados = ['82230104', '40730256', '81220087', '81480196', '81410158', '71980052', '81980780', '61900026', '81720098'];
         if ($request->getSession()->get('pathSystem') == "SieHerramientaBundle") {
             $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
             $departamento_id = $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId();
