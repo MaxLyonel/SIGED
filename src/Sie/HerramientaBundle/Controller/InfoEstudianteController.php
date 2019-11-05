@@ -1409,28 +1409,30 @@ class InfoEstudianteController extends Controller {
         $arrStudents = array();
         if($objStudents){
             foreach ($objStudents as $value) {
-                $arrStudents[] = array(
-                    
-                    'studentId'=>$value['id'],
-                    'carnetIdentidad'=>$value['carnetIdentidad'],
-                    'complemento'=>$value['complemento'],
-                    'codigoRude'=>$value['codigoRude'],
-                    'paterno'=>$value['paterno'],
-                    'materno'=>$value['materno'],
-                    'nombre'=>$value['nombre'],
-                    'estadomatricula'=>$value['estadomatricula'],
-                    'estadomatriculaId'=>$value['estadomatriculaId'],
-                    'eInsId'=>$value['eInsId'],
-                    'studentId'=>$value['id'],
-                    'specialty'=>$value['especialidad'],
-                    'studentSpecialtyId'=>$value['ethtId'],
-                    'studentSpecialtyIdNew'=>($value['ethtId']!=null)?$value['ethtId']:false,
-                    'deletebthOption'=>false,
-                    'updatebthOption'=>false,
-                    'mainoption'=>true,
-                    'justificativo'=>'',
-                    
-                );
+                if($value['estadomatriculaId']==4){
+                    $arrStudents[] = array(
+                        
+                        'studentId'=>$value['id'],
+                        'carnetIdentidad'=>$value['carnetIdentidad'],
+                        'complemento'=>$value['complemento'],
+                        'codigoRude'=>$value['codigoRude'],
+                        'paterno'=>$value['paterno'],
+                        'materno'=>$value['materno'],
+                        'nombre'=>$value['nombre'],
+                        'estadomatricula'=>$value['estadomatricula'],
+                        'estadomatriculaId'=>$value['estadomatriculaId'],
+                        'eInsId'=>$value['eInsId'],
+                        'studentId'=>$value['id'],
+                        'specialty'=>$value['especialidad'],
+                        'studentSpecialtyId'=>$value['ethtId'],
+                        'studentSpecialtyIdNew'=>($value['ethtId']!=null)?$value['ethtId']:false,
+                        'deletebthOption'=>false,
+                        'updatebthOption'=>false,
+                        'mainoption'=>true,
+                        'justificativo'=>'',
+                        
+                    );
+                }
             }
         }
 
