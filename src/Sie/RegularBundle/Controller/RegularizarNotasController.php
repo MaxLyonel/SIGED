@@ -144,7 +144,13 @@ class RegularizarNotasController extends Controller {
                 $notas = $this->get('notas')->regular($idInscripcion,$operativo);
             }
 
-            // dump($notas);die;
+            $vista = 1; // EDITABLE DE ACUERDO AL OPERATIVO O FALTA DE CALIFICACIONES
+
+            // SI EL ROL ES NACIONAL SE ABRE TODAS LAS CALIFICACIONES
+            // INSITINTAMENTE DEL OPERATIVO
+            if ($this->session->get('roluser') == 8) {
+                $vista = 2;
+            }
 
             $em->getConnection()->commit();
             return $this->render('SieRegularBundle:RegularizarNotas:show.html.twig', array(
@@ -153,7 +159,7 @@ class RegularizarNotasController extends Controller {
                         'curso'=>$institucionCurso,
                         'notas'=>$notas,
                         'inscripcion'=>$inscripcion,
-                        'vista'=>1,
+                        'vista'=>$vista,
                         'plantilla'=>$plantilla,
                         'tipoUE'=>$tipoUE
             ));
