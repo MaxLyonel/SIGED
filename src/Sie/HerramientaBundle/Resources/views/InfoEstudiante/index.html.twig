@@ -116,7 +116,7 @@
                                                                             </button>
                                                                         </div>
                                                                         {% if estado == true %}
-                                                                            {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId == 6 %}
+                                                                            {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
                                                                                 
                                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
                                                                                         <button class="btn btn-circle btn-success btn-stroke " onclick="optionsBth('{{dataParalelo.infoUe}}');">
