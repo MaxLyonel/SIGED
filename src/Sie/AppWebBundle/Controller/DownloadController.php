@@ -1220,7 +1220,7 @@ class DownloadController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'formulario_tramite_modificacion_calificaciones_'.$idTramite.'.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_formulario_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_formulario_ue_gral_v1_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1234,7 +1234,7 @@ class DownloadController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'acta_tramite_modificacion_calificaciones_'.$idTramite.'.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_acta_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR .'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_acta_ue_gral_v1_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR .'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
