@@ -865,12 +865,13 @@ class TramiteRueController extends Controller
         //dump($idtramite,$id_td);die;
         $em = $this->getDoctrine()->getManager();
         //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
         $file = 'rue_iniciosolicitudModificacion_v1_pvc.rptdesign';    
         $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&lk='. $lk .'&&__format=pdf&'));
         //dump($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&&__format=pdf&');die;
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -1263,7 +1264,7 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                 }elseif($t['id'] == 37){#cambio de nombre
-                                    $institucioneducativa->setInstitucioneducativa(mb_strtoupper($tareasDatos[0]['datos'][$t['tramiteTipo']]['nuevo_nombre'], 'utf-8'));
+                                    $institucioneducativa->setInstitucioneducativa(mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'));
                                     $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setDesUeAntes(mb_strtoupper($tareasDatos[0]['datos']['institucioneducativa']['institucioneducativa'], 'utf-8'));
