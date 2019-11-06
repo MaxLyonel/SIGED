@@ -112,6 +112,9 @@
             float: right;
             font-size: 1.2em;
         }
+        textarea{
+            resize: vertical;
+        }
     </style>
     <style type="text/css">
         .requisitos{
@@ -170,34 +173,60 @@
                             <div class="clearfix"></div>
                             <div v-if="datos != ''">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <table class="table table-condensed table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th colspan="2">
-                                                        <h5>Datos Estudiante</h5>
+                                                    <th colspan="4">
+                                                        <b>Datos del Estudiante</b>
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr><th>Código Rude</th><td>${codigoRude}</td></tr>
-                                                <tr><th>Nombre completo</th><td>${estudiante}</td></tr>
+                                                <tr><th>Código RUDE</th><td colspan="3">${codigoRude}</td></tr>
+                                                <tr><th>Nombre</th><td colspan="3">${estudiante}</td></tr>
+                                                <tr>
+                                                    <th>Cédula de Identidad</th><td>${carnet}</td>
+                                                    <th>Complemento</th><td>${complemento}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <table class="table table-condensed table-bordered">
                                             <thead>
-                                                <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
+                                                <tr><th colspan="4"><b>Datos de la Unidad Educativa (Solicitante)</b></th></tr>
                                             </thead>
                                             <tbody>
-                                                <tr><th>Código SIE</th><td>${sie}</td></tr>
-                                                <tr><th>Unidad Educativa</th><td>${institucioneducativa}</td></tr>
-                                                <tr><th>Nivel</th><td>${nivel}</td></tr>
-                                                <tr><th>Grado</th><td>${grado}</td></tr>
-                                                <tr><th>Paralelo</th><td>${paralelo}</td></tr>
-                                                <tr><th>Turno</th><td>${turno}</td></tr>
-                                                <tr><th>Gestión</th><td>${gestion}</td></tr>
+                                                <tr><th>Unidad Educativa</th><td colspan="3">${sie} - ${institucioneducativa}</td></tr>
+                                                <tr>
+                                                    <th>Departamento</th><td>${departamento}</td>
+                                                    <th>Distrito</th><td>${distrito}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr><th colspan="4"><b>Datos del Director (Solicitante)</b></th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th>Nombre</th><td colspan="3">${directorNombre}</td></tr>
+                                                <tr><th>Cédula de Identidad</th><td>${directorCarnet}</td><th>Complemento</th><td>${directorComplemento}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr><th colspan="4"><b>Datos del Trámite</b></th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th colspan="4">Datos de Inscripción</th></tr>
+                                                <tr><th>Nivel</th><td>${nivel}</td><th>Paralelo</th><td>${paralelo}</td></tr>
+                                                <tr><th>Grado</th><td>${grado}</td><th>Turno</th><td>${turno}</td></tr>
+                                                <tr><td colspan="2"></td><th>Gestión</th><td>${gestion}</td></tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -214,7 +243,7 @@
                                                 <th colspan="5">Cuantitativas</th>
                                             </tr>
                                             <tr>
-                                                <th class="headtabla">Asignatura</th>
+                                                <th class="headtabla">Área</th>
                                                 <th class="headtabla">Periodo</th>
                                                 <th class="headtabla">Calificación actual</th>
                                                 <th class="headtabla">Nueva calificación</th>
@@ -265,10 +294,9 @@
                                     </table>
                                     <hr>
                                     <div class="row">
-                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <h5><b>Justificativo</b></h5>
-
-                                            <textarea v-model="justificacion" id="" rows="4" class="form-control jupper" ref="justificacion"></textarea>
+                                            <textarea v-model="justificacion" id="" rows="2" class="form-control jupper" ref="justificacion"></textarea>
                                         </div>
                                         {# <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                             <h5>Adjuntar Informe técnico</h5>
@@ -415,7 +443,7 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && ins.sie == sieActual" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
@@ -526,6 +554,7 @@
             el: '#app',
             data: {
                 idTramite: '{{idTramite}}',
+                sieActual: '{{sieActual}}',
                 buscando: false,
                 rudeBuscar: '',
                 respuesta: '',
@@ -534,6 +563,12 @@
 
                 codigoRude: '',
                 estudiante: '',
+                carnet: '',
+                complemento:'',
+
+                directorNombre: '',
+                directorCarnet: '',
+                directorComplemento: '',
 
                 sie: '',
                 institucioneducativa: '',
@@ -542,6 +577,8 @@
                 paralelo: '',
                 turno: '',
                 gestion: '',
+                departamento: '',
+                distrito: '',
                 
                 inscripciones: [],
                 datos: [],
@@ -591,9 +628,15 @@
                     this.buscando = true;
                     this.codigoRude = '';
                     this.estudiante = '';
+                    this.carnet = '';
+                    this.complemento = '';
                     this.inscripciones = '';
                     this.respuesta = '';
                     this.datos = '';
+                    
+                    this.directorNombre = '';
+                    this.directorCarnet = '';
+                    this.directorComplemento = '';
 
                     this.idInscripcion = '';
                     this.sie = '';
@@ -603,6 +646,8 @@
                     this.paralelo = '';
                     this.turno = '';
                     this.gestion = '';
+                    this.departamento = '';
+                    this.distrito = '';
 
                     this.notas = [];
                     this.filas = [];
@@ -631,7 +676,13 @@
                         if (response.status == 200) {
                             this.codigoRude = response.data.codigoRude;
                             this.estudiante = response.data.estudiante;
+                            this.carnet = response.data.carnet;
+                            this.complemento = response.data.complemento;
                             this.inscripciones = response.data.inscripciones;
+                            
+                            this.directorNombre = response.data.directorNombre;
+                            this.directorCarnet = response.data.directorCarnet;
+                            this.directorComplemento = response.data.directorComplemento;
 
                             $('[data-toggle="tooltip"]').tooltip();
                         }
@@ -657,6 +708,8 @@
                     this.paralelo = this.inscripciones[pos].paralelo;
                     this.turno = this.inscripciones[pos].turno;
                     this.gestion = this.inscripciones[pos].gestion;
+                    this.departamento = this.inscripciones[pos].departamento;
+                    this.distrito = this.inscripciones[pos].distrito;
                     this.datos = [];
 
                     this.notas = [];
@@ -1381,6 +1434,8 @@
                             data.append('idInscripcion', this.idInscripcion);
                             data.append('codigoRude', this.codigoRude);
                             data.append('estudiante', this.estudiante);
+                            data.append('carnet', this.carnet);
+                            data.append('complemento', this.complemento);
                             data.append('sie', this.sie);
                             data.append('institucioneducativa', this.institucioneducativa);
                             data.append('nivel', this.nivel);
@@ -1388,6 +1443,12 @@
                             data.append('paralelo', this.paralelo);
                             data.append('turno', this.turno);
                             data.append('gestion', this.gestion);
+                            data.append('departamento', this.departamento);
+                            data.append('distrito', this.distrito);
+                            
+                            data.append('directorNombre', this.directorNombre);
+                            data.append('directorCarnet', this.directorCarnet);
+                            data.append('directorComplemento', this.directorComplemento);
 
                             data.append('flujoTipo', this.flujoTipo);
                             data.append('notas', JSON.stringify(this.notas));
