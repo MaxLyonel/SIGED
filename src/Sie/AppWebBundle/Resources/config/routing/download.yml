@@ -1,6 +1,10 @@
-download_tramite_modificacion_calificaciones:
-    path: /tramiteModificacionCalificaciones/{idTramite}
-    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificaciones }
+download_tramite_modificacion_calificaciones_formulario:
+    path: /tramiteModificacionCalificacionesFormulario/{idTramite}/{codigoQR}
+    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificacionesFormulario }
+
+download_tramite_modificacion_calificaciones_acta:
+    path: /tramiteModificacionCalificacionesActa/{idTramite}/{codigoQR}
+    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificacionesActa }
 
 donwload_nnats:
     path: /nnats/{gestion}/{sie}

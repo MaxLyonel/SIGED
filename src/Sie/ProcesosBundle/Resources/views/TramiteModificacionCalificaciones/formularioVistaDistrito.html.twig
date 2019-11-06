@@ -26,15 +26,15 @@
             color: #14A1DA;
         }
         .requisitos{
-            background: #EEEEEE;
+            /* background: #EEEEEE; */
             padding: 5px;
-            padding-left: 50px;
-            box-shadow: 4px 4px #DDDDDD;
+            /* padding-left: 50px; */
+            /* box-shadow: 4px 4px #DDDDDD; */
             margin-bottom: 15px;
         }
         .requisitos > .checkbox > label{
             color: #2A3271;
-            font-size: 1.2rem !important;
+            font-size: 1.1rem !important;
         }
     </style>
     <div class="header-content">
@@ -70,7 +70,7 @@
                         <form id="formDistrito" action="{{path('tramite_modificacion_calificaciones_deriva_distrito')}}" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="idTramite" value="{{idTramite}}">
                             
-                            <label>¿Que requisitos presentó la Unidad Educativa?</label>
+                            <label>Marcar los requisitos presentados por la Unidad Educativa</label>
                             <div class="requisitos">
                                 <div class="checkbox">
                                     <label>
@@ -246,6 +246,16 @@
             e.preventDefault();
 
             if($('#procedente1').is(':checked')){
+
+                if ($('#informe').val() == '') {
+                    Swal.fire({
+                      title: 'Adjuntar informe',
+                      text: 'Debe adjuntar el informe técnico para continuar',
+                      type: 'warning'
+                    });
+                    return;
+                }
+
                 var texto = '';
                 if (aprobarDistrito == true) {
                     var titulo = '¿Aprobar trámite?';

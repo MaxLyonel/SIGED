@@ -1,9 +1,9 @@
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-lg" id="modal_requisitos_{{id}}" style="width: 70%">
     <div class="modal-content">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Requisitos para: <span>{{tramitetipo.tramiteTipo}}</span></h3>
+                    <h3 class="panel-title"><span>{{tramitetipo.tramiteTipo|upper}}</span></h3>
                 </div>
                 <div class="pull-rigth">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -53,46 +53,46 @@
                                 </div><!-- /.panel-heading -->
                                 <!--/ End tabs heading -->
                                 <!-- Start tabs content -->
-                                <div class="panel-body">
+                                <div class="panel-body tab-content">
                                     {% if id == 34 %} {# ampliacion de nivel #}
-                                        {{ form_start(form_34,{ 'attr': {'id':'form_requisitos_34','class':'tab-content form-horizontal'}}) }}
+                                        {# {{ form_start(form_34,{ 'attr': {'id':'form_requisitos_34','enctype':"multipart/form-data",'class':'tab-content form-horizontal'}}) }} #}
                                             <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
                                                 <div class="row">
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-6">
-                                                            {{ form_label(form_34.i_solicitud_ampliar) }}
+                                                            {{ form_label(form.i_solicitud_ampliar) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_34.i_solicitud_ampliar) }}
+                                                            {{ form_widget(form.i_solicitud_ampliar) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-6">
-                                                            {{ form_label(form_34.i_alquiler_ampliar) }}
+                                                            {{ form_label(form.i_alquiler_ampliar) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {% for a in form_34.i_alquiler_ampliar %}
+                                                            {% for a in form.i_alquiler_ampliar %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a) }}
+                                                                    {{ form_widget(a,{'attr':{'class':'alquiler'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
                                                     </div>
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group col-md-12" id="contrato" style="display:none">
                                                         <div class="col-md-6">
-                                                            {{ form_label(form_34.i_contrato_ampliar) }}
+                                                            {{ form_label(form.i_contrato_ampliar) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_34.i_contrato_ampliar) }}
+                                                            {{ form_widget(form.i_contrato_ampliar) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <div class="col-md-6">
-                                                        </div>
+                                                        {# <div class="col-md-6">
+                                                        </div> #}
                                                         <div class="col-md-6 ckbox ckbox-primary">
-                                                            {{ form_widget(form_34.i_certificado_ampliar) }}
-                                                            {{ form_label(form_34.i_certificado_ampliar) }}                                                            
+                                                            {{ form_widget(form.i_certificado_ampliar) }}&nbsp;
+                                                            {{ form_label(form.i_certificado_ampliar) }}                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -101,62 +101,62 @@
                                                 <div class="row">
                                                     <div class="form-group col-md-12 ckbox ckbox-primary">
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_34.ii_planos_ampliar) }}
-                                                            {{ form_label(form_34.ii_planos_ampliar) }}
+                                                            {{ form_widget(form.ii_planos_ampliar) }}&nbsp;
+                                                            {{ form_label(form.ii_planos_ampliar) }}
                                                         </div>
                                                         <div class="col-md-6">
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12 ckbox ckbox-primary">
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_34.ii_infra_ampliar) }}
-                                                            {{ form_label(form_34.ii_infra_ampliar) }}
+                                                            {{ form_widget(form.ii_infra_ampliar) }}&nbsp;
+                                                            {{ form_label(form.ii_infra_ampliar) }}
                                                         </div>
                                                         <div class="col-md-6">                                                            
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        {{ form_end(form_34) }}  
+                                        {# {{ form_end(form) }}   #}
                                     {% elseif id == 35 %}{# Reduccion de Nivel #}
-                                        {{ form_start(form_35,{ 'attr': {'id':'form_requisitos_35','class':'tab-content form-horizontal'}}) }}
+                                        {# {{ form_start(form_35,{ 'attr': {'id':'form_requisitos_35','class':'tab-content form-horizontal'}}) }} #}
                                             <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
                                                 <div class="row">
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-6">
-                                                            {{ form_label(form_35.i_solicitud_reducir) }}
+                                                            {{ form_label(form.i_solicitud_reducir) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_35.i_solicitud_reducir) }}
+                                                            {{ form_widget(form.i_solicitud_reducir) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-6">
-                                                            {{ form_label(form_35.i_alquiler_reducir) }}
+                                                            {{ form_label(form.i_alquiler_reducir) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {% for a in form_35.i_alquiler_reducir %}
+                                                            {% for a in form.i_alquiler_reducir %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a) }}
+                                                                    {{ form_widget(a,{'attr':{'class':'alquilerReducir'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
                                                     </div>
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group col-md-12" id="contratoReducir" style="display:none">
                                                         <div class="col-md-6">
-                                                            {{ form_label(form_35.i_contrato_reducir) }}
+                                                            {{ form_label(form.i_contrato_reducir) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_35.i_contrato_reducir) }}
+                                                            {{ form_widget(form.i_contrato_reducir) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
-                                                        <div class="col-md-6">
-                                                        </div>
+                                                        {# <div class="col-md-6">
+                                                        </div> #}
                                                         <div class="col-md-6 ckbox ckbox-primary">
-                                                            {{ form_widget(form_35.i_certificado_reducir) }}
-                                                            {{ form_label(form_35.i_certificado_reducir) }}                                                            
+                                                            {{ form_widget(form.i_certificado_reducir) }}&nbsp;
+                                                            {{ form_label(form.i_certificado_reducir) }}                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -165,44 +165,379 @@
                                                 <div class="row">
                                                     <div class="form-group col-md-12 ckbox ckbox-primary">
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_35.ii_planos_reducir) }}
-                                                            {{ form_label(form_35.ii_planos_reducir) }}
+                                                            {{ form_widget(form.ii_planos_reducir) }}&nbsp;
+                                                            {{ form_label(form.ii_planos_reducir) }}
                                                         </div>
                                                         <div class="col-md-6">
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12 ckbox ckbox-primary">
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form_35.ii_infra_reducir) }}
-                                                            {{ form_label(form_35.ii_infra_reducir) }}
+                                                            {{ form_widget(form.ii_infra_reducir) }}&nbsp;
+                                                            {{ form_label(form.ii_infra_reducir) }}
                                                         </div>
                                                         <div class="col-md-6">                                                            
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        {{ form_end(form_35) }}
+                                        {# {{ form_end(form) }} #}
                                     {% elseif id == 36 %}{# cambio de dependencia #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    {% if dependencia.id == 1 %}
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_solicitud_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_solicitud_dependencia) }}
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_informe_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_informe_dependencia) }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                {% if dependencia.id == 1 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_actafundacion) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_actafundacion) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_folio_dependencia) }}&nbsp;
+                                                            {{ form_label(form.i_folio_dependencia) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_nrofolio_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_nrofolio_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_esalquiler_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {% for a in form.i_esalquiler_dependencia %}
+                                                                <div class="col-md-3 rdio rdio-primary circle">
+                                                                    {{ form_widget(a, {'attr':{'class':'alquilerDependencia'}}) }}
+                                                                    {{ form_label(a) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12" style="display:none" id="contratoDependencia">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_contrato_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_contrato_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_convenio_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_convenio_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_certificacion_gam) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_certificacion_gam) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_certificacionde_convenio) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_certificacionde_convenio) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_convenio_administracion) }}&nbsp;
+                                                            {{ form_label(form.i_convenio_administracion) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_acta_constitucion) }}&nbsp;
+                                                            {{ form_label(form.i_acta_constitucion) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_registro_culto) }}&nbsp;
+                                                            {{ form_label(form.i_registro_culto) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_org_nogubernamental) }}&nbsp;
+                                                            {{ form_label(form.i_org_nogubernamental) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_form_fundaempresa) }}&nbsp;
+                                                            {{ form_label(form.i_form_fundaempresa) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.nro_fundaempresa) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.nro_fundaempresa) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.fecha_fundaempresa) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.fecha_fundaempresa) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_fotocopia_nit) }}&nbsp;
+                                                            {{ form_label(form.i_fotocopia_nit) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.nit_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.nit_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_balance_apertura) }}&nbsp;
+                                                            {{ form_label(form.i_balance_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_testimonioconvenio) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_testimonioconvenio) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.fecha_testimonioconvenio) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.fecha_testimonioconvenio) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_dependencia) }}&nbsp;
+                                                        {{ form_label(form.i_certificadorue_dependencia) }}                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
-                                        </div>                                                
                                     {% elseif id == 37 %}{# cambio de nombre #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_cn) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_cn) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id in [1,2] %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_ley_cn) }}&nbsp;
+                                                            {{ form_label(form.i_ley_cn) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if dependencia.id in [2,3] %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_actaconstitucion_cn) }}&nbsp;
+                                                            {{ form_label(form.i_actaconstitucion_cn) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_copianit_cn) }}&nbsp;
+                                                            {{ form_label(form.i_copianit_cn) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_nit_cn) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_nit_cn) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_nrotestimonio_cn) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_nrotestimonio_cn) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_fecha_testimonio_cn) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_fecha_testimonio_cn) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_licenciafuncionamiento_cn) }}&nbsp;
+                                                            {{ form_label(form.i_licenciafuncionamiento_cn) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if dependencia.id == 3 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_form_fundaempresa_cn) }}&nbsp;
+                                                            {{ form_label(form.i_form_fundaempresa_cn) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_nro_fundaempresa_cn) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_nro_fundaempresa_cn) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_fecha_fundaempresa_cn) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_fecha_fundaempresa_cn) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_cn) }}&nbsp;
+                                                        {{ form_label(form.i_certificadorue_cn) }}                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_certdefuncion_cn) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_certdefuncion_cn) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
-                                        </div>                                                
                                     {% elseif id == 38 %}{# cambio de jurisdiccion administrativa #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_resolucion_jur) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_resolucion_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_certificacion_jur) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_certificacion_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_area_jur) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {% for a in form.i_area_jur %}
+                                                            <div class="col-md-3 rdio rdio-primary circle">
+                                                                {{ form_widget(a) }}
+                                                                {{ form_label(a) }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 2 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_cert_convenio_jur) }}&nbsp;
+                                                            {{ form_label(form.i_cert_convenio_jur) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_jur) }}&nbsp;
+                                                        {{ form_label(form.i_certificadorue_jur) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_planos_jur) }}&nbsp;
+                                                        {{ form_label(form.ii_planos_jur) }}                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_inventario_jur) }}&nbsp;
+                                                        {{ form_label(form.ii_inventario_jur) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
-                                        </div>                                                    
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.iii_partemensual_jur) }}&nbsp;
+                                                        {{ form_label(form.iii_partemensual_jur) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     {% elseif id == 39 %}{# Fusion #}
                                         <div class="tab-pane fade inner-all in active" id="tab1-1">
                                         </div>
@@ -218,39 +553,132 @@
                                         <div class="tab-pane fade inner-all" id="tab1-3">
                                         </div>
                                     {% elseif id == 41 %} {# cambio de infraestructura #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_infra) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_certificacion_infra) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_certificacion_infra) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 2 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_certificacionconvenio_infra) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_certificacionconvenio_infra) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_resolucion_infra) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_resolucion_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_infra) }}&nbsp;
+                                                        {{ form_label(form.i_certificadorue_infra) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_folio_infra) }}
+                                                        {{ form_label(form.ii_folio_infra) }}                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.ii_nrofolio_infra) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.ii_nrofolio_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_planos_infra) }}&nbsp;
+                                                        {{ form_label(form.ii_planos_infra) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
-                                        </div>
-                                    {% elseif id == 42 %} {# cierre temporal #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
-                                        </div>
-                                    {% elseif id == 43 %} {# cierre definitivo #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
+                                    {% elseif id in [42,43] %} {# cierre temporal #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_cierre) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_cierre) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_resolucion_cierre) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_resolucion_cierre) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_archivos_cierre) }}&nbsp;
+                                                        {{ form_label(form.i_archivos_cierre) }}                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_cierre) }}&nbsp;
+                                                        {{ form_label(form.i_certificadorue_cierre) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% elseif id == 44 %}{# Reapertura #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_apertura) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_apertura) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% elseif id == 45 %}{# nuevo certifcado rue #}
-                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-2">
-                                        </div>
-                                        <div class="tab-pane fade inner-all" id="tab1-3">
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_nuevorue) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_nuevorue) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 </div><!-- /.panel-body -->
@@ -264,7 +692,7 @@
             </div>
             <div class="panel-footer">
                 <div class="pull-right">
-                    <button type="button" class="btn btn-primary" onclick="guardarRequisitos({{id}})">aceptar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarRequisitos({{id}})">Guardar</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                 </div>
                 <div class="clearfix"></div>
@@ -273,3 +701,39 @@
     </div>
 </div><!-- /.modal-dialog -->
 
+<script>
+    $(".alquiler").change(function () {	 
+        if ($(this).val() == 'SI'){
+            $('#contrato').show();
+            $('#form_i_contrato_ampliar').attr('required',true);
+
+        }else{
+            $('#contrato').hide();
+            $('#form_i_contrato_ampliar').attr('required',false);
+            $('#form_i_contrato_ampliar').val('');
+        }
+    });
+
+    $(".alquilerDependencia").change(function () {	 
+        if ($(this).val() == 'SI'){
+            $('#contratoDependencia').show();
+            $('#form_i_contrato_dependencia').attr('required',true);
+
+        }else{
+            $('#contratoDependencia').hide();
+            $('#form_i_contrato_dependencia').attr('required',false);
+            $('#form_i_contrato_dependencia').val('');
+        }
+    });
+    $(".alquilerReducir").change(function () {	 
+        if ($(this).val() == 'SI'){
+            $('#contratoReducir').show();
+            $('#form_i_contrato_reducir').attr('required',true);
+
+        }else{
+            $('#contratoReducir').hide();
+            $('#form_i_contrato_reducir').attr('required',false);
+            $('#form_i_contrato_reducir').val('');
+        }
+    });
+</script>

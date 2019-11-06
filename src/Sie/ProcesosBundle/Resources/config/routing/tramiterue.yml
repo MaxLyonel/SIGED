@@ -6,6 +6,10 @@ tramite_rue_inicio_modificacion_guardar:
     path:     /solicitud/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionGuardar" }
 
+tramite_rue_inicio_modificacion_reporte:
+    path:     /solicitud/reporte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionReporte" }
+
 tramite_rue_recepcion_distrito:
     path:     /recepcion/distrito
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistrito" }
@@ -59,36 +63,36 @@ tramite_rue_buscar_edificio:
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscaredificio" }
 
 tramite_rue_le_buscar_provincias:
-     path:    /provincias/{idDepartamento}/
+     path:    /provincias/{idDepartamento}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:provincias" }
      options:
          expose: true
 
 tramite_rue_le_buscar_municipios:
-     path:    /municipios/{idProvincia}/
+     path:    /municipios/{idProvincia}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:municipios" }
      options:
          expose: true
 tramite_rue_le_buscar_comunidad:
-     path:    /cantones/{idMunicipio}/
+     path:    /comunidades/{idMunicipio}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:comunidad" }
      options:
          expose: true
 
 tramite_rue_le_buscar_cantones:
-     path:    /cantones/{idMunicipio}/
+     path:    /cantones/{idMunicipio}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:cantones" }
      options:
          expose: true
 
 tramite_rue_le_buscar_localidades:
-     path:    /localidades/{idCanton}/
+     path:    /localidades/{idCanton}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:localidades" }
      options:
          expose: true
 
 tramite_rue_le_buscar_distritos:
-     path:    /distritos/{idDepartamento}/
+     path:    /distritos/{idDepartamento}/  
      defaults: { _controller: "SieProcesosBundle:TramiteRue:distritos" }
      options:
          expose: true

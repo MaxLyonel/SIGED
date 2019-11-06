@@ -351,7 +351,7 @@ class WFTramite {
     * funcion que elimina tramite recibido
     */
     public function eliminarTramiteRecibido($idtramite)
-    {
+    {   
         $this->em->getConnection()->beginTransaction();
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
@@ -361,6 +361,7 @@ class WFTramite {
             $this->em->flush();
             //dump($tramite);die;
             $this->em->getConnection()->commit();
+            //dump($tramite,$mensaje);die;
             return true;
             
         } catch (Exception $ex) {
