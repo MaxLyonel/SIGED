@@ -6,6 +6,10 @@ tramite_rue_inicio_modificacion_guardar:
     path:     /solicitud/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionGuardar" }
 
+tramite_rue_inicio_modificacion_reporte:
+    path:     /solicitud/reporte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionReporte" }
+
 tramite_rue_recepcion_distrito:
     path:     /recepcion/distrito
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistrito" }

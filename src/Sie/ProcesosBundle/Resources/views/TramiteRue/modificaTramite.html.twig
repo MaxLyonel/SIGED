@@ -1,15 +1,21 @@
 {% if id == 34 %} {# ampliacion de nivel #}
     <td>
         <ul>
+            {% set nt =[] %}
             {% for n in ieNivel %}
                 <li type=square>{{ n.nivel }}</li>
+                {% set nt = nt|merge([n.id]) %}
             {% endfor %}
         </ul>
     </td>
-    <td>    
+    <td>
         {% for a in form.nivelampliar %}
             <div class="ckbox ckbox-primary">
-                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {% if a.vars.value in nt %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo','disabled':'disabled','checked':'checked'}}) }}
+                {% else %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {% endif %}
                 {{ form_label(a) }}
             </div>
         {% endfor %}
@@ -25,7 +31,7 @@
     <td>
         {% for a in form.nivelreducir %}
             <div class="ckbox ckbox-primary">
-                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {{ form_widget(a,{'attr':{'class':'niveltipo','checked':'checked'}}) }}
                 {{ form_label(a) }}
             </div>
         {% endfor %}

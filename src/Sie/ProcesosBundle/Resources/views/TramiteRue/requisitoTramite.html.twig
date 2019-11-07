@@ -137,13 +137,13 @@
                                                         <div class="col-md-6">
                                                             {% for a in form.i_alquiler_reducir %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a) }}
+                                                                    {{ form_widget(a,{'attr':{'class':'alquilerReducir'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
                                                     </div>
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group col-md-12" id="contratoReducir" style="display:none">
                                                         <div class="col-md-6">
                                                             {{ form_label(form.i_contrato_reducir) }}
                                                         </div>
@@ -692,7 +692,7 @@
             </div>
             <div class="panel-footer">
                 <div class="pull-right">
-                    <button type="button" class="btn btn-primary" onclick="guardarRequisitos({{id}})">Guardar</button>
+                    {# <button type="button" class="btn btn-primary" onclick="guardarRequisitos({{id}})">Guardar</button> #}
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                 </div>
                 <div class="clearfix"></div>
@@ -723,6 +723,17 @@
             $('#contratoDependencia').hide();
             $('#form_i_contrato_dependencia').attr('required',false);
             $('#form_i_contrato_dependencia').val('');
+        }
+    });
+    $(".alquilerReducir").change(function () {	 
+        if ($(this).val() == 'SI'){
+            $('#contratoReducir').show();
+            $('#form_i_contrato_reducir').attr('required',true);
+
+        }else{
+            $('#contratoReducir').hide();
+            $('#form_i_contrato_reducir').attr('required',false);
+            $('#form_i_contrato_reducir').val('');
         }
     });
 </script>
