@@ -1,33 +1,28 @@
 Sie\AppWebBundle\Entity\Institucioneducativa:
     type: entity
     table: institucioneducativa
-    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaRepository
     indexes:
         fk_institucioneducativa_institu:
             columns:
                 - institucioneducativa_tipo_id
-        fk_institucioneducativa_jurisdi:
-            columns:
-                - le_juridicciongeografica_id
-        fk_dat_rue_unidad_educativa_cl4:
-            columns:
-                - orgcurricular_tipo_id
         fk_dat_rue_unidad_educativa_cl3:
             columns:
                 - dependencia_tipo_id
         fk_dat_rue_unidad_educativa_cl2:
             columns:
                 - convenio_tipo_id
+        fk_institucioneducativa_jurisdi:
+            columns:
+                - le_juridicciongeografica_id
+        fk_dat_rue_unidad_educativa_cl4:
+            columns:
+                - orgcurricular_tipo_id
         fk_dat_rue_unidad_educativa_cl1:
             columns:
                 - estadoinstitucion_tipo_id
         IDX_296403278CB2B089:
             columns:
                 - institucioneducativa_acreditacion_tipo_id
-    uniqueConstraints:
-        institucioneducativa_pk:
-            columns:
-                - id
     id:
         id:
             type: integer
@@ -35,11 +30,13 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             unsigned: false
             comment: ''
             id: true
+            generator:
+                strategy: SEQUENCE
     fields:
         institucioneducativa:
             type: string
             nullable: true
-            length: 70
+            length: 255
             fixed: false
             comment: ''
         rueUe:
@@ -86,14 +83,20 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             fixed: false
             comment: ''
             column: fecha_cierre
-    oneToMany:
-      formularios:
-        targetEntity: FormularioRue
-        mappedBy: institucioneducativa
-      certificados:
-        targetEntity: CertificadoRueInstitucioneducativa
-        mappedBy: institucioneducativa
-
+        obsRue2:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: obs_rue2
+        desUeAntes2:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: des_ue_antes2
     manyToOne:
         convenioTipo:
             targetEntity: ConvenioTipo

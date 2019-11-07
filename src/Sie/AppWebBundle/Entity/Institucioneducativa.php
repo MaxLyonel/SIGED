@@ -454,4 +454,60 @@ class Institucioneducativa {
     {
         return $this->institucioneducativaAcreditacionTipo;
     }
+    /**
+     * @var string
+     */
+    private $obsRue2;
+
+    /**
+     * @var string
+     */
+    private $desUeAntes2;
+
+
+    /**
+     * Set obsRue2
+     *
+     * @param string $obsRue2
+     * @return Institucioneducativa
+     */
+    public function setObsRue2($obsRue2)
+    {
+        $this->obsRue2 = $obsRue2;
+    
+        return $this;
+    }
+
+    /**
+     * Get obsRue2
+     *
+     * @return string 
+     */
+    public function getObsRue2()
+    {
+        return $this->obsRue2;
+    }
+
+    /**
+     * Set desUeAntes2
+     *
+     * @param string $desUeAntes2
+     * @return Institucioneducativa
+     */
+    public function setDesUeAntes2($desUeAntes2)
+    {
+        $this->desUeAntes2 = $desUeAntes2;
+    
+        return $this;
+    }
+
+    /**
+     * Get desUeAntes2
+     *
+     * @return string 
+     */
+    public function getDesUeAntes2()
+    {
+        return $this->desUeAntes2;
+    }
 }
