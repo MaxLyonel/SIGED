@@ -2,27 +2,31 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
     type: entity
     table: institucioneducativa
     indexes:
-        fk_institucioneducativa_institu:
+        fk_dat_rue_unidad_educativa_cl4:
             columns:
-                - institucioneducativa_tipo_id
+                - orgcurricular_tipo_id
         fk_dat_rue_unidad_educativa_cl3:
             columns:
                 - dependencia_tipo_id
         fk_dat_rue_unidad_educativa_cl2:
             columns:
                 - convenio_tipo_id
-        fk_institucioneducativa_jurisdi:
-            columns:
-                - le_juridicciongeografica_id
-        fk_dat_rue_unidad_educativa_cl4:
-            columns:
-                - orgcurricular_tipo_id
         fk_dat_rue_unidad_educativa_cl1:
             columns:
                 - estadoinstitucion_tipo_id
+        fk_institucioneducativa_jurisdi:
+            columns:
+                - le_juridicciongeografica_id
+        fk_institucioneducativa_institu:
+            columns:
+                - institucioneducativa_tipo_id
         IDX_296403278CB2B089:
             columns:
                 - institucioneducativa_acreditacion_tipo_id
+    uniqueConstraints:
+        institucioneducativa_pk:
+            columns:
+                - id
     id:
         id:
             type: integer
@@ -60,14 +64,14 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
         obsRue:
             type: string
             nullable: true
-            length: 45
+            length: 255
             fixed: false
             comment: ''
             column: obs_rue
         desUeAntes:
             type: string
             nullable: true
-            length: 45
+            length: 255
             fixed: false
             comment: ''
             column: des_ue_antes
@@ -97,50 +101,24 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             fixed: false
             comment: ''
             column: des_ue_antes2
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
-        convenioTipo:
-            targetEntity: ConvenioTipo
+        institucioneducativaAcreditacionTipo:
+            targetEntity: InstitucioneducativaAcreditacionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                convenio_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        dependenciaTipo:
-            targetEntity: DependenciaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                dependencia_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        estadoinstitucionTipo:
-            targetEntity: EstadoinstitucionTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                estadoinstitucion_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        orgcurricularTipo:
-            targetEntity: OrgcurricularTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                orgcurricular_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        institucioneducativaTipo:
-            targetEntity: InstitucioneducativaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                institucioneducativa_tipo_id:
+                institucioneducativa_acreditacion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         leJuridicciongeografica:
@@ -152,13 +130,49 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
                 le_juridicciongeografica_id:
                     referencedColumnName: id
             orphanRemoval: false
-        institucioneducativaAcreditacionTipo:
-            targetEntity: InstitucioneducativaAcreditacionTipo
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                institucioneducativa_acreditacion_tipo_id:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadoinstitucionTipo:
+            targetEntity: EstadoinstitucionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadoinstitucion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        dependenciaTipo:
+            targetEntity: DependenciaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                dependencia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        convenioTipo:
+            targetEntity: ConvenioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                convenio_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
