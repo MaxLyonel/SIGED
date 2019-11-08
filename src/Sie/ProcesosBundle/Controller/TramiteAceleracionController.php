@@ -86,10 +86,10 @@ class TramiteAceleracionController extends Controller
                         ->andWhere('ie.institucioneducativaTipo=1')
                         ->orderBy("eins.id", "DESC")
                         ->getQuery()
-                        ->getSingleResult();
-                    if (!empty($einscripcion_result)) {
-                        $estudianteinscripcion_id = $einscripcion_result->getId();
-                        $institucioneducativa = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa();
+                        ->getResult();
+                    if (count($einscripcion_result)>0) {
+                        $estudianteinscripcion_id = $einscripcion_result[0]->getId();
+                        $institucioneducativa = $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa();
                         $estudiante = array(
                             'id' => $estudiante_result->getId(),
                             'nombre' => $estudiante_result->getNombre(),
@@ -102,17 +102,17 @@ class TramiteAceleracionController extends Controller
                             'estudiante_id' => $estudiante_result->getId()
                         );
 
-                        $codigo_sie = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-                        $nivel_id = $einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-                        $grado_id = $einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-                        $paralelo_id = $einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-                        $turno_id = $einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+                        $codigo_sie = $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                        $nivel_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+                        $grado_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+                        $paralelo_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+                        $turno_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
                         $inscripcion = array(
-                            'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                            'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                            'grado_id'=>$grado_id, 'grado'=>$einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                            'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
-                            'turno_id'=>$turno_id, 'turno'=>$einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
+                            'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                            'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                            'grado_id'=>$grado_id, 'grado'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                            'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                            'turno_id'=>$turno_id, 'turno'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
                         );
                         $talento = array(
                             'tipo_talento' => strtoupper($estudiante_talento->getTalentoTipo()),
@@ -522,12 +522,12 @@ class TramiteAceleracionController extends Controller
             ->andWhere('ie.institucioneducativaTipo=1')
             ->orderBy("eins.id", "DESC")
             ->getQuery()
-            ->getSingleResult();
-        $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-        $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-        $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-        $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-        $turno_id = $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+            ->getResult();
+        $codigo_sie = $restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $nivel_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $paralelo_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $turno_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
 
         $arrayActas = array();
         for ($i=1; $i < $datos->grado_cantidad; $i++) {
@@ -582,12 +582,12 @@ class TramiteAceleracionController extends Controller
             $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'paraleloTipo' => $paralelo_id, 'turnoTipo' => $turno_id, 'gestionTipo' => $this->session->get('currentyear')));
             $arrayActas[] = array(
                 'curso' => array(
-                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                    'nivel_id'=>$nivel_id, 'nivel'=>($nivel_tipo)?$nivel_tipo->getNivel():'',//$restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                    'grado_id'=>$grado_id, 'grado'=>($grado_tipo)?$grado_tipo->getGrado():'',//$restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                    'nivel_id'=>$nivel_id, 'nivel'=>($nivel_tipo)?$nivel_tipo->getNivel():'',//$restudianteinst[0]->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                    'grado_id'=>$grado_id, 'grado'=>($grado_tipo)?$grado_tipo->getGrado():'',//$restudianteinst[0]->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
                     'paralelos'=>$queryParalelo->getResult(),
-                    'turno_id'=>$turno_id, 'turno'=>$restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
+                    'turno_id'=>$turno_id, 'turno'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
                     'turnos'=>$queryTurno->getResult(),
                     'iec_id'=>($iecurso)?$iecurso->getId():0),
                 'materiasnotas' => $materiasnotas
@@ -827,7 +827,7 @@ class TramiteAceleracionController extends Controller
             ->andWhere('ie.institucioneducativaTipo=1')
             ->orderBy("eins.id", "DESC")
             ->getQuery()
-            ->getSingleResult();
+            ->getResult();
         
         // Obtiene el ultimo código SIE
         $curso_asignatura = json_decode($datos2->curso_asignatura_notas);
@@ -835,11 +835,11 @@ class TramiteAceleracionController extends Controller
         $codigo_sie = $curso_asignatura[$posicion_sie-1]->curso->sie;
         $institucion_e = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($codigo_sie);
         $nombre_ie = $institucion_e->getInstitucioneducativa();
-        // $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-        $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-        $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-        $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-        $turno_id = $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        // $codigo_sie = $restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $nivel_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $paralelo_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $turno_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
 
         for ($i=1; $i < $datos1->grado_cantidad; $i++) {
             if ($nivel_id == 11) {
@@ -907,7 +907,7 @@ class TramiteAceleracionController extends Controller
         }
         $cursoActual = array(
             'codigo_sie' => $codigo_sie,
-            'nombre_sie' => $nombre_ie,//$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+            'nombre_sie' => $nombre_ie,//$restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
             'nivel_id' => $nivel_id,
             'nivel' => ($nivel_tipo)?$nivel_tipo->getNivel():'',
             'grado_id' => $grado_id,
@@ -935,7 +935,7 @@ class TramiteAceleracionController extends Controller
             'tramite_id' => $tramite_id,
             'institucioneducativa_id'=>$datos1->institucioneducativa_id,
             'codigo_sie'=>$datos1->institucioneducativa_id,
-            // 'codigo_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
+            // 'codigo_sie'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
             'rude' => $rude,
             'estudiante' => $estudiante,
             'procede_aceleracion' => $datos1->procede_aceleracion,
