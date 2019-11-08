@@ -150,17 +150,27 @@ class TramiteAceleracionController extends Controller
             if(empty($estudiante_talento)){
                 return $response->setData(array('msg' => 'notalento'));
             }
-            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));//Evaluar 'estadomatriculaTipo' => 4
-            if (!empty($einscripcion_result)) {
+            // $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));//Evaluar 'estadomatriculaTipo' => 4
+            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+                ->select('eins')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+                ->where('eins.estudiante='.$estudiante_result->getId())
+                ->andWhere('eins.estadomatriculaTipo=4')
+                ->andWhere('ie.institucioneducativaTipo=1')
+                ->orderBy("eins.id", "DESC")
+                ->getQuery()
+                ->getResult();
+            if (count($einscripcion_result)>0) {
                 // Verifica si la Unidad Educativa es regular
-                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativaTipo()->getId() != 1) {
+                if ($einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativaTipo()->getId() != 1) {
                     return $response->setData(array('msg' => 'noregular'));
                 }
                 // Verifica si el Estudiante está inscrito en su Unidad Educativa
-                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
+                if ($einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
                     return $response->setData(array('msg' => 'noue'));
                 }
-                $estudianteinscripcion_id = $einscripcion_result->getId();
+                $estudianteinscripcion_id = $einscripcion_result[0]->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
@@ -202,17 +212,17 @@ class TramiteAceleracionController extends Controller
                     'segundo' => $valida
                 );
 
-                $codigo_sie = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-                $nivel_id = $einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-                $grado_id = $einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-                $paralelo_id = $einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-                $turno_id = $einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+                $codigo_sie = $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                $nivel_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+                $grado_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+                $paralelo_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+                $turno_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
                 $inscripcion = array(
-                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                    'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                    'grado_id'=>$grado_id, 'grado'=>$einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
-                    'turno_id'=>$turno_id, 'turno'=>$einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
+                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                    'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                    'grado_id'=>$grado_id, 'grado'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                    'turno_id'=>$turno_id, 'turno'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
                 );
                 $talento = array(
                     'tipo_talento' => strtoupper($estudiante_talento->getTalentoTipo()),
