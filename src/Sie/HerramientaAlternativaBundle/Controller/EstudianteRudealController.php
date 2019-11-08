@@ -467,7 +467,7 @@ class EstudianteRudealController extends Controller {
             //     $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
             // }
 
-            if(isset($form['expedido'])){
+            if(isset($form['expedido']) and $form['expedido'] != ''){
                 $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));   
             }
 

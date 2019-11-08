@@ -152,10 +152,14 @@
                             {# VERIFICAMOS SI EL ESTADO DE MATRICULA ES DIFERENTE DE INSCRIPCION POSTBACHILLERATO #}
                             {% if notas.estadoMatricula != 29 %}
                                 
-                                {% if notas.cantidadFaltantes > 0 %}
+                                {% if notas.cantidadFaltantes > 0 or app.session.get('roluser') == 8 %}
                                     <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#F2591C; padding:20px">
-                                        <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
-                                         Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
+                                        {% if app.session.get('roluser') != 8 %}
+                                            <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
+                                            Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
+                                        {% else %}
+                                            Registro de calificaciones        
+                                        {% endif %}
                                     </div>
 
                                     <form action="{{path('regularizarNotas_update')}}" method="post" onsubmit="return validarRegistro();">
