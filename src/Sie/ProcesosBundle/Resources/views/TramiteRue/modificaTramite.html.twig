@@ -1,4 +1,5 @@
 {% if id == 34 %} {# ampliacion de nivel #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         <ul>
             {% set nt =[] %}
@@ -21,6 +22,7 @@
         {% endfor %}
     </td>
 {% elseif id == 35 %}{# Reduccion de Nivel #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         <ul>
             {% for n in ieNivel %}
@@ -37,6 +39,7 @@
         {% endfor %}
     </td>
 {% elseif id == 36 %}{# cambio de dependencia #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         {{dependencia.dependencia|upper}}
     </td>
@@ -57,6 +60,7 @@
         {% endif %}
     </td>
 {% elseif id == 37 %}{# cambio de nombre #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         {{nombre_actual|upper}}
     </td>
@@ -65,6 +69,7 @@
         {{ form_widget(form.nuevo_nombre) }}
     </td>
 {% elseif id == 38 %}{# cambio de jurisdiccion administrativa #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         {{distrito|upper}}
     </td>
@@ -75,11 +80,42 @@
         </div>
     </td>
 {% elseif id == 39 %}{# Fusion #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
-        
+        <ul>
+            {% set nt =[] %}
+            {% for n in ieNivel %}
+                <li type=square>{{ n.nivel }}</li>
+                {% set nt = nt|merge([n.id]) %}
+            {% endfor %}
+        </ul>
     </td>
     <td>
-        
+        {% for a in form.nivelampliar %}
+            <div class="ckbox ckbox-primary">
+                {% if a.vars.value in nt %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo','disabled':'disabled','checked':'checked'}}) }}
+                {% else %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {% endif %}
+                {{ form_label(a) }}
+            </div>
+        {% endfor %}
+    </td>
+    <td>
+        {% if estadoinstitucion.id == 10 %}
+            {{estadoinstitucion.estadoinstitucion|upper}}
+        {% else %}
+            <span class="label label-danger">LA UNIDAD EDUCATIVA EST CERRADA</span>
+        {% endif %}
+    </td>
+    <td>
+        {% if estadoinstitucion.id == 10 %}
+            <div class="col-md-12 ckbox ckbox-primary">
+                {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                {{ form_label(form.estadoinstitucion) }}                                                            
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 40 %} {# desglose #}
     <td>
@@ -98,6 +134,7 @@
             padding: 15px;
         }
     </style>
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         <div class="row">
             <div class="form-group col-md-12">
@@ -310,6 +347,7 @@
         </div>
     </td>
 {% elseif id == 42 or id == 43 %} {# cierre temporal #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         {% if estadoinstitucion.id == 10 %}
             {{estadoinstitucion.estadoinstitucion|upper}}
@@ -326,6 +364,7 @@
         {% endif %}
     </td>
 {% elseif id == 44 %}{# Reapertura #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         {% if estadoinstitucion.id == 19 %}
             {{estadoinstitucion.estadoinstitucion|upper}}
@@ -342,6 +381,7 @@
         {% endif %}
     </td>
 {% elseif id == 45 %}{# nuevo certifcado rue #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         
     </td>

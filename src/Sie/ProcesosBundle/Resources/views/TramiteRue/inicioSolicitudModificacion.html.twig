@@ -344,7 +344,7 @@
                                                     {{ form_label(form.tramites) }}
                                                 </div>
                                                 <div class="col-md-3">
-                                                    {{ form_widget(form.tramites) }}
+                                                    {{ form_widget(form.tramites,{'attr':{'onchange':'buscarTramite(this.value,null)'}}) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -776,7 +776,70 @@
             });
         });
         
-        $("#form_tramites").change(function(){
+        
+        function buscarTramite(id,tipo){
+            if(id){
+                var tramitetipo = $('#form_tramites option:selected').text();
+                if ( $("#fila_"+ id).length ) {
+                    return false;
+                }
+                //alert ($('#form_tr').val());
+                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39)== false){
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    return false;
+                }
+                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(42) || JSON.parse($('#form_tr').val()).includes(43)) && JSON.parse($('#form_tr').val()).includes(39)== false){
+                    alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
+                    return false;
+                }
+                if(id == 39){ //fusion
+                    idtramite = 34; //ampliacion de nivel
+                }else{
+                    idtramite = id;
+                }
+                var formData = {id: idtramite,tipo:tipo,ie:'{{institucioneducativa.id}}'};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('tramite_rue_busca_tarea')}}",
+                    data: formData,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        var tr ='<tr id="fila_'+idtramite+'">'+data;
+                        if(idtramite == 44 && {{institucioneducativa.estadoinstitucionTipo.id}} == 10){
+                            tr = tr+'<td></td>';
+                        }else{
+                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+idtramite+'" data-placement="top" title="Requisitos" onclick="requisitos('+idtramite+')"><i class="glyphicon glyphicon-plus"></i></button>'+
+                                '</td>';
+                        }
+                        tr = tr+'<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+idtramite+')"><i class="glyphicon glyphicon-minus"></i></button>'+
+                            '</td></tr>';
+                        $('#tabla').append(tr);
+                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        if ($('#form_tr').val() == "" && id != 39) {
+                            trArray = [Number(idtramite)];
+                            $('#form_tr').val(JSON.stringify(trArray));
+                        }else if($('#form_tr').val() == "" && id == 39) {
+                            trArray = [Number(id),Number(idtramite)];
+                            $('#form_tr').val(JSON.stringify(trArray));
+                            buscarTramite(43,'fusion');
+                        }else if($('#form_tr').val() != "" && id == 39){
+                            trArray = JSON.parse($('#form_tr').val());
+                            trArray.push(Number(id));
+                            trArray.push(Number(idtramite));
+                            $('#form_tr').val(JSON.stringify(trArray));
+                            buscarTramite(43,'fusion');
+                        }else{
+                            trArray = JSON.parse($('#form_tr').val());
+                            trArray.push(Number(idtramite));
+                            $('#form_tr').val(JSON.stringify(trArray));
+                        }
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                });
+            }
+        }
+        /*$("#form_tramites").change(function(){
             //alert('entra');  
             var id = $(this).val();
             if(id){
@@ -784,6 +847,15 @@
                 if ( $("#fila_"+ id).length ) {
                     return false;
                 }
+                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0){
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    return false;
+                }
+                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(42) || JSON.parse($('#form_tr').val()).includes(43))){
+                    alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
+                    return false;
+                }
+                
                 var formData = {id: id,tramitetipo:tramitetipo,ie:'{{institucioneducativa.id}}'};
                 $.ajax({
                     type: 'GET',
@@ -816,7 +888,7 @@
                     },
                 });
             }
-        });        
+        });*/        
  
         function requisitos(id){
             //alert(id);
