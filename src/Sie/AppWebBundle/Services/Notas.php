@@ -1501,9 +1501,18 @@ die;/*
                     
                     if($inscripcion->getEstadomatriculaInicioTipo() != null and $inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
                         $nuevoEstado = 26; // promovido por postbachillerato
-
                     }else{
-                        $nuevoEstado = 5; // Aprobado
+                        // VERIFICAMOS SI EL ESTADO DE MATRICULA ACTUAL ES
+                        // 26 PROMOVIDO POST-BACHILLERATO
+                        // 55 PROMOVIDO BACHILLER DE EXCELENCIA
+                        // 57 PROMOVIDO POR REZAGO ESCOLAR
+                        // 58 PROMOVIDO TALENTO EXTRAORDINARIO
+                        // PARA NO MODIFICAR EL ESTADO DE MATRICULA ORIGINAL SI EL NUEVO ESTADO ES PROMOVIDO
+                        if (in_array($inscripcion->getEstadomatriculaTipo()->getId(), [26,55,57,58])) {
+                            $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
+                        }else{
+                            $nuevoEstado = 5; // PROMOVIDO
+                        }
                     }
 
                     if($tipo == 'Bimestre'){
@@ -1752,9 +1761,11 @@ die;/*
             
         }
     }
-    /**
-    * REGISTRO Y MODIFICACION DE NOTAS CUANTITATIVAS E INICIAL(estudiante_nota) 
-    */
+   
+    /*====================================================================
+    =            REGISTRO Y MODIFICACION DE CALIFICACIONES            =
+    ====================================================================*/
+
     public function registrarNota($idNotaTipo, $idEstudianteAsignatura,$notaCuantitativa, $notaCualitativa){
         // Reiniciamos la secuencia de la tabla notas
         $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();        
@@ -1834,6 +1845,9 @@ die;/*
 
         return $datosNota;
     }
+
+    /*=====  End of REGISTRO Y MODIFICACION DE CALIFICACACION  ======*/
+
 
     /**
     * REGISTRO Y MODIFICACION DE NOTAS CUALITATIVAS (estudiante_nota_cualitativa) 
@@ -2651,6 +2665,9 @@ die;/*
             return new JsonResponse(array('msg'=>'error'));
         }
     }
+
+    /*=====  End of REGISTRO DE CALIFICACIONES EDUCACION ESPECIAL  ======*/
+
 
     /*==========================================================================
     =             REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS            =
