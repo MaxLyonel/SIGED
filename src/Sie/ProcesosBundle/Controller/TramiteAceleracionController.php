@@ -76,7 +76,17 @@ class TramiteAceleracionController extends Controller
                 $grados = array();
                 if (!empty($estudiante_result)) {
                     $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $estudiante_result));
-                    $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
+                    // $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
+                    $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+                        ->select('eins')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+                        ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+                        ->where('eins.estudiante='.$estudiante_result->getId())
+                        ->andWhere('eins.estadomatriculaTipo=4')
+                        ->andWhere('ie.institucioneducativaTipo=1')
+                        ->orderBy("eins.id", "DESC")
+                        ->getQuery()
+                        ->getSingleResult();
                     if (!empty($einscripcion_result)) {
                         $estudianteinscripcion_id = $einscripcion_result->getId();
                         $institucioneducativa = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa();
@@ -502,7 +512,17 @@ class TramiteAceleracionController extends Controller
         $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
 
-        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+            ->select('eins')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+            ->where('eins.estudiante='.$restudiante->getId())
+            ->andWhere('eins.estadomatriculaTipo=4')
+            ->andWhere('ie.institucioneducativaTipo=1')
+            ->orderBy("eins.id", "DESC")
+            ->getQuery()
+            ->getSingleResult();
         $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
@@ -797,7 +817,17 @@ class TramiteAceleracionController extends Controller
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
 
-        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+            ->select('eins')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+            ->where('eins.estudiante='.$restudiante->getId())
+            ->andWhere('eins.estadomatriculaTipo=4')
+            ->andWhere('ie.institucioneducativaTipo=1')
+            ->orderBy("eins.id", "DESC")
+            ->getQuery()
+            ->getSingleResult();
         
         // Obtiene el ultimo código SIE
         $curso_asignatura = json_decode($datos2->curso_asignatura_notas);
