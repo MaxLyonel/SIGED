@@ -71,7 +71,7 @@ class RegularizarNotasController extends Controller {
                                 ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
                                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
                                 ->where('e.codigoRude = :rude')
-                                ->orderBy('ei.fechaInscripcion','ASC')
+                                ->orderBy('ei.fechaInscripcion','DESC')
                                 ->setParameter('rude',$rude)
                                 ->getQuery()
                                 ->getResult();
@@ -137,7 +137,7 @@ class RegularizarNotasController extends Controller {
             }
 
             // VERIFICAMOS SI LAS NOTAS SON POSTBACHILLERATO
-            if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+            if($inscripcion->getEstadomatriculaInicioTipo() != null and $inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
                 $plantilla = 'postbachillerato';
                 $notas = $this->get('notas')->postbachillerato($idInscripcion);
             }else{
@@ -147,9 +147,9 @@ class RegularizarNotasController extends Controller {
             $vista = 1; // EDITABLE DE ACUERDO AL OPERATIVO O FALTA DE CALIFICACIONES
 
             // SI EL ROL ES NACIONAL SE ABRE TODAS LAS CALIFICACIONES
-            // INSITINTAMENTE DEL OPERATIVO
+            // DE TODOS LOS BIMESTRES O TRIMESTRES
             if ($this->session->get('roluser') == 8) {
-                $vista = 2;
+                $vista = 2; // Opcion para editar todas las calificaciones
             }
 
             $em->getConnection()->commit();
