@@ -265,7 +265,7 @@
                                                             </tr>
                                                             {% for t in d.datos.tramites  %}
                                                                 <tr>
-                                                                    <td>{{t.tramiteTipo}}</td>
+                                                                    <td>{{t.tramite_tipo}}</td>
                                                                     {% if t.id == 34 %} {# ampliacion de nivel #}
                                                                         <td>
                                                                             <ul>
@@ -276,7 +276,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <ul>
-                                                                                {% for n in d.datos[t.tramiteTipo].nivelampliar %}
+                                                                                {% for n in d.datos[t.tramite_tipo].nivelampliar %}
                                                                                     <li type=square>{{ n.nivel }}</li> 
                                                                                 {% endfor %}            
                                                                             </ul>
@@ -291,7 +291,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <ul>
-                                                                                {% for n in d.datos[t.tramiteTipo].nivelreducir %}
+                                                                                {% for n in d.datos[t.tramite_tipo].nivelreducir %}
                                                                                     <li type=square>{{ n.nivel }}</li> 
                                                                                 {% endfor %}
                                                                             </ul>
@@ -304,7 +304,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <ul>
-                                                                                <li type=square>{{d.datos[t.tramiteTipo].dependencia.dependencia|upper}}</li> 
+                                                                                <li type=square>{{d.datos[t.tramite_tipo].dependencia.dependencia|upper}}</li> 
                                                                                 {% if d.datos.institucioneducativa.dependencia_tipo_id == 1 %}
                                                                                     <li type=square>
                                                                                         Tipo de convenio: {{d.datos.institucioneducativa.convenio}}
@@ -317,7 +317,7 @@
                                                                             {{d.datos.institucioneducativa.institucioneducativa|upper}}
                                                                         </td>
                                                                         <td>
-                                                                            {{d.datos[t.tramiteTipo].nuevo_nombre|upper}}
+                                                                            {{d.datos[t.tramite_tipo].nuevo_nombre|upper}}
                                                                         </td>
                                                                     {% elseif t.id == 38 %}{# cambio de jurisdiccion administrativa #}
                                                                         <td>
@@ -327,7 +327,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <ul>
-                                                                                <li type=square>{{d.datos[t.tramiteTipo].nuevo_distrito.nuevo_distrito|upper}}</li> 
+                                                                                <li type=square>{{d.datos[t.tramite_tipo].nuevo_distrito.nuevo_distrito|upper}}</li> 
                                                                             </ul>
                                                                         </td>
                                                                     {% elseif t.id == 39 %}{# Fusion #}
@@ -448,13 +448,13 @@
                                                                         </td>
                                                                         <td>
                                                                             <div class="row">
-                                                                                {% if datos[t.tramiteTipo].lejurisdiccion is defined %}
+                                                                                {% if datos[t.tramite_tipo].lejurisdiccion is defined %}
                                                                                     <div class="form-group  col-md-12">
                                                                                         <div class="col-md-5">  
                                                                                             <strong>Código Edificio Educativo:</strong>
                                                                                         </div>
                                                                                         <div class="col-md-7">
-                                                                                            {{datos[t.tramiteTipo].lejurisdiccion}}
+                                                                                            {{datos[t.tramite_tipo].lejurisdiccion}}
                                                                                         </div>
                                                                                     </div>
                                                                                 {% endif %}
@@ -466,7 +466,7 @@
                                                                                         <strong>DEPARTAMENTO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].departamento2001}}
+                                                                                        {{d.datos[t.tramite_tipo].departamento2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -474,7 +474,7 @@
                                                                                         <strong>PROVINCIA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].provincia2001}}
+                                                                                        {{d.datos[t.tramite_tipo].provincia2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -482,7 +482,7 @@
                                                                                         <strong>MUNICIPIO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].municipio2001}}
+                                                                                        {{d.datos[t.tramite_tipo].municipio2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -490,7 +490,7 @@
                                                                                         <strong>CANTON:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].canton2001}}
+                                                                                        {{d.datos[t.tramite_tipo].canton2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -498,7 +498,7 @@
                                                                                         <strong>LOCALIDAD:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].localidad2001}}
+                                                                                        {{d.datos[t.tramite_tipo].localidad2001}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
@@ -509,7 +509,7 @@
                                                                                         <strong>DEPARTAMENTO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].departamento2012}}
+                                                                                        {{d.datos[t.tramite_tipo].departamento2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -517,7 +517,7 @@
                                                                                         <strong>PROVINCIA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].provincia2012}}
+                                                                                        {{d.datos[t.tramite_tipo].provincia2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -525,7 +525,7 @@
                                                                                         <strong>MUNICIPIO:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].municipio2012}}
+                                                                                        {{d.datos[t.tramite_tipo].municipio2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -533,7 +533,7 @@
                                                                                         <strong>COMUNIDAD:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].comunidad2012}}
+                                                                                        {{d.datos[t.tramite_tipo].comunidad2012}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
@@ -544,7 +544,7 @@
                                                                                         <strong>ZONA:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].zona}}
+                                                                                        {{d.datos[t.tramite_tipo].zona}}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group  col-md-12">
@@ -552,7 +552,7 @@
                                                                                         <strong>DIRECCIÓN:</strong>
                                                                                     </div>
                                                                                     <div class="col-md-7">
-                                                                                        {{d.datos[t.tramiteTipo].direccion}}
+                                                                                        {{d.datos[t.tramite_tipo].direccion}}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

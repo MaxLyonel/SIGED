@@ -6,7 +6,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -50,7 +50,7 @@
                                                                 <strong>Solicitud de Ampliación de Nivel:</strong>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -60,16 +60,16 @@
                                                                 <strong>Infraestructura arrendada:</strong>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{datos[t.tramiteTipo].i_alquiler_ampliar}}
+                                                                {{datos[t.tramite_tipo].i_alquiler_ampliar}}
                                                             </div>
                                                         </div>
-                                                        {% if datos[t.tramiteTipo].i_alquiler_ampliar == 'SI' %}
+                                                        {% if datos[t.tramite_tipo].i_alquiler_ampliar == 'SI' %}
                                                             <div  class="form-group col-md-12">
                                                                 <div class="col-md-6">
                                                                     <strong>Copia notariada de arrendamiento:</strong>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_contrato_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_contrato_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -121,7 +121,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -165,7 +165,7 @@
                                                                 <strong>Solicitud de Reducción de Nivel:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_reducir )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_reducir )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -175,16 +175,16 @@
                                                                 <strong>Infraestructura arrendada:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                {{datos[t.tramiteTipo].i_alquiler_reducir}}
+                                                                {{datos[t.tramite_tipo].i_alquiler_reducir}}
                                                             </div>
                                                         </div>
-                                                        {% if datos[t.tramiteTipo].i_alquiler_reducir == 'SI' %}
+                                                        {% if datos[t.tramite_tipo].i_alquiler_reducir == 'SI' %}
                                                             <div  class="form-group col-md-12">
                                                                 <div class="col-md-8">
                                                                     <strong>Copia notariada de arrendamiento:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_contrato_reducir )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_contrato_reducir )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -236,7 +236,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -273,7 +273,7 @@
                                                                     <strong>Solicitud de Cambio de dependencia:</strong>    
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_dependencia )}}" target="_blank" data-placement="top" title="Ver solicitud">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_dependencia )}}" target="_blank" data-placement="top" title="Ver solicitud">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -282,7 +282,7 @@
                                                                     <strong>Informe estableciendo aspectos técnicos de infraestructura y de cambio de dependencia:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_informe_dependencia )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_informe_dependencia )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -294,7 +294,7 @@
                                                                     <strong>Acta de Fundación:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_actafundacion )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_actafundacion )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -310,7 +310,7 @@
                                                                     <strong>Nro. de Folio Real:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{ datos[t.tramiteTipo].i_nrofolio_dependencia }}
+                                                                    {{ datos[t.tramite_tipo].i_nrofolio_dependencia }}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -318,16 +318,16 @@
                                                                     <strong>Infraestructura arrendada:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_esalquiler_dependencia}}
+                                                                    {{datos[t.tramite_tipo].i_esalquiler_dependencia}}
                                                                 </div>
                                                             </div>
-                                                            {% if datos[t.tramiteTipo].i_esalquiler_dependencia == 'SI' %}
+                                                            {% if datos[t.tramite_tipo].i_esalquiler_dependencia == 'SI' %}
                                                                 <div class="form-group col-md-12">
                                                                     <div class="col-md-8">
                                                                         <strong>Copia notariada de contrato de arrendamiento:</strong>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_contrato_dependencia )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_contrato_dependencia )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                             <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                         </a>
                                                                     </div>
@@ -338,7 +338,7 @@
                                                                     <strong>Convenio vigente de prestación de servicios:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_convenio_dependencia )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_convenio_dependencia )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -348,7 +348,7 @@
                                                                     <strong>Certificación emitida por el Gobierno Autónomo Municipal Correspondiente:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_certificacion_gam )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certificacion_gam )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -358,7 +358,7 @@
                                                                     <strong>Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_certificacionde_convenio )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certificacionde_convenio )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -398,7 +398,7 @@
                                                                     <strong>Nro. de Matrícula de Comercio:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].nro_fundaempresa}}
+                                                                    {{datos[t.tramite_tipo].nro_fundaempresa}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -406,7 +406,7 @@
                                                                     <strong>Fecha de Inscripción:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].fecha_fundaempresa}}
+                                                                    {{datos[t.tramite_tipo].fecha_fundaempresa}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -420,7 +420,7 @@
                                                                     <strong>Nro. de N.I.T.:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].nit_dependencia}}
+                                                                    {{datos[t.tramite_tipo].nit_dependencia}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -434,7 +434,7 @@
                                                                     <strong>Nro. del Testimonio de personeria jurídica de la entidad prestadora de servicio:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_testimonioconvenio}}
+                                                                    {{datos[t.tramite_tipo].i_testimonioconvenio}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -442,7 +442,7 @@
                                                                     <strong>Fecha del testimonio:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].fecha_testimonioconvenio}}
+                                                                    {{datos[t.tramite_tipo].fecha_testimonioconvenio}}
                                                                 </div>
                                                             </div>
                                                         {% endif %}
@@ -480,7 +480,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -516,7 +516,7 @@
                                                                 <strong>Solicitud de Cambio de Nombre:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_cn )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_cn )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -547,7 +547,7 @@
                                                                     <strong>'Nro. de N.I.T.:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_nit_cn}}
+                                                                    {{datos[t.tramite_tipo].i_nit_cn}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -555,7 +555,7 @@
                                                                     <strong>Nro. de testimonio de poder de representante legal:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_nrotestimonio_cn}}
+                                                                    {{datos[t.tramite_tipo].i_nrotestimonio_cn}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -563,7 +563,7 @@
                                                                     <strong>Fecha del testimonio:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_fecha_testimonio_cn}}
+                                                                    {{datos[t.tramite_tipo].i_fecha_testimonio_cn}}
                                                                 </div>
                                                             </div>
                                                             <div  class="form-group col-md-12 ">
@@ -585,7 +585,7 @@
                                                                     <strong>Nro. de Matrícula de Comercio:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_nro_fundaempresa_cn}}
+                                                                    {{datos[t.tramite_tipo].i_nro_fundaempresa_cn}}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
@@ -593,7 +593,7 @@
                                                                     <strong>Fecha de Inscripción:</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    {{datos[t.tramiteTipo].i_fecha_fundaempresa_cn}}
+                                                                    {{datos[t.tramite_tipo].i_fecha_fundaempresa_cn}}
                                                                 </div>
                                                             </div>
                                                         {% endif %}
@@ -608,7 +608,7 @@
                                                                 <strong>Certificado de defunción, (en caso de que la Unidad Educativa lleve nombre de persona):</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_certdefuncion_cn )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certdefuncion_cn )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -641,7 +641,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -693,7 +693,7 @@
                                                                 <strong>Resolucion Administrativa de Autorización de apertura y funcionamiento emitida por la DDE:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_resolucion_jur )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_resolucion_jur )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -703,7 +703,7 @@
                                                                 <strong>Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuyo cambio de jurisdicción administrativa es del área rural o urbana:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                {{datos[t.tramiteTipo].i_certificacion_jur}}
+                                                                {{datos[t.tramite_tipo].i_certificacion_jur}}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -711,7 +711,7 @@
                                                                 <strong>Área geográfica:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                {{datos[t.tramiteTipo].i_area_jur}}
+                                                                {{datos[t.tramite_tipo].i_area_jur}}
                                                             </div>
                                                         </div>
                                                         {% if datos.institucioneducativa.dependencia_tipo_id == 2 %}
@@ -784,7 +784,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -828,7 +828,7 @@
                                                                 <strong>Solicitud de Cambio de Infraestructura:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_infra )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_infra )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -838,7 +838,7 @@
                                                                 <strong>Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_certificacion_infra )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certificacion_infra )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -849,7 +849,7 @@
                                                                     <strong>Certificación de convenio emitida por el reponsable de la Entidad Prestadora de Servicios (solo convenio):</strong>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_certificacionconvenio_infra )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certificacionconvenio_infra )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -860,7 +860,7 @@
                                                                 <strong>Fotocopia legalizada de la Resolucion Administrativa de Autorización de funcionamiento emitida por la DDE.</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_resolucion_infra )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_resolucion_infra )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -886,7 +886,7 @@
                                                                 <strong>Nro. de Folio:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                {{datos[t.tramiteTipo].ii_nrofolio_infra}}
+                                                                {{datos[t.tramite_tipo].ii_nrofolio_infra}}
                                                             </div>
                                                         </div>
                                                         <div  class="form-group col-md-12 ">
@@ -923,7 +923,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -959,7 +959,7 @@
                                                                 <strong>Solicitud de cierre temporal o definitivo:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_cierre )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_cierre )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -969,7 +969,7 @@
                                                                 <strong>Fotocopia legalizada de la Resolucion Administrativa de Autorización de apertura y funcionamiento de la unidad educativa:</strong>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_resolucion_cierre )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_resolucion_cierre )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -1014,7 +1014,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -1058,7 +1058,7 @@
                                                                 <strong>Solicitud de Ampliación de Nivel:</strong>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
@@ -1068,16 +1068,16 @@
                                                                 <strong>Infraestructura arrendada:</strong>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{datos[t.tramiteTipo].i_alquiler_ampliar}}
+                                                                {{datos[t.tramite_tipo].i_alquiler_ampliar}}
                                                             </div>
                                                         </div>
-                                                        {% if datos[t.tramiteTipo].i_alquiler_ampliar == 'SI' %}
+                                                        {% if datos[t.tramite_tipo].i_alquiler_ampliar == 'SI' %}
                                                             <div  class="form-group col-md-12">
                                                                 <div class="col-md-6">
                                                                     <strong>Copia notariada de arrendamiento:</strong>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_contrato_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_contrato_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                     </a>
                                                                 </div>
@@ -1129,7 +1129,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramiteTipo|upper}}</span></h3>
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{t.tramite_tipo|upper}}</span></h3>
                             </div>
                             <div class="pull-rigth">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -1165,7 +1165,7 @@
                                                                 <strong>Informe Técnico circunstanciado de extravío del Original del Certificado RUE:</strong>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramiteTipo].i_solicitud_nuevorue )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_nuevorue )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>

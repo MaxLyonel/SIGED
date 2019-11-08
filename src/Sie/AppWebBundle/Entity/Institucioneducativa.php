@@ -1,14 +1,14 @@
 <?php
 
 namespace Sie\AppWebBundle\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Institucioneducativa
  */
-class Institucioneducativa {
-
+class Institucioneducativa
+{
     /**
      * @var integer
      */
@@ -20,7 +20,7 @@ class Institucioneducativa {
     private $institucioneducativa;
 
     /**
-     * @var boolean
+     * @var integer
      */
     private $rueUe;
 
@@ -55,29 +55,29 @@ class Institucioneducativa {
     private $fechaCierre;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\ConvenioTipo
+     * @var string
      */
-    private $convenioTipo;
+    private $obsRue2;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\DependenciaTipo
+     * @var string
      */
-    private $dependenciaTipo;
+    private $desUeAntes2;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\EstadoinstitucionTipo
+     * @var \DateTime
      */
-    private $estadoinstitucionTipo;
+    private $fechaRegistro;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\OrgcurricularTipo
+     * @var \DateTime
      */
-    private $orgcurricularTipo;
+    private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaTipo
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaAcreditacionTipo
      */
-    private $institucioneducativaTipo;
+    private $institucioneducativaAcreditacionTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\JurisdiccionGeografica
@@ -85,46 +85,51 @@ class Institucioneducativa {
     private $leJuridicciongeografica;
 
     /**
-     * @ORM\OneToMany(targetEntity="FormularioRue", mappedBy="institucioneducativa", cascade={"remove"})
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaTipo
      */
-    protected $formularios;
-    
+    private $institucioneducativaTipo;
+
     /**
-     * @ORM\OneToMany(targetEntity="CertificadoRueInstitucioneducativa", mappedBy="institucioneducativa", cascade={"remove"})
+     * @var \Sie\AppWebBundle\Entity\OrgcurricularTipo
      */
-    protected $certificados;
-    
-    public function __construct()
-    {
-    	$this->formularios = new ArrayCollection();
-    }
-    
-    public function __toString() {
-        return $this->institucioneducativa;
-    }
+    private $orgcurricularTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadoinstitucionTipo
+     */
+    private $estadoinstitucionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\DependenciaTipo
+     */
+    private $dependenciaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\ConvenioTipo
+     */
+    private $convenioTipo;
+
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
-    public function setId($id)
-    {
-    	$this->id = $id;
-    }
-    
+
     /**
      * Set institucioneducativa
      *
      * @param string $institucioneducativa
      * @return Institucioneducativa
      */
-    public function setInstitucioneducativa($institucioneducativa) {
+    public function setInstitucioneducativa($institucioneducativa)
+    {
         $this->institucioneducativa = $institucioneducativa;
-
+    
         return $this;
     }
 
@@ -133,28 +138,31 @@ class Institucioneducativa {
      *
      * @return string 
      */
-    public function getInstitucioneducativa() {
+    public function getInstitucioneducativa()
+    {
         return $this->institucioneducativa;
     }
 
     /**
      * Set rueUe
      *
-     * @param boolean $rueUe
+     * @param integer $rueUe
      * @return Institucioneducativa
      */
-    public function setRueUe($rueUe) {
+    public function setRueUe($rueUe)
+    {
         $this->rueUe = $rueUe;
-
+    
         return $this;
     }
 
     /**
      * Get rueUe
      *
-     * @return boolean 
+     * @return integer 
      */
-    public function getRueUe() {
+    public function getRueUe()
+    {
         return $this->rueUe;
     }
 
@@ -164,9 +172,10 @@ class Institucioneducativa {
      * @param \DateTime $fechaResolucion
      * @return Institucioneducativa
      */
-    public function setFechaResolucion($fechaResolucion) {
+    public function setFechaResolucion($fechaResolucion)
+    {
         $this->fechaResolucion = $fechaResolucion;
-
+    
         return $this;
     }
 
@@ -175,7 +184,8 @@ class Institucioneducativa {
      *
      * @return \DateTime 
      */
-    public function getFechaResolucion() {
+    public function getFechaResolucion()
+    {
         return $this->fechaResolucion;
     }
 
@@ -185,9 +195,10 @@ class Institucioneducativa {
      * @param string $nroResolucion
      * @return Institucioneducativa
      */
-    public function setNroResolucion($nroResolucion) {
+    public function setNroResolucion($nroResolucion)
+    {
         $this->nroResolucion = $nroResolucion;
-
+    
         return $this;
     }
 
@@ -196,7 +207,8 @@ class Institucioneducativa {
      *
      * @return string 
      */
-    public function getNroResolucion() {
+    public function getNroResolucion()
+    {
         return $this->nroResolucion;
     }
 
@@ -206,9 +218,10 @@ class Institucioneducativa {
      * @param string $obsRue
      * @return Institucioneducativa
      */
-    public function setObsRue($obsRue) {
+    public function setObsRue($obsRue)
+    {
         $this->obsRue = $obsRue;
-
+    
         return $this;
     }
 
@@ -217,7 +230,8 @@ class Institucioneducativa {
      *
      * @return string 
      */
-    public function getObsRue() {
+    public function getObsRue()
+    {
         return $this->obsRue;
     }
 
@@ -227,9 +241,10 @@ class Institucioneducativa {
      * @param string $desUeAntes
      * @return Institucioneducativa
      */
-    public function setDesUeAntes($desUeAntes) {
+    public function setDesUeAntes($desUeAntes)
+    {
         $this->desUeAntes = $desUeAntes;
-
+    
         return $this;
     }
 
@@ -238,7 +253,8 @@ class Institucioneducativa {
      *
      * @return string 
      */
-    public function getDesUeAntes() {
+    public function getDesUeAntes()
+    {
         return $this->desUeAntes;
     }
 
@@ -248,9 +264,10 @@ class Institucioneducativa {
      * @param \DateTime $fechaCreacion
      * @return Institucioneducativa
      */
-    public function setFechaCreacion($fechaCreacion) {
+    public function setFechaCreacion($fechaCreacion)
+    {
         $this->fechaCreacion = $fechaCreacion;
-
+    
         return $this;
     }
 
@@ -259,7 +276,8 @@ class Institucioneducativa {
      *
      * @return \DateTime 
      */
-    public function getFechaCreacion() {
+    public function getFechaCreacion()
+    {
         return $this->fechaCreacion;
     }
 
@@ -269,9 +287,10 @@ class Institucioneducativa {
      * @param string $fechaCierre
      * @return Institucioneducativa
      */
-    public function setFechaCierre($fechaCierre) {
+    public function setFechaCierre($fechaCierre)
+    {
         $this->fechaCierre = $fechaCierre;
-
+    
         return $this;
     }
 
@@ -280,157 +299,102 @@ class Institucioneducativa {
      *
      * @return string 
      */
-    public function getFechaCierre() {
+    public function getFechaCierre()
+    {
         return $this->fechaCierre;
     }
 
     /**
-     * Set convenioTipo
+     * Set obsRue2
      *
-     * @param \Sie\AppWebBundle\Entity\ConvenioTipo $convenioTipo
+     * @param string $obsRue2
      * @return Institucioneducativa
      */
-    public function setConvenioTipo(\Sie\AppWebBundle\Entity\ConvenioTipo $convenioTipo = null) {
-        $this->convenioTipo = $convenioTipo;
-
+    public function setObsRue2($obsRue2)
+    {
+        $this->obsRue2 = $obsRue2;
+    
         return $this;
     }
 
     /**
-     * Get convenioTipo
+     * Get obsRue2
      *
-     * @return \Sie\AppWebBundle\Entity\ConvenioTipo 
+     * @return string 
      */
-    public function getConvenioTipo() {
-        return $this->convenioTipo;
+    public function getObsRue2()
+    {
+        return $this->obsRue2;
     }
 
     /**
-     * Set dependenciaTipo
+     * Set desUeAntes2
      *
-     * @param \Sie\AppWebBundle\Entity\DependenciaTipo $dependenciaTipo
+     * @param string $desUeAntes2
      * @return Institucioneducativa
      */
-    public function setDependenciaTipo(\Sie\AppWebBundle\Entity\DependenciaTipo $dependenciaTipo = null) {
-        $this->dependenciaTipo = $dependenciaTipo;
-
+    public function setDesUeAntes2($desUeAntes2)
+    {
+        $this->desUeAntes2 = $desUeAntes2;
+    
         return $this;
     }
 
     /**
-     * Get dependenciaTipo
+     * Get desUeAntes2
      *
-     * @return \Sie\AppWebBundle\Entity\DependenciaTipo 
+     * @return string 
      */
-    public function getDependenciaTipo() {
-        return $this->dependenciaTipo;
+    public function getDesUeAntes2()
+    {
+        return $this->desUeAntes2;
     }
 
     /**
-     * Set estadoinstitucionTipo
+     * Set fechaRegistro
      *
-     * @param \Sie\AppWebBundle\Entity\EstadoinstitucionTipo $estadoinstitucionTipo
+     * @param \DateTime $fechaRegistro
      * @return Institucioneducativa
      */
-    public function setEstadoinstitucionTipo(\Sie\AppWebBundle\Entity\EstadoinstitucionTipo $estadoinstitucionTipo = null) {
-        $this->estadoinstitucionTipo = $estadoinstitucionTipo;
-
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
         return $this;
     }
 
     /**
-     * Get estadoinstitucionTipo
+     * Get fechaRegistro
      *
-     * @return \Sie\AppWebBundle\Entity\EstadoinstitucionTipo 
+     * @return \DateTime 
      */
-    public function getEstadoinstitucionTipo() {
-        return $this->estadoinstitucionTipo;
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
     }
 
     /**
-     * Set orgcurricularTipo
+     * Set fechaModificacion
      *
-     * @param \Sie\AppWebBundle\Entity\OrgcurricularTipo $orgcurricularTipo
+     * @param \DateTime $fechaModificacion
      * @return Institucioneducativa
      */
-    public function setOrgcurricularTipo(\Sie\AppWebBundle\Entity\OrgcurricularTipo $orgcurricularTipo = null) {
-        $this->orgcurricularTipo = $orgcurricularTipo;
-
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
         return $this;
     }
 
     /**
-     * Get orgcurricularTipo
+     * Get fechaModificacion
      *
-     * @return \Sie\AppWebBundle\Entity\OrgcurricularTipo 
+     * @return \DateTime 
      */
-    public function getOrgcurricularTipo() {
-        return $this->orgcurricularTipo;
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
     }
-
-    /**
-     * Set institucioneducativaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaTipo $institucioneducativaTipo
-     * @return Institucioneducativa
-     */
-    public function setInstitucioneducativaTipo(\Sie\AppWebBundle\Entity\InstitucioneducativaTipo $institucioneducativaTipo = null) {
-        $this->institucioneducativaTipo = $institucioneducativaTipo;
-
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaTipo 
-     */
-    public function getInstitucioneducativaTipo() {
-        return $this->institucioneducativaTipo;
-    }
-
-    /**
-     * Set leJuridicciongeografica
-     *
-     * @param \Sie\AppWebBundle\Entity\JurisdiccionGeografica $leJuridicciongeografica
-     * @return Institucioneducativa
-     */
-    public function setLeJuridicciongeografica(\Sie\AppWebBundle\Entity\JurisdiccionGeografica $leJuridicciongeografica = null) {
-        $this->leJuridicciongeografica = $leJuridicciongeografica;
-
-        return $this;
-    }
-
-    /**
-     * Get leJuridicciongeografica
-     *
-     * @return \Sie\AppWebBundle\Entity\JurisdiccionGeografica 
-     */
-    public function getLeJuridicciongeografica() {
-        return $this->leJuridicciongeografica;
-    }
-	public function getFormularios() {
-		return $this->formularios;
-	}
-	public function setFormularios($formularios) {
-		$this->formularios = $formularios;
-		return $this;
-	}
-	public function getCertificados() {
-		return $this->certificados;
-	}
-	public function setCertificados($certificados) {
-		$this->certificados = $certificados;
-		return $this;
-	}
-	
-	
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaAcreditacionTipo
-     */
-    private $institucioneducativaAcreditacionTipo;
-
 
     /**
      * Set institucioneducativaAcreditacionTipo
@@ -453,5 +417,143 @@ class Institucioneducativa {
     public function getInstitucioneducativaAcreditacionTipo()
     {
         return $this->institucioneducativaAcreditacionTipo;
+    }
+
+    /**
+     * Set leJuridicciongeografica
+     *
+     * @param \Sie\AppWebBundle\Entity\JurisdiccionGeografica $leJuridicciongeografica
+     * @return Institucioneducativa
+     */
+    public function setLeJuridicciongeografica(\Sie\AppWebBundle\Entity\JurisdiccionGeografica $leJuridicciongeografica = null)
+    {
+        $this->leJuridicciongeografica = $leJuridicciongeografica;
+    
+        return $this;
+    }
+
+    /**
+     * Get leJuridicciongeografica
+     *
+     * @return \Sie\AppWebBundle\Entity\JurisdiccionGeografica 
+     */
+    public function getLeJuridicciongeografica()
+    {
+        return $this->leJuridicciongeografica;
+    }
+
+    /**
+     * Set institucioneducativaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaTipo $institucioneducativaTipo
+     * @return Institucioneducativa
+     */
+    public function setInstitucioneducativaTipo(\Sie\AppWebBundle\Entity\InstitucioneducativaTipo $institucioneducativaTipo = null)
+    {
+        $this->institucioneducativaTipo = $institucioneducativaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaTipo 
+     */
+    public function getInstitucioneducativaTipo()
+    {
+        return $this->institucioneducativaTipo;
+    }
+
+    /**
+     * Set orgcurricularTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OrgcurricularTipo $orgcurricularTipo
+     * @return Institucioneducativa
+     */
+    public function setOrgcurricularTipo(\Sie\AppWebBundle\Entity\OrgcurricularTipo $orgcurricularTipo = null)
+    {
+        $this->orgcurricularTipo = $orgcurricularTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get orgcurricularTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OrgcurricularTipo 
+     */
+    public function getOrgcurricularTipo()
+    {
+        return $this->orgcurricularTipo;
+    }
+
+    /**
+     * Set estadoinstitucionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadoinstitucionTipo $estadoinstitucionTipo
+     * @return Institucioneducativa
+     */
+    public function setEstadoinstitucionTipo(\Sie\AppWebBundle\Entity\EstadoinstitucionTipo $estadoinstitucionTipo = null)
+    {
+        $this->estadoinstitucionTipo = $estadoinstitucionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadoinstitucionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadoinstitucionTipo 
+     */
+    public function getEstadoinstitucionTipo()
+    {
+        return $this->estadoinstitucionTipo;
+    }
+
+    /**
+     * Set dependenciaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\DependenciaTipo $dependenciaTipo
+     * @return Institucioneducativa
+     */
+    public function setDependenciaTipo(\Sie\AppWebBundle\Entity\DependenciaTipo $dependenciaTipo = null)
+    {
+        $this->dependenciaTipo = $dependenciaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get dependenciaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\DependenciaTipo 
+     */
+    public function getDependenciaTipo()
+    {
+        return $this->dependenciaTipo;
+    }
+
+    /**
+     * Set convenioTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\ConvenioTipo $convenioTipo
+     * @return Institucioneducativa
+     */
+    public function setConvenioTipo(\Sie\AppWebBundle\Entity\ConvenioTipo $convenioTipo = null)
+    {
+        $this->convenioTipo = $convenioTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get convenioTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\ConvenioTipo 
+     */
+    public function getConvenioTipo()
+    {
+        return $this->convenioTipo;
     }
 }
