@@ -1509,7 +1509,7 @@ class TramiteAceleracionController extends Controller
         $image_path = str_replace("/app_dev.php", "", $image_path);
         $cabecera = '<table border="0">';
         $cabecera .='<tr>';
-            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="'.$image_path.'" width="60" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
+            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="https://academico.sie.gob.bo/images/escudo.jpg" width="60" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
             $cabecera .='<td width="70%" align="center"><h2>ACTA SUPLETORIA DE PROMOCIÓN PARA<br>TALENTO EXTRAORDINARIO</h2></td>';
             $cabecera .='<td width="15%" align="right"><img src="http://172.20.0.114/index.php?data='.$queryEstudiante['codigoRude'].'|'.$queryEstudiante['carnetIdentidad'].'|'.'Aceleración_Educativa'.'|'.$tramite_id.'" width="66" height="66"></td>';
         $cabecera .='</tr>';
