@@ -1505,11 +1505,16 @@ class TramiteAceleracionController extends Controller
             ->getSingleResult();
         // dump(json_decode($datos2->curso_asignatura_notas));die;
 
-        $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
+        // $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
+        // $image_path = str_replace("/app_dev.php", "", $image_path);
+
+        $image_path = $this->getRequest()->getUriForPath('/images/boliviaMinEdu.jpg');
         $image_path = str_replace("/app_dev.php", "", $image_path);
+        $pdf->Image($image_path, 10, 10, 30, 24, 'JPG', 'http://www.tcpdf.org', '', true, 150, '', false, false, 0, false, false, false);
+
         $cabecera = '<table border="0">';
         $cabecera .='<tr>';
-            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="https://academico.sie.gob.bo/images/escudo.jpg" width="60" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
+            $cabecera .='<td width="15%" align="center" style="font-size: 6px"></td>';
             $cabecera .='<td width="70%" align="center"><h2>ACTA SUPLETORIA DE PROMOCIÓN PARA<br>TALENTO EXTRAORDINARIO</h2></td>';
             $cabecera .='<td width="15%" align="right"><img src="http://172.20.0.114/index.php?data='.$queryEstudiante['codigoRude'].'|'.$queryEstudiante['carnetIdentidad'].'|'.'Aceleración_Educativa'.'|'.$tramite_id.'" width="66" height="66"></td>';
         $cabecera .='</tr>';
