@@ -71,7 +71,7 @@ class RegularizarNotasController extends Controller {
                                 ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
                                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
                                 ->where('e.codigoRude = :rude')
-                                ->orderBy('ei.fechaInscripcion','ASC')
+                                ->orderBy('ei.fechaInscripcion','DESC')
                                 ->setParameter('rude',$rude)
                                 ->getQuery()
                                 ->getResult();
@@ -137,14 +137,20 @@ class RegularizarNotasController extends Controller {
             }
 
             // VERIFICAMOS SI LAS NOTAS SON POSTBACHILLERATO
-            if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+            if($inscripcion->getEstadomatriculaInicioTipo() != null and $inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
                 $plantilla = 'postbachillerato';
                 $notas = $this->get('notas')->postbachillerato($idInscripcion);
             }else{
                 $notas = $this->get('notas')->regular($idInscripcion,$operativo);
             }
 
-            // dump($notas);die;
+            $vista = 1; // EDITABLE DE ACUERDO AL OPERATIVO O FALTA DE CALIFICACIONES
+
+            // SI EL ROL ES NACIONAL SE ABRE TODAS LAS CALIFICACIONES
+            // DE TODOS LOS BIMESTRES O TRIMESTRES
+            if ($this->session->get('roluser') == 8) {
+                $vista = 2; // Opcion para editar todas las calificaciones
+            }
 
             $em->getConnection()->commit();
             return $this->render('SieRegularBundle:RegularizarNotas:show.html.twig', array(
@@ -153,7 +159,7 @@ class RegularizarNotasController extends Controller {
                         'curso'=>$institucionCurso,
                         'notas'=>$notas,
                         'inscripcion'=>$inscripcion,
-                        'vista'=>1,
+                        'vista'=>$vista,
                         'plantilla'=>$plantilla,
                         'tipoUE'=>$tipoUE
             ));
