@@ -303,7 +303,12 @@ class TramiteRueController extends Controller
             case 43://cierre definitivo
                 if($ie->getEstadoinstitucionTipo()->getId() == 10){
                     $form = $form
-                        ->add('estadoinstitucion', 'checkbox', array('label' => 'CERRADA','required'  => true))
+                        ->add('estadoinstitucion', 'checkbox', array('label' => 'CERRADA','required'  => true));
+                    if($tipo == 'fusion'){
+                        $form = $form
+                        ->add('siefusion', 'text', array('label' => 'Código SIE de la Unidad Educativa a Cerrar definitivamente:','required'=>true,'attr' => array('class' => 'form-control validar','maxlength'=>8)));
+                    }
+                    $form = $form    
                         ->getForm()
                         ->createView();    
                 }else{
@@ -313,7 +318,8 @@ class TramiteRueController extends Controller
                     'form' => $form,
                     'id' => $id,
                     'tramiteTipo' => $tramiteTipo,
-                    'estadoinstitucion'=>$ie->getEstadoinstitucionTipo()
+                    'estadoinstitucion'=>$ie->getEstadoinstitucionTipo(),
+                    'tipo' => $tipo
                 );
                 break;
             case 44://Reapertura

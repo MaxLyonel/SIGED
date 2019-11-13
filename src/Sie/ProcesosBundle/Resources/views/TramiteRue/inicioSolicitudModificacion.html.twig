@@ -779,12 +779,21 @@
         
         function buscarTramite(id,tipo){
             if(id){
+                if(id == 39){ //fusion
+                    idtramite = 34; //ampliacion de nivel
+                }else{
+                    idtramite = id;
+                }
                 var tramitetipo = $('#form_tramites option:selected').text();
-                if ( $("#fila_"+ id).length ) {
+                if ( $("#fila_"+ idtramite).length ) {
                     return false;
                 }
                 //alert ($('#form_tr').val());
-                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39)== false){
+                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39) == false){
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    return false;
+                }
+                if($('#form_tr').val() != "" && JSON.parse($('#form_tr').val()).includes(39) == true && id == 42){
                     alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
                     return false;
                 }
@@ -792,11 +801,7 @@
                     alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
                     return false;
                 }
-                if(id == 39){ //fusion
-                    idtramite = 34; //ampliacion de nivel
-                }else{
-                    idtramite = id;
-                }
+                
                 var formData = {id: idtramite,tipo:tipo,ie:'{{institucioneducativa.id}}'};
                 $.ajax({
                     type: 'GET',
