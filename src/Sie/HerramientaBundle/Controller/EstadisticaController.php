@@ -1761,7 +1761,7 @@ class EstadisticaController extends Controller {
         $response->headers->set('Content-type', 'application/xls');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionUe_bth_v1_pvc.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionUe_bth_v1_pvc.rptdesign&__format=xls&gestion='.$gestion.'&codigo='.$codigoArea));
         /* // por defecto
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bth_unidadeducativa_nacional_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
 
@@ -1898,7 +1898,7 @@ class EstadisticaController extends Controller {
             $nomArchivo = 'reg_est_InformacionEstadistica_bth_Nacional_v1_pvc.rptdesign';
         } 
 
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nomArchivo .'&__format=xlsx&gestion='.$gestion.'&codigo='.$codigoArea));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nomArchivo .'&__format=xls&gestion='.$gestion.'&codigo='.$codigoArea));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
