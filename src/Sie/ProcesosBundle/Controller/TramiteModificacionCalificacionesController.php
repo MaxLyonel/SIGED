@@ -396,7 +396,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
                 $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
 
-                // REGISTRAMOS UNA NUEVO TRAMITE
+                // REGISTRAMOS UN NUEVO TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
                     $this->session->get('userId'),
                     $this->session->get('roluser'),
@@ -412,6 +412,11 @@ class TramiteModificacionCalificacionesController extends Controller {
                     '',//$lugarTipoLocalidad,
                     $lugarTipo['lugarTipoIdDistrito']
                 );
+
+                if ($registroTramite['dato'] == false) {
+                    $response->setStatusCode(500);
+                    return $response;
+                }
 
                 $idTramite = $registroTramite['idtramite'];
 
@@ -437,6 +442,11 @@ class TramiteModificacionCalificacionesController extends Controller {
                     '',
                     $lugarTipo['lugarTipoIdDistrito']
                 );
+
+                if ($registroTramite['dato'] == false) {
+                    $response->setStatusCode(500);
+                    return $response;
+                }
 
                 $msg = "El Tramite ".$registroTramite['msg']." fue enviado exitosamente";
 
