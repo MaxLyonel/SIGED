@@ -178,155 +178,156 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <div class="pull-left">
-                                        <h3 class="panel-title">2. UBICACIÓN GEOGRÁFICA</h3>
-                                    </div>                                    
-                                    <div class="clearfix"></div>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                            <div class="form-group col-md-12" style="background:#E9F9FC">
-                                                <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
+                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validar();'}}) }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">2. UBICACIÓN GEOGRÁFICA</h3>
+                                        </div>                                    
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <div class="form-group col-md-12" style="background:#E9F9FC">
+                                                    <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>DEPARTAMENTO:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>PROVINCIA:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>MUNICIPIO:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ lugarTipo2012.lugartipo.lugar|upper }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>COMUNIDAD:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ lugarTipo2012.lugar|upper }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>ZONA:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.zona|upper }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>DIRECCIÓN:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.direccion|upper }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {% for a in form.area %}
+                                                            <div class="col-md-6 rdio rdio-primary circle">
+                                                                {{ form_widget(a) }}
+                                                                {{ form_label(a) }}
+                                                            </div>
+                                                        {% endfor %}
+                                                        {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
+                                                            URBANO
+                                                        {% else %}
+                                                            RURAL
+                                                        {% endif %} #}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>DEPARTAMENTO:</strong>
+                                            <div class="col-md-6">
+                                                <div class="form-group col-md-12" style="background:#E9F9FC">
+                                                    <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>DEPARTAMENTO:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>PROVINCIA:</strong>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>PROVINCIA:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugartipo.lugar }}
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>MUNICIPIO:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugartipo.lugar }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>MUNICIPIO:</strong>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>CANTÓN:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar }}
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{ lugarTipo2012.lugartipo.lugar|upper }}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>LOCALIDAD:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugar }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>COMUNIDAD:</strong>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>ZONA:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.zona }}
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{ lugarTipo2012.lugar|upper }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>ZONA:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.zona|upper }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>DIRECCIÓN:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.direccion|upper }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {% for a in form.area %}
-                                                        <div class="col-md-6 rdio rdio-primary circle">
-                                                            {{ form_widget(a) }}
-                                                            {{ form_label(a) }}
-                                                        </div>
-                                                    {% endfor %}
-                                                    {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
-                                                        URBANO
-                                                    {% else %}
-                                                        RURAL
-                                                    {% endif %} #}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        <strong>DIRECCIÓN:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ institucioneducativa.leJuridicciongeografica.direccion }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group col-md-12" style="background:#E9F9FC">
-                                                <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>DEPARTAMENTO:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>PROVINCIA:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugartipo.lugar }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>MUNICIPIO:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugartipo.lugar }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>CANTÓN:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>LOCALIDAD:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugar }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>ZONA:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.zona }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <div class="col-md-6">
-                                                    <strong>DIRECCIÓN:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ institucioneducativa.leJuridicciongeografica.direccion }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><!-- /.panel-body -->
+                                    </div><!-- /.panel-body -->
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data'}}) }}
+                    {# {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data'}}) }} #}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-primary">
@@ -343,7 +344,7 @@
                                                     {{ form_label(form.tramites) }}
                                                 </div>
                                                 <div class="col-md-3">
-                                                    {{ form_widget(form.tramites) }}
+                                                    {{ form_widget(form.tramites,{'attr':{'onchange':'buscarTramite(this.value,null)'}}) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -405,8 +406,7 @@
                 </div><!-- /.end panel -->  
             </div>
         </div>
-    </div>
-    
+    </div>    
     
 {% endblock %}
 {% block javascripts %}
@@ -776,7 +776,75 @@
             });
         });
         
-        $("#form_tramites").change(function(){
+        
+        function buscarTramite(id,tipo){
+            if(id){
+                if(id == 39){ //fusion
+                    idtramite = 34; //ampliacion de nivel
+                }else{
+                    idtramite = id;
+                }
+                var tramitetipo = $('#form_tramites option:selected').text();
+                if ( $("#fila_"+ idtramite).length ) {
+                    return false;
+                }
+                //alert ($('#form_tr').val());
+                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39) == false){
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    return false;
+                }
+                if($('#form_tr').val() != "" && JSON.parse($('#form_tr').val()).includes(39) == true && id == 42){
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    return false;
+                }
+                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(42) || JSON.parse($('#form_tr').val()).includes(43)) && JSON.parse($('#form_tr').val()).includes(39)== false){
+                    alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
+                    return false;
+                }
+                
+                var formData = {id: idtramite,tipo:tipo,ie:'{{institucioneducativa.id}}'};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('tramite_rue_busca_tarea')}}",
+                    data: formData,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        var tr ='<tr id="fila_'+idtramite+'">'+data;
+                        if(idtramite == 44 && {{institucioneducativa.estadoinstitucionTipo.id}} == 10){
+                            tr = tr+'<td></td>';
+                        }else{
+                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+idtramite+'" data-placement="top" title="Requisitos" onclick="requisitos('+idtramite+')"><i class="glyphicon glyphicon-plus"></i></button>'+
+                                '</td>';
+                        }
+                        tr = tr+'<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+idtramite+')"><i class="glyphicon glyphicon-minus"></i></button>'+
+                            '</td></tr>';
+                        $('#tabla').append(tr);
+                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        if ($('#form_tr').val() == "" && id != 39) {
+                            trArray = [Number(idtramite)];
+                            $('#form_tr').val(JSON.stringify(trArray));
+                        }else if($('#form_tr').val() == "" && id == 39) {
+                            trArray = [Number(id),Number(idtramite)];
+                            $('#form_tr').val(JSON.stringify(trArray));
+                            buscarTramite(43,'fusion');
+                        }else if($('#form_tr').val() != "" && id == 39){
+                            trArray = JSON.parse($('#form_tr').val());
+                            trArray.push(Number(id));
+                            trArray.push(Number(idtramite));
+                            $('#form_tr').val(JSON.stringify(trArray));
+                            buscarTramite(43,'fusion');
+                        }else{
+                            trArray = JSON.parse($('#form_tr').val());
+                            trArray.push(Number(idtramite));
+                            $('#form_tr').val(JSON.stringify(trArray));
+                        }
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                });
+            }
+        }
+        /*$("#form_tramites").change(function(){
             //alert('entra');  
             var id = $(this).val();
             if(id){
@@ -784,6 +852,15 @@
                 if ( $("#fila_"+ id).length ) {
                     return false;
                 }
+                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0){
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    return false;
+                }
+                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(42) || JSON.parse($('#form_tr').val()).includes(43))){
+                    alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
+                    return false;
+                }
+                
                 var formData = {id: id,tramitetipo:tramitetipo,ie:'{{institucioneducativa.id}}'};
                 $.ajax({
                     type: 'GET',
@@ -816,9 +893,7 @@
                     },
                 });
             }
-        });
-
-        
+        });*/        
  
         function requisitos(id){
             //alert(id);
@@ -916,6 +991,17 @@
             $(this).closest('tr').remove();
             $(this).closest('div').remove();
         }); #}
+
+        function validar(){
+            //alert($('#tabla tr').length);
+            var filas = $('#tabla tr').length - 1;
+            if (filas == 0){
+                alert('Seleccione datos a modificar.');
+                return false;
+            }else{
+                return true;
+            }
+        }
 
     </script>
 {% endblock %}
