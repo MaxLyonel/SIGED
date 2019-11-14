@@ -1241,11 +1241,12 @@ class DownloadController extends Controller {
    
 
      public function bthEspecialidadesAction(Request $request, $ue, $gestion) {
-        //dump($ue,$gestion);die;
+        $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
+        $gradoId = implode(",",$grado);
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_espe_mod_' . $ue . '_' . $gestion . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_modificacion_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_modificacion_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&gradoId='.$gradoId.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1253,10 +1254,11 @@ class DownloadController extends Controller {
         return $response;
     }
     public function bthEspecialidadesEliminadasAction(Request $request, $ue, $gestion){
-        //dump($ue,$gestion);die;
+        $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
+        $gradoId = implode(",",$grado);
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_espe_elim_' . $ue . '_' . $gestion . '.pdf'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_espe_elim_' . $ue . '_' . $gestion . '&gradoId='.$gradoId '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_eliminacion_v1_ma
 .rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
         $response->setStatusCode(200);
