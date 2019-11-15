@@ -255,7 +255,6 @@ class TramiteRueController extends Controller
                 foreach($ienivel as $n){
                     if(in_array($n['id'],$this->nivelArray)){
                         $this->nivelArray = array_diff($this->nivelArray, array($n['id']));
-                        
                     }
                 }
                 $form = $form
@@ -1844,6 +1843,8 @@ class TramiteRueController extends Controller
                 WHERE ie.id = :id
                 AND ie.estadoinstitucionTipo = 10
                 AND ie.institucioneducativaAcreditacionTipo = 1
+                AND ie.institucioneducativaTipo = 1
+                AND ie.dependenciaTipo in (1,2)
                 AND le.lugarTipoIdDistrito = :lugar_id')
                 ->setParameter('id', $idsiefusion)
                 ->setParameter('lugar_id', $iddistrito);
@@ -1851,11 +1852,8 @@ class TramiteRueController extends Controller
         //dump($institucioneducativa);die;
         $response = new JsonResponse();
         if($institucioneducativa){
-            foreach ($institucioneducativa as $nt){
-                $nivel[]=$nt['nivel_tipo_id'];
-            }
             $iefusion = array('idsiefusion'=>$idsiefusion,'institucioneducativa'=>$idsiefusion.'-'.$institucioneducativa[0]['institucioneducativa']);
-            $response->setData(array('ie'=>$iefusion,'nivel'=>$nivel));
+            $response->setData(array('ie'=>$iefusion));
         }else{
             $response->setData(array('msg'=>'El codigo SIE es incorrecto.'));
         }

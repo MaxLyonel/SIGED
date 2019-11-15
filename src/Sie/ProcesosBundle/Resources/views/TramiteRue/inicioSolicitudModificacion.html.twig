@@ -351,6 +351,7 @@
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <div class="table-responsive col-md-12">
+                                                    <div id="msg"></div>
                                                     {{ form_widget(form.tr) }}
                                                     <table class="table table-bordered table-striped" id="tabla">
                                                         <tr>
@@ -432,34 +433,33 @@
             });
             $('#form_tr').empty(); 
         });
-        
-        $('#form_siefusion').on('input',function(e){
-            var formData = {idsiefusion: $(this).val(),iddistrito:'{{institucioneducativa.leJuridicciongeografica.lugarTipoIdDistrito}}'};
-            //console.log($(this).val().length);
-            if($(this).val().length >= 8){
+        function siefusion(sie){
+            var formData = {idsiefusion: sie,iddistrito:'{{institucioneducativa.leJuridicciongeografica.lugarTipoIdDistrito}}'};
+            if(sie.length >= 8){
+                if (sie == '{{institucioneducativa.id}}'){
+                    alert('No puede cerrar definitivamente la Unidad Educativa para la que esta solicitando Ampliación de Nivel.');
+                    $('#form_siefusion').val('');
+                    return false;
+                }
                 $.ajax({
                     type: 'GET',
                     url: "{{path('tramite_rue_buscar_rue')}}",
                     data: formData,
                     beforeSend: function () {
                         $('#msg').empty();
-                        /*$("#form_dependenciaTipo").val('');
-                        $("#form_tipoeducacion").val('');*/
                     },
                     success: function (data) {
                         if (data.msg){
                             $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
-                            $("#fusioncerrar").hide();
+                            $('#form_siefusion').val('');
                         }else{
-                            $("#form_fusioncerrar_1").val(data.ie.idsiefusion);
-                            $('label[for=form_fusioncerrar_1]').html(data.ie.institucioneducativa);
-                            $("#fusioncerrar").show();
-                            $("#nivelfusion2").val(JSON.stringify(data.nivel));
+                            //console.log(data);
+                            $('#fusion').show();
                         }
                     },
                 });
             }
-        });
+        }
 
         function buscarEdificioEscolar(idLe) {
             if(idLe.length >= 8 ){
@@ -977,13 +977,26 @@
         }
 
         function borrarFila(id){
-            $('#fila_'+id).remove();
-            $('#modal_'+id).remove();
             var array = JSON.parse($('#form_tr').val());
-            //console.log(array);
-            var index = array.indexOf(id);
-            array.splice(index, 1);
-            $('#form_tr').val(JSON.stringify(array));
+            if ((id == 34 || id == 43) && $('#form_tr').val()!= "" && JSON.parse($('#form_tr').val()).includes(39)==true){
+                for(var i = array.length - 1; i>=0 ;i--){
+                    if(array[i] == 34 || array[i] == 43 || array[i] == 39){
+                        $('#fila_'+array[i]).remove();
+                        $('#modal_'+array[i]).remove();
+                        array.splice(i,1);
+                     }
+                } 
+            }else{
+                $('#fila_'+id).remove();
+                $('#modal_'+id).remove();
+                var index = array.indexOf(id);
+                array.splice(index, 1);
+            }
+            if(array.length == 0){
+                $('#form_tr').val('');
+            }else{
+                $('#form_tr').val(JSON.stringify(array));
+            }
         }
         {#  $(document).on('click', '.borrar', function (event) {
             console.log($(this).closest('tr').0.id);

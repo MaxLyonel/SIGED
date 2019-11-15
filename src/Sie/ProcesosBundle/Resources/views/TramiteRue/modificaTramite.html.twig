@@ -351,7 +351,7 @@
     <td>
         {% if tipo == 'fusion' %}
             {{ form_label(form.siefusion) }}
-            {{ form_widget(form.siefusion) }}
+            {{ form_widget(form.siefusion, {'attr':{'oninput':'siefusion(this.value)'}}) }}
         {% else %}
             {% if estadoinstitucion.id == 10 %}
                 {{estadoinstitucion.estadoinstitucion|upper}}
@@ -362,7 +362,7 @@
     </td>
     <td>
         {% if estadoinstitucion.id == 10 %}
-            <div class="col-md-12 ckbox ckbox-primary">
+            <div class="col-md-12 ckbox ckbox-primary" style="display:none" id="fusion">
                 {{ form_widget(form.estadoinstitucion) }}&nbsp;
                 {{ form_label(form.estadoinstitucion) }}                                                            
             </div>
@@ -394,3 +394,6 @@
         
     </td>
 {% endif %}
+<script>
+
+</script>
