@@ -289,7 +289,7 @@ class SpecialModificationDataStudentController extends Controller{
         $estudianteId = $arrData['estudianteId'];
         $carnetIdentidad=$arrData['carnetIdentidad'];
         $complemento=$arrData['complemento'];
-        $generoId=$arrData['generoId'];
+        $generoId=$arrData['generoTipoId'];
         $paterno=$arrData['paterno'];
         $materno=$arrData['materno'];
         $nombre=$arrData['nombre'];
