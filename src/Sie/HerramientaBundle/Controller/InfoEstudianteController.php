@@ -118,19 +118,16 @@ class InfoEstudianteController extends Controller {
                 $mostrarSextoCerrado = true;
             }
         }
-       
+       //evaluar el estado del operatvo de modificar/eiminar especialidades, t= operativoCerrado f = operativoHabilitado 
         $entity = $em->getRepository('SieAppWebBundle:BthControlOperativoModificacionEspecialidades')->findOneBy(array('institucioneducativaId'=>$sie, 'gestionTipoId'=>$gestion,'estadoOperativo'=>true));
-        //dump($entity);die;
         if($entity){
             $estado = false;
         }else{
             $estado =  true;
         }
-        //dump($estado);die;
+        //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
-       // dump($gradoId);die;
-
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                     'sie' => $form['sie'],
@@ -1772,12 +1769,8 @@ class InfoEstudianteController extends Controller {
         return $studentInscription;
     }
 
-    public function operativoEspecialidadesBthAction ( Request $request){ //dump ($request);die;
+    public function operativoEspecialidadesBthAction ( Request $request){ 
         $em = $this->getDoctrine()->getManager();
-       
-
-        //bth_control_operativo_modificacion_especialidades
-        //$em->getConnection()->beginTransaction();
         try {
             $bthOperativo=new bthControlOperativoModificacionEspecialidades();
             $bthOperativo->setInstitucioneducativaId($request->get('sie'));

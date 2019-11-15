@@ -35,10 +35,12 @@
                                     <h5>Cursos</h5>
                                 </div>
                                 <div class="pull-right">
-                                    Opciones:{{gradoId}}
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Mod. Especialidades" onclick="cerrarOperativo({{odataUedu.id}},{{gestion}});">
+                                    Opciones:
+                                     {% if estado == true %}
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Mod. Especialidades" id='btnCerraoperativo' onclick="cerrarOperativo({{odataUedu.id}},{{gestion}});">
                                     <i class="fa fa-group" ></i>
                                     </button>
+                                    {% endif %}
                                     <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Modificadas"><i class="fa fa-cloud-download"></i></a>
                                     <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
                                     <a class="btn btn-twitter btn-sm" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Listado de estudiantes"><i class="fa fa-download"></i></a>
@@ -575,23 +577,24 @@
             // type: 'POST',
             data: {sie: sie, gestion: gestion},
             beforeSend: function(){
-
             },
             success: function(data){
-
                 location.reload();
             },
             error: function(){
-
             }
           });
       }
 
       function cerrarOperativo(sie, gestion){
+
          Swal.fire({
                         title: '¿Cerrar el Operativo?',
                         text: "Esta seguro de cerrar el operativo para la modificación de Especialidades",
                         type: 'question',
+                        html:
+                            '<b>¿Una vez cerrado el operativo,ya no podrá modificar las especialidades</b>, ' +
+                            '<b>Está seguro de realizar esta acción?</b> ',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
@@ -600,22 +603,27 @@
                     }).then((result) => {
                         if (result.value) {
                           var formData = {sie:sie, gestion:gestion};
+                          var imagen = '{{ asset("img/loading96.gif") }}';
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('herramienta_info_estudiante_operativoEspecialidadesBth') }}",
                                 data:formData,
                                 beforeSend: function () {
-                                    
                                 },
                                 success: function (data) {
                                    if(data.estado = 1){
-                                    //Swal("operativo cerrado") //console.log(data);
-                                    location.reload();
+                                  Swal.fire({
+                                    icon: 'success',
+                                    title: 'Se cerró el operativo correctamente',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                    })
+                                  document.getElementById("btnCerraoperativo").disabled = true;
+                                  setInterval('window.location.reload()', 3000);
+
                                    }else{
 
                                    }
-                                   
-                                    
                                 },
                                 complete: function () {
                                   console.log("error");  
