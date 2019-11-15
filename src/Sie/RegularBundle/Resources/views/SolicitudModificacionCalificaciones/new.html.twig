@@ -132,10 +132,11 @@
                             </table>
                         </div>
                         <hr>
-                       
-                        <div style="text-align:right">
-                            <button type="button" onclick="mostrarNotasCualitativas()" class="btn btn-orange"><i class="fa fa-file-text"></i> Agregar apreciación cualitativa</button>
-                        </div>
+                        {% if gestion < 2019 %}
+                            <div style="text-align:right">
+                                <button type="button" onclick="mostrarNotasCualitativas()" class="btn btn-orange"><i class="fa fa-file-text"></i> Agregar apreciación cualitativa</button>
+                            </div>
+                        {% endif %}
                         <div id="no-more-tables">
                             <table class="table table-bordered cf" id="tabla-cualitativas" style="display:none">
                                 <thead class="cf">
@@ -188,29 +189,83 @@
                                     <thead>
                                     <tr class="cf">
                                         <th><small>Área</small></th>
-                                        {% for n in titulos_notas %}
-                                            <th align="center"><small>{{n.titulo}}</small></th>
-                                        {% endfor %}
+                                        {% if gestion < 2019 or (gestion >= 2019 and nivel != 11) %}
+                                            {% for n in titulos_notas %}
+                                                <th align="center"><small>{{n.titulo}}</small></th>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% for c in cualitativas %}
+                                                {% if c.notaTipo != 18 %}
+                                                    <th>{{c.bimestre}}</th>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for a in asignaturas %}
-                                        <tr>
-                                            <td data-title="Área">
-                                                <small>{{a.asignatura}}</small>
-                                            </td>
-                                            {% for n in a.notas %}
-                                                <td id="{{n.id}}" align="center" data-title="{{n.bimestre}}" onclick="agregarNota(new String('{{n.idEstudianteNota}}'),new String('{{a.asignatura}}'),new String('{{n.bimestre}}'),new String('{{n.nota}}'),new String('{{n.id}}'),new String('{{n.idFila}}'),{{n.idNotaTipo}},{{n.idEstudianteAsignatura}})" {% if n.idNotaTipo in [5,6,7,8,9,11] %} style="font-weight: bold; background:#DDDDDD" {% else %} class="select-nota" style="cursor:pointer" {% endif %} >
-                                                    {% if curso.nivelTipo.id == 11 or curso.nivelTipo.id == 1 or curso.nivelTipo.id == 403 %}
-                                                        <small>{{n.nota}}</small>
-                                                    {% else %}
-                                                        {{n.nota}}
+                                        {# CALIFICACIONES PARA PRIMARIA Y SECUNDARIA    #}
+                                        {% if gestion < 2019 or (gestion >= 2019 and nivel != 11) %}
+                                            {% for a in asignaturas %}
+                                                <tr>
+                                                    <td data-title="Área">
+                                                        <small>{{a.asignatura}}</small>
+                                                    </td>
+                                                    {% if a.notas is defined %}
+                                                        {% for n in a.notas %}
+                                                            <td id="{{n.id}}" align="center" data-title="{{n.bimestre}}" onclick="agregarNota(new String('{{n.idEstudianteNota}}'),new String('{{a.asignatura}}'),new String('{{n.bimestre}}'),new String('{{n.nota}}'),new String('{{n.id}}'),new String('{{n.idFila}}'),{{n.idNotaTipo}},{{n.idEstudianteAsignatura}})" {% if n.idNotaTipo in [5,6,7,8,9,11] %} style="font-weight: bold; background:#DDDDDD" {% else %} class="select-nota" style="cursor:pointer" {% endif %} >
+                                                                {% if curso.nivelTipo.id == 11 or curso.nivelTipo.id == 1 or curso.nivelTipo.id == 403 %}
+                                                                    <small>{{n.nota}}</small>
+                                                                {% else %}
+                                                                    {{n.nota}}
+                                                                {% endif %}
+                                                                &nbsp;
+                                                            </td>
+                                                        {% endfor %}
                                                     {% endif %}
-                                                    &nbsp;
-                                                </td>
+                                                </tr>
                                             {% endfor %}
-                                        </tr>
-                                    {% endfor %}
+                                            {% if gestion >= 2019 and nivel == 12 and operativo >= 4 %}
+                                                <tr>
+                                                    <td colspan="5" align="right">Promedio anual:</td>
+                                                    {% for c in cualitativas %}
+                                                        <td style="font-weight: bold; background:#DDDDDD; text-align:center">
+                                                            {{c.notaCuantitativa}}
+                                                        </td>
+                                                    {% endfor %}
+                                                </tr>
+                                            {% endif %}
+                                        {% else %}
+                                            {# CALIFICACIONES DE INICIAL #}
+                                            <tr>
+                                                <td>
+                                                    {% for a in asignaturas %}
+                                                        <p><b>{{ a.asignatura }}</b></p>
+                                                    {% endfor %}
+                                                </td>
+                                                {% for c in cualitativas %}
+                                                    {% if c.notaTipo != 18 %}
+                                                        <td align="center" class="select-nota" style="cursor:pointer" onclick="agregarNotaCualitativa({{c.idFila}},new String('{{c.bimestre}}'),new String('{{c.notaCualitativa}}'), new String('{{c.idEstudianteNota}}'),{{c.notaTipo}})">
+                                                            {{c.notaCualitativa}}
+                                                        </td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                            {% for c in cualitativas %}
+                                                {% if c.notaTipo == 18 %}
+                                                    <tr>
+                                                        <td colspan="5"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="height: 100px">
+                                                            <b>Informe anual del proceso educativo</b>
+                                                        </td>
+                                                        <td colspan="4" align="center" class="select-nota" style="cursor:pointer" onclick="agregarNotaCualitativa({{c.idFila}},new String('{{c.bimestre}}'),new String('{{c.notaCualitativa}}'), new String('{{c.idEstudianteNota}}'),{{c.notaTipo}})">
+                                                            {{c.notaCualitativa}}
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </tbody>
                                 </table>
                             </div>
@@ -239,7 +294,7 @@
                         <div id="areasModal">
                             <div class="alert alert-warning">
                             <i class="fa fa-info-circle"></i> Si observa alguna inconsistencia de datos, como ser duplicado de materias, informe esta situación a las instancias correspondientes antes de realizar la solicitud, para evitar posibles problemas al procesar la solicitud</div>
-                            {% if cualitativas is not empty %}
+                            {% if cualitativas is not empty and gestion < 2019 %}
                                 <div id="no-more-tables">
                                     <table class="table table-striped table-bordered table-hover cf" id="tablaNotasCualitativas">
                                         <thead>
