@@ -189,62 +189,78 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 );
             }else{
 
-                $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-                $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-                $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
-                $idAsignatura = $cursoOferta->getAsignaturaTipo()->getId();
+                //VERIFICAMOS SI LA ESPECIALIDAD YA FUE ELIMINADA PREVIAMENTE
+                // SI ES ASI ENTONCES NO LE PERMITIMOS AGREGAR NUEVAMENTE LA ESPECIALIDAD
+                $eliminado = $em->getRepository('SieAppWebBundle:BthEstudianteInscripcionGestionEspecialidad')->findOneBy(array(
+                    'estudianteInscripcion'=>$idInscripcion,
+                    'operativoGestionEspecialidadTipo'=>3
+                ));
+                if ($eliminado) {
 
-                // VERIFICAMOS SI LA MATERIA ES ESPECIALIZADA
-                $registrarEspecialidad = false;
-                $especialidadesUe = [];
-                if ($idAsignatura == 1039) {
-                    $registrarEspecialidad = true;
-                    $especialidadesUnidadEducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array(
-                        'institucioneducativa'=>$sie,
-                        'gestionTipo'=>$gestion
-                    ));
-                    foreach ($especialidadesUnidadEducativa as $e) {
-                        $especialidadesUe[] = array(
-                            'ueespid'=>$e->getId().'_'.$idCursoOferta,
-                            'especialidad'=>$e->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad()
-                        );
-                    }
-                }
+                    $data = array(
+                        'status'=>500,
+                        'type'=>'warning',
+                        'msg'=> 'No puede agregar la especialidad debido a que ya fue eliminada.'
+                    );
 
-                // VERIFICAMOS SI SE DEBE LLENAR NOTAS
-                $llenarNotas = $this->get('notas')->llenarNotasMateriaAntes($idInscripcion, $idCursoOferta);
-
-                if ((count($llenarNotas['cuantitativas']) > 0 or count($llenarNotas['cualitativas']) > 0 ) or $registrarEspecialidad ){
-                    // SI SE TIENE QUE LLENAR NOTAS LE MANDAMOS UNA VISTA DONDE REGISTRE LAS NOTAS
-                    // dump($llenarNotas);die;
-                    return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:completarNotas.html.twig',array(
-                        'areas'=>$areas,
-                        'inscripcion'=>$inscripcion,
-                        'data'=>$llenarNotas,
-                        'registrarEspecialidad'=>$registrarEspecialidad,
-                        'especialidadesUe'=>$especialidadesUe,
-                        'idCursoOferta'=>$idCursoOferta
-                    ));
                 }else{
-                    // SI NO HAY NOTAS QUE REGSITRAR REGISTRAMOS LA MATERIA AL ESTUDIANTE
-                    $nuevaArea = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idInscripcion, $gestion);
-                    if($nuevaArea){
-                        // SI TODO SE REALIZO CON EXITO
-                        $data = array(
-                            'status'=>200,
-                            'type'=>'success',
-                            'msg'=> 'El área se agregó correctamente.'
-                        );
 
-                        $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
+                    $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                    $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+                    $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
+                    $idAsignatura = $cursoOferta->getAsignaturaTipo()->getId();
 
+                    // VERIFICAMOS SI LA MATERIA ES ESPECIALIZADA
+                    $registrarEspecialidad = false;
+                    $especialidadesUe = [];
+                    if ($idAsignatura == 1039) {
+                        $registrarEspecialidad = true;
+                        $especialidadesUnidadEducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array(
+                            'institucioneducativa'=>$sie,
+                            'gestionTipo'=>$gestion
+                        ));
+                        foreach ($especialidadesUnidadEducativa as $e) {
+                            $especialidadesUe[] = array(
+                                'ueespid'=>$e->getId().'_'.$idCursoOferta,
+                                'especialidad'=>$e->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad()
+                            );
+                        }
+                    }
+
+                    // VERIFICAMOS SI SE DEBE LLENAR NOTAS
+                    $llenarNotas = $this->get('notas')->llenarNotasMateriaAntes($idInscripcion, $idCursoOferta);
+
+                    if ((count($llenarNotas['cuantitativas']) > 0 or count($llenarNotas['cualitativas']) > 0 ) or $registrarEspecialidad ){
+                        // SI SE TIENE QUE LLENAR NOTAS LE MANDAMOS UNA VISTA DONDE REGISTRE LAS NOTAS
+                        return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:completarNotas.html.twig',array(
+                            'areas'=>$areas,
+                            'inscripcion'=>$inscripcion,
+                            'data'=>$llenarNotas,
+                            'registrarEspecialidad'=>$registrarEspecialidad,
+                            'especialidadesUe'=>$especialidadesUe,
+                            'idCursoOferta'=>$idCursoOferta
+                        ));
                     }else{
-                        // SI OCURRIO UN ERROR AL AGREGAR EL AREA
-                        $data = array(
-                            'status'=>500,
-                            'type'=>'danger',
-                            'msg'=> 'Ocurrió un error al agregar el área.'
-                        );
+                        // SI NO HAY NOTAS QUE REGISTRAR, REGISTRAMOS LA MATERIA AL ESTUDIANTE
+                        $nuevaArea = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idInscripcion, $gestion);
+                        if($nuevaArea){
+                            // SI TODO SE REALIZO CON EXITO
+                            $data = array(
+                                'status'=>200,
+                                'type'=>'success',
+                                'msg'=> 'El área se agregó correctamente.'
+                            );
+
+                            $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
+
+                        }else{
+                            // SI OCURRIO UN ERROR AL AGREGAR EL AREA
+                            $data = array(
+                                'status'=>500,
+                                'type'=>'danger',
+                                'msg'=> 'Ocurrió un error al agregar el área.'
+                            );
+                        }
                     }
                 }
             }
