@@ -507,6 +507,13 @@
                     enviar = false;
                 }
             }
+            if (notas.length == 0 && cualitativas.length == 0) {
+                if(mensaje == ""){
+                    mensaje = 'Debe agregar una o mas calificaciones o valoraciones para modificar';
+                }
+                enviar = false;
+            }
+
             if(enviar == true){
                 if(confirm('Verifique los datos introducidos, presione aceptar para enviar la solicitud.')){
                     return true;
@@ -519,19 +526,19 @@
             }
             $("#top-right-message-demo").click(function() {
 
-    Messenger.options = {
-        extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
-        theme: 'flat'
-    }
+                Messenger.options = {
+                    extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
+                    theme: 'flat'
+                }
 
-    Messenger().post({
-        message: 'This is an example of a top right notification!',
-        id: "Only-one-message",
-        type: 'success',
-        showCloseButton: true
-    });
+                Messenger().post({
+                    message: 'This is an example of a top right notification!',
+                    id: "Only-one-message",
+                    type: 'success',
+                    showCloseButton: true
+                });
 
-});
+            });
         }
     </script>
     
