@@ -127,6 +127,9 @@ class InfoEstudianteController extends Controller {
             $estado =  true;
         }
         //dump($estado);die;
+        $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
+        $gradoId = implode(",",$grado);
+       // dump($gradoId);die;
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
@@ -138,7 +141,8 @@ class InfoEstudianteController extends Controller {
           //          'levelAutorizados' => $objInfoAutorizadaUe,
                     'odataUedu' => $odataUedu,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
-                    'estado'=>$estado
+                    'estado'=>$estado,
+                    'gradoId'=>$gradoId
         ));
     }
 

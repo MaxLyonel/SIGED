@@ -35,12 +35,12 @@
                                     <h5>Cursos</h5>
                                 </div>
                                 <div class="pull-right">
-                                    Opciones:
+                                    Opciones:{{gradoId}}
                                     <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Mod. Especialidades" onclick="cerrarOperativo({{odataUedu.id}},{{gestion}});">
                                     <i class="fa fa-group" ></i>
                                     </button>
-                                    <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Modificadas"><i class="fa fa-cloud-download"></i></a>
-                                    <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
+                                    <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Modificadas"><i class="fa fa-cloud-download"></i></a>
+                                    <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
                                     <a class="btn btn-twitter btn-sm" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Listado de estudiantes"><i class="fa fa-download"></i></a>
                                     <a class="btn btn-info btn-sm" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Reporte NNATS"><i class="fa fa-download"></i></a>
                                 </div>

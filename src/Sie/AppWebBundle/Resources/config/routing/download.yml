@@ -163,9 +163,9 @@ donwload_studentHistModification:
     defaults: { _controller: SieAppWebBundle:Download:downstudentHistModification }
 
 donwload_studentBthEspecialidades:
-    path:     /downstudentEspecialidades/{ue}/{gestion}
+    path:     /downstudentEspecialidades/{ue}/{gestion}/{gradoId}
     defaults: { _controller: SieAppWebBundle:Download:bthEspecialidades }
 
 donwload_studentBthEspecialidadesEliminadas:
-    path:     /downstudentEspecialidadesEliminadas/{ue}/{gestion}
+    path:     /downstudentEspecialidadesEliminadas/{ue}/{gestion}/{gradoId}
     defaults: { _controller: SieAppWebBundle:Download:bthEspecialidadesEliminadas }
