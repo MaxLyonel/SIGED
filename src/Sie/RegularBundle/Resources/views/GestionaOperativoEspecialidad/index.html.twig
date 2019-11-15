@@ -96,7 +96,12 @@
                                     <td>${ueplena.institucioneducativa}</td>
                                     <td>
                                     <table>
-                                    <tr ><td colspan="2" align="center"><button type="submit" v-on:click="changeStatusOperativo()" class="btn btn-info mb-4">Hablitar Operativo</button></td></tr>
+                                    <tr >
+                                        <td colspan="2" align="center">
+                                            <button type="submit" v-on:click="changeStatusOperativo()" class="btn btn-info mb-4">Hablitar Operativo</button>
+                                            <a v-bind:href="urlreport" class="btn btn-default"><i class="fa fa-download"> Registro de Especialidades</i></a>
+                                        </td>
+                                    </tr>
                                     </table>
                                     </td>
                                     </tr>
@@ -126,7 +131,8 @@
                 result:false,
                 ueplena:[],
                 siebuscar:'',  
-                respuesta:''             
+                respuesta:'',
+                urlreport: ''             
             },
             methods: {
                 buscarPlena: function(){
@@ -152,6 +158,8 @@
                             if(response.data.result){
                                 this.ueplena = response.data.arrInfoUe;
                                 this.result = response.data.result;
+                                this.urlreport = response.data.urlreport;
+
                             }else{
                                 this.result = false;
                                 this.ueplena = [];

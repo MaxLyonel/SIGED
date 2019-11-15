@@ -47,14 +47,24 @@ class GestionaOperativoEspecialidadController extends Controller{
         $arrCondition1 = array(
             'institucioneducativaId'=>$siebuscar,
             'gestionTipoId' => $this->session->get('currentyear') ,
-            'gradoTipo'=>6,
+            // 'gradoTipo'=>6,
             'institucioneducativaHumanisticoTecnicoTipo' => 1,
         );
         $objUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy($arrCondition1);
         $message='';
         $arrInfoUe='';
         $result = false;
-
+        $gradoId='';
+        $arrGradoTipoBth = false;
+        //get info about the grado
+        if($objUePlena->getGradoTipo()->getId()>=6){
+            $arrGradoTipoBth = array(5,6);
+        }else{
+            $gradoTipoBth = $objUePlena->getGradoTipo()->getId()==5?$arrGradoTipoBth = array(5):false;
+        }
+        //set the grado to show in report
+        $gradoId = implode(',', $arrGradoTipoBth);
+          
         if($objUePlena){
             // check if the user is end its operativo 
             $arrCondition2 = array(
@@ -84,6 +94,7 @@ class GestionaOperativoEspecialidadController extends Controller{
             'result'    => $result,
             'message'   => $message,
             'arrInfoUe' => $arrInfoUe,
+            'urlreport'=> $this->generateUrl('donwload_studentBthEspecialidades', array('gestion'=>$this->session->get('currentyear'),'ue'=>$siebuscar,'gradoId'=>$gradoId)),
         ));
        
         return $response;       
