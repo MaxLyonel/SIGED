@@ -1430,8 +1430,9 @@ die;/*
 
             $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado);
 
+            // ACTUALIZAMOS EL ESTADO DE MATRICULA DE EDUCACION INICIAL A PROMOVIDO
             if($nivel == 11 or $nivel == 1 or $nivel == 403){
-
+                // SE ACTUALIZA EL ESTADO DE MATRICULA SI EL OPERATIVO ACTUAL ES MAYOR A 4TO BIMESTRE
                 if($operativo >= 4){
                     $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
@@ -1459,6 +1460,7 @@ die;/*
 
                 }
             }else{
+                // ACTUALIZAMOS EL ESTADO DE MATRICULA DE PRIMARIA Y SECUNDARIA
                 $asignaturas = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findby(array('estudianteInscripcion'=>$idInscripcion));
                 $arrayPromedios = array();
                 foreach ($asignaturas as $a) {
@@ -1516,11 +1518,16 @@ die;/*
                     }
 
                     if($tipo == 'Bimestre'){
-                        foreach ($arrayPromedios as $ap) {
-                            if($ap < 51){
-                                $nuevoEstado = 11;
-                                break;
-                            }
+                        // NO REALIZAMOS LA VERIFICACION DE LOS PROMEDIOS PARA PRIMARIA 
+                        // A PARTIR DE LA GESTION 2019 DEBIDO A QUE LA PROMOCION SE
+                        // DETERMINA CON EL PROMEDIO ANUAL
+                        if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 12)) {
+                            foreach ($arrayPromedios as $ap) {
+                                if($ap < 51){
+                                    $nuevoEstado = 11;
+                                    break;
+                                }
+                            }   
                         }
                     }
                     if($tipo == 'Trimestre'){
@@ -1566,7 +1573,7 @@ die;/*
                                 
                                 if($promedioGeneral){
                                     // SI EXISTE EL PROMEDIO GENERAL LO ACTUALIZAMOS
-                                    $this->modificarNotaCualitativa($promedioGeneral->getId(), '', $promedioPrimaria);
+                                    $promedioGeneral = $this->modificarNotaCualitativa($promedioGeneral->getId(), '', $promedioPrimaria);
                                 }else{
                                     // SI NO EXISTE LO REGISTRAMOS
                                     $promedioGeneral = $this->registrarNotaCualitativa(5, $idInscripcion, '', $promedioPrimaria);
@@ -1574,8 +1581,6 @@ die;/*
 
                                 if ($promedioGeneral->getNotaCuantitativa() < 51) {
                                     $nuevoEstado = 28; // ESTADO RETENIDO 28 - REEMPLAZA ESTADO REPROBADO 11
-                                } else {
-                                    $nuevoEstado = 5;
                                 }
 
                                 $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));

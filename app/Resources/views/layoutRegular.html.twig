@@ -110,7 +110,7 @@
                                                 <a href="{{ path('mensaje_readed_inbox', { 'id': mensaje.id }) }}">
                                                     <div class="row">
                                                         <div class="col-xs-2">
-                                                            <img class="img-circle img-profile" src="{{asset('img/profile-picture.png') }}" alt="{{ mensaje.paterno }} {{ mensaje.materno }} {{ mensaje.nombre }}">
+                                                            <img class="img-circle img-profile" src="{{asset('img/avatar.png') }}" alt="{{ mensaje.paterno }} {{ mensaje.materno }} {{ mensaje.nombre }}">
                                                         </div>
                                                         <div class="col-xs-10">
                                                             <p>
@@ -225,7 +225,7 @@
                         <!-- begin SIDE NAV USER PANEL -->
                         <li class="side-user hidden-xs">
                             {% if app.session.get('userfoto') is empty %}
-                                <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                                <img class="img-circle" src ="/img/avatar.png " height="150" width="150" >
                             {% else %}
                                 <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}} " height="150" width="150" >
                             {% endif %}
@@ -331,11 +331,11 @@
             <div id="logout">
                 <div class="logout-message">
                     {% if app.session.get('userfoto') is empty %}
-                        <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                        <img class="img-circle" src ="/img/avatar.png" height="150" width="150" >
                     {% else %}
                         <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
                     {% endif %}
-                    <!--img class="img-circle img-logout" src="{{asset('img/profile-pic.jpg') }}" alt=""-->
+                    <!--img class="img-circle img-logout" src="{{asset('img/avatar.png') }}" alt=""-->
                     <h3>
                         <i class="fa fa-sign-out text-blue"></i> ¿Lista/o para salir?
                     </h3>
