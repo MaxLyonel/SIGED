@@ -21,6 +21,7 @@ use Sie\AppWebBundle\Entity\BthControlOperativoModificacionEspecialidades;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 
 
 use Doctrine\DBAL\Types\Type;
@@ -122,7 +123,17 @@ class InfoEstudianteController extends Controller {
         $entity = $em->getRepository('SieAppWebBundle:BthControlOperativoModificacionEspecialidades')->findOneBy(array('institucioneducativaId'=>$sie, 'gestionTipoId'=>$gestion,'estadoOperativo'=>true));
         //dump($entity);die;
         //evaluar si la ue es plena 
-        $ue_plena =($this->session->get('ue_plena'))?$this->session->get('ue_plena'):false;
+
+             $query = $em->getConnection()->prepare("SELECT * 
+            from institucioneducativa_humanistico_tecnico 
+            WHERE institucioneducativa_id = $sie and gestion_tipo_id = $gestion
+            and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (5,6)");
+            $query->execute();
+            $entity_validacion = $query->fetchAll();
+            //dump($entity_validacion);die;
+
+
+        $ue_plena =($entity_validacion)?true:false;
         //dump($ue_plena);die;
 
         if($ue_plena){
@@ -136,7 +147,7 @@ class InfoEstudianteController extends Controller {
         }
 
 
-        
+
 
 
         // if($entity){
