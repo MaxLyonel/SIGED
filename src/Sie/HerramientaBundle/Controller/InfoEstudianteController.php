@@ -120,11 +120,35 @@ class InfoEstudianteController extends Controller {
         }
        //evaluar el estado del operatvo de modificar/eiminar especialidades, t= operativoCerrado f = operativoHabilitado 
         $entity = $em->getRepository('SieAppWebBundle:BthControlOperativoModificacionEspecialidades')->findOneBy(array('institucioneducativaId'=>$sie, 'gestionTipoId'=>$gestion,'estadoOperativo'=>true));
-        if($entity){
+        //dump($entity);die;
+        //evaluar si la ue es plena 
+        $ue_plena =($this->session->get('ue_plena'))?$this->session->get('ue_plena'):false;
+        //dump($ue_plena);die;
+
+        if($ue_plena){
+            if($entity){
             $estado = false;
+            }else{
+                $estado =  true;
+            }
         }else{
-            $estado =  true;
+            $estado = false;
         }
+
+
+        
+
+
+        // if($entity){
+        //     if($ue_plena == false){
+        //         $estado = false;
+        //     }
+
+        // }else{
+        //     $estado =  true;
+        // }
+        //dump($estado);die;
+
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
