@@ -1530,7 +1530,8 @@ class InfoEstudianteController extends Controller {
         $response = new JsonResponse();
         // get students bth        
         $arrStudents = $this->getBthStudents($iecId,2);
-        $arrStudentsWithoutBTH = $this->getRemoveAsigBthStudents($iecId);
+        // $arrStudents = $this->getRemoveAsigBthStudents($iecId,1);
+        $arrStudentsWithoutBTH = $this->getRemoveAsigBthStudents($iecId,3);
         
         // get specialities 
         $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
@@ -1547,11 +1548,11 @@ class InfoEstudianteController extends Controller {
         return $response;   
     }
 
-        private function getRemoveAsigBthStudents($iecId){
+        private function getRemoveAsigBthStudents($iecId,$operativoType){
 
         $em = $this->getDoctrine()->getManager();
 
-        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListRemoveAsigBthStudents($iecId);
+        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListRemoveAsigBthStudents($iecId,$operativoType);
         //get the students has BTH
         $arrStudents = array();
         if($objStudents){
@@ -1609,27 +1610,30 @@ class InfoEstudianteController extends Controller {
                     'EspecialidadTecnicoHumanisticoTipo'=>$especialidadEstudiante->getEspecialidadTecnicoHumanisticoTipo()->getId(),
                 );
             }
+            
+            if($specialityId != $especialidadEstudiante->getEspecialidadTecnicoHumanisticoTipo()->getId()){    
 
-            // set tthe add or update
-            $arrCondition = array('institucioneducativa'=>$this->session->get('ie_id'), 'gestionTipo'=>$this->session->get('currentyear'), 'especialidadTecnicoHumanisticoTipo'=>$specialityId);
-                $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findOneBy($arrCondition);
-            $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
-            $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
-            $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($specialityId));
-            $especialidadEstudiante->setHoras(0);
-            $em->persist($especialidadEstudiante);
+                // set tthe add or update
+                $arrCondition = array('institucioneducativa'=>$this->session->get('ie_id'), 'gestionTipo'=>$this->session->get('currentyear'), 'especialidadTecnicoHumanisticoTipo'=>$specialityId);
+                    $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findOneBy($arrCondition);
+                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
+                $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($specialityId));
+                $especialidadEstudiante->setHoras(0);
+                $em->persist($especialidadEstudiante);
 
-              //set the backup info
-            $objBthEstudianteInscripcionGestionEspecialidad = new BthEstudianteInscripcionGestionEspecialidad();
-            $objBthEstudianteInscripcionGestionEspecialidad->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
-            $objBthEstudianteInscripcionGestionEspecialidad->setOperativoGestionEspecialidadTipo($em->getRepository('SieAppWebBundle:OperativoGestionEspecialidadTipo')->find($operativoSpeciality));
-            $objBthEstudianteInscripcionGestionEspecialidad->setData(json_encode($arrEstudianteInscripcionHumnisticoTecnico));
-            $objBthEstudianteInscripcionGestionEspecialidad->setFechaRegistro(new \DateTime('now'));
-            $objBthEstudianteInscripcionGestionEspecialidad->setUsuarioId($this->session->get('userId'));
-            $em->persist($objBthEstudianteInscripcionGestionEspecialidad);
+                  //set the backup info
+                $objBthEstudianteInscripcionGestionEspecialidad = new BthEstudianteInscripcionGestionEspecialidad();
+                $objBthEstudianteInscripcionGestionEspecialidad->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
+                $objBthEstudianteInscripcionGestionEspecialidad->setOperativoGestionEspecialidadTipo($em->getRepository('SieAppWebBundle:OperativoGestionEspecialidadTipo')->find($operativoSpeciality));
+                $objBthEstudianteInscripcionGestionEspecialidad->setData(json_encode($arrEstudianteInscripcionHumnisticoTecnico));
+                $objBthEstudianteInscripcionGestionEspecialidad->setFechaRegistro(new \DateTime('now'));
+                $objBthEstudianteInscripcionGestionEspecialidad->setUsuarioId($this->session->get('userId'));
+                $em->persist($objBthEstudianteInscripcionGestionEspecialidad);
 
 
-            $em->flush();
+                $em->flush();
+            }
 
             // get the set data on students
             $arrStudents = $this->getBthStudents($iecId,1);
