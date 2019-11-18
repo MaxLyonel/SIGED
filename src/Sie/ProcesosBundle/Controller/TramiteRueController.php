@@ -1312,6 +1312,9 @@ class TramiteRueController extends Controller
                                     $fusion = 1;
                                 }
                                 if($t['id'] == 34){#ampliacion de nivel
+                                    foreach($tareasDatos[0]['datos']['institucioneducativaNivel'] as $n){
+                                        $arr[] = $n['id'];
+                                    }
                                     $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
@@ -1319,12 +1322,13 @@ class TramiteRueController extends Controller
                                     $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar'];
                                     //adiciona niveles nuevos
                                     foreach($nuevoNivel as $n){
-                                        //dump($n);die;
-                                        $nivel = new InstitucioneducativaNivelAutorizado();
-                                        $nivel->setFechaRegistro(new \DateTime('now'));
-                                        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($n['id']));
-                                        $nivel->setInstitucioneducativa($institucioneducativa);
-                                        $em->persist($nivel);
+                                        if(!in_array($n['id'],$arr)){
+                                            $nivel = new InstitucioneducativaNivelAutorizado();
+                                            $nivel->setFechaRegistro(new \DateTime('now'));
+                                            $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($n['id']));
+                                            $nivel->setInstitucioneducativa($institucioneducativa);
+                                            $em->persist($nivel);
+                                        }
                                     }
                                     $em->flush();
                                 }elseif($t['id'] == 35){#reduccion de nivel
