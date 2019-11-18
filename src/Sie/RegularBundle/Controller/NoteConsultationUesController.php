@@ -45,7 +45,7 @@ class NoteConsultationUesController extends Controller {
 
         //set new gestion to the select year
         $arrGestion = array();
-        $currentYear = date('Y');
+        $currentYear = date('Y')-1;
         for ($i = 0; $i <= 10; $i++) {
             $arrGestion[$currentYear] = $currentYear;
             $currentYear--;

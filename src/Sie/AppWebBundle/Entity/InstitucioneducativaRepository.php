@@ -858,7 +858,7 @@ class InstitucioneducativaRepository extends EntityRepository {
         return $qb->getQuery()->getResult();
     }    
 
-    public function getListRemoveAsigBthStudents($iecId){
+    public function getListRemoveAsigBthStudents($iecId, $operativoType){
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
                 ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId")
@@ -879,7 +879,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->where('iec.id = :iecId')
                 ->andwhere('bthgesesp.operativoGestionEspecialidadTipo = :opetype')
                 ->setParameter('iecId', $iecId)
-                ->setParameter('opetype', 3)
+                ->setParameter('opetype', $operativoType)
                 ->orderBy('e.paterno, e.materno')
         ;
         return $qb->getQuery()->getResult();
