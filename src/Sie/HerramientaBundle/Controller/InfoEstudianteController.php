@@ -21,6 +21,7 @@ use Sie\AppWebBundle\Entity\BthControlOperativoModificacionEspecialidades;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 
 
 use Doctrine\DBAL\Types\Type;
@@ -120,11 +121,45 @@ class InfoEstudianteController extends Controller {
         }
        //evaluar el estado del operatvo de modificar/eiminar especialidades, t= operativoCerrado f = operativoHabilitado 
         $entity = $em->getRepository('SieAppWebBundle:BthControlOperativoModificacionEspecialidades')->findOneBy(array('institucioneducativaId'=>$sie, 'gestionTipoId'=>$gestion,'estadoOperativo'=>true));
-        if($entity){
+        //dump($entity);die;
+        //evaluar si la ue es plena 
+
+             $query = $em->getConnection()->prepare("SELECT * 
+            from institucioneducativa_humanistico_tecnico 
+            WHERE institucioneducativa_id = $sie and gestion_tipo_id = $gestion
+            and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (5,6)");
+            $query->execute();
+            $entity_validacion = $query->fetchAll();
+            //dump($entity_validacion);die;
+
+
+        $ue_plena =($entity_validacion)?true:false;
+        //dump($ue_plena);die;
+
+        if($ue_plena){
+            if($entity){
             $estado = false;
+            }else{
+                $estado =  true;
+            }
         }else{
-            $estado =  true;
+            $estado = false;
         }
+
+
+
+
+
+        // if($entity){
+        //     if($ue_plena == false){
+        //         $estado = false;
+        //     }
+
+        // }else{
+        //     $estado =  true;
+        // }
+        //dump($estado);die;
+
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
