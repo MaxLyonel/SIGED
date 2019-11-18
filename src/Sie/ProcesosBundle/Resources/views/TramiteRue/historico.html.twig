@@ -261,333 +261,343 @@
                                                                 <th>Tipo de trámite</th> 
                                                                 <th>Dato antiguo</th>
                                                                 <th>Dato nuevo</th>
-                                                                <th>Requisitos</th>
+                                                                <th>Ver Requisitos Presentados</th>
                                                             </tr>
+                                                            {% set fus = 0 %}
                                                             {% for t in d.datos.tramites  %}
-                                                                <tr>
-                                                                    <td>{{t.tramite_tipo}}</td>
-                                                                    {% if t.id == 34 %} {# ampliacion de nivel #}
-                                                                        <td>
-                                                                            <ul>
-                                                                                {% for n in d.datos.institucioneducativaNivel %}
-                                                                                    <li type=square>{{ n.nivel }}</li> 
-                                                                                {% endfor %}            
-                                                                            </ul>
-                                                                        </td>
-                                                                        <td>
-                                                                            <ul>
-                                                                                {% for n in d.datos[t.tramite_tipo].nivelampliar %}
-                                                                                    <li type=square>{{ n.nivel }}</li> 
-                                                                                {% endfor %}            
-                                                                            </ul>
-                                                                        </td>
-                                                                    {% elseif t.id == 35 %}{# Reduccion de Nivel #}
-                                                                        <td>
-                                                                            <ul>
-                                                                                {% for n in d.datos.institucioneducativaNivel %}
-                                                                                    <li type=square>{{ n.nivel }}</li> 
-                                                                                {% endfor %}      
-                                                                            </ul>
-                                                                        </td>
-                                                                        <td>
-                                                                            <ul>
-                                                                                {% for n in d.datos[t.tramite_tipo].nivelreducir %}
-                                                                                    <li type=square>{{ n.nivel }}</li> 
-                                                                                {% endfor %}
-                                                                            </ul>
-                                                                        </td>
-                                                                    {% elseif t.id == 36 %}{# cambio de dependencia #}
-                                                                        <td>
-                                                                            <ul>
-                                                                                <li type=square>{{d.datos.institucioneducativa.dependencia|upper}}</li>
-                                                                            </ul>
-                                                                        </td>
-                                                                        <td>
-                                                                            <ul>
-                                                                                <li type=square>{{d.datos[t.tramite_tipo].dependencia.dependencia|upper}}</li> 
-                                                                                {% if d.datos.institucioneducativa.dependencia_tipo_id == 1 %}
-                                                                                    <li type=square>
-                                                                                        Tipo de convenio: {{d.datos.institucioneducativa.convenio}}
-                                                                                    </li> 
-                                                                                {% endif %}
-                                                                            </ul>
-                                                                        </td>
-                                                                    {% elseif t.id == 37 %}{# cambio de nombre #}
-                                                                        <td>
-                                                                            {{d.datos.institucioneducativa.institucioneducativa|upper}}
-                                                                        </td>
-                                                                        <td>
-                                                                            {{d.datos[t.tramite_tipo].nuevo_nombre|upper}}
-                                                                        </td>
-                                                                    {% elseif t.id == 38 %}{# cambio de jurisdiccion administrativa #}
-                                                                        <td>
-                                                                            <ul>
-                                                                                <li type=square>{{d.datos.jurisdiccion_geografica.distrito|upper}}</li>
-                                                                            </ul>
-                                                                        </td>
-                                                                        <td>
-                                                                            <ul>
-                                                                                <li type=square>{{d.datos[t.tramite_tipo].nuevo_distrito.nuevo_distrito|upper}}</li> 
-                                                                            </ul>
-                                                                        </td>
-                                                                    {% elseif t.id == 39 %}{# Fusion #}
-                                                                        <td>
-                                                                            
-                                                                        </td>
-                                                                        <td>
-                                                                            
-                                                                        </td>
-                                                                    {% elseif t.id == 40 %} {# desglose #}
-                                                                        <td>
-                                                                            
-                                                                        </td>
-                                                                        <td>
-                                                                            
-                                                                        </td>
-                                                                    {% elseif t.id == 41 %} {# cambio de infraestructura #}
-                                                                        <td>
-                                                                            <div class="row">
-                                                                                <div class="form-group col-md-12">
-                                                                                    <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
+                                                                {% if t.id == 39 %} {% set fus = 1 %} {% endif %}
+                                                            {% endfor %}
+                                                            {% for t in d.datos.tramites  %}
+                                                                {% if t.id != 39 %}
+                                                                    <tr>
+                                                                        <td>{% if fus == 0 %} {{t.tramite_tipo}}{% else %} {{t.tramite_tipo}} <strong>(Por Fusión)</strong> {% endif %}</td>
+                                                                        {% if t.id == 34 %} {# ampliacion de nivel #}
+                                                                            <td>
+                                                                                <ul>
+                                                                                    {% for n in d.datos.institucioneducativaNivel %}
+                                                                                        <li type=square>{{ n.nivel }}</li> 
+                                                                                    {% endfor %}            
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td>
+                                                                                <ul>
+                                                                                    {% for n in d.datos[t.tramite_tipo].nivelampliar %}
+                                                                                        <li type=square>{{ n.nivel }}</li> 
+                                                                                    {% endfor %}            
+                                                                                </ul>
+                                                                            </td>
+                                                                        {% elseif t.id == 35 %}{# Reduccion de Nivel #}
+                                                                            <td>
+                                                                                <ul>
+                                                                                    {% for n in d.datos.institucioneducativaNivel %}
+                                                                                        <li type=square>{{ n.nivel }}</li> 
+                                                                                    {% endfor %}      
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td>
+                                                                                <ul>
+                                                                                    {% for n in d.datos[t.tramite_tipo].nivelreducir %}
+                                                                                        <li type=square>{{ n.nivel }}</li> 
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                            </td>
+                                                                        {% elseif t.id == 36 %}{# cambio de dependencia #}
+                                                                            <td>
+                                                                                <ul>
+                                                                                    <li type=square>{{d.datos.institucioneducativa.dependencia|upper}}</li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td>
+                                                                                <ul>
+                                                                                    <li type=square>{{d.datos[t.tramite_tipo].dependencia.dependencia|upper}}</li> 
+                                                                                    {% if d.datos.institucioneducativa.dependencia_tipo_id == 1 %}
+                                                                                        <li type=square>
+                                                                                            Tipo de convenio: {{d.datos.institucioneducativa.convenio}}
+                                                                                        </li> 
+                                                                                    {% endif %}
+                                                                                </ul>
+                                                                            </td>
+                                                                        {% elseif t.id == 37 %}{# cambio de nombre #}
+                                                                            <td>
+                                                                                {{d.datos.institucioneducativa.institucioneducativa|upper}}
+                                                                            </td>
+                                                                            <td>
+                                                                                {{d.datos[t.tramite_tipo].nuevo_nombre|upper}}
+                                                                            </td>
+                                                                        {% elseif t.id == 38 %}{# cambio de jurisdiccion administrativa #}
+                                                                            <td>
+                                                                                <ul>
+                                                                                    <li type=square>{{d.datos.jurisdiccion_geografica.distrito|upper}}</li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td>
+                                                                                <ul>
+                                                                                    <li type=square>{{d.datos[t.tramite_tipo].nuevo_distrito.nuevo_distrito|upper}}</li> 
+                                                                                </ul>
+                                                                            </td>
+                                                                        {% elseif t.id == 39 %}{# Fusion #}
+                                                                            <td>
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        {% elseif t.id == 40 %} {# desglose #}
+                                                                            <td>
+                                                                                
+                                                                            </td>
+                                                                            <td>
+                                                                                
+                                                                            </td>
+                                                                        {% elseif t.id == 41 %} {# cambio de infraestructura #}
+                                                                            <td>
+                                                                                <div class="row">
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>DEPARTAMENTO:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.departamento2001|upper }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>PROVINCIA:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.provincia2001 }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>MUNICIPIO:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.municipio2001 }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>CANTÓN:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.canton2001 }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>LOCALIDAD:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.localidad2001 }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></span></h5>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>DEPARTAMENTO: </strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.departamento2012|upper }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>PROVINCIA:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.provincia2012|upper }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>MUNICIPIO:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.municipio2012|upper }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>COMUNIDAD:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.comunidad2012|upper }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <h5><span style="background:#E9F9FC"><strong>Dirección</strong></span></h5>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>ZONA:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.zona }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            <strong>DIRECCIÓN:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ d.datos.jurisdiccion_geografica.direccion }}
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>DEPARTAMENTO:</strong>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="row">
+                                                                                    {% if datos[t.tramite_tipo].lejurisdiccion is defined %}
+                                                                                        <div class="form-group  col-md-12">
+                                                                                            <div class="col-md-5">  
+                                                                                                <strong>Código Edificio Educativo:</strong>
+                                                                                            </div>
+                                                                                            <div class="col-md-7">
+                                                                                                {{datos[t.tramite_tipo].lejurisdiccion}}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    {% endif %}
+                                                                                    <div class="col-md-12">
+                                                                                        <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
                                                                                     </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.departamento2001|upper }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>PROVINCIA:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.provincia2001 }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>MUNICIPIO:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.municipio2001 }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>CANTÓN:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.canton2001 }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>LOCALIDAD:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.localidad2001 }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></span></h5>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>DEPARTAMENTO: </strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.departamento2012|upper }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>PROVINCIA:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.provincia2012|upper }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>MUNICIPIO:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.municipio2012|upper }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>COMUNIDAD:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.comunidad2012|upper }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <h5><span style="background:#E9F9FC"><strong>Dirección</strong></span></h5>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>ZONA:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.zona }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-4">
-                                                                                        <strong>DIRECCIÓN:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-8">
-                                                                                        {{ d.datos.jurisdiccion_geografica.direccion }}
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="row">
-                                                                                {% if datos[t.tramite_tipo].lejurisdiccion is defined %}
-                                                                                    <div class="form-group  col-md-12">
-                                                                                        <div class="col-md-5">  
-                                                                                            <strong>Código Edificio Educativo:</strong>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>DEPARTAMENTO:</strong>
                                                                                         </div>
                                                                                         <div class="col-md-7">
-                                                                                            {{datos[t.tramite_tipo].lejurisdiccion}}
+                                                                                            {{d.datos[t.tramite_tipo].departamento2001}}
                                                                                         </div>
                                                                                     </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>PROVINCIA:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].provincia2001}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>MUNICIPIO:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].municipio2001}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>CANTON:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].canton2001}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>LOCALIDAD:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].localidad2001}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></span></h5>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>DEPARTAMENTO:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].departamento2012}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>PROVINCIA:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].provincia2012}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>MUNICIPIO:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].municipio2012}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>COMUNIDAD:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].comunidad2012}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <h5><span style="background:#E9F9FC"><strong>Dirección</strong></span></h5>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>ZONA:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].zona}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group  col-md-12">
+                                                                                        <div class="col-md-5">
+                                                                                            <strong>DIRECCIÓN:</strong>
+                                                                                        </div>
+                                                                                        <div class="col-md-7">
+                                                                                            {{d.datos[t.tramite_tipo].direccion}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        {% elseif t.id == 42 or t.id == 43 %} {# cierre temporal #}
+                                                                            <td>
+                                                                                {% if fus == 1 %}
+                                                                                    <strong>Unidad Educativa a Cerrar Definitivamente (Por Fusión)</strong></br>
+                                                                                    Código SIE: {{d.datos['Fusion'].siefusion.id}}</br>
+                                                                                    Unidad Educativa: {{d.datos['Fusion'].siefusion.institucioneducativa}}
+                                                                                {% else %}
+                                                                                    {{d.datos.institucioneducativa.estadoinstitucion|upper}}
                                                                                 {% endif %}
-                                                                                <div class="col-md-12">
-                                                                                    <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>DEPARTAMENTO:</strong>
+                                                                            </td>
+                                                                            <td>
+                                                                                CERRADA
+                                                                            </td>
+                                                                        {% elseif t.id == 44 %}{# Reapertura #}
+                                                                            <td>
+                                                                                {% if estadoinstitucion.id == 19 %}
+                                                                                    {{estadoinstitucion.estadoinstitucion|upper}}
+                                                                                {% else %}
+                                                                                    <span class="label label-danger">LA UNIDAD EDUCATIVA SE ENCUENTRA ABIERTA</span>
+                                                                                {% endif %}
+                                                                            </td>
+                                                                            <td>
+                                                                                {% if estadoinstitucion.id == 19 %}
+                                                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                                                        {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                                                                                        {{ form_label(form.estadoinstitucion) }}                                                            
                                                                                     </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].departamento2001}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>PROVINCIA:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].provincia2001}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>MUNICIPIO:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].municipio2001}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>CANTON:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].canton2001}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>LOCALIDAD:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].localidad2001}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-12">
-                                                                                    <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></span></h5>
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>DEPARTAMENTO:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].departamento2012}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>PROVINCIA:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].provincia2012}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>MUNICIPIO:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].municipio2012}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>COMUNIDAD:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].comunidad2012}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-12">
-                                                                                    <h5><span style="background:#E9F9FC"><strong>Dirección</strong></span></h5>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>ZONA:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].zona}}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group  col-md-12">
-                                                                                    <div class="col-md-5">
-                                                                                        <strong>DIRECCIÓN:</strong>
-                                                                                    </div>
-                                                                                    <div class="col-md-7">
-                                                                                        {{d.datos[t.tramite_tipo].direccion}}
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    {% elseif t.id == 42 or t.id == 43 %} {# cierre temporal #}
+                                                                                {% endif %}
+                                                                            </td>
+                                                                        {% elseif t.id == 45 %}{# nuevo certifcado rue #}
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        {% endif %}
                                                                         <td>
-                                                                            {{d.datos.institucioneducativa.estadoinstitucion|upper}}
+                                                                            <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
                                                                         </td>
-                                                                        <td>
-                                                                            CERRADA
-                                                                        </td>
-                                                                    {% elseif t.id == 44 %}{# Reapertura #}
-                                                                        <td>
-                                                                            {% if estadoinstitucion.id == 19 %}
-                                                                                {{estadoinstitucion.estadoinstitucion|upper}}
-                                                                            {% else %}
-                                                                                <span class="label label-danger">LA UNIDAD EDUCATIVA SE ENCUENTRA ABIERTA</span>
-                                                                            {% endif %}
-                                                                        </td>
-                                                                        <td>
-                                                                            {% if estadoinstitucion.id == 19 %}
-                                                                                <div class="col-md-12 ckbox ckbox-primary">
-                                                                                    {{ form_widget(form.estadoinstitucion) }}&nbsp;
-                                                                                    {{ form_label(form.estadoinstitucion) }}                                                            
-                                                                                </div>
-                                                                            {% endif %}
-                                                                        </td>
-                                                                    {% elseif t.id == 45 %}{# nuevo certifcado rue #}
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                    {% endif %}
-                                                                    <td>
-                                                                        <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
-                                                                    </td>
-                                                                </tr>
+                                                                    </tr>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         </table>
                                                     </div>    

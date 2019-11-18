@@ -458,6 +458,8 @@
                         }
                     },
                 });
+            }else{
+                $('#fusion').hide();
             }
         }
 
@@ -1011,10 +1013,37 @@
             if (filas == 0){
                 alert('Seleccione datos a modificar.');
                 return false;
+            }else if(JSON.parse($('#form_tr').val()).includes(39) == true && $('#form_siefusion').val().length < 8){
+                alert('Ingrese codigo SIE a Cerrar Definitivamente válido.');
+                return false;
+            }else if(JSON.parse($('#form_tr').val()).includes(34) == true){
+                var ok = 0;
+                $('.niveltipo').each(function() {
+                    if ($(this).is(':checked') ) {
+                        ok = ok + 1;
+                    }
+                });
+                if(ok == 0){
+                    alert('Seleccione el o los niveles a ampliar.');
+                    return false;
+                }
+            }else if(JSON.parse($('#form_tr').val()).includes(35) == true){
+                var ok = 0;
+                $('.niveltipo').each(function() {
+                    if (!$(this).is(':checked') ) {
+                        ok = ok + 1;
+                    }
+                });
+                if(ok == 0){
+                    alert('Deseleccione el o los niveles a reducir.');
+                    return false;
+                }
+            }else if(JSON.parse($('#form_tr').val()).includes(36) == true && (('{{institucioneducativa.dependenciaTipo.id}}' == 1 && !$('#form_dependencia_1').attr('checked')) || ('{{institucioneducativa.dependenciaTipo.id}}' == 2 && !$('#form_dependencia_2').attr('checked')))){
+                alert('Seleccione nueva dependencia.');
+                return false;
             }else{
                 return true;
             }
         }
-
     </script>
 {% endblock %}

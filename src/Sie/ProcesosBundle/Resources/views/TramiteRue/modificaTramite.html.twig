@@ -13,7 +13,7 @@
         {% for a in form.nivelampliar %}
             <div class="ckbox ckbox-primary">
                 {% if a.vars.value in nt %}
-                    {{ form_widget(a,{'attr':{'class':'niveltipo','disabled':'disabled','checked':'checked'}}) }}
+                    {{ form_widget(a,{'attr':{'disabled':'disabled','checked':'checked'}}) }}
                 {% else %}
                     {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
                 {% endif %}
@@ -356,13 +356,13 @@
             {% if estadoinstitucion.id == 10 %}
                 {{estadoinstitucion.estadoinstitucion|upper}}
             {% else %}
-                <span class="label label-danger">LA UNIDAD EDUCATIVA EST CERRADA</span>
+                <span class="label label-danger">LA UNIDAD EDUCATIVA ESTA CERRADA</span>
             {% endif %}
         {% endif %}
     </td>
     <td>
         {% if estadoinstitucion.id == 10 %}
-            <div class="col-md-12 ckbox ckbox-primary" style="display:none" id="fusion">
+            <div class="col-md-12 ckbox ckbox-primary" {% if tipo == 'fusion' %}style="display:none" {% endif %}id="fusion">
                 {{ form_widget(form.estadoinstitucion) }}&nbsp;
                 {{ form_label(form.estadoinstitucion) }}                                                            
             </div>

@@ -639,7 +639,7 @@ class TramiteRueController extends Controller
         $files = $request->files->get('form');
         //dump($form,$files);die;
         $tramites = json_decode($form['tr'],true);
-        //dump($tramites);die;
+        //dump($tramites,$form);die;
         $em = $this->getDoctrine()->getManager();
 
         $usuario = $this->session->get('userId');
@@ -814,9 +814,10 @@ class TramiteRueController extends Controller
                     $datos[$tramite['tramite_tipo']]['i_certificacion_jur']=$this->upload($files['i_certificacion_jur'],$form['idrue']);
                     break;
                 case 39://Fusion
-                    $datos['siefusion']=$form['siefusion'];
-                    $datos['fusioncerrar']=$form['fusioncerrar'];
-                    $datos['nivelfusion']=$form['nivelfusion'];
+                    $iefusion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['siefusion']);
+                    $datos[$tramite['tramite_tipo']]['siefusion']['id'] = $iefusion->getId();
+                    $datos[$tramite['tramite_tipo']]['siefusion']['institucioneducativa'] = $iefusion->getInstitucioneducativa();
+                    //$datos[$tramite['tramite_tipo']]['siefusion'] = $form['siefusion'];
                     break;
                 case 40://Desglose
                     $datos['niveldesglose']=$form['niveldesglose'];
@@ -1016,7 +1017,7 @@ class TramiteRueController extends Controller
             ->add('tramite', 'hidden', array('data' =>$tramite?$tramite->getId():$tramite ))
             ->add('idrue', 'hidden', array('data' =>$idrue ))
             ->add('tramitetipo', 'hidden', array('data' =>5 ))
-            ->add('requisitos','choice',array('label'=>'Requisitos:','required'=>false, 'multiple' => true,'expanded' => true,'choices'=>$requisitos))
+            ->add('requisitos','choice',array('label'=>'Requisitos:','required'=>true, 'multiple' => true,'expanded' => true,'choices'=>$requisitos))
             ->add('observacion','textarea',array('label'=>'Observación:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
             ->add('varevaluacion1','choice',array('label'=>'¿Observar y devolver?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
             ->add('varevaluacion2','choice',array('label'=>'¿Informe Procedente?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
@@ -1281,9 +1282,10 @@ class TramiteRueController extends Controller
         $observacion = $form['observacion'];
         $varevaluacion = $form['varevaluacion'];
         $lugar = $this->obtienelugar($idtramite);
-        //$tareasDatos = $this->obtieneDatos($em->getRepository('SieAppWebBundle:Tramite')->find($idtramite));
+        $tareasDatos = $this->obtieneDatos($em->getRepository('SieAppWebBundle:Tramite')->find($idtramite));
         //dump($tareasDatos);die;
         //dump($varevaluacion);die;
+        //dump($tareasDatos[0]['datos']['tramites']);die;
         $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         if($mensaje['dato'] == true){
             if($varevaluacion=="SI"){
@@ -1303,7 +1305,12 @@ class TramiteRueController extends Controller
                             $tareasDatos = $this->obtieneDatos($em->getRepository('SieAppWebBundle:Tramite')->find($idtramite));
                             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
                             $iddistrito = $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'];
+                            //dump($tareasDatos[0]['datos']['tramites']);die;
+                            $fusion = 0;
                             foreach($tareasDatos[0]['datos']['tramites'] as $t){
+                                if($t['id'] == 39){
+                                    $fusion = 1;
+                                }
                                 if($t['id'] == 34){#ampliacion de nivel
                                     $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
@@ -1370,6 +1377,14 @@ class TramiteRueController extends Controller
                                     $jurisdicciongeografica->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_distrito']['id']));
                                     $jurisdicciongeografica->setFechaModificacion(new \DateTime('now'));
                                     $em->flush();
+                                }elseif($t['id'] == 39){#Fusion
+                                    $iefusion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($tareasDatos[0]['datos'][$t['tramite_tipo']]['siefusion']['id']);
+                                    $iefusion->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $iefusion->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    $iefusion->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(19));
+                                    $iefusion->setFechaModificacion(new \DateTime('now'));
+                                    $iefusion->setFechaCierre((new \DateTime('now'))->format('Y-m-d'));
+                                    $em->flush();
                                 }elseif($t['id'] == 41){#cambio de infraestructura
                                     $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
@@ -1381,12 +1396,14 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                 }elseif($t['id'] == 42 or $t['id'] == 43){#cierre temporal
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
-                                    $institucioneducativa->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(19));
-                                    $institucioneducativa->setFechaModificacion(new \DateTime('now'));
-                                    $institucioneducativa->setFechaCierre(new \DateTime('now'));
-                                    $em->flush();
+                                    if($fusion == 0 ){
+                                        $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                        $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                        $institucioneducativa->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(19));
+                                        $institucioneducativa->setFechaModificacion(new \DateTime('now'));
+                                        $institucioneducativa->setFechaCierre(new \DateTime('now'));
+                                        $em->flush();
+                                    }
                                 }
                             }
                             $em->getConnection()->commit();
