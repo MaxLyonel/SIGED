@@ -43,7 +43,11 @@
                     <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
                 </div>
                 
-                <h4 v-if="operativoUeEnd" class="text-center" style="color: #FF0000;"> Operativo Cerrado</h4>
+                <span v-if="operativoUeEnd" class="text-center"> 
+                <div class="alert alert-lilac">
+                    <strong>Consolidación de Información Completa</strong> la Unidad Educativa cerro su operativo
+                </div>
+                </span>
                 <span v-else>
                 <div class="panel panel-primary" v-if="swaddupdate">
                     <div class="panel-heading">
