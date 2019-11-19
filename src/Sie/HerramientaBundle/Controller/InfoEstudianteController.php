@@ -1443,9 +1443,10 @@ class InfoEstudianteController extends Controller {
         
         //get the students has BTH
         $arrStudents = array();
+        $arrStudentsStatus = array(4,5,11,28);
         if($objStudents){
             foreach ($objStudents as $value) {
-                if($value['estadomatriculaId']==4){
+                if( in_array($value['estadomatriculaId'], $arrStudentsStatus)){
                     $arrStudents[] = array(
                         
                         'studentId'=>$value['id'],
@@ -1494,24 +1495,36 @@ class InfoEstudianteController extends Controller {
     *return json data(studnets, specialityies)
     **/
     public function addupdateStudentbthAction(Request $request){
+               
         //get the send values
         $iecId = $request->get('iecId');
         // create var to send the next values
         $response = new JsonResponse();
-        // get students bth
-        $arrStudents = $this->getBthStudents($iecId,1);
-        // dump($arrStudents);
-        // die;
-        // get specialities 
+
+        // check if the Ue has finished the all operativo
+        $operativo = $this->get('funciones')->obtenerOperativo($this->session->get('ie_id'), $this->session->get('currentyear'));
+        //set the values to continue the process
+        $arrStudents   = array();
+        $arrSpeciality = array();
+        $operativoUeEnd = false;
+
+        if($operativo!=5){
+            // get students bth
+            $arrStudents = $this->getBthStudents($iecId,1);
+            // get specialities             
+            $arrSpeciality = $this->getSpeciality();
+        }else{
+            $operativoUeEnd = true;
+        }
         $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
-        $arrSpeciality = $this->getSpeciality();
         
         //return values
         $response->setStatusCode(200);
         $response->setData(array(
-            'students'     => $arrStudents,
-            'swaddupdate'  => true,
-            'DBspeciality' => $arrSpeciality
+            'students'       => $arrStudents,
+            'swaddupdate'    => true,
+            'DBspeciality'   => $arrSpeciality,
+            'operativoUeEnd' => $operativoUeEnd
         ));
         return $response;   
     }
