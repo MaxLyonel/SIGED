@@ -109,3 +109,39 @@ herramienta_info_estudiante_cerrarSextoGrado:
     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:cerrarSextoGrado }
     options:
          expose: true
+
+herramienta_info_estudiante_optionsBth:
+    path:     /sie/getstudentsbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:getStudentsBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_addupdateStudentbth:
+    path:     /sie/addupdateStudentbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:addupdateStudentbth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_removeStudentBth:
+    path:     /sie/removeStudentBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:removeStudentBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_addupStudentbth:
+    path:     /sie/addupStudentbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:addupStudentbth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_doRemoveStudentBth:
+    path:     /sie/doRemoveStudentBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:doRemoveStudentBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_operativoEspecialidadesBth:
+    path:     /sie/operativoEspecialidadesBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:operativoEspecialidadesBth }
+    options:
+         expose: true         

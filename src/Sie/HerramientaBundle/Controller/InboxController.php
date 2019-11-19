@@ -233,6 +233,13 @@ class InboxController extends Controller {
               # plena
               $this->session->set('ue_plena', true);
               $this->session->set('acceso_total', true);
+              $arrGradoTipoBth = false;
+              if($objValidateUePlena->getGradoTipo()->getId()>=6){
+                $arrGradoTipoBth = array(5,6);
+              }else{
+                $gradoTipoBth = $objValidateUePlena->getGradoTipo()->getId()==5?$arrGradoTipoBth = array(5):false;
+              }
+              $this->session->set('gradoTipoBth', $arrGradoTipoBth);
               break;
             case 2:
                 # tec teg

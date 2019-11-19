@@ -1,0 +1,492 @@
+
+<style type="text/css">
+    .btn-menu{
+        border: 1px solid #FFFFFF;
+        color: #FFFFFF;
+        border-radius: 50%;
+    }
+    .btn-menu:hover{
+        color: #FFFFFF;
+        /* border: 2px; */
+        box-shadow: 0px 2px 3px #90E6EA;
+    }
+</style>
+
+    <div id="app">
+    
+        <div v-cloak>
+           <div class="panel-body">
+                
+                <div class="header-content">{# new options #}
+                    <center>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <button v-on:click="addupdateStudentbth()" type="button" class="btn btn-success"> Modificaci&oacute;n/Elimaci&oacute;n de Especialidad</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <button v-on:click="removeStudentBth()" type="button" class="btn btn-success"> Lista de Estudiante con Especialidades y Eliminados</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    </center>
+                </div>{# end new options #}
+
+
+
+                {# <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> </div> #}
+                <div v-if="buscando" class="text-center">
+                    <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                </div>
+
+
+                <div class="panel panel-primary" v-if="swaddupdate">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h5>Lista de inscritos</h5>
+                        </div>
+                        <div class="pull-right">
+
+                            {# <span style="font-size:1.2em">Opciones del curso:</span>
+                            <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a> #}
+                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>INFORMACION ESTUDIANTE</th>
+                                        {# <th></th> #}
+                                        <th></th>
+                                        
+                                    </tr>
+                                </thead>
+                                {#init the array info student #}
+                                <tbody>
+                                    <tr v-for="(student, index) in students">
+                                        <td>${ index+1 }</td>
+                                        <td>
+                                            <table>
+                                                <tr>                                                    
+                                                    <td><strong>COD. RUDE:</strong> ${ student.codigoRude }</td>
+                                                </tr>
+                                                <tr>                                                    
+                                                    <td><strong>ESTUDIANTE:</strong> ${ student.paterno } ${ student.materno } ${ student.nombre }</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>ESTADO:</strong> ${ student.estadomatricula }</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  class="text-primary"><strong>ESPECIALIDAD:</strong>  ${ student.specialty }</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table v-if="student.deletebthOption" class="table table-bordered cf">
+                                                <tr>                                                    
+                                                    <td>
+                                                        Adjuntar Acta:
+                                                        <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                    Justificativo:
+                                                        <textarea id="form_obs" name="form[obs]" class="form-control" pattern="[A-Za-z0-9-/ ]{0,25}" v-model="student.justificativo"></textarea>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td align="center">
+                                                        <button v-on:click="doRemoveStudentBth(index)" class="btn btn-xs btn-success" >Eliminar</button>
+                                                        <button v-on:click="cancelRemoveStudentBth(index)" class="btn btn-xs btn-danger" >Cancelar</button>
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                            </table>
+                                            <table v-if="student.updatebthOption" class="table table-bordered cf">
+                                                <tr>
+                                                    <td>
+                                                    <select name="arrSpeciality" id="specialityId"  class="custom-select form-control" v-model="student.studentSpecialtyId">  
+                                                        <option v-for="item in DBspeciality"  :value="item.specialtyId">${ item.specialty }</option>       
+                                                    </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center">
+                                                        <button v-on:click="addupStudentbth(index)" type="button" class="btn btn-xs btn-success">Modificar</button>
+                                                        <button v-on:click="cancelUpdateStudentBth(index)" type="button" class="btn btn-xs btn-danger" >Cancelar</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            
+                                            <table v-if="student.studentSpecialtyIdNew >0">
+                                                <tr><td>
+                                                <table v-if="student.mainoption" class="table table cf">
+                                                    <tr>
+                                                        <td>
+                                                            <button v-on:click="deleteStudentbth(index)" type="button" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> Eliminar </button>
+                                                        </td>
+                                                        <td>
+                                                            <button v-on:click="updateStudentbth(index)" type="button" class="btn btn-xs btn-info"> <i class="fa fa-list" ></i>  Modificar</button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                </td></tr>
+                                            </table>
+                                            
+
+                                        </td>
+                                         
+                                    </tr>
+                                    
+                                </tbody>   
+                            </table>
+                                    
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+
+                <div class="panel panel-primary" v-if="swremove">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h5>Lista de Estudiante con Especialidades y Eliminados</h5>
+                        </div>
+                        <div class="pull-right">
+
+                            {# <span style="font-size:1.2em">Opciones del curso:</span>
+                            <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a> #}
+                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                    
+                    <div class="row">
+                        <div class="col-lg-12">
+                        <strong class="text-primary" >Estudiantes con Especialidad</strong>
+                            <table class="table ">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>RUDE</th>
+                                        <th>ESTUDIANTE</th>
+                                        
+                                        <th>ESPECIALIDAD</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(studentbth, index) in studentsBTH">
+                                        <td>${ index+1 }</td>
+                                        <td> ${ studentbth.codigoRude }</td>
+                                        <td> ${ studentbth.paterno } ${ studentbth.materno } ${ studentbth.nombre }</td>
+                                        <td  class="text-primary">  ${ studentbth.specialty }</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                       
+                    </div>
+                    </br></br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <strong class="text-primary" >Estudiantes Especialidad Eliminada</strong>
+                            <table class="table ">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>RUDE</th>
+                                        <th>ESTUDIANTE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(studentwobth, index) in studentswithoutBTH">
+                                        <td>${ index+1 }</td>
+                                        <td> ${ studentwobth.codigoRude }</td>
+                                        <td> ${ studentwobth.paterno } ${ studentwobth.materno } ${ studentwobth.nombre }</td>
+                                    </tr>
+                                </tbody>
+                            </table>                        
+                        </div>
+                    </div>
+
+                    </div>                
+                </div>
+
+  
+                        
+
+        </div>
+    </div>{# end div cloak #}
+</div>{# end div app #}
+    <!-- /.row -->
+<script>
+
+ var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                buscando:false,
+                respuesta:'',
+                iecId: '{{iecId}}',
+                swaddupdate:false,
+                swremove:false,
+                students: [],
+                studentsBTH: [],
+                studentswithoutBTH: [],
+                DBspeciality:'',
+                eInsIdselected:'',
+                specialityIdselected:'',
+                showFormRemove:false,
+                informe:''
+
+            },
+            methods: {
+                addupdateStudentbth: function(){
+                    this.buscando = true;
+                    this.swaddupdate = false;
+                    this.swremove = false;
+                    this.showFormRemove=false;
+                    axios.get(Routing.generate('herramienta_info_estudiante_addupdateStudentbth', {
+                        iecId: '{{iecId}}'
+                    }))
+                    .then(response => {
+                        
+                        if (response.status == 200) {
+                            this.students = response.data.students;
+                            this.DBspeciality = response.data.DBspeciality;
+                            this.swaddupdate = true;
+                            this.buscando = false;
+                            this.swaddupdate = true;
+                        }
+                        this.buscando = false;
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                },
+                removeStudentBth: function(){
+                    this.buscando = true;
+                    this.swaddupdate = false;
+                    this.swremove = false;
+                    axios.get(Routing.generate('herramienta_info_estudiante_removeStudentBth', {
+                        iecId: '{{iecId}}'
+                    }))
+                    .then(response => {
+                        
+                        if (response.status == 200) {
+                            this.studentsBTH = response.data.studentsBTH;
+                            this.studentswithoutBTH = response.data.studentswithoutBTH;                            
+                            //this.DBspeciality = response.data.DBspeciality;
+                            this.swaddupdate = false;
+                            this.buscando = false;
+                            this.swremove = response.data.swremove;
+                        }
+                        this.buscando = false;
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                },
+                addupStudentbth: function(index){
+
+                    Swal.fire({
+                        title: '¿Enviar Cambios?',
+                        text: "esta seguro de realizar la asignación",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+
+                            this.eInsIdselected = this.students[index].eInsId;
+                            this.specialityIdselected = this.students[index].studentSpecialtyId;
+                            
+                            axios.get(Routing.generate('herramienta_info_estudiante_addupStudentbth', {
+                                eInsId: this.eInsIdselected,
+                                specialityId: this.specialityIdselected,
+                                iecId: '{{iecId}}'
+                            }))
+                            .then(response => {
+                                
+                                if (response.status == 200) {
+                                    this.students = response.data.students;
+                                    console.log(this.eInsIdselected +' '+this.specialityIdselected)
+                                }
+                                this.buscando = false;
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+                            })
+                            .catch(e => {
+                                console.log(e);
+                            });
+                        
+
+                        }
+                    })                                        
+
+                },
+                deleteStudentbth: function(index){
+                    var me = this;
+                    me.students[index].updatebthOption = false;
+                    me.students[index].deletebthOption = true;                    
+                    me.students[index].mainoption = false;
+                    console.log(me.students[index].mainoption);
+                   
+                },
+                updateStudentbth: function(index){
+                    var me = this;
+                    me.students[index].deletebthOption = false;
+                    me.students[index].updatebthOption = true;
+                    me.students[index].mainoption = false;
+                    console.log(me.students[index].mainoption);
+                   
+                },
+                cancelRemoveStudentBth:function(index){
+                    var me = this;
+                    me.students[index].deletebthOption = false;
+                    me.students[index].mainoption = true;
+                    this.informe = '';
+                    me.student[index].justificativo = '';
+                },
+                cancelUpdateStudentBth:function(index){
+                    var me = this;
+                    me.students[index].updatebthOption = false;
+                    me.students[index].mainoption = true;
+                },
+                doRemoveStudentBth:function(index){
+
+                    if(this.students[index].justificativo == ''){
+                        this.respuesta = 'Debe ingresar el Justificativo';
+                        this.buscando = false;
+                        Swal.fire(
+                            'Debe ingresar el Justificativo',
+                            'Campo requerido!',                              
+                            'warning'
+                            );                        
+                        return false;
+                    }
+
+                    /*validate the file attached*/
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Acta',
+                        'Debe adjuntar un escaneado de la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }
+
+                    var message = "Aclarar que esta opción de ELIMINAR especialidad es para aquellos que cumplan lo establecido en la R.M. 1263/2018, se pide ser cuidadoso con los casos presentados.</br> ¿Está seguro de realizar la eliminación?</br> Si procede no habra forma de registrar la Materia Especializada, Notas y su respectiva Especialidad.</br>  ¿Está completamente seguro de proceder?";
+                    Swal.fire({
+                        title: '¿Enviar Cambios?',
+                        html: message,
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            
+                            var data = new FormData();
+                            data.append('datos', JSON.stringify(this.students[index]))
+                            data.append('iecId',  '{{iecId}}')
+                            data.append('informe', this.informe)
+
+                            this.eInsIdselected = this.students[index].eInsId;
+                            this.specialityIdselected = this.students[index].studentSpecialtyId;
+                            
+                            axios.post(Routing.generate('herramienta_info_estudiante_doRemoveStudentBth'),data)
+                            .then(response => {
+                                
+                                if (response.status == 200) {
+                                    this.students = response.data.students;
+                                    console.log(this.eInsIdselected +' '+this.specialityIdselected)
+                                    var me = this;
+                                    me.students[index].deletebthOption = false;
+                                }
+                                this.buscando = false;
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+                            })
+                            .catch(e => {
+                                console.log(e);
+                            });
+                        
+
+                        }
+                    })
+                },
+                getImage:function(event){
+                    var informe = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    console.log(informe);
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informe = '';
+                        return false;
+                    }else{
+                        var megas = (informe.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informe = '';
+                            return false;
+                        }
+                    }
+                    this.informe = event.target.files[0];
+
+                },
+
+
+
+            },
+            mounted(){
+                
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+</script>

@@ -1,0 +1,55 @@
+Sie\AppWebBundle\Entity\BthControlOperativoModificacionEspecialidades:
+    type: entity
+    table: bth_control_operativo_modificacion_especialidades
+    indexes:
+        IDX_81A2921925CCAE14:
+            columns:
+                - institucioneducativa_operativo_log_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        estadoOperativo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_operativo
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        fechaCierre:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_cierre
+        fechaHabilitacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_habilitacion
+    manyToOne:
+        institucioneducativaOperativoLogTipo:
+            targetEntity: InstitucioneducativaOperativoLogTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_operativo_log_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
