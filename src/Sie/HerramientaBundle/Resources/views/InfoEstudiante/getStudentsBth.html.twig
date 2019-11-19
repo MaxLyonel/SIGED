@@ -403,10 +403,10 @@
                         return;
                     }
 
-                    
+                    var message = "Aclarar que esta opción de ELIMINAR especialidad es para aquellos que cumplan lo establecido en la R.M. 1263/2018, se pide ser cuidadoso con los casos presentados.</br> ¿Está seguro de realizar la eliminación?</br> Si procede no habra forma de registrar la Materia Especializada, Notas y su respectiva Especialidad.</br>  ¿Está completamente seguro de proceder?";
                     Swal.fire({
                         title: '¿Enviar Cambios?',
-                        text: "Esta seguro de realizar la eliminación, si procede no habra forma de registrar la Materia Especializada, Notas y su respectiva Especialidad.\n¿Esta completamente seguro?",
+                        html: message,
                         type: 'question',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
