@@ -39,18 +39,22 @@
 
 
                 {# <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> </div> #}
-                <div v-if="buscando" class="text-center">
+                <div v-if="buscando" class="">
                     <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
                 </div>
-
-
+                
+                <span v-if="operativoUeEnd" class="text-center"> 
+                <div class="alert alert-lilac">
+                    <strong>Consolidación de Información Completa</strong> la Unidad Educativa cerro su operativo
+                </div>
+                </span>
+                <span v-else>
                 <div class="panel panel-primary" v-if="swaddupdate">
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h5>Lista de inscritos</h5>
                         </div>
                         <div class="pull-right">
-
                             {# <span style="font-size:1.2em">Opciones del curso:</span>
                             <a class="btn btn-menu tooltips" href="" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                                 <i class="fa fa-download" style="color:#FFFFFF"></i>
@@ -61,6 +65,7 @@
                     </div>
                     <div class="panel-body">
                         <div id="no-more-tables">
+                            
                             <table class="table table-bordered table-hover cf">
                                 <thead>
                                     <tr>
@@ -152,13 +157,14 @@
                                     </tr>
                                     
                                 </tbody>   
-                            </table>
-                                    
+                            </table>                                    
                         </div>
                         
                     </div>
                     
                 </div>
+
+                </span>
 
 
                 <div class="panel panel-primary" v-if="swremove">
@@ -254,7 +260,8 @@
                 eInsIdselected:'',
                 specialityIdselected:'',
                 showFormRemove:false,
-                informe:''
+                informe:'',
+                operativoUeEnd: false
 
             },
             methods: {
@@ -269,11 +276,21 @@
                     .then(response => {
                         
                         if (response.status == 200) {
-                            this.students = response.data.students;
-                            this.DBspeciality = response.data.DBspeciality;
                             this.swaddupdate = true;
-                            this.buscando = false;
-                            this.swaddupdate = true;
+                            this.operativoUeEnd = response.data.operativoUeEnd;
+                            if(response.data.operativoUeEnd){
+                                this.students = [];
+                                this.DBspeciality = [];    
+                                this.buscando = true;
+                                this.swaddupdate = false;
+                            }else{
+                                this.students = response.data.students;
+                                this.DBspeciality = response.data.DBspeciality;
+                                this.swaddupdate = true;
+                                this.buscando = false;
+                                this.swaddupdate = true;
+                            }
+                            
                         }
                         this.buscando = false;
                         if( response.status == 202){
@@ -288,6 +305,7 @@
                     this.buscando = true;
                     this.swaddupdate = false;
                     this.swremove = false;
+                    this.operativoUeEnd = false;
                     axios.get(Routing.generate('herramienta_info_estudiante_removeStudentBth', {
                         iecId: '{{iecId}}'
                     }))
