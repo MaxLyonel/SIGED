@@ -133,7 +133,7 @@ class TramiteRueController extends Controller
                 ->setParameter('tipo',$this->tramiteTipoArray)
                 ->orderBy('tr.tramiteTipo','ASC');},
             'property'=>'tramiteTipo','empty_value' => 'Seleccione tipo de trámite'))
-        ->add('tr', 'text')
+        ->add('tr', 'hidden')
         ->add('observacion','textarea',array('label'=>'JUSTIFICACIÓN:','required'=>true,'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
         ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
         ->getForm();
@@ -172,7 +172,8 @@ class TramiteRueController extends Controller
                     'form' => $form->createView(),
                     'id' => $id,
                     'tramiteTipo' => $tramiteTipo,
-                    'ieNivel'=>$ienivel
+                    'ieNivel'=>$ienivel,
+                    'tipo' => $tipo
                 );
                 break;
             case 35://Reduccion de Nivel
@@ -274,19 +275,19 @@ class TramiteRueController extends Controller
             case 41://cambio de infraestructura
                 $form = $form
                     ->add('lejurisdiccion', 'text', array('label' => 'Código Edificio Educativo:','required'=>false,'attr' => array('class' => 'form-control validar','maxlength'=>8)))
-                    ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                    ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>true,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
                         return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
-                    ->add('provincia2012', 'choice', array('label' => 'Provincia:','required'=>false,'attr' => array('class' => 'form-control')))
-                    ->add('municipio2012', 'choice', array('label' => 'Municipio:','required'=>false, 'attr' => array('class' => 'form-control')))
-                    ->add('comunidad2012', 'choice', array('label' => 'Comunidad:','required'=>false, 'attr' => array('class' => 'form-control')))
-                    ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                    ->add('provincia2012', 'choice', array('label' => 'Provincia:','required'=>true,'attr' => array('class' => 'form-control')))
+                    ->add('municipio2012', 'choice', array('label' => 'Municipio:','required'=>true, 'attr' => array('class' => 'form-control')))
+                    ->add('comunidad2012', 'choice', array('label' => 'Comunidad:','required'=>true, 'attr' => array('class' => 'form-control')))
+                    ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>true,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
                         return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 1')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
-                    ->add('provincia2001', 'choice', array('label' => 'Provincia:','required'=>false,'attr' => array('class' => 'form-control')))
-                    ->add('municipio2001', 'choice', array('label' => 'Municipio:','required'=>false, 'attr' => array('class' => 'form-control')))
-                    ->add('canton2001', 'choice', array('label' => 'Cantón:','required'=>false, 'attr' => array('class' => 'form-control')))
-                    ->add('localidad2001', 'choice', array('label' => 'Localidad/Comunidad:','required'=>false,'attr' => array('class' => 'form-control')))
-                    ->add('zona', 'text', array('label' => 'Zona:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
-                    ->add('direccion', 'text', array('label' => 'Dirección:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
+                    ->add('provincia2001', 'choice', array('label' => 'Provincia:','required'=>true,'attr' => array('class' => 'form-control')))
+                    ->add('municipio2001', 'choice', array('label' => 'Municipio:','required'=>true, 'attr' => array('class' => 'form-control')))
+                    ->add('canton2001', 'choice', array('label' => 'Cantón:','required'=>true, 'attr' => array('class' => 'form-control')))
+                    ->add('localidad2001', 'choice', array('label' => 'Localidad/Comunidad:','required'=>true,'attr' => array('class' => 'form-control')))
+                    ->add('zona', 'text', array('label' => 'Zona:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
+                    ->add('direccion', 'text', array('label' => 'Dirección:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
                     ->getForm();
                 $data = array(
                     'form' => $form->createView(),
@@ -2127,47 +2128,16 @@ class TramiteRueController extends Controller
                     $lugarArray['c2001']['loc']['lista'][$l->getid()] = $l->getlugar();
                 }
             }
-
-
-            //dump($lugarArray);die;
-            /* $dep = $em->getRepository('SieAppWebBundle:LugarTipo')->find($iddepartamento);
-            $query = $em->createQuery(
-                    'SELECT dt
-                    FROM SieAppWebBundle:DistritoTipo dt
-                    WHERE dt.id NOT IN (:ids)
-                    AND dt.departamentoTipo = :dpto
-                    ORDER BY dt.id')
-                    ->setParameter('ids', array(1000,2000,3000,4000,5000,6000,7000,8000,9000))
-                    ->setParameter('dpto', (int)$dep->getcodigo());
-            $distrito = $query->getResult();
-            $distritoArray = array();
-            foreach($distrito as $c){
-                $distritoArray[$c->getId()] = $c->getDistrito();
-            } */
-            /* $comparteLe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
-                ->select('ie')
-                ->where('ie.leJuridicciongeografica='.$idLe)
-                ->andWhere('ie.estadoinstitucionTipo=10')
-                ->andWhere('ie.institucioneducativaAcreditacionTipo=1')
-                ->getQuery()
-                ->getResult();
-            if($comparteLe){
-                foreach($comparteLe as $c){
-                    $comparteArray[$c->getId()] = $c->getInstitucioneducativa();
-                }
-            }else{
-                $comparteArray = array();
-            } */
             return $response->setData(array(
                 'lugar' => $lugarArray,
             ));
         }else{
             //dump($dep);die;
-            $mensaje = "No existe el Código del Edificio Educativo";
+            $mensaje = "¡Código de Edificio Educativo incorrecto!";
             //dump($mensaje);die;
             return $response->setData(array(
                 'msg'=>$mensaje,
-                'departamento' => $depArray,
+                'lugar' => $lugarArray,
             ));
         }
         

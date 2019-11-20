@@ -1,5 +1,5 @@
 {% if id == 34 %} {# ampliacion de nivel #}
-    <td>{{tramiteTipo.tramiteTipo}}</td>
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'fusion' %}<strong>(Por Fusión){% endif %}</strong></td>
     <td>
         <ul>
             {% set nt =[] %}
@@ -47,7 +47,7 @@
         <div class="col-md-12">
             {% for a in form.dependencia %}
                 <div class="ckbox ckbox-primary">
-                    {{ form_widget(a) }}
+                    {{ form_widget(a,{'attr':{'required':true}}) }}
                     {{ form_label(a) }}
                 </div>
             {% endfor %}
@@ -347,7 +347,7 @@
         </div>
     </td>
 {% elseif id == 42 or id == 43 %} {# cierre temporal #}
-    <td>{{tramiteTipo.tramiteTipo}}</td>
+    <td>{{tramiteTipo.tramiteTipo}}{% if tipo == 'fusion' %}&nbsp; <strong>(Por Fusión)</strong>{% endif %}</td>
     <td>
         {% if tipo == 'fusion' %}
             {{ form_label(form.siefusion) }}

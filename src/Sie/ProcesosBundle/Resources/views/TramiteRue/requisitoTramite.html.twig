@@ -55,133 +55,129 @@
                                 <!-- Start tabs content -->
                                 <div class="panel-body tab-content">
                                     {% if id == 34 %} {# ampliacion de nivel #}
-                                        {# {{ form_start(form_34,{ 'attr': {'id':'form_requisitos_34','enctype':"multipart/form-data",'class':'tab-content form-horizontal'}}) }} #}
-                                            <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
-                                                <div class="row">
-                                                    <div class="form-group col-md-12">
-                                                        <div class="col-md-6">
-                                                            {{ form_label(form.i_solicitud_ampliar) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.i_solicitud_ampliar) }}
-                                                        </div>
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_ampliar) }}
                                                     </div>
-                                                    <div class="form-group col-md-12">
-                                                        <div class="col-md-6">
-                                                            {{ form_label(form.i_alquiler_ampliar) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            {% for a in form.i_alquiler_ampliar %}
-                                                                <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a,{'attr':{'class':'alquiler'}}) }}
-                                                                    {{ form_label(a) }}
-                                                                </div>
-                                                            {% endfor %}
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_ampliar) }}
                                                     </div>
-                                                    <div class="form-group col-md-12" id="contrato" style="display:none">
-                                                        <div class="col-md-6">
-                                                            {{ form_label(form.i_contrato_ampliar) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.i_contrato_ampliar) }}
-                                                        </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_alquiler_ampliar) }}
                                                     </div>
-                                                    <div class="form-group col-md-12">
-                                                        {# <div class="col-md-6">
-                                                        </div> #}
-                                                        <div class="col-md-6 ckbox ckbox-primary">
-                                                            {{ form_widget(form.i_certificado_ampliar) }}&nbsp;
-                                                            {{ form_label(form.i_certificado_ampliar) }}                                                            
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        {% for a in form.i_alquiler_ampliar %}
+                                                            <div class="col-md-3 rdio rdio-primary circle">
+                                                                {{ form_widget(a,{'attr':{'class':'alquiler'}}) }}
+                                                                {{ form_label(a) }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12" id="contrato" style="display:none">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_contrato_ampliar) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_contrato_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    {# <div class="col-md-6">
+                                                    </div> #}
+                                                    <div class="col-md-6 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_certificado_ampliar) }}&nbsp;
+                                                        {{ form_label(form.i_certificado_ampliar) }}                                                            
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
-                                                <div class="row">
-                                                    <div class="form-group col-md-12 ckbox ckbox-primary">
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.ii_planos_ampliar) }}&nbsp;
-                                                            {{ form_label(form.ii_planos_ampliar) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.ii_planos_ampliar) }}&nbsp;
+                                                        {{ form_label(form.ii_planos_ampliar) }}
                                                     </div>
-                                                    <div class="form-group col-md-12 ckbox ckbox-primary">
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.ii_infra_ampliar) }}&nbsp;
-                                                            {{ form_label(form.ii_infra_ampliar) }}
-                                                        </div>
-                                                        <div class="col-md-6">                                                            
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.ii_infra_ampliar) }}&nbsp;
+                                                        {{ form_label(form.ii_infra_ampliar) }}
+                                                    </div>
+                                                    <div class="col-md-6">                                                            
                                                     </div>
                                                 </div>
                                             </div>
-                                        {# {{ form_end(form) }}   #}
+                                        </div>
                                     {% elseif id == 35 %}{# Reduccion de Nivel #}
-                                        {# {{ form_start(form_35,{ 'attr': {'id':'form_requisitos_35','class':'tab-content form-horizontal'}}) }} #}
-                                            <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
-                                                <div class="row">
-                                                    <div class="form-group col-md-12">
-                                                        <div class="col-md-6">
-                                                            {{ form_label(form.i_solicitud_reducir) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.i_solicitud_reducir) }}
-                                                        </div>
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_reducir) }}
                                                     </div>
-                                                    <div class="form-group col-md-12">
-                                                        <div class="col-md-6">
-                                                            {{ form_label(form.i_alquiler_reducir) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            {% for a in form.i_alquiler_reducir %}
-                                                                <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a,{'attr':{'class':'alquilerReducir'}}) }}
-                                                                    {{ form_label(a) }}
-                                                                </div>
-                                                            {% endfor %}
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_reducir) }}
                                                     </div>
-                                                    <div class="form-group col-md-12" id="contratoReducir" style="display:none">
-                                                        <div class="col-md-6">
-                                                            {{ form_label(form.i_contrato_reducir) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.i_contrato_reducir) }}
-                                                        </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_alquiler_reducir) }}
                                                     </div>
-                                                    <div class="form-group col-md-12">
-                                                        {# <div class="col-md-6">
-                                                        </div> #}
-                                                        <div class="col-md-6 ckbox ckbox-primary">
-                                                            {{ form_widget(form.i_certificado_reducir) }}&nbsp;
-                                                            {{ form_label(form.i_certificado_reducir) }}                                                            
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        {% for a in form.i_alquiler_reducir %}
+                                                            <div class="col-md-3 rdio rdio-primary circle">
+                                                                {{ form_widget(a,{'attr':{'class':'alquilerReducir'}}) }}
+                                                                {{ form_label(a) }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12" id="contratoReducir" style="display:none">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_contrato_reducir) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_contrato_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    {# <div class="col-md-6">
+                                                    </div> #}
+                                                    <div class="col-md-6 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_certificado_reducir) }}&nbsp;
+                                                        {{ form_label(form.i_certificado_reducir) }}                                                            
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
-                                                <div class="row">
-                                                    <div class="form-group col-md-12 ckbox ckbox-primary">
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.ii_planos_reducir) }}&nbsp;
-                                                            {{ form_label(form.ii_planos_reducir) }}
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.ii_planos_reducir) }}&nbsp;
+                                                        {{ form_label(form.ii_planos_reducir) }}
                                                     </div>
-                                                    <div class="form-group col-md-12 ckbox ckbox-primary">
-                                                        <div class="col-md-6">
-                                                            {{ form_widget(form.ii_infra_reducir) }}&nbsp;
-                                                            {{ form_label(form.ii_infra_reducir) }}
-                                                        </div>
-                                                        <div class="col-md-6">                                                            
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.ii_infra_reducir) }}&nbsp;
+                                                        {{ form_label(form.ii_infra_reducir) }}
+                                                    </div>
+                                                    <div class="col-md-6">                                                            
                                                     </div>
                                                 </div>
                                             </div>
-                                        {# {{ form_end(form) }} #}
+                                        </div>
                                     {% elseif id == 36 %}{# cambio de dependencia #}
                                         <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
                                             <div class="row">
@@ -692,8 +688,7 @@
             </div>
             <div class="panel-footer">
                 <div class="pull-right">
-                    {# <button type="button" class="btn btn-primary" onclick="guardarRequisitos({{id}})">Guardar</button> #}
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-primary" onclick="verificarRequisitos({{id}})">Aceptar</button>
                 </div>
                 <div class="clearfix"></div>
             </div>

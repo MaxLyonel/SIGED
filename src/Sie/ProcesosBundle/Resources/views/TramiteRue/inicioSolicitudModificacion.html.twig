@@ -131,7 +131,8 @@
                                                             {% for n in ieNivel %}
                                                                 <li type=square>{{ n.nivelTipo.nivel }}</li> 
                                                                 {% set nivel = nivel|merge([n.nivelTipo.id]) %}
-                                                            {% endfor %}            
+                                                            {% endfor %}      
+                                                            <input type='hidden' id='nivel' value='{{nivel|json_encode}}'>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -480,7 +481,6 @@
                         $("#form_municipio2001").empty();
                         $("#form_canton2001").empty();
                         $("#form_localidad2001").empty();
-                        //$("#form_distrito").empty();
                         $("#form_zona").empty();
                         $("#form_direccion").empty();
                         $("#form_departamento2012").append('<option value="">Buscando...</option>');
@@ -494,12 +494,11 @@
                         $("#form_localidad2001").append('<option value="">Buscando...</option>');
                         $("#form_zona").val('');
                         $("#form_direccion").val('');
-                        //$("#form_distrito").append('<option value="">Buscando...</option>');
+                        $("#msg").empty();
                     },
                     success: function (data) {
                         //console.log(data);
                         if(data.msg){
-                            //$("#msgLe").append('hola');
                             $("#form_lejurisdiccion").val('');
                             $("#form_departamento2012").empty();
                             $("#form_departamento2012").append('<option value="">Seleccione...</option>');
@@ -512,7 +511,6 @@
                             $("#form_municipio2001").empty();
                             $("#form_canton2001").empty();
                             $("#form_localidad2001").empty();
-                            //$("#form_distrito").empty();
                             $("#form_zona").val('');
                             $("#form_direccion").val('');
                             $.each(data.lugar.c2012.dep.lista, function (i, value) {
@@ -521,7 +519,18 @@
                             $.each(data.lugar.c2001.dep.lista, function (i, value) {
                                 $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            alert(data.msg);
+                            $('#form_departamento2012').removeAttr( 'style' );
+                            $("#form_provincia2012").removeAttr( 'style' );
+                            $("#form_municipio2012").removeAttr( 'style' );
+                            $("#form_comunidad2012").removeAttr( 'style' );
+                            $("#form_departamento2001").removeAttr( 'style' );
+                            $("#form_provincia2001").removeAttr( 'style' );
+                            $("#form_municipio2001").removeAttr( 'style' );
+                            $("#form_canton2001").removeAttr( 'style' );
+                            $("#form_localidad2001").removeAttr( 'style' );
+                            $('#form_zona').removeAttr( 'style' );
+                            $('#form_direccion').removeAttr( 'style' );
+                            $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
                         }else{
                             $.each(data.lugar.c2012.dep.lista, function (i, value) {
                                 $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
@@ -550,9 +559,6 @@
                             $.each(data.lugar.c2001.loc.lista, function (i, value) {
                                 $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            /*$.each(data.lugar.distrito, function (i, value) {
-                                $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                            });*/
                             $("#form_departamento2012").val(data.lugar.c2012.dep.id);
                             $("#form_provincia2012").val(data.lugar.c2012.prov.id);
                             $("#form_municipio2012").val(data.lugar.c2012.mun.id);
@@ -562,14 +568,23 @@
                             $("#form_municipio2001").val(data.lugar.c2001.mun.id);
                             $("#form_canton2001").val(data.lugar.c2001.can.id);
                             $("#form_localidad2001").val(data.lugar.c2001.loc.id);
-                            //$("#form_distrito").val(data.lugar.iddistrito);
                             $("#form_zona").val(data.lugar.zona);
                             $("#form_direccion").val(data.lugar.direccion);
+                            $('#form_departamento2012').css('pointer-events','none');
+                            $("#form_provincia2012").css('pointer-events','none');
+                            $("#form_municipio2012").css('pointer-events','none');
+                            $("#form_comunidad2012").css('pointer-events','none');
+                            $("#form_departamento2001").css('pointer-events','none');
+                            $("#form_provincia2001").css('pointer-events','none');
+                            $("#form_municipio2001").css('pointer-events','none');
+                            $("#form_canton2001").css('pointer-events','none');
+                            $("#form_localidad2001").css('pointer-events','none');
+                            $('#form_zona').css('pointer-events','none');
+                            $('#form_direccion').css('pointer-events','none');
                         }
                     }   
                 });
             }else{
-                //$("#form_lejurisdiccion").val('');
                 $("#form_departamento2012").val('');
                 $('#form_departamento2012 option[value=""]').text("Seleccione departamento");
                 $("#form_provincia2012").empty();
@@ -581,14 +596,24 @@
                 $("#form_municipio2001").empty();
                 $("#form_canton2001").empty();
                 $("#form_localidad2001").empty();
-                //$("#form_distrito").empty();
                 $("#form_zona").val('');
-                $("#form_direccion").val('');   
+                $("#form_direccion").val('');
+                $('#form_departamento2012').removeAttr( 'style' );
+                $("#form_provincia2012").removeAttr( 'style' );
+                $("#form_municipio2012").removeAttr( 'style' );
+                $("#form_comunidad2012").removeAttr( 'style' );
+                $("#form_departamento2001").removeAttr( 'style' );
+                $("#form_provincia2001").removeAttr( 'style' );
+                $("#form_municipio2001").removeAttr( 'style' );
+                $("#form_canton2001").removeAttr( 'style' );
+                $("#form_localidad2001").removeAttr( 'style' );
+                $('#form_zona').removeAttr( 'style' );
+                $('#form_direccion').removeAttr( 'style' );
             }
 
         }
         function provincia(d,censo) {
-            //alert(d);
+            $("#form_lejurisdiccion").val('');
             $.ajax({
                 type: 'get',
                 url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
@@ -625,9 +650,13 @@
                         $("#form_localidad2001").empty();
                         //$("#form_distrito2001").empty();
                         $("#form_provincia2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_provincia2001").attr('required',true);
                         $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2001").attr('required',true);
                         $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").attr('required',true);
                         $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").attr('required',true);
                         //$("#form_distrito2001").append('<option value="">Seleccionar...</option>');
                         $.each(data.provincia, function (i, value) {
                             $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
@@ -641,8 +670,11 @@
                         $("#form_comunidad2012").empty();
                         //$("#form_distrito2012").empty();
                         $("#form_provincia2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_provincia2012").attr('required',true);
                         $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2012").attr('required',true);
                         $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").attr('required',true);
                         //$("#form_distrito2012").append('<option value="">Seleccionar...</option>');
                         $.each(data.provincia, function (i, value) {
                             $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
@@ -700,7 +732,6 @@
         }
 
         function comunidad(p,censo) {
-            alert(censo);
             $.ajax({
                 type: 'get',
                 url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p,'censo':censo}),
@@ -778,19 +809,35 @@
             });
         });
         
-        
         function buscarTramite(id,tipo){
             if(id){
                 if(id == 39){ //fusion
                     idtramite = 34; //ampliacion de nivel
+                    tipo = 'fusion'
                 }else{
                     idtramite = id;
                 }
                 var tramitetipo = $('#form_tramites option:selected').text();
-                if ( $("#fila_"+ idtramite).length ) {
+                if ( $("#fila_"+ idtramite).length && id==39 ) {
+                    alert('Elimine la Ampliación de Nivel para poder solictar la '+tramitetipo);
                     return false;
                 }
-                //alert ($('#form_tr').val());
+                if ( $("#fila_"+ idtramite).length ) {
+                    alert('Ya seleccionó '+tramitetipo);
+                    return false;
+                }
+                if ( idtramite == 34 ) {
+                    if(JSON.parse($('#nivel').val()).length == 3){
+                        alert('La Unidad Educativa ya cuenta con los tres nivel, por lo que no corresponde una Ampliación de Nivel.');
+                        return false;
+                    }
+                }
+                if ( idtramite == 35 ) {
+                    if(JSON.parse($('#nivel').val()).length == 1){
+                        alert('La Unidad Educativa solo cuenta con un Nivel, por lo que no corresponde una Reducción de Nivel.');
+                        return false;
+                    }
+                }
                 if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39) == false){
                     alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
                     return false;
@@ -846,56 +893,6 @@
                 });
             }
         }
-        /*$("#form_tramites").change(function(){
-            //alert('entra');  
-            var id = $(this).val();
-            if(id){
-                var tramitetipo = $('#form_tramites option:selected').text();
-                if ( $("#fila_"+ id).length ) {
-                    return false;
-                }
-                if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0){
-                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
-                    return false;
-                }
-                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(42) || JSON.parse($('#form_tr').val()).includes(43))){
-                    alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
-                    return false;
-                }
-                
-                var formData = {id: id,tramitetipo:tramitetipo,ie:'{{institucioneducativa.id}}'};
-                $.ajax({
-                    type: 'GET',
-                    url: "{{path('tramite_rue_busca_tarea')}}",
-                    data: formData,
-                    beforeSend: function () {
-                    },
-                    success: function (data) {
-                        var tr ='<tr id="fila_'+id+'"><td>'+tramitetipo+'</td>'+data;
-                        if(id == 44 && {{institucioneducativa.estadoinstitucionTipo.id}} == 10){
-                            tr = tr+'<td></td>';
-                        }else{
-                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+id+'" data-placement="top" title="Requisitos" onclick="requisitos('+id+')"><i class="glyphicon glyphicon-plus"></i></button>'+
-                                '</td>';
-                        }
-                        tr = tr+'<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+id+')"><i class="glyphicon glyphicon-minus"></i></button>'+
-                            '</td></tr>';
-                        $('#tabla').append(tr);
-                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+id+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
-                        if ($('#form_tr').val() == "") {
-                            trArray = [Number(id)];
-                        }else{
-                            trArray = JSON.parse($('#form_tr').val());
-                            trArray.push(Number(id));
-                        }
-                        //console.log(trArray);
-                        $('#form_tr').val(JSON.stringify(trArray));
-                        $('[data-toggle="tooltip"]').tooltip()
-                        //$('.container').css('background','rgba(0, 0, 0, 0.5)');
-                    },
-                });
-            }
-        });*/        
  
         function requisitos(id){
             //alert(id);
@@ -955,27 +952,75 @@
             });
         }
 
-        function guardarRequisitos(id){
-            //alert('entra');
-            //var fileName = $('#form_i_solicitud_ampliar').files[0].name;
-             //input.files[0]
-            //console.log( input.files[0]);
-            //data = new FormData();
-            //data.append( 'file', $( '#form_34_i_solicitud_ampliar' )[0].files[0] );
-            //var form = new FormData($('#form_requisitos_'+id));
-
-            //var paqueteDeDatos = new FormData($('#form_requisitos_'+id));
-            /* Todos los campos deben ser añadidos al objeto FormData. Para ello 
-            usamos el método append. Los argumentos son el nombre con el que se mandará el 
-            dato al script que lo reciba, y el valor del dato.
-            Presta especial atención a la forma en que agregamos el contenido 
-            del campo de fichero, con el nombre 'archivo'. */
-            //var form = $('#form_requisitos_'+id).serialize();
-            //paqueteDeDatos.append('i_solicitud_ampliar', $('#form_i_solicitud_ampliar')[0].files[0]);
-            //paqueteDeDatos.append('form', form);    
-            
-            //$('#form_form_'+id).val(paqueteDeDatos);
-            //console.log(paqueteDeDatos);
+        function verificarRequisitos(id){
+            //alert(id);
+            switch (id){
+                case 34:
+                    if($('#form_i_solicitud_ampliar').val()==''){
+                        alert('Debe adjuntar la solicitud de ampliacion de nivel.');
+                        return false;
+                    }else if($('.alquiler').is(':checked') == false){
+                        alert('Seleccione si la infraestructura es arrendada o no.');
+                        return false;
+                    }else if($('#form_i_alquiler_ampliar_0').is(':checked') == true && $('#form_i_contrato_ampliar').val()==''){
+                        alert('Debe adjuntar la copia notariada de arrendamiento.');
+                        return false;
+                    }else if($('#form_i_certificado_ampliar').is(':checked') == false){
+                        alert('Seleccione la presentación original de Certificado RUE.');
+                        return false;
+                    }else if($('#form_ii_planos_ampliar').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de planos arquitectónicos.');
+                        return false;
+                    }else if($('#form_ii_infra_ampliar').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la actualización de datos de infraestructura en el SIE.');
+                        return false;
+                    }else{
+                        alert('finalizo');
+                    }
+                    break;
+                case 35:
+                    if($('#form_i_solicitud_reducir').val()==''){
+                        alert('Debe adjuntar la solicitud de reducción de nivel.');
+                        return false;
+                    }else if($('.alquilerReducir').is(':checked') == false){
+                        alert('Seleccione si la infraestructura es arrendada o no.');
+                        return false;
+                    }else if($('#form_i_alquiler_reducir_0').is(':checked') == true && $('#i_contrato_reducir').val()==''){
+                        alert('Debe adjuntar la copia notariada de arrendamiento.');
+                        return false;
+                    }else if($('#form_i_certificado_reducir').is(':checked') == false){
+                        alert('Seleccione la presentación original de Certificado RUE.');
+                        return false;
+                    }else if($('#form_ii_planos_reducir').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de planos arquitectónicos.');
+                        return false;
+                    }else if($('#form_ii_infra_reducir').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la actualización de datos de infraestructura en el SIE.');
+                        return false;
+                    }else{
+                        alert('finalizo');
+                    }
+                    break;
+                case 36:
+                    break;
+                case 37:
+                    break;
+                case 38:
+                    break;
+                case 39:
+                    break;
+                case 40:
+                    break;
+                case 41:
+                    break;
+                case 42:
+                case 43:
+                    break;
+                case 44:
+                    break;
+                case 45:
+                    break;
+            }
         }
 
         function borrarFila(id){
@@ -1000,12 +1045,6 @@
                 $('#form_tr').val(JSON.stringify(array));
             }
         }
-        {#  $(document).on('click', '.borrar', function (event) {
-            console.log($(this).closest('tr').0.id);
-            event.preventDefault();
-            $(this).closest('tr').remove();
-            $(this).closest('div').remove();
-        }); #}
 
         function validar(){
             //alert($('#tabla tr').length);
