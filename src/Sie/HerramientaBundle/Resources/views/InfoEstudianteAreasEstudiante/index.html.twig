@@ -14,7 +14,7 @@
 
             	{% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
             	{# SOLO SE PODRA AGREGAR MATERIAS ANTES DEL PRIMER BIMESTRE #}
-				{% if areas.operativo < 3 and areas.areasFaltantes|length > 0 and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3  %}
+				{% if areas.operativo < 4 and areas.areasFaltantes|length > 0 and areas.gestion >= 2019 and areas.nivel == 13 and areas.grado >= 3  %}
         			<div class="btn-group" style="width:650px; float:right;">
         			    <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
         			        Agregar Área al estudiante <span class="caret"></span>
