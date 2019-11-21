@@ -54,13 +54,13 @@ class HomologacionController extends Controller {
         $rolUsuario = implode(',',array_column($roles,'id')); // PHP 5 >= 5.5.0, PHP 7
         $sistemaPermitido = '3'; // diplomas: 5, certificacion: 3
 
-        $servicioFunciones = $this->get('sie_app_web.funciones');
-        $validacionMenu = $servicioFunciones->controlaccesomenus($sistemaPermitido, $rolUsuario, $id_usuario, $route);
+        // $servicioFunciones = $this->get('sie_app_web.funciones');
+        // $validacionMenu = $servicioFunciones->controlaccesomenus($sistemaPermitido, $rolUsuario, $id_usuario, $route);
 
-        if (!$validacionMenu){
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-        }
+        // if (!$validacionMenu){
+        //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }
 
         return $this->render('SieTramitesBundle:Homologacion:cerAltIndex.html.twig', array(
                     'form' => $this->creaFormularioCertTecHomologacion('tramite_homologacion_certificacion_guarda', '', $gestionActual)->createView()

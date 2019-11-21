@@ -299,7 +299,7 @@ class DocumentoController extends Controller {
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo as pat on pat.id = e.pais_tipo_id
             where iec.gestion_tipo_id = ".$gestionId."::double precision and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
-            and td.tramite_estado_id <> 4 and td.flujo_proceso_id = 5
+            and td.tramite_estado_id <> 4 and (td.flujo_proceso_id = 5 or td.flujo_proceso_id = 9)
             order by e.paterno, e.materno, e.nombre
         ");
         $queryEntidad->execute();

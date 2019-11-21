@@ -84,7 +84,7 @@
                                             <td>{{ participante.documento_serie_id }}</td>
                                             <td>{{ participante.estadomatricula }}</td>
                                             <td>{{ participante.codigo_rude }}</td>
-                                            <td>{{ participante.carnet_identidad }}</td>
+                                            <td>{% if participante.carnet_identidad != "" %}{{ participante.carnet_identidad }}{% else %}{{ participante.documento_diplomatico }}{% endif %}</td>
                                             <td>{{ participante.paterno }}</td>
                                             <td>{{ participante.materno }}</td>
                                             <td>{{ participante.nombre }}</td>
@@ -101,6 +101,7 @@
                                                     {% set registro = false %}
                                                   {% endif %}
                                                 {% endif %}
+
                                                 {% if participante.documento_id != "" %}
                                                     <span class="label label-success rounded">Dip. {{ participante.documento_serie_id }}</span>
                                                     {% set registro = false %}
@@ -110,11 +111,12 @@
                                                         {% set registro = false %}
                                                     {% endif %}
                                                 {% endif %}
-
-
-                                                {% if participante.carnet_identidad == "" %}
-                                                    <span class="label label-danger rounded">Sin C.I.</span>
-                                                    {% set registro = false %}
+                                                
+                                                {% if participante.estadomatricula_inicio_tipo_id != 45 %}
+                                                    {% if participante.carnet_identidad == "" and participante.documento_diplomatico == "" %}
+                                                        <span class="label label-danger rounded">Sin C.I.</span>
+                                                        {% set registro = false %}
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if participante.fecha_nacimiento == "" %}

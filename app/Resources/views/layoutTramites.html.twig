@@ -481,10 +481,8 @@
                                     {% if ((rol13 or rol14 or rol16) or (rol10 or rol41 or rol43 or rol42 or rol8)) %}
                                         <li><a href="{{ path('tramite_detalle_diploma_humanistico_entrega_busca') }}">Entrega</a></li>
                                     {% endif %}
-                                    {% if (1 != 1) %}
-                                        {% if ((rol14 or rol16) or (rol43 or rol42 or rol8)) %}
-                                            <li><a href="{{ path('tramite_diploma_humanistico_registro_diplomatico_busca') }}">Registro Diplomatico</a></li>
-                                        {% endif %}
+                                    {% if ((rol14 or rol16) or (rol43 or rol42 or rol8)) %}
+                                        <li><a href="{{ path('tramite_diploma_humanistico_registro_diplomatico_busca') }}">Registro Diplomatico</a></li>
                                     {% endif %}
                                 </ul>
                             </li>  
@@ -546,6 +544,18 @@
                                 </a>
                                 <ul class="collapse nav">
                                     <li><a href="{{ path('tramite_homologacion_diploma_humanistico_index') }}">Diploma Humanístico</a></li>
+                                </ul>
+                            </li>  
+                        {% endif %}
+                        {% if ((rol16) or (rol42 or rol8)) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Convalidación</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="collapse nav">
+                                    <li><a href="{{ path('tramite_convalidacion_diploma_humanistico_index') }}">Diploma Humanístico</a></li>
                                 </ul>
                             </li>  
                         {% endif %}
