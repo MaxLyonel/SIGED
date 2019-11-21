@@ -1846,4 +1846,52 @@ class InfoEstudianteController extends Controller {
 
     }
 
+    public function closeOperativoSextoSeccAction(Request $request){
+        // get the send values
+        $sie     = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $em = $this->getDoctrine()->getManager();
+
+
+        try {
+
+            $responseOpe = false;//function db
+            $arrResponse = array();
+            // chek if the validation has error
+            if($responseOpe){
+                // no error save the success validation
+                $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+                $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
+                $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+                $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+                $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+                $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+                $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(4));
+                $institucioneducativaOperativoLog->setDescripcion('...');
+                $institucioneducativaOperativoLog->setEsexitoso('t');
+                $institucioneducativaOperativoLog->setEsonline('t');
+                $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
+                $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+                $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+                $em->persist($institucioneducativaOperativoLog);
+                $em->flush();
+
+            }else{
+                // error; send the errors to show on the view
+                $arrResponse = $responseOpe;
+            }
+            
+          
+            $msg = "Se cerro el operativo correctamente";
+        }catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+            $res = 0;
+            $msg = "Error al cerrar el Operativo";
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:closeOperativoSextoSecc.html.twig', array(
+                'arrResponse' => $arrResponse,
+        ));
+    }
+
 }
