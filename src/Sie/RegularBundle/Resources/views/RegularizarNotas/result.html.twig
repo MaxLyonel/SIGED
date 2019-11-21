@@ -80,6 +80,7 @@
                                         <th>Nivel</th>
                                         <th>Grado</th>
                                         <th>Paralelo</th>
+                                        <th>Estado Matrícula</th>
                                         <th>Regularizar Calificaciones</th>
                                     </tr>
                                     <tbody>
@@ -90,11 +91,12 @@
                                                 <td>{{ins.institucioneducativaCurso.nivelTipo.nivel}}</td>
                                                 <td>{{ins.institucioneducativaCurso.gradoTipo.grado}}</td>
                                                 <td>{{ins.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                                <td>{{ins.estadomatriculaTipo.estadomatricula}}</td>
                                                 <td>
                                                     
                                                         <form action="{{path('regularizarNotas_show')}}" method="post" style="display:inline-block">
                                                             <input type="hidden" name="idInscripcion" value="{{ins.id}}">
-                                                            <button type="submit" class="btn btn-xs btn-primaru"> <i class="fa fa-eye red"></i></button>
+                                                            <button type="submit" class="btn btn-xs btn-primary"> <i class="fa fa-edit"></i> Regularizar</button>
                                                         </form>
                                                     
                                                 </td>

@@ -67,8 +67,15 @@ class AreasEstudiante {
                         ->getResult();
 
         $areasEstudianteId = [0];
+        $especialidadEstudiante = '';
         foreach ($areasEstudiante as $ae) {
             $areasEstudianteId[] = $ae['idAsignatura'];
+            if ($ae['idAsignatura'] == 1039) {
+                $especialidad = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
+                if($especialidad){
+                    $especialidadEstudiante = $especialidad->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad();
+                }
+            }
         }
 
         $areasFaltantes = $this->em->createQueryBuilder()
@@ -108,7 +115,8 @@ class AreasEstudiante {
             'sie'=>$sie,
             'gestion'=>$gestion,
             'nivel'=>$nivel,
-            'grado'=>$grado
+            'grado'=>$grado,
+            'especialidadEstudiante'=>$especialidadEstudiante
         );
 
 

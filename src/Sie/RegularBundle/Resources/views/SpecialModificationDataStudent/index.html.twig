@@ -279,7 +279,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Adjuntar Solictud de modificaci&oacute;n</th>
+                                            <th>Adjuntar R.A./ R.A. SEGIP</th>
                                             <td colspan="4">
                                                 {# <input type="file" > #}
                                                 <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -810,7 +810,7 @@
                     /*validate the file attached*/
                     if (typeof this.informe != 'object') {
                         Swal.fire(
-                        'Adjuntar Resolucion',
+                        'Adjuntar Solicitud',
                         'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
                         'warning'
                         );

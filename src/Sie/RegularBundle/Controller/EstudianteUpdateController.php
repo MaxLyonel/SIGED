@@ -282,6 +282,7 @@ class EstudianteUpdateController extends Controller {
                     ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('readonly' => 'readonly', 'class' => 'form-control')))
+                    
                     // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                     ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormA()')))
                     ->getForm();
@@ -369,6 +370,7 @@ class EstudianteUpdateController extends Controller {
                     ->add('libro', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getLibro(), 'label' => 'Libro', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/_() ]{0,20}')))
                     ->add('partida', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getPartida(), 'label' => 'Partida', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                     ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
+                    ->add('pasaporte', 'text', array('label' => 'Pasaporte','required' => false, 'mapped' => false, 'data'=>$student->getPasaporte()))
                     // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                       ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormD()')))
                     ->getForm();
@@ -401,6 +403,7 @@ class EstudianteUpdateController extends Controller {
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
 
                     ->add('ci', 'hidden', array('label' => 'carnetIdentidad','required' => false, 'mapped'=>false, 'data'=>$student->getCarnetIdentidad()))
+
                     ->add('complemento', 'hidden', array('label' => 'complemento','required' => false, 'mapped'=>false, 'data'=>$student->getComplemento()))
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
 
@@ -412,7 +415,9 @@ class EstudianteUpdateController extends Controller {
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
                     ->add('obsAdicional', 'textarea', array('required' => false, 'data' => $student->getObservacionadicional(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
                     // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    
                      ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormB()')))
+                     
                     ->getForm();
         } else {
             //look for new values
@@ -500,6 +505,7 @@ class EstudianteUpdateController extends Controller {
                     ->add('libro', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getLibro(), 'label' => 'Libro', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/_() ]{0,20}')))
                     ->add('partida', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getPartida(), 'label' => 'Partida', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                     ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
+                    ->add('pasaporte', 'text', array('label' => 'Pasaporte','required' => false, 'mapped' => false, 'data'=>$student->getPasaporte()))
                     // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                     ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormE()')))
                     ->getForm();
@@ -619,6 +625,7 @@ class EstudianteUpdateController extends Controller {
                 ->add('partida', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getPartida(), 'label' => 'Partida', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                 ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                 ->add('isDoubleNcnal', 'checkbox', array('label'=>'Doble Nacionalidad','data'=>$student->getEsDobleNacionalidad(),'required' => false, 'mapped' => false,'attr' => array('class'   => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => ""),))
+                ->add('pasaporte', 'text', array('label' => 'Pasaporte','required' => false, 'mapped' => false, 'data'=>$student->getPasaporte()))
                 // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                   ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormC()')))
                 ->getForm();
@@ -855,6 +862,7 @@ class EstudianteUpdateController extends Controller {
         $entity->setPartida($form['partida']);
         $entity->setFolio($form['folio']);
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
+        $entity->setPasaporte($form['pasaporte']);
         //need to add 2 files too
         $em->flush();
         $updateDataStudent = (array)$entity;
@@ -943,6 +951,7 @@ class EstudianteUpdateController extends Controller {
         $entity->setPartida($form['partida']);
         $entity->setFolio($form['folio']);
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
+        $entity->setPasaporte($form['pasaporte']);
         //need to add 2 files too
         $em->flush();
         $updateDataStudent = (array)$entity;
@@ -1029,6 +1038,7 @@ class EstudianteUpdateController extends Controller {
         $entity->setPartida($form['partida']);
         $entity->setFolio($form['folio']);
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
+        $entity->setPasaporte($form['pasaporte']);
         //form 1 y form3
         //need to save departamento, etc,etc
         //need to add 2 files too

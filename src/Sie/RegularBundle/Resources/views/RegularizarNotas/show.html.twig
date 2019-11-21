@@ -152,10 +152,21 @@
                             {# VERIFICAMOS SI EL ESTADO DE MATRICULA ES DIFERENTE DE INSCRIPCION POSTBACHILLERATO #}
                             {% if notas.estadoMatricula != 29 %}
                                 
-                                {% if notas.cantidadFaltantes > 0 %}
+                                {% if notas.cantidadFaltantes > 0 or app.session.get('roluser') == 8 %}
                                     <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#F2591C; padding:20px">
-                                        <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
-                                         Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
+                                        {% if app.session.get('roluser') != 8 %}
+                                            <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
+                                            Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
+                                        {% else %}
+                                            <span style="color:#19322D; font-weight:bold;">Regularización de calificaciones</span>
+                                            <div style="float:right">
+                                                <form action="{{path('history_new_inscription_index')}}" method="post" style="display:inline-block">
+                                                    <input type="hidden" name="form[codigoRudeHistory]" value="{{estudiante.codigoRude}}">
+                                                    <button type="submit" class="btn-link" style="font-weight:bold"><i class="fa fa-hand-o-right"></i> Ir al Historial de Inscripciones</button>
+                                                </form>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        {% endif %}
                                     </div>
 
                                     <form action="{{path('regularizarNotas_update')}}" method="post" onsubmit="return validarRegistro();">
@@ -184,7 +195,7 @@
                                 {% endif %}
 
                             {% else %}
-                                {# SI ES POSTBACHILLERATO #}
+                                {# SI ES POSTBACHILLERATO 29 #}
                                 {% if notas.cantidadFaltantes > 0 %}
                                     <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#F2591C; padding:20px">
                                         <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
@@ -218,7 +229,6 @@
                                 
                             {% endif %}
                             
-
                         </div>
                     </div>
                 </div>

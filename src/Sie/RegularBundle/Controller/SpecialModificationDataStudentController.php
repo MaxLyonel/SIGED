@@ -61,9 +61,6 @@ class SpecialModificationDataStudentController extends Controller{
         $form['codeRude'] = $request->get('codigoRude');
         $form['arrOption'] = $request->get('arraOptionBuscar');
 
-// dump($request);
-// dump($form);
-// die;
         // $form = $request->get('form');
         // create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -99,8 +96,8 @@ class SpecialModificationDataStudentController extends Controller{
 
 
                 }else{
-                    $message = 'error general';
-                    $typeMessage = 'warning';
+                    $message = 'bien';
+                    $typeMessage = 'success';
                     $compleMessage = 'good';
                     $sw = true;
                 }
@@ -155,10 +152,13 @@ class SpecialModificationDataStudentController extends Controller{
             $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
         }
         // get departamento
+        // dump($objStudent->getPaisTipo());die;
         if($objStudent->getPaisTipo() !== null){
             if ($objStudent->getPaisTipo()->getId() == 1) {
                 $condition = array('lugarNivel' => 1, 'paisTipoId' => $objStudent->getPaisTipo()->getId());
-            } 
+            }else{
+                $condition = array('lugarNivel' => 8, 'id' => '0');
+            }
         }else{
             $condition = array('lugarNivel' => 8, 'id' => '79355');
         }
@@ -214,9 +214,7 @@ class SpecialModificationDataStudentController extends Controller{
 
                 ));
          $arrStudentModif = $arrStudent;
-        // dump($objStudent);
-        // dump($form);
-        // die;
+
         $response->setStatusCode(200);
         $response->setData(array(
             'codigoRude'=>$objStudent->getCodigoRude(),
@@ -235,12 +233,6 @@ class SpecialModificationDataStudentController extends Controller{
        
         return $response;        
 
-        // return $this->render('SieRegularBundle:SpecialModificationDataStudent:lookforStudent.html.twig', array(
-        //         'compleMessage' => $compleMessage,
-        //         'typeMessage'   => $typeMessage,
-        //         'form'          => $this->studentForm($objStudent)->createView(),
-        //         'sw'            => $sw,
-        // ));
     }
     /*
         select * from estudiante as e
@@ -297,14 +289,17 @@ class SpecialModificationDataStudentController extends Controller{
         $estudianteId = $arrData['estudianteId'];
         $carnetIdentidad=$arrData['carnetIdentidad'];
         $complemento=$arrData['complemento'];
-        $generoId=$arrData['generoId'];
+        $generoId=$arrData['generoTipoId'];
         $paterno=$arrData['paterno'];
         $materno=$arrData['materno'];
         $nombre=$arrData['nombre'];
         $fechaNacimiento=$arrData['fechaNacimiento'];
         $paisId=$arrData['paisId'];
+        $pais=$arrData['pais'];        
         $lugarNacTipoId=$arrData['lugarNacTipoId'];
+        $lugarNacTipo=$arrData['lugarNacTipo'];
         $lugarProvNacTipoId=$arrData['lugarProvNacTipoId'];
+        $lugarProvNacTipo=$arrData['lugarProvNacTipo'];
         $localidad=$arrData['localidad'];
         $oficialia=$arrData['oficialia'];
         $libro=$arrData['libro'];
@@ -364,8 +359,7 @@ class SpecialModificationDataStudentController extends Controller{
         //get the info data
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId);
         // update student data
-            
-                //GET OLD DATA
+        //GET OLD DATA
         $oldDataStudentPrev = array();
         if($carnetIdentidad!=$objStudent->getCarnetIdentidad()){
             $oldDataStudentPrev[] = array('campo'=>'Carnet Identidad','anterior'=>$objStudent->getCarnetIdentidad(),'nuevo'=>$carnetIdentidad);
@@ -388,17 +382,30 @@ class SpecialModificationDataStudentController extends Controller{
         if($fechaNacimiento!=$objStudent->getFechaNacimiento()->format('d-m-Y')){
             $oldDataStudentPrev[] = array('campo'=>'Fecha Nacimiento','anterior'=>$objStudent->getFechaNacimiento()->format('d-m-Y'),'nuevo'=>$fechaNacimiento);
         }
+
         if($paisId!=$objStudent->getPaisTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>$objStudent->getPaisTipo()->getId(),'nuevo'=>$paisId);
+            $oldDataStudentPrev[] = array('campo'=>'Pais','anterior'=>mb_strtoupper($objStudent->getPaisTipo()->getPais(), 'utf8'),'nuevo'=>mb_strtoupper($pais, 'utf8'));
         }
-        if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>$objStudent->getLugarNacTipo()->getId(),'nuevo'=>$lugarNacTipoId);
-        }
-        if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>$objStudent->getLugarProvNacTipo()->getId(),'nuevo'=>$lugarProvNacTipoId);
-        }
-        if($localidad!=$objStudent->getLocalidadNac()){
-            $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>$objStudent->getLocalidadNac(),'nuevo'=>$localidad);
+        if ($paisId==1) {
+            # code...
+            if($objStudent->getLugarNacTipo() !== null ){
+                if($lugarNacTipoId!=$objStudent->getLugarNacTipo()->getId()){
+                    $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>mb_strtoupper($objStudent->getLugarNacTipo()->getLugar(), 'utf8') ,'nuevo'=>mb_strtoupper($lugarNacTipo, 'utf8'));
+                }            
+            }else{
+                $oldDataStudentPrev[] = array('campo'=>'Departamento','anterior'=>'','nuevo'=>mb_strtoupper($lugarNacTipo, 'utf8'));
+
+            }
+            if($objStudent->getLugarProvNacTipo() !== null ){
+                if($lugarProvNacTipoId!=$objStudent->getLugarProvNacTipo()->getId()){
+                    $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>mb_strtoupper($objStudent->getLugarProvNacTipo()->getLugar(), 'utf8')  ,'nuevo'=>mb_strtoupper($lugarProvNacTipo, 'utf8'));
+                }
+            }else{
+                $oldDataStudentPrev[] = array('campo'=>'Provincia','anterior'=>'','nuevo'=>mb_strtoupper($lugarProvNacTipo, 'utf8'));
+            }
+            if($localidad!=$objStudent->getLocalidadNac()){
+                $oldDataStudentPrev[] = array('campo'=>'Localidad','anterior'=>mb_strtoupper($objStudent->getLocalidadNac(), 'utf8'),'nuevo'=>mb_strtoupper($localidad, 'utf8'));
+            }
         }
         if($oficialia!=$objStudent->getOficialia()){
             $oldDataStudentPrev[] = array('campo'=>'Oficialia','anterior'=>$objStudent->getOficialia(),'nuevo'=>$oficialia);
@@ -418,38 +425,17 @@ class SpecialModificationDataStudentController extends Controller{
 
         $oldDataStudent2 = json_encode($oldDataStudentPrev);
 
-        // $oldDataStudent2 =json_encode( array(
-        //     'carnetIdentidad'=>$objStudent->getCarnetIdentidad(),
-        //     'complemento'=>$objStudent->getComplemento(),
-        //     'genero'=>$objStudent->getGeneroTipo()->getGenero(),
-        //     'paterno'=>$objStudent->getPaterno(),
-        //     'materno'=>$objStudent->getMaterno(),
-        //     'nombre'=>$objStudent->getNombre(),
-        //     'fechaNacimiento'=>$objStudent->getFechaNacimiento(),
-        //     'pais'=>$objStudent->getPaisTipo()->getPais(),
-        //     'paisId'=>$objStudent->getPaisTipo()->getId(),
-        //     'lugarNacTipo'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getLugar(),
-        //     'lugarNacTipoId'=>($objStudent->getLugarNacTipo()==NULL)?'':$objStudent->getLugarNacTipo()->getId(),
-        //     'lugarProvNacTipo'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getLugar(),
-        //     'lugarProvNacTipoId'=>($objStudent->getLugarProvNacTipo()==NULL)?'':$objStudent->getLugarProvNacTipo()->getId(),
-        //     'localidad'=>$objStudent->getLocalidadNac(),
-        //     'oficialia'=>$objStudent->getOficialia(),
-        //     'libro'=>$objStudent->getLibro(),
-        //     'partida'=>$objStudent->getPartida(),
-        //     'folio'=>$objStudent->getFolio(),
-        //     'pasaporte'=>$objStudent->getPasaporte(),
-        // ));
-
                 // $oldDataStudent = clone $objStudent;
                 // $oldDataStudent = json_encode((array)$oldDataStudent);
-                
+                $arrUpdateFechaNac = explode('-', $fechaNacimiento);
+
                 $objStudent->setCarnetIdentidad($carnetIdentidad);
                 $objStudent->setComplemento($complemento);
                 $objStudent->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId) );
                 $objStudent->setPaterno(mb_strtoupper($paterno, 'utf8'));
                 $objStudent->setMaterno(mb_strtoupper($materno, 'utf8'));
                 $objStudent->setNombre(mb_strtoupper($nombre, 'utf8'));
-                $objStudent->getFechaNacimiento(new \DateTime($fechaNacimiento));
+                $objStudent->setFechaNacimiento(new \DateTime($arrUpdateFechaNac[2].'-'.$arrUpdateFechaNac[1].'-'. $arrUpdateFechaNac[0]));
                 $objStudent->setPasaporte($pasaporte);
                 
                 $objStudent->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId) );
@@ -464,12 +450,17 @@ class SpecialModificationDataStudentController extends Controller{
                 }else{
                     $objStudent->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11) );
                 }
-                $objStudent->setLocalidadNac($localidad);
+                if ($paisId==1) {
+                    $objStudent->setLocalidadNac($localidad);
+                }else{
+                    $objStudent->setLocalidadNac('');
+                }                
                 $objStudent->setOficialia($oficialia);
                 $objStudent->setLibro($libro);
                 $objStudent->setPartida($partida);
                 $objStudent->setFolio($folio);
                 //validate segip
+                $answerSegip = false;
                 if($carnetIdentidad){
                     // set the valuest to validate on segip
                     $arrParametros = array('complemento'=>$complemento,
@@ -487,16 +478,19 @@ class SpecialModificationDataStudentController extends Controller{
                 }else{
                     $objStudent->setSegipId(0);       
                 }
-
-
-
-
+                $em->persist($objStudent);
                 $em->flush();
+                
                 // save log data
                 $objEstudianteHistorialModificacion = new EstudianteHistorialModificacion();
                 $objEstudianteHistorialModificacion->setDatoAnterior($oldDataStudent2);
                 $objEstudianteHistorialModificacion->setResolucion($resolucionAdm);
-                $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($fecharesolAdm));
+                if(isset($fecharesolAdm) && $fecharesolAdm!=''){   
+                    $arrfecharesolAdm = explode('-', $fecharesolAdm);
+                    $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime($arrfecharesolAdm[2].'-'.$arrfecharesolAdm[1].'-'. $arrfecharesolAdm[0]));
+                }else{
+                    $objEstudianteHistorialModificacion->setFechaResolucion(new \DateTime('0001-01-01'));
+                }
                 $objEstudianteHistorialModificacion->setJustificacion($justificativo);
                 $objEstudianteHistorialModificacion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudianteId));
                 $objEstudianteHistorialModificacion->setFechaRegistro(new \DateTime('now'));
@@ -623,11 +617,11 @@ class SpecialModificationDataStudentController extends Controller{
                 ->setParameter('id', trim($data['codeRude']));
         if(!$sw){
             $query = $query
-            ->andwhere('iec.nivelTipo = :nivel')
-            ->andwhere('iec.gradoTipo = :grado')
+            ->andwhere('iec.nivelTipo IN (:nivel)')
+            ->andwhere('iec.gradoTipo IN (:grado)')
             ->andwhere('ei.estadomatriculaTipo IN (:mat)')
-            ->setParameter('nivel', 13)
-            ->setParameter('grado', 6) 
+            ->setParameter('nivel', array(3,13))
+            ->setParameter('grado', array(4,6) ) 
             ->setParameter('mat', array( 5,26,55,57,58)) ;
         }
         $query = $query            
@@ -635,7 +629,24 @@ class SpecialModificationDataStudentController extends Controller{
                 ->getQuery();
 
         $objInfoInscription = $query->getResult();
-       
+        
+        if(!$sw && sizeof($objInfoInscription)>0){
+
+            if($objInfoInscription[0]['nivelId'] == 13){
+                if($objInfoInscription[0]['gradoId']==6){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            if($objInfoInscription[0]['nivelId'] == 3){
+                if($objInfoInscription[0]['gradoId']==4){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
         return  $objInfoInscription;
     }
 

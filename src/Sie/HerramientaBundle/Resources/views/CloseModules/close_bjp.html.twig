@@ -35,7 +35,8 @@
             <form action="{{path('herramienta_info_estudiante_bjp_print_reporte')}}" method="post">
                 <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                 <input type="hidden" name="gestion" value="{{gestion}}">
-                <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-save"></i> Generar Reporte de Información</button>
+                <input type="hidden" name="pagoTipo" value="0">
+                <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-save"></i> Generar Reporte de Información (En plazo)</button>
             </form>
           </div>
         </div>
@@ -43,7 +44,7 @@
         <div class="row">
             <div class="col-lg-4 col-lg-offset-4">
                 <div class="callout callout-info text-justify">
-                    <strong>Información!</strong> El registro de rezagados durante la gestión <strong>"{{gestion}}"</strong> para la U.E. <strong>"{{institucion.id}} - {{institucion.institucioneducativa}}"</strong> se puede realizar a través del siguiente enlace:
+                    <strong>¡Información!</strong> El registro de rezagados durante la gestión <strong>"{{gestion}}"</strong> para la U.E. <strong>"{{institucion.id}} - {{institucion.institucioneducativa}}"</strong> se puede realizar a través del siguiente enlace:
                 </div>
             </div>
         </div>
@@ -54,7 +55,13 @@
                     <input type="hidden" name="gestion" value="{{gestion}}">
                     <input type="hidden" name="pagoTipo" value="1">
                     <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-edit"></i> Registrar rezagados</button>
-              </form>
+                </form>
+                <form action="{{path('herramienta_info_estudiante_bjp_print_reporte')}}" method="post">
+                    <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                    <input type="hidden" name="gestion" value="{{gestion}}">
+                    <input type="hidden" name="pagoTipo" value="1">
+                    <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-save"></i> Generar Reporte de Información (rezagados)</button>
+                </form>
             </div>
         </div>
     </div>
