@@ -117,7 +117,7 @@
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
-                                                                        {% if estado == true %}
+¡                                                                        {% if estado == true and app.session.get('currentyear') == 2019 %}
                                                                             {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
                                                                                 
                                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
