@@ -3949,7 +3949,7 @@ class TramiteController extends Controller {
                     select e.id as estudianteId, ei.id as estudianteInscripcionId, iec.gestion_tipo_id from estudiante as e
                     inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges."
+                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges." and ei.estadomatricula_tipo_id in (5,55)
                     and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and iec.grado_tipo_id=3) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=5 and iec.grado_tipo_id=2) else iec.nivel_tipo_id=13 and iec.grado_tipo_id=6 end
                 ");
                 $query->execute();
