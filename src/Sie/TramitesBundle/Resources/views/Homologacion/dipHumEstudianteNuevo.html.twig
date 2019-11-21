@@ -1,0 +1,337 @@
+<div class="col-xs-12 col-lg-12" id="message">
+
+</div>
+<div class="col-xs-12 col-lg-12">
+    <div class="panel panel-icon panel-teal">
+        {{form_start(formDatoPersonal, { 'attr': {'id': 'formEstudianteDatoPersonal', 'data-toggle': 'validator','role': "form"} } )}}
+            <div class="panel-heading">
+                Dato personal
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        {{form_label(formDatoPersonal.ci)}}
+                        {{form_widget(formDatoPersonal.ci)}}
+                    </div>
+                    <div class="col-md-2">
+                        {{form_label(formDatoPersonal.complemento)}}
+                        {{form_widget(formDatoPersonal.complemento)}}
+                    </div>
+                    <div class="col-md-2">
+                        {{form_label(formDatoPersonal.expedido)}}
+                        {{form_widget(formDatoPersonal.expedido)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.pasaporte)}}
+                        {{form_widget(formDatoPersonal.pasaporte)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.generoTipo)}}
+                        {{form_widget(formDatoPersonal.generoTipo)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.paterno)}}
+                        {{form_widget(formDatoPersonal.paterno)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.materno)}}
+                        {{form_widget(formDatoPersonal.materno)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.nombre)}}
+                        {{form_widget(formDatoPersonal.nombre)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.fnacimiento)}}
+                        <div id="sandbox-container">
+                            {{form_widget(formDatoPersonal.fnacimiento)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.pais)}}
+                        {{form_widget(formDatoPersonal.pais,{'attr':{'onchange':'dep(this.value)'} })}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.departamento)}}
+                        {{form_widget(formDatoPersonal.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.provincia)}}
+                        {{form_widget(formDatoPersonal.provincia)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.localidad)}}
+                        {{form_widget(formDatoPersonal.localidad)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.oficialia)}}
+                        {{form_widget(formDatoPersonal.oficialia)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.libro)}}
+                        {{form_widget(formDatoPersonal.libro)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.partida)}}
+                        {{form_widget(formDatoPersonal.partida)}}
+                    </div>
+                    <div class="col-md-3">
+                        {{form_label(formDatoPersonal.folio)}}
+                        {{form_widget(formDatoPersonal.folio)}}
+                    </div>
+                </div>
+            </div>
+        {{form_end(formDatoPersonal)}}
+    </div>
+</div>
+
+<div class="col-xs-12 col-lg-12">
+    <div class="panel panel-icon panel-teal">
+        {{form_start(formDatoAcademico, { 'attr': {'id': 'formEstudianteDatoAcademico', 'data-toggle': 'validator','role': "form"} } )}}
+            <div class="panel-heading">
+                Dato Academico
+            </div>
+            <div class="panel-body">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{form_label(formDatoAcademico.gestion)}}
+                            {{form_widget(formDatoAcademico.gestion)}}
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(formDatoAcademico.institucionEducativa)}}
+                            {{form_widget(formDatoAcademico.institucionEducativa)}}
+                        </div>
+                        <div class="col-md-12">
+                            {{form_label(formDatoAcademico.institucionEducativaName)}}
+                            {{form_widget(formDatoAcademico.institucionEducativaName)}}
+                        </div>
+                        <div class="col-md-12">
+                            {{form_label(formDatoAcademico.nivel)}}
+                            {{form_widget(formDatoAcademico.nivel)}}
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(formDatoAcademico.grado)}}
+                            {{form_widget(formDatoAcademico.grado)}}
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(formDatoAcademico.paralelo)}}
+                            {{form_widget(formDatoAcademico.paralelo)}}
+                        </div>
+                        <div class="col-md-12">
+                            {{form_label(formDatoAcademico.turno)}}
+                            {{form_widget(formDatoAcademico.turno)}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                <div class="fileinput-preview thumbnail col-md-12" style="height: 300px;" data-trigger="fileinput" >                                    
+                                </div>
+                                <div>
+                                    <span class="btn btn-info btn-file">
+                                        <span class="fileinput-new col-sm-6">Seleccionar Diploma</span>
+                                        <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                        {{ form_widget(formDatoAcademico.documento, { 'attr': {'class': 'col-sm-12', 'accept':'image/*'} }) }} 
+                                    </span>
+                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-12" id="formFooter">
+                        {{ form_widget(formDatoAcademico.guardar,{'id':'formBtnEstudianteGuardar', 'attr':{'class':'btn btn-primary col-md-12' } } ) }}
+                    </div>
+                </div>
+            </div>
+        {{form_end(formDatoAcademico)}}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){ 
+        $("#formBtnEstudianteGuardar").click(function () {
+
+            var botonSubmit = $(this);
+
+            if($('#form_ci').val() === "" && $('#form_pasaporte').val() === ""){
+                alert("Debe ingresar la cédula de identidad o pasaporte del bachiller");
+                $('#form_ci').focus();
+                return false;
+            }
+
+            if($('#form_pais').val() === "" || $('#form_pais').val() === 0 || $('#form_pais').val() === "0"){
+                alert("Debe ingresar el pais de nacimiento del bachiller");
+                $('#form_pais').focus();
+                return false;
+            }
+
+            if($('#form_fnacimiento').val() === ""){
+                alert("Debe ingresar la fecha de nacimiento del bachiller");
+                $('#form_fnacimiento').focus();
+                return false;
+            }
+
+            if($('#form_pais').val() === "1" || $('#form_pais').val() === 1){
+                if($('#form_departamento').children('option').length == 0 || $('#form_departamento').val() === ""){
+                    alert("Debe ingresar el departamento de nacimiento del bachiller");
+                    $('#form_departamento').focus();
+                    return false;
+                }
+                if($('#form_provincia').children('option').length == 0 || $('#form_provincia').val() === ""){
+                    alert("Debe ingresar la provincia de nacimiento del bachiller");
+                    $('#form_provincia').focus();
+                    return false;
+                }
+                if($('#form_localidad').val() === ""){
+                    alert("Debe ingresar el localidad de nacimiento del bachiller");
+                    $('#form_localidad').focus();
+                    return false;
+                }
+            }
+
+            if($('#form_institucionEducativa').is(':disabled') == false){
+                if($('#form_institucionEducativa').val() === ""){
+                    alert("Debe ingresar la institución educativa");
+                    return false;
+                }
+            }
+            
+            if($('#form_institucionEducativaName').val() === ""){
+                alert("Debe ingresar una institución educativa válida");
+                return false;
+            }
+
+            if($('#form_documento').val() === ""){
+                alert("Debe ingresar el diploma de bachiller");
+                return false;
+            }
+
+            $(this).hide();   
+
+            var form = $('#formEstudianteDatoPersonal, #formEstudianteDatoAcademico').serialize();            
+            //$(".fileinput-preview").empty();
+            var content = $("#formContent").html();
+            //var formFooter = $("#formFooter").html();
+
+            var form1 = $('#formEstudianteDatoPersonal').serializeArray();
+            //var formData1 = new FormData(form1);
+            var form2 = $('#formEstudianteDatoAcademico')[0];
+            var formData2 = new FormData(form2);
+            //var formData = $.extend(true,formData2, formData1);
+            var formData = formData2;
+            for(var i=0; i<form1.length; i++){
+                formData.append(form1[i].name, form1[i].value)
+            }
+            $.ajax({
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: Routing.generate('tramite_homologacion_diploma_humanistico_estudiante_guarda'),
+                beforeSend: function () {
+                    $("#message").empty();        
+                    $("#message").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#message").empty();
+                    if (data.estado){
+                        $("#formContent").empty();
+                        $("#formContent").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg+'</div>');
+                    } else {
+                        botonSubmit.show();   
+                        $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg+'</div>');
+                    }
+                },
+                error: function(error){
+                    botonSubmit.show(); 
+                    $("#message").empty(); 
+                    $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+                },
+            });
+
+            return false;
+        });
+
+        $("#form_institucionEducativa").focusout(function () {
+            if ($('#form_institucionEducativa').val().length > 7) {
+                ges = $('#form_gestion').val();
+                ie = $('#form_institucionEducativa').val();
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_homologacion_diploma_humanistico_findIE', {'ges': ges,'id': ie}),
+                    beforeSend: function () {
+                        $("#form_institucionEducativaName").val('');
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+                    }
+                });
+            } else {
+                $("#form_institucionEducativaName").val('');
+                
+            }
+        });
+
+        $("#form_gestion").change(function () {
+            ges = $('#form_gestion').val();
+            var contentGrado = $("#form_grado").html();
+            var contentNivel = $("#form_nivel").html();
+            $("#form_gestion option[value="+ges+"]").attr("selected",true);
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_homologacion_diploma_humanistico_gestion_cambia'),
+                data: {'ges':ges},
+                beforeSend: function () {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Cargando...</option>');
+                    $("#form_nivel").empty();
+                    $("#form_nivel").append('<option value="">Cargando...</option>');
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    for (var i in data.grados) {
+                        $("#form_grado").append('<option value="' + data.grados[i].id + '">' + data.grados[i].grado + '</option>');
+                    }
+                    $("#form_nivel").empty();
+                    for (var i in data.grados) {
+                        $("#form_nivel").append('<option value="' + data.niveles[i].id + '">' + data.niveles[i].nivel + '</option>');
+                    }
+                },
+                error: function(error){
+                    $("#form_grado").empty();
+                    $("#form_grado").html(contentGrado);
+                    $("#form_nivel").empty();
+                    $("#form_nivel").html(contentNivel);
+                },
+            });
+            
+        });
+
+        $("#form_documento").on('change', function () {
+            var fileNombre = this.files[0].name;
+            var ext = fileNombre.split('.').pop();
+            switch(ext){
+                case 'jpg': break;
+                case 'jpeg': break;
+                case 'png': break;
+                default:
+                    alert("El archivo debe se una imagen en formato (jpg, jpeg, png)");
+                    this.value="";
+            }
+        });
+    });
+</script>
