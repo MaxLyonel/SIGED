@@ -408,7 +408,7 @@ class WfTramiteController extends Controller
         $form = $this->createFormBuilder()
             //->setAction($this->generateUrl('flujoproceso_guardar'))
             ->add('proceso','entity',array('label'=>'Trámite','required'=>true,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:FlujoTipo','query_builder'=>function(EntityRepository $ft){
-                return $ft->createQueryBuilder('ft')->where('ft.id > 5')->andWhere("ft.obs like '%ACTIVO%'")->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione trámite'))
+                return $ft->createQueryBuilder('ft')->where('ft.id > 5')->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione trámite'))
             ->add('tramite','text',array('label'=>'Nro. de Trámite','required'=>true,'attr' => array('placeholder'=>'Nro. de trámite','class'=>'form-control validar')))
             ->getForm();
         return $form;
