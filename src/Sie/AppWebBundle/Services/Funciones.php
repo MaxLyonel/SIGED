@@ -1611,6 +1611,6 @@ class Funciones {
             $sextoCerrado = true;
         }
 
-        return true;//$sextoCerrado;
+        return $sextoCerrado;
     }
 }
