@@ -105,7 +105,7 @@ class InfoEstudianteNotasController extends Controller {
             =            VALIDACION DE CIERRE DE CALIFICACIONES SEXTO DE SECUNDARIA            =
             ==================================================================================*/
             
-            if($gestion >= 2019 and $operativo == 4 and $grado == 6){
+            if($gestion >= 2019 and $operativo == 4 and $nivel == 13 and $grado == 6){
                 $validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
                 if($validacionSexto){
                     $vista = 0;
