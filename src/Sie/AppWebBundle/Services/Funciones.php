@@ -1586,4 +1586,101 @@ class Funciones {
 
         return $response;
     }
+
+    public function getEstudianteBachillerHumanisticoAlternativa($institucioneducativa_id, $gestion_id, $genero_id){
+        $query = $this->em->getConnection()->prepare("
+            select
+            distinct on (nt.id, nt.nivel, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre)
+            dt.id as dependencia_tipo_id,
+            dt.dependencia,
+            oct.id as orgcurricular_tipo_id,
+            oct.orgcurricula,
+            ie.le_juridicciongeografica_id,
+            ie.id as institucioneducativa_id,
+            ie.institucioneducativa,
+            ies.gestion_tipo_id,
+            nt.id as nivel_tipo_id,
+            nt.nivel,
+            ct.id as ciclo_tipo_id,
+            ct.ciclo,
+            sat.codigo as grado_tipo_id,  
+            sat.acreditacion as grado,  
+            pt.id as paralelo_tipo_id,
+            pt.paralelo,
+            tt.id as turno_tipo_id,
+            tt.turno,
+            pet.id as periodo_tipo_id,
+            pet.periodo,
+            e.id as estudiante_id,
+            e.codigo_rude,
+            e.carnet_identidad as carnet,  
+            e.complemento,
+            cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
+            e.pasaporte,
+            e.paterno,
+            e.materno,
+            e.nombre,
+            e.segip_id,
+            gt.id as genero_tipo_id,
+            gt.genero,
+            to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,  
+            e.localidad_nac,
+            emt.id as estadomatricula_tipo_id,
+            emt.estadomatricula,
+            ei.id as estudiante_inscripcion_id,  
+            case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
+            CASE
+            WHEN sfat.codigo = 13 THEN
+            'Regular Humanística'
+            WHEN sfat.codigo = 15 THEN
+            'Alternativa Humanística'
+            WHEN sfat.codigo > 17 THEN
+            'Alternativa Técnica'
+            END AS subsistema,
+            e.lugar_prov_nac_tipo_id as lugar_nacimiento_id,
+            lt2.codigo as depto_nacimiento_id,
+            lt2.lugar as depto_nacimiento,
+            t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id, e.segip_id
+            , eid.documento_numero as documento_diplomatico
+            , ei.estadomatricula_inicio_tipo_id as estadomatricula_inicio_tipo_id
+            from superior_facultad_area_tipo as sfat
+            inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+            inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+            inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+            inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+            inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+            inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+            inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+            inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+            inner join estudiante as e on ei.estudiante_id=e.id
+            inner join estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+            left JOIN lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
+            left JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+            left join pais_tipo pat on pat.id = e.pais_tipo_id
+            inner join institucioneducativa as ie on ie.id = siea.institucioneducativa_id
+            inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+            inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+            inner join orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
+            inner join nivel_tipo as nt on nt.id = sfat.codigo
+            inner join ciclo_tipo as ct on ct.id = iec.ciclo_tipo_id
+            inner join paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+            inner join turno_tipo as tt on tt.id = iec.turno_tipo_id
+            inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
+            inner join genero_tipo as gt on gt.id = e.genero_tipo_id
+            left join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (1) and t.esactivo = 't'
+            left join documento as d on d.tramite_id = t.id and documento_tipo_id in (1,9) and d.documento_estado_id = 1
+            left join estudiante_inscripcion_diplomatico as eid on eid.estudiante_inscripcion_id = ei.id
+            where ie.id = ".$institucioneducativa_id."
+            and ies.gestion_tipo_id = ".$gestion_id."
+            and gt.id = ".$genero_id."        
+            and sfat.codigo in (15) and sat.codigo in (3) and sest.codigo in (2)
+            and ei.estadomatricula_tipo_id in (4,5,55)
+            order by nt.id, nt.nivel, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc        
+        ");
+
+        $query->execute();
+        $bachilleres = $query->fetchAll();
+
+        return $bachilleres;
+    }
 }
