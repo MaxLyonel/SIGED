@@ -62,7 +62,7 @@
                                                         {{ form_label(form.i_solicitud_ampliar) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_solicitud_ampliar) }}
+                                                        {{ form_widget(form.i_solicitud_ampliar,{'attr':{'class':'req34'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -72,7 +72,7 @@
                                                     <div class="col-md-6">
                                                         {% for a in form.i_alquiler_ampliar %}
                                                             <div class="col-md-3 rdio rdio-primary circle">
-                                                                {{ form_widget(a,{'attr':{'class':'alquiler'}}) }}
+                                                                {{ form_widget(a,{'attr':{'class':'alquiler req34'}}) }}
                                                                 {{ form_label(a) }}
                                                             </div>
                                                         {% endfor %}
@@ -83,14 +83,14 @@
                                                         {{ form_label(form.i_contrato_ampliar) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_contrato_ampliar) }}
+                                                        {{ form_widget(form.i_contrato_ampliar,{'attr':{'class':'req34'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     {# <div class="col-md-6">
                                                     </div> #}
                                                     <div class="col-md-6 ckbox ckbox-primary">
-                                                        {{ form_widget(form.i_certificado_ampliar) }}&nbsp;
+                                                        {{ form_widget(form.i_certificado_ampliar,{'attr':{'class':'req34'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificado_ampliar) }}                                                            
                                                     </div>
                                                 </div>
@@ -100,7 +100,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12 ckbox ckbox-primary">
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.ii_planos_ampliar) }}&nbsp;
+                                                        {{ form_widget(form.ii_planos_ampliar,{'attr':{'class':'req34'}}) }}&nbsp;
                                                         {{ form_label(form.ii_planos_ampliar) }}
                                                     </div>
                                                     <div class="col-md-6">
@@ -108,7 +108,7 @@
                                                 </div>
                                                 <div class="form-group col-md-12 ckbox ckbox-primary">
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.ii_infra_ampliar) }}&nbsp;
+                                                        {{ form_widget(form.ii_infra_ampliar,{'attr':{'class':'req34'}}) }}&nbsp;
                                                         {{ form_label(form.ii_infra_ampliar) }}
                                                     </div>
                                                     <div class="col-md-6">                                                            
@@ -124,7 +124,7 @@
                                                         {{ form_label(form.i_solicitud_reducir) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_solicitud_reducir) }}
+                                                        {{ form_widget(form.i_solicitud_reducir,{'attr':{'class':'req35'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -134,7 +134,7 @@
                                                     <div class="col-md-6">
                                                         {% for a in form.i_alquiler_reducir %}
                                                             <div class="col-md-3 rdio rdio-primary circle">
-                                                                {{ form_widget(a,{'attr':{'class':'alquilerReducir'}}) }}
+                                                                {{ form_widget(a,{'attr':{'class':'alquilerReducir req35'}}) }}
                                                                 {{ form_label(a) }}
                                                             </div>
                                                         {% endfor %}
@@ -145,14 +145,14 @@
                                                         {{ form_label(form.i_contrato_reducir) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_contrato_reducir) }}
+                                                        {{ form_widget(form.i_contrato_reducir,{'attr':{'class':'req35'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     {# <div class="col-md-6">
                                                     </div> #}
                                                     <div class="col-md-6 ckbox ckbox-primary">
-                                                        {{ form_widget(form.i_certificado_reducir) }}&nbsp;
+                                                        {{ form_widget(form.i_certificado_reducir,{'attr':{'class':'req35'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificado_reducir) }}                                                            
                                                     </div>
                                                 </div>
@@ -162,7 +162,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12 ckbox ckbox-primary">
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.ii_planos_reducir) }}&nbsp;
+                                                        {{ form_widget(form.ii_planos_reducir,{'attr':{'class':'req35'}}) }}&nbsp;
                                                         {{ form_label(form.ii_planos_reducir) }}
                                                     </div>
                                                     <div class="col-md-6">
@@ -170,7 +170,7 @@
                                                 </div>
                                                 <div class="form-group col-md-12 ckbox ckbox-primary">
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.ii_infra_reducir) }}&nbsp;
+                                                        {{ form_widget(form.ii_infra_reducir,{'attr':{'class':'req35'}}) }}&nbsp;
                                                         {{ form_label(form.ii_infra_reducir) }}
                                                     </div>
                                                     <div class="col-md-6">                                                            
@@ -187,14 +187,14 @@
                                                             {{ form_label(form.i_solicitud_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_solicitud_dependencia) }}
+                                                            {{ form_widget(form.i_solicitud_dependencia,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     {% else %}
                                                         <div class="col-md-6">
                                                             {{ form_label(form.i_informe_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_informe_dependencia) }}
+                                                            {{ form_widget(form.i_informe_dependencia,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     {% endif %}
                                                 </div>
@@ -204,12 +204,12 @@
                                                             {{ form_label(form.i_actafundacion) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_actafundacion) }}
+                                                            {{ form_widget(form.i_actafundacion,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_folio_dependencia) }}&nbsp;
+                                                            {{ form_widget(form.i_folio_dependencia,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_folio_dependencia) }}                                                            
                                                         </div>
                                                     </div>
@@ -218,7 +218,7 @@
                                                             {{ form_label(form.i_nrofolio_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nrofolio_dependencia) }}
+                                                            {{ form_widget(form.i_nrofolio_dependencia,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -228,7 +228,7 @@
                                                         <div class="col-md-6">
                                                             {% for a in form.i_esalquiler_dependencia %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a, {'attr':{'class':'alquilerDependencia'}}) }}
+                                                                    {{ form_widget(a, {'attr':{'class':'alquilerDependencia req36'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
@@ -239,7 +239,7 @@
                                                             {{ form_label(form.i_contrato_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_contrato_dependencia) }}
+                                                            {{ form_widget(form.i_contrato_dependencia,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -247,7 +247,7 @@
                                                             {{ form_label(form.i_convenio_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_convenio_dependencia) }}
+                                                            {{ form_widget(form.i_convenio_dependencia,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -255,7 +255,7 @@
                                                             {{ form_label(form.i_certificacion_gam) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_certificacion_gam) }}
+                                                            {{ form_widget(form.i_certificacion_gam,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -263,36 +263,36 @@
                                                             {{ form_label(form.i_certificacionde_convenio) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_certificacionde_convenio) }}
+                                                            {{ form_widget(form.i_certificacionde_convenio,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_convenio_administracion) }}&nbsp;
+                                                            {{ form_widget(form.i_convenio_administracion,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_convenio_administracion) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_acta_constitucion) }}&nbsp;
+                                                            {{ form_widget(form.i_acta_constitucion,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_acta_constitucion) }}                                                            
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_registro_culto) }}&nbsp;
+                                                            {{ form_widget(form.i_registro_culto,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_registro_culto) }}                                                            
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_org_nogubernamental) }}&nbsp;
+                                                            {{ form_widget(form.i_org_nogubernamental,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_org_nogubernamental) }}                                                            
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_form_fundaempresa) }}&nbsp;
+                                                            {{ form_widget(form.i_form_fundaempresa,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_form_fundaempresa) }}                                                            
                                                         </div>
                                                     </div>
@@ -302,7 +302,7 @@
                                                                 {{ form_label(form.nro_fundaempresa) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.nro_fundaempresa) }}
+                                                                {{ form_widget(form.nro_fundaempresa,{'attr':{'class':'req36'}}) }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -310,13 +310,13 @@
                                                                 {{ form_label(form.fecha_fundaempresa) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.fecha_fundaempresa) }}
+                                                                {{ form_widget(form.fecha_fundaempresa,{'attr':{'class':'req36'}}) }}
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_fotocopia_nit) }}&nbsp;
+                                                            {{ form_widget(form.i_fotocopia_nit,{'attr':{'class':'req36'}}) }}&nbsp;
                                                             {{ form_label(form.i_fotocopia_nit) }}                                                            
                                                         </div>
                                                     </div>
@@ -326,12 +326,12 @@
                                                                 {{ form_label(form.nit_dependencia) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.nit_dependencia) }}
+                                                                {{ form_widget(form.nit_dependencia,{'attr':{'class':'req36'}}) }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                                {{ form_widget(form.i_balance_apertura) }}&nbsp;
+                                                                {{ form_widget(form.i_balance_apertura,{'attr':{'class':'req36'}}) }}&nbsp;
                                                                 {{ form_label(form.i_balance_apertura) }}                                                            
                                                             </div>
                                                         </div>
@@ -341,7 +341,7 @@
                                                             {{ form_label(form.i_testimonioconvenio) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_testimonioconvenio) }}
+                                                            {{ form_widget(form.i_testimonioconvenio,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -349,13 +349,13 @@
                                                             {{ form_label(form.fecha_testimonioconvenio) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.fecha_testimonioconvenio) }}
+                                                            {{ form_widget(form.fecha_testimonioconvenio,{'attr':{'class':'req36'}}) }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.i_certificadorue_dependencia) }}&nbsp;
+                                                        {{ form_widget(form.i_certificadorue_dependencia,{'attr':{'class':'req36'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificadorue_dependencia) }}                                                        
                                                     </div>
                                                 </div>
@@ -369,13 +369,13 @@
                                                         {{ form_label(form.i_solicitud_cn) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_solicitud_cn) }}
+                                                        {{ form_widget(form.i_solicitud_cn,{'attr':{'class':'req37'}}) }}
                                                     </div>
                                                 </div>
                                                 {% if dependencia.id in [1,2] %}
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_ley_cn) }}&nbsp;
+                                                            {{ form_widget(form.i_ley_cn,{'attr':{'class':'req37'}}) }}&nbsp;
                                                             {{ form_label(form.i_ley_cn) }}                                                            
                                                         </div>
                                                     </div>
@@ -383,13 +383,13 @@
                                                 {% if dependencia.id in [2,3] %}
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_actaconstitucion_cn) }}&nbsp;
+                                                            {{ form_widget(form.i_actaconstitucion_cn,{'attr':{'class':'req37'}}) }}&nbsp;
                                                             {{ form_label(form.i_actaconstitucion_cn) }}                                                            
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_copianit_cn) }}&nbsp;
+                                                            {{ form_widget(form.i_copianit_cn,{'attr':{'class':'req37'}}) }}&nbsp;
                                                             {{ form_label(form.i_copianit_cn) }}                                                            
                                                         </div>
                                                     </div>
@@ -398,7 +398,7 @@
                                                             {{ form_label(form.i_nit_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nit_cn) }}
+                                                            {{ form_widget(form.i_nit_cn,{'attr':{'class':'req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -406,7 +406,7 @@
                                                             {{ form_label(form.i_nrotestimonio_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nrotestimonio_cn) }}
+                                                            {{ form_widget(form.i_nrotestimonio_cn,{'attr':{'class':'req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -414,12 +414,12 @@
                                                             {{ form_label(form.i_fecha_testimonio_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_fecha_testimonio_cn) }}
+                                                            {{ form_widget(form.i_fecha_testimonio_cn,{'attr':{'class':'req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_licenciafuncionamiento_cn) }}&nbsp;
+                                                            {{ form_widget(form.i_licenciafuncionamiento_cn,{'attr':{'class':'req37'}}) }}&nbsp;
                                                             {{ form_label(form.i_licenciafuncionamiento_cn) }}                                                            
                                                         </div>
                                                     </div>
@@ -427,7 +427,7 @@
                                                 {% if dependencia.id == 3 %}
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_form_fundaempresa_cn) }}&nbsp;
+                                                            {{ form_widget(form.i_form_fundaempresa_cn,{'attr':{'class':'req37'}}) }}&nbsp;
                                                             {{ form_label(form.i_form_fundaempresa_cn) }}                                                            
                                                         </div>
                                                     </div>
@@ -436,7 +436,7 @@
                                                             {{ form_label(form.i_nro_fundaempresa_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nro_fundaempresa_cn) }}
+                                                            {{ form_widget(form.i_nro_fundaempresa_cn,{'attr':{'class':'req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -444,13 +444,13 @@
                                                             {{ form_label(form.i_fecha_fundaempresa_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_fecha_fundaempresa_cn) }}
+                                                            {{ form_widget(form.i_fecha_fundaempresa_cn,{'attr':{'class':'req37'}}) }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.i_certificadorue_cn) }}&nbsp;
+                                                        {{ form_widget(form.i_certificadorue_cn,{'attr':{'class':'req37'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificadorue_cn) }}                                                            
                                                     </div>
                                                 </div>
@@ -459,7 +459,7 @@
                                                         {{ form_label(form.i_certdefuncion_cn) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_certdefuncion_cn) }}
+                                                        {{ form_widget(form.i_certdefuncion_cn,{'attr':{'class':'req37'}}) }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -472,7 +472,7 @@
                                                         {{ form_label(form.i_resolucion_jur) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_resolucion_jur) }}
+                                                        {{ form_widget(form.i_resolucion_jur,{'attr':{'class':'req38'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -480,7 +480,7 @@
                                                         {{ form_label(form.i_certificacion_jur) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_certificacion_jur) }}
+                                                        {{ form_widget(form.i_certificacion_jur,{'attr':{'class':'req38'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -490,7 +490,7 @@
                                                     <div class="col-md-6">
                                                         {% for a in form.i_area_jur %}
                                                             <div class="col-md-3 rdio rdio-primary circle">
-                                                                {{ form_widget(a,{'attr':{'class':'area_jur'}}) }}
+                                                                {{ form_widget(a,{'attr':{'class':'area_jur req38'}}) }}
                                                                 {{ form_label(a) }}
                                                             </div>
                                                         {% endfor %}
@@ -499,14 +499,14 @@
                                                 {% if dependencia.id == 2 %}
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                            {{ form_widget(form.i_cert_convenio_jur) }}&nbsp;
+                                                            {{ form_widget(form.i_cert_convenio_jur,{'attr':{'class':'req38'}}) }}&nbsp;
                                                             {{ form_label(form.i_cert_convenio_jur) }}                                                            
                                                         </div>
                                                     </div>
                                                 {% endif %}
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.i_certificadorue_jur) }}&nbsp;
+                                                        {{ form_widget(form.i_certificadorue_jur,{'attr':{'class':'req38'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificadorue_jur) }}                                                            
                                                     </div>
                                                 </div>
@@ -516,13 +516,13 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.ii_planos_jur) }}&nbsp;
+                                                        {{ form_widget(form.ii_planos_jur,{'attr':{'class':'req38'}}) }}&nbsp;
                                                         {{ form_label(form.ii_planos_jur) }}                                                            
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.ii_inventario_jur) }}&nbsp;
+                                                        {{ form_widget(form.ii_inventario_jur,{'attr':{'class':'req38'}}) }}&nbsp;
                                                         {{ form_label(form.ii_inventario_jur) }}                                                            
                                                     </div>
                                                 </div>
@@ -532,7 +532,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.iii_partemensual_jur) }}&nbsp;
+                                                        {{ form_widget(form.iii_partemensual_jur,{'attr':{'class':'req38'}}) }}&nbsp;
                                                         {{ form_label(form.iii_partemensual_jur) }}                                                            
                                                     </div>
                                                 </div>
@@ -560,7 +560,7 @@
                                                         {{ form_label(form.i_solicitud_infra) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_solicitud_infra) }}
+                                                        {{ form_widget(form.i_solicitud_infra,{'attr':{'class':'req41'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -568,7 +568,7 @@
                                                         {{ form_label(form.i_certificacion_infra) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_certificacion_infra) }}
+                                                        {{ form_widget(form.i_certificacion_infra,{'attr':{'class':'req41'}}) }}
                                                     </div>
                                                 </div>
                                                 {% if dependencia.id == 2 %}
@@ -577,7 +577,7 @@
                                                             {{ form_label(form.i_certificacionconvenio_infra) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_certificacionconvenio_infra) }}
+                                                            {{ form_widget(form.i_certificacionconvenio_infra,{'attr':{'class':'req41'}}) }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -586,12 +586,12 @@
                                                         {{ form_label(form.i_resolucion_infra) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_resolucion_infra) }}
+                                                        {{ form_widget(form.i_resolucion_infra,{'attr':{'class':'req41'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.i_certificadorue_infra) }}&nbsp;
+                                                        {{ form_widget(form.i_certificadorue_infra,{'attr':{'class':'req41'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificadorue_infra) }}                                                            
                                                     </div>
                                                 </div>
@@ -601,7 +601,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.ii_folio_infra) }}
+                                                        {{ form_widget(form.ii_folio_infra,{'attr':{'class':'req41'}}) }}
                                                         {{ form_label(form.ii_folio_infra) }}                                                            
                                                     </div>
                                                 </div>
@@ -610,12 +610,12 @@
                                                         {{ form_label(form.ii_nrofolio_infra) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.ii_nrofolio_infra) }}
+                                                        {{ form_widget(form.ii_nrofolio_infra,{'attr':{'class':'req41'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.ii_planos_infra) }}&nbsp;
+                                                        {{ form_widget(form.ii_planos_infra,{'attr':{'class':'req41'}}) }}&nbsp;
                                                         {{ form_label(form.ii_planos_infra) }}                                                            
                                                     </div>
                                                 </div>
@@ -629,7 +629,7 @@
                                                         {{ form_label(form.i_solicitud_cierre) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_solicitud_cierre) }}
+                                                        {{ form_widget(form.i_solicitud_cierre,{'attr':{'class':'req42'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -637,18 +637,18 @@
                                                         {{ form_label(form.i_resolucion_cierre) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_resolucion_cierre) }}
+                                                        {{ form_widget(form.i_resolucion_cierre,{'attr':{'class':'req42'}}) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.i_archivos_cierre) }}&nbsp;
+                                                        {{ form_widget(form.i_archivos_cierre,{'attr':{'class':'req42'}}) }}&nbsp;
                                                         {{ form_label(form.i_archivos_cierre) }}                                                            
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                        {{ form_widget(form.i_certificadorue_cierre) }}&nbsp;
+                                                        {{ form_widget(form.i_certificadorue_cierre,{'attr':{'class':'req42'}}) }}&nbsp;
                                                         {{ form_label(form.i_certificadorue_cierre) }}                                                            
                                                     </div>
                                                 </div>
@@ -706,6 +706,18 @@
 </div><!-- /.modal-dialog -->
 
 <script>
+    $(document).on('change','input[type="file"]',function(){
+        // this.files[0].size recupera el tamaño del archivo
+        // alert(this.files[0].size);
+        var fileName = this.files[0].name;
+        var fileSize = this.files[0].size;
+        var sizePermitido = 3 * (1024 * 1024)
+        if(fileSize > sizePermitido){
+            alert('El archivo adjunto no debe superar los 3MB');
+            this.value = '';
+            this.files[0].name = '';
+        }
+    });
     $(".alquiler").change(function () {	 
         if ($(this).val() == 'SI'){
             $('#contrato').show();
@@ -717,7 +729,6 @@
             $('#form_i_contrato_ampliar').val('');
         }
     });
-
     $(".alquilerDependencia").change(function () {	 
         if ($(this).val() == 'SI'){
             $('#contratoDependencia').show();
@@ -761,15 +772,41 @@
             $('#nitCn').hide();
         }
     });
-    $(".req45").click(function(){
-        alert('entra');
-        $('#validar45').val(0);
-        $('#msg45').empty();
+    $(".req34").click(function(){
+        $('#validar34').val(0);
+        $('#msg34').empty();
+    });
+    $(".req35").click(function(){
+        $('#validar35').val(0);
+        $('#msg35').empty();
     });
     $(".req36").click(function(){
-        alert('entra');
         $('#validar36').val(0);
         $('#msg36').empty();
     });
-    
+    $(".req37").click(function(){
+        $('#validar37').val(0);
+        $('#msg37').empty();
+    });
+    $(".req38").click(function(){
+        $('#validar38').val(0);
+        $('#msg38').empty();
+    });
+    $(".req41").click(function(){
+        $('#validar41').val(0);
+        $('#msg41').empty();
+    });
+    $(".req42").click(function(){
+        if($('#validar42').length == 1){
+            $('#validar42').val(0);
+            $('#msg42').empty();    
+        }else{
+            $('#validar43').val(0);
+            $('#msg43').empty();
+        }
+    });
+    $(".req45").click(function(){
+        $('#validar45').val(0);
+        $('#msg45').empty();
+    });    
 </script>
