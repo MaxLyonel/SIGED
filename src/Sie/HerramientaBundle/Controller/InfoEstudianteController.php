@@ -159,7 +159,7 @@ class InfoEstudianteController extends Controller {
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
         // set variables to show and ejecute the close operativo sexto fo secc 
-        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion);
+        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         // dump($arrLevelandGrado);die;
 
 
