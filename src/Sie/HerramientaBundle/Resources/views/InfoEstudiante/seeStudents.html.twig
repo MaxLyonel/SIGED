@@ -176,7 +176,7 @@
                                 </td>
                                 <td>
                                     {# AREAS ESTUDIANTE #}
-                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28] and operativo < 5)) and nivel == 13 and grado >= 3 %}
+                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
                                             <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
                                                 <i class="fa fa-bars"></i>
@@ -212,7 +212,7 @@
                                     {% endif %}
 
                                     {# REGISTRO DE NOTAS #}
-                                    {% if app.session.get('acceso_total') or app.session.get('roluser') == 8 %}
+                                    {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4 and false) %}
                                         {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
                                             {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
                                             {% if gestion >= 2019 and nivel == 13 and grado >= 5 %}

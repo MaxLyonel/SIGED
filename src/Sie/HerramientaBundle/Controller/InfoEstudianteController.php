@@ -827,7 +827,8 @@ class InfoEstudianteController extends Controller {
                     'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
-                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion)
         ));
     }
 
