@@ -218,7 +218,7 @@
                                                             {{ form_label(form.i_nrofolio_dependencia) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nrofolio_dependencia,{'attr':{'class':'req36'}}) }}
+                                                            {{ form_widget(form.i_nrofolio_dependencia,{'attr':{'class':'form-control req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -302,7 +302,7 @@
                                                                 {{ form_label(form.nro_fundaempresa) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.nro_fundaempresa,{'attr':{'class':'req36'}}) }}
+                                                                {{ form_widget(form.nro_fundaempresa,{'attr':{'class':'form-control req36'}}) }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -310,7 +310,7 @@
                                                                 {{ form_label(form.fecha_fundaempresa) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.fecha_fundaempresa,{'attr':{'class':'req36'}}) }}
+                                                                {{ form_widget(form.fecha_fundaempresa,{'attr':{'class':'form-control date req36'}}) }}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -326,7 +326,7 @@
                                                                 {{ form_label(form.nit_dependencia) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.nit_dependencia,{'attr':{'class':'req36'}}) }}
+                                                                {{ form_widget(form.nit_dependencia,{'attr':{'class':'form-control req36'}}) }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -341,7 +341,7 @@
                                                             {{ form_label(form.i_testimonioconvenio) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_testimonioconvenio,{'attr':{'class':'req36'}}) }}
+                                                            {{ form_widget(form.i_testimonioconvenio,{'attr':{'class':'form-control req36'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -349,7 +349,7 @@
                                                             {{ form_label(form.fecha_testimonioconvenio) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.fecha_testimonioconvenio,{'attr':{'class':'req36'}}) }}
+                                                            {{ form_widget(form.fecha_testimonioconvenio,{'attr':{'class':'form-control date req36'}}) }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -398,7 +398,7 @@
                                                             {{ form_label(form.i_nit_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nit_cn,{'attr':{'class':'req37'}}) }}
+                                                            {{ form_widget(form.i_nit_cn,{'attr':{'class':'form-control validar req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -406,7 +406,7 @@
                                                             {{ form_label(form.i_nrotestimonio_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nrotestimonio_cn,{'attr':{'class':'req37'}}) }}
+                                                            {{ form_widget(form.i_nrotestimonio_cn,{'attr':{'class':'form-control req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -414,7 +414,7 @@
                                                             {{ form_label(form.i_fecha_testimonio_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_fecha_testimonio_cn,{'attr':{'class':'req37'}}) }}
+                                                            {{ form_widget(form.i_fecha_testimonio_cn,{'attr':{'class':'form-control date req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -436,7 +436,7 @@
                                                             {{ form_label(form.i_nro_fundaempresa_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_nro_fundaempresa_cn,{'attr':{'class':'req37'}}) }}
+                                                            {{ form_widget(form.i_nro_fundaempresa_cn,{'attr':{'class':'form-control req37'}}) }}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -444,7 +444,7 @@
                                                             {{ form_label(form.i_fecha_fundaempresa_cn) }}
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {{ form_widget(form.i_fecha_fundaempresa_cn,{'attr':{'class':'req37'}}) }}
+                                                            {{ form_widget(form.i_fecha_fundaempresa_cn,{'attr':{'class':'form-control date req37'}}) }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -693,7 +693,7 @@
             <div class="panel-footer">
                 <div class="pull-left">
                     <div id="msg{{id}}"></div>
-                    <input type="text" id="validar{{id}}" value="0">
+                    <input type="hidden" id="validar{{id}}" value="0">
                 </div>
                 <div class="pull-right">
                     <button type="button" class="btn btn-success" onclick="verificarRequisitos({{id}},{{dependencia.id}})">Validar Requisitos</button>
@@ -706,7 +706,7 @@
 </div><!-- /.modal-dialog -->
 
 <script>
-    $(document).on('change','input[type="file"]',function(){
+    {# $(document).on('change','input[type="file"]',function(){
         // this.files[0].size recupera el tamaño del archivo
         // alert(this.files[0].size);
         var fileName = this.files[0].name;
@@ -717,7 +717,7 @@
             this.value = '';
             this.files[0].name = '';
         }
-    });
+    }); #}
     $(".alquiler").change(function () {	 
         if ($(this).val() == 'SI'){
             $('#contrato').show();

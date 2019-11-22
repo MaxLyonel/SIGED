@@ -403,7 +403,7 @@ class TramiteRueController extends Controller
                         ->add('i_solicitud_dependencia', 'file', array('label' => 'Adjuntar Solicitud de Cambio de Dependencia (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_actafundacion', 'file', array('label' => 'Adjuntar Acta de Fundación (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_folio_dependencia', 'checkbox', array('label' => 'Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.','required'  => false))
-                        ->add('i_nrofolio_dependencia', 'text', array('label' => 'Nro. de Folio Real:','required'=>false,'attr' => array('class' => 'form-control','maxlength'=>10)))
+                        ->add('i_nrofolio_dependencia', 'text', array('label' => 'Nro. de Folio Real:','required'=>false,'attr' => array('maxlength'=>10)))
                         ->add('i_esalquiler_dependencia', 'choice', array('label' => 'Infraestructura arrendada:','required'=>false,'empty_value'=>false,'multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
                         ->add('i_contrato_dependencia', 'file', array('label' => 'Adjuntar Copia notariada de contrato de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_dependencia', 'file', array('label' => 'Adjuntar convenio vigente de prestación de servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
@@ -768,16 +768,20 @@ class TramiteRueController extends Controller
                         $datos[$tramite['tramite_tipo']]['i_convenio_dependencia']=$this->upload($files['i_convenio_dependencia'],$form['idrue']);
                         $datos[$tramite['tramite_tipo']]['i_certificacion_gam']=$this->upload($files['i_certificacion_gam'],$form['idrue']);
                         $datos[$tramite['tramite_tipo']]['i_certificacionde_convenio']=$this->upload($files['i_certificacionde_convenio'],$form['idrue']);
-                        $datos[$tramite['tramite_tipo']]['i_convenio_administracion']=$form['i_convenio_administracion'];
+                        $datos[$tramite['tramite_tipo']]['i_convenio_administracion']=isset($form['i_convenio_administracion'])?$form['i_convenio_administracion']:0;
                         $datos[$tramite['tramite_tipo']]['i_acta_constitucion']=$form['i_acta_constitucion'];
-                        $datos[$tramite['tramite_tipo']]['i_registro_culto']=$form['i_registro_culto'];
-                        $datos[$tramite['tramite_tipo']]['i_org_nogubernamental']=$form['i_org_nogubernamental'];
-                        $datos[$tramite['tramite_tipo']]['i_form_fundaempresa']=$form['i_form_fundaempresa'];
-                        $datos[$tramite['tramite_tipo']]['nro_fundaempresa']=$form['nro_fundaempresa'];
-                        $datos[$tramite['tramite_tipo']]['fecha_fundaempresa']=$form['fecha_fundaempresa'];
-                        $datos[$tramite['tramite_tipo']]['i_fotocopia_nit']=$form['i_fotocopia_nit'];
-                        $datos[$tramite['tramite_tipo']]['nit_dependencia']=$form['nit_dependencia'];
-                        $datos[$tramite['tramite_tipo']]['i_balance_apertura']=$form['i_balance_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_registro_culto']=isset($form['i_registro_culto'])?$form['i_registro_culto']:0;
+                        $datos[$tramite['tramite_tipo']]['i_org_nogubernamental']=isset($form['i_org_nogubernamental'])?$form['i_org_nogubernamental']:0;
+                        $datos[$tramite['tramite_tipo']]['i_form_fundaempresa']=isset($form['i_form_fundaempresa'])?$form['i_form_fundaempresa']:0;
+                        if(isset($form['i_form_fundaempresa'])){
+                            $datos[$tramite['tramite_tipo']]['nro_fundaempresa']=$form['nro_fundaempresa'];
+                            $datos[$tramite['tramite_tipo']]['fecha_fundaempresa']=$form['fecha_fundaempresa'];
+                        }                        
+                        $datos[$tramite['tramite_tipo']]['i_fotocopia_nit']=isset($form['i_fotocopia_nit'])?$form['i_fotocopia_nit']:0;
+                        if(isset($form['i_fotocopia_nit'])){
+                            $datos[$tramite['tramite_tipo']]['nit_dependencia']=$form['nit_dependencia'];
+                            $datos[$tramite['tramite_tipo']]['i_balance_apertura']=$form['i_balance_apertura'];
+                        }                        
                         $datos[$tramite['tramite_tipo']]['i_testimonioconvenio']=$form['i_testimonioconvenio'];
                         $datos[$tramite['tramite_tipo']]['fecha_testimonioconvenio']=$form['fecha_testimonioconvenio'];
                     }else{
