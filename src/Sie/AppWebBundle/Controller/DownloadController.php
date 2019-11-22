@@ -690,6 +690,15 @@ class DownloadController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         if($gestion >= 2019){
+            // VERIFICAMOS SI EL CURSO ES DE SEXTO DE SECUNDARIA Y CERRO OPERATIVO DE SEXTO 
+            // PARA IMPRIMIR LIBRETA COMO OPERATIVO CERRADO HASTA 4TO BIMESTRE
+            if($operativo == 3 and $nivel == 13 and $grado == 6){
+                $validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
+                if($validacionSexto){
+                    $operativo = 4;
+                }
+            }
+            
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&bimestre=' . $operativo . '&&__format=pdf&'));
         }else{
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
