@@ -1851,15 +1851,23 @@ class InfoEstudianteController extends Controller {
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
+        $bimestre = 4;
+        $level = 13;
+        $grado = 6;
+
         $em = $this->getDoctrine()->getManager();
 
-
         try {
-
-            $responseOpe = false;//function db
+            // check if the UE has observation in level 13 and grado 6
+            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+            $query->execute();
+            $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
             // chek if the validation has error
-            if($responseOpe){
+            if(sizeof($responseOpe)>0){
+                // error; send the errors to show on the view
+                $arrResponse = $responseOpe;
+            }else{
                 // no error save the success validation
                 $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
                 $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
@@ -1876,10 +1884,6 @@ class InfoEstudianteController extends Controller {
                 $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
                 $em->persist($institucioneducativaOperativoLog);
                 $em->flush();
-
-            }else{
-                // error; send the errors to show on the view
-                $arrResponse = $responseOpe;
             }
             
           
