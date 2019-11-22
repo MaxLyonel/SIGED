@@ -1683,4 +1683,31 @@ class Funciones {
 
         return $bachilleres;
     }
+
+    /**
+     * Funcion para verificar si se cerro el operativo de registro de calificaciones
+     * para sexto de secundaria
+     * @param  integer $sie     [description]
+     * @param  integer $gestion [description]
+     * @return [boolean]        si se cerro el operativo true , false si no se cerro el operativo
+     */
+    public function verificarSextoSecundariaCerrado($sie, $gestion){
+        $registro = $this->em->createQueryBuilder()
+                            ->select('ieol')
+                            ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
+                            ->where('ieol.institucioneducativa = :sie')
+                            ->andWhere('ieol.gestionTipoId = :gestion')
+                            ->andWhere('ieol.institucioneducativaOperativoLogTipo = 10')
+                            ->setParameter('sie', $sie)
+                            ->setParameter('gestion', $gestion)
+                            ->getQuery()
+                            ->getResult();
+
+        $sextoCerrado = false;
+        if ($registro) {
+            $sextoCerrado = true;
+        }
+
+        return true;//$sextoCerrado;
+    }
 }

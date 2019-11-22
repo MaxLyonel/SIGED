@@ -717,7 +717,8 @@ class InfoEstudianteController extends Controller {
              */
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
+                // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
                     $imprimirLibreta = true;
                 }
                 // Unidades educativas tecnicas tecnologicas
@@ -826,7 +827,8 @@ class InfoEstudianteController extends Controller {
                     'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
-                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion)
         ));
     }
 

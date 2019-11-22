@@ -101,6 +101,7 @@
                                                     {% set registro = false %}
                                                   {% endif %}
                                                 {% endif %}
+                                                
                                                 {% if participante.documento_id != "" %}
                                                     <span class="label label-success rounded">Dip. {{ participante.documento_serie_id }}</span>
                                                     {% set registro = false %}
@@ -111,9 +112,11 @@
                                                     {% endif %}
                                                 {% endif %}
 
-                                                {% if participante.carnet_identidad == "" %}
-                                                    <span class="label label-danger rounded">Sin C.I.</span>
-                                                    {% set registro = false %}
+                                                {% if participante.estadomatricula_inicio_tipo_id != 45 %}
+                                                    {% if participante.carnet_identidad == "" %}
+                                                        <span class="label label-danger rounded">Sin C.I.</span>
+                                                        {% set registro = false %}
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if participante.fecha_nacimiento == "" %}

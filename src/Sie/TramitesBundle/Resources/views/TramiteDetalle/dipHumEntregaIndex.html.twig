@@ -126,7 +126,7 @@
                                                 {% set registro = true %}
                                                 {% set anular = false %}
 
-                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") and 1 > 1 %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
                                                     {% set registro = false %}
                                                   {% endif %}
@@ -142,10 +142,11 @@
                                                   {% endif %}
                                                 {% endif %}
 
-
-                                                {% if participante.carnet_identidad == "" %}
-                                                    <span class="label label-danger rounded">Sin C.I.</span>
-                                                    {% set registro = false %}
+                                                {% if participante.estadomatricula_inicio_tipo_id != 45 %}
+                                                    {% if participante.carnet_identidad == "" %}
+                                                        <span class="label label-danger rounded">Sin C.I.</span>
+                                                        {% set registro = false %}
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if participante.fecha_nacimiento == "" %}

@@ -147,9 +147,11 @@
                                                     {% set registro = false %}
                                                 {% endif %}
 
-                                                {% if participante.fecha_nacimiento == "" %}
-                                                    <span class="label label-danger rounded">Sin Fecha Nac.</span>
-                                                    {% set registro = false %}
+                                                {% if participante.estadomatricula_inicio_tipo_id != 45 %}
+                                                    {% if participante.fecha_nacimiento == "" %}
+                                                        <span class="label label-danger rounded">Sin Fecha Nac.</span>
+                                                        {% set registro = false %}
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if participante.lugar_nacimiento == "" %}

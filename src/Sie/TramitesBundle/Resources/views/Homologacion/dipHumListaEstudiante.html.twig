@@ -1,0 +1,116 @@
+    <!-- begin ADVANCED TABLES ROW -->
+        <div class="col-md-12">
+            <div class="panel panel-lilac">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        Lista de Estudiantes
+                    </div>
+                    <div class="pull-right">
+                        {{form_start(formNuevoEstudiante, { 'attr': {'id': 'formEstudianteNuevo'}})}}
+                            {{form_widget(formNuevoEstudiante.ninguno,{'id':'formBtnEstudianteNuevo'})}}
+                        {{form_end(formNuevoEstudiante)}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-striped table-bordered table-hover table-green dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Nro.</th>
+                                    <th>Rude</th>
+                                    <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Fecha Nacimiento</th>
+                                    <th>C.I.</th>
+                                    <th>Lugar Nacimiento</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in samestudents %}
+                                    {% if student.complemento == "" %}
+                                        {% set ci = student.carnetIdentidad %} 
+                                    {% else %}
+                                        {% set ci = student.carnetIdentidad ~ "-" ~ student.complemento %} 
+                                    {% endif %}
+                                    {% if student.paisId == 1 %}
+                                        {% set lugar = student.lugarDepartamento ~ " - " ~ student.pais %} 
+                                    {% else %}
+                                        {% set lugar = student.pais %} 
+                                    {% endif %}
+                                    <tr {% if student.segipId != 1 %}class="text-danger"{% endif %}>
+                                        <td>{{loop.index}}</td>
+                                        <td class="center">{{student.codigoRude}}</td>
+                                        <td>{{student.nombre}}</td>
+                                        <td>{{student.paterno}}</td>
+                                        <td>{{student.materno}}</td>
+                                        <td>{{student.fechaNacimiento|date('d-m-Y')}}</td>
+                                        <td class="center">{{ ci }}</td>
+                                        <td class="center">{{ lugar}}</td>
+                                        <td class="center">
+                                            <button class="btn btn-success btn-sm btn-block btnEstudianteSeleccionado" value="{{student.id|base64_encode}}"> <i class="fa fa-pencil"></i> Seleccionar</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.portlet-body -->
+            </div>
+            <!-- /.portlet -->
+        </div>
+        <!-- /.row -->
+
+    <script>
+        $(document).ready(function(){ 
+            $("#formBtnEstudianteNuevo").click(function () {
+                var form = $('#formEstudianteNuevo').serialize();
+                var content = $("#formContent").html();
+                $.ajax({
+                    type: 'get',
+                    data: form,
+                    url: Routing.generate('tramite_homologacion_diploma_humanistico_estudiante_nuevo'),
+                    beforeSend: function () {
+                        $("#formContent").empty();
+                        $("#formContent").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#formContent").empty();
+                        $("#formContent").append(data);
+                    },
+                    error: function(error){
+                        $("#formContent").empty();
+                        $("#formContent").html(content);
+                        $("#formContent").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+                    },
+                });
+            });
+
+            $(".btnEstudianteSeleccionado").click(function () {
+                var est = $(this).val();
+                var content = $("#formContent").html();
+                $.ajax({
+                    type: 'get',
+                    data: {'est':est},
+                    url: Routing.generate('tramite_homologacion_diploma_humanistico_estudiante_seleccionado'),
+                    beforeSend: function () {
+                        $("#formContent").empty();
+                        $("#formContent").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#formContent").empty();
+                        $("#formContent").append(data);
+                    },
+                    error: function(error){
+                        $("#formContent").empty();
+                        $("#formContent").html(content);
+                        $("#formContent").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+                    },
+                });
+            });
+        });
+    </script>
