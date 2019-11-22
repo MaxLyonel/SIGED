@@ -147,9 +147,23 @@ class InfoEstudianteController extends Controller {
         }
 
 
-
-
-
+        //get variables to show and hidde the close sexto secc operativo
+        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $query->execute();
+        $objDataOperativo = $query->fetchAll();
+        $haslevel = false;
+        $hasgrado = false;
+        if(sizeof($objDataOperativo)>0){
+            $haslevel = 13;
+            $hasgrado = 6;
+        }
+        // set variables to show and ejecute the close operativo sexto fo secc 
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);        
+        $this->session->set('haslevel', $haslevel);
+        $this->session->set('hasgrado', $hasgrado);
+        // $this->session->set('itsoperativo', $operativo);
+        $this->session->set('closeopesextosecc', $closeopesextosecc);
+        
         // if($entity){
         //     if($ue_plena == false){
         //         $estado = false;
