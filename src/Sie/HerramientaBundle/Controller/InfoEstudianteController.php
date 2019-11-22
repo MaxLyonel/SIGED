@@ -147,9 +147,23 @@ class InfoEstudianteController extends Controller {
         }
 
 
+        //get variables to show and hidde the close sexto secc operativo
+        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $query->execute();
+        $objDataOperativo = $query->fetchAll();
+        $haslevel = false;
+        $hasgrado = false;
+        if(sizeof($objDataOperativo)>0){
+            $haslevel = 13;
+            $hasgrado = 6;
+        }
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+        // set variables to show and ejecute the close operativo sexto fo secc 
+        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
+        // dump($arrLevelandGrado);die;
 
 
-
+        
         // if($entity){
         //     if($ue_plena == false){
         //         $estado = false;
@@ -174,6 +188,7 @@ class InfoEstudianteController extends Controller {
                     'odataUedu' => $odataUedu,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'estado'=>$estado,
+                    'arrLevelandGrado'=>$arrLevelandGrado,
                     'gradoId'=>$gradoId
         ));
     }
@@ -1848,18 +1863,30 @@ class InfoEstudianteController extends Controller {
     }
 
     public function closeOperativoSextoSeccAction(Request $request){
+        
+        $response = new JsonResponse();
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
+        $bimestre = 4;
+        $level = 13;
+        $grado = 6;
+
         $em = $this->getDoctrine()->getManager();
 
-
         try {
-
-            $responseOpe = false;//function db
+            // check if the UE has observation in level 13 and grado 6
+            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+            $query->execute();
+            $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
             // chek if the validation has error
-            if($responseOpe){
+            if(sizeof($responseOpe)>0){
+                // error; send the errors to show on the view
+                $swObservations = true;
+                $arrResponse = $responseOpe;                
+            }else{
+                $swObservations = false;
                 // no error save the success validation
                 $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
                 $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
@@ -1867,7 +1894,7 @@ class InfoEstudianteController extends Controller {
                 $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
                 $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
                 $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
-                $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(4));
+                $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($this->session->get('lastOperativo')));
                 $institucioneducativaOperativoLog->setDescripcion('...');
                 $institucioneducativaOperativoLog->setEsexitoso('t');
                 $institucioneducativaOperativoLog->setEsonline('t');
@@ -1877,9 +1904,8 @@ class InfoEstudianteController extends Controller {
                 $em->persist($institucioneducativaOperativoLog);
                 $em->flush();
 
-            }else{
-                // error; send the errors to show on the view
-                $arrResponse = $responseOpe;
+                return $response->setData(array('reloadIt'=>true, 'mssg'=>'Se verifico el operativo Sexto de Secundaria sin problemas'));
+
             }
             
           
@@ -1892,6 +1918,7 @@ class InfoEstudianteController extends Controller {
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:closeOperativoSextoSecc.html.twig', array(
                 'arrResponse' => $arrResponse,
+                'swObservations' => $swObservations,
         ));
     }
 

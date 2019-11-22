@@ -1,0 +1,42 @@
+
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Observaci&oacute;n</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for response in arrResponse%}
+    {% set arrstudentObs = response.observacion|split(',') %}
+    
+    <tr>
+        <th scope="row">{{loop.index}}</th> 
+        <td>
+            <small>
+            <table class="table table-borderless">
+                <tr><th>{{arrstudentObs[0]}}</th></tr>
+                <tr>
+                    <td>
+                        <table border="0" >
+                            <tr ><th colspan="5" class="text-primary">{{arrstudentObs[6]}}</th></tr>
+                            <tr>
+                            <td>{{arrstudentObs[1]}}</td>
+                            <td>{{arrstudentObs[2]}}</td>
+                            <td>{{arrstudentObs[3]}}</td>
+                            <td>{{arrstudentObs[4]}}</td>
+                            <td>{{arrstudentObs[5]}}</td>
+                            </tr>    
+                        </table>
+                    </td>
+                </tr>
+                                             
+            </table>
+            </small>
+        <td>
+    </tr>
+    {% endfor %}
+  
+  </tbody>
+</table>
