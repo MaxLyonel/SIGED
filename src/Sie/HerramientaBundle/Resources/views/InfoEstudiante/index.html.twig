@@ -36,8 +36,8 @@
                                 </div>
                                 <div class="pull-right">
                                     Opciones:
-                                    {% if app.session.get('haslevel') == 13 and app.session.get('hasgrado') == 6 and app.session.get('currentyear') >= 2019 %}
-                                        {% if app.session.get('lastOperativo') == 4 and app.session.get('closeopesextosecc') == false  %}
+                                    {% if arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
+                                        {% if app.session.get('lastOperativo') == 4 and arrLevelandGrado.closeopesextosecc == false  %}
                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                             <i class="fa fa-group" ></i>
                                             </button>
@@ -676,21 +676,16 @@
                                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                                 },
                                 success: function (data) {
+                                    //console.log(data);return;
                                     $("#idstudents").empty();
-                                    $("#idstudents").append(data);
+                                    
+                                    if(data.reloadIt){
+                                        $("#idstudents").append('<p>'+data.mssg+'</p>');
+                                        location.reload(true);
+                                    }else{
+                                        $("#idstudents").append(data);
+                                    }
                                     $('.tooltips').tooltip();
-                                   /*if(data.estado = 1){
-                                  Swal.fire({
-                                    icon: 'success',
-                                    title: 'Se cerró el operativo correctamente',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                    })
-                                  document.getElementById("btnCerraoperativo").disabled = true;
-                                  setInterval('window.location.reload()', 3000);
-                                   }else{
-
-                                   }*/
                                 },
                                 complete: function () {
                                   console.log("error");  

@@ -157,12 +157,12 @@ class InfoEstudianteController extends Controller {
             $haslevel = 13;
             $hasgrado = 6;
         }
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
         // set variables to show and ejecute the close operativo sexto fo secc 
-        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);        
-        $this->session->set('haslevel', $haslevel);
-        $this->session->set('hasgrado', $hasgrado);
-        // $this->session->set('itsoperativo', $operativo);
-        $this->session->set('closeopesextosecc', $closeopesextosecc);
+        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion);
+        // dump($arrLevelandGrado);die;
+
+
         
         // if($entity){
         //     if($ue_plena == false){
@@ -188,6 +188,7 @@ class InfoEstudianteController extends Controller {
                     'odataUedu' => $odataUedu,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'estado'=>$estado,
+                    'arrLevelandGrado'=>$arrLevelandGrado,
                     'gradoId'=>$gradoId
         ));
     }
@@ -1862,6 +1863,8 @@ class InfoEstudianteController extends Controller {
     }
 
     public function closeOperativoSextoSeccAction(Request $request){
+        
+        $response = new JsonResponse();
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
@@ -1880,8 +1883,10 @@ class InfoEstudianteController extends Controller {
             // chek if the validation has error
             if(sizeof($responseOpe)>0){
                 // error; send the errors to show on the view
-                $arrResponse = $responseOpe;
+                $swObservations = true;
+                $arrResponse = $responseOpe;                
             }else{
+                $swObservations = false;
                 // no error save the success validation
                 $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
                 $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
@@ -1889,7 +1894,7 @@ class InfoEstudianteController extends Controller {
                 $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
                 $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
                 $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
-                $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(4));
+                $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($this->session->get('lastOperativo')));
                 $institucioneducativaOperativoLog->setDescripcion('...');
                 $institucioneducativaOperativoLog->setEsexitoso('t');
                 $institucioneducativaOperativoLog->setEsonline('t');
@@ -1898,6 +1903,9 @@ class InfoEstudianteController extends Controller {
                 $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
                 $em->persist($institucioneducativaOperativoLog);
                 $em->flush();
+
+                return $response->setData(array('reloadIt'=>true, 'mssg'=>'Se verifico el operativo Sexto de Secundaria sin problemas'));
+
             }
             
           
@@ -1910,6 +1918,7 @@ class InfoEstudianteController extends Controller {
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:closeOperativoSextoSecc.html.twig', array(
                 'arrResponse' => $arrResponse,
+                'swObservations' => $swObservations,
         ));
     }
 
