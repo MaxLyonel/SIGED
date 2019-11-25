@@ -67,7 +67,7 @@ class ChangeMatriculaController extends Controller {
             'query_builder' => function (EntityRepository $e) {
                 return $e->createQueryBuilder('emt')
                         ->where('emt.id IN (:id)')
-                        ->setParameter('id', ($this->operativo>1)?array('4','6','10'):array('4','6'))
+                        ->setParameter('id', ($this->operativo>1)?array('4','10'):array('4','6'))
                         ->orderBy('emt.id', 'ASC')
                 ;
             }, 'property' => 'estadomatricula'))

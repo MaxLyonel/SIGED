@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\EstudianteDestacado:
     type: entity
     table: estudiante_destacado
     indexes:
+        IDX_3CCD05D359590C39:
+            columns:
+                - estudiante_id
         IDX_3CCD05D3A1104027:
             columns:
                 - estudiante_inscripcion_id
@@ -28,6 +31,7 @@ Sie\AppWebBundle\Entity\EstudianteDestacado:
             type: datetime
             nullable: true
             comment: ''
+            default: now()
             column: fecha_registro
         ipOrigen:
             type: string
@@ -58,12 +62,6 @@ Sie\AppWebBundle\Entity\EstudianteDestacado:
             scale: 2
             comment: ''
             column: promedio_final
-        estudianteId:
-            type: integer
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: _estudiante_id
         esoficial:
             type: boolean
             nullable: false
@@ -126,7 +124,27 @@ Sie\AppWebBundle\Entity\EstudianteDestacado:
             scale: 2
             comment: ''
             column: promedio_sem2
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
     manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         estudianteInscripcion:
             targetEntity: EstudianteInscripcion
             cascade: {  }

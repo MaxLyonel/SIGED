@@ -102,13 +102,13 @@
                                 {% for estudiante in estudiantesF%}
                                     <tr>
                                         <td style="width: .1em">{{ loop.index }}</td>
-                                        <td><a href="#" onclick="openHistoryInsc({{estudiante.estId}})" data-toggle="tooltip" data-placement="right" title="Ver historial de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-info-circle"></i> {{ estudiante.codigoRude }}</a></td>
+                                        <td>{{ estudiante.codigoRude }}</td>
                                         <td>{{ estudiante.carnetIdentidad }}</td>
                                         <td>{{ estudiante.paterno }}</td>
                                         <td>{{ estudiante.materno }}</td>
                                         <td>{{ estudiante.nombre }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
-                                        <td class="text-center"><a href="#" onclick="openRegistroBachiller({{estudiante.estId}}, {{estudiante.estinsId}}, {{estudiante.instId}}, {{estudiante.genId}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a></td>
+                                        <td class="text-center">{% if estudiante.segipId == 1 %}<a href="#" onclick="openRegistroBachiller({{estudiante.estId}}, {{estudiante.estinsId}}, {{estudiante.instId}}, {{estudiante.genId}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>{% else %}<span class="text-danger">Estudiante observado (Verificar datos personales)</span>{% endif %}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -148,13 +148,13 @@
                                 {% for estudiante in estudiantesM%}
                                     <tr>
                                         <td style="width: .1em">{{ loop.index }}</td>
-                                        <td><a href="#" onclick="openHistoryInsc({{estudiante.estId}})" data-toggle="tooltip" data-placement="right" title="Ver historial de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-info-circle"></i> {{ estudiante.codigoRude }}</a></td>
+                                        <td>{{ estudiante.codigoRude }}</td>
                                         <td>{{ estudiante.carnetIdentidad }}</td>
                                         <td>{{ estudiante.paterno }}</td>
                                         <td>{{ estudiante.materno }}</td>
                                         <td>{{ estudiante.nombre }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
-                                        <td class="text-center"><a href="#" onclick="openRegistroBachiller('{{estudiante.estId}}', '{{estudiante.estinsId}}', '{{estudiante.instId}}', '{{estudiante.genId}}')" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-pencil-square"></i> Registrar Calificación</a></td>
+                                        <td class="text-center">{% if estudiante.segipId == 1 %}<a href="#" onclick="openRegistroBachiller('{{estudiante.estId}}', '{{estudiante.estinsId}}', '{{estudiante.instId}}', '{{estudiante.genId}}')" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>{% else %}<span class="text-danger">Estudiante observado (Verificar datos personales)</span>{% endif %}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
