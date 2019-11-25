@@ -70,7 +70,7 @@ class ResetBjpController extends Controller
         // look for confirmation register
         $objValidacionBjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findOneBy(array(
           'institucioneducativaId' => $form['codigoSie'],
-          'gestionTipoId' => $this->session->get('currentyear') - 1
+          'gestionTipoId' => $this->session->get('currentyear')
         ));
           
         //chech it the ue is gonna to register the BJP

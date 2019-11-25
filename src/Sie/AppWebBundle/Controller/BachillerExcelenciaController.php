@@ -312,7 +312,7 @@ class BachillerExcelenciaController extends Controller {
                 'primer_apellido'=>$form_aux['paterno'],
                 'segundo_apellido'=>$form_aux['materno'],
                 'nombre'=>$form_aux['nombre'],
-                'apellido_esposo'=>$form_aux['apellidoEsposo'],
+                // 'apellido_esposo'=>$form_aux['apellidoEsposo'],
                 'fecha_nacimiento'=>$form_aux['fechaNacimiento']
             );
             
