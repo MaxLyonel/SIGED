@@ -370,6 +370,17 @@ class ChangestadoqaController extends Controller {
               }
 
               /////////////////////////////////////rude tables
+            $objApoIns = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            //dump($objApoIns);die;
+
+            foreach ($objApoIns as $element) {
+                $objApoInsDat = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findBy(array('apoderadoInscripcion' => $element->getId()));
+                foreach ($objApoInsDat as $element1){
+                    $em->remove($element1);
+                }
+                $em->remove($element);
+            }
+            $em->flush();              
 
                           //to remove all info about RUDE
             $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion' =>  $arrDataInfo['estInsId'] ));
