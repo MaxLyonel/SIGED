@@ -1303,7 +1303,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         // 3 MODULAR
                         // 7 TRANSFORMACION BTH
                         // PARA NO CONSIDERAR ESTA VALIDACION YA QUE NO DESCARGAN ARCHIVOS
-                        $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
+                        $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
                         if (!in_array($tipoUE['id'], [1,2,3,7])) {
 
                             // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
