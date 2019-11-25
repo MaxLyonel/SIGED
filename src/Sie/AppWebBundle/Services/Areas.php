@@ -399,7 +399,7 @@ class Areas {
                 // Verificamos si se puede adicionar materias, en base al operativo antes de tercer bimestre
                 if($gestion == $this->session->get('currentyear')){
                     $operativo = $this->funciones->obtenerOperativo($sie,$gestion);
-                    if($operativo <= 3 or ($tipoUE['id'] == 3 and in_array($nivel, array(3,13)))){
+                    if($operativo < 5 or ($tipoUE['id'] == 3 and in_array($nivel, array(3,13)))){
                         $vista = 1;
                     }else{
                         $vista = 0;

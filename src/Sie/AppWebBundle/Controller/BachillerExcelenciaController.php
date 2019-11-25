@@ -41,7 +41,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -84,7 +84,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -122,7 +122,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -164,7 +164,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa
               INNER JOIN "public".institucioneducativa_curso ON "public".institucioneducativa_curso.institucioneducativa_id = "public".institucioneducativa."id"
               WHERE
-              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2018 and "public".institucioneducativa_curso.grado_tipo_id = 6
+              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2019 and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
@@ -211,7 +211,7 @@ class BachillerExcelenciaController extends Controller {
                 $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
                 $query = $repository->createQueryBuilder('m')
-                        ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria')
+                        ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria, m.fechaNacimiento, m.apellidoEsposo')
                         ->innerJoin('SieAppWebBundle:EntidadfinancieraTipo', 'ef', 'WITH', 'ef.id = m.entidadfinancieraTipo')
                         ->where('m.institucioneducativa = :institucion')
                         ->andWhere('m.gestionTipo = :gestion')
@@ -236,7 +236,7 @@ class BachillerExcelenciaController extends Controller {
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
             $query = $repository->createQueryBuilder('i')
-                    ->select('i.id instId, i.institucioneducativa, ct.cargo, p.id dirId, p.carnet, p.paterno, p.materno, p.nombre, p.complemento, mi.id dirinsId')
+                    ->select('i.id instId, i.institucioneducativa, ct.cargo, p.id dirId, p.carnet, p.paterno, p.materno, p.nombre, p.complemento, p.fechaNacimiento, mi.id dirinsId')
                     ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.institucioneducativa = i.id')
                     ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                     ->innerJoin('SieAppWebBundle:CargoTipo', 'ct', 'WITH', 'mi.cargoTipo = ct.id')
@@ -297,7 +297,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -306,6 +306,22 @@ class BachillerExcelenciaController extends Controller {
         $response = new JsonResponse();
         try {
             $form_aux = $request->get('sie_appwebbundle_maestrocuentabancaria');
+
+            $persona = array(
+                'complemento'=>$form_aux['complemento'],
+                'primer_apellido'=>$form_aux['paterno'],
+                'segundo_apellido'=>$form_aux['materno'],
+                'nombre'=>$form_aux['nombre'],
+                'apellido_esposo'=>$form_aux['apellidoEsposo'],
+                'fecha_nacimiento'=>$form_aux['fechaNacimiento']
+            );
+            
+            $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form_aux['carnet'], $persona, 'prod', 'academico');
+
+            if(!$resultado){
+                return $response->setData(array('mensaje' => 'Información no validada por SEGIP.'));
+            }
+
             $entidadfinancieraTipoId = $form_aux['entidadfinancieraTipo'];
             $cuentabancaria = $form_aux['cuentabancaria'];
             $carnet = $form_aux['carnet'];
@@ -313,12 +329,14 @@ class BachillerExcelenciaController extends Controller {
             $paterno = $form_aux['paterno'];
             $materno = $form_aux['materno'];
             $nombre = $form_aux['nombre'];
+            $apellidoEsposo = $form_aux['apellidoEsposo'];
+            $fechaNacimiento = $form_aux['fechaNacimiento'];
 
             $personaId = $form_aux['persona'];
             $maestroinscripcionId = $form_aux['maestroInscripcion'];
             $institucioneducativaId = $form_aux['institucioneducativa'];
             $cargoTipoId = $form_aux['cargoTipo'];
-            $gestion = 2018;
+            $gestion = $this->session->get('currentyear');
 
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -381,7 +399,9 @@ class BachillerExcelenciaController extends Controller {
             $maestrocuenta->setPaterno(mb_strtoupper($paterno, 'UTF-8'));
             $maestrocuenta->setMaterno(mb_strtoupper($materno, 'UTF-8'));
             $maestrocuenta->setNombre(mb_strtoupper($nombre, 'UTF-8'));
+            $maestrocuenta->setApellidoEsposo(mb_strtoupper($apellidoEsposo, 'UTF-8'));
             $maestrocuenta->setComplemento(mb_strtoupper($complemento, 'UTF-8'));
+            $maestrocuenta->setFechaNacimiento(new \DateTime($fechaNacimiento));
             $maestrocuenta->setEsoficial('t');
             $maestrocuenta->setGestionTipo($gestion);
             $maestrocuenta->setFechaRegistro(new \DateTime('now'));
@@ -410,7 +430,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-10');
+        $fechaCorte = new \DateTime('2019-11-27');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -449,7 +469,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -491,7 +511,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa
               INNER JOIN "public".institucioneducativa_curso ON "public".institucioneducativa_curso.institucioneducativa_id = "public".institucioneducativa."id"
               WHERE
-              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2018 and "public".institucioneducativa_curso.grado_tipo_id = 6
+              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2019 and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
@@ -536,7 +556,7 @@ class BachillerExcelenciaController extends Controller {
 
                 $query = $repository->createQueryBuilder('ed')
                         ->select('e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, g.genero, ed.promedioFinal')
-                        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudianteId = e.id')
+                        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudiante = e.id')
                         ->innerJoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
                         ->where('ed.institucioneducativa = :institucion')
                         ->andWhere('ed.gestionTipo = :gestion')
@@ -559,7 +579,7 @@ class BachillerExcelenciaController extends Controller {
             $repository = $em->getRepository('SieAppWebBundle:Estudiante');
 
             $query = $repository->createQueryBuilder('e')
-                    ->select('e.id estId, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, ei.id estinsId, i.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
+                    ->select('e.id estId, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, e.segipId, ei.id estinsId, i.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
                     ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
                     ->innerJoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'ic.institucioneducativa = i.id')
@@ -588,7 +608,7 @@ class BachillerExcelenciaController extends Controller {
             $estudiantesF = $query->getResult();
 
             $query = $repository->createQueryBuilder('e')
-                    ->select('e.id estId, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, ei.id estinsId, i.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
+                    ->select('e.id estId, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, e.segipId, ei.id estinsId, i.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
                     ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
                     ->innerJoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'ic.institucioneducativa = i.id')
@@ -634,7 +654,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-10');
+        $fechaCorte = new \DateTime('2019-11-27');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -670,7 +690,7 @@ class BachillerExcelenciaController extends Controller {
             $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
             $query = $repository->createQueryBuilder('m')
-                    ->select('m.id, m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria, m.esoficial estado')
+                    ->select('m.id, m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria, m.esoficial estado, m.fechaNacimiento, m.apellidoEsposo')
                     ->innerJoin('SieAppWebBundle:EntidadfinancieraTipo', 'ef', 'WITH', 'ef.id = m.entidadfinancieraTipo')
                     ->where('m.institucioneducativa = :institucion')
                     ->andWhere('m.gestionTipo = :gestion')
@@ -686,7 +706,7 @@ class BachillerExcelenciaController extends Controller {
 
             $query = $repository->createQueryBuilder('ed')
                     ->select('ed.codigoRude, ed.carnetIdentidad, ed.paterno, ed.materno, ed.nombre, g.genero, ed.promedioFinal, ed.id edId, g.id gen')
-                    ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudianteId = e.id')
+                    ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudiante = e.id')
                     ->innerJoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
                     ->where('ed.institucioneducativa = :institucion')
                     ->andWhere('ed.gestionTipo = :gestion')
@@ -714,7 +734,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-10');
+        $fechaCorte = new \DateTime('2019-11-27');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -728,7 +748,7 @@ class BachillerExcelenciaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->getQuery();
 
         $directores = $query->getResult();
@@ -753,7 +773,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-10');
+        $fechaCorte = new \DateTime('2019-11-27');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -769,7 +789,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.id = :destacado')
                 ->andWhere('ed.generoTipo = :genero')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->setParameter('destacado', $ed)
                 ->setParameter('genero', $g)
                 ->getQuery();
@@ -797,7 +817,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.generoTipo = :genero')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->setParameter('genero', $g)
                 ->getQuery();
 
@@ -826,7 +846,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -871,7 +891,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-01-04');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -899,7 +919,7 @@ class BachillerExcelenciaController extends Controller {
                     ->andWhere('e.generoTipo = :genero')
                     ->andWhere('e.esoficial = :esoficial')
                     ->setParameter('institucion', $institucioneducativaId)
-                    ->setParameter('gestion', 2018)
+                    ->setParameter('gestion', 2019)
                     ->setParameter('genero', $generoTipoId)
                     ->setParameter('esoficial', 't')
                     ->getQuery();
@@ -914,13 +934,15 @@ class BachillerExcelenciaController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcionId);
             $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativaId);
             $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoTipoId);
-            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find(2018);
+            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find(2019);
 
             $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(55));
 
             $estudiantedestacado = new EstudianteDestacado();
             $estudiantedestacado->setFechaRegistro(new \DateTime('now'));
             $estudiantedestacado->setEstudiante($estudiante);
+            $estudiantedestacado->setFechaNacimiento($estudiante->getFechaNacimiento());
+            $estudiantedestacado->setComplemento($estudiante->getComplemento());
             $estudiantedestacado->setEstudianteId($estudianteId);
             $estudiantedestacado->setEstudianteInscripcion($inscripcion);
             $estudiantedestacado->setGeneroTipo($genero);
@@ -976,7 +998,7 @@ class BachillerExcelenciaController extends Controller {
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('nivel', 13)
                 ->setParameter('grado', 6)
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->getQuery();
 
         $sexto = $query->getResult();
@@ -989,13 +1011,13 @@ class BachillerExcelenciaController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
         $query = $repository->createQueryBuilder('m')
-                ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria')
+                ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria, m.fechaNacimiento, m.apellidoEsposo')
                 ->innerJoin('SieAppWebBundle:EntidadfinancieraTipo', 'ef', 'WITH', 'ef.id = m.entidadfinancieraTipo')
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->andWhere('m.esoficial = :esoficial')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1005,13 +1027,13 @@ class BachillerExcelenciaController extends Controller {
 
         $query = $repository->createQueryBuilder('ed')
                 ->select('e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, g.genero, ed.promedioFinal')
-                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudianteId = e.id')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudiante = e.id')
                 ->innerJoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
                 ->where('ed.institucioneducativa = :institucion')
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.esoficial = :esoficial')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1032,6 +1054,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+        $gestion = 2019;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1048,7 +1071,7 @@ class BachillerExcelenciaController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1080,7 +1103,7 @@ class BachillerExcelenciaController extends Controller {
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('nivel', 13)
                 ->setParameter('grado', 6)
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->getQuery();
 
         $sexto = $query->getResult();
@@ -1093,14 +1116,14 @@ class BachillerExcelenciaController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
         $query = $repository->createQueryBuilder('m')
-                ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria')
+                ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria, m.apellidoEsposo, m.fechaNacimiento')
                 ->innerJoin('SieAppWebBundle:EntidadfinancieraTipo', 'ef', 'WITH', 'ef.id = m.entidadfinancieraTipo')
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.esoficial = :esoficial')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('esoficial', 't')
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->getQuery();
 
         $director = $query->getOneOrNullResult();
@@ -1121,6 +1144,7 @@ class BachillerExcelenciaController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+        $gestion = 2019;
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
@@ -1128,7 +1152,7 @@ class BachillerExcelenciaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2018)
+                ->setParameter('gestion', 2019)
                 ->getQuery();
 
         $directores = $query->getResult();
@@ -1138,12 +1162,12 @@ class BachillerExcelenciaController extends Controller {
             $em->persist($value);
             $em->flush();
         }
-
+        
         $arch = 'DECLARACION_JURADA_DIRECTOR_' . $arrSieInfo['id'] . '_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_DirectorEstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_DirectorEstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1207,5 +1231,4 @@ class BachillerExcelenciaController extends Controller {
             return $response;
         }
     }
-
 }

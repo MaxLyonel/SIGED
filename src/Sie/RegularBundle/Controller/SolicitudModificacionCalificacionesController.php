@@ -1264,75 +1264,6 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $idInscripcion = $solicitud->getEstudianteInscripcionId();
             $estadoMatriculaActual = $inscripcion[0]['estadoMatricula'];
 
-            $nuevoEstado = $this->calcularNuevoEstadoMatriculaConSolicitud($request->get('idSolicitud'));
-
-            // SI EL NUEVO ESTADO ES PROMOVIDO VERIFICAMOS
-            if ($nuevoEstado == 5){
-                // VERIFICAMOS SI SE TIENE OTRA INSCRIPCION DEL MISMO GRADO Y NIVEL APROBADO O EFECTIVO
-                // RETURN TRUE OR FALSE
-                $inscripcionSimilarAprobada = $this->get('funciones')->existeInscripcionSimilarAprobado($idInscripcion);
-                if ($inscripcionSimilarAprobada) {
-                    $this->get('session')->getFlashBag()->add('error', 'La solicitud no puede ser aprobada porque el estudiante ya cuenta con una inscripcion del mismo nivel y grado con un estado de matrícula Promovido o Efectivo.');
-                    return $this->redirectToRoute('solicitudModificacionCalificaciones');
-                }
-            }
-
-            $sie = $solicitud->getInstitucioneducativaId();
-            $gestion = $solicitud->getGestionTipoId();
-            $nivel = $inscripcion[0]['nivel'];
-            $grado = $inscripcion[0]['grado'];
-
-            $gestionActual = $this->session->get('currentyear');
-
-            if($gestion == $gestionActual){
-                // VERIFICAMOS SI LA UE ES
-                // 1 PLENA
-                // 2 TECNICA TECNOLOGICA
-                // 3 MODULAR
-                // 7 TRANSFORMACION BTH
-                // PARA NO CONSIDERAR ESTA VALIDACION YA QUE NO DESCARGAN ARCHIVOS
-                $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
-                if (!in_array($tipoUE['id'], [1,2,3,7])) {
-
-                    // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
-                    $operativoLog = $em->createQueryBuilder()
-                                        ->select('ieol')
-                                        ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
-                                        ->innerJoin('SieAppWebBundle:InstitucioneducativaOperativoLogTipo','ieolt','with','ieol.institucioneducativaOperativoLogTipo = ieolt.id')
-                                        ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','ieol.institucioneducativa = ie.id')
-                                        ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','ieol.gestionTipoId = gt.id')
-                                        ->where('ie.id = :sie')
-                                        ->andWhere('gt.id = :gestion')
-                                        ->andWhere('ieolt.id in (1,2)')
-                                        ->setParameter('sie', $sie)
-                                        ->setParameter('gestion', $gestion)
-                                        ->orderBy('ieol.id','desc')
-                                        ->setMaxResults(1)
-                                        ->getQuery()
-                                        ->getResult()[0];
-
-                    if($operativoLog){
-                        $accion = $operativoLog->getInstitucioneducativaOperativoLogTipo()->getId();
-                        if($accion == 1){
-                            $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
-                            return $this->redirectToRoute('solicitudModificacionCalificaciones');
-                        }
-                        // VERIFICAMOS SI SE SUBIO EL ARCHIVO id = 2
-                        if($accion == 2){
-                            $operativo = $operativoLog->getPeriodoTipo()->getId();
-                            $operativoActual = $this->get('funciones')->obtenerOperativo($sie, $gestion);
-                            if( in_array($this->session->get('roluser'), array(7,8,10))) {
-                                $operativoActual = $operativoActual + 1;
-                            }
-                            if($operativoActual < $operativo){
-                                $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
-                                return $this->redirectToRoute('solicitudModificacionCalificaciones');
-                            }
-                        }
-                    }
-                }
-            }
-
             $idSolicitud = $request->get('idSolicitud');
             // Verificamos si la solicitud sigue en estado 1, para aprobralo 2 o rechazarlo 3
             if($solicitud->getEstado() != 1){
@@ -1343,6 +1274,77 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
                 $nuevoEstado = $request->get('state');
                 if($nuevoEstado == 'approved'){
+
+                    // OBTENEMOS EL NUEVO ESTADO DE MATRICULA QUE TENDRA CON LAS MODIFICACIONES
+                    $nuevoEstadoMatricula = $this->calcularNuevoEstadoMatriculaConSolicitud($request->get('idSolicitud'));
+
+                    // SI EL NUEVO ESTADO ES PROMOVIDO VERIFICAMOS
+                    if ($nuevoEstadoMatricula == 5){
+                        // VERIFICAMOS SI SE TIENE OTRA INSCRIPCION DEL MISMO GRADO Y NIVEL APROBADO O EFECTIVO
+                        // RETURN TRUE OR FALSE
+                        $inscripcionSimilarAprobada = $this->get('funciones')->existeInscripcionSimilarAprobado($idInscripcion);
+                        if ($inscripcionSimilarAprobada) {
+                            $this->get('session')->getFlashBag()->add('error', 'La solicitud no puede ser aprobada porque el estudiante ya cuenta con una inscripcion del mismo nivel y grado con un estado de matrícula Promovido o Efectivo.');
+                            return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                        }
+                    }
+
+                    $sie = $solicitud->getInstitucioneducativaId();
+                    $gestion = $solicitud->getGestionTipoId();
+                    $nivel = $inscripcion[0]['nivel'];
+                    $grado = $inscripcion[0]['grado'];
+
+                    $gestionActual = $this->session->get('currentyear');
+
+                    if($gestion == $gestionActual){
+                        // VERIFICAMOS SI LA UE ES
+                        // 1 PLENA
+                        // 2 TECNICA TECNOLOGICA
+                        // 3 MODULAR
+                        // 7 TRANSFORMACION BTH
+                        // PARA NO CONSIDERAR ESTA VALIDACION YA QUE NO DESCARGAN ARCHIVOS
+                        $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
+                        if (!in_array($tipoUE['id'], [1,2,3,7])) {
+
+                            // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
+                            $operativoLog = $em->createQueryBuilder()
+                                                ->select('ieol')
+                                                ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
+                                                ->innerJoin('SieAppWebBundle:InstitucioneducativaOperativoLogTipo','ieolt','with','ieol.institucioneducativaOperativoLogTipo = ieolt.id')
+                                                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','ieol.institucioneducativa = ie.id')
+                                                ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','ieol.gestionTipoId = gt.id')
+                                                ->where('ie.id = :sie')
+                                                ->andWhere('gt.id = :gestion')
+                                                ->andWhere('ieolt.id in (1,2)')
+                                                ->setParameter('sie', $sie)
+                                                ->setParameter('gestion', $gestion)
+                                                ->orderBy('ieol.id','desc')
+                                                ->setMaxResults(1)
+                                                ->getQuery()
+                                                ->getResult()[0];
+
+                            if($operativoLog){
+                                $accion = $operativoLog->getInstitucioneducativaOperativoLogTipo()->getId();
+                                if($accion == 1){
+                                    $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
+                                    return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                                }
+                                // VERIFICAMOS SI SE SUBIO EL ARCHIVO id = 2
+                                if($accion == 2){
+                                    $operativo = $operativoLog->getPeriodoTipo()->getId();
+                                    $operativoActual = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+                                    if( in_array($this->session->get('roluser'), array(7,8,10))) {
+                                        $operativoActual = $operativoActual + 1;
+                                    }
+                                    if($operativoActual < $operativo){
+                                        $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
+                                        return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     // Reiniciar el primary key de las tablas estudiante_nota y estudiante_nota_cualitativa
                     $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');");
                     $query->execute();
@@ -1419,10 +1421,12 @@ class SolicitudModificacionCalificacionesController extends Controller {
                     $this->get('session')->getFlashBag()->add('approved', 'La solicitud fue aprobada');
                     return $this->redirect($this->generateUrl('solicitudModificacionCalificaciones'));
                 }else{
-                    $em->getConnection()->commit();
                     $solicitud->setEstado(3);
                     $solicitud->setRespuesta($request->get('observacion'));
                     $em->flush();
+
+                    $em->getConnection()->commit();
+
                     $this->get('session')->getFlashBag()->add('rejected', 'La solicitud fue rechazada');
                     return $this->redirect($this->generateUrl('solicitudModificacionCalificaciones'));
                 }
