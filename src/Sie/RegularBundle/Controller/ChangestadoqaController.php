@@ -451,6 +451,24 @@ class ChangestadoqaController extends Controller {
                 $em->flush();      
             }
 
+             $objRudeApoderadoInscripcion = $em->getRepository('SieAppWebBundle:RudeApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            foreach ($objRudeApoderadoInscripcion as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
+            $objCdlInscripcion = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            foreach ($objCdlInscripcion as $element) {
+                $em->remove($element);
+            }
+            $em->flush();            
+
+
+            if ($objRude) {
+                $em->remove($objRude);
+            }
+            $em->flush();
+
               /////////////////////////////////////rude tables
 
               $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
