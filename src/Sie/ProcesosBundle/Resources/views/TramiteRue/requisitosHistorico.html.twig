@@ -365,7 +365,7 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <input id="checkbox-primary" {% if datos[t.tramite_tipo].i_convenio_administracion == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
                                                                     <label for="checkbox-primary">Convenio de administración de infraestructura firmado entre el Gobierno Autónomo Municipal correspondiente y la Institución prestadora del servicio (si corresponde).</label>
                                                                 </div>
                                                             </div>
@@ -377,58 +377,62 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <input id="checkbox-primary" {% if datos[t.tramite_tipo].i_registro_culto == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
                                                                     <label for="checkbox-primary">En caso de Institucionaes Religiosas, fotocopia legalizada del certificado de registro de culto emitido por el Ministerio de Relaciones Exteriores.</label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <input id="checkbox-primary" {% if datos[t.tramite_tipo].i_org_nogubernamental == 1 %} checked="checked" {% endif %}  type="checkbox" disabled="disabled">
                                                                     <label for="checkbox-primary">Para instituciones no gubernamentales, fotocopia legalizada del certificado de registro emitido por el Viceministerio de Inversion Pública y Financiamiento Externo.</label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <input id="checkbox-primary" {% if datos[t.tramite_tipo].i_form_fundaempresa == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
                                                                     <label for="checkbox-primary">Copia legalizada del formulario de registro de comercio, emitido por FUNDAEMPRESA, (si corresponde).</label>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group col-md-12">
-                                                                <div class="col-md-8">
-                                                                    <strong>Nro. de Matrícula de Comercio:</strong>
+                                                            {% if datos[t.tramite_tipo].i_form_fundaempresa == 1 %}
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        <strong>Nro. de Matrícula de Comercio:</strong>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[t.tramite_tipo].nro_fundaempresa}}
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    {{datos[t.tramite_tipo].nro_fundaempresa}}
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        <strong>Fecha de Inscripción:</strong>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[t.tramite_tipo].fecha_fundaempresa}}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group col-md-12">
-                                                                <div class="col-md-8">
-                                                                    <strong>Fecha de Inscripción:</strong>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    {{datos[t.tramite_tipo].fecha_fundaempresa}}
-                                                                </div>
-                                                            </div>
+                                                            {% endif %}
                                                             <div class="form-group col-md-12">
                                                                 <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <input id="checkbox-primary" {% if datos[t.tramite_tipo].i_fotocopia_nit == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
                                                                     <label for="checkbox-primary">Fotocopia legalizada del certificado del Número de Identificación Tributaria NIT, (si corresponde).</label>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group col-md-12">
-                                                                <div class="col-md-8">
-                                                                    <strong>Nro. de N.I.T.:</strong>
+                                                            {% if datos[t.tramite_tipo].i_fotocopia_nit == 1 %}
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        <strong>Nro. de N.I.T.:</strong>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[t.tramite_tipo].nit_dependencia}}
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    {{datos[t.tramite_tipo].nit_dependencia}}
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="ckbox ckbox-primary">
+                                                                        <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                        <label for="checkbox-primary">Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).</label>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group col-md-12">
-                                                                <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
-                                                                    <label for="checkbox-primary">Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).</label>
-                                                                </div>
-                                                            </div>
+                                                            {% endif %}
                                                             <div class="form-group col-md-12">
                                                                 <div class="col-md-8">
                                                                     <strong>Nro. del Testimonio de personeria jurídica de la entidad prestadora de servicio:</strong>
@@ -538,10 +542,11 @@
                                                             </div>
                                                             <div  class="form-group col-md-12 ">
                                                                 <div class="ckbox ckbox-primary">
-                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <input id="checkbox-primary" {% if datos[t.tramite_tipo].i_copianit_cn %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
                                                                     <label for="checkbox-primary">Copia computarizada del N.I.T., (si corresponde).</label>
                                                                 </div>
                                                             </div>
+                                                            {% if datos[t.tramite_tipo].i_copianit_cn %}
                                                             <div class="form-group col-md-12">
                                                                 <div class="col-md-8">
                                                                     <strong>'Nro. de N.I.T.:</strong>
