@@ -369,6 +369,90 @@ class ChangestadoqaController extends Controller {
                   $em->remove($element3);
               }
 
+              /////////////////////////////////////rude tables
+
+                          //to remove all info about RUDE
+            $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion' =>  $arrDataInfo['estInsId'] ));
+
+            if($objRude){
+
+                $objRudeAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude' => $objRude->getId() ));
+
+                foreach ($objRudeAbandono as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+
+                $objRudeAccesoInternet = $em->getRepository('SieAppWebBundle:RudeAccesoInternet')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeAccesoInternet as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeActividad = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeActividad as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeCentroSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeCentroSalud as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeDiscapacidadGrado = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeDiscapacidadGrado as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeEducacionDiversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeEducacionDiversa as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeIdioma = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeIdioma as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeMedioTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeMedioTransporte as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeMediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeMediosComunicacion as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeRecibioPago = $em->getRepository('SieAppWebBundle:RudeRecibioPago')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeRecibioPago as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeServicioBasico = $em->getRepository('SieAppWebBundle:RudeServicioBasico')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeServicioBasico as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeTurnoTrabajo = $em->getRepository('SieAppWebBundle:RudeTurnoTrabajo')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeTurnoTrabajo as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();      
+            }
+
+              /////////////////////////////////////rude tables
+
               $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
               $em->remove($inscriptionStudent);
               $em->flush();
