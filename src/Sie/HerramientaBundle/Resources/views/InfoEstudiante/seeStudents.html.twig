@@ -158,7 +158,7 @@
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
                                 <td>
-                                    {% if app.session.get('acceso_total') %}
+                                    {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
                                         {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
                                             {{data.estadomatricula}}
                                         {% else %}
