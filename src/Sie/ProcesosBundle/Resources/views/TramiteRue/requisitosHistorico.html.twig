@@ -547,14 +547,15 @@
                                                                 </div>
                                                             </div>
                                                             {% if datos[t.tramite_tipo].i_copianit_cn %}
-                                                            <div class="form-group col-md-12">
-                                                                <div class="col-md-8">
-                                                                    <strong>'Nro. de N.I.T.:</strong>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        <strong>'Nro. de N.I.T.:</strong>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[t.tramite_tipo].i_nit_cn}}
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    {{datos[t.tramite_tipo].i_nit_cn}}
-                                                                </div>
-                                                            </div>
+                                                            {% endif %}
                                                             <div class="form-group col-md-12">
                                                                 <div class="col-md-8">
                                                                     <strong>Nro. de testimonio de poder de representante legal:</strong>
@@ -608,16 +609,18 @@
                                                                 <label for="checkbox-primary">Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).</label>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group col-md-12">
-                                                            <div class="col-md-8">
-                                                                <strong>Certificado de defunción, (en caso de que la Unidad Educativa lleve nombre de persona):</strong>
+                                                        {% if datos[t.tramite_tipo].i_certdefuncion_cn is defined %}
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    <strong>Certificado de defunción, (en caso de que la Unidad Educativa lleve nombre de persona):</strong>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certdefuncion_cn )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                        <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-4">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certdefuncion_cn )}}" target="_blank" data-placement="top" title="Ver informe">
-                                                                    <i class="fa fa-file-pdf-o fa-2x" >  </i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </div><!-- /.panel-body -->
