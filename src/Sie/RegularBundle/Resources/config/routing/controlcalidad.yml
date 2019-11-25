@@ -51,3 +51,7 @@ ccalidad_omitir_historico:
 ccalidad_ratificar_edad:
     path:     /ratificarEdad
     defaults: { _controller: "SieRegularBundle:ControlCalidad:ratificarEdad" }
+
+ccalidad_validar_estudiante_segip:
+    path:     /validarEstudianteSegip
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:validarEstudianteSegip" }
