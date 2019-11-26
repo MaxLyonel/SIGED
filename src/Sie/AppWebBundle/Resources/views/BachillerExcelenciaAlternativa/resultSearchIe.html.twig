@@ -110,7 +110,18 @@
                                         <td>{{ estudiante.nombre }}</td>
                                         <td>{{ estudiante.periodo }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
-                                        <td class="text-center">{% if estudiante.segip_id == 1 %}<a href="#" onclick="openRegistroBachiller({{estudiante.estudiante_id}}, {{estudiante.estudiante_inscripcion_id}}, {{estudiante.institucioneducativa_id}}, {{estudiante.genero_tipo_id}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>{% else %}<span class="text-danger">Estudiante observado (Verificar datos personales)</span>{% endif %}</td>
+                                        <td class="text-center">
+                                            {% if estudiante.segip_id == 1 %}
+                                                <a href="#" onclick="openRegistroBachiller({{estudiante.estudiante_id}}, {{estudiante.estudiante_inscripcion_id}}, {{estudiante.institucioneducativa_id}}, {{estudiante.genero_tipo_id}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>
+                                            {% else %}
+                                                <span class="text-danger">Estudiante con observación</span>
+                                                <form action="{{path('bach_exc_alt_validar_estudiante_segip')}}" method="post">
+                                                    <input type="hidden" id="form_idEstudiante" name="form[idEstudiante]" value="{{estudiante.estudiante_id}}">
+                                                    <input type="hidden" id="form_subsistema" name="form[subsistema]" value="2">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -158,7 +169,18 @@
                                         <td>{{ estudiante.nombre }}</td>
                                         <td>{{ estudiante.periodo }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
-                                        <td class="text-center">{% if estudiante.segip_id == 1 %}<a href="#" onclick="openRegistroBachiller({{estudiante.estudiante_id}}, {{estudiante.estudiante_inscripcion_id}}, {{estudiante.institucioneducativa_id}}, {{estudiante.genero_tipo_id}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>{% else %}<span class="text-danger">Estudiante observado (Verificar datos personales)</span>{% endif %}</td>
+                                        <td class="text-center">
+                                            {% if estudiante.segip_id == 1 %}
+                                                <a href="#" onclick="openRegistroBachiller({{estudiante.estudiante_id}}, {{estudiante.estudiante_inscripcion_id}}, {{estudiante.institucioneducativa_id}}, {{estudiante.genero_tipo_id}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>
+                                            {% else %}
+                                                <span class="text-danger">Estudiante con observación</span>
+                                                <form action="{{path('bach_exc_alt_validar_estudiante_segip')}}" method="post">
+                                                    <input type="hidden" id="form_idEstudiante" name="form[idEstudiante]" value="{{estudiante.estudiante_id}}">
+                                                    <input type="hidden" id="form_subsistema" name="form[subsistema]" value="2">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
