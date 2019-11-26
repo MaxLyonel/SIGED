@@ -1295,8 +1295,9 @@ class DownloadController extends Controller {
         return $response;
 
     }
+    
     /*
-    report nivelation bth per course
+    report nivelation bth ttg per course
     */
     public function boletinNivelacionTTGBthAction(Request $request, $iecId, $codue){
 
@@ -1315,6 +1316,27 @@ class DownloadController extends Controller {
         return $response;
 
     }
+
+    /*
+    report nivelation bth ttg per course
+    */
+    public function boletinNivelacionTTEBthAction(Request $request, $iecId, $codue){
+
+        $response = new Response();
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$iecId.'|'.$codue;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($data);
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'bth_niv_'.$codue.'_'.$iecId. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinCentralizadorNivelacionBTH_TTE_v1_ma.rptdesign&inscripid=' . $iecId.'&codue='. $codue.'&lk='. $link . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }    
 
 
 }

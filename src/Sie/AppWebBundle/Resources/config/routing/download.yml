@@ -173,3 +173,7 @@ donwload_studentBthEspecialidadesEliminadas:
 donwload_boletinNivelacionTTGBth:
     path:     /boletinNivelacionTTGBth/{iecId}/{codue}
     defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTGBth }
+
+donwload_boletinNivelacionTTEBth:
+    path:     /boletinNivelacionTTEBth/{iecId}/{codue}
+    defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTEBth }    
