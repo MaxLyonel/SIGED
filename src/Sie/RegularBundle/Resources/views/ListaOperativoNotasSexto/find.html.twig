@@ -54,9 +54,9 @@
                                         <td data-title="F. Subida." class="text-center">{{ entity.fecha_registro |date('d-m-Y') }}</td>
                                         <td>
                                         {% if entity.estado == '10' %}
-                                        <button class="btn btn-xs btn-danger">Cerrado</button>
+                                        <button class="btn btn-xs btn-success">Cerrado</button>
                                         {% else %}
-                                        <button class="btn btn-xs btn-success">Pendiente</button>
+                                        <button class="btn btn-xs btn-warning">Pendiente</button>
                                         {% endif %}
                                         </td>
                                     </tr>
