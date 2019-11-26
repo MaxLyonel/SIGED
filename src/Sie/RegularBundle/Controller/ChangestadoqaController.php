@@ -369,6 +369,13 @@ class ChangestadoqaController extends Controller {
                   $em->remove($element3);
               }
 
+            //paso X borrando objHumanistico
+            $objHumanistico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            foreach ($objHumanistico as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
               /////////////////////////////////////rude tables
             $objApoIns = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
             //dump($objApoIns);die;
