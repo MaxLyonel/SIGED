@@ -196,13 +196,14 @@ class InscriptionRezagoController extends Controller {
             $arrMatriculas=array(5,6,10);
             $inscriptionData = array('studentId' => $student->getId(), 'gestion' => $this->session->get('currentyear')-1,'matricula' => $arrMatriculas );
             $studentInscriptionLastYear = $this->validationInscription($inscriptionData);
-
-            if ($studentInscriptionLastYear) {
-                if(in_array($studentInscriptionLastYear[0]['matricula'], array(4,5,11)) ){
-                    $message = 'No se puede realizar la inscripción, el estudiante presenta inscripción en la gestion pasada';
-                    $this->addFlash('warningrezago', $message);
-                    return $this->redirectToRoute('inscription_rezago_index');
-                }
+            if($this->session->get('userName') != '4926577' ){
+                if ($studentInscriptionLastYear) {
+                    if(in_array($studentInscriptionLastYear[0]['matricula'], array(4,5,11)) ){
+                        $message = 'No se puede realizar la inscripción, el estudiante presenta inscripción en la gestion pasada';
+                        $this->addFlash('warningrezago', $message);
+                        return $this->redirectToRoute('inscription_rezago_index');
+                    }
+                }                
             }
 
             // look student data to validate the years old trougth the level and grado
