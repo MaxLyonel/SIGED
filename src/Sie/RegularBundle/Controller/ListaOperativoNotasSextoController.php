@@ -76,14 +76,67 @@ class ListaOperativoNotasSextoController extends Controller{
          $distrito = $data['distrito'];
         
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT i.id,jg.distrito_tipo_id, i.institucioneducativa,ilog.gestion_tipo_id,ilog.fecha_registro, ilog.institucioneducativa_operativo_log_tipo_id,
-            CASE WHEN(ilog.institucioneducativa_operativo_log_tipo_id = 10)THEN '1' ELSE '0' END as estado
-            FROM institucioneducativa i 
-            INNER JOIN jurisdiccion_geografica jg  on i.le_juridicciongeografica_id = jg.id
-            INNER JOIN institucioneducativa_operativo_log ilog on i.id = ilog.institucioneducativa_id
-            WHERE jg.distrito_tipo_id = $distrito and ilog.gestion_tipo_id >= $gestion");
+        // $query = $em->getConnection()->prepare("SELECT i.id, jg.distrito_tipo_id, i.institucioneducativa
+        //     FROM institucioneducativa i 
+        //     INNER JOIN jurisdiccion_geografica jg  on i.le_juridicciongeografica_id = jg.id
+        //     WHERE jg.distrito_tipo_id = $distrito
+        //     AND i.orgcurricular_tipo_id = 1
+        //     AND i.estadoinstitucion_tipo_id = 10
+        //     ORDER BY i.id ASC");
+        // $query->execute();
+        // $infoUE = $query->fetchAll();
+
+        // $array = [];
+        // foreach ($infoUE as $value) {
+        //     $operativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
+        //         'gestionTipoId'=>$gestion,
+        //         'institucioneducativa'=>$value['id'],
+        //         'institucioneducativaOperativoLogTipo'=>10
+        //     ));
+
+        //     if ($operativoLog) {
+        //         $array[] = array(
+        //             'id'=>$value['id'],
+        //             'distrito_tipo_id'=>$value['distrito_tipo_id'],
+        //             'institucioneducativa'=>$value['institucioneducativa'],
+        //             'gestion_tipo_id'=>$gestion,
+        //             'fecha_registro'=>$operativoLog->getFechaRegistro(),
+        //             'estado'=>1
+        //         );
+        //     }else{
+        //         $array[] = array(
+        //             'id'=>$value['id'],
+        //             'distrito_tipo_id'=>$value['distrito_tipo_id'],
+        //             'institucioneducativa'=>$value['institucioneducativa'],
+        //             'gestion_tipo_id'=>$gestion,
+        //             'fecha_registro'=>'',
+        //             'estado'=>0
+        //         );
+        //     }
+        // }
+
+        // $infoUE = $array;
+        $query = $em->getConnection()->prepare("
+            select distinct on (ie.id, ie.institucioneducativa)
+            ie.id,
+            ie.institucioneducativa,
+            jg.distrito_tipo_id,
+            ieol.gestion_tipo_id,
+            ieol.fecha_registro,
+            ieol.institucioneducativa_operativo_log_tipo_id as estado
+            from institucioneducativa ie
+            inner join jurisdiccion_geografica jg on ie.le_juridicciongeografica_id = jg.id
+            left join institucioneducativa_operativo_log ieol on ieol.institucioneducativa_id = ie.id
+            where jg.distrito_tipo_id = :distrito
+            and ie.orgcurricular_tipo_id = 1
+            and ie.estadoinstitucion_tipo_id = 10
+            and ieol.gestion_tipo_id = :gestion
+            order by ie.id asc, ie.institucioneducativa, ieol.institucioneducativa_operativo_log_tipo_id desc");
+        $query->bindValue('gestion', $gestion);
+        $query->bindValue('distrito', $distrito);
         $query->execute();
         $infoUE = $query->fetchAll();
+
         return($infoUE); 
 
 
