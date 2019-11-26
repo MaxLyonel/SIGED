@@ -59,6 +59,15 @@
                     <a class="btn btn-menu tooltips" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                         <i class="fa fa-download" style="color:#FFFFFF"></i>
                     </a>
+
+                    <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTGBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTG">
+                        <i class="fa fa-download" style="color:#FFFFFF"></i>
+                    </a>
+
+                    <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTEBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTE">
+                        <i class="fa fa-download" style="color:#FFFFFF"></i>
+                    </a>                    
+
                     {#
                     {% if operativo >= 5 %}
                       <div class="col-md-4">
