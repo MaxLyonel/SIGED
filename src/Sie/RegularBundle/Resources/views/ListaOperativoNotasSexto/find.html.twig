@@ -1,0 +1,71 @@
+{# {% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+
+    {{parent()}}
+    <style>
+        .higherWider {
+            width: 800px;
+            margin-top:100px;
+        }
+
+    </style>
+{% endblock %} #}
+{# {% block contentoption%} #}
+<div class="row">
+        <div class="col-md-12">
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-sub-heading">
+                    <div class="callout callout-info">
+                        <p class="text"><strong>Resultado de la Busqueda:</br></strong></p>
+                    </div>
+                </div><!-- /.panel-subheading -->
+                <div class="panel-body no-padding rounded-bottom">
+                 <small>
+                        <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                            <thead class="">
+                                <tr>
+                                    <th colspan="9"><h4> <span class="label label-success">DISTRITO: {{dataDistrito.distrito}}</span> </h4></th>
+                                </tr>
+                                <tr class="">
+                                    <th>No.</th>
+                                    <th>SIE</th>
+                                    <th>Unidad Educativa</th>
+                                    <th>Gestión</th>
+                                    <th>Distrito</th>
+                                    <th>Fecha Cierre</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entity in objUeOperativoCerrado %}
+                                    <tr>
+                                        <td data-title="No.">{{loop.index}}</td>
+                                        <td data-title="SIE">{{entity.id}}</a></td>
+                                        <td data-title="Unidad Educativa">{{ entity.institucioneducativa }} </td>
+                                        <td data-title="Gestión" class="text-center">{{ entity.gestion_tipo_id }}</td>
+                                        <td data-title="Distrito" class="text-center">{{ entity.distrito_tipo_id }}</td>
+                                        <td data-title="F. Subida." class="text-center">{{ entity.fecha_registro |date('d-m-Y') }}</td>
+                                        <td>
+                                        {% if entity.estado=='1' %}
+                                        <button class="btn btn-xs btn-danger">Cerrado</button>
+                                        {% else %}
+                                        <button class="btn btn-xs btn-success">Pendiente</button>
+                                        {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </small>
+                </div>
+            </div>
+        </div>
+ </div>
+{#  {% endblock %} #}

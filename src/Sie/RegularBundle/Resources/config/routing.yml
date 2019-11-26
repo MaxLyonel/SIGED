@@ -375,3 +375,7 @@ sie_regular_specialmodificationdata_student:
 sie_regular_gestionaoperativoespecialidad:
      resource: "@SieRegularBundle/Resources/config/routing/gestionaoperativoespecialidad.yml"
      prefix:   /sie/admopespeciality
+
+sie_regular_lista_operativo_notas_sexto:
+    resource: "@SieRegularBundle/Resources/config/routing/ListaOperativoNotasSexto.yml"
+    prefix:   /sie/listaOperativoNotasSexto
