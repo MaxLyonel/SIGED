@@ -926,6 +926,7 @@ class InstitucioneducativaController extends Controller {
             $entity->setDireccion("");
             $entity->setZona("");
             $entity->setNombreSubcea("");
+            $entity->setPeriodoTipoId(1);
             $entity->setCodCerradaId(10);
             $entity->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById(0));
             $entity->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->findOneById(0));
