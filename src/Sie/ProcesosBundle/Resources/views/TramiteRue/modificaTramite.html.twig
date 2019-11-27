@@ -22,7 +22,7 @@
         {% endfor %}
     </td>
 {% elseif id == 35 %}{# Reduccion de Nivel #}
-    <td>{{tramiteTipo.tramiteTipo}}</td>
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'desglose' %}<strong>(Por Desglose){% endif %}</strong></td>
     <td>
         <ul>
             {% for n in ieNivel %}
@@ -392,6 +392,13 @@
     </td>
     <td>
         
+    </td>
+{% elseif id == 54 %}{# apertura de unidad educativa #}
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'desglose' %}<strong>(Por Desglose){% endif %}</strong></td>
+    <td>
+    </td>
+    <td>
+        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal_apertura" data-placement="top" title="Datos de la Nueva Unidad Educativa" onclick="apertura({{id}})"><i class="glyphicon glyphicon-plus"></i>Registrar Nueva Unidad Educativa</button>
     </td>
 {% endif %}
 <script>

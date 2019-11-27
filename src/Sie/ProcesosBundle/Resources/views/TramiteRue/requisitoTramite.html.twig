@@ -326,7 +326,7 @@
                                                                 {{ form_label(form.nit_dependencia) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.nit_dependencia,{'attr':{'class':'form-control req36'}}) }}
+                                                                {{ form_widget(form.nit_dependencia,{'attr':{'class':'form-control validar req36'}}) }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -680,6 +680,402 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    {% elseif id == 54 %}{# apertura #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_apertura) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_apertura,{'attr':{'class':'req54'}}) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 1 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_actafundacion_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_actafundacion_apertura,{'attr':{'class':'req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_folio_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_folio_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_certificacion_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_certificacion_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_area_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {% for a in form.i_area_apertura %}
+                                                                <div class="col-md-3 rdio rdio-primary circle">
+                                                                    {{ form_widget(a,{'attr':{'class':'area_jur req54'}}) }}
+                                                                    {{ form_label(a) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_compromiso_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_compromiso_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if dependencia.id == 2 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_representante_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_representante_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_actafundacion_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_actafundacion_apertura,{'attr':{'class':'req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_folio_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_folio_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_convenio_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_convenio_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_convenioadministracion_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_convenioadministracion_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_certificacion_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_certificacion_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_area_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {% for a in form.i_area_apertura %}
+                                                                <div class="col-md-3 rdio rdio-primary circle">
+                                                                    {{ form_widget(a,{'attr':{'class':'area_jur req54'}}) }}
+                                                                    {{ form_label(a) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_constitucion_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_constitucion_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_registro_culto_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_registro_culto_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_org_nogubernamental_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_org_nogubernamental_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_form_fundaempresa_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_form_fundaempresa_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div style="display:none" id="fundaempresaApertura">
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.nro_fundaempresa_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.nro_fundaempresa_apertura,{'attr':{'class':'form-control req54'}}) }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.fecha_fundaempresa_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.fecha_fundaempresa_apertura,{'attr':{'class':'form-control date req54'}}) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_fotocopia_nit_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_fotocopia_nit_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div style="display:none" id="nitApertura">
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.nit_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.nit_apertura,{'attr':{'class':'form-control validar req54'}}) }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                                {{ form_widget(form.i_balance_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                                {{ form_label(form.i_balance_apertura) }}                                                            
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_testimonioconvenio) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_testimonioconvenio,{'attr':{'class':'form-control req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if dependencia.id == 3 %}
+                                                    {% if constitucion != 5 %}
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                                {{ form_widget(form.i_personeria_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                                {{ form_label(form.i_personeria_apertura) }}                                                            
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if constitucion == 5 %}
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                                {{ form_widget(form.i_afcoop_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                                {{ form_label(form.i_afcoop_apertura) }}                                                            
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_fotocopia_nit_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_fotocopia_nit_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.nit_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.nit_apertura,{'attr':{'class':'form-control validar req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_balance_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_balance_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                     <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_representante_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_representante_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_copia_ci_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_copia_ci_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.ci_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.ci_apertura,{'attr':{'class':'form-control req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_funcionamiento_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_funcionamiento_apertura,{'attr':{'class':'req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_estatutos_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.i_estatutos_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    {% if constitucion in [2,6] %}
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.i_funcionamiento_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.i_funcionamiento_apertura,{'attr':{'class':'req54'}}) }}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if constitucion in [3,4,6] %}
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                                {{ form_widget(form.i_form_fundaempresa_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                                {{ form_label(form.i_form_fundaempresa_apertura) }}                                                            
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.nro_fundaempresa_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.nro_fundaempresa_apertura,{'attr':{'class':'form-control req54'}}) }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.fecha_fundaempresa_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.fecha_fundaempresa_apertura,{'attr':{'class':'form-control req54'}}) }}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.i_empleadores_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.i_empleadores_apertura,{'attr':{'class':'req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    {% if constitucion == 6 %}
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                                {{ form_widget(form.i_convenio_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                                {{ form_label(form.i_convenio_apertura) }}                                                            
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{id}}">
+                                            <div class="row">
+                                                {% if dependencia.id == 3 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.ii_alquiler_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {% for a in form.ii_alquiler_apertura %}
+                                                                <div class="col-md-3 rdio rdio-primary circle">
+                                                                    {{ form_widget(a,{'attr':{'class':'alquilerApertura req54'}}) }}
+                                                                    {{ form_label(a) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12" style="display:none" id="folioApertura">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.ii_folio_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.ii_folio_apertura) }}                                                            
+                                                        </div>
+                                                    </div> 
+                                                    <div class="form-group col-md-12" style="display:none" id="contratoApertura">
+                                                        <div class="col-md-6">
+                                                            {{ form_label(form.ii_contrato_apertura) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{ form_widget(form.ii_contrato_apertura,{'attr':{'class':'req54'}}) }}
+                                                        </div>
+                                                    </div>                                                       
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_inventario_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                        {{ form_label(form.ii_inventario_apertura) }}                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_planos_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                        {{ form_label(form.ii_planos_apertura) }}                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{id}}">
+                                            <div class="row">
+                                                {% if dependencia.id == 3 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_reglamento_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.iii_reglamento_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_convivencia_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.iii_convivencia_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_manual_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.iii_manual_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_kardex_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.iii_kardex_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_sippase_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.iii_sippase_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.iii_poa_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                        {{ form_label(form.iii_poa_apertura) }}                                                            
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 3 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_contratos_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
+                                                            {{ form_label(form.iii_contratos_apertura) }}                                                            
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 </div><!-- /.panel-body -->
                                 <!--/ End tabs content -->
@@ -706,7 +1102,7 @@
 </div><!-- /.modal-dialog -->
 
 <script>
-    {# $(document).on('change','input[type="file"]',function(){
+    $(document).on('change','input[type="file"]',function(){
         // this.files[0].size recupera el tamaño del archivo
         // alert(this.files[0].size);
         var fileName = this.files[0].name;
@@ -717,7 +1113,14 @@
             this.value = '';
             this.files[0].name = '';
         }
-    }); #}
+    });
+    $(function(){
+            $(".validar").keydown(function(event){
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
     $(".alquiler").change(function () {	 
         if ($(this).val() == 'SI'){
             $('#contrato').show();
@@ -772,6 +1175,35 @@
             $('#nitCn').hide();
         }
     });
+    $("#form_i_form_fundaempresa_apertura").change(function () {
+        $('#form_nro_fundaempresa_apertura').val('');
+        $('#form_fecha_fundaempresa_apertura').val('');
+        if ($(this).is(':checked')){
+            $('#fundaempresaApertura').show();
+        }else{
+            $('#fundaempresaApertura').hide();
+        }
+    });
+    $("#form_i_fotocopia_nit_apertura").change(function () {
+        $('#form_nit_apertura').val('');
+        $('#form_i_balance_apertura').attr('checked',false);	 
+        if ($(this).is(':checked')){
+            $('#nitApertura').show();
+        }else{
+            $('#nitApertura').hide();
+        }
+    });
+    $(".alquilerApertura").change(function () {	 
+        $('#form_ii_contrato_apertura').val('');
+        $('#form_ii_folio_apertura').attr('checked',false);
+        if ($(this).val() == 'SI'){
+            $('#contratoApertura').show();
+            $('#folioApertura').hide();
+        }else{
+            $('#contratoApertura').hide();
+            $('#folioApertura').show();
+        }
+    });
     $(".req34").click(function(){
         $('#validar34').val(0);
         $('#msg34').empty();
@@ -808,5 +1240,9 @@
     $(".req45").click(function(){
         $('#validar45').val(0);
         $('#msg45').empty();
-    });    
+    });
+    $(".req54").click(function(){
+        $('#validar54').val(0);
+        $('#msg54').empty();
+    });  
 </script>

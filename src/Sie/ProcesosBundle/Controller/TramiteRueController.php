@@ -101,13 +101,7 @@ class TramiteRueController extends Controller
     public function createInicioModificacionForm($flujotipo,$tarea,$tramite,$idrue,$institucioneducativa)
     {
         $em = $this->getDoctrine()->getManager();
-        $iddep = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-        $idprov = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-        $idmun = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
-        $idcan = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
-        $idloc = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
-        $iddis = $institucioneducativa->getLeJuridicciongeografica()->getDistritoTipo()->getId();
-        $le = $this->obtieneLoalizacion($iddep,$idprov,$idmun,$idcan,$idloc);
+       
         $this->tramiteTipoArray = array(32,33,44);
         //$this->tramiteTipoArray = array(32,33,39,40,44);
         if(in_array($institucioneducativa->getDependenciaTipo()->getId(),array(0,3,4,5))){
@@ -116,27 +110,27 @@ class TramiteRueController extends Controller
         }
         //dump($this->tramiteTipoArray);die;
         $form = $this->createFormBuilder()
-        ->setAction($this->generateUrl('tramite_rue_inicio_modificacion_guardar'))
-        ->add('flujoproceso', 'hidden', array('data' =>$tarea ))
-        ->add('flujotipo', 'hidden', array('data' =>$flujotipo ))
-        ->add('tramite', 'hidden', array('data' =>$tramite?$tramite->getId():$tramite ))
-        ->add('idrue', 'hidden', array('data' =>$idrue ))
-        ->add('tramitetipo', 'hidden', array('data' =>33 ))
-        ->add('area', 'choice', array('label' => 'ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:','required'=>true,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'Urbano','R'=>'Rural')))
-        ->add('tramites','entity',array('label'=>'Tipo de Trámite:','required'=>true,'multiple' => false,'expanded' => false,'attr'=>array('class'=>'form-control','data-placeholder'=>"Seleccionar tipo de trámite"),'class'=>'SieAppWebBundle:TramiteTipo',
-            'query_builder'=>function(EntityRepository $tr){
-            return $tr->createQueryBuilder('tr')
-                ->where('tr.obs = :rue')
-                ->andWhere('tr.id not in (:tipo)')
-                //->andWhere('tr.id in (34,35,36,37,38,41,42,43,44,45)')
-                ->setParameter('rue','RUE')
-                ->setParameter('tipo',$this->tramiteTipoArray)
-                ->orderBy('tr.tramiteTipo','ASC');},
-            'property'=>'tramiteTipo','empty_value' => 'Seleccione tipo de trámite'))
-        ->add('tr', 'text')
-        ->add('observacion','textarea',array('label'=>'JUSTIFICACIÓN:','required'=>true,'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
-        ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
-        ->getForm();
+            ->setAction($this->generateUrl('tramite_rue_inicio_modificacion_guardar'))
+            ->add('flujoproceso', 'hidden', array('data' =>$tarea ))
+            ->add('flujotipo', 'hidden', array('data' =>$flujotipo ))
+            ->add('tramite', 'hidden', array('data' =>$tramite?$tramite->getId():$tramite ))
+            ->add('idrue', 'hidden', array('data' =>$idrue ))
+            ->add('tramitetipo', 'hidden', array('data' =>33 ))
+            ->add('area', 'choice', array('label' => 'ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:','required'=>true,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'Urbano','R'=>'Rural')))
+            ->add('tramites','entity',array('label'=>'Tipo de Trámite:','required'=>true,'multiple' => false,'expanded' => false,'attr'=>array('class'=>'form-control','data-placeholder'=>"Seleccionar tipo de trámite"),'class'=>'SieAppWebBundle:TramiteTipo',
+                'query_builder'=>function(EntityRepository $tr){
+                return $tr->createQueryBuilder('tr')
+                    ->where('tr.obs = :rue')
+                    ->andWhere('tr.id not in (:tipo)')
+                    //->andWhere('tr.id in (34,35,36,37,38,41,42,43,44,45)')
+                    ->setParameter('rue','RUE')
+                    ->setParameter('tipo',$this->tramiteTipoArray)
+                    ->orderBy('tr.tramiteTipo','ASC');},
+                'property'=>'tramiteTipo','empty_value' => 'Seleccione tipo de trámite'))
+            ->add('tr', 'text')
+            ->add('observacion','textarea',array('label'=>'JUSTIFICACIÓN:','required'=>true,'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
+            ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
+            ->getForm();
         return $form;
     }
 
@@ -144,6 +138,7 @@ class TramiteRueController extends Controller
         $id = $request->get('id');
         $tipo = $request->get('tipo');
         $ie = $request->get('ie');
+
         $em = $this->getDoctrine()->getManager();
         $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
         $tramiteTipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($id);
@@ -197,7 +192,8 @@ class TramiteRueController extends Controller
                     'form' => $form->createView(),
                     'id' => $id,
                     'tramiteTipo' => $tramiteTipo,
-                    'ieNivel'=>$ienivel
+                    'ieNivel'=>$ienivel,
+                    'tipo' => $tipo
                 );
                 break;
             case 36://cambio de dependencia
@@ -247,29 +243,6 @@ class TramiteRueController extends Controller
                 break;
             case 39://Fusion
                 //ampliacion y cierre definitivo
-                $ienivel = $em->getRepository('SieAppWebBundle:NivelTipo')->createQueryBuilder('nt')
-                    ->select('nt.id,nt.nivel')
-                    ->leftJoin('SieAppWebBundle:InstitucioneducativaNivelAutorizado', 'ien', 'with', 'nt.id = ien.nivelTipo')
-                    ->where('ien.institucioneducativa ='.$ie->getId())
-                    ->getQuery()
-                    ->getResult();
-                $this->nivelArray = array(11,12,13);
-                foreach($ienivel as $n){
-                    if(in_array($n['id'],$this->nivelArray)){
-                        $this->nivelArray = array_diff($this->nivelArray, array($n['id']));
-                    }
-                }
-                $form = $form
-                    ->add('nivelampliar','entity',array('label'=>'Ampliacion','required'=>false,'multiple' => true,'expanded' => true,'class'=>'SieAppWebBundle:NivelTipo','query_builder'=>function(EntityRepository $nt){
-                        return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id',array(11,12,13))->orderBy('nt.id','ASC');},'property'=>'nivel'))
-                    ->add('estadoinstitucion', 'checkbox', array('label' => 'CERRADA','required'  => true))
-                    ->add('siecerrar', 'text', array('label' => 'Código SIE de Unidad eEducativa a Cerrar Definitivamente:','required'=>false,'attr' => array('class' => 'form-control validar','maxlength'=>8)))
-                    ->getForm();
-                $data = array(
-                    'form' => $form->createView(),
-                    'id' => $id,
-                    'ieNivel'=>$ienivel
-                );
                 break;
             case 40://desglose
                 break;
@@ -307,7 +280,7 @@ class TramiteRueController extends Controller
                         ->add('estadoinstitucion', 'checkbox', array('label' => 'CERRADA','required'  => true));
                     if($tipo == 'fusion'){
                         $form = $form
-                        ->add('siefusion', 'text', array('label' => 'Código SIE de la Unidad Educativa a Cerrar definitivamente:','required'=>true,'attr' => array('class' => 'form-control validar','maxlength'=>8)));
+                            ->add('siefusion', 'text', array('label' => 'Código SIE de la Unidad Educativa a Cerrar definitivamente:','required'=>true,'attr' => array('class' => 'form-control validar','maxlength'=>8)));
                     }
                     $form = $form    
                         ->getForm()
@@ -345,6 +318,13 @@ class TramiteRueController extends Controller
                     'tramiteTipo' => $tramiteTipo,
                 );
                 break;
+            case 54://apertura de unidad educativa
+                $data = array(
+                    'id' => $id,
+                    'tramiteTipo' => $tramiteTipo,
+                    'tipo' => $tipo
+                );
+                break;
         }
         
         return $this->render('SieProcesosBundle:TramiteRue:modificaTramite.html.twig', $data);
@@ -352,10 +332,15 @@ class TramiteRueController extends Controller
 
     public function buscarRequisitosAction(Request $request){
         $id = $request->get('id');
-        //dump($id);die;
-        $ie = $request->get('ie');
         $em = $this->getDoctrine()->getManager();
-        $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
+        if($id != 54){
+            $ie = $request->get('ie');
+            $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
+        }else{
+            $dependencia = $request->get('dependencia');
+            $constitucion = $request->get('constitucion');
+            //dump($request);die;
+        }        
         $tramitetipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($id);
         $requisitos = array();
         $form = $this->createFormBuilder();
@@ -564,6 +549,106 @@ class TramiteRueController extends Controller
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
                     'dependencia' => $ie->getDependenciaTipo()
+                );
+                break;
+            case 54://apertura
+                $requisitos = array('legal'=>true,'infra'=>true,'admi'=>true);
+                //$dependencia = 1;  
+                if($dependencia == 1){
+                    $form = $form
+                        ->add('i_solicitud_apertura', 'file', array('label' => 'Adjuntar Solicitud de apertura dirigida a la Dirección Distrital Educativa correspondiente (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_folio_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.','required'  => false))
+                        ->add('i_actafundacion_apertura', 'file', array('label' => 'Adjuntar Acta de Fundación de la Unidad Educativa (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")));
+                }
+                if($dependencia == 2){
+                    $form = $form
+                        ->add('i_solicitud_apertura', 'file', array('label' => 'Adjuntar Solicitud de apertura dirigida a la Dirección Distrital Educativa correspondiente por la o el representante legal de la entidad prestadora de servicio (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_representante_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio de Poder del representante legal.','required'  => false))
+                        ->add('i_actafundacion_apertura', 'file', array('label' => 'Adjuntar Copia legalizada del Acta de Fundación (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_folio_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre de la entidad prestadora de servicio.','required'  => false))
+                        ->add('i_convenio_apertura', 'checkbox', array('label' => 'Convenio vigente de prestación de servicios educativos firmado entre la Institución Prestadora de Servicios y el Ministerio de Educación (ME) o el Director Departamental de Educación, según corresponda.','required'  => false))
+                        ->add('i_convenioadministracion_apertura', 'checkbox', array('label' => 'Convenio de administración de infraestructura firmado entre el Gobierno Autónomo Municipal correspondiente y la institución prestadora del servicio (si corresponde).','required'  => false))
+                        ->add('i_constitucion_apertura', 'checkbox', array('label' => 'Copia notaria actualizada del Acta de Constitución y estatutos de la Institución prestadora de servicios.','required'  => false))
+                        ->add('i_registro_culto_apertura', 'checkbox', array('label' => 'En caso de Institucionaes Religiosas, fotocopia legalizada del certificado de registro de culto emitido por el Ministerio de Relaciones Exteriores:','required'  => false))
+                        ->add('i_org_nogubernamental_apertura', 'checkbox', array('label' => 'Para organizaciones no gubernamentales, fotocopia legalizada del certificado de registro del Viceministerio de Inversion Pública y Financiamiento Externo.','required'  => false))
+                        ->add('i_form_fundaempresa_apertura', 'checkbox', array('label' => 'Copia legalizada del formulario virtual de registro de comercio, emitido por FUNDAEMPRESA, (si corresponde):','required'  => false))
+                        ->add('nro_fundaempresa_apertura', 'text', array('label' => 'Nro. de Matrícula de Comercio:','required'=>false,'attr' => array('class' => 'form-control')))
+                        ->add('fecha_fundaempresa_apertura', 'text', array('label' => 'Fecha de Inscripción:','required'=>false,'attr' => array('class' => 'form-control date')))
+                        ->add('i_fotocopia_nit_apertura', 'checkbox', array('label' => 'Fotocopia legalizada del certificado del Número de Identificación Tributaria NIT, (si corresponde):','required'  => false))
+                        ->add('nit_apertura', 'text', array('label' => 'Nro. de N.I.T.:','required'=>false,'attr' => array('class' => 'form-control validar')))
+                        ->add('i_balance_apertura', 'checkbox', array('label' => 'Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).','required'  => false))
+                        ->add('i_testimonioconvenio', 'text', array('label' => 'Nro. del Testimonio de personeria jurídica emitido por la entidad correspondiente:','required'=>false,'attr' => array('class' => 'form-control validar')));
+                }
+                if( $dependencia == 1 or $dependencia == 2){
+                    $form = $form
+                        ->add('i_certificacion_apertura', 'checkbox', array('label' => 'Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.','required'  => false))
+                        ->add('i_area_apertura', 'choice', array('label' => 'Área geográfica:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))    
+                        ->add('i_compromiso_apertura', 'checkbox', array('label' => 'Compromiso Municipal de dotación y mantenimiento de infraestructura y equipamiento para la unidad educativa a crearse (en caso de unidades educativas fiscales y de convenio).','required'  => false));
+                }
+                if($dependencia == 3){
+                    /**
+                     * 1 asociaciones o fundaciones sin fines de lucro - ong
+                     * 2 instituciones religiosas
+                     * 3 s.a. / s.r.l.
+                     * 4 unipersonal
+                     * 5 cooperativa
+                     * 6 de convenio (suscrito entre estados)
+                     */
+                    $form = $form
+                        ->add('i_solicitud_apertura', 'file', array('label' => 'Adjuntar Solicitud de apertura de la unidad educativa privada, dirigida por el propietario o representante legal, a la Dirección Distrital Educativa correspondiente (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_fotocopia_nit_apertura', 'checkbox', array('label' => 'Copia de registro del Número de Identificación Tributaria (NIT).','required'  => false))
+                        ->add('nit_apertura', 'text', array('label' => 'Nro. de N.I.T.:','required'=>false,'attr' => array('class' => 'form-control validar')))
+                        ->add('i_balance_apertura', 'checkbox', array('label' => 'Copia de Balance de apertura, sellado por el Servicio de Impuestos Nacionales SIN.','required'  => false))
+                        ->add('i_representante_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio de Poder del representante legal.','required'  => false))
+                        ->add('i_copia_ci_apertura', 'checkbox', array('label' => 'Copia de Cedula de Identidad del representante legal.','required'  => false))
+                        ->add('ci_apertura', 'text', array('label' => 'Nro. de C.I.:','required'=>false,'attr' => array('class' => 'form-control validar')))
+                        ->add('i_funcionamiento_apertura', 'file', array('label' => 'Adjuntar Copia legalizada de la Licencia de Funcionamiento Municipal (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_estatutos_apertura', 'checkbox', array('label' => 'Copia notariada de la escritura de constitución y sus estatutos.','required'  => false))
+                        ->add('i_empleadores_apertura', 'file', array('label' => 'Adjuntar Registro obligatorio de empleadores (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('ii_alquiler_apertura', 'choice', array('label' => 'Infraestructura arrendada:','multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
+                        ->add('ii_folio_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales estableciendo que la infraestructura esta destinada a la unidad educativa y pertenece a los propietarios de la misma.','required'  => false))
+                        ->add('ii_contrato_apertura', 'file', array('label' => 'Adjuntar Copia notariada de compromiso de contrato por un plazo no menor a seis años (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('iii_reglamento_apertura', 'checkbox', array('label' => '3.1 Reglamento interno de funcionamiento de disposiciones administrativas.','required'  => false))
+                        ->add('iii_convivencia_apertura', 'checkbox', array('label' => '3.2 Reglamento de convivencia armónica y pacífica que contenga los mecanismos preventivos, medidas reparadoras de solución de conflictos, tipificación de infracciones, procedimientos y sanciones.','required'  => false))
+                        ->add('iii_manual_apertura', 'checkbox', array('label' => '3.3 Manual de organización y funciones (misión, objetivos, estructura organizativa, objetivos de áreas, descripción y objetivos de funciones, superviciones y coordinación).','required'  => false))
+                        ->add('iii_kardex_apertura', 'checkbox', array('label' => '3.4 Kardex de maestras y maestros y personal administrativo.','required'  => false))
+                        ->add('iii_sippase_apertura', 'checkbox', array('label' => '3.5 Cetificado SIPPASE y REJAP del plantel docente y administrativo (en mérito al D.S. Nro. 1302 y 1320).','required'  => false))
+                        ->add('iii_contratos_apertura', 'checkbox', array('label' => '3.7 Contratos firmados por el personal docente con pertinencia académica.','required'  => false));
+                    if($constitucion != 5 ){
+                        $form = $form
+                            ->add('i_personeria_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio de la Personería Jurídica.','required'  => false));
+                    }
+                    if($constitucion == 5){
+                        $form = $form
+                            ->add('i_afcoop_apertura', 'file', array('label' => 'Adjuntar Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")));
+                    }
+                    if($constitucion == 2 or $constitucion == 6){
+                        $form = $form
+                            ->add('i_certificacionculto_apertura', 'file', array('label' => 'Adjuntar Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores. (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")));
+                    }
+                    if($constitucion == 3 or $constitucion == 4 or $constitucion == 6){
+                        $form = $form
+                            ->add('i_form_fundaempresa_apertura', 'checkbox', array('label' => 'Copia del formulario virtual de Registro de Comercio, emitida por FUNDAEMPRESA.','required'  => false))
+                            ->add('nro_fundaempresa_apertura', 'text', array('label' => 'Nro. de Matrícula de Comercio:','required'=>false,'attr' => array('class' => 'form-control')))
+                            ->add('fecha_fundaempresa_apertura', 'text', array('label' => 'Fecha de Inscripción:','required'=>false,'attr' => array('class' => 'form-control date')));
+                    }
+                    if($constitucion == 6){
+                        $form = $form
+                            ->add('i_convenio_apertura', 'checkbox', array('label' => 'Copia legalizada de convenio entre estados.','required'  => false));
+                    }
+                }
+                $form = $form
+                    ->add('ii_inventario_apertura', 'checkbox', array('label' => '2.1 Inventario de mobiliario y equipamento de la Unidad Educativa de acuerdo a norma.','required'  => false))
+                    ->add('ii_planos_apertura', 'checkbox', array('label' => '2.2 Copia legalizada de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal correspondiente, para infraestructura de ambientes propios, que contemplen la adecuación progresiva para la atención de la población con discapacidad leve, en el caso de área dispersa, el cumplimiento de este requisito se incluirá en el informe del Director Distrital de Educación correspondiente.','required'  => false))
+                    ->add('iii_poa_apertura', 'checkbox', array('label' => 'Plan Operativo Anual (POA) de la gestión en la que iniarán actividades, firmado por la o el Director Distrital de Educación correspondiente.','required'  => false))
+                    ->getForm();
+                $data = array(
+                    'form' => $form->createView(),
+                    'id' => $id,
+                    'tramitetipo' => $tramitetipo,
+                    'requisitos' => $requisitos,
+                    'dependencia' => $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($dependencia),
+                    'constitucion' => $constitucion
                 );
                 break;
         }
@@ -933,7 +1018,6 @@ class TramiteRueController extends Controller
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&lk='. $lk .'&&__format=pdf&'));
-        //dump($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&&__format=pdf&');die;
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1067,6 +1151,7 @@ class TramiteRueController extends Controller
             $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$form['idrue']);
         }else{
             $datos['varevaluacion2']=$form['varevaluacion2'];
+            $varevaluacion2 = $form['varevaluacion2'];
         }
         $datos = json_encode($datos);
         //dump($datos);die;
@@ -1087,7 +1172,6 @@ class TramiteRueController extends Controller
                 $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
                 $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
                 if($mensaje['dato'] == true){
-                    //$datos['varevaluacion2']=$form['varevaluacion2'];
                     $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
                     if($mensaje['dato'] == true){
                         $request->getSession()
@@ -1325,7 +1409,6 @@ class TramiteRueController extends Controller
                             $tareasDatos = $this->obtieneDatos($em->getRepository('SieAppWebBundle:Tramite')->find($idtramite));
                             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
                             $iddistrito = $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'];
-                            //dump($tareasDatos[0]['datos']['tramites']);die;
                             $fusion = 0;
                             foreach($tareasDatos[0]['datos']['tramites'] as $t){
                                 if($t['id'] == 39){
@@ -1335,8 +1418,8 @@ class TramiteRueController extends Controller
                                     foreach($tareasDatos[0]['datos']['institucioneducativaNivel'] as $n){
                                         $arr[] = $n['id'];
                                     }
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $em->flush();
                                     $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar'];
@@ -1352,8 +1435,8 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                 }elseif($t['id'] == 35){#reduccion de nivel
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $em->flush();
                                     //elimina los niveles
@@ -1376,8 +1459,8 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                 }elseif($t['id'] == 36){#cambio de dependencia
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['dependencia']['id']));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     if($tareasDatos[0]['datos'][$t['tramite_tipo']]['dependencia']['id'] == 2){
@@ -1385,16 +1468,16 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                 }elseif($t['id'] == 37){#cambio de nombre
-                                    $institucioneducativa->setInstitucioneducativa(mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'));
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$institucioneducativa->setInstitucioneducativa(mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'));
+                                    //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setDesUeAntes(mb_strtoupper($tareasDatos[0]['datos']['institucioneducativa']['institucioneducativa'], 'utf-8'));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $em->flush();
                                 }elseif($t['id'] == 38){#cambio de jurisdiccion administrativa
                                     $iddistrito = $tareasDatos[0]['datos'][$t['tramiteTipo']]['nuevo_distrito']['id'];
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $jurisdicciongeografica = $institucioneducativa->getLeJuridiccionGeografica();
                                     $jurisdicciongeografica->setLugarTipoIdDistrito($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('lugarNivel' => 7, 'codigo' => $tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_distrito']['id']))->getId());
@@ -1403,15 +1486,15 @@ class TramiteRueController extends Controller
                                     $em->flush();
                                 }elseif($t['id'] == 39){#Fusion
                                     $iefusion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($tareasDatos[0]['datos'][$t['tramite_tipo']]['siefusion']['id']);
-                                    $iefusion->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $iefusion->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    //$iefusion->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$iefusion->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $iefusion->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(19));
                                     $iefusion->setFechaModificacion(new \DateTime('now'));
                                     $iefusion->setFechaCierre((new \DateTime('now'))->format('Y-m-d'));
                                     $em->flush();
                                 }elseif($t['id'] == 41){#cambio de infraestructura
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    //$institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     if(isset($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion'])){
                                         $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion']));
@@ -1421,8 +1504,8 @@ class TramiteRueController extends Controller
                                     $em->flush();
                                 }elseif($t['id'] == 42 or $t['id'] == 43){#cierre temporal
                                     if($fusion == 0 ){
-                                        $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                        $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                        //$institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                        //$institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
                                         $institucioneducativa->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(19));
                                         $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                         $institucioneducativa->setFechaCierre(new \DateTime('now'));
@@ -1896,7 +1979,7 @@ class TramiteRueController extends Controller
             $iefusion = array('idsiefusion'=>$idsiefusion,'institucioneducativa'=>$idsiefusion.'-'.$institucioneducativa[0]['institucioneducativa']);
             $response->setData(array('ie'=>$iefusion));
         }else{
-            $response->setData(array('msg'=>'El codigo SIE es incorrecto.'));
+            $response->setData(array('msg'=>'El código SIE es incorrecto.'));
         }
 
         return $response;

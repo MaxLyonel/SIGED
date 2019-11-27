@@ -108,3 +108,7 @@ tramite_rue_busca_tarea:
 tramite_rue_busca_requisitos:
     path:     /buscarequisitos
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRequisitos" }
+
+tramite_rue_apertura:
+    path:     /apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:apertura" }

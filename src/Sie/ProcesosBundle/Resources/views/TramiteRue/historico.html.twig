@@ -7,13 +7,15 @@
                 <div class="panel-heading no-padding">
                     <ul class="nav nav-tabs nav-pills">
                         {% for d in datos %}
-                            <li class={% if d.flujoProceso.orden == 1 %}"active" {% else %} ""{% endif %}>
-                                <a href="#{{d.flujoProceso.id}}" data-toggle="tab" aria-expanded="false">
-                                    <div>
-                                        <span class="text-strong">{{d.flujoProceso.proceso.procesoTipo}}</span>
-                                    </div>
-                                </a>
-                            </li>
+                            {% if d.flujoProceso.id != 67 %}
+                                <li class={% if d.flujoProceso.orden == 1 %}"active" {% else %} ""{% endif %}>
+                                    <a href="#{{d.flujoProceso.id}}" data-toggle="tab" aria-expanded="false">
+                                        <div>
+                                            <span class="text-strong">{{d.flujoProceso.proceso.procesoTipo}}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div><!-- /.panel-heading -->

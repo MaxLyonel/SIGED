@@ -365,6 +365,8 @@
                                                     </table>
                                                     <div id="requisitos">
                                                     </div>
+                                                    <div id="apertura">
+                                                    </div>
                                                 </div>    
                                             </div>
                                         </div>
@@ -409,7 +411,9 @@
             </div>
         </div>
     </div>    
-    
+{% if tramite %}
+    {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
+{% endif %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }} 
@@ -801,6 +805,7 @@
                 }
             });
         } 
+
         $(function(){
             $(".validar").keydown(function(event){
                 if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
@@ -815,11 +820,19 @@
                 if(id == 39){ //fusion
                     idtramite = 34; //ampliacion de nivel
                     tipo = 'fusion'
+                }else if (id == 40){
+                    idtramite = 35; //reduccion de nivel
+                    tipo = 'desglose'
                 }else{
                     idtramite = id;
                 }
+                //alert(id);
                 var tramitetipo = $('#form_tramites option:selected').text();
                 if ( $("#fila_"+ idtramite).length && id==39 ) {
+                    alert('Elimine la Ampliación de Nivel para poder solictar la '+tramitetipo);
+                    return false;
+                }
+                if ( $("#fila_"+ idtramite).length && id == 40) {
                     alert('Elimine la Ampliación de Nivel para poder solictar la '+tramitetipo);
                     return false;
                 }
@@ -840,7 +853,7 @@
                     }
                 }
                 if((id == 42 || id == 43) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39) == false){
-                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.');
+                    alert('El '+ tramitetipo + ', no corresponde si modificará otros datos.Entra'+id);
                     return false;
                 }
                 if($('#form_tr').val() != "" && JSON.parse($('#form_tr').val()).includes(39) == true && id == 42){
@@ -871,19 +884,28 @@
                             '</td></tr>';
                         $('#tabla').append(tr);
                         $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
-                        if ($('#form_tr').val() == "" && id != 39) {
+                        if ($('#form_tr').val() == "" && id != 39 && id != 40) {
                             trArray = [Number(idtramite)];
                             $('#form_tr').val(JSON.stringify(trArray));
-                        }else if($('#form_tr').val() == "" && id == 39) {
+                        }else if($('#form_tr').val() == "" && (id == 39 || id == 40)) {
                             trArray = [Number(id),Number(idtramite)];
                             $('#form_tr').val(JSON.stringify(trArray));
-                            buscarTramite(43,'fusion');
-                        }else if($('#form_tr').val() != "" && id == 39){
+                            if(tipo == 'fusion'){
+                                buscarTramite(43,tipo);
+                            }else{//desglose
+                                $('#apertura').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_apertura" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                                buscarTramite(54,tipo);
+                            }
+                        }else if($('#form_tr').val() != "" && (id == 39 || id == 40)){
                             trArray = JSON.parse($('#form_tr').val());
                             trArray.push(Number(id));
                             trArray.push(Number(idtramite));
                             $('#form_tr').val(JSON.stringify(trArray));
-                            buscarTramite(43,'fusion');
+                            if(tipo == 'fusion'){
+                                buscarTramite(43,tipo);
+                            }else{
+                                buscarTramite(54,tipo);
+                            }
                         }else{
                             trArray = JSON.parse($('#form_tr').val());
                             trArray.push(Number(idtramite));
@@ -893,11 +915,15 @@
                     },
                 });
             }
-        }
+        }   
  
         function requisitos(id){
             //alert(id);
-            var formData = {id: id,ie:'{{institucioneducativa.id}}'};
+            if(id != 54){
+                var formData = {id: id,ie:'{{institucioneducativa.id}}'};
+            }else{
+                var formData = {id: id,dependencia:2, constitucion:1};
+            }
             if ( $("#modal_requisitos_"+ id).length ) {
                 return false;
             }
@@ -1236,11 +1262,48 @@
             }
         }
 
+        function apertura(id){
+            //alert(id);
+            var formData = {id: id,ie:'{{institucioneducativa.id}}'};
+            if ( $("#modal_apertura").length ) {
+                return false;
+            }
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_apertura')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal_apertura').empty();
+                    $("#modal_apertura").append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    //console.log(data);
+                    $('#modal_apertura').empty();
+                    $('#modal_apertura').append(data);
+                     $('.date').datepicker({
+                        orientation: "auto left",
+                        forceParse: false,
+                        autoclose: true,
+                        todayHighlight: true,
+                        language: 'es'
+                    });
+                },
+            });
+        }
+
         function borrarFila(id){
             var array = JSON.parse($('#form_tr').val());
             if ((id == 34 || id == 43) && $('#form_tr').val()!= "" && JSON.parse($('#form_tr').val()).includes(39)==true){
                 for(var i = array.length - 1; i>=0 ;i--){
                     if(array[i] == 34 || array[i] == 43 || array[i] == 39){
+                        $('#fila_'+array[i]).remove();
+                        $('#modal_'+array[i]).remove();
+                        array.splice(i,1);
+                     }
+                } 
+            }else if ((id == 35 || id == 54) && $('#form_tr').val()!= "" && JSON.parse($('#form_tr').val()).includes(40)==true){
+                for(var i = array.length - 1; i>=0 ;i--){
+                    if(array[i] == 35 || array[i] == 54 || array[i] == 40){
                         $('#fila_'+array[i]).remove();
                         $('#modal_'+array[i]).remove();
                         array.splice(i,1);
@@ -1296,7 +1359,7 @@
             if(JSON.parse($('#form_tr').val()).length > 0){
                 var arr = [];
                 $.each(JSON.parse($('#form_tr').val()),function(index,value){
-                    if($('#modal_requisitos_'+value).length == 0){
+                    if($('#modal_requisitos_'+value).length == 0 && value!=39 && value!=40){
                         arr.push($('#fila_'+value+' td').html());
                     }
                 });
