@@ -59,6 +59,19 @@
                     <a class="btn btn-menu tooltips" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                         <i class="fa fa-download" style="color:#FFFFFF"></i>
                     </a>
+                    {# {% if app.session.get('acceso_total') and gestion >= 2018 and nivel == 13 %}
+
+                        {% if grado == 1 or grado == 2 or grado == 3 or grado == 4  %}
+                            <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTGBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTG">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a>
+                        {% endif %}
+                        {% if grado == 5 or grado == 6  %}
+                            <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTEBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTE">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a>
+                        {% endif %}
+                    {% endif %} #}
                     {#
                     {% if operativo >= 5 %}
                       <div class="col-md-4">
