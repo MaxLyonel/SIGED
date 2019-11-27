@@ -207,6 +207,12 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
                                         {% endif %}
+                                        {% if regla.id == 37 %}
+                                            <form action="{{path('ccalidad_validar_estudiante_segip')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                            </form>
+                                        {% endif %}
                                     {% endif %}
                                     {% if regla.id == 9 %}
                                         {% if detalle.solucionTipoId == 1 %}
