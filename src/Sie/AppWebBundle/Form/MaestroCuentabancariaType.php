@@ -27,7 +27,7 @@ class MaestroCuentabancariaType extends AbstractType {
             ))
             ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => '14')))
             ->add('paterno', 'text', array('label' => 'Apellido Paterno', 'required' => false, 'attr' => array('autocomplete' => 'off')))
-            ->add('materno', 'text', array('label' => 'Apellido Materno', 'required' => true, 'attr' => array('autocomplete' => 'off')))
+            ->add('materno', 'text', array('label' => 'Apellido Materno', 'required' => false, 'attr' => array('autocomplete' => 'off')))
             ->add('nombre', 'text', array('label' => 'Nombre(s)', 'required' => true, 'attr' => array('autocomplete' => 'off')))
             ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('autocomplete' => 'off', 'maxlength' => '2')))
             ->add('apellidoEsposo', 'text', array('label' => 'Apellido de Esposo', 'required' => false, 'attr' => array('autocomplete' => 'off')))
