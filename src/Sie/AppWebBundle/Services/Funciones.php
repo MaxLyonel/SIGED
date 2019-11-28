@@ -159,10 +159,20 @@ class Funciones {
         $tiposUE = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(array('institucioneducativaId'=>$sie,'gestionTipoId'=>$gestion));
         if($tiposUE){
             foreach ($tiposUE as $t) {
-                $tipo = array('id'=>$t->getInstitucioneducativaHumanisticoTecnicoTipo()->getId(),'tipo'=>$t->getInstitucioneducativaHumanisticoTecnicoTipo()->getInstitucioneducativaHumanisticoTecnicoTipo(),'grado'=>$t->getGradoTipo()->getId());
+                $tipo = array(
+                    'id'=>$t->getInstitucioneducativaHumanisticoTecnicoTipo()->getId(),
+                    'tipo'=>$t->getInstitucioneducativaHumanisticoTecnicoTipo()->getInstitucioneducativaHumanisticoTecnicoTipo(),
+                    'grado'=>$t->getGradoTipo()->getId(),
+                    'academico'=>true
+                );
             }
         }else{
-            $tipo = array('id'=>5,'tipo'=>'Humanistica','grado'=>0);
+            $tipo = array(
+                'id'=>5,
+                'tipo'=>'Humanistica',
+                'grado'=>0,
+                'academico'=>false
+            );
         }
 
         return $tipo;
