@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\MaestroCuentabancaria;
 use Sie\AppWebBundle\Entity\EntidadfinancieraTipo;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 
 /**
  * Bachiller de Excelencia Controller.
@@ -405,7 +406,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-27');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -643,7 +644,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-27');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -731,7 +732,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-27');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -768,7 +769,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-27');
+        $fechaCorte = new \DateTime('2019-11-28');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -1236,6 +1237,124 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $response->headers->set('Pragma', 'no-cache');
             $response->headers->set('Expires', '0');
             return $response;
+        }
+    }
+
+    public function validarEstudianteIbdSegipAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $form = $request->get('form');
+
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($form['idEstudiante']);
+
+        $datos = array(
+            'complemento'=>$estudiante->getComplemento(),
+            'primer_apellido'=>$estudiante->getPaterno(),
+            'segundo_apellido'=>$estudiante->getMaterno(),
+            'nombre'=>$estudiante->getNombre(),
+            'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
+        );
+        
+        if($estudiante){
+            if($estudiante->getCarnetIdentidad()){
+                $resultadoEstudiante = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($estudiante->getCarnetIdentidad(),$datos,'prod','academico');
+
+                if($resultadoEstudiante){
+                    $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante:".$estudiante->getCodigoRude().", se validaron correctamente con SEGIP.";
+                    $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $estudiante->getCodigoRude(), 'validacionReglaTipo' => 37));
+                    $estudiante->setSegipId(1);
+                    $em->persist($estudiante);
+                    $em->flush();
+                    if($vproceso) {
+                        $this->ratificar($vproceso);
+                    }
+                    $this->addFlash('successSegip', $mensaje);
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP. Verifique la información de la/el estudiante.";
+                    $this->addFlash('warningSegip', $mensaje);
+                }                
+            } else {
+                $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de la/el estudiante.";
+                $this->addFlash('warningSegip', $mensaje);
+            }
+        } else {
+            $mensaje = "No se realizó la validación con SEGIP. No existe información de la/el estudiante con el código RUDE proporcionado.";
+            $this->addFlash('warningSegip', $mensaje);
+        }
+
+        if($form['subsistema'] == 2) {
+            return $this->redirect($this->generateUrl('bach_exc_alt'));
+        } else {
+            return $this->redirect($this->generateUrl('bach_exc'));
+        }
+    }
+
+    private function ratificar($vproceso){
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        $arrayRegistro = null;
+
+        try {
+            // Antes
+            $arrayRegistro['id'] = $vproceso->getId();
+            $arrayRegistro['fecha_proceso'] = $vproceso->getFechaProceso();
+            $arrayRegistro['validacion_regla_tipo_id'] = $vproceso->getValidacionReglaTipo()->getId();
+            $arrayRegistro['llave'] = $vproceso->getLlave();
+            $arrayRegistro['gestion_tipo_id'] = $vproceso->getGestionTipoId();
+            $arrayRegistro['periodo_tipo_id'] = $vproceso->getPeriodoTipoId();
+            $arrayRegistro['es_activo'] = $vproceso->getEsActivo();
+            $arrayRegistro['obs'] = $vproceso->getObs();
+            $arrayRegistro['institucioneducativa_id'] = $vproceso->getInstitucioneducativaId();
+            $arrayRegistro['lugar_tipo_id_distrito'] = $vproceso->getLugarTipoIdDistrito();
+            $arrayRegistro['solucion_tipo_id'] = $vproceso->getSolucionTipoId();
+            $arrayRegistro['omitido'] = $vproceso->getOmitido();
+
+            $antes = json_encode($arrayRegistro);
+
+            // despues
+            $arrayRegistro = null;
+
+            $vproceso->setEsActivo(true);
+            $em->persist($vproceso);
+            $em->flush();
+            // $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+
+            $arrayRegistro['id'] = $vproceso->getId();
+            $arrayRegistro['fecha_proceso'] = $vproceso->getFechaProceso();
+            $arrayRegistro['validacion_regla_tipo_id'] = $vproceso->getValidacionReglaTipo()->getId();
+            $arrayRegistro['llave'] = $vproceso->getLlave();
+            $arrayRegistro['gestion_tipo_id'] = $vproceso->getGestionTipoId();
+            $arrayRegistro['periodo_tipo_id'] = $vproceso->getPeriodoTipoId();
+            $arrayRegistro['es_activo'] = $vproceso->getEsActivo();
+            $arrayRegistro['obs'] = $vproceso->getObs();
+            $arrayRegistro['institucioneducativa_id'] = $vproceso->getInstitucioneducativaId();
+            $arrayRegistro['lugar_tipo_id_distrito'] = $vproceso->getLugarTipoIdDistrito();
+            $arrayRegistro['solucion_tipo_id'] = $vproceso->getSolucionTipoId();
+            $arrayRegistro['omitido'] = $vproceso->getOmitido();
+
+            $despues = json_encode($arrayRegistro);
+
+            // registro del log
+            $resp = $defaultController->setLogTransaccion(
+                $vproceso->getId(),
+                'validacion_proceso',
+                'U',
+                json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+                $this->session->get('userId'),
+                '',
+                $despues,
+                $antes,
+                'SIGED',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
+
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();           
         }
     }
 
