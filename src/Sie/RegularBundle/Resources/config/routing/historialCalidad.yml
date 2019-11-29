@@ -1,0 +1,7 @@
+historial_calidad_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:HistorialCalidad:index }
+
+historial_calidad_save:
+    path:     /save
+    defaults: { _controller: SieRegularBundle:HistorialCalidad:save }

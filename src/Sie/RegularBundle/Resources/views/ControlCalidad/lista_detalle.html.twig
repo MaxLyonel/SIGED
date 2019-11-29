@@ -142,6 +142,15 @@
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>#}
                                             {% endif %}
+                                            {% if detalle.solucionTipoId == 1 %}
+                                                <form action="{{path('historial_calidad_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                                </form>
+                                            {% endif %}
                                         {% elseif regla.id == 10 %}
                                             <form action="{{path('reg_multigrado_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
