@@ -637,7 +637,7 @@ class InboxController extends Controller {
         $dataInfo = array('id' => $data['id'], 'gestion' => $data['gestion'], 'ieducativa' => $ieducativa);
 
         //get and set the operativo
-        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($data['id'],$data['gestion']);
+        $operativo = $this->get('funciones')->obtenerOperativo($data['id'],$data['gestion']);
         $this->session->set('lastOperativo', $operativo);
 
         //verificar - crear registro en InstitucioneducativaHumanisticoTecnico
