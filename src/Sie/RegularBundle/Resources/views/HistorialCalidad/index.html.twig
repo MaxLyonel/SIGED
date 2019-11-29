@@ -1,0 +1,167 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Validación sin historial académico (Caso Extranjeros)
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Validar historial</a></li>
+    
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos del estudiante</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <table class="table">
+                        <tr>
+                            <th>Código Rude</th>
+                            <th>Estudiante</th>
+                        </tr>
+                        <tr>
+                            <td>{{estudiante.codigoRude}}</td>
+                            <td>{{estudiante.nombre}} {{estudiante.paterno}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% if solucionado == false %}
+            <div class="col-lg-12">
+                <form action="{{path('historial_calidad_save')}}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="idDetalle" value="{{idDetalle}}">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>Seleccionar Inscripción</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-collapse collapse in">
+                            <div class="portlet-body">
+                                <div class="panel-body panel-primary">
+                                    {# {{ dump(historial) }} #}
+                                    {% if historial is not empty %}
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Gestión</th>
+                                                    <th>SIE</th>
+                                                    <th>Unidad Educativa</th>
+                                                    <th>Nivel</th>
+                                                    <th>Grado</th>
+                                                    <th>Paralelo</th>
+                                                    <th>Turno</th>
+                                                    <th>Estado Matrícula</th>
+                                                    <th>Estado Matrícula Inicio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for inscripcion in historial %}
+                                                    <tr>
+                                                        <td>
+                                                            <div class="radio">
+                                                                <label class="radio-inline">
+                                                                    <input type="radio" name="idInscripcion" value="{{inscripcion.id}}" required>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>{{inscripcion.gestion}}</td>
+                                                        <td>{{inscripcion.sie}}</td>
+                                                        <td>{{inscripcion.institucioneducativa}}</td>
+                                                        <td>{{inscripcion.nivel}}</td>
+                                                        <td>{{inscripcion.grado}}</td>
+                                                        <td>{{inscripcion.paralelo}}</td>
+                                                        <td>{{inscripcion.turno}}</td>
+                                                        <td>{{inscripcion.estadomatricula}}</td>
+                                                        <td>{{inscripcion.estadomatriculaInicio}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>Datos complementarios extranjero</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Unidad educativa de procedencia</label>
+                                    <input type="text" class="form-control jupper" name="unidadProcedencia" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Último grado vencido</label>
+                                    <input type="text" class="form-control jupper" name="grado" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Pais</label>
+                                    <select class="form-control" name="pais" required>
+                                        <option value="">___ Seleccionar ___</option>
+                                        {% for pais in paises %}
+                                            <option value="{{pais.id}}">{{pais.pais}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Archivo</label>
+                                    <input type="file" class="" name="informe" required>
+                                </div>
+                                <div class="form-group col-md-12 text-center">
+                                    <hr>
+                                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Solucion</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="alert alert-success">
+                            <i class="fa fa-check"></i> La inconsistencia fue solucionada exitosamente
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    
+{% endblock %}
