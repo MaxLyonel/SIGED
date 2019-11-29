@@ -1,5 +1,5 @@
 {% if id == 34 %} {# ampliacion de nivel #}
-    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'fusion' %}<strong>(Por Fusión){% endif %}</strong></td>
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'fusion' %}<strong>(Por Fusión)</strong>{% endif %}</td>
     <td>
         <ul>
             {% set nt =[] %}
@@ -347,7 +347,7 @@
         </div>
     </td>
 {% elseif id == 42 or id == 43 %} {# cierre temporal #}
-    <td>{{tramiteTipo.tramiteTipo}}{% if tipo == 'fusion' %}&nbsp; <strong>(Por Fusión)</strong>{% endif %}</td>
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'fusion' %}<strong>(Por Fusión)</strong>{% endif %}</td>
     <td>
         {% if tipo == 'fusion' %}
             {{ form_label(form.siefusion) }}

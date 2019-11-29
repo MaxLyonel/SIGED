@@ -719,7 +719,7 @@
                                                         <div class="col-md-6">
                                                             {% for a in form.i_area_apertura %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a,{'attr':{'class':'area_jur req54'}}) }}
+                                                                    {{ form_widget(a,{'attr':{'class':'areaApertura req54'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
@@ -778,7 +778,7 @@
                                                         <div class="col-md-6">
                                                             {% for a in form.i_area_apertura %}
                                                                 <div class="col-md-3 rdio rdio-primary circle">
-                                                                    {{ form_widget(a,{'attr':{'class':'area_jur req54'}}) }}
+                                                                    {{ form_widget(a,{'attr':{'class':'areaApertura req54'}}) }}
                                                                     {{ form_label(a) }}
                                                                 </div>
                                                             {% endfor %}
@@ -868,9 +868,11 @@
                                                     {% endif %}
                                                     {% if constitucion == 5 %}
                                                         <div class="form-group col-md-12">
-                                                            <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
-                                                                {{ form_widget(form.i_afcoop_apertura,{'attr':{'class':'req54'}}) }}&nbsp;
-                                                                {{ form_label(form.i_afcoop_apertura) }}                                                            
+                                                            <div class="col-md-6">
+                                                                {{ form_label(form.i_afcoop_apertura) }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ form_widget(form.i_afcoop_apertura,{'attr':{'class':'req54'}}) }}
                                                             </div>
                                                         </div>
                                                     {% endif %}
@@ -931,10 +933,10 @@
                                                     {% if constitucion in [2,6] %}
                                                         <div class="form-group col-md-12">
                                                             <div class="col-md-6">
-                                                                {{ form_label(form.i_funcionamiento_apertura) }}
+                                                                {{ form_label(form.i_certificacionculto_apertura) }}
                                                             </div>
                                                             <div class="col-md-6">
-                                                                {{ form_widget(form.i_funcionamiento_apertura,{'attr':{'class':'req54'}}) }}
+                                                                {{ form_widget(form.i_certificacionculto_apertura,{'attr':{'class':'req54'}}) }}
                                                             </div>
                                                         </div>
                                                     {% endif %}

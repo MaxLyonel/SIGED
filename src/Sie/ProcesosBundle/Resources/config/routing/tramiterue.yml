@@ -101,6 +101,10 @@ tramite_rue_buscar_rue:
     path:     /buscarrue
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRue" }
 
+tramite_rue_buscar_ruecomparte:
+    path:     /buscarrue/comparte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
+
 tramite_rue_busca_tarea:
     path:     /buscatarea
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarTarea" }

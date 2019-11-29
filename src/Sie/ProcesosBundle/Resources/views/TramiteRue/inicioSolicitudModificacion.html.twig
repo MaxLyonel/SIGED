@@ -467,6 +467,41 @@
                 $('#fusion').hide();
             }
         }
+        function siecomparte(sie){
+            var formData = {sie: sie};
+            if(sie.length >= 8){
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('tramite_rue_buscar_ruecomparte')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#msgcomparte').empty();
+                        $('#ie').empty();
+                        $('#org').empty();
+                        $('#dependencia').empty();
+                    },
+                    success: function (data) {
+                        //console.log(data);
+                        if (data.msg){
+                            $("#msgcomparte").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                            $('#form_siecomparte').val('');
+                        }else{
+                            $('#ie').append(data.institucioneducativa);
+                            $('#org').append(data.subsistema);
+                            $('#dependencia').append(data.dependencia);
+                            $('#form_lejurisdiccion').val(data.codigole);
+                            buscarEdificioEscolar($('#form_lejurisdiccion').val());
+                        }
+                    },
+                });
+            }else{
+                $('#ie').empty();
+                $('#org').empty();
+                $('#dependencia').empty();
+                $('#form_lejurisdiccion').val('');
+                buscarEdificioEscolar('');
+            }
+        }
 
         function buscarEdificioEscolar(idLe) {
             if(idLe.length >= 8 ){
@@ -877,10 +912,10 @@
                         if(idtramite == 44 && {{institucioneducativa.estadoinstitucionTipo.id}} == 10){
                             tr = tr+'<td></td>';
                         }else{
-                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+idtramite+'" data-placement="top" title="Requisitos" onclick="requisitos('+idtramite+')"><i class="glyphicon glyphicon-plus"></i></button>'+
+                            tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_'+idtramite+'" data-placement="top" title="Registrar los requisitos del trámite" onclick="requisitos('+idtramite+')"><i class="glyphicon glyphicon-plus"></i></button>'+
                                 '</td>';
                         }
-                        tr = tr+'<td align="center"><button class="btn btn-xs btn-danger" onclick="borrarFila('+idtramite+')"><i class="glyphicon glyphicon-minus"></i></button>'+
+                        tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-danger" data-placement="top" title="Eliminar trámite" onclick="borrarFila('+idtramite+')"><i class="glyphicon glyphicon-minus"></i></button>'+
                             '</td></tr>';
                         $('#tabla').append(tr);
                         $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
@@ -912,6 +947,7 @@
                             $('#form_tr').val(JSON.stringify(trArray));
                         }
                         $('[data-toggle="tooltip"]').tooltip();
+                        $('[type="button"]').tooltip();
                     },
                 });
             }
@@ -922,7 +958,12 @@
             if(id != 54){
                 var formData = {id: id,ie:'{{institucioneducativa.id}}'};
             }else{
-                var formData = {id: id,dependencia:2, constitucion:1};
+                if($('#form_dependencia').length == 0 || $('#form_dependencia').val() == ''){
+                    alert('Primero debe registrar y validar los datos de la nueva Unidad Educativa.');
+                    $('#modal_'+id).modal('toggle');
+                    return false;
+                }
+                var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:1};
             }
             if ( $("#modal_requisitos_"+ id).length ) {
                 return false;
@@ -1013,9 +1054,9 @@
                     }else if($('.alquilerReducir').is(':checked') == false){
                         alert('Seleccione si la infraestructura es arrendada o no.');
                         return false;
-                    }else if($('#form_i_alquiler_reducir_0').is(':checked') == true && $('#i_contrato_reducir').val()==''){
+                    }else if($('#form_i_alquiler_reducir_0').is(':checked') == true && $('#form_i_contrato_reducir').val()==''){
                         alert('Debe adjuntar la copia notariada de arrendamiento.');
-                        return false;
+                        return false;                    
                     }else if($('#form_i_certificado_reducir').is(':checked') == false){
                         alert('Seleccione la presentación original de Certificado RUE.');
                         return false;
@@ -1259,15 +1300,175 @@
                         $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxtio.</div>');
                     }
                     break;
+                case 54: //apertura
+                    if($('#form_i_solicitud_apertura').val()==''){
+                        alert('Debe adjuntar la solicitud de apertura.');
+                        return false;                  
+                    }
+                    if(dependenciaId == 1){
+                        if($('#form_i_solicitud_apertura').val()==''){
+                            alert('Debe adjuntar la solicitud de apertura.');
+                            return false;
+                        }else if($('#form_i_folio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.');
+                            return false;
+                        }else if($('#form_i_certificacion_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.');
+                            return false;
+                        }else if($('.areaApertura').is(':checked')==false){
+                            alert('Seleccione el área geográfica.');
+                            return false;
+                        }else if($('#form_i_compromiso_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación del Compromiso Municipal de dotación y mantenimiento de infraestructura y equipamiento para la unidad educativa a crearse (en caso de unidades educativas fiscales y de convenio).');
+                            return false;
+                        }
+                    }
+                    if(dependenciaId == 2){
+                        if($('#form_i_representante_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio de Poder del representante legal.');
+                            return false;
+                        }else if($('#form_i_actafundacion_apertura').val()==''){
+                            alert('Debe adjuntar la Copia legalizada del Acta de Fundación');
+                            return false;
+                        }else if($('#form_i_folio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre de la entidad prestadora de servicio.');
+                            return false;
+                        }else if($('#form_i_convenio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación del Convenio vigente de prestación de servicios educativos firmado entre la Institución Prestadora de Servicios y el Ministerio de Educación (ME) o el Director Departamental de Educación, según corresponda.');
+                            return false;                        
+                        }else if($('#form_i_certificacion_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.');
+                            return false;
+                        }else if($('.areaApertura').is(':checked')==false){
+                            alert('Seleccione el área geográfica.');
+                            return false;
+                        }else if($('#form_i_constitucion_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia notaria actualizada del Acta de Constitución y estatutos de la Institución prestadora de servicios.');
+                            return false;
+                        }else if($('#form_i_form_fundaempresa_apertura').is(':checked')==true && $('#form_nro_fundaempresa_apertura').val()==''){
+                            alert('Ingrese el Nro. de Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_form_fundaempresa_apertura').is(':checked')==true && $('#form_fecha_fundaempresa_apertura').val()==''){
+                            alert('Ingrese la fecha de inscripción de la Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==true && $('#form_nit_apertura').val()==''){
+                            alert('Ingrese el Nro. de N.I.T..');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==true && $('#form_i_balance_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación del Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).');
+                            return false;
+                        }else if($('#form_i_testimonioconvenio').val()==''){
+                            alert('Ingrese el Nro. del Testimonio de personeria jurídica emitido por la entidad correspondiente');
+                            return false;
+                        }
+                    }
+                    if(dependenciaId == 3){
+                        var constitucion = 1;
+                        if (constitucion != 5 && $('#form_i_personeria_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio de la Personería Jurídica.');
+                            return false;
+                        }else if (constitucion == 5 && $('#form_i_afcoop_apertura').val()==''){
+                            alert('Debe adjuntar la Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas.');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia de registro del Número de Identificación Tributaria (NIT).');
+                            return false;
+                        }else if ($('#form_nit_apertura').val()==''){
+                            alert('Ingrese el Nro. de N.I.T.');
+                            return false;
+                        }else if(constitucion != 2 && $('#form_i_balance_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia de Balance de apertura, sellado por el Servicio de Impuestos Nacionales SIN.');
+                            return false;
+                        }else if($('#form_i_representante_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio de Poder del representante legal.');
+                            return false;
+                        }else if($('#form_i_copia_ci_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia de Cedula de Identidad del representante legal.');
+                            return false;
+                        }else if ($('#form_ci_apertura').val()==''){
+                            alert('Ingrese el Nro. de C.I.');
+                            return false;
+                        }else if ($('#form_i_funcionamiento_apertura').val()==''){
+                            alert('Debe adjuntar la Copia legalizada de la Licencia de Funcionamiento Municipal.');
+                            return false;
+                        }else if($('#form_i_estatutos_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia notariada de la escritura de constitución y sus estatutos.');
+                            return false;
+                        }else if ((constitucion == 2 || constitucion == 6) && $('#form_i_certificacionculto_apertura').val()==''){
+                            alert('Debe adjuntar la Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores.');
+                            return false;
+                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_i_form_fundaempresa_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia del formulario virtual de Registro de Comercio, emitida por FUNDAEMPRESA.');
+                            return false;
+                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_nro_fundaempresa_apertura').val()==''){
+                            alert('Ingrese el Nro. de Matrícula de Comercio.');
+                            return false;
+                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_fecha_fundaempresa_apertura').val()==''){
+                            alert('Ingrese la Fecha de Inscripción.');
+                            return false;
+                        }else if ($('#form_i_empleadores_apertura').val()==''){
+                            alert('Debe adjuntar el Registro obligatorio de empleadores.');
+                            return false;
+                        }else if (constitucion == 6 && $('#form_i_convenio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada de convenio entre estados.');
+                            return false;
+                        }
+                    }
+                    if (dependenciaId == 3 && $('.alquilerApertura').is(':checked')==false){
+                        alert('Seleccione si la infraestructura es arrendada o no.');
+                        return false;
+                    }else if (dependenciaId == 3 && $('#form_ii_alquiler_apertura_0').is(':checked')==true && $('#form_ii_contrato_apertura').val()==''){
+                        alert('Debe adjuntar la Copia notariada de compromiso de contrato por un plazo no menor a seis años');
+                        return false;
+                    }else if (dependenciaId == 3 && $('#form_ii_alquiler_apertura_1').is(':checked')==true && $('#form_ii_folio_apertura').is(':checked')==false){
+                        alert('Seleccione la presentación de la Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales estableciendo que la infraestructura esta destinada a la unidad educativa y pertenece a los propietarios de la misma.');
+                        return false;
+                    }else if($('#form_ii_inventario_apertura').is(':checked')==false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación del Inventario de mobiliario y equipamento de la Unidad Educativa de acuerdo a norma.');
+                        return false;
+                    }else if($('#form_ii_planos_apertura').is(':checked')==false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de la Copia legalizada de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal correspondiente, para infraestructura de ambientes propios, que contemplen la adecuación progresiva para la atención de la población con discapacidad leve, en el caso de área dispersa, el cumplimiento de este requisito se incluirá en el informe del Director Distrital de Educación correspondiente.');
+                        return false;
+                    }else if($('#form_ii_planos_apertura').is(':checked')==false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de la Copia legalizada de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal correspondiente, para infraestructura de ambientes propios, que contemplen la adecuación progresiva para la atención de la población con discapacidad leve, en el caso de área dispersa, el cumplimiento de este requisito se incluirá en el informe del Director Distrital de Educación correspondiente.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_reglamento_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Reglamento interno de funcionamiento de disposiciones administrativas.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_convivencia_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Reglamento de convivencia armónica y pacífica que contenga los mecanismos preventivos, medidas reparadoras de solución de conflictos, tipificación de infracciones, procedimientos y sanciones.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_manual_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Manual de organización y funciones (misión, objetivos, estructura organizativa, objetivos de áreas, descripción y objetivos de funciones, superviciones y coordinación).');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_kardex_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Kardex de maestras y maestros y personal administrativo.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_sippase_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Cetificado SIPPASE y REJAP del plantel docente y administrativo (en mérito al D.S. Nro. 1302 y 1320).');
+                        return false;
+                    }else if($('#form_iii_poa_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Plan Operativo Anual (POA) de la gestión en la que iniarán actividades, firmado por la o el Director Distrital de Educación correspondiente.');
+                        return false;
+                    }else if($('#form_iii_contratos_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación de los Contratos firmados por el personal docente con pertinencia académica.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxtio.</div>');
+                    }
+                    break;
             }
         }
 
         function apertura(id){
-            //alert(id);
+            
             var formData = {id: id,ie:'{{institucioneducativa.id}}'};
-            if ( $("#modal_apertura").length ) {
+            if ( $("#modal_apertura_datos").length ) {
                 return false;
             }
+            //alert(id);
             $.ajax({
                 type: 'GET',
                 url: "{{path('tramite_rue_apertura')}}",
@@ -1287,6 +1488,7 @@
                         todayHighlight: true,
                         language: 'es'
                     });
+                    $('[data-toggle="tooltip"]').tooltip();
                 },
             });
         }
@@ -1306,6 +1508,7 @@
                     if(array[i] == 35 || array[i] == 54 || array[i] == 40){
                         $('#fila_'+array[i]).remove();
                         $('#modal_'+array[i]).remove();
+                        $('#modal_apertura').remove();
                         array.splice(i,1);
                      }
                 } 
@@ -1360,7 +1563,10 @@
                 var arr = [];
                 $.each(JSON.parse($('#form_tr').val()),function(index,value){
                     if($('#modal_requisitos_'+value).length == 0 && value!=39 && value!=40){
-                        arr.push($('#fila_'+value+' td').html());
+                        var texto = $('#fila_'+value+' td').html().replace('<strong>', '');
+                        texto = texto.replace('</strong>', '');
+                        arr.push(texto);
+                        //arr.push($('#fila_'+value+' td').html());
                     }
                 });
                 //console.log(arr);
@@ -1373,10 +1579,13 @@
                 var arr = [];
                 $.each(JSON.parse($('#form_tr').val()),function(index,value){
                     if($('#validar'+value).val() == 0){
-                        arr.push($('#fila_'+value+' td').html());
+                        var texto = $('#fila_'+value+' td').html().replace('<strong>', '');
+                        texto = texto.replace('</strong>', '');
+                        arr.push(texto);
+                        //arr.push($('#fila_'+value+' td').html());
                     }
                 });
-                console.log(arr);
+                //console.log(arr);
                 if (arr.length > 0){
                     alert('Debe validar los requisitos de el/los trámite/s: '+arr,toString());
                     return false;
