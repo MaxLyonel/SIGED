@@ -268,7 +268,7 @@ class DownloadFileSieController extends Controller {
           //get info if the UE is plena
           // $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           // $errorValidation = $this->validateDownload($form);
-          if ($inconsistencia) {
+          if (!$inconsistencia) {
 
             $swCtrlMenu = false;
             // set the ctrol menu with false
@@ -517,7 +517,7 @@ class DownloadFileSieController extends Controller {
                 // switch ($form['gestion']) {
                 //     case $this->session->get('currentyear'):
                 if($form['gestion'] == 2019 && $operativo == 5){
-                  $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                  $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_sin_6to('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
                 }else{              
                   switch ($operativo) {
                     case '1':
