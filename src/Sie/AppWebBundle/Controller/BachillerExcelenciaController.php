@@ -41,7 +41,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -84,7 +84,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -122,7 +122,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -297,7 +297,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -430,7 +430,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-29');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -469,7 +469,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -654,7 +654,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-29');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -734,7 +734,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-29');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -773,7 +773,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-29');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -846,7 +846,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -891,7 +891,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-11-28');
+        $fechaCorte = new \DateTime('2019-11-30');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -1207,6 +1207,7 @@ class BachillerExcelenciaController extends Controller {
     public function resultSearchDistRepAction(Request $request) {
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
+        $gestion_reporte = 2019;
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1223,7 +1224,7 @@ class BachillerExcelenciaController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudianteExcelencia_DIstritoRegular_v2_afv_hcq.rptdesign&distrito=' . $formulario['institucioneducativa'] . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudianteExcelencia_DIstritoRegular_v2_afv_hcq.rptdesign&distrito=' . $formulario['institucioneducativa'] . '&gestion='.$gestion_reporte.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
