@@ -189,7 +189,7 @@
                                 </td>
                                 <td>
                                     {# AREAS ESTUDIANTE #}
-                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
+                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
                                             <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
                                                 <i class="fa fa-bars"></i>
