@@ -268,7 +268,7 @@ class DownloadFileSieController extends Controller {
           //get info if the UE is plena
           // $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           // $errorValidation = $this->validateDownload($form);
-          if (!$inconsistencia) {
+          if ($inconsistencia) {
 
             $swCtrlMenu = false;
             // set the ctrol menu with false
