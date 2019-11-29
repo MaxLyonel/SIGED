@@ -317,6 +317,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
                 break;
             case 'herramientalt.local':
                 $sysname = 'Herramienta Alternativa';
