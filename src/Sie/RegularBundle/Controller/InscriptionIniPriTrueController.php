@@ -241,6 +241,14 @@ class InscriptionIniPriTrueController extends Controller {
       $form = $request->get('form');
       $setNotasInscription=false;
 
+      // validation if the ue is over 4 operativo
+      $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
+      if($operativo >= 4){
+        $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+        $this->addFlash('idNoInscription', $message);
+        return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+      }
+
       //validation inscription in the same U.E
       $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']);
 

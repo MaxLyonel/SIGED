@@ -250,6 +250,14 @@ class TrasladoController extends Controller {
       //dump($newForm);die;
       $arrInfoUeducativaFrom = json_decode($form['infoUeducativaFrom'],true);
 
+      // validation if the ue is over 4 operativo
+      $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));
+      if($operativo >= 4){
+        $message = 'No se puede realizar el traslado debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+        $this->addFlash('estadoTraslado', $message);
+        return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig');
+      }      
+
       //VALIDATE OPERATIVO IN BOTH SIE's
       $operativoUETo   = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));
       $operativoUEFrom = $this->get('funciones')->obtenerOperativo($arrInfoUeducativaFrom['institucioneducativa'],$this->session->get('currentyear'));

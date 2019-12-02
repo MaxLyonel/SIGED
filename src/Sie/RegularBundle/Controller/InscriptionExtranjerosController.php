@@ -754,6 +754,12 @@ class InscriptionExtranjerosController extends Controller {
 // dump($aDataOption);die;
 
         try {
+        // validation if the ue is over 4 operativo
+          $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestion']);
+          if($operativo >= 4){
+            $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos');
+            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+          }
 
           //validation inscription in the same U.E
           $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($aDataStudent['codigoRude'],$aDataStudent['gestion']);
