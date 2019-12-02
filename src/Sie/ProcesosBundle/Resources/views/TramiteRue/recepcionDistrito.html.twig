@@ -82,7 +82,7 @@
                                                 <div class="col-md-9">
                                                 {% for r in form.requisitos %}
                                                     <div class="ckbox ckbox-primary">
-                                                        {{ form_widget(r) }}
+                                                        {{ form_widget(r,{'attr':{'required':true}}) }}
                                                         {{ form_label(r) }}
                                                     </div>
                                                 {% endfor %}   
