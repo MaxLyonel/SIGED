@@ -374,6 +374,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         ->getResult();
 
             $nivel = $curso[0]['idNivel'];
+            $grado = $curso[0]['idGrado'];
             /**
              * Obtenemos la cantidad de notas
              */
@@ -416,11 +417,23 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
                                 $valor_inicial = 1;
+                                // OBTENEMOS CONSOLIDADO (ACTUAL -1) DE LA UNIDAD EDUCATIVA
                                 $valor_final = $this->get('funciones')->obtenerOperativo($idInstitucion,$gestion) - 1;
                                 $operativo = $valor_final;
                                 if ($valor_final < 0) {
                                     $valor_final = 0;
                                     $operativo = 0;
+                                }
+                                // VERIFICAMOS SI SE ESTA EN OPERATIVO CONSOLIDADO 3ER BIMESTRE
+                                // Y SE TIENE EL OPERATIVO SEXTO SECUNDARIA CONSOLIDADO
+                                // PARA QUE LOS ESTUDIANTES DE SEXTO PUEDAN REALIZAR LA SOLICITUD
+                                // DE 4TO BIMESTRE
+                                if ($operativo == 3 and $nivel == 13 and $grado == 6) {
+                                    $sextoCerrado = $this->get('funciones')->verificarSextoSecundariaCerrado($idInstitucion, $gestion);
+                                    if ($sextoCerrado) {
+                                        $operativo++;
+                                        $valor_final = $operativo;
+                                    }
                                 }
                             }else{
                                 $tipo_nota = 'Bimestre';

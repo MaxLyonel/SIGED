@@ -516,21 +516,25 @@ class DownloadFileSieController extends Controller {
                 $operativo = $form['bimestre'] + 1;
                 // switch ($form['gestion']) {
                 //     case $this->session->get('currentyear'):
-                      switch ($operativo) {
-                        case '1':
-                          # code...
-                          $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                          break;
-                        case '2':
-                        case '3':
-                        case '4':
-                        case '5':
-                            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                          break;
-                        default:
-                          # code...
-                          break;
-                      }
+                if($form['gestion'] == 2019 && $operativo == 5){
+                  $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_sin_6to('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                }else{              
+                  switch ($operativo) {
+                    case '1':
+                      # code...
+                      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                      break;
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                      break;
+                    default:
+                      # code...
+                      break;
+                  }
+                }
 
                 //         break;
                 //     case '2015':

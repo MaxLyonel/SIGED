@@ -59,7 +59,7 @@
                     <a class="btn btn-menu tooltips" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                         <i class="fa fa-download" style="color:#FFFFFF"></i>
                     </a>
-                    {# {% if app.session.get('acceso_total') and gestion >= 2018 and nivel == 13 %}
+                    {% if app.session.get('acceso_total') and gestion >= 2018 and nivel == 13 %}
 
                         {% if grado == 1 or grado == 2 or grado == 3 or grado == 4  %}
                             <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTGBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTG">
@@ -71,7 +71,7 @@
                                 <i class="fa fa-download" style="color:#FFFFFF"></i>
                             </a>
                         {% endif %}
-                    {% endif %} #}
+                    {% endif %}
                     {#
                     {% if operativo >= 5 %}
                       <div class="col-md-4">
@@ -216,7 +216,7 @@
                                     {% endif %}
                                     
                                     {# REPORTE CUT #}
-                                    {% if sextoCerrado == true and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and operativo == 4 and data.estadomatriculaId in [4,5] and 1 == 2 %}
+                                    {% if sextoCerrado == true and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and operativo == 4 and data.estadomatriculaId in [4,5] %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
                                             <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                               <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
