@@ -27,13 +27,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaHistorialTramite:
             generator:
                 strategy: SEQUENCE
     fields:
-        nroResolcucion:
+        nroResolucion:
             type: string
             nullable: false
             length: 255
             fixed: false
             comment: ''
-            column: nro_resolcucion
+            column: nro_resolucion
         fechaResolucion:
             type: date
             nullable: false

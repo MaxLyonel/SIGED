@@ -388,4 +388,32 @@ class InstitucioneducativaHistorialTramite
     {
         return $this->institucioneducativa;
     }
+    /**
+     * @var string
+     */
+    private $nroResolucion;
+
+
+    /**
+     * Set nroResolucion
+     *
+     * @param string $nroResolucion
+     * @return InstitucioneducativaHistorialTramite
+     */
+    public function setNroResolucion($nroResolucion)
+    {
+        $this->nroResolucion = $nroResolucion;
+    
+        return $this;
+    }
+
+    /**
+     * Get nroResolucion
+     *
+     * @return string 
+     */
+    public function getNroResolucion()
+    {
+        return $this->nroResolucion;
+    }
 }
