@@ -868,7 +868,7 @@
                     return false;
                 }
                 if ( $("#fila_"+ idtramite).length && id == 40) {
-                    alert('Elimine la Ampliación de Nivel para poder solictar la '+tramitetipo);
+                    alert('Elimine la Reducción de Nivel para poder solictar la '+tramitetipo);
                     return false;
                 }
                 if ( $("#fila_"+ idtramite).length ) {
@@ -1450,7 +1450,7 @@
                     }else if($('#form_iii_poa_apertura').is(':checked')==false){
                         alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Plan Operativo Anual (POA) de la gestión en la que iniarán actividades, firmado por la o el Director Distrital de Educación correspondiente.');
                         return false;
-                    }else if($('#form_iii_contratos_apertura').is(':checked')==false){
+                    }else if(dependenciaId == 3 && $('#form_iii_contratos_apertura').is(':checked')==false){
                         alert('En el punto 3. Requisitos Administrativos, seleccione la presentación de los Contratos firmados por el personal docente con pertinencia académica.');
                         return false;
                     }else{

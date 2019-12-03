@@ -265,14 +265,15 @@
                                                                 <th>Dato nuevo</th>
                                                                 <th>Ver Requisitos Presentados</th>
                                                             </tr>
-                                                            {% set fus = 0 %}
+                                                            {% set tipo = '' %}
                                                             {% for t in d.datos.tramites  %}
-                                                                {% if t.id == 39 %} {% set fus = 1 %} {% endif %}
+                                                                {% if t.id == 39 %} {% set tipo = 'fusion' %} {% endif %}
+                                                                {% if t.id == 40 %} {% set tipo = 'desglose' %} {% endif %}
                                                             {% endfor %}
                                                             {% for t in d.datos.tramites  %}
-                                                                {% if t.id != 39 %}
+                                                                {% if t.id not in [39,40] %}
                                                                     <tr>
-                                                                        <td>{% if fus == 0 %} {{t.tramite_tipo}}{% else %} {{t.tramite_tipo}} <strong>(Por Fusión)</strong> {% endif %}</td>
+                                                                        <td>{{t.tramite_tipo}} {% if tipo == 'fusion' %} <strong>(Por Fusión)</strong>{% elseif tipo == 'desglose' %} <strong>(Por Desglose)</strong>{% endif %}</td>
                                                                         {% if t.id == 34 %} {# ampliacion de nivel #}
                                                                             <td>
                                                                                 <ul>
@@ -594,6 +595,11 @@
                                                                         {% elseif t.id == 45 %}{# nuevo certifcado rue #}
                                                                             <td></td>
                                                                             <td></td>
+                                                                        {% elseif t.id == 54 %}{# apertura #}
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal_apertura" data-placement="top" title="Ver datos de la Nueva Unidad Educativa" ><i class="glyphicon glyphicon-plus"></i>Ver datos de la Unidad Educativa</button>
+                                                                            </td>
                                                                         {% endif %}
                                                                         <td>
                                                                             <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
