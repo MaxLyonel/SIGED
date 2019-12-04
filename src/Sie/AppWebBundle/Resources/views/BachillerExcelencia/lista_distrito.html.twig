@@ -76,19 +76,23 @@
                                             <td>{{ item.fecha_nacimiento }}</td>
                                             <td class="text-center">
                                                 <div id="expedido_{{item.mcuentaid}}">
-                                                    {% if item.expedido == null %}
-                                                        <select class="form-control" id="itemUpdateId_{{item.mcuentaid}}" name="itemUpdateId[{{item.mcuentaid}}]">
-                                                            <option value="">Ninguno</option>
-                                                            <option value="CH">Chuquisca</option>
-                                                            <option value="LP">La Paz</option>
-                                                            <option value="CB">Cochabamba</option>
-                                                            <option value="OR">Oruro</option>
-                                                            <option value="PO">Potosí</option>
-                                                            <option value="TJ">Tarija</option>
-                                                            <option value="SC">Santa Cruz</option>
-                                                            <option value="BE">Beni</option>
-                                                            <option value="PA">Pando</option>
-                                                        </select>
+                                                    {% if rol == 10 %}
+                                                        {% if item.expedido == null %}
+                                                            <select class="form-control" id="itemUpdateId_{{item.mcuentaid}}" name="itemUpdateId[{{item.mcuentaid}}]">
+                                                                <option value="">Ninguno</option>
+                                                                <option value="CH">Chuquisca</option>
+                                                                <option value="LP">La Paz</option>
+                                                                <option value="CB">Cochabamba</option>
+                                                                <option value="OR">Oruro</option>
+                                                                <option value="PO">Potosí</option>
+                                                                <option value="TJ">Tarija</option>
+                                                                <option value="SC">Santa Cruz</option>
+                                                                <option value="BE">Beni</option>
+                                                                <option value="PA">Pando</option>
+                                                            </select>
+                                                        {% else %}
+                                                            {{item.expedido}}
+                                                        {% endif %}
                                                     {% else %}
                                                         {{item.expedido}}
                                                     {% endif %}
@@ -96,10 +100,14 @@
                                             </td>
                                             <td class="text-center">
                                                 <div id="acciones_{{item.mcuentaid}}">
-                                                    {% if item.expedido == null %}
-                                                        <form id="formUpdateId_{{item.mcuentaid}}" method="post">
-                                                            <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateMaestroCuentabancaria({{item.mcuentaid}});"><i class="fa fa-save"></i> Actualizar</button>
-                                                        </form>
+                                                    {% if rol == 10 %}
+                                                        {% if item.expedido == null %}
+                                                            <form id="formUpdateId_{{item.mcuentaid}}" method="post">
+                                                                <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateMaestroCuentabancaria({{item.mcuentaid}});"><i class="fa fa-save"></i> Actualizar</button>
+                                                            </form>
+                                                        {% else %}
+                                                            -
+                                                        {% endif %}
                                                     {% else %}
                                                         -
                                                     {% endif %}

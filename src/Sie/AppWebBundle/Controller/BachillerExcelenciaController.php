@@ -1237,12 +1237,29 @@ class BachillerExcelenciaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         $roluserlugarid = $this->session->get('roluserlugarid');
+        $roluser = $this->session->get('roluser');
         $username = $this->session->get('userName');
         $gestion_reporte = 2019;
-        $distritoid = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid)->getCodigo();
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid)->getCodigo();
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        switch ($roluser) {
+            case '10':
+                $where = "distrito_tipo.id = ".$lugar."";
+                break;
+            case '7':
+                $lugar = substr($lugar, 0, 1);
+                $where = "departamento_tipo.id = ".$lugar."";
+                break;
+            case '8':
+                $where = '1 = 1';
+                break;
+            default:
+                $where = '1 = 0';
+                break;
         }
 
         $query = $em->getConnection()->prepare("
@@ -1279,7 +1296,7 @@ class BachillerExcelenciaController extends Controller {
             and maestro_cuentabancaria.gestion_tipo_id = 2019
             and estudiante_destacado.gestion_tipo_id = 2019
             and dependencia_tipo.id = 3
-            and distrito_tipo.id = ".$distritoid."
+            and ".$where."
             ORDER BY
             departamento_tipo.id ASC,
             jurisdiccion_geografica.distrito_tipo_id ASC,
@@ -1290,7 +1307,8 @@ class BachillerExcelenciaController extends Controller {
         $lista = $query->fetchAll();
 
         return $this->render('SieAppWebBundle:BachillerExcelencia:lista_distrito.html.twig', array(
-            'maestroCuentabancaria' => $lista
+            'maestroCuentabancaria' => $lista,
+            'rol' => $roluser
         ));
     }
 
