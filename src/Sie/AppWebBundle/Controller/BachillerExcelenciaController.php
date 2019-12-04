@@ -1232,4 +1232,102 @@ class BachillerExcelenciaController extends Controller {
             return $response;
         }
     }
+
+    public function completarInformacionListaAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $id_usuario = $this->session->get('userId');
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $username = $this->session->get('userName');
+        $gestion_reporte = 2019;
+        $distritoid = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid)->getCodigo();
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $query = $em->getConnection()->prepare("
+            SELECT DISTINCT
+            maestro_cuentabancaria.id mcuentaid,
+            departamento_tipo.id,
+            departamento_tipo.departamento,
+            jurisdiccion_geografica.distrito_tipo_id,
+            distrito_tipo.distrito,
+            institucioneducativa.id as sie,
+            institucioneducativa.institucioneducativa,
+            maestro_cuentabancaria.carnet,
+            maestro_cuentabancaria.complemento,
+            maestro_cuentabancaria.apellido_esposo,
+            maestro_cuentabancaria.paterno,
+            maestro_cuentabancaria.materno,
+            maestro_cuentabancaria.nombre,
+            maestro_cuentabancaria.fecha_nacimiento,
+            maestro_cuentabancaria.expedido
+            FROM
+            institucioneducativa
+            INNER JOIN estudiante_destacado ON estudiante_destacado.institucioneducativa_id = institucioneducativa.id
+            INNER JOIN jurisdiccion_geografica ON institucioneducativa.le_juridicciongeografica_id = jurisdiccion_geografica.id
+            INNER JOIN lugar_tipo ON jurisdiccion_geografica.lugar_tipo_id_localidad = lugar_tipo.id
+            INNER JOIN distrito_tipo ON distrito_tipo.id = jurisdiccion_geografica.distrito_tipo_id
+            INNER JOIN departamento_tipo ON distrito_tipo.departamento_tipo_id = departamento_tipo.id
+            INNER JOIN maestro_cuentabancaria ON maestro_cuentabancaria.institucioneducativa_id = institucioneducativa.id
+            INNER JOIN entidadfinanciera_tipo ON entidadfinanciera_tipo.id = maestro_cuentabancaria.entidadfinanciera_tipo_id
+            INNER JOIN dependencia_tipo ON dependencia_tipo.id = institucioneducativa.dependencia_tipo_id
+            INNER JOIN institucioneducativa_tipo ON institucioneducativa_tipo.id = institucioneducativa.institucioneducativa_tipo_id
+            WHERE
+            maestro_cuentabancaria.esoficial = 't'
+            and estudiante_destacado.esoficial = 't'
+            and maestro_cuentabancaria.gestion_tipo_id = 2019
+            and estudiante_destacado.gestion_tipo_id = 2019
+            and dependencia_tipo.id = 3
+            and distrito_tipo.id = ".$distritoid."
+            ORDER BY
+            departamento_tipo.id ASC,
+            jurisdiccion_geografica.distrito_tipo_id ASC,
+            institucioneducativa.id ASC;
+        ");
+
+        $query->execute();
+        $lista = $query->fetchAll();
+
+        return $this->render('SieAppWebBundle:BachillerExcelencia:lista_distrito.html.twig', array(
+            'maestroCuentabancaria' => $lista
+        ));
+    }
+
+    public function updateMaestroCuentabancariaAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $maestroCuentabancariaId = $form['id'];
+        $expedido = $form['expedido'];
+        $mensaje = "Registro modificado satisfactoriamente.";
+        $estado = "success";
+
+        $maestroCuentabancaria = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria')->findOneBy(array(
+            'id' => $maestroCuentabancariaId
+        ));
+
+        if($maestroCuentabancaria){
+            $em->getConnection()->beginTransaction();
+            try {
+                $maestroCuentabancaria->setExpedido($expedido);
+
+                $em->persist($maestroCuentabancaria);
+                $em->flush();
+                $em->getConnection()->commit();
+            } catch (Exception $ex) {
+                $mensaje = "Ocurrió un error interno, intente nuevamente.";
+                $estado = "danger";
+                $expedido = 'X';
+                $em->getConnection()->rollback();
+            }
+        }
+
+        $response = new JsonResponse();
+        
+        return $response->setData(array(
+            'mensaje' => $mensaje, 
+            'estado' => $estado,
+            'expedido' => $expedido
+        ));
+    }
 }

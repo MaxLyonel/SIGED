@@ -98,6 +98,12 @@ Sie\AppWebBundle\Entity\MaestroCuentabancaria:
             fixed: false
             comment: ''
             column: apellido_esposo
+        expedido:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
     manyToOne:
         cargoTipo:
             targetEntity: CargoTipo

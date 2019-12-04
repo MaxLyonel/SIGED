@@ -79,3 +79,14 @@ bach_exc_rep_dist_search:
     path:     /repdis-search
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resultSearchDistRep" }
     methods:  POST    
+
+bach_exc_completar_informacion_lista:
+    path:     /completar-expedido-lista
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:completarInformacionLista" }
+    methods:  GET    
+
+bach_exc_completar_informacion_update:
+    path:     /updateMaestroCuentabancaria
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:updateMaestroCuentabancaria" }
+    options:
+        expose: true
