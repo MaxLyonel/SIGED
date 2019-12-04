@@ -724,7 +724,7 @@ class InfoEstudianteController extends Controller {
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
 
         $imprimirLibreta = false;
-        $estadosPermitidosImprimir = array(4,5,11,55);
+        $estadosPermitidosImprimir = array(4,5,11,55,28);
 
         if($tipoUE){
             /*

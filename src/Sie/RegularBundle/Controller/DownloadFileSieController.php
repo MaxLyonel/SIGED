@@ -833,7 +833,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v1291.exe';
+        $file = 'instalador_SIGED_SIE_v1292.exe';
 
         //create response to donwload the file
         $response = new Response();

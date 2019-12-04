@@ -377,7 +377,10 @@ class ConsolidationSieController extends Controller {
 
                     }else{
                       if(
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0
+                        (
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0 || 
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.2'))) === 0 
+                        )
                             and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED8'))) === 0
                       ){
 
