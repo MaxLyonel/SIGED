@@ -79,12 +79,12 @@
                                                 <ul>
                                                     {% for gradoKey, dataGrado in dataNivel %}
 
-                                                        <li>
+                                                        <li style="display:none">
                                                             <span><i class="icon-minus-sign"></i> {{gradoKey}}</span>
 
                                                             <ul>
                                                                 {% for paraleloKey, dataParalelo in dataGrado %}
-                                                                    <li>
+                                                                    <li style="display:none">
                                                                       <a href="#" onclick="seeStudents('{{dataParalelo.infoUe}}');">
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Lista de Inscritos">
                                                                             <span ><i class="icon-leaf"></i>
