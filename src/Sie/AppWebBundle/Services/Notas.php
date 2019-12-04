@@ -2689,8 +2689,18 @@ die;/*
         $sie = $curso->getInstitucioneducativa()->getId();
         $gestion = $curso->getGestionTipo()->getId();
         $nivel = $curso->getNivelTipo()->getId();
+        $grado = $curso->getGradoTipo()->getId();
 
         $operativo = $this->funciones->obtenerOperativo($sie, $gestion);
+
+        // VERIFICAMOS SI SE CERRO EL OPERATIVO DE SEXTO DE SECUNDARIA
+        // PARA PEDIR LAS CALIFICACIONES HASTA CUARTO BIMESTRE
+        if($gestion >= 2018 and $operativo == 4 and $nivel == 13 and $grado == 6){
+            $validacionSexto = $this->funciones->verificarGradoCerrado($sie, $gestion);
+            if($validacionSexto){
+                $operativo++;
+            }
+        }
 
         $cursosOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('id'=>$idsco));
         $cont = 0;

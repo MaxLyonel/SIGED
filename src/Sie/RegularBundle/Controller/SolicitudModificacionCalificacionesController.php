@@ -374,6 +374,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         ->getResult();
 
             $nivel = $curso[0]['idNivel'];
+            $grado = $curso[0]['idGrado'];
             /**
              * Obtenemos la cantidad de notas
              */
@@ -416,11 +417,23 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
                                 $valor_inicial = 1;
+                                // OBTENEMOS CONSOLIDADO (ACTUAL -1) DE LA UNIDAD EDUCATIVA
                                 $valor_final = $this->get('funciones')->obtenerOperativo($idInstitucion,$gestion) - 1;
                                 $operativo = $valor_final;
                                 if ($valor_final < 0) {
                                     $valor_final = 0;
                                     $operativo = 0;
+                                }
+                                // VERIFICAMOS SI SE ESTA EN OPERATIVO CONSOLIDADO 3ER BIMESTRE
+                                // Y SE TIENE EL OPERATIVO SEXTO SECUNDARIA CONSOLIDADO
+                                // PARA QUE LOS ESTUDIANTES DE SEXTO PUEDAN REALIZAR LA SOLICITUD
+                                // DE 4TO BIMESTRE
+                                if ($operativo == 3 and $nivel == 13 and $grado == 6) {
+                                    $sextoCerrado = $this->get('funciones')->verificarSextoSecundariaCerrado($idInstitucion, $gestion);
+                                    if ($sextoCerrado) {
+                                        $operativo++;
+                                        $valor_final = $operativo;
+                                    }
                                 }
                             }else{
                                 $tipo_nota = 'Bimestre';
@@ -1301,10 +1314,11 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         // 1 PLENA
                         // 2 TECNICA TECNOLOGICA
                         // 3 MODULAR
+                        // 5 HUMANISTICA
                         // 7 TRANSFORMACION BTH
                         // PARA NO CONSIDERAR ESTA VALIDACION YA QUE NO DESCARGAN ARCHIVOS
-                        $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
-                        if (!in_array($tipoUE['id'], [1,2,3,7])) {
+                        $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
+                        if (!in_array($tipoUE['id'], [1,2,3,5,7]) and $tipoUE['academico'] == false) {
 
                             // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
                             $operativoLog = $em->createQueryBuilder()

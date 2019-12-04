@@ -108,7 +108,9 @@ class InfoEstudianteNotasController extends Controller {
             if($gestion >= 2019 and $operativo == 4 and $nivel == 13 and $grado == 6){
                 $validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
                 if($validacionSexto){
-                    $vista = 0;
+                    if ($inscripcion->getEstadomatriculaTipo()->getId() != 4) {
+                        $vista = 0;
+                    }
                 }
             }
             
