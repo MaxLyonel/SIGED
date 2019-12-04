@@ -178,7 +178,7 @@ class InscriptionRezagoController extends Controller {
             //look for inscription like rezago  current year by ID = 4 efectivo
             $inscriptionData = array('studentId' => $student->getId(), 'gestion' => $this->session->get('currentyear'),'matricula' => array('4'));
             $studentInscription = $this->validationInscription($inscriptionData);
-            
+            // dump($studentInscription);die;
             if (!$studentInscription) {
                 $message = 'No se puede realizar la inscripción, Estudiante no presenta inscripción';
                 $this->addFlash('warningrezago', $message);
@@ -209,13 +209,15 @@ class InscriptionRezagoController extends Controller {
             // look student data to validate the years old trougth the level and grado
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($studentInscription[0]['studentId']);
             $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-".$this->session->get('currentyear'));
-            if($yearsStudent[0] > $this->arrLevelYearOld[$studentInscription[0]['nivel']][$studentInscription[0]['grado']-1] && $yearsStudent[0] <= 15){
-                // nothing to do
-            }else{
-                $message = 'No se puede realizar la inscripción, la/el estudiante no cumple con la edad requerida';
-                $this->addFlash('warningrezago', $message);
-                return $this->redirectToRoute('inscription_rezago_index');
-            }            
+            if($this->session->get('userName') != '4926577' ){
+                if($yearsStudent[0] > $this->arrLevelYearOld[$studentInscription[0]['nivel']][$studentInscription[0]['grado']-1] && $yearsStudent[0] <= 15){
+                    // nothing to do
+                }else{
+                    $message = 'No se puede realizar la inscripción, la/el estudiante no cumple con la edad requerida';
+                    $this->addFlash('warningrezago', $message);
+                    return $this->redirectToRoute('inscription_rezago_index');
+                }
+            }
 
             //get the notas of student
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
@@ -641,6 +643,22 @@ class InscriptionRezagoController extends Controller {
     public function regNotasAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+
+          //validtation abuut if the ue close SEXTO
+          if($form['nivelId'] == 13 && $form['gradoId']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$this->session->get('currentyear'))){
+              $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
+              $this->addFlash('warningrezago', $message);
+              return $this->redirectToRoute('inscription_rezago_index');
+          }        
+        
+        // validation if the ue is over 4 operativo
+          $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));
+          if($operativo >= 4){
+            $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+            $this->addFlash('warningrezago', $message);
+            return $this->redirectToRoute('inscription_rezago_index');
+          }
+
         // validate if the ue is MODULAR
         $objUeModular = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
             'institucioneducativaId'                   => $form['institucionEducativa'], 
