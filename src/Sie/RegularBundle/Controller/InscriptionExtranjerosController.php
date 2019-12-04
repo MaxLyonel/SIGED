@@ -748,18 +748,22 @@ class InscriptionExtranjerosController extends Controller {
         $em->getConnection()->beginTransaction();
         //get the variblees
         $form = $request->get('form');
-
         $aDataStudent = unserialize($form['newdata']);
         $aDataOption = json_decode($aDataStudent['dataOption'],true);
 // dump($aDataOption);die;
 
         try {
-        // validation if the ue is over 4 operativo
-          $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestion']);
-          if($operativo >= 4){
-            $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos');
-            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-          }
+
+            if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestion'])){
+                $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria');
+                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+            }
+            // validation if the ue is over 4 operativo
+            $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestion']);
+            if($operativo >= 4){
+                $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos');
+                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+            }
 
           //validation inscription in the same U.E
           $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($aDataStudent['codigoRude'],$aDataStudent['gestion']);

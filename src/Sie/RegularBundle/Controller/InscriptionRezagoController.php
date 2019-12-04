@@ -643,6 +643,13 @@ class InscriptionRezagoController extends Controller {
     public function regNotasAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+
+          //validtation abuut if the ue close SEXTO
+          if($form['nivelId'] == 13 && $form['gradoId']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$this->session->get('currentyear'))){
+              $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
+              $this->addFlash('warningrezago', $message);
+              return $this->redirectToRoute('inscription_rezago_index');
+          }        
         
         // validation if the ue is over 4 operativo
           $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));

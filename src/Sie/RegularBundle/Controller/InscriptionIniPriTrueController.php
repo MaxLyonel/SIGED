@@ -241,6 +241,13 @@ class InscriptionIniPriTrueController extends Controller {
       $form = $request->get('form');
       $setNotasInscription=false;
 
+      //validtation abuut if the ue close SEXTO
+      if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestionIns'])){
+          $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
+          $this->addFlash('idNoInscription', $message);
+          return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+      }
+
       // validation if the ue is over 4 operativo
       $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
       if($operativo >= 4){
