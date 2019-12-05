@@ -90,3 +90,9 @@ bach_exc_completar_informacion_update:
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:updateMaestroCuentabancaria" }
     options:
         expose: true
+
+bach_exc_completar_informacion_reset_expedido:
+    path:     /resetExpedidoMaestroCuentabancaria
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resetExpedidoMaestroCuentabancaria" }
+    options:
+        expose: true

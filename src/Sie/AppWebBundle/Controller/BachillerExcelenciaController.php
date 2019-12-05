@@ -1348,4 +1348,42 @@ class BachillerExcelenciaController extends Controller {
             'expedido' => $expedido
         ));
     }
+
+    public function resetExpedidoMaestroCuentabancariaAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $maestroCuentabancariaId = $form['id'];
+        $expedido = null;
+        
+        $mensaje = "Registro restablecido satisfactoriamente.";
+        $estado = "success";
+
+        $maestroCuentabancaria = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria')->findOneBy(array(
+            'id' => $maestroCuentabancariaId
+        ));
+
+        if($maestroCuentabancaria){
+            $em->getConnection()->beginTransaction();
+            try {
+                $maestroCuentabancaria->setExpedido($expedido);
+
+                $em->persist($maestroCuentabancaria);
+                $em->flush();
+                $em->getConnection()->commit();
+            } catch (Exception $ex) {
+                $mensaje = "Ocurrió un error interno, intente nuevamente.";
+                $estado = "danger";
+                $expedido = 'X';
+                $em->getConnection()->rollback();
+            }
+        }
+
+        $response = new JsonResponse();
+        
+        return $response->setData(array(
+            'mensaje' => $mensaje, 
+            'estado' => $estado,
+            'expedido' => $expedido
+        ));
+    }
 }
