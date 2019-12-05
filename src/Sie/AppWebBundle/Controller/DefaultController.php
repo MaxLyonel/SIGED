@@ -52,6 +52,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
                 $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
                 break;
             case '172.20.196.9:8015':
                 $sysname = 'ALTERNATIVA';
@@ -67,6 +68,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
                 break;
             case 'academico.sie.gob.bo':
             case 'academicolb.sie.gob.bo':
@@ -77,6 +79,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
                 break;
             case '172.20.0.53:8013':
                 $sysname = 'Herramienta';
@@ -94,6 +97,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                $this->session->set('color', 'success');
                 break;
             case 'eduper.sie.gob.bo':
                 $sysname = 'PERMANENTE';
@@ -108,6 +112,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
                 break;
             case '172.20.196.9:8014':
             case 'rue.sie.gob.bo':
@@ -217,6 +222,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutEspecialSie.html.twig';
                 $this->session->set('pathSystem', "SieEspecialBundle");
+                $this->session->set('color', 'danger');
                 break;
             case 'lc.herramientaregular.ch':
                 $sysname = 'Herramienta';
@@ -318,6 +324,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
                 $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
                 break;
             case 'herramientalt.local':
                 $sysname = 'Herramienta Alternativa';
