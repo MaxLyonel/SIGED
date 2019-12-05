@@ -61,6 +61,20 @@
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
+                                <tfoot>
+                                    <th>#</th>
+                                    <th>SIE</th>
+                                    <th>Institucioneducativa</th>
+                                    <th>C.I.</th>
+                                    <th>Complemento</th>
+                                    <th>Apellido Esposo</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>Nombre(s)</th>
+                                    <th>Fecha de nacimiento</th>
+                                    <th class="text-center">Expedido</th>
+                                    <th class="text-center">Acciones</th>
+                                </tfoot>
                                 <tbody>
                                     {% for item in maestroCuentabancaria %}
                                         <tr>
@@ -77,7 +91,7 @@
                                             <td class="text-center">
                                                 <div id="expedido_{{item.mcuentaid}}">
                                                     {% if rol == 10 %}
-                                                        {% if item.expedido == null %}
+                                                        {% if item.expedido is null %}
                                                             <select class="form-control" id="itemUpdateId_{{item.mcuentaid}}" name="itemUpdateId[{{item.mcuentaid}}]">
                                                                 <option value="">Ninguno</option>
                                                                 <option value="CH">Chuquisca</option>
@@ -101,7 +115,7 @@
                                             <td class="text-center">
                                                 <div id="acciones_{{item.mcuentaid}}">
                                                     {% if rol == 10 %}
-                                                        {% if item.expedido == null %}
+                                                        {% if item.expedido is null %}
                                                             <form id="formUpdateId_{{item.mcuentaid}}" method="post">
                                                                 <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateMaestroCuentabancaria({{item.mcuentaid}});"><i class="fa fa-save"></i> Actualizar</button>
                                                             </form>
@@ -109,7 +123,13 @@
                                                             -
                                                         {% endif %}
                                                     {% else %}
-                                                        -
+                                                        {% if item.expedido is not null %}
+                                                            <form id="formResetId_{{item.mcuentaid}}" method="post">
+                                                                <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="resetMaestroCuentabancaria({{item.mcuentaid}});"><i class="fa fa-save"></i> Restablecer Expedido</button>
+                                                            </form>
+                                                        {% else %}
+                                                            -
+                                                        {% endif %}
                                                     {% endif %}
                                                 </div>
                                             </td>
@@ -142,6 +162,40 @@
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('bach_exc_completar_informacion_update'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#expedido_"+id).empty();
+                        $("#expedido_"+id).append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                        $("#acciones_"+id).empty();
+                        $("#acciones_"+id).append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                    },
+                    success: function (data) {
+                        $("#expedido_"+id).empty();
+                        $("#expedido_"+id).append('<div class="text-'+data.estado+'">'+data.expedido+'</div>');
+                        $("#acciones_"+id).empty();
+                        $("#acciones_"+id).append('<div class="text-'+data.estado+'">'+data.mensaje+'</div>');
+                    },
+                    statusCode: {
+                        500: function () {
+    
+                        },
+                        404: function () {
+    
+                        }
+                    }
+                });
+            }
+        };
+
+        var resetMaestroCuentabancaria = function(id){
+            if(confirm('¡Se restablecerá el registro! ¿Desea continuar?')){                
+                formData = $('#formResetId_'+id)
+                .append('<input type="hidden" name="form[id]" id="form_id" value="'+id+'">')
+                .serialize();
+                
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('bach_exc_completar_informacion_reset_expedido'),
                     data: formData,
                     beforeSend: function () {
                         $("#expedido_"+id).empty();
