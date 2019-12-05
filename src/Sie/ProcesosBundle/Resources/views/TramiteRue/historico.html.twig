@@ -258,7 +258,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <div class="table-responsive col-md-12">
-                                                        <table class="table table-bordered table-striped" id="tabla">
+                                                        <table class="table table-bordered table-striped" id="tablahistorico">
                                                             <tr>
                                                                 <th>Tipo de trámite</th> 
                                                                 <th>Dato antiguo</th>
@@ -653,7 +653,7 @@
                                             {% if d.datos.varevaluacion1 == 'SI' %}
                                                 <div class="form-group col-md-12">
                                                     <div class="col-md-3">
-                                                        <strong>NRO. DE INFORME:</strong>
+                                                        <strong>CITE DEL INFORME TÉCNICO:</strong>
                                                     </div>
                                                     <div class="col-md-9">
                                                         {{ d.datos.informedistrito }}
@@ -661,7 +661,7 @@
                                                 </div>
                                                 <div  class="form-group col-md-12">
                                                     <div class="col-md-3">
-                                                        <strong>FECHA DE INFORME:</strong>
+                                                        <strong>FECHA DEL INFORME TÉCNICO:</strong>
                                                     </div>
                                                     <div class="col-md-9">
                                                         {{ d.datos.fechainformedistrito }}
@@ -669,14 +669,36 @@
                                                 </div>
                                                 <div  class="form-group col-md-12">
                                                     <div class="col-md-3">
-                                                        <strong>INFORME ADJUNTO:</strong>
+                                                        <strong>INFORME TÉCNICO ADJUNTO:</strong>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ d.datos.adjuntoinforme )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ d.datos.adjuntoinforme )}}" target="_blank" data-placement="top" title="Ver Informe Técnico">
                                                             <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                         </a>
                                                     </div>
                                                 </div>
+                                                {% if d.datos.actaconformidad is defined %}
+                                                    <div  class="form-group col-md-12">
+                                                        <div class="col-md-3">
+                                                            <strong>ACTA DE CONFORMIDAD ADJUNTA:</strong>
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ d.datos.actaconformidad )}}" target="_blank" data-placement="top" title="Ver Acta de Conformidad">
+                                                                <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div  class="form-group col-md-12">
+                                                        <div class="col-md-3">
+                                                            <strong>RESOLUCIÓN BI-DISTRITAL ADJUNTA:</strong>
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ d.datos.bidistrital )}}" target="_blank" data-placement="top" title="Ver Resolución Bi-Distrital">
+                                                                <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                             {% else %}
                                                 <div class="form-group  col-md-12" id="obs" style="display:none">
                                                     <div class="col-md-3"><strong>FINALIZAR TRÁMITE:</strong></div>
