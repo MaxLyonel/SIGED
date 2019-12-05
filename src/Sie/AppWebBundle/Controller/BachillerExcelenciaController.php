@@ -1278,7 +1278,7 @@ class BachillerExcelenciaController extends Controller {
             maestro_cuentabancaria.materno,
             maestro_cuentabancaria.nombre,
             maestro_cuentabancaria.fecha_nacimiento,
-            maestro_cuentabancaria.expedido
+            case when maestro_cuentabancaria.expedido = '' then 'NINGUNO' else maestro_cuentabancaria.expedido end as expedido
             FROM
             institucioneducativa
             INNER JOIN estudiante_destacado ON estudiante_destacado.institucioneducativa_id = institucioneducativa.id
