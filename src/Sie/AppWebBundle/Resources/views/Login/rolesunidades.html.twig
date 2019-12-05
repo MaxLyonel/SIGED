@@ -9,14 +9,33 @@
 
         <title>{{ titulosubsistema }}</title>
 
+        {% if app.session.get('layout') in ['layoutHerramienta.html.twig','layoutEspecialSie.html.twig','layoutHerramientaAlternativa.html.twig'] %}
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
+            <style type="text/css">
+                body{
+                    background: #E9EAED;
+                }
+            </style>
+            {% set card = 'panel' %}
+        {% else %}
+            <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+            <link href="{{asset('css/style.css')}}" rel="stylesheet">
+            {% set card = 'portlet' %}
+        {% endif %}
+
+        <style>
+            .container{
+                margin-top: 50px;
+            }
+        </style>
+
         <!-- GLOBAL STYLES -->
-        <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
         
         <!-- PAGE LEVEL PLUGIN STYLES -->
 
         <!-- THEME STYLES -->
-        <link href="{{asset('css/style.css')}}" rel="stylesheet">
-        
 
         <!-- THEME DEMO STYLES -->
         
@@ -38,15 +57,15 @@
                         {#<h2><i class="fa fa-gears"></i> Gestión de Usuarios</h2>#}
                     </div>
                     
-                    <div class="portlet portlet-blue">
-                        <div class="portlet-heading login-heading">
-                            <div class="portlet-title">                                
+                    <div class="{{card}} {{card}}-{{app.session.get('color')}}">
+                        <div class="{{card}}-heading login-heading">
+                            <div class="{{card}}-title">
                                 <h4><strong>NOMBRE DE USUARIO</strong> : {{ user }} -- <strong>NOMBRE Y APELLIDO</strong> : {{ persona }} <strong>CI</strong>  : {{ carnet }}</h4>
                             </div>
 
                             <div class="clearfix"></div>
                         </div>
-                        <div class="portlet-body">
+                        <div class="{{card}}-body">
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -65,7 +84,7 @@
                                 </div>
                             </div>
 
-                            <div class="portlet portlet-default">
+                            <div class="{{card}} {{card}}-default">
                                 {% for flashMessage in app.session.flashbag.get('errorcontraexp') %}
                                     <div class="alert alert-danger alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -100,20 +119,20 @@
                                     </div>
                                 {% endfor %}
 
-                                <div class="portlet-heading">
-                                    <div class="portlet-title">
+                                <div class="{{card}}-heading">
+                                    <div class="{{card}}-title">
                                         <h4>Usted tiene asignados los siguientes roles y/o instituciónes educativas. Selecciones su tipo de acceso al sistema.</h4>
                                     </div>
-                                    <div class="portlet-widgets">
+                                    <div class="{{card}}-widgets">
                                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#formControls"><i class="fa fa-chevron-down"></i></a>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
 
-                                <div id="formControls" class="panel-collapse collapse in">
-                                    <div class="portlet-body">
+                                <div id="formControls" class="{{card}}-collapse collapse in">
+                                    <div class="{{card}}-body">
                                         <div id="no-more-tables">
-                                            <table class="table table-hover">
+                                            <table class="table table-hover table-bordered">
                                                 <thead>
                                                     <tr>
                                                         <th>Rol</th>
@@ -144,8 +163,9 @@
                                                 </tbody>
                                             </table>
                                         </div>
+                                        <br>
                                         <form action="{{path('logout')}}" method="post">
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Salir del SIGED.</button>
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Salir</button>
                                         </form>
                                     </div>
                                 </div>
