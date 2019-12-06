@@ -218,7 +218,7 @@ class TramiteRueController extends Controller
                 break;
             case 37://cambio de nombre
                 $form = $form
-                    ->add('nuevo_nombre','text',array('label'=>'Nuevo nombre de la Unidad Educativa:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
+                    ->add('nuevo_nombre','text',array('label'=>'Nuevo nombre de la Unidad Educativa:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase','oninput'=>'validarnombre(this.value)','onblur'=>'validarnombredistrito(this.value)')))
                     ->getForm();
                 $data = array(
                     'form' => $form->createView(),

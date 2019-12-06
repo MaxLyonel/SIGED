@@ -952,7 +952,39 @@
                 });
             }
         }   
- 
+        
+        function validarnombre(nombre){
+            var generico = ['ESCUELA','COLEGIO','FISCAL','CONVENIO','PRIVADA','PRIVADO','KINDER','INSTITUTO','CENTRO INTEGRADO','TECNICO TECNOLOGICO','TÉCNICO TECNOLOGICO','TÉCNICO TECNOLÓGICO','TÉCNICO TECNOLÓGICO','HUMANISTICO','HUMANÍSTICO'];
+            $.each(generico, function (index,value){
+                if(nombre.search(value) != -1){
+                    $('#form_nuevo_nombre').val('');
+                    alert('El nombre de la Unidad Educativa no puede llevar el denominativo genérico: '+value);
+                }
+            });
+        }
+        function validarnombredistrito(nombre){
+            if ( nombre != '') {
+                return false;
+            }
+            var formData = {nombre: nombre};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('tramite_rue_validarnombredistrito')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#msg').empty();
+                },
+                success: function (data) {
+                    //console.log(data);
+                    if(data.msg){
+                        $("#msg").append('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                        $('#form_nuevo_nombre').val('');
+                    }
+                },
+            });
+        }
+        
+
         function requisitos(id){
             //alert(id);
             if(id != 54){
