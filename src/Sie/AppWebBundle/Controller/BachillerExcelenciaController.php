@@ -1242,6 +1242,13 @@ class BachillerExcelenciaController extends Controller {
         $gestion_reporte = 2019;
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid)->getCodigo();
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-12-02');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
