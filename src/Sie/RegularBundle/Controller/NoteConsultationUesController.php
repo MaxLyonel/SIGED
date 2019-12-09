@@ -45,7 +45,7 @@ class NoteConsultationUesController extends Controller {
 
         //set new gestion to the select year
         $arrGestion = array();
-        $currentYear = date('Y')-1;
+        $currentYear = date('Y');
         for ($i = 0; $i <= 10; $i++) {
             $arrGestion[$currentYear] = $currentYear;
             $currentYear--;
@@ -77,40 +77,50 @@ class NoteConsultationUesController extends Controller {
 
          //check if the data exist
         if ($objUe) {
-            //look for inscription data
-            $objCourses = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getCoursesPerUe($sie, $gestion);
-            //check if exists data
-            if (!$objCourses) {
-                $message = 'Unidad Educativa no presenta Cursos';
-                $this->addFlash('warningconsultaue', $message);
-                $exist = false;
+
+            // check if the ue close the operativo
+            $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+            if( in_array($this->session->get('roluser'), array(7,8,10)) ){
+                $operativo = $operativo - 1;
             }
-        } else {
-            $message = 'Unidad Educativa no Existe';
-            $this->addFlash('warningconsultaue', $message);
-            $exist = false;
-        }
 
-          /***********************************\
-          * *
-          * Validacion tipo de Unidad Educativa
-          * send codigo sie *
-          * return type of UE *
-          * *
-          \************************************/
-          $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
-          
-          if($objUeVal[0]['tipoUe']!=1){
-              $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
-                $this->addFlash('warningconsultaue', $message);
-                $exist = false;
-          }
+            if($operativo <= 3){
+                $message = 'Unidad Educativa no cerro el operativo 4to bimestre';
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+            }
+            // get infor about the consolidation  by YEAR and SIE
+            $infoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion, 'unidadEducativa' => $sie));
+            // check if the UE close the RUDE task
+            if(!$infoConsolidation->getRude()){
+                $message = 'Unidad Educativa no consolido el operativo RUDE';
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+            }
+            // check if the UE close the boletin
+            if(!$infoConsolidation->getBoletin()){
+                $message = 'Unidad Educativa no consolido el operativo CALIDAD - BOLETIN';
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+            }
+              /***********************************\
+              * *
+              * Validacion tipo de Unidad Educativa
+              * send codigo sie *
+              * return type of UE *
+              * *
+              \************************************/
+              $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
+              
+              if($objUeVal[0]['tipoUe']!=1){
+                  $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+              }
 
-        $arrValidation = array();
-        
-        if($exist && $gestion == $this->session->get('currentyear')){
-
-
+            $arrValidation = array();
+            
+            
             // added new validation to download the reports files
             // validation UE QA
               // $query = $em->getConnection()->prepare('select * from sp_verificar_duplicados_ue(:gestion, :sie)');
@@ -167,16 +177,32 @@ class NoteConsultationUesController extends Controller {
                   $arrValidation['observaciones_incosistencia'] = $inconsistencia;
               }
              
+            // if does not have observation show the course data
+            if($exist){
+              //look for inscription data
+              $objCourses = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getCoursesPerUe($sie, $gestion);
+              //check if exists data
+              if (!$objCourses){
+                  $message = 'Unidad Educativa no presenta Cursos';
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+              }else{
+                $data = array(
+                    'operativoTipo' => 7,
+                    'gestion' => $gestion,
+                    'id' => $sie,
+                );   
+                $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
+              }
+            }
+
+
+
+        } else {
+            $message = 'Unidad Educativa no Existe';
+            $this->addFlash('warningconsultaue', $message);
+            $exist = false;
         }
-
-        $data = array(
-            'operativoTipo' => 7,
-            'gestion' => $gestion,
-            'id' => $sie,
-
-        );
- 
-        $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
 
         return $this->render($this->session->get('pathSystem') . ':NoteConsultationUes:result.html.twig', array(
                     'unidadEducativa' => $objUe,
