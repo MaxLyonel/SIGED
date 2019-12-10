@@ -77,126 +77,130 @@ class NoteConsultationUesController extends Controller {
 
          //check if the data exist
         if ($objUe) {
+          // get infor about the consolidation  by YEAR and SIE
+          $infoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion, 'unidadEducativa' => $sie));
+          $arrValidation = array();
+          if($infoConsolidation){
+                // check if the ue close the operativo
+              $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+              if( in_array($this->session->get('roluser'), array(7,8,10)) ){
+                  $operativo = $operativo - 1;
+              }
 
-            // check if the ue close the operativo
-            $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
-            if( in_array($this->session->get('roluser'), array(7,8,10)) ){
-                $operativo = $operativo - 1;
-            }
-
-            if($operativo <= 3){
-                $message = 'Unidad Educativa no cerro el operativo 4to bimestre';
-                  $this->addFlash('warningconsultaue', $message);
-                  $exist = false;
-            }
-            // get infor about the consolidation  by YEAR and SIE
-            $infoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion, 'unidadEducativa' => $sie));
-            // check if the UE close the RUDE task
-            if(!$infoConsolidation->getRude()){
-                $message = 'Unidad Educativa no consolido el operativo RUDE';
-                  $this->addFlash('warningconsultaue', $message);
-                  $exist = false;
-            }
-            // check if the UE close the boletin
-            if(!$infoConsolidation->getBoletin()){
-                $message = 'Unidad Educativa no consolido el operativo CALIDAD - BOLETIN';
-                  $this->addFlash('warningconsultaue', $message);
-                  $exist = false;
-            }
-              /***********************************\
-              * *
-              * Validacion tipo de Unidad Educativa
-              * send codigo sie *
-              * return type of UE *
-              * *
-              \************************************/
-              $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
-              
-              if($objUeVal[0]['tipoUe']!=1){
-                  $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
+              if($operativo <= 3){
+                  $message = 'Unidad Educativa no cerro el operativo 4to bimestre';
                     $this->addFlash('warningconsultaue', $message);
                     $exist = false;
               }
-
-            $arrValidation = array();
-            
-            
-            // added new validation to download the reports files
-            // validation UE QA
-              // $query = $em->getConnection()->prepare('select * from sp_verificar_duplicados_ue(:gestion, :sie)');
-              // $query->bindValue(':gestion', $gestion);
-              // $query->bindValue(':sie', $sie);
-              // $query->execute();
-              // $inconsistenciaReviewQa = $query->fetchAll();  
-
-              //  valiation IG off
-              //first validations calidad
-              /***********************************\
-              * *
-              * validatin of QA
-              * send array => sie, gestion, reglas *
-              * return observations UE *
-              * *
-              \************************************/          
-              //the rule to donwload file with validations\
-              $arrDataVal = array(
-                'sie' => $sie,
-                'gestion' => $gestion,
-                'reglas' => '1,2,3,10,12,13,16,27,48'
-              );
-            
-              $objObsQA = $this->get('funciones')->appValidationQuality($arrDataVal);
               
-              // dump($objObsQA);
-              if ($objObsQA) {  
-                  $message = 'Unidad Educativa  presenta observaciones de calidad' ;
-                  $this->addFlash('warningconsultaue', $message);
-                  $exist = false;
-                  $arrValidation['observaciones_calidad'] = $objObsQA;
+              // check if the UE close the RUDE task
+              if(!$infoConsolidation->getRude()){
+                  $message = 'Unidad Educativa no consolido el operativo RUDE';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
               }
-
-              // validation UE data
-              /***********************************\
-              * *
-              * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
-              * send array => sie, gestion, reglas *
-              * return type of UE *
+              // check if the UE close the boletin
+              if(!$infoConsolidation->getBoletin()){
+                  $message = 'Unidad Educativa no consolido el operativo CALIDAD - BOLETIN';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+              }
+                /***********************************\
                 * *
-              \************************************/
-              $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
-              $query->bindValue(':gestion', $gestion);
-              $query->bindValue(':sie', $sie);
-              $query->bindValue(':periodo', 4);
-              $query->execute();
-              $inconsistencia = $query->fetchAll();
+                * Validacion tipo de Unidad Educativa
+                * send codigo sie *
+                * return type of UE *
+                * *
+                \************************************/
+                $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
+                
+                if($objUeVal[0]['tipoUe']!=1){
+                    $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
+                      $this->addFlash('warningconsultaue', $message);
+                      $exist = false;
+                }
               
-              if ($inconsistencia) {
-                 $message = 'Unidad Educativa presenta observaciones de incosistencia';
-                  $this->addFlash('warningconsultaue', $message);
-                  $exist = false;
-                  $arrValidation['observaciones_incosistencia'] = $inconsistencia;
+              // added new validation to download the reports files
+              // validation UE QA
+                // $query = $em->getConnection()->prepare('select * from sp_verificar_duplicados_ue(:gestion, :sie)');
+                // $query->bindValue(':gestion', $gestion);
+                // $query->bindValue(':sie', $sie);
+                // $query->execute();
+                // $inconsistenciaReviewQa = $query->fetchAll();  
+
+                //  valiation IG off
+                //first validations calidad
+                /***********************************\
+                * *
+                * validatin of QA
+                * send array => sie, gestion, reglas *
+                * return observations UE *
+                * *
+                \************************************/          
+                //the rule to donwload file with validations\
+                $arrDataVal = array(
+                  'sie' => $sie,
+                  'gestion' => $gestion,
+                  'reglas' => '1,2,3,10,12,13,16,27,48'
+                );
+              
+                $objObsQA = $this->get('funciones')->appValidationQuality($arrDataVal);
+                
+                // dump($objObsQA);
+                if ($objObsQA) {  
+                    $message = 'Unidad Educativa  presenta observaciones de calidad' ;
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+                    $arrValidation['observaciones_calidad'] = $objObsQA;
+                }
+
+                // validation UE data
+                /***********************************\
+                * *
+                * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
+                * send array => sie, gestion, reglas *
+                * return type of UE *
+                  * *
+                \************************************/
+                $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+                $query->bindValue(':gestion', $gestion);
+                $query->bindValue(':sie', $sie);
+                $query->bindValue(':periodo', 4);
+                $query->execute();
+                $inconsistencia = $query->fetchAll();
+                
+                if ($inconsistencia) {
+                   $message = 'Unidad Educativa presenta observaciones de incosistencia';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+                    $arrValidation['observaciones_incosistencia'] = $inconsistencia;
+                }
+               
+              // if does not have observation show the course data
+              if($exist){
+                //look for inscription data
+                $objCourses = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getCoursesPerUe($sie, $gestion);
+                //check if exists data
+                if (!$objCourses){
+                    $message = 'Unidad Educativa no presenta Cursos';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+                }else{
+                  $data = array(
+                      'operativoTipo' => 7,
+                      'gestion' => $gestion,
+                      'id' => $sie,
+                  );   
+                  $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
+                }
               }
-             
-            // if does not have observation show the course data
-            if($exist){
-              //look for inscription data
-              $objCourses = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getCoursesPerUe($sie, $gestion);
-              //check if exists data
-              if (!$objCourses){
-                  $message = 'Unidad Educativa no presenta Cursos';
-                  $this->addFlash('warningconsultaue', $message);
-                  $exist = false;
-              }else{
-                $data = array(
-                    'operativoTipo' => 7,
-                    'gestion' => $gestion,
-                    'id' => $sie,
-                );   
-                $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
-              }
-            }
 
 
+          }else{
+            $message = 'Unidad Educativa no cuenta con información de consolidación';
+            $this->addFlash('warningconsultaue', $message);
+            $exist = false;
+          }
 
         } else {
             $message = 'Unidad Educativa no Existe';
