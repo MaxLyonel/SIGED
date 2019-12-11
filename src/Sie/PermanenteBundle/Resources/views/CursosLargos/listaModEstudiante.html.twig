@@ -1,0 +1,60 @@
+
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Módulo</th>
+                            <th>Horas</th>
+                            <th>Facilitador</th>
+                            <th>Otros</th>
+                            <th>Nota</th>
+                            <th> Estado </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for lstmod in lstmod %}
+                            <tr>
+                                <td >{{ loop.index }}</td>
+                                <td >{{ lstmod.modulo }}</td>
+                                <td >{{ lstmod.horas_modulo }}</td>
+                                <td >{{ lstmod.nombre }}</td>
+                                <td>
+                                    {% if ((lstmod.nombre == '') or (lstmod.nombre == null)) %}
+                                RS
+
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if (lstmod.esnotaid != '')  %}
+                                        SI
+                                    {% else %}
+                                        NO
+                                    {% endif %}
+
+                                </td>
+                                <td>
+                                    {#<form action="{{path('permanente_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">#}
+                                        {#<input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">#}
+                                        {#<input type="hidden" name="idInstitucion" value="{{institucion.id}}">#}
+                                        {#<input type="hidden" name="gestion" value="{{gestion}}">#}
+                                        {#<input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">#}
+                                        {#<input type="hidden" name="idCargo" value="{{maestro.cargoId}}">#}
+                                    {% if lstmod.esaid %}
+                                        <button  class="btn btn-danger" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="delEstMod({{ lstmod.idieco }},{{ idinscripcion}},{{ idcurso}});">Eliminar</button>
+                                    {% else %}
+                                        <button  class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Inscribir"  onclick="insEstMod({{ lstmod.idieco }},{{ idinscripcion}},{{ idcurso}});">Inscribir</button>
+                                    {% endif %}
+                                    {#</form>#}
+                                </td>
+                                {#<td>#}
+                                    {#<button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Estado" onclick="cambiaEstadoModulo({{ lstmod.idieco }}));"><i class="fa fa-times"></i></button>#}
+                                {#</td>#}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+
+

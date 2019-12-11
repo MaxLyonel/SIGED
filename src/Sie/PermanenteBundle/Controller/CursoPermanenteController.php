@@ -1184,7 +1184,7 @@ class CursoPermanenteController extends Controller
             $tecmed = 0;
         }
         $especialidad = strtoupper($form['especialidad']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
-
+       // dump($request);die;
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();

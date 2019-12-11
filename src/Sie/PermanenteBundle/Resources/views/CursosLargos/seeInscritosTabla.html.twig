@@ -1,0 +1,389 @@
+<div class="w3-container w3-red">
+    <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+    <h3><i class="glyphicon glyphicon-user"></i>  Inscripciones  </h3>
+
+</div>
+{#<h2>London</h2>#}
+<BR>
+<div class="row">
+    <div class="col-md-12">
+        {% for flashMessage in app.session.flashbag.get('noinscription') %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% for flashMessage in app.session.flashbag.get('errorcursoduplicado') %}
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                {% for flashIdcurso in app.session.flashbag.get('idcursodup') %}
+                    <a href="#" onclick="doCursoDuplicado('{{ infoUe }}','{{ flashIdcurso }}');">
+                            <span><i class="icon-leaf"></i>
+                                VER CURSO DUPLICADO -- {{ flashIdcurso }}
+                            </span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <p>
+        <div class="col-md-12">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('seedatoscursoduplicado') %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+<div class="panel-sub-heading inner-all">
+    <div class="pull-left">
+        <ul class="list-inline no-margin">
+            <li class="hidden-xs">
+
+                {% if  cursolargo[0].esabierto ==true %}
+
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsCL('{{infoUe}}');" >
+                            <i class="fa fa-user"></i> Inscrip. con Rudeal
+                        </button>
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="col-md-4">
+
+                        <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+                    </div>
+                    <div class="col-md-4">
+
+                        <a href="{{path('permanente_reporte_centralizador_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Centralizador</a>
+
+                    </div>
+
+                    {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
+
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-danger btn-stroke" onclick="opencursoCL('{{infoUe}}');" >
+                                <i class="fa fa-check"></i> Habilitar Curso
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+
+
+
+            </li>
+
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="w3-container w3-red" id="listainscritos">
+    <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+    <h4><i class="glyphicon glyphicon-list-alt"></i>  Inscripciones - Cant Participantes:  {{ totalInscritos }}   </h4>
+</div>
+<div class="panel-sub-heading inner-all">
+    <div class="pull-left" >
+        <ul class="list-inline no-margin">
+            {#<li>#}
+            {#<a href="mail-inbox.html" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left"></i> Back</a>#}
+            {#</li>#}
+            {#<li class="hidden-xs">#}
+            {#<a href="#" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Save Draft</a>#}
+            {#</li>#}
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="panel-body no-padding">
+
+    <ul class="nav nav-tabs" id="myTab">
+        <li><a data-toggle="tab" href="#sectionA">Individual</a></li>
+        <li><a data-toggle="tab" href="#sectionB">Grupal</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="sectionA" class="tab-pane fade in active">
+            <h3>Individual</h3>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+
+                    {% if objStudents is not empty %}
+
+                        <div id="no-more-tables" >
+                            <div id="mengestioncurso"></div>
+                            <table class="table table-striped table-danger">
+                                <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Carnet de Identidad</th>
+                                    <th>Codigo Rude</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre(s)</th>
+                                    {#<th>Genero</th>#}
+                                    <th>Fecha de Nacimiento</th>
+                                    <th>Estado</th>
+                                    {% if  cursolargo[0].esabierto ==true %}
+                                        <th> Acciones </th>
+                                    {% endif %}
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                {% set objInfoStudent = [] %}
+                                {% for objStudents in objStudents %}
+
+                                    {% set items = {
+                                    'estadomatriculaId': objStudents.estadomatriculaid,
+                                    'id': objStudents.idest,
+                                    'carnetIdentidad': objStudents.carnet,
+                                    'codigoRude': objStudents.codigorude,
+                                    'paterno': objStudents.paterno,
+                                    'materno': objStudents.materno,
+                                    'nombre': objStudents.nombre,
+                                    'fechaNacimiento': objStudents.fechanacimiento,
+                                    'eInsId': objStudents.idestins,
+                                    } %}
+
+                                    {# set the array student info and convert on json string #}
+                                    {# set objInfoStudent = objInfoStudent|merge(data) #}
+                                    {# set jsnInfoStudent = objInfoStudent #}
+                                    {% set jsnInfoStudent = items|json_encode() %}
+                                    <tr>
+
+                                        <td data-title="N°">{{ loop.index }}</td>
+                                        <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                        <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                        <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                        <td data-title="Materno">{{ objStudents.materno }}</td>
+                                        <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                        {#<td data-title="Formación">{{ objStudents.genero }}</td>#}
+                                        <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
+                                        <td data-title="Estado">{{ objStudents.estadomatricula }}</td>
+                                        {% if  cursolargo[0].esabierto ==true %}
+                                            <td>
+                                                <div class="btn-group">
+                                                    {#<button type="button" class="btn btn-danger">Action</button>#}
+                                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
+                                                        <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
+                                                        <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealCL('{{infoUe}}', '{{jsnInfoStudent}}');">Rudeal</a> </li>
+                                                        <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
+
+                                                        {#<li class="divider"></li>#}
+                                                        {#<li><a href="#">Separated link</a></li>#}
+                                                    </ul>
+                                                </div>
+                                            </td>
+
+                                        {% endif %}
+
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        No hay Participantes Registrados
+                    {% endif %}
+
+                    <!-- /.portlet -->
+                </div>
+            </div>
+
+            <p>. </p>
+        </div>
+
+        <div id="sectionB" class="tab-pane fade">
+            <h3>Asignación de Modulos en lote</h3>
+            {% if lstmod is not empty %}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Módulo</th>
+                        <th>Horas</th>
+                        <th>Facilitador</th>
+                        <th>Otros</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for lstmod in lstmod %}
+                        <tr>
+                            <td >{{ loop.index }}</td>
+                            <td >{{ lstmod.modulo }}</td>
+                            <td >{{ lstmod.horas_modulo }}</td>
+                            <td >{{ lstmod.nombre }}</td>
+                            <td>
+                                {% if ((lstmod.nombre == '6') or (lstmod.nombre == null)) %}
+                                    RS
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                No hay Modulos en este Curso
+            {% endif %}
+            {% if  cursolargo[0].esabierto ==true %}
+                <div align="right">
+                    <button type="button" class="btn btn-success"  data-dismiss="modal" onclick="saveModuloLote('{{ infoUe }}');" > Asignar modulos</button>
+                    </button>
+                </div>
+            {% endif %}
+            <h3>Lista de Participantes</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                    {% if objStudents is not empty %}
+
+                        <div id="no-more-tables">
+                            <table class="table table-striped table-danger">
+                                <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Carnet de Identidad</th>
+                                    <th>Codigo Rude</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre(s)</th>
+                                    {#<th>Genero</th>#}
+                                    <th>Fecha de Nacimiento</th>
+                                    <th>Estado</th>
+                                    {% if  cursolargo[0].esabierto ==true %}
+                                        <th> Acciones </th>
+                                    {% endif %}
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                {% set objInfoStudent = [] %}
+                                {% for objStudents in objStudents %}
+
+                                    {% set items = {
+                                    'estadomatriculaId': objStudents.estadomatriculaid,
+                                    'id': objStudents.idest,
+                                    'carnetIdentidad': objStudents.carnet,
+                                    'codigoRude': objStudents.codigorude,
+                                    'paterno': objStudents.paterno,
+                                    'materno': objStudents.materno,
+                                    'nombre': objStudents.nombre,
+                                    'fechaNacimiento': objStudents.fechanacimiento,
+                                    'eInsId': objStudents.idestins,
+                                    } %}
+
+                                    {# set the array student info and convert on json string #}
+                                    {# set objInfoStudent = objInfoStudent|merge(data) #}
+                                    {# set jsnInfoStudent = objInfoStudent #}
+                                    {% set jsnInfoStudent = items|json_encode() %}
+                                    <tr>
+
+                                        <td data-title="N°">{{ loop.index }}</td>
+                                        <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                        <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                        <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                        <td data-title="Materno">{{ objStudents.materno }}</td>
+                                        <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                        {#<td data-title="Formación">{{ objStudents.genero }}</td>#}
+                                        <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
+                                        <td data-title="Estado">{{ objStudents.estadomatricula }}</td>
+                                        {% if  cursolargo[0].esabierto ==true %}
+                                            <td>
+                                                <div class="btn-group">
+                                                    {#<button type="button" class="btn btn-danger">Action</button>#}
+                                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
+                                                        <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
+                                                        <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealCL('{{infoUe}}', '{{jsnInfoStudent}}');">Rudeal</a> </li>
+                                                        <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
+
+                                                        {#<li class="divider"></li>#}
+                                                        {#<li><a href="#">Separated link</a></li>#}
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        {% endif %}
+
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+
+
+
+
+                        </div>
+                    {% else %}
+                        No hay Participantes Registrados
+                    {% endif %}
+                    <p id="menestado">  </p>
+
+                    <!-- /.portlet -->
+                </div>
+            </div>
+
+            <p>. </p>
+        </div>
+
+
+    </div>
+</div>
+{%  if ( (cursolargo[0].esabierto) ==true) %}
+    <div align="right">
+        <button type="button" class="btn btn-danger"  onclick="closeInscriptionsCL('{{infoUe}}');" data-dismiss="modal"> Cerrar Curso</button>
+    </div>
+{% endif %}

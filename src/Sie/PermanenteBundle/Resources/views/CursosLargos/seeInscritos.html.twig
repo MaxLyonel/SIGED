@@ -1,0 +1,841 @@
+
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style type="text/css">
+
+</style>
+<div class="header-content" >
+
+    {{form_start(form,{'attr':{'id':'formCursoLargo','class':'form-horizontal form-group'} })}}
+
+{% if exist == true %}
+
+  <small id="listEstudiante">
+
+      <div class="w3-container w3-red">
+          <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+          <h3><i class="glyphicon glyphicon-user"></i>  Inscripciones  </h3>
+
+      </div>
+         {#<h2>London</h2>#}
+        <BR>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% for flashMessage in app.session.flashbag.get('errorcursoduplicado') %}
+        <div class="row">
+            <div class="col-md-12" align="center">
+                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                    {% for flashIdcurso in app.session.flashbag.get('idcursodup') %}
+                        <a href="#" onclick="doCursoDuplicado('{{ infoUe }}','{{ flashIdcurso }}');">
+                            <span><i class="icon-leaf"></i>
+                                VER CURSO DUPLICADO -- {{ flashIdcurso }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <p>
+            <div class="col-md-12">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('seedatoscursoduplicado') %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+      <div class="panel-sub-heading inner-all">
+          <div class="pull-left">
+              <ul class="list-inline no-margin">
+                  <li class="hidden-xs">
+
+                      {% if  cursolargo[0].esabierto ==true %}
+
+                          <div class="col-md-6">
+                              <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsCL('{{infoUe}}');" >
+                                  <i class="fa fa-user"></i> Inscrip. con Rudeal
+                              </button>
+                          </div>
+
+
+                          <div class="col-md-3">
+
+                              <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+                          </div>
+
+                      {% else %}
+
+                          <div class="col-md-4">
+
+                              <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+                          </div>
+
+                          <div class="col-md-4">
+
+                              <a href="{{path('permanente_reporte_centralizador_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Centralizador</a>
+
+                          </div>
+
+                          {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
+
+                              <div class="col-md-3">
+                                  <button type="button" class="btn btn-danger btn-stroke" onclick="opencursoCL('{{infoUe}}');" >
+                                      <i class="fa fa-check"></i> Habilitar Curso
+                                  </button>
+                              </div>
+                          {% endif %}
+                      {% endif %}
+
+
+
+
+                  </li>
+
+              </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+      <div class="w3-container w3-red" id="listainscritos">
+          <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+          <h4><i class="glyphicon glyphicon-list-alt"></i>  Inscripciones - Cant Participantes:  {{ totalInscritos }}   </h4>
+      </div>
+      <div class="panel-sub-heading inner-all">
+          <div class="pull-left" >
+              <ul class="list-inline no-margin">
+                  {#<li>#}
+                      {#<a href="mail-inbox.html" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left"></i> Back</a>#}
+                  {#</li>#}
+                  {#<li class="hidden-xs">#}
+                      {#<a href="#" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Save Draft</a>#}
+                  {#</li>#}
+              </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+      <div class="panel-body no-padding">
+
+              <ul class="nav nav-tabs" id="myTab">
+                  <li><a data-toggle="tab" href="#sectionA">Individual</a></li>
+                  <li><a data-toggle="tab" href="#sectionB">Grupal</a></li>
+              </ul>
+              <div class="tab-content">
+                  <div id="sectionA" class="tab-pane fade in active">
+                      <h3>Individual</h3>
+
+                      <div class="row">
+                          <div class="col-lg-12">
+                              <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+
+                                  {% if objStudents is not empty %}
+
+                                      <div id="no-more-tables" >
+                                          <div id="mengestioncurso"></div>
+                                          <table class="table table-striped table-danger">
+                                              <thead>
+                                              <tr>
+                                                  <th>N°</th>
+                                                  <th>Carnet de Identidad</th>
+                                                  <th>Codigo Rude</th>
+                                                  <th>Paterno</th>
+                                                  <th>Materno</th>
+                                                  <th>Nombre(s)</th>
+                                                  {#<th>Genero</th>#}
+                                                  <th>Fecha de Nacimiento</th>
+                                                  <th>Estado</th>
+                                                  {% if  cursolargo[0].esabierto ==true %}
+                                                  <th> Acciones </th>
+                                                    {% endif %}
+
+                                              </tr>
+                                              </thead>
+                                              <tbody>
+
+
+
+                                              {% set objInfoStudent = [] %}
+                                              {% for objStudents in objStudents %}
+
+                                                  {% set items = {
+                                                  'estadomatriculaId': objStudents.estadomatriculaid,
+                                                  'id': objStudents.idest,
+                                                  'carnetIdentidad': objStudents.carnet,
+                                                  'codigoRude': objStudents.codigorude,
+                                                  'paterno': objStudents.paterno,
+                                                  'materno': objStudents.materno,
+                                                  'nombre': objStudents.nombre,
+                                                  'fechaNacimiento': objStudents.fechanacimiento,
+                                                  'eInsId': objStudents.idestins,
+                                                   } %}
+
+                                                  {# set the array student info and convert on json string #}
+                                                  {# set objInfoStudent = objInfoStudent|merge(data) #}
+                                                  {# set jsnInfoStudent = objInfoStudent #}
+                                                  {% set jsnInfoStudent = items|json_encode() %}
+                                                  <tr>
+
+                                                      <td data-title="N°">{{ loop.index }}</td>
+                                                      <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                                      <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                                      <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                                      <td data-title="Materno">{{ objStudents.materno }}</td>
+                                                      <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                                      {#<td data-title="Formación">{{ objStudents.genero }}</td>#}
+                                                      <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
+                                                      <td data-title="Estado">{{ objStudents.estadomatricula }}</td>
+                                                      {% if  cursolargo[0].esabierto ==true %}
+                                                      <td>
+                                                          <div class="btn-group">
+                                                          {#<button type="button" class="btn btn-danger">Action</button>#}
+                                                          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                                              <span class="caret"></span>
+                                                              <span class="sr-only">Toggle Dropdown</span>
+                                                          </button>
+                                                          <ul class="dropdown-menu" role="menu">
+                                                              <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
+                                                              <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
+                                                              <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealCL('{{infoUe}}', '{{jsnInfoStudent}}');">Rudeal</a> </li>
+                                                              <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
+
+                                                              {#<li class="divider"></li>#}
+                                                              {#<li><a href="#">Separated link</a></li>#}
+                                                          </ul>
+                                                          </div>
+                                                      </td>
+
+                                                      {% endif %}
+
+
+                                                  </tr>
+                                              {% endfor %}
+                                              </tbody>
+                                          </table>
+                                      </div>
+                                  {% else %}
+                                      No hay Participantes Registrados
+                                  {% endif %}
+
+                              <!-- /.portlet -->
+                          </div>
+                      </div>
+
+                      <p>. </p>
+                  </div>
+
+                  <div id="sectionB" class="tab-pane fade">
+                      <h3>Asignación de Modulos en lote</h3>
+                        {% if lstmod is not empty %}
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Módulo</th>
+                                    <th>Horas</th>
+                                    <th>Facilitador</th>
+                                    <th>Otros</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for lstmod in lstmod %}
+                                    <tr>
+                                        <td >{{ loop.index }}</td>
+                                        <td >{{ lstmod.modulo }}</td>
+                                        <td >{{ lstmod.horas_modulo }}</td>
+                                        <td >{{ lstmod.nombre }}</td>
+                                        <td>
+                                            {% if ((lstmod.nombre == '6') or (lstmod.nombre == null)) %}
+                                                RS
+                                            {% endif %}
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            No hay Modulos en este Curso
+                      {% endif %}
+                      {% if  cursolargo[0].esabierto ==true %}
+                      <div align="right">
+                          <button type="button" class="btn btn-success"  data-dismiss="modal" onclick="saveModuloLote('{{ infoUe }}');" > Asignar modulos</button>
+                          </button>
+                      </div>
+                      {% endif %}
+                      <h3>Lista de Participantes</h3>
+                      <div class="row">
+                          <div class="col-lg-12">
+                                  <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                                  {% if objStudents is not empty %}
+
+                                      <div id="no-more-tables">
+                                          <table class="table table-striped table-danger">
+                                              <thead>
+                                              <tr>
+                                                  <th>N°</th>
+                                                  <th>Carnet de Identidad</th>
+                                                  <th>Codigo Rude</th>
+                                                  <th>Paterno</th>
+                                                  <th>Materno</th>
+                                                  <th>Nombre(s)</th>
+                                                  {#<th>Genero</th>#}
+                                                  <th>Fecha de Nacimiento</th>
+                                                  <th>Estado</th>
+                                                  {% if  cursolargo[0].esabierto ==true %}
+                                                  <th> Acciones </th>
+                                                  {% endif %}
+
+                                              </tr>
+                                              </thead>
+                                              <tbody>
+
+
+
+                                              {% set objInfoStudent = [] %}
+                                              {% for objStudents in objStudents %}
+
+                                                  {% set items = {
+                                                  'estadomatriculaId': objStudents.estadomatriculaid,
+                                                  'id': objStudents.idest,
+                                                  'carnetIdentidad': objStudents.carnet,
+                                                  'codigoRude': objStudents.codigorude,
+                                                  'paterno': objStudents.paterno,
+                                                  'materno': objStudents.materno,
+                                                  'nombre': objStudents.nombre,
+                                                  'fechaNacimiento': objStudents.fechanacimiento,
+                                                  'eInsId': objStudents.idestins,
+                                                  } %}
+
+                                                  {# set the array student info and convert on json string #}
+                                                  {# set objInfoStudent = objInfoStudent|merge(data) #}
+                                                  {# set jsnInfoStudent = objInfoStudent #}
+                                                  {% set jsnInfoStudent = items|json_encode() %}
+                                                  <tr>
+
+                                                      <td data-title="N°">{{ loop.index }}</td>
+                                                      <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                                      <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                                      <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                                      <td data-title="Materno">{{ objStudents.materno }}</td>
+                                                      <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                                      {#<td data-title="Formación">{{ objStudents.genero }}</td>#}
+                                                      <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
+                                                      <td data-title="Estado">{{ objStudents.estadomatricula }}</td>
+                                                      {% if  cursolargo[0].esabierto ==true %}
+                                                      <td>
+                                                          <div class="btn-group">
+                                                              {#<button type="button" class="btn btn-danger">Action</button>#}
+                                                              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                                                  <span class="caret"></span>
+                                                                  <span class="sr-only">Toggle Dropdown</span>
+                                                              </button>
+                                                              <ul class="dropdown-menu" role="menu">
+                                                                  <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
+                                                                  <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
+                                                                  <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealCL('{{infoUe}}', '{{jsnInfoStudent}}');">Rudeal</a> </li>
+                                                                  <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
+
+                                                                  {#<li class="divider"></li>#}
+                                                                  {#<li><a href="#">Separated link</a></li>#}
+                                                              </ul>
+                                                          </div>
+                                                      </td>
+                                                      {% endif %}
+
+
+                                                  </tr>
+                                              {% endfor %}
+                                              </tbody>
+                                          </table>
+
+
+
+
+
+                                      </div>
+                                  {% else %}
+                                      No hay Participantes Registrados
+                                  {% endif %}
+                                  <p id="menestado">  </p>
+
+                              <!-- /.portlet -->
+                          </div>
+                      </div>
+
+                      <p>. </p>
+                  </div>
+
+
+          </div>
+      </div>
+      {%  if ( (cursolargo[0].esabierto) ==true) %}
+          <div align="right">
+              <button type="button" class="btn btn-danger"  onclick="closeInscriptionsCL('{{infoUe}}');" data-dismiss="modal"> Cerrar Curso</button>
+          </div>
+      {% endif %}
+    <!-- /.row -->
+
+
+
+</small>
+{% else %}
+{% endif %}
+    {#{{ form_end(form) }}#}
+<script>
+    $(document).ready( function(){
+        $(".tooltips").tooltip();
+        //onchange="getSelectedValue()"
+        //herramienta_per_estudiantechange_estado
+        $( "body .estados" ).on( "change", function() {
+//            console.log( $(this).val() );
+//            console.log( $(this).attr('id').split('-')[1] );
+            matricula = $(this).val();
+            idestins = $(this).attr('id').split('-')[1];
+            $.ajax({
+                type: "post",
+                data: ({matricula:matricula,idestins:idestins}),
+                url: "{{ path('herramienta_per_estudiantechange_estado') }}",
+                beforeSend: function () {
+                    //$('#listEstudiante').empty();
+                    $("#menestado").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+
+//                    $('#listEstudiante').empty();
+//                    $('#listEstudiante').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        });
+
+    });
+
+    var saveModuloLote = function (infoUe) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe}),
+            url: Routing.generate('herramienta_per_modulos_lote'),
+            beforeSend: function () {
+                $("#idstudents").empty();
+                $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $("#idstudents").empty();
+                $("#idstudents").append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+
+
+
+     var getRudealCL = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('socioeconomicoper_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var getNotasCL = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_per_cursos_largos_show_notas') }}",
+        beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+
+    var removeInscriptionStudentCL = function (idcurso, idestins,infoUe) {
+
+      if(confirm('¡¡Advertencia!! Esta por eliminar una inscripción. ¿Esta seguro de continuar?')){
+        $.ajax({
+            type: 'post',
+            data: ({idcurso: idcurso, idestins: idestins,infoUe:infoUe}),
+            url: "{{ path('herramienta_per_estudianterequest_removeinscriptionCL') }}",
+            beforeSend: function () {
+//              $("#listEstudiante").empty();
+              $("#mengestioncurso").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+              $("#listEstudiante").empty();
+               $('#mengestioncurso').empty();
+              $("#listEstudiante").append(data);
+            },
+            error: function(data){
+                $('#mengestioncurso').empty();
+                $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar un participante antes debe eliminar lo siguiente:  Materias/módulos asignados.</div>");
+                //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+            }
+        });
+      }else{
+        return false;
+      }
+
+    };
+
+    var doInscriptionsCL = function(data){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: data }),
+         url: "{{ path('per_inscriptionstudent_index_curso_largo') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+   };
+
+    var doInscriptionsCI = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('per_inscriptioncistudent_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var Imprimir = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('permanente_reporte_participantes_curso_corto') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    var closeInscriptionsCL = function(data){
+        if(confirm('¡¡Advertencia!! Esta por cerrar el curso, no se permitiran realizar modificaciones. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('herramienta_per_estudianterequest_closeinscriptionCL') }}",
+            beforeSend: function () {
+//                $('#listEstudiante').empty();
+                $("#listEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+
+            },
+            success: function (data) {
+                $('#listEstudiante').empty();
+                $('#listEstudiante').append(data);
+                window.location.href =  Routing.generate('herramienta_per_cursos_largos_index');
+
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+        }else{
+            return false;
+        }
+    };
+
+
+
+
+   var doCursoDuplicado = function (infoUe,idcursodup) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe, idcursodup: idcursodup}),
+                url: Routing.generate('herramientalt_ceducativa_curso_duplicado'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+   var doInscriptionsWithOutRude = function(data){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: data }),
+         url: "{{ path('alter_inscriptionstudent_without_rude_index') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+   };
+
+   var addModulosToStudent = function (infoUe, infoStudent) {
+
+    $.ajax({
+        type: 'post',
+        data: ({infoUe: infoUe, infoStudent: infoStudent}),
+        url: "{{ path('herramienta_per_inscribir_modulo_estudiante') }}",
+        beforeSend: function () {
+            $('#modal').empty();
+        },
+        success: function (data) {
+            $('#modal').empty();
+            $('#modal').append(data);
+        },
+        statusCode: {
+            500: function () {
+
+            },
+            404: function () {
+
+            }
+        }
+      });
+    };
+
+    var deletecursoLargo = function(infoUe){
+        if(confirm('¡¡Advertencia!! Esta por eliminar el especialidad. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+         type: 'post',
+         data: ({infoUe: infoUe }),
+         url: "{{ path('herramienta_per_cursos_largos_delete') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
+                },
+                success: function (data) {
+//                    $('#mengestioncurso').empty();
+//                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+//                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+    else{
+        return false;
+    }
+   };
+
+    var opencursoCL = function(infoUe){
+        if(confirm('¡¡Advertencia!! Se Abrira el curso para realizar operaciones. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe }),
+                url: "{{ path('herramienta_per_open_curso_nuevo') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Habilitando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_largos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+        else{
+            return false;
+        }
+    };
+    var editarCursoLargo = function (infoUe) {
+       // var formData = $('#formCursoLargo').serialize();
+         $('#modal').modal('hide');
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe:infoUe}),
+            url: "{{ path('herramienta_per_cursos_largos_edit') }}",
+
+            beforeSend: function () {
+                $('#modal').empty();
+
+            },
+            success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                //   $('#modal').modal('show');
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+function getSelectedValue()
+{
+
+    console.log($(this).val());
+    //var selectedValue = document.getElementById("estado").value();
+
+
+}
+
+    // Demo by http://creative-punch.net
+
+    (function($) {
+        $(function() {
+
+            $('.button-collapse').sideNav();
+            $('select').material_select();
+            $('.dropdown-button').dropdown();
+
+        }); // end of document ready
+    })(jQuery); // end of jQuery name space
+</script>

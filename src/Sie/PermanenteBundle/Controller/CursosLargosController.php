@@ -218,7 +218,15 @@ class CursosLargosController extends Controller {
                 }
             }
 
-
+            $query = $em->createQuery(
+                'SELECT p FROM SieAppWebBundle:ParaleloTipo p
+                WHERE p.id != :id'
+                )->setParameter('id',0);
+            $paralelos_result = $query->getResult();
+            $paralelos = array();
+            foreach ($paralelos_result as $p){
+                $paralelos[$p->getId()] = $p->getParalelo();
+            }
 
             $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
             $query = $em->createQuery(
@@ -274,6 +282,7 @@ class CursosLargosController extends Controller {
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_per_cursos_largos_create'))
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
               //  ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('programa', 'choice', array('label' => 'Programa', 'required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('especialidad', 'choice', array( 'required' => true, 'choices' => $espUEArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarNiveles(this.value)')))
@@ -342,13 +351,13 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
           //  dump($idpersup['supinstperiodoid']);die;
      //       dump($form['programa']);die;
             //Invoca a una funcion de Base de Datos Necesaria para cualquier INSERT, para que se reinicie la secuencia de ingreso de datos
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
+          //  $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
             // Realiza un INSERT para la creacion de un curso nuevo con los datos extraidos de la vista
             $institucioncurso = new  InstitucioneducativaCurso();
             $institucioncurso ->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(231));
             $institucioncurso ->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find(0));
             $institucioncurso ->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(99));
-            $institucioncurso ->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find(1));
+            $institucioncurso ->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find($form['paralelo']));
             $institucioncurso ->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
             $institucioncurso ->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find($this->session->get('ie_subcea')));
             $institucioncurso ->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
@@ -467,7 +476,15 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
             $query->execute();
             $poblaciones= $query->fetchAll();
 
-
+             $query = $em->createQuery(
+                                                    'SELECT p FROM SieAppWebBundle:ParaleloTipo p
+                                                    WHERE p.id != :id'
+                                                    )->setParameter('id',0);
+                $paralelos_result = $query->getResult();
+                $paralelos = array();
+                foreach ($paralelos_result as $p){
+                    $paralelos[$p->getId()] = $p->getParalelo();
+                }
             //   dump($idorg['organizacion_tipo_id']);die;
 
             $poblacionesArray = array();
@@ -623,7 +640,8 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
                 ->add('nivel', 'hidden', array('data' => 231))
                 ->add('ciclo', 'hidden', array('data' => 0))
                 ->add('grado', 'hidden', array('data' => 99))
-                ->add('paralelo', 'hidden', array('data' => 1))
+                ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+               // ->add('paralelo', 'hidden', array('data' => 1))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('sucursal', 'hidden', array('data' => $sucursal))
                 ->add('institucion', 'hidden', array('data' => $institucion))
@@ -922,6 +940,7 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
         //$sie= $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+        //dump($form);die;
         if (isset($form['recsabe'])){
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
@@ -2668,14 +2687,14 @@ from estudiante_asignatura ea
                     }
                  //   dump($totalhoras);
                     if($acreditacionid==1){
-                        if($totalhoras>=800){
+                        if($totalhoras>=500){
                             $apbhoras = true;
                         }else{
                             $apbhoras = false;
                         }
                     }elseif($acreditacionid==20)
                     {
-                        if($totalhoras>=400){
+                        if($totalhoras>=500){
                             $apbhoras = true;
                         }else{
                             $apbhoras = false;
@@ -2683,7 +2702,7 @@ from estudiante_asignatura ea
 
                     }elseif($acreditacionid==32)
                     {
-                        if($totalhoras>=800){
+                        if($totalhoras>=1000){
                             $apbhoras = true;
                         }else{
                             $apbhoras = false;
@@ -2944,13 +2963,13 @@ from estudiante_asignatura ea
 
             if($niv==1)
             {
-            $horas=800;
+            $horas=500;
             }elseif($niv==20)
             {
-                $horas=1200;
+                $horas=500;
             }elseif($niv==32)
             {
-                $horas=2000;
+                $horas=1000;
             }
             //   dump($poblaciones);die;
 
@@ -3032,7 +3051,7 @@ from estudiante_asignatura ea
     }
 
     public function updateNotasCLAction (request $request){
-            dump($request);
+           // dump($request);
 
         $em = $this->getDoctrine()->getManager();
 

@@ -1,0 +1,67 @@
+<div id="moduloslista">
+    <table>
+        <tr>
+            <th> <strong>{{form_label(form.modulos)}}</strong></th>
+            <th> <strong>{{form_label(form.maestros)}}</strong></th>
+            <th class="text-center"> <strong>{{form_label(form.recsabe)}}</strong></th>
+            <th> <strong>  </strong></th>
+        </tr>
+        <tr>
+            <td><strong>{{form_widget(form.modulos)}}</strong></td>
+            <td><strong>{{form_widget(form.maestros)}}</strong></td>
+            <td class="text-center"><strong>{{form_widget(form.recsabe)}}</strong></td>
+            <td>
+                {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="editarCursoLargo('{{ infoUe}} ');">#}
+                {#<i class="fa fa-list"></i> Editar#}
+                {#</button>#}
+                <strong>{{form_widget(form.guardar)}}</strong>
+            </td>
+        </tr>
+    </table>
+    <br>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>N°</th>
+            <th>Módulo</th>
+            <th>Horas</th>
+            <th>Facilitador</th>
+            <th>Otros</th>
+            <th>  </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for lstmod in lstmod %}
+            <tr>
+                <td >{{ loop.index }}</td>
+                <td >{{ lstmod.modulo }}</td>
+                <td >{{ lstmod.horas_modulo }}</td>
+                <td >{{ lstmod.nombre }}</td>
+                <td>
+                    {% if ((lstmod.nombre == '0') or (lstmod.nombre == null)) %}
+                        {#<input type="rs" name="rs" id="rs" value="1">#}
+                        RS
+                    {% else %}
+                        {#<input type="rs" name="rs" id="rs" value="0">#}
+                    {% endif %}
+                </td>
+
+                <td>
+
+                    <form id="cursomod_{{lstmod.idieco}}" method="post">
+                        <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                        {#<input type="hidden" name="form[idieco]" id="form_idieco_{{lstmod.idieco}}" value="{{lstmod.idieco}}">#}
+                        <button type="button" class="btn btn-danger btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Borrar" onclick="deleteModuloCL({{lstmod.idieco}},'{{ infoUe }}');"><i class="fa fa-times"></i> </button>
+                        {#<button  class="btn btn-danger" data-toggle="tooltip" data-placement="top" onclick="deleteModuloCL({{lstmod.idieco}}{{ infoUe }});">Eliminar</button>#}
+                    </form>
+
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

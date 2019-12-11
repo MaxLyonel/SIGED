@@ -1,0 +1,648 @@
+{% extends 'layoutReporte.html.twig' %}
+{% block fechaReporte %}
+    {% if fechaEstadistica is defined  %}
+        {{ fechaEstadistica }}
+    {% endif %}
+{% endblock %}
+
+{% block contentoption %}
+    {% set ingresa = 0 %}
+    {% set ingresaAdmin = 0 %}
+    {% for item in app.session.get('roluser') %} 
+        {% if item.id == 8 or item.id == 11 or item.id == 32 or item.id == 33 or item.id == 39 %} 
+             {% set ingresa = 1 %}
+             {% if item.id == 8 or item.id == 39 %} 
+                {% set ingresaAdmin = 1 %}
+             {% endif %} 
+        {% endif %} 
+    {% endfor %} 
+    <!-- Start page header -->
+    <div id="tour-6" class="header-content">
+        <h2><i class="fa fa-th-large"></i>Estadistica General<span>Subsistema de Infraestructura</span></h2>
+        <div" class="breadcrumb-wrapper hidden-xs">
+            <!--<span class="label">Info.:</span>-->
+            <ol class="breadcrumb">
+                <li class="active">Gestión: {{gestion}}</li>
+                <!--<li><i class="fa fa-ellipsis-v" aria-hidden="true"></i></li>-->
+            </ol>
+        </div>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+        {% if infoEntidad is defined  %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- Start widget newsletter -->
+                    <div class="panel text-center rounded shadow">
+                        <div class="panel-body bg-primary rounded">
+                            <!--<div class="inner-all">-->
+                                <h5 class="text-uc"><b>{{infoEntidad.nombre}}</b></h5>
+                            <!--</div>-->
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                    <!--/ End widget newsletter -->
+                </div>
+            </div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-content">
+                        {% for type, flashMessage in app.session.flashbag.all() %}
+                            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                    {{ flashMessage.message }}
+                                {% else %}
+                                    {{ type }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>        
+            </div>
+        {% endif %}
+        <div class="row">
+  
+            {% if infoSubEntidad is defined %}
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                   
+                    <div class="panel">
+                        
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-cloud-download'></i> Reportes</h3>
+                            </div>   
+                            <div class="pull-right"> 
+                            </div>                          
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                              <div>
+                                <table>
+                                    <tr>
+                                        <th class="text-center" style="width:350px" >Reportes Estadisticos </th>
+                                        <th >Descarga</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Estadistica Ambientes</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaAmbientesPDF'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaAmbientesXLS'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>Estadistica Ambientes Pedagógicos</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>Estadistica Ambientes Pedagógicos Recreativos</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                        <tr>
+                                        <td>Estadistica Ambientes No Pedagógicos</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>Estadistica Otros Ambientes</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>Estadistica Servicios</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                        <tr>
+                                        <td>Estadistica Eventos o Desastres Naturales</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>Estadistica Riesgos Proximos</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                   
+                                   {#  <tr>
+                                        <td>Especialidades</td>
+                                        <td>
+
+                                            <button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td>
+                                    </tr> #}
+
+                                </table>
+                                  <div>
+                                  <div>
+                                   <table>
+                                    <tr>
+                                        <th class="text-center" style="width:350px" >Reporte Gerencial</th>
+                                        <th ></th>
+                                    </tr>
+                                    <tr>
+                                        <td>Reportes Gerenciales de Infraestructura Educativa</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formGerencialesPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                                  </div>
+                                    <div id="descarga"> </div>
+                                  </div>
+                            </div>
+                        </div>
+                     
+
+                    </div>                    
+                    <div id="tour-8" class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Ambientes por {% if infoSubEntidad is defined %}{{infoSubEntidad[0]['nombrearea']}}{%endif%}</h3>
+                            </div>   
+                            <div class="pull-right"> 
+                            </div>                          
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body"> 
+                            {% if infoEstadistica is defined %}
+                                <span class="text-primary pull-right"><b>{{(infoEstadistica[0]['total_general'])|number_format(0, ',', '.')}}</b></span><span class="text-primary"><b>Total</b></span>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    </div>
+                                </div><!-- /.progress -->   
+                            {% endif %}       
+                            {% set contadorColor = 0 %}      
+                            {% for data in infoSubEntidad %}
+                                {% set cantidad = data.total_ambiente %}  
+                                {% set totalGeneral = data['total_general'] %} 
+                                {% set porcentaje = (cantidad * 100)/(totalGeneral)%} 
+                                {% set id = data.codigo %}
+                                {% set nombre = data.nombre %} 
+                                {% set rol = data.rolusuario %}
+                                {% set periodo = data.periodo %}
+                                {% set gestion = data.gestion %}
+
+                                <form name="form" role="form" action="{{ path('reporte_infraestructura_index') }}" method="POST">
+                                    <input type="hidden" name="codigo" value="{{id|base64_encode}}" />
+                                    <input type="hidden" name="rol" value="{{rol}}" />
+                                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                    <input type="hidden" name="periodo" value="{{ periodo }}" />
+                                    <button type="submit" id="submit{{id}}" style="display:none;"></button>
+                                    <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
+                                         <span class="pull-right" style="width:50px; text-align:right"><b>{{cantidad|number_format(0, ',', '.')}}</b></span><span class="">{{nombre}}</span>
+                                    </a>    
+                                    <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                
+                                            </div>
+                                        </div><!-- /.progress -->
+                                </form> 
+                            {% endfor %}
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+
+                <form name="formEstadisticaAmbientesPDF" id="formEstadisticaAmbientesPDF" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual}}" />     
+                      <input type="hidden" name="tipo" value="1" />     
+                </form> 
+                <form name="formEstadisticaAmbientesXLS" id="formEstadisticaAmbientesXLS" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
+                </form>
+                <form name="formEspEstadisticaEspecialPdf" id="formEspEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+                <form name="formEspEstadisticaEspecialXls" id="formEspEstadisticaEspecialXls" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+
+                <form name="formGerencialesPdf" id="formGerencialesPdf" role="form" action="{{ path('estadistica_gerenciales_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+            
+               
+
+
+            {% endif %}
+            {% if infoEntidad is defined and 1 == 2 %}
+                {% if infoEntidad.rolactual == 9 or infoEntidad.rolactual == 5 %}
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">                        
+                            <div class="panel panel-default shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class='fa fa-home'></i> Información</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                    </div><!-- /.pull-right -->
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">                                 
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        
+                                    </div>   
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            &nbsp;
+                                        </div>
+                                    </div>  
+                                </div><!-- /.panel-body -->
+                            </div>     
+                        </div>    
+                {% endif %}
+            {% endif %}
+            <div id="tour-7" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">     
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div id="chartContainerPoblacion" style="height:300px;"> </div>
+                                    </div>
+
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">                   
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">    
+                                    <div id="chartContainerDependencia" style="height: 300px;"> </div> 
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">                                    
+                                    <div id="chartContainerGenero" style="height: 300px;"> </div>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>                    
+                </div> 
+          
+  
+                {% if infoEstadisticaUE is defined and infoEstadisticaEE is defined %}
+                    <div class="row">     
+                        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">             
+                            <div class="panel panel-default shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Unidades Educativas - Dependencia</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                    </div><!-- /.pull-right -->
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-googleplus shadow">
+                                                <i class="fa fa-home fa-2x"></i>
+                                                <h2>{{infoEstadisticaUE['cant_publica']|number_format(0, ',', '.')}}</h2>
+                                                <h4>Pública</h4>
+                                            </div>
+                                        </div>    
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-warning shadow">
+                                                <i class="fa fa-home fa-2x"></i>
+                                                <h2>{{infoEstadisticaUE['cant_convenio']|number_format(0, ',', '.')}}</h2>
+                                                <h4>Convenio</h4>
+                                            </div>
+                                        </div>   
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-teal shadow">
+                                                <i class="fa fa-home fa-2x"></i>
+                                                <h2>{{infoEstadisticaUE['cant_privada']|number_format(0, ',', '.')}}</h2>
+                                                <h4>Privada</h4>
+                                            </div>
+                                        </div>   
+                                    </div>                            
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>                         
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">             
+                            <div class="panel panel-default shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Edificios</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                    </div><!-- /.pull-right -->
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">                           
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-facebook shadow">
+                                                <i class="fa fa-building fa-2x"></i>
+                                                <h2>{{infoEstadisticaEE['cant_total']|number_format(0, ',', '.')}}</h2>
+                                                <h5>Ed. Educativo</h5>
+                                            </div>
+                                        </div>                                   
+                                    </div>                            
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>    
+                {%endif%}            
+            </div>        
+        </div>
+        <div class="row">
+            <div class="alert alert-info">
+                <span class="alert-icon"><i class="fa fa-info"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="pull-left notification-sender"><span><a>Estudiante matriculado: </a></span> Persona que se registró en el libro de inscripciones de un Centro de Educación Alternativa durante una gestión escolar dada. </li>
+                        <li class="pull-right notification-time"></li>                        
+                    </ul>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <!--/ END ADDITIONAL ELEMENT -->
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    {% if infoEntidad is defined %}
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script>
+            function initialize() {
+                var marcadores = [['{{infoEntidad.id}}', {{infoEntidad.cordx}}, {{infoEntidad.cordy}}]];
+                var map = new google.maps.Map(document.getElementById('lienzoMapa'), {
+                    zoom: 16,
+                    center: new google.maps.LatLng({{infoEntidad.cordx}}, {{infoEntidad.cordy}}),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+                var infowindow = new google.maps.InfoWindow();
+                var marker, i;
+                for (i = 0; i < marcadores.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(marcadores[i][1], marcadores[i][2]),
+                        map: map
+                    });
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infowindow.setContent('<div><b>Unidad Educativa: </b>' + marcadores[i][0] + '</div>');
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+            }        
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+        
+    {% endif %}
+    <script>
+        $(document).ready(function() {
+
+            Highcharts.setOptions({
+                lang: {
+                    decimalPoint: ',',
+                    thousandsSep: '.'
+                }
+            });
+
+            
+            {% autoescape %}
+                {% if mensaje is defined %}
+                    {{ mensaje|raw }}   
+                {% endif %} 
+            {% endautoescape %}
+
+            {% autoescape %}
+                {% if datoGraficoPoblacion is defined %}
+                    {{ datoGraficoPoblacion|raw }}
+                {% endif %} 
+            {% endautoescape %}
+            {% autoescape %}
+                {% if datoGraficoDependencia is defined %}
+                    {{ datoGraficoDependencia|raw }}
+                {% endif %} 
+            {% endautoescape %}
+            {% autoescape %}
+                {% if datoGraficoGenero is defined %}
+                    {{ datoGraficoGenero|raw }}
+                {% endif %} 
+            {% endautoescape %}
+
+                        
+
+            $(function () {
+                chartContainerPoblacionLoad();
+                chartContainerDependenciaLoad();
+                chartContainerGeneroLoad();  
+               
+               
+            });  
+
+            function seeGraphic (infoTipo,infoCodigo,infoRol) {
+                $("#modal-page").modal(
+                    {
+                        show: true,
+                        backdrop: 'static',
+                        keyboard: false
+                    }
+                );                 
+            };
+        });
+
+    </script> 
+    <script>
+
+        $(function() {
+            $('#listaesp').change(function() {
+                var value= $(this).val();
+                $("#idesp").val(value);
+                $("#idespx").val(value);
+                var  a=$("#idesp").val();
+              //  alert(a);
+            })
+        });
+
+        function cargaSie(){
+            var sie = $('#sie').val();
+            //alert(sie);
+            $("#siecentrop").val(sie);
+            $("#siecentrox").val(sie);
+        };
+        function cargaSie2(){
+            var sie2 = $('#sie2').val();
+            //alert(sie);
+            $("#siecentroestp").val(sie2);
+            $("#siecentroestx").val(sie2);
+        };
+        //$(function() {
+          //  $('#sie').change(function() {
+            //    var sie= $(this).val();
+                 // alert(sie);
+              //  $("#siecentrop").val(sie);
+                //$("#siecentrox").val(sie);
+               // var  a=$("#siecentrop").val();
+  //               alert(a);
+            //});
+
+        //});
+
+
+//        $(function() {
+//            $('#sie2').change(function() {
+//                var sie2= $(this).val();
+//                // alert(sie);
+//                $("#siecentroestx").val(sie2);
+//                $("#siecentroestp").val(sie2);
+//
+//                //               var  a=$("#siecentrop").val();
+//                //               alert(a);
+//            })  ;
+//
+//        });
+
+
+
+
+//var
+//    repEsp = function (gestion,periodo) {
+//        var value= $('#listaesp').val();
+//        alert(value);
+//        $("#idesp").val(value);
+//
+//    };
+
+
+
+
+    </script>
+
+
+{% endblock %}
+
+

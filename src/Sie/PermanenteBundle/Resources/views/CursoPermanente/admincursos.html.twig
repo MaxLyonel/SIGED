@@ -1,614 +1,526 @@
 {% extends 'layoutPermanente.html.twig' %}
 
 {% block contentoption %}
-    <div class="header-content">
-        <h2><i class="fa fa-users"></i> Cursos <span>Administración de cursos de educación Permanente.</span></h2>
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aqui:</span>
-            <ol class="breadcrumb">
-                    <li>
-                        <i class="glyphicon glyphicon-leaf"></i>
-                            <a href="{{path('principal_web')}}">Bienvenida</a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    {#<li>#}
-                        {#<i class="fa fa-th-large"></i>#}
-                            {#<a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>#}
-                        {#<i class="fa fa-angle-right"></i>#}
-                    {#</li>#}
-                    {#<li>#}
-                        {#<i class="fa fa-child"></i>#}
-                            {#Cursos y alumnos#}
-                        {#<i class="fa fa-angle-right"></i>#}
-                    {#</li>#}
-            </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div>
+	<div class="header-content">
+		<h2>
+			<i class="fa fa-users"></i>
+			Cursos
+			<span>Administración de cursos de educación Permanente.</span>
+		</h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aqui:</span>
+			<ol class="breadcrumb">
+				<li>
+					<i class="glyphicon glyphicon-leaf"></i>
+					<a href="{{path('principal_web')}}">Bienvenida</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
 
-    <div class="row">
-        <div class="col-md-12">
-            <p id="menestado">  </p>
-            <!-- Start basic wizard horizontal -->
-            <div id="basic-wizard-horizontal">
+			</ol>
+		</div>
+		<!-- /.breadcrumb-wrapper -->
+	</div>
 
-                <div class="panel panel-tab rounded shadow">
-                    <!-- Start tabs heading -->
-                    <div class="panel-heading no-padding">
-                        <ul class="nav nav-tabs nav-pills">
-                            <li class="active">
-                                <a href="#tab1-1" data-toggle="tab" aria-expanded="true" >
-                                    <i class="fa fa-user"></i>
-                                    <div>
-                                        {#<span class="text-strong">Step 1</span>#}
-                                        <span>Cursos Cortos</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="#tab1-2" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-file-text"></i>
-                                    <div>
-                                        {#<span class="text-strong">Step 2</span>#}
-                                        <span>Programa</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="#tab1-3" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-credit-card"></i>
-                                    <div>
-                                        {#<span class="text-strong">Step 3</span>#}
-                                        <span>Área Temática</span>
-                                    </div>
-                                </a>
-                            </li>
-                            {#<li class="">#}
-                                {#<a href="#tab1-4" data-toggle="tab" aria-expanded="false">#}
-                                    {#<i class="fa fa-check-circle"></i>#}
-                                    {#<div>#}
-                                        {#<span class="text-strong">Step 4</span>#}
-                                        {#<span>Confirmation</span>#}
-                                    {#</div>#}
-                                {#</a>#}
-                            {#</li>#}
-                        </ul>
-                    </div><!-- /.panel-heading -->
-                    <!--/ End tabs heading -->
+	<div class="row">
+		<div class="col-md-12">
+			<p id="menestado"></p>
+			<!-- Start basic wizard horizontal -->
+			<div id="basic-wizard-horizontal">
 
-                    <!-- Start tabs content -->
-                    <div class="panel-body">
-                        <form id="formCursos" action="#" class="tab-content form-horizontal" >
-                            <div class="tab-pane fade inner-all active in" id="tab1-1">
+				<div
+					class="panel panel-tab rounded shadow">
+					<!-- Start tabs heading -->
+					<div class="panel-heading no-padding">
+						<ul class="nav nav-tabs nav-pills">
+							<li class="active">
+								<a href="#tab1-1" data-toggle="tab" aria-expanded="true">
+									<i class="fa fa-user"></i>
+									<div>
 
-                                    <h4 class="page-header">Cursos Cortos</h4>
-                                <div class="row">
-                                <div class="form-body col-lg-4 col-md-6">
-                                    <label> Ver Cursos cortos</label>
-                                    <select id="combocurso" class="chosen-select col-lg-10">
-                                        <option value="">Seleccionar...</option>
-                                        {% for at in cursoscortos %}
-                                            <option value="{{at.id}}">{{at.cursocorto}}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
-                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewCursoCorto();">
-                                            <i class="fa fa-plus"></i> Nuevo Curso
-                                        </button>
-                                    </div>
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar">
-                                        <button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">
-                                            <i class="fa fa-pencil"></i> Editar Curso
-                                        </button>
-                                    </div>
-                                    {#<button type="button" class="btn btn-danger" onclick="showEditCursoCorto()">edit</button>#}
-                                    {#<button type="button" class="btn btn-danger" onclick="showNewCursoCorto()">Eliminar</button>#}
+										<span>Cursos Cortos</span>
+									</div>
+								</a>
+							</li>
+							{#       <li class="">
+							                                <a href="#tab1-2" data-toggle="tab" aria-expanded="false">
+							                                    <i class="fa fa-file-text"></i>
+							                                    <div>
+							                                
+							                                        <span>Programa</span>
+							                                    </div>
+							                                </a>
+							                            </li>
+							                            <li class="">
+							                                <a href="#tab1-3" data-toggle="tab" aria-expanded="false">
+							                                    <i class="fa fa-credit-card"></i>
+							                                    <div>
+							                                      
+							                                        <span>Área Temática</span>
+							                                    </div>
+							                                </a>
+							                            </li> #}
 
-                                    {#<button type="button" class="btn btn-danger" onclick="editarCursoCorto()">edit</button>#}
-                                    <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="eliminarCursoCorto()">
-                                        <i class="fa fa-trash"></i> Eliminar
-                                    </button>
-                                </div>
-                            </div>
+						</ul>
+					</div>
+					<!-- /.panel-heading -->
+					<!--/ End tabs heading -->
+
+					<!-- Start tabs content -->
+						<div class="panel-body"> <form id="formCursos" action="#" class="tab-content form-horizontal">
+							<div class="tab-pane fade inner-all active in" id="tab1-1">
+
+								<h4 class="page-header">Cursos Cortos</h4>
+								<div class="row">
+									<div class="form-body col-lg-4 col-md-6">
+										<label>
+											Ver Cursos cortos</label>
+										<select id="combocurso" class="chosen-select col-lg-10">
+											<option value="">Seleccionar...</option>
+											{% for at in cursoscortos %}
+												<option value="{{at.id}}">{{at.cursocorto}}</option>
+											{% endfor %}
+										</select>
+										<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
+											<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewCursoCorto();">
+												<i class="fa fa-plus"></i>
+												Nuevo Curso
+											</button>
+										</div>
+										<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar">
+											<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">
+												<i class="fa fa-pencil"></i>
+												Editar Curso
+											</button>
+										</div>
+
+										<button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="eliminarCursoCorto()">
+											<i class="fa fa-trash"></i>
+											Eliminar
+										</button>
+									</div>
+								</div>
+							</div>
 
 
+{# 							<div class="tab-pane fade inner-all" id="tab1-2">
+								<h4 class="page-header">Programa</h4>
+								<div class="form-body col-lg-4 col-md-6">
+									<label>
+										Ver Programas</label>
+									<select id="combocursob" class="chosen-select col-lg-10">
+										<option value="">Seleccionar...</option>
+										{% for at in programaper %}
+											<option value="{{at.id}}">{{at.programa}}</option>
+										{% endfor %}
+									</select>
+									<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
+										<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewPrograma();">
+											<i class="fa fa-plus"></i>
+											Nuevo Programa
+										</button>
+									</div>
+									<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar">
+										<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditPrograma();">
+											<i class="fa fa-pencil"></i>
+											Editar Programa
+										</button>
+									</div>
+										<button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="eliminarPrograma()"> <i class="fa fa-trash"></i>
+										Eliminar
+									</button>
+								</div>
+							</div>
+
+							<div class="tab-pane fade inner-all" id="tab1-3">
+								<h4 class="page-header">Área Temática</h4>
+								<div class="form-body col-lg-4 col-md-6">
+									<label>
+										Ver Área Temática</label>
+									<select id="combocursoc" class="chosen-select col-lg-10">
+										<option value="">Seleccionar...</option>
+										{% for at in areatematicaper %}
+											<option value="{{at.id}}">{{at.areatematica}}</option>
+										{% endfor %}
+									</select>
+									<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
+										<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewAreaTem();">
+											<i class="fa fa-plus"></i>
+											Nueva Área Temática
+										</button>
+									</div>
+									<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar">
+										<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditAreaTem();">
+											<i class="fa fa-pencil"></i>
+											Editar Área Temática
+										</button>
+									</div>
+										<button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="eliminarAreaTem()"> <i class="fa fa-trash"></i>
+										Eliminar
+									</button>
+								</div>
+							</div> #}
+					
+						</form>
+					</div>
+					<!-- /.panel-body -->
+					<!--/ End tabs content -->
+
+					<!-- Start pager --><div class="panel-footer"> </div>
+					<!-- /.panel-footer -->
+					<!--/ End pager -->
+
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /#basic-wizard-horizontal -->
+			<!--/ End basic wizard horizontal-->
+
+		</div>
+	</div>
 
 
-                            </div>
-                            <div class="tab-pane fade inner-all" id="tab1-2">
-                         <h4 class="page-header">Programa</h4>
-                                <div class="form-body col-lg-4 col-md-6">
-                                    <label> Ver Programas</label>
-                                    <select id="combocursob" class="chosen-select col-lg-10">
-                                        <option value="">Seleccionar...</option>
-                                        {% for at in programaper %}
-                                            <option value="{{at.id}}">{{at.programa}}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
-                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewPrograma();">
-                                            <i class="fa fa-plus"></i> Nuevo Programa
-                                        </button>
-                                    </div>
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar">
-                                        <button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditPrograma();">
-                                            <i class="fa fa-pencil"></i> Editar Programa
-                                        </button>
-                                    </div>
-                                    {#<button type="button" class="btn btn-danger" onclick="showEditCursoCorto()">edit</button>#}
-                                    {#<button type="button" class="btn btn-danger" onclick="showNewCursoCorto()">Eliminar</button>#}
-
-                                    {#<button type="button" class="btn btn-danger" onclick="editarCursoCorto()">edit</button>#}
-                                    <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="eliminarPrograma()">
-                                        <i class="fa fa-trash"></i> Eliminar
-                                    </button>
-                                </div>
-
-                            </div>
-                            <div class="tab-pane fade inner-all" id="tab1-3">
-                                <h4 class="page-header">Área Temática</h4>
-                                <div class="form-body col-lg-4 col-md-6">
-                                    <label> Ver Área Temática</label>
-                                    <select id="combocursoc" class="chosen-select col-lg-10">
-                                        <option value="">Seleccionar...</option>
-                                        {% for at in areatematicaper %}
-                                            <option value="{{at.id}}">{{at.areatematica}}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
-                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewAreaTem();">
-                                            <i class="fa fa-plus"></i> Nueva Área Temática
-                                        </button>
-                                    </div>
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar">
-                                        <button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditAreaTem();">
-                                            <i class="fa fa-pencil"></i> Editar Área Temática
-                                        </button>
-                                    </div>
-                                    {#<button type="button" class="btn btn-danger" onclick="showEditCursoCorto()">edit</button>#}
-                                    {#<button type="button" class="btn btn-danger" onclick="showNewCursoCorto()">Eliminar</button>#}
-
-                                    {#<button type="button" class="btn btn-danger" onclick="editarCursoCorto()">edit</button>#}
-                                    <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="eliminarAreaTem()">
-                                        <i class="fa fa-trash"></i> Eliminar
-                                    </button>
-                                </div>
-
-                            </div>
-                            {#<div class="tab-pane fade inner-all" id="tab1-4">#}
-                                {#<h4 class="page-header">Confirmation</h4>#}
-                            {#</div>#}
-                        </form>
-                    </div><!-- /.panel-body -->
-                    <!--/ End tabs content -->
-
-                    <!-- Start pager -->
-                    <div class="panel-footer">
-
-                    </div><!-- /.panel-footer -->
-                    <!--/ End pager -->
-
-                </div><!-- /.panel -->
-            </div><!-- /#basic-wizard-horizontal -->
-            <!--/ End basic wizard horizontal-->
-
-        </div>
-    </div>
-
-
-
-    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-
-    </div><!-- /.modal -->
-    <!--/ End body content -->
+	<div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal"></div>
+	<!-- /.modal -->
+	<!--/ End body content -->
 {% endblock %}
 
 {% block javascripts %}
-    {{parent()}}
-    <script>
-
-
-        var asignarPrograma = function(){
-            var nuevoCurso = $('#form_programa').val();
-            if(nuevoCurso == ''){
-                alert('Campo requerido, Ingrese el Nombre del Programa');
-                return false;
-            }
-            var formData = $('#formCursos').serialize();
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: "{{ path('herramienta_per_add_programa') }}",
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    if(data.reinicio == true)
-                    {
-                        window.location.href =  Routing.generate('herramienta_permanente_admin');
-                    }
-                    //
-
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        };
-
-        var asignarArea = function(){
-            var nuevoCurso = $('#form_area').val();
-            if(nuevoCurso == ''){
-                alert('Campo requerido, Ingrese el Nombre del Area Tematica');
-                return false;
-            }
-            var formData = $('#formCursos').serialize();
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: "{{ path('herramienta_per_add_areatematica') }}",
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    if(data.reinicio == true)
-                    {
-                        window.location.href =  Routing.generate('herramienta_permanente_admin');
-                    }
-                    //
-
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        };
-
-
-        var editarCursoCorto = function(){
-
-            var formData = {
-                form: $('#combocurso').val()
-            };
-           // var formData = $('#formCursos').serialize();
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: "{{ path('herramienta_per_edit_curso_nuevo') }}",
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    if(data.reinicio == true)
-                    {
-                        window.location.href =  Routing.generate('herramienta_permanente_admin');
-                    }
-                    //
-
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        }
-
-        var eliminarCursoCorto = function(){
-
-            var formData = {
-                form: $('#combocurso').val()
-            };
-            if($('#combocurso').val() == ''){
-                alert('Campo requerido, seleccione un valor de la lista a eliminar');
-                return false;
-            }
-            // var formData = $('#formCursos').serialize();
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: "{{ path('herramienta_per_delete_curso_nuevo') }}",
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    if(data.reinicio == true)
-                    {
-                        window.location.href =  Routing.generate('herramienta_permanente_admin');
-                    }
-                    //
-
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        }
-
-        var showNewCursoCorto = function () {
-            $.ajax({
-                type: 'get',
-                url: "{{ path('herramienta_per_show_curso_nuevo') }}",
-                beforeSend: function () {
-                    $('#modal').empty();
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                    $('.chosen-select').chosen({allow_single_deselect: false});
-                },
-
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        };
-
-
-
-        var showEditCursoCorto = function () {
-
-            var formData = {
-                form: $('#combocurso').val()
-            };
-            if($('#combocurso').val() == ''){
-                alert('Campo requerido, seleccione un valor de la lista');
-                return false;
-            }else {
-                $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: "{{ path('herramienta_per_show_curso_edit') }}",
-                    beforeSend: function () {
-                        $('#modal').empty();
-                    },
-                    success: function (data) {
-                        $('#modal').empty();
-                        $('#modal').modal('show');
-                        $('#modal').append(data);
-
-                    },
-
-                    statusCode: {
-                        500: function () {
-
-                        },
-                        404: function () {
-
-                        }
-                    }
-                });
-            }
-
-
-        };
-
-
-        var eliminarPrograma = function(){
-
-            var formData = {
-                form: $('#combocursob').val()
-            };
-            if($('#combocursob').val() == ''){
-                alert('Campo requerido, seleccione un valor de la lista a eliminar');
-                return false;
-            }
-            // var formData = $('#formCursos').serialize();
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: "{{ path('herramienta_per_delete_programa_nuevo') }}",
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    if(data.reinicio == true)
-                    {
-                        window.location.href =  Routing.generate('herramienta_permanente_admin');
-                    }
-                    //
-
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        }
-
-        var showNewPrograma = function () {
-            $.ajax({
-                type: 'get',
-                url: "{{ path('herramienta_per_show_programa_nuevo') }}",
-                beforeSend: function () {
-                    $('#modal').empty();
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                    $('.chosen-select').chosen({allow_single_deselect: false});
-                },
-
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        };
-
-
-
-        var showEditPrograma = function () {
-
-            var formData = {
-                form: $('#combocursob').val()
-            };
-            if($('#combocursob').val() == ''){
-                alert('Campo requerido, seleccione un valor de la lista');
-                return false;
-            }else {
-                $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: "{{ path('herramienta_per_show_programa_edit') }}",
-                    beforeSend: function () {
-                        $('#modal').empty();
-                    },
-                    success: function (data) {
-                        $('#modal').empty();
-                        $('#modal').modal('show');
-                        $('#modal').append(data);
-
-                    },
-
-                    statusCode: {
-                        500: function () {
-
-                        },
-                        404: function () {
-
-                        }
-                    }
-                });
-            }
-
-
-        };
-
-        var eliminarAreaTem = function(){
-
-            var formData = {
-                form: $('#combocursoc').val()
-            };
-            if($('#combocursoc').val() == ''){
-                alert('Campo requerido, seleccione un valor de la lista a eliminar');
-                return false;
-            }
-            // var formData = $('#formCursos').serialize();
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: "{{ path('herramienta_per_delete_areatem_nuevo') }}",
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    if(data.reinicio == true)
-                    {
-                        window.location.href =  Routing.generate('herramienta_permanente_admin');
-                    }
-                    //
-
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        }
-
-        var showNewAreaTem = function () {
-            $.ajax({
-                type: 'get',
-                url: "{{ path('herramienta_per_show_areatem_nuevo') }}",
-                beforeSend: function () {
-                    $('#modal').empty();
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                    $('.chosen-select').chosen({allow_single_deselect: false});
-                },
-
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        };
-
-
-
-        var showEditAreaTem = function () {
-
-            var formData = {
-                form: $('#combocursoc').val()
-            };
-            if($('#combocursoc').val() == ''){
-                alert('Campo requerido, seleccione un valor de la lista');
-                return false;
-            }else {
-                $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: "{{ path('herramienta_per_show_areatem_edit') }}",
-                    beforeSend: function () {
-                        $('#modal').empty();
-                    },
-                    success: function (data) {
-                        $('#modal').empty();
-                        $('#modal').modal('show');
-                        $('#modal').append(data);
-
-                    },
-
-                    statusCode: {
-                        500: function () {
-
-                        },
-                        404: function () {
-
-                        }
-                    }
-                });
-            }
-
-
-        };
-
-    </script>
+{{parent()}}
+<script>
+
+
+	var asignarPrograma = function () {
+var nuevoCurso = $('#form_programa').val();
+if (nuevoCurso == '') {
+alert('Campo requerido, Ingrese el Nombre del Programa');
+return false;
+}
+var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_add_programa') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
+
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+};
+
+var asignarArea = function () {
+var nuevoCurso = $('#form_area').val();
+if (nuevoCurso == '') {
+alert('Campo requerido, Ingrese el Nombre del Area Tematica');
+return false;
+}
+var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_add_areatematica') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
+
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+};
+
+
+var editarCursoCorto = function () {
+
+var formData = {
+form: $('#combocurso').val()
+};
+// var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_edit_curso_nuevo') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
+
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+var eliminarCursoCorto = function () {
+
+var formData = {
+form: $('#combocurso').val()
+};
+if ($('#combocurso').val() == '') {
+alert('Campo requerido, seleccione un valor de la lista a eliminar');
+return false;
+}
+// var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_delete_curso_nuevo') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
+
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+var showNewCursoCorto = function () {
+$.ajax({
+type: 'get',
+url: "{{ path('herramienta_per_show_curso_nuevo') }}",
+beforeSend: function () {
+$('#modal').empty();
+},
+success: function (data) {
+$('#modal').empty();
+$('#modal').append(data);
+$('.chosen-select').chosen({allow_single_deselect: false});
+},
+
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+};
+
+
+var showEditCursoCorto = function () {
+
+var formData = {
+form: $('#combocurso').val()
+};
+if ($('#combocurso').val() == '') {
+alert('Campo requerido, seleccione un valor de la lista');
+return false;
+} else {
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_show_curso_edit') }}",
+beforeSend: function () {
+$('#modal').empty();
+},
+success: function (data) {
+$('#modal').empty();
+$('#modal').modal('show');
+$('#modal').append(data);
+
+},
+
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+
+};
+
+
+var eliminarPrograma = function () {
+
+var formData = {
+form: $('#combocursob').val()
+};
+if ($('#combocursob').val() == '') {
+alert('Campo requerido, seleccione un valor de la lista a eliminar');
+return false;
+}
+// var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_delete_programa_nuevo') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
+
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+var showNewPrograma = function () {
+$.ajax({
+type: 'get',
+url: "{{ path('herramienta_per_show_programa_nuevo') }}",
+beforeSend: function () {
+$('#modal').empty();
+},
+success: function (data) {
+$('#modal').empty();
+$('#modal').append(data);
+$('.chosen-select').chosen({allow_single_deselect: false});
+},
+
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+};
+
+
+var showEditPrograma = function () {
+
+var formData = {
+form: $('#combocursob').val()
+};
+if ($('#combocursob').val() == '') {
+alert('Campo requerido, seleccione un valor de la lista');
+return false;
+} else {
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_show_programa_edit') }}",
+beforeSend: function () {
+$('#modal').empty();
+},
+success: function (data) {
+$('#modal').empty();
+$('#modal').modal('show');
+$('#modal').append(data);
+
+},
+
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+
+};
+
+var eliminarAreaTem = function () {
+
+var formData = {
+form: $('#combocursoc').val()
+};
+if ($('#combocursoc').val() == '') {
+alert('Campo requerido, seleccione un valor de la lista a eliminar');
+return false;
+}
+// var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_delete_areatem_nuevo') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
+
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+var showNewAreaTem = function () {
+$.ajax({
+type: 'get',
+url: "{{ path('herramienta_per_show_areatem_nuevo') }}",
+beforeSend: function () {
+$('#modal').empty();
+},
+success: function (data) {
+$('#modal').empty();
+$('#modal').append(data);
+$('.chosen-select').chosen({allow_single_deselect: false});
+},
+
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+};
+
+
+var showEditAreaTem = function () {
+
+var formData = {
+form: $('#combocursoc').val()
+};
+if ($('#combocursoc').val() == '') {
+alert('Campo requerido, seleccione un valor de la lista');
+return false;
+} else {
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_show_areatem_edit') }}",
+beforeSend: function () {
+$('#modal').empty();
+},
+success: function (data) {
+$('#modal').empty();
+$('#modal').modal('show');
+$('#modal').append(data);
+
+},
+
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+}
+
+
+};
+</script>
 {%endblock%}

@@ -1,7 +1,6 @@
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-md">
     <div class="modal-content">
-        {{ form_start(form) }}
-        <form id="formnuevocurso" onsubmit="newAcre(); return false;" method="post" style="">
+        {{form_start(form,{'attr':{'id':'formEspecialidadie','class':'form-horizontal form-group'} })}}
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -20,13 +19,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
 
-                                            <div class="form-group col-lg-4 col-md-6">
-                                                <label> Programa </label>
-                                                <strong>{{form_widget(form.programa)}}</strong>
+                                            <div class="form-group col-lg-5 col-md-6">
+                                                <label> Especialidad </label>
+                                                <strong>{{form_widget(form.especialidad)}}</strong>
                                             </div>
-                                        <div class="form-group col-lg-4 col-md-6">
-                                            <label> Especialidad </label>
-                                            <strong>{{form_widget(form.especialidad)}}</strong>
+                                        <div class="form-group col-lg-6 col-md-6">
+                                            <label> Nivel de Acreditación </label>
+                                            <strong>{{form_widget(form.nivel)}}</strong>
                                         </div>
 
 
@@ -52,26 +51,48 @@
 </div><!-- /.modal-dialog -->
 <script>
 
-   function listarEspecialidades(idArea){
+   function listarNiveles(idEsp){
 
             $.ajax({
             type: 'get',
-            url: Routing.generate('permanente_herramienta_listarespecialidades', {'area': idArea}),
+            url: Routing.generate('permanente_herramienta_listarniveles', {'idesp': idEsp}),
             beforeSend: function (data) {
 
             },
             success: function (data) {
 
-                $('#form_especialidad').empty();
-                $.each(data.listarespecialidad, function (i,value) {
-                    $('#form_especialidad').append('<option value="' + i + '">' + value + '</option>');
+                $('#form_nivel').empty();
+                $.each(data.listarniveles, function (i,value) {
+                    $('#form_nivel').append('<option value="' + i + '">' + value + '</option>');
                 });
 
             }
         });
     }
 
+   var newEspecialidad= function () {
+       var formData = $('#formEspecialidadie').serialize();
+       $('#modal').modal('hide');
 
+       $.ajax({
+           type: 'post',
+           url: "{{ path('permanente_herramienta_acreditacion_new') }}",
+           data:formData,
+           beforeSend: function () {
+               $("#arbolesp").empty();
+               $("#arbolesp").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+           },
+           success: function (data) {
+               $('#arbolesp').empty();
+               $('#arbolesp').html(data);
+
+           },
+           complete: function () {
+           }
+
+
+       });
+   };
 
 </script>
 <style>

@@ -1,10 +1,10 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        {{form_start(form,{'attr':{'id':'formEspecialidad','class':'form-horizontal form-group'} })}}
+        {{form_start(form,{'attr':{'id':'formModulo','class':'form-horizontal form-group'} })}}
         <div class="panel panel-danger">
             <div class="panel-heading ">
                 <div class="pull-left">
-                    <h3 class="panel-title">Creación de Especialidad</h3>
+                    <h3 class="panel-title">Creación de Modulo</h3>
                 </div>
 
                 <div class="clearfix"></div>
@@ -12,32 +12,14 @@
             <div class="panel-body">
         <div class="row">
             <div class="form-body col-lg-12 col-md-12">
-                <label> Nombre del Especialidad</label>
-                <strong>{{form_widget(form.especialidad)}}</strong>
-                <br>
-                <div class="table-responsive col-md-12">
-                 <table class="table table-bordered table-striped table-danger">
-                    <thead>
-                        <tr>
-                            <th class="text-center border-right">Tecnico Basico</th>
-                            <th class="text-center border-right">Tecnico Auxiliar</th>
-                            <th class="text-center border-right">Tecnico Medio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">{{form_widget(form.tecbas)}}</td>
-                            <td class="text-center">{{form_widget(form.tecaux)}}</td>
-                            <td class="text-center">{{form_widget(form.tecmed)}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-
-                {#<button type="button" class="btn btn-danger" onclick="asignarCursoCorto()">Guardar</button>#}
-
-
+                <label> Nombre del Modulo</label>
+                <strong>{{form_widget(form.modulo)}}</strong>
+             </div>
+            <div class="form-body col-lg-12 col-md-12">
+                <label> Horas</label>
+                <strong>{{form_widget(form.horas)}}</strong>
             </div>
+
 
         </div>
             </div>
@@ -55,23 +37,14 @@
 </div>
 <script>
 
-    var guardarEspecialidadP= function () {
+    var guardarModulo= function () {
 
-//        if ($('#form_tecmed').prop('checked')== false ) {
-//            alert("Checkbox no seleccionado");
-//            return false;
-//        }else
-//        {
-////            console.log("Checkbox no seleccionado");
-////            return false;
-//        }
-//        var menu = $('#form_nombre').val();
-       var formData = $('#formEspecialidad').serialize();
+       var formData = $('#formModulo').serialize();
       $('#modal').modal('hide');
 
         $.ajax({
             type: 'post',
-            url: "{{ path('herramienta_per_create_especialidad_nuevo') }}",
+            url: "{{ path('permanente_create_modulo_nuevo') }}",
             data:formData,
             beforeSend: function () {
 
@@ -82,12 +55,12 @@
 //                    icon: imagen,
 //                    buttons: false
 //                });
-                $("#panelesp").empty();
-                $("#panelesp").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                $("#listamodulos").empty();
+                $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
             },
             success: function (data) {
-                $('#panelesp').empty();
-                $('#panelesp').html(data);
+                $('#listamodulos').empty();
+                $('#listamodulos').html(data);
 
             },
             complete: function () {
@@ -102,7 +75,11 @@
         });
     };
 
-
+    var rangoHoras = function(control){
+        if(control.value == ""){ control.value = 0; }
+        if(control.value < 0){ control.value = 0; }
+        if(control.value > 170){ control.value = 170; }
+    }
 
 
     {#var asignarCursoCorto = function(){#}

@@ -9,7 +9,38 @@ permanente_malla_tecnica_modulos:
     defaults: { _controller: SiePermanenteBundle:MallaTecnica:seemodulos}
     options:
          expose: true
-         
+
+permanente_show_modulo_nuevo:
+    path:     /showmodulonuevo/
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:shoModuloNuevo"}
+    options:
+         expose: true
+
+permanente_create_modulo_nuevo:
+    path:     /createmodnuevo/
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:createModuloNuevo"}
+    options:
+         expose: true
+
+permanente_update_modulo_nuevo:
+    path:     /updatemodnuevo/
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:updateeModuloNuevo"}
+    options:
+         expose: true
+
+
+permanente_show_modulo_edit:
+    path:     /showmoduloedit/
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:showModuloEdit"}
+    options:
+         expose: true
+
+permanente_show_modulo_delete:
+    path:     /showmodulodelete/
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:showModuloDelete"}
+    options:
+         expose: true
+
 permanente_malla_tecnica_modulos_change_semestre:
     path:     /changesemestre
     defaults: { _controller: SiePermanenteBundle:MallaTecnica:changesemestre}
@@ -76,14 +107,32 @@ permanente_malla_tecnica_modulos_delete:
     options:
          expose: true     
          
-herramienta_nueva_acreditacion:
+permanente_herramienta_nueva_acreditacion:
     path:     /nuevaacreditacion
     defaults: { _controller: SiePermanenteBundle:MallaTecnica:nuevaacreditacion }
     options:
-         expose: true         
-         
-herramienta_acreditacion_alternativa_new:
+         expose: true
+
+permanente_herramienta_acreditacion_new:
     path:     /newacreditacion
     defaults: { _controller: SiePermanenteBundle:MallaTecnica:newacreditacion }
     options:
-         expose: true         
+         expose: true
+
+permanente_herramienta_create_especialidad:
+    path:     /createespecialidad
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:createEspecialidad }
+    options:
+         expose: true
+
+permanente_herramienta_update_modulo:
+    path:     /updatemodulo
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:updateModuloNuevo }
+    options:
+         expose: true
+
+permanente_herramienta_listarniveles:
+    path:     /listarniveles/{idesp}
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:listarNiveles" }
+    options:
+         expose: true

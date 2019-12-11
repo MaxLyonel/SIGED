@@ -1,0 +1,222 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {{form_start(form,{'attr':{'id':'formModulo','class':'form-horizontal form-group'} })}}
+        <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+        {#<input type="hidden" name="lstmod" id="lstmod" value="{{ lstmod }}">#}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+
+                    <h3 class="panel-title">Asignación de Módulos y Facilitadores</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="panel-body" id="lstmod">
+
+                <div id="moduloslista">
+                <table width="800">
+                    <tr>
+                        <th> <strong>{{form_label(form.modulos)}}</strong></th>
+                        <th> <strong>{{form_label(form.maestros)}}</strong></th>
+                        <th class="text-center"> <strong>{{form_label(form.recsabe)}}</strong></th>
+                        <th> <strong>  </strong></th>
+                    </tr>
+                    <tr>
+                        <td><strong>{{form_widget(form.modulos)}}</strong></td>
+                        <td><strong>{{form_widget(form.maestros)}}</strong></td>
+                        <td class="text-center"><strong>{{form_widget(form.recsabe)}}</strong></td>
+                        <td>
+                            {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="editarCursoLargo('{{ infoUe}} ');">#}
+                                {#<i class="fa fa-list"></i> Editar#}
+                            {#</button>#}
+                            <strong>{{form_widget(form.guardar)}}</strong>
+                        </td>
+                    </tr>
+                </table>
+
+                <br>
+                    <div id="mengestion"></div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Módulo</th>
+                            <th>Horas</th>
+                            <th>Facilitador</th>
+                            <th>Otros</th>
+                            <th>  </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for lstmod in lstmod %}
+                            <tr>
+                                <td >{{ loop.index }}</td>
+                                <td >{{ lstmod.modulo }}</td>
+                                <td >{{ lstmod.horas_modulo }}</td>
+                                <td >{{ lstmod.nombre }}</td>
+                                <td>
+                                    {% if ((lstmod.nombre == '0') or (lstmod.nombre == null)) %}
+                                        {#<input type="rs" name="rs" id="rs" value="1">#}
+                                RS
+                                    {% else %}
+                                        {#<input type="rs" name="rs" id="rs" value="0">#}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+
+                                    <form id="cursomod_{{lstmod.idieco}}" method="post">
+                                        <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                                        {#<input type="hidden" name="form[idieco]" id="form_idieco_{{lstmod.idieco}}" value="{{lstmod.idieco}}">#}
+                                        <button type="button" class="btn btn-danger btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Borrar" onclick="deleteModuloCL({{lstmod.idieco}},'{{ infoUe }}');"><i class="fa fa-times"></i> </button>
+                                    {#<button  class="btn btn-danger" data-toggle="tooltip" data-placement="top" onclick="deleteModuloCL({{lstmod.idieco}}{{ infoUe }});">Eliminar</button>#}
+                                    </form>
+
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-footer">
+                <div class="col-sm-offset-5">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+                    {#<td colspan="2" class="text-right">{{ form_widget(form.guardar) }}</div></td>#}
+
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+</div>
+
+<script>
+
+    var deleteModuloCL= function (ieco,infoUe) {
+        if(confirm('¡¡Advertencia!! Esta por eliminar una Módulo. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('herramienta_per_delete_moduloCL') }}",
+                data:{ieco:ieco, infoUe: infoUe},
+                beforeSend: function () {
+
+                  //  $("#moduloslista").empty();
+                    $("#mengestion").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#moduloslista').empty();
+                    $('#mengestion').empty();
+                    $('#moduloslista').html(data);
+
+                },
+                error: function(data){
+                    $('#mengestion').empty();
+                    $('#mengestion').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar modulo de un curso antes debe eliminar lo siguiente:  Participantes registrados en modulos </div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+
+
+
+            });
+        }else{
+            return false;
+        }
+    };
+
+
+    var addModulo= function () {
+//        alert('efsdf');
+        var formData = $('#formModulo').serialize();
+//        $('#modal').modal('hide');
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('herramienta_addmodulo_curso') }}",
+            data:formData,
+            beforeSend: function () {
+
+
+//                swal({
+//                    title: "Guardando...",
+//                    text: "Espere un momento por favor",
+//                    icon: imagen,
+//                    buttons: false
+//                });
+                $("#moduloslista").empty();
+                $("#moduloslista").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#moduloslista').empty();
+                $('#moduloslista').html(data);
+
+            },
+            complete: function () {
+//                swal.stopLoading();
+//                swal.close();
+//                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+//                    $(".alert").slideUp(1000);
+//                });
+            }
+
+
+        });
+    };
+
+</script>
+
+
+<script type="text/javascript">
+
+
+
+    $('.calendario').datepicker({
+
+        format: 'dd-mm-yyyy',
+
+        todayBtn: 'linked'
+
+    });
+
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+        //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
+
+   // form_recsabe
+    $(function () {
+        $("#form_recsabe").click(function () {
+            if ($(this).is(":checked")) {
+                $("#form_maestros").attr("disabled", "disabled");
+            } else {
+                $("#form_maestros").removeAttr("disabled");
+                $("#form_maestros").focus();
+            }
+        });
+    });
+</script>

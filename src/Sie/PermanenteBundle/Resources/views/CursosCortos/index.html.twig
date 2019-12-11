@@ -93,17 +93,18 @@
                             {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
                             {% if (subareaKey==1) %}
                                     <ul>
-                                                {% for programaKey, dataPrograma in dataSubarea %}
+                                               {#  {% for programaKey, dataPrograma in dataSubarea %}
                                                     <li>
                                                         <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
                                                         <ul>
                                                             {% for areatematicaKey, dataAreatematica in dataPrograma %}
                                                                 <li>
                                                                     <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
-                                                                    <ul>
-                                                                        {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                                    <ul> #}
+                                                                        {% for cursocortoKey, dataCursocorto in dataSubarea %}
                                                                             <li>
                                                                                 <span><i class="icon-minus-sign"></i>{{ cursocortoKey }}</span>
+                                                                         
                                                                                 <ul>
                                                                                     {% for iecidKey, dataIecid in dataCursocorto %}
                                                                                         <li>
@@ -146,12 +147,12 @@
                                                                                 </ul>
                                                                             </li>
                                                                         {% endfor %}
-                                                                    </ul>
+                                                                   {#  </ul>
                                                                 </li>
                                                             {% endfor %}
                                                         </ul>
                                                     </li>
-                                                {% endfor %}
+                                                {% endfor %} #}
 
                                     </ul>
                             {% endif %}
@@ -185,15 +186,15 @@
                         {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
                             {% if (subareaKey==0) %}
                                 <ul>
-                                    {% for programaKey, dataPrograma in dataSubarea %}
+                                   {#  {% for programaKey, dataPrograma in dataSubarea %}
                                         <li>
                                             <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
                                             <ul>
                                                 {% for areatematicaKey, dataAreatematica in dataPrograma %}
                                                     <li>
                                                         <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
-                                                        <ul>
-                                                            {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                        <ul> #}
+                                                            {% for cursocortoKey, dataCursocorto in dataSubarea %}
                                                                 <li>
                                                                     <span><i class="icon-minus-sign"></i>{{ cursocortoKey }}</span>
                                                                     <ul>
@@ -238,12 +239,12 @@
                                                                     </ul>
                                                                 </li>
                                                             {% endfor %}
-                                                        </ul>
+                                                       {#  </ul>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
-                                    {% endfor %}
+                                    {% endfor %} #}
 
                                 </ul>
                             {% endif %}
@@ -274,15 +275,15 @@
                         {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
 
                                 <ul>
-                                    {% for programaKey, dataPrograma in dataSubarea %}
+                                   {#  {% for programaKey, dataPrograma in dataSubarea %}
                                         <li>
                                             <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
                                             <ul>
                                                 {% for areatematicaKey, dataAreatematica in dataPrograma %}
                                                     <li>
                                                         <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
-                                                        <ul>
-                                                            {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                        <ul> #}
+                                                            {% for cursocortoKey, dataCursocorto in dataSubarea %}
                                                                 <li>
                                                                     <span><i class="icon-minus-sign"></i>{{ cursocortoKey }}</span>
                                                                     <ul>
@@ -340,11 +341,6 @@
                                                                                                 {% endif %}
 
 
-
-
-
-
-
                                                                                             </div>
 
                                                                                         </li>
@@ -356,12 +352,12 @@
                                                                     </ul>
                                                                 </li>
                                                             {% endfor %}
-                                                        </ul>
+                                                       {#  </ul>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
-                                    {% endfor %}
+                                    {% endfor %} #}
 
                                 </ul>
 

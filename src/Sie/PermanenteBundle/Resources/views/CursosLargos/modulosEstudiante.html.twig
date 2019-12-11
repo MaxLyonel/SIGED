@@ -1,0 +1,234 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {#{{form_start(form,{'attr':{'id':'formModulo','class':'form-horizontal form-group'} })}}#}
+        <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+        {#<input type="hidden" name="lstmod" id="lstmod" value="{{ lstmod }}">#}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+
+                    <h3 class="panel-title">Asignación de Módulos a Participantes</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="panel-body" id="lstmod">
+                <div class="alert " style="padding:10px">
+                    <h5 class="text-lilac">Datos del Curso</h5>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Subarea</th><td>{{curso.subarea}}</td>
+                        </tr>
+                        <tr>
+                            <th>Programa</th><td>{{curso.programa}}</td>
+
+                        </tr>
+                        <tr>
+                            <th>Especialidad</th><td>{{curso.cursolargo}}</td>
+                        </tr>
+                        <tr>
+                            <th>Nivel de Acreditación</th><td colspan="3">{{curso.acreditacion}}</td>
+                        </tr>
+
+                    </table>
+                    <h5 class="text-info">Datos del Estudiante</h5>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Codigo Rudeal</th><td>{{ estudiante.codigoRude }}</td>
+                            <th>Carnet de Identidad</th><td>{{ estudiante.carnetIdentidad }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estudiante</th><td>{{ estudiante.paterno }} {{ estudiante.materno }} {{ estudiante.nombre }}</td>
+                            {#<th>Fecha de Nacimiento</th><td> {{ estudiante.fechanacimiento }}</td>#}
+                        </tr>
+                    </table>
+                </div>
+                    {#<table class="table table-striped">#}
+                        {#<thead>#}
+                            {#<tr>#}
+                                {#<th>codigoRude</th>#}
+                                {#<th>carnetIdentidad</th>#}
+                                {#<th>paterno</th>#}
+                                {#<th>materno</th>#}
+                                {#<th>nombre</th>#}
+                            {#</tr>#}
+                        {#</thead>#}
+                        {#<tbody>#}
+                            {#<tr>#}
+                                {#<td>{{ estudiante.codigoRude }}</td>#}
+                                {#<td>{{ estudiante.carnetIdentidad }}</td>#}
+                                {#<td>{{ estudiante.paterno }}</td>#}
+                                {#<td>{{ estudiante.materno }}</td>#}
+                                {#<td>{{ estudiante.nombre }}</td>#}
+
+                            {#</tr>#}
+                        {#</tbody>#}
+                    {#</table>#}
+                <h5 class="text-lilac">Modulos Asignados</h5>
+
+                <div id="moduloslistaest">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Módulo</th>
+                            <th>Horas</th>
+                            <th>Facilitador</th>
+                            <th>Otros</th>
+                            <th>Nota</th>
+                            <th> Estado </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for lstmod in lstmod %}
+                            <tr>
+                                <td >{{ loop.index }}</td>
+                                <td >{{ lstmod.modulo }}</td>
+                                <td >{{ lstmod.horas_modulo }}</td>
+                                <td >{{ lstmod.nombre }}</td>
+                                <td>
+                                    {% if ((lstmod.nombre == '') or (lstmod.nombre == null)) %}
+                                RS
+
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if (lstmod.esnotaid != '')  %}
+                                    SI
+                                    {% else %}
+                                        NO
+                                    {% endif %}
+
+                                </td>
+                                <td>
+                                    {#<form action="{{path('permanente_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">#}
+                                        {#<input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">#}
+                                        {#<input type="hidden" name="idInstitucion" value="{{institucion.id}}">#}
+                                        {#<input type="hidden" name="gestion" value="{{gestion}}">#}
+                                        {#<input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">#}
+                                        {#<input type="hidden" name="idCargo" value="{{maestro.cargoId}}">#}
+                                    {% if lstmod.esaid %}
+                                        <button  class="btn btn-danger" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="delEstMod({{ lstmod.idieco }},{{ idinscripcion}},{{ idcurso}});">Eliminar</button>
+                                    {% else %}
+                                        <button  class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Inscribir"  onclick="insEstMod({{ lstmod.idieco }},{{ idinscripcion}},{{ idcurso}});">Inscribir</button>
+                                    {% endif %}
+                                    {#</form>#}
+                                </td>
+                                {#<td>#}
+                                    {#<button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Estado" onclick="cambiaEstadoModulo({{ lstmod.idieco }}));"><i class="fa fa-times"></i></button>#}
+                                {#</td>#}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-footer">
+                <div class="col-sm-offset-5">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+                    {#<td colspan="2" class="text-right">{{ form_widget(form.guardar) }}</div></td>#}
+
+            </div>
+        </div>
+    </div>
+    {#{{ form_end(form) }}#}
+</div>
+</div>
+
+<script>
+
+
+    var insEstMod= function (idieco, idestins, idcurso) {
+        $.ajax({
+            type: 'post',
+            url: "{{ path('herramienta_per_inscribir_modest') }}",
+            data:({idieco: idieco, idestins: idestins,idcurso:idcurso}),
+            beforeSend: function () {
+
+                $("#moduloslistaest").empty();
+                $("#moduloslistaest").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#moduloslistaest').empty();
+                $('#moduloslistaest').html(data);
+
+            },
+            complete: function () {
+//
+            }
+
+
+        });
+    };
+
+    var delEstMod= function (idieco, idestins, idcurso) {
+        if(confirm('¡¡Advertencia!! Esta por eliminar una Módulo. ¿Esta seguro de continuar?')){
+            $.ajax({
+                type: 'post',
+                url: "{{ path('herramienta_per_delete_modest') }}",
+                data:({idieco: idieco, idestins: idestins,idcurso:idcurso}),
+                beforeSend: function () {
+
+                    $("#moduloslistaest").empty();
+                    $("#moduloslistaest").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#moduloslistaest').empty();
+                    $('#moduloslistaest').html(data);
+
+                },
+                complete: function () {
+//
+                }
+
+
+            });
+        }else{
+            return false;
+        }
+    };
+
+</script>
+
+
+<script type="text/javascript">
+
+
+
+    $('.calendario').datepicker({
+
+        format: 'dd-mm-yyyy',
+
+        todayBtn: 'linked'
+
+    });
+
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+        //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
+
+</script>
