@@ -54,24 +54,23 @@ class CursosLargosController extends Controller {
         $exist = true;
         $em = $this->getDoctrine()->getManager();
         $querya = $em->getConnection()->prepare('select h.id as iecid, psat.id as subareaid,psat.sub_area as subarea,ppt.id as programaid,ppt.programa,
-	--a.id as programaid, a.facultad_area as programa,
-	d.id as acreditacionid, d.acreditacion as acreditacion,b.id as cursolargoid,b.especialidad as cursolargo,pt.id as paraleloId, pt.paralelo, picc.esabierto
-									       
-									       from superior_facultad_area_tipo a  
-                            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-                                inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-                                    inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-                                        inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                                            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
-                                                inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id                                                    
-                                                inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id = g.id
-                                                       inner join superior_turno_tipo q on h.turno_tipo_id = q.id
-															inner join permanente_institucioneducativa_cursocorto picc on picc.institucioneducativa_curso_id = h.id
-																	inner join permanente_programa_tipo ppt on ppt.id =picc.programa_tipo_id
-																			inner join permanente_sub_area_tipo psat on psat.id = picc.sub_area_tipo_id
-																inner join paralelo_tipo pt on pt.id=h.paralelo_tipo_id 																
-                        where f.gestion_tipo_id=:gestion and f.institucioneducativa_id=:sie 
-                        and f.sucursal_tipo_id=:suc --and f.periodo_tipo_id=1
+        --a.id as programaid, a.facultad_area as programa,
+        d.id as acreditacionid, d.acreditacion as acreditacion,b.id as cursolargoid,b.especialidad as cursolargo,pt.id as paraleloId, pt.paralelo, picc.esabierto
+        from superior_facultad_area_tipo a  
+        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+        inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+        inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+        inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+        inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id                                                    
+        inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id = g.id
+        inner join superior_turno_tipo q on h.turno_tipo_id = q.id
+        inner join permanente_institucioneducativa_cursocorto picc on picc.institucioneducativa_curso_id = h.id
+        inner join permanente_programa_tipo ppt on ppt.id =picc.programa_tipo_id
+        inner join permanente_sub_area_tipo psat on psat.id = picc.sub_area_tipo_id
+        inner join paralelo_tipo pt on pt.id=h.paralelo_tipo_id 																
+        where f.gestion_tipo_id=:gestion and f.institucioneducativa_id=:sie 
+        and f.sucursal_tipo_id=:suc --and f.periodo_tipo_id=1
 		and a.id =40  and  h.nivel_tipo_id =231
               
         ');
@@ -83,21 +82,21 @@ class CursosLargosController extends Controller {
         $querya->execute();
 
         $objUeducativa= $querya->fetchAll();
-
+//dump($objUeducativa);die;
         $exist = true;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
             foreach ($objUeducativa as $uEducativa) {
 
                 $sinfoUeducativa = serialize(array(
-                    'ueducativaInfo' => array('subarea' => $uEducativa['subarea'],'programa' => $uEducativa['programa'], 'cursolargo' => $uEducativa['cursolargo'], 'acreditacion' => $uEducativa['acreditacion'],
-                    'ueducativaInfoId' => array('subareaid' => $uEducativa['subareaid'],'programaid' => $uEducativa['programaid'], 'cursolargoid' => $uEducativa['cursolargoid'], 'acreditacionid' => $uEducativa['acreditacionid'], 'iecid' => $uEducativa['iecid'],'esabierto'=> $uEducativa['esabierto'])
+                    'ueducativaInfo' => array('subarea' => $uEducativa['subarea'],'programa' => $uEducativa['programa'], 'cursolargo' => $uEducativa['cursolargo'], 'acreditacion' => $uEducativa['acreditacion'], 'paralelo' => $uEducativa['paralelo'],
+                    'ueducativaInfoId' => array('subareaid' => $uEducativa['subareaid'],'programaid' => $uEducativa['programaid'], 'cursolargoid' => $uEducativa['cursolargoid'], 'acreditacionid' => $uEducativa['acreditacionid'], 'iecid' => $uEducativa['iecid'], 'paraleloId' => $uEducativa['paraleloid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
-                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['iecid']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto']);
+                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto']);
 
             }
-           // dump($aInfoUnidadEductiva);die;
+         //   dump($aInfoUnidadEductiva);die;
         } else {
             $message = 'No existe información del Centro de Educación  para la gestión seleccionada.';
             $this->addFlash('warninresult', $message);
@@ -174,7 +173,7 @@ class CursosLargosController extends Controller {
             $subareaArray = array();
 
             foreach ($subarea as $value) {
-                if (($value->getId() == 1 )||($value->getId() == 2 )) {
+                if (($value->getId() != 0 )) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
@@ -182,7 +181,7 @@ class CursosLargosController extends Controller {
 
             $programaArray = array();
             foreach ($programa as $value) {
-               if (($value->getId() ==1 )||($value->getId() ==2 ))
+               if (($value->getId() ==1 )||($value->getId() ==2 )||($value->getId() ==3 ))
                {
                    $programaArray[$value->getId()] = $value->getPrograma();
                 }
@@ -328,17 +327,17 @@ class CursosLargosController extends Controller {
             $form = $request->get('form');
 //dump($form);die;
           $query = $em->getConnection()->prepare('
-select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditacionid,d.acreditacion as acreditacion,c.id espacredid,e.id as supinsacredid, g.id  as supinstperiodoid
-									       from superior_facultad_area_tipo a  
-                            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-                                inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-                                    inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-                                        inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                                            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
-																								inner join superior_institucioneducativa_periodo g on e.id = g.superior_institucioneducativa_acreditacion_id
-																						where e.institucioneducativa_id =:sie and f.sucursal_tipo_id=:suc
-																						and d.id= :niv and b.id=:esp and f.gestion_tipo_id =:gestion
-         
+                select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditacionid,d.acreditacion as acreditacion,c.id espacredid,e.id as supinsacredid, g.id  as supinstperiodoid
+                    from superior_facultad_area_tipo a  
+                    inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+                    inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+                    inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+                    inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
+                    inner join superior_institucioneducativa_periodo g on e.id = g.superior_institucioneducativa_acreditacion_id
+                    where e.institucioneducativa_id =:sie and f.sucursal_tipo_id=:suc
+                    and d.id= :niv and b.id=:esp and f.gestion_tipo_id =:gestion
+                        
         ');
             $query->bindValue(':suc', $sucursal);
             $query->bindValue(':esp', $form['especialidad']);
@@ -368,8 +367,9 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
             $institucioncurso ->setFechaInicio(new \DateTime($form['fechaInicio']));
             $institucioncurso ->setFechaFin(new \DateTime($form['fechaFin']));
             $em->persist($institucioncurso);
+       
             $em->flush($institucioncurso);
-  // dump($institucioncurso);die;
+
             if($form['programa']==40)
             {
                 $programaid =1;
@@ -381,7 +381,7 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
                 $programaid =4;
             }
 
-         //   dump($em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find(99));DIE;
+         //   dump($em->getRepository('SieAppWebBundle:PermanenteCursoc ortoTipo')->find(99));DIE;
 
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permanente_institucioneducativa_cursocorto');")->execute();
@@ -389,7 +389,7 @@ select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditaci
             $institucioncursocorto  ->setInstitucioneducativaCurso($institucioncurso);
             $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));
             $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => $form['programa'])));
-            $institucioncursocorto  ->setAreatematicaTipo($em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->find(10));
+           // $institucioncursocorto  ->setAreatematicaTipo($em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->find(10));
             $institucioncursocorto  ->setCursocortoTipo($em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find(300));
             $institucioncursocorto  ->setEsabierto(true);
             $institucioncursocorto  ->setPoblacionTipo($em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->findOneBy(array('id' => $form['poblacion'])));

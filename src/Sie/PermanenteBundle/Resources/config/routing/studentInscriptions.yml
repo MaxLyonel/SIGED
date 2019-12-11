@@ -3,6 +3,13 @@ per_inscriptionstudent_index:
     defaults: { _controller: "SiePermanenteBundle:StudentsInscriptions:index"}
     options:
          expose: true
+
+per_inscriptionstudent_index_curso_largo:
+    path:     /indexCL
+    defaults: { _controller: "SiePermanenteBundle:StudentsInscriptions:indexCL"}
+    options:
+         expose: true
+
 per_inscriptionstudent_findstudent:
     path:     /findstudent
     defaults: { _controller: "SiePermanenteBundle:StudentsInscriptions:findStudent"}
@@ -11,5 +18,11 @@ per_inscriptionstudent_findstudent:
 per_inscriptionstudent_saveinscription:
     path:     /save
     defaults: { _controller: "SiePermanenteBundle:StudentsInscriptions:saveInscription"}
+    options:
+         expose: true
+
+per_inscriptionstudent_saveinscription_curso_largo:
+    path:     /savecl
+    defaults: { _controller: "SiePermanenteBundle:StudentsInscriptions:saveInscriptionCL"}
     options:
          expose: true
