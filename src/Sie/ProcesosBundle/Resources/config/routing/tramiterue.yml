@@ -18,6 +18,10 @@ tramite_rue_recepcion_distrito_guardar:
     path:     /recepcion/distrito/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoGuardar" }
 
+tramite_rue_recepcion_distrito_apertura:
+    path:     /recepcion/distrito/apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoApertura" }
+
 tramite_rue_recepcion_departamento:
     path:     /recepcion/departamento
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDepartamento" }
@@ -101,7 +105,15 @@ tramite_rue_buscar_rue:
     path:     /buscarrue
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRue" }
 
+tramite_rue_buscar_solicitud:
+    path:     /buscar/solicitud
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarSolicitud" }
+
 tramite_rue_buscar_ruecomparte:
+    path:     /buscarrue/comparte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
+
+tramite_rue_validarnombredistrito:
     path:     /buscarrue/comparte
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
 
