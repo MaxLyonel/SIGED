@@ -1,0 +1,90 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_documento_supletorio')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+            <a href="#">Números de Serie disponible</a>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+        <div class="panel text-center panel-default">
+            <div class="panel-body">
+                {% if gestiones is defined  %}
+                    {% if infoEntidad[0] is defined  %}
+                        {% set codigo = infoEntidad[0]['codigo'] %}  
+                        {% set nivelActual = infoEntidad[0]['nivel_actual'] %}                                 
+                    {% else %}                
+                        {% set codigo = 0 %}  
+                        {% set nivelActual = 1 %}  
+                    {% endif %}
+                    <form name="form" role="form" action="{{ path('tramite_documento_serie_disponible') }}" action="" method="POST" >
+                        <select class="form-control input-lg" name="gestion" name="gestion" onchange="this.form.submit();">
+                            {% for ges in gestiones %}
+                                {% if ges.id == gestion %}
+                                    <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                {% else %}
+                                    <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% for serie in series %}
+        {% set c = serie.documento_tipo_id %}
+        {% if c == 1 %}
+            {% set color = 'primary' %}
+        {% elseif  c == 2 %}
+            {% set color = 'danger' %}
+        {% elseif  c == 6 %}
+            {% set color = 'warning' %}
+        {% elseif  c == 9 %}
+            {% set color = 'lilac' %}
+        {% elseif  c == 7 %}
+            {% set color = 'info' %}
+            {% set c = 0 %}
+        {% else %}
+            {% set color = 'primary' %}
+        {% endif %}
+        <div class="col-lg-3 col-md-6 col-sm-6 col-sx-12">
+            <div class="panel text-center rounded shadow">
+                <div class="panel-body bg-{{color}} rounded">
+                    <div class"inner-all">
+                        <h4 class="media-heading">{{ serie.documento_tipo }}</h4>
+                        <p class="text-muted h6 mt-5">{{ serie.departamento }}</p>
+                        <div style="height:70px">
+                            <h3 class="text-strong">{{ serie.primer }} al {{ serie.ultimo }}</h3>
+                        </div>
+                        <a class="btn btn-{{color}} btn-sm btn-alt">Serie "{{ serie.serie }}"</a>                 
+                    </div> 
+                    <p class="text-muted">{{ serie.count }} carton(es) disponible(s)</p>      
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+       $(window).load(function(){
+
+        });
+    </script>
+{% endblock %}
