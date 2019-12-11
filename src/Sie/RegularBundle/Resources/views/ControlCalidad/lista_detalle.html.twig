@@ -131,7 +131,7 @@
                                                     <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
                                                     <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
                                                     <input type="hidden" id="form_optionEliminaRude" name="form[optionEliminaRude]" value=1>
-                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución eliminar</button>
                                                 </form>
                                             {#% elseif detalle.solucionTipoId == 2 %}
                                                 <form action="{{path('unificacion_index_calidad')}}" method="post"  target="_blank">
@@ -142,6 +142,36 @@
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>#}
                                             {% endif %}
+                                            {% if detalle.solucionTipoId == 1 %}
+                                                <form action="{{path('historial_calidad_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución cambiar estado extranjero</button>
+                                                </form>
+                                            {% endif %}
+
+                                            {# SE MOSTRARAN LAS DOS OPCIONES DE SOLUCION #}
+                                            {% if detalle.solucionTipoId == 3 %}
+                                                <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
+                                                    <input type="hidden" id="form_optionEliminaRude" name="form[optionEliminaRude]" value=1>
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución eliminar</button>
+                                                </form>
+                                                <form action="{{path('historial_calidad_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución cambiar estado extranjero</button>
+                                                </form>
+                                            {% endif %}
+                                            
                                         {% elseif regla.id == 10 %}
                                             <form action="{{path('reg_multigrado_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">

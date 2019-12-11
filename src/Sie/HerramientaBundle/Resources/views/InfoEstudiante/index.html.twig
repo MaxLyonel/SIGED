@@ -24,7 +24,7 @@
                 
             </div>
         </div>
-
+        {% set allowOperativo = [3, 4] %}
         <div class="row">
             <div class="col-md-4">
                 <div class="row">
@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="pull-right">
                                     Opciones:
-                                    {% if arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
+                                    {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
                                         {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}
                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                             <i class="fa fa-group" ></i>
@@ -47,13 +47,15 @@
                                             </button>
                                         {% endif %}    
                                     {% endif %}
-                                     {% if estado == true %}
+                                     {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
                                     <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Mod. Especialidades" id='btnCerraoperativo' onclick="cerrarOperativo({{odataUedu.id}},{{gestion}});">
                                     <i class="fa fa-group" ></i>
                                     </button>
                                     {% endif %}
-                                    <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Modificadas"><i class="fa fa-cloud-download"></i></a>
-                                    <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
+                                    {% if app.session.get('acceso_total') and arrLevelandGrado.gestion >= 2019 %}
+                                        <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Modificadas"><i class="fa fa-cloud-download"></i></a>
+                                        <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
+                                    {% endif %}
                                     <a class="btn btn-twitter btn-sm" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Listado de estudiantes"><i class="fa fa-download"></i></a>
                                     <a class="btn btn-info btn-sm" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Reporte NNATS"><i class="fa fa-download"></i></a>
                                 </div>
@@ -77,12 +79,12 @@
                                                 <ul>
                                                     {% for gradoKey, dataGrado in dataNivel %}
 
-                                                        <li>
+                                                        <li style="display:none">
                                                             <span><i class="icon-minus-sign"></i> {{gradoKey}}</span>
 
                                                             <ul>
                                                                 {% for paraleloKey, dataParalelo in dataGrado %}
-                                                                    <li>
+                                                                    <li style="display:none">
                                                                       <a href="#" onclick="seeStudents('{{dataParalelo.infoUe}}');">
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Lista de Inscritos">
                                                                             <span ><i class="icon-leaf"></i>
@@ -128,16 +130,28 @@
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
-                                                                        {% if estado == true and app.session.get('currentyear') == 2019 %}
-                                                                            {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
-                                                                                
-                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
-                                                                                        <button class="btn btn-circle btn-success btn-stroke " onclick="optionsBth('{{dataParalelo.infoUe}}');">
-                                                                                        <i class="fa fa-group"></i>
-                                                                                        </button>
-                                                                                    </div>
+                                                                        
+                                                                        {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.gestion >= 2019 %}
+                                                                            {% if estado == true and app.session.get('currentyear') == 2019 %}
+                                                                                {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
+                                                                                    {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}                                                                                
+                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
+                                                                                            <button class="btn btn-circle btn-success btn-stroke " onclick="optionsBth('{{dataParalelo.infoUe}}');">
+                                                                                            <i class="fa fa-group"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    {% else %}
+                                                                                        {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId == 5 and dataParalelo.gradoId in app.session.get('gradoTipoBth')  %}
+                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidades">
+                                                                                                <button class="btn btn-circle btn-success btn-stroke " onclick="optionsBth('{{dataParalelo.infoUe}}');">
+                                                                                                <i class="fa fa-group"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        {% endif %}
+                                                                                    {% endif %}    
+                                                                                {% endif %}
+                                                                            {% else %}
                                                                             {% endif %}
-                                                                        {% else %}
                                                                         {% endif %}
 
                                                                     </li>

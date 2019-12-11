@@ -246,9 +246,25 @@ class TrasladoController extends Controller {
       //$em->getConnection()->beginTransaction();
       //get the send values
       $form = $request->get('form');
+      
       $newForm = json_encode($form);
       //dump($newForm);die;
       $arrInfoUeducativaFrom = json_decode($form['infoUeducativaFrom'],true);
+
+      //validtation abuut if the ue close SEXTO
+      if($form['nivelId'] == 13 && $form['gradoId']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$this->session->get('currentyear'))){
+        $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
+        $this->addFlash('estadoTraslado', $message);
+        return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig');
+      }              
+
+      // validation if the ue is over 4 operativo
+      $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));
+      if($operativo >= 4){
+        $message = 'No se puede realizar el traslado debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+        $this->addFlash('estadoTraslado', $message);
+        return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig');
+      }      
 
       //VALIDATE OPERATIVO IN BOTH SIE's
       $operativoUETo   = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));

@@ -696,4 +696,32 @@ class MaestroCuentabancaria
     {
         return $this->apellidoEsposo;
     }
+    /**
+     * @var string
+     */
+    private $expedido;
+
+
+    /**
+     * Set expedido
+     *
+     * @param string $expedido
+     * @return MaestroCuentabancaria
+     */
+    public function setExpedido($expedido)
+    {
+        $this->expedido = $expedido;
+    
+        return $this;
+    }
+
+    /**
+     * Get expedido
+     *
+     * @return string 
+     */
+    public function getExpedido()
+    {
+        return $this->expedido;
+    }
 }
