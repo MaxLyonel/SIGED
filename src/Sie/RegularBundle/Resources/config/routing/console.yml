@@ -1,0 +1,9 @@
+console:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:Console:index" }
+
+console_execute:
+    path:     /ejecutar
+    defaults: { _controller: "SieRegularBundle:Console:ejecutar" }
+    options:
+         expose: true
