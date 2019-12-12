@@ -397,7 +397,7 @@
                 success: function (data) {
                     $("#envio").empty();
                     if (data.estado == 200) {
-                        $("#guardar").attr('disabled', true);
+                        $("#guardar").hide();
                         clearInput();
                         $("#tramite_st").val(1);
                         // $("#tramite_id").val(data.tramite);
