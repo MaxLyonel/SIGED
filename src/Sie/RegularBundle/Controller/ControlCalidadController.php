@@ -787,4 +787,31 @@ class ControlCalidadController extends Controller {
             
         return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
     }
+
+    public function justificarEstudianteSegipAction(Request $request) {
+
+        $gestion = $this->session->get('idGestionCalidad');
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $form = $request->get('formJ');
+        $justificacion= mb_strtoupper($form['justificacion'], 'utf-8');
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+
+        if($vproceso){
+            $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
+            $vproceso->setJustificacion($justificacion);
+            $em->persist($vproceso);
+            $em->flush();
+            $this->ratificar($vproceso);
+            $this->addFlash('success', $mensaje);
+        } else {
+            $mensaje = "No se encontró la inconsistencia.";
+            $this->addFlash('warning', $mensaje);
+        }
+            
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+    }
 }

@@ -1,22 +1,21 @@
 Sie\AppWebBundle\Entity\ValidacionProceso:
     type: entity
     table: validacion_proceso
-    repositoryClass: Sie\AppWebBundle\Entity\ValidacionProcesoRepository
     indexes:
+        idx_regla_alumno:
+            columns:
+                - llave
         idx__validacion_proceso:
             columns:
                 - validacion_regla_tipo_id
                 - llave
                 - gestion_tipo_id
-        idx_regla_alumno:
-            columns:
-                - llave
-        IDX_FB191DA496157FA0:
-            columns:
-                - periodo_tipo_id
         IDX_FB191DA4179FF95:
             columns:
                 - gestion_tipo_id
+        IDX_FB191DA496157FA0:
+            columns:
+                - periodo_tipo_id
         IDX_FB191DA4D62B85B7:
             columns:
                 - validacion_regla_tipo_id
@@ -76,16 +75,13 @@ Sie\AppWebBundle\Entity\ValidacionProceso:
             nullable: true
             unsigned: false
             comment: ''
+        justificacion:
+            type: string
+            nullable: true
+            length: 400
+            fixed: false
+            comment: ''
     manyToOne:
-        periodoTipo:
-            targetEntity: PeriodoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                periodo_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         gestionTipo:
             targetEntity: GestionTipo
             cascade: {  }
@@ -93,6 +89,15 @@ Sie\AppWebBundle\Entity\ValidacionProceso:
             inversedBy: null
             joinColumns:
                 gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: PeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         validacionReglaTipo:
