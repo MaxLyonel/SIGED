@@ -92,33 +92,37 @@ class NoteConsultationUesController extends Controller {
                     $this->addFlash('warningconsultaue', $message);
                     $exist = false;
               }
+
+                            /***********************************\
+              * *
+              * Validacion tipo de Unidad Educativa
+              * send codigo sie *
+              * return type of UE *
+              * *
+              \************************************/
+              $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
               
-              // check if the UE close the RUDE task
-              if(!$infoConsolidation->getRude()){
+              if($objUeVal[0]['tipoUe']!=1){
+                  $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+              }
+              // this for the current year and close this task
+              if($gestion == $this->session->get('currentyear')){
+                // check if the UE close the RUDE task
+                if(!$infoConsolidation->getRude()){
                   $message = 'Unidad Educativa no consolido el operativo RUDE';
-                    $this->addFlash('warningconsultaue', $message);
-                    $exist = false;
-              }
-              // check if the UE close the boletin
-              if(!$infoConsolidation->getBoletin()){
-                  $message = 'Unidad Educativa no consolido el operativo CALIDAD - BOLETIN';
-                    $this->addFlash('warningconsultaue', $message);
-                    $exist = false;
-              }
-                /***********************************\
-                * *
-                * Validacion tipo de Unidad Educativa
-                * send codigo sie *
-                * return type of UE *
-                * *
-                \************************************/
-                $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
-                
-                if($objUeVal[0]['tipoUe']!=1){
-                    $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
-                      $this->addFlash('warningconsultaue', $message);
-                      $exist = false;
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
                 }
+                // check if the UE close the boletin
+                if(!$infoConsolidation->getBoletin()){
+                  $message = 'Unidad Educativa no consolido el operativo CALIDAD - BOLETIN';
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+                }
+
+              }
               
               // added new validation to download the reports files
               // validation UE QA
