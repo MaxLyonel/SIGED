@@ -1,0 +1,34 @@
+Sie\AppWebBundle\Entity\SolicitudTramite:
+    type: entity
+    table: solicitud_tramite
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        datos:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        codigo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }
