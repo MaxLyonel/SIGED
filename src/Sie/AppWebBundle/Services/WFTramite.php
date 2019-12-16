@@ -264,6 +264,7 @@ class WFTramite {
             }
             $this->em->getConnection()->commit();
             $mensaje['dato'] = true;
+            $mensaje['idtramite'] = $tramite->getId();
             return $mensaje;
         } catch (Exception $ex) {
             $this->em->getConnection()->rollback();
