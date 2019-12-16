@@ -556,4 +556,32 @@ class Institucioneducativa
     {
         return $this->convenioTipo;
     }
+    /**
+     * @var string
+     */
+    private $areaMunicipio;
+
+
+    /**
+     * Set areaMunicipio
+     *
+     * @param string $areaMunicipio
+     * @return Institucioneducativa
+     */
+    public function setAreaMunicipio($areaMunicipio)
+    {
+        $this->areaMunicipio = $areaMunicipio;
+    
+        return $this;
+    }
+
+    /**
+     * Get areaMunicipio
+     *
+     * @return string 
+     */
+    public function getAreaMunicipio()
+    {
+        return $this->areaMunicipio;
+    }
 }
