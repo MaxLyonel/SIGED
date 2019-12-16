@@ -115,7 +115,7 @@
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="form-group  col-md-12" id="obs" style="display:none">
+                                            <div class="form-group  col-md-12 obs" style="display:none">
                                                 <div class="col-md-4"><strong>FINALIZAR TRÁMITE:</strong></div>
                                                 <div class="col-md-8">
                                                     {% for b in form.varevaluacion2 %}
@@ -242,7 +242,7 @@
             //alert('entra');
             if ($("#form_varevaluacion1_0").is(':checked')){
                 $('#informe').show();
-                $('#obs').hide();
+                $('.obs').hide();
                 $('.inf').show();
                 $('.jur').show();
                 $('#titulo').text('DATOS DEL INFORME');
@@ -262,7 +262,7 @@
         $('#form_varevaluacion1_1').click(function(){
             if ($("#form_varevaluacion1_1").is(':checked')){
                 $('#informe').show();
-                $('#obs').show();
+                $('.obs').show();
                 $('.inf').hide();
                 $('.jur').hide();
                 $('#titulo').text('DATOS DE LA OBSERVACIÓN');
@@ -283,7 +283,7 @@
             //alert('entra');
             if ($("#form_varevaluacion2_0").is(':checked')){
                 $('.inf').show();
-                $('.jut').hide();
+                $('.jur').hide();
                 $('#form_observacion').attr('required',false);
                 $("#form_informedistrito").attr('required',true);
                 $("#form_fechainformedistrito").attr('required',true);
@@ -297,7 +297,7 @@
         $('#form_varevaluacion2_1').click(function(){
             if ($("#form_varevaluacion2_1").is(':checked')){
                 $('.inf').hide();
-                $('.jut').hide();
+                $('.jur').hide();
                 $('#form_observacion').attr('required',true);
                 $("#form_informedistrito").attr('required',false);
                 $("#form_fechainformedistrito").attr('required',false);

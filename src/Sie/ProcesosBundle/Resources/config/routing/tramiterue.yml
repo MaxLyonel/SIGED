@@ -128,3 +128,11 @@ tramite_rue_busca_requisitos:
 tramite_rue_apertura:
     path:     /apertura
     defaults: { _controller: "SieProcesosBundle:TramiteRue:apertura" }
+
+tramite_rue_apertura_guardar:
+    path:     /apertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:aperturaGuardar" }
+
+tramite_rue_recepcion_distrito_apertura_guardar:
+    path:     /recepcion/distrito/apertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoAperturaGuardar" }

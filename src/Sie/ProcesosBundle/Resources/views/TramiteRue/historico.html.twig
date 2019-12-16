@@ -353,6 +353,16 @@
                                                                         {% elseif t.id == 41 %} {# cambio de infraestructura #}
                                                                             <td>
                                                                                 <div class="row">
+                                                                                    {% if d.datos.jurisdiccion_geografica.lejurisdiccion is defined  %}
+                                                                                        <div class="form-group  col-md-12">
+                                                                                            <div class="col-md-5">  
+                                                                                                <strong>Código Edificio Educativo:</strong>
+                                                                                            </div>
+                                                                                            <div class="col-md-7">
+                                                                                                {{ d.datos.jurisdiccion_geografica.lejurisdiccion }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    {% endif %}
                                                                                     <div class="form-group col-md-12">
                                                                                         <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
                                                                                     </div>
