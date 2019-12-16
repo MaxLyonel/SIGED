@@ -1,0 +1,95 @@
+perm_estudiante_rudeal_index:
+    path:     /
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:index" }
+    options:
+         expose: true
+
+# estudiante_rudeal_departamentos_nac:
+#     path:     /departamentosNac/{pais}
+#     defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:departamentosNac" }
+#     options:
+#          expose: true
+
+# estudiante_rudeal_provincias_nac:
+#     path:     /provinciasNac/{departamento}
+#     defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:provinciasNac" }
+#     options:
+#          expose: true
+
+# TAB 2 -  DATOS ESTUDIANTE
+perm_estudiante_rudeal_save_formEstudiante:
+    path:     /saveFormEstudiante
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:saveFormEstudiante" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_diversa:
+    path:     /diversa
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:diversa" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_cargar_unidades_militares:
+    path:     /cargarUnidadesMilitares
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:cargarUnidadesMilitares" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_cargar_recintos_penitenciarios:
+    path:     /cargarRecintosPenitenciarios
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:cargarRecintosPenitenciarios" }
+    options:
+         expose: true
+
+# TAB 4 -  DIRECCION
+perm_estudiante_rudeal_listarprovincias:
+    path:     /listarprovincias/{dpto}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:listarprovincias" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_listarmunicipios:
+    path:     /listarmunicipios/{prov}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:listarmunicipios" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_listarcantones:
+    path:     /listarcantones/{muni}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:listarcantones" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_listarlocalidades:
+    path:     /listarlocalidades/{cantn}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:listarlocalidades" }
+    options:
+         expose: true
+
+perm_estudiante_rudeal_save_formDireccion:
+    path:     /saveFormDireccion
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:saveFormDireccion" }
+    options:
+         expose: true
+
+
+perm_estudiante_rudeal_save_formDiscapacidad:
+    path:     /saveFormDiscapacidad
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:saveFormDiscapacidad" }
+    options:
+         expose: true
+
+
+# SOCIOECONOMICO
+perm_estudiante_rudeal_save_formSocioeconomicos:
+    path:     /saveFormSocioeconomicos
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:saveFormSocioeconomicos" }
+    options:
+         expose: true
+
+# TAB 7
+perm_estudiante_rudeal_save_formLugar:
+    path:     /saveFormLugar
+    defaults: { _controller: "SiePermanenteBundle:EstudianteRudeal:saveFormLugar" }
+    options:
+         expose: true
