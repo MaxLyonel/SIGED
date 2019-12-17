@@ -367,7 +367,7 @@ class StudentsInscriptionsController extends Controller {
       $dataInscriptionR = array();
       $dataInscriptionA = array();
       $dataInscriptionE = array();
-      $dataInscriptionP = array();
+      $dataInscriptionP = [];
       $arrGenero = array();
       $arrPais = array();
       $arrStudent = array();
@@ -387,8 +387,9 @@ class StudentsInscriptionsController extends Controller {
           'paterno'     =>$objStudent->getPaterno(),
           'materno'     =>$objStudent->getMaterno(),
           'nombres'     =>$objStudent->getNombre(),
-          // 'fecNac'      =>$objStudent->getCodigoRude(),
+          'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
           'carnet'      =>$objStudent->getCarnetIdentidad(),
+          'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
           'complemento' =>$objStudent->getComplemento(),
           'rude'     =>$objStudent->getCodigoRude(),
         );
@@ -408,10 +409,20 @@ class StudentsInscriptionsController extends Controller {
                     $dataInscriptionE[$key] = $inscription;
                     break;
                 case '5':
-                    $dataInscriptionP[$key] = $inscription;
+                    $dataInscriptionP[] = array(
+                      'gestion'=> $inscription['gestion_tipo_id_raep'],
+                      'institucioneducativa'=> $inscription['institucioneducativa_raep'],
+                      'partp'=> $inscription['parte_p'],
+                      'bloquep'=> $inscription['bloque_p'],
+                      'fini'=> $inscription['fech_ini_p'],
+                      'ffin'=> $inscription['fech_fin_p'],
+                      'curso'=> $inscription['institucioneducativa_curso_id_raep'],
+                      'matricula'=> $inscription['estadomatricula_p'],
+                    );
                     break;
             }
         }
+        
       }else{
         // look into the PERSON table
         // set arrayCondition2
@@ -434,6 +445,19 @@ class StudentsInscriptionsController extends Controller {
           );
         }
       }
+      // this is to the new person
+      // get genero data
+      $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
+      foreach ($objGenero as $value) {
+          if($value->getId()<3){
+              $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());                
+          }
+      }
+      //get pais data
+      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+      foreach ($objPais as $value) {
+        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
+      }
 
       if(!$swperson  && !$swstudent){
         //set struct data person
@@ -443,24 +467,8 @@ class StudentsInscriptionsController extends Controller {
           'lugarProvNacTipoId'=>'',
           'localidad'=>'',
         );
-        // get genero data
-        $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
-        foreach ($objGenero as $value) {
-            if($value->getId()<3){
-                $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());                
-            }
-        }
-        //get pais data
-        $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
-        foreach ($objPais as $value) {
-          $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
-        }
-
         $swnewperson = true;
       }
-
-
-
 
       $arrResponse = array(
             'status'           => 200,
@@ -477,14 +485,10 @@ class StudentsInscriptionsController extends Controller {
             'arrNewStudent' => $arrNewStudent,
       );
       // dump($arrResponse);die;
-
-
-
-
       $response->setStatusCode(200);
       $response->setData($arrResponse);
        
-        return $response;    
+      return $response;    
       
     }
 
