@@ -184,11 +184,13 @@
                                                             <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
+                                                            {% if d.datos.institucioneducativa.area_municipio == 'U' %}
                                                                 URBANO
-                                                            {% else %}
+                                                            {% elseif d.datos.institucioneducativa.area_municipio == 'R'  %}
                                                                 RURAL
-                                                            {% endif %} #}
+                                                            {% else %}
+                                                                NO DEFINIDO
+                                                            {% endif %}
                                                         </div>
                                                     </div>
                                                 </div>

@@ -179,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validar();'}}) }}
+                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validacion();'}}) }}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-primary">
@@ -248,17 +248,19 @@
                                                         <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {% for a in form.area %}
+                                                        {# {% for a in form.area %}
                                                             <div class="col-md-6 rdio rdio-primary circle">
                                                                 {{ form_widget(a) }}
                                                                 {{ form_label(a) }}
                                                             </div>
-                                                        {% endfor %}
-                                                        {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
+                                                        {% endfor %} #}
+                                                        {% if institucioneducativa.areaMunicipio == 'U' %}
                                                             URBANO
-                                                        {% else %}
+                                                        {% elseif institucioneducativa.areaMunicipio == 'R'  %}
                                                             RURAL
-                                                        {% endif %} #}
+                                                        {% else %}
+                                                            NO DEFINIDO
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -438,6 +440,7 @@
             });
             $('#form_tr').empty(); 
         });
+
         function siefusion(sie){
             var formData = {idsiefusion: sie,iddistrito:'{{institucioneducativa.leJuridicciongeografica.lugarTipoIdDistrito}}'};
             if(sie.length >= 8){
@@ -467,6 +470,7 @@
                 $('#fusion').hide();
             }
         }
+
         function siecomparte(sie){
             var formData = {sie: sie};
             if(sie.length >= 8){
@@ -655,6 +659,7 @@
             }
 
         }
+
         function provincia(d,censo) {
             $("#form_lejurisdiccion").val('');
             $.ajax({
@@ -795,6 +800,7 @@
                 }
             });
         }
+
         function canton(m,censo) {
             $.ajax({
                 type: 'get',
@@ -965,28 +971,34 @@
                 }
             });
         }
+
         function validarnombredistrito(nombre){
+            var ie = ('{{institucioneducativa.institucioneducativa}}').trim();
+            nombre = nombre.trim();
             if ( nombre != '') {
-                return false;
+                if(nombre.toUpperCase() == ie.toUpperCase()){
+                    alert('No puede ingresar el mismo nombre para la unidda educativa.');
+                    $('#form_nuevo_nombre').val('');
+                    return false;
+                }
+                var formData = {sie:'{{institucioneducativa.id}}',nuevo_nombre: nombre,iddistrito:'{{institucioneducativa.leJuridicciongeografica.distritoTipo.id}}'};
+                $.ajax({
+                    type: 'POST',
+                    url: "{{path('tramite_rue_validarnombredistrito')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#msg').empty();
+                    },
+                    success: function (data) {
+                        //console.log(data);
+                        if(data.id){
+                            $("#msg").append('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                            $('#form_nuevo_nombre').val('');
+                        }
+                    },
+                });                
             }
-            var formData = {nombre: nombre};
-            $.ajax({
-                type: 'POST',
-                url: "{{path('tramite_rue_validarnombredistrito')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#msg').empty();
-                },
-                success: function (data) {
-                    //console.log(data);
-                    if(data.msg){
-                        $("#msg").append('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
-                        $('#form_nuevo_nombre').val('');
-                    }
-                },
-            });
-        }
-        
+        }        
 
         function requisitos(id){
             //alert(id);
@@ -1128,13 +1140,16 @@
                             alert('Debe adjuntar la copia notariada del contrato de arrendamiento.');
                             return false;
                         }else if($('#form_i_convenio_dependencia').val()==''){
-                            alert('Debe adjuntar convenio vigente de prestación de servicios.');
+                            alert('Debe adjuntar el Convenio vigente de prestación de servicios.');
+                            return false;
+                        }else if($('.area_dependencia').is(':checked') == false){
+                            alert('Seleccione el área geográfica establecida por el municipio.');
                             return false;
                         }else if($('#form_i_certificacion_gam').val()==''){
-                            alert('Debe adjuntar Certificación emitida por el Gobierno Autónomo Municipal Correspondiente.');
+                            alert('Debe adjuntar la Certificación emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa es del área rural o urbana.');
                             return false;
                         }else if($('#form_i_certificacionde_convenio').val()==''){
-                            alert('Debe adjuntar Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios.');
+                            alert('Debe adjuntar la Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios.');
                             return false;
                         }else if($('#form_i_acta_constitucion').is(':checked') == false){
                             alert('Seleccione la presentación del Copia Notariada del Acta de Constitución y estatutos de la Institución prestadora de servicios.');
@@ -1237,7 +1252,7 @@
                         alert('Debe adjuntar el Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuyo cambio de jurisdicción administrativa es del área rural o urbana.');
                         return false;
                     }else if($('.area_jur').is(':checked') == false){
-                        alert('Seleccione el área geográfica.');
+                        alert('Seleccione el área geográfica establecida por el municipio.');
                         return false;
                     }
                     if(dependenciaId == 2){
@@ -1271,6 +1286,9 @@
                 case 41: //cambio de infraestructura
                     if($('#form_i_solicitud_infra').val()==''){
                         alert('Debe adjuntar la Solicitud de Cambio de Infraestructura.');
+                        return false;
+                    }else if($('.area_infra').is(':checked') == false){
+                        alert('Seleccione el área geográfica establecida por el municipio.');
                         return false;
                     }else if($('#form_i_certificacion_infra').val()==''){
                         alert('Debe adjuntar la Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana.');
@@ -1560,7 +1578,7 @@
             }
         }
 
-        function validar(){
+        function validacion(){
             //alert($('#tabla tr').length);
             var filas = $('#tabla tr').length - 1;
             if (filas == 0){
@@ -1625,6 +1643,11 @@
                     alert('Debe validar los requisitos de el/los trámite/s: '+arr,toString());
                     return false;
                 }
+            }
+
+            if($('.btn-lilac').length > 0){
+                alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
+                return false;
             }else{
                 return true;
             }

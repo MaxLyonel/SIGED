@@ -321,6 +321,18 @@
             $("#form_varevaluacion2_1").prop('checked',false);
         }
 
-       
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+        });
+
+        function validacion(){
+            if($('.btn-lilac').length > 0){
+                alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
+                return false;
+            }else{
+                return true;
+            }
+        }
     </script>   
     {% endblock %}

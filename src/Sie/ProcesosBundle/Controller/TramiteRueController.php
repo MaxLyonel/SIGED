@@ -74,11 +74,19 @@ class TramiteRueController extends Controller
             $flujotipo = $tramite->getFlujoTipo()->getId();
             $tarea = $tramiteDetalle->getFlujoProceso();
         }else{
-            $tramite = null;
-            $tareasDatos =null;
-            $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo'=>$id,'orden'=>1));
-            $flujotipo = $flujoproceso->getFlujoTipo()->getId();
-            $tarea = $flujoproceso;    
+            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$idrue,'flujoTipo'=>$id,'fechaFin'=>null,'gestionId'=>$this->session->get('currentyear')));
+            if($tramite){
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', 'La Unidad Educativa ya cuenta con una SOLICITUD DE MODIFICACIÓN RUE en la gestión actual con el <strong>Nro.: '.$tramite->getId().'</strong></br>Para iniciar un nuevo trámite primero debe finalizar el actual.');
+                return $this->redirectToRoute('wf_tramite_index');
+            }else{
+                $tramite = null;
+                $tareasDatos =null;
+                $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo'=>$id,'orden'=>1));
+                $flujotipo = $flujoproceso->getFlujoTipo()->getId();
+                $tarea = $flujoproceso;    
+            }         
         }
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($idrue);
         $lugar_tipo2012 = $em->getRepository('SieAppWebBundle:LugarTipo')->find($institucioneducativa->getLeJuridicciongeografica()->getLugarTipoIdLocalidad2012());
@@ -116,7 +124,7 @@ class TramiteRueController extends Controller
             ->add('tramite', 'hidden', array('data' =>$tramite?$tramite->getId():$tramite ))
             ->add('idrue', 'hidden', array('data' =>$idrue ))
             ->add('tramitetipo', 'hidden', array('data' =>33 ))
-            ->add('area', 'choice', array('label' => 'ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:','required'=>true,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'Urbano','R'=>'Rural')))
+            //->add('area', 'choice', array('label' => 'ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:','required'=>true,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'Urbano','R'=>'Rural')))
             ->add('tramites','entity',array('label'=>'Tipo de Trámite:','required'=>true,'multiple' => false,'expanded' => false,'attr'=>array('class'=>'form-control','data-placeholder'=>"Seleccionar tipo de trámite"),'class'=>'SieAppWebBundle:TramiteTipo',
                 'query_builder'=>function(EntityRepository $tr){
                 return $tr->createQueryBuilder('tr')
@@ -230,9 +238,10 @@ class TramiteRueController extends Controller
                 break;
             case 38://cambio de jurisdiccion administrativa
                 $this->iddep = $ie->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo();
+                $this->iddis = $ie->getLeJuridicciongeografica()->getDistritoTipo()->getId();
                 $form = $form
                     ->add('nuevo_distrito','entity',array('label'=>'Nuevo Distrito:','required'=>true,'multiple' => false,'attr' => array('class' => 'form-control'),'empty_value'=>'Seleccione nuevo distrito','class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $dt){
-                        return $dt->createQueryBuilder('dt')->where('dt.departamentoTipo = :id')->setParameter('id',$this->iddep)->orderBy('dt.distrito','ASC');},'property'=>'distrito'))
+                        return $dt->createQueryBuilder('dt')->where('dt.departamentoTipo = :id')->andwhere('dt.id <> :iddis')->setParameter('id',$this->iddep)->setParameter('iddis',$this->iddis)->orderBy('dt.distrito','ASC');},'property'=>'distrito'))
                     ->getForm();
                 $data = array(
                     'form' => $form->createView(),
@@ -394,7 +403,8 @@ class TramiteRueController extends Controller
                         ->add('i_esalquiler_dependencia', 'choice', array('label' => 'Infraestructura arrendada:','required'=>false,'empty_value'=>false,'multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
                         ->add('i_contrato_dependencia', 'file', array('label' => 'Adjuntar Copia notariada de contrato de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_dependencia', 'file', array('label' => 'Adjuntar convenio vigente de prestación de servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
-                        ->add('i_certificacion_gam', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal Correspondiente (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
+                        ->add('i_area_dependencia', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
+                        ->add('i_certificacion_gam', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_certificacionde_convenio', 'file', array('label' => 'Adjuntar Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_administracion', 'checkbox', array('label' => 'Convenio de administración de infraestructura firmado entre el Gobierno Autónomo Municipal correspondiente y la Institución prestadora del servicio (si corresponde):','required'  => false))
                         ->add('i_acta_constitucion', 'checkbox', array('label' => 'Copia Notariada del Acta de Constitución y estatutos de la Institución prestadora de servicios:','required'  => false))
@@ -464,7 +474,7 @@ class TramiteRueController extends Controller
                 $form = $form
                     ->add('i_resolucion_jur', 'file', array('label' => 'Adjuntar Resolucion Administrativa de Autorización de apertura y funcionamiento emitida por la DDE (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar resolución",'accept'=>"application/pdf,.img,.jpg")))
                     ->add('i_certificacion_jur', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuyo cambio de jurisdicción administrativa es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")))
-                    ->add('i_area_jur', 'choice', array('label' => 'Área geográfica:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
+                    ->add('i_area_jur', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
                     ->add('i_certificadorue_jur', 'checkbox', array('label' => 'Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).','required'  => false))
                     ->add('ii_planos_jur', 'checkbox', array('label' => '2.1 Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal para infraestructura','required'  => false))
                     ->add('ii_inventario_jur', 'checkbox', array('label' => 'Inventario del mobiliario y equipamento de la unidad educativa de acuerdo a norma.','required'  => false))
@@ -490,6 +500,7 @@ class TramiteRueController extends Controller
                 $requisitos = array('legal'=>true,'infra'=>true,'admi'=>false);
                 $form = $form
                     ->add('i_solicitud_infra', 'file', array('label' => 'Adjuntar Solicitud de Cambio de Infraestructura (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
+                    ->add('i_area_infra', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
                     ->add('i_certificacion_infra', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
                 if($ie->getDependenciaTipo()->getId() == 2){
                     $form = $form
@@ -801,7 +812,7 @@ class TramiteRueController extends Controller
         /**
          * datos propios de la solicitud del formulario rue
          */
-        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1
+        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1
                 FROM institucioneducativa ie
                 join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
                 join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
@@ -848,7 +859,7 @@ class TramiteRueController extends Controller
             ->getResult();
           
         $datos['tramites'] = $tramites;
-        $datos['area'] = $form['area'];
+        //$datos['area'] = $form['area'];
         $datos['justificacion'] = trim(mb_strtoupper($form['observacion'], 'utf-8'));
         foreach ($tramites as $tramite){
             switch($tramite['id']){
@@ -906,6 +917,7 @@ class TramiteRueController extends Controller
                             $datos[$tramite['tramite_tipo']]['i_contrato_dependencia']=$this->upload($files['i_contrato_dependencia'],$form['idrue']);
                         }
                         $datos[$tramite['tramite_tipo']]['i_convenio_dependencia']=$this->upload($files['i_convenio_dependencia'],$form['idrue']);
+                        $datos[$tramite['tramite_tipo']]['i_area_dependencia']=$form['i_area_dependencia'];
                         $datos[$tramite['tramite_tipo']]['i_certificacion_gam']=$this->upload($files['i_certificacion_gam'],$form['idrue']);
                         $datos[$tramite['tramite_tipo']]['i_certificacionde_convenio']=$this->upload($files['i_certificacionde_convenio'],$form['idrue']);
                         $datos[$tramite['tramite_tipo']]['i_convenio_administracion']=isset($form['i_convenio_administracion'])?$form['i_convenio_administracion']:0;
@@ -1002,6 +1014,7 @@ class TramiteRueController extends Controller
                         $datos[$tramite['tramite_tipo']]['idcomunidad2012']=$form['comunidad2012'];
                         $datos[$tramite['tramite_tipo']]['comunidad2012']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['comunidad2012'])->getLugar();
                         $datos[$tramite['tramite_tipo']]['i_solicitud_infra']=$this->upload($files['i_solicitud_infra'],$form['idrue']);
+                        $datos[$tramite['tramite_tipo']]['i_area_infra']=$form['i_area_infra'];
                         $datos[$tramite['tramite_tipo']]['i_certificacion_infra']=$this->upload($files['i_certificacion_infra'],$form['idrue']);
                         if($ie->getDependenciaTipo()->getId() == 2){
                             $datos[$tramite['tramite_tipo']]['i_certificacionconvenio_infra']=$this->upload($files['i_certificacionconvenio_infra'],$form['idrue']);    
@@ -1176,7 +1189,7 @@ class TramiteRueController extends Controller
         //dump($datos);die;
         $datos = json_encode($datos);
 
-        if (!isset($form['tramite'])){
+        if ($form['tramite']==''){
             $mensaje = $this->get('wftramite')->guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,'','',$datos,$ie_lugarlocalidad,$ie_lugardistrito);
             if($mensaje['dato']==true){
                 $request->getSession()
@@ -1813,7 +1826,10 @@ class TramiteRueController extends Controller
                                     if($tareasDatos[0]['datos'][$t['tramite_tipo']]['dependencia']['id'] == 2){ //convenio
                                         $convenio = $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['conveniotipo']['id']);
                                         $institucioneducativa->setConvenioTipo($convenio);
+                                        $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['area_dependencia']);
                                         $vNuevo['conveniotipo'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['conveniotipo'];
+                                        $vAnterior['area_municipio'] = $tareasDatos[0]['datos']['institucioneducativa']['area_municipio'];
+                                        $vNuevo['area_municipio'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['area_dependencia'];
                                     }else{ //fiscal
                                         $vAnterior['conveniotipo']['id'] = $tareasDatos[0]['datos']['institucioneducativa']['convenio_tipo_id'];
                                         $vAnterior['conveniotipo']['convenio'] = $tareasDatos[0]['datos']['institucioneducativa']['convenio'];
@@ -2402,6 +2418,42 @@ class TramiteRueController extends Controller
             $response->setData($ie);
         }else{
             $response->setData(array('msg'=>'El código SIE es incorrecto.'));
+        }
+
+        return $response;
+    }
+
+    public function validarNombreDistritoAction(Request $request)
+    {
+        //dump($request);die;
+        
+        $idlugarusuario = $this->session->get('roluserlugarid');
+        //dump($idlugarusuario);die;
+        $sie=$request->get('sie');
+        $nuevo_nombre=$request->get('nuevo_nombre');
+        $iddistrito=$request->get('iddistrito');
+        $em = $this->getDoctrine()->getManager();
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
+            ->select('ie.id,ie.institucioneducativa,dt.distrito')
+            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'le', 'with', 'le.id = ie.leJuridicciongeografica')
+            ->innerJoin('SieAppWebBundle:DistritoTipo', 'dt', 'with', 'dt.id = le.distritoTipo')
+            ->where("ie.institucioneducativa='".$nuevo_nombre."'")
+            ->andWhere("le.distritoTipo=".$iddistrito)
+            ->andWhere("ie.estadoinstitucionTipo=10")
+            ->andWhere("ie.institucioneducativaAcreditacionTipo=1")
+            ->getQuery()
+            ->getResult();
+        //dump($institucioneducativa);die;
+        $response = new JsonResponse();
+        if($institucioneducativa){
+            $ie = array('id'=>$institucioneducativa[0]['id'],
+                        'institucioneducativa'=>$institucioneducativa[0]['institucioneducativa'],
+                        'distrito'=>$institucioneducativa[0]['distrito'],
+                        'msg'=>'El nuevo nombre de la Unidad Educativa: <strong>'. $institucioneducativa[0]['institucioneducativa'] .'</strong> ya se encuentra registrada con el <strong>Código RUE: '. $institucioneducativa[0]['id'] .'</strong> en el mismo Distrito Educativo: <strong>'. $institucioneducativa[0]['distrito'] .'</strong>.</br>Por lo que debe elegir otro nombre.');
+            //dump($ie);die;
+            $response->setData($ie);
+        }else{
+            $response->setData(array('msg'=>'ok'));
         }
 
         return $response;

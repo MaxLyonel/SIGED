@@ -114,8 +114,8 @@ tramite_rue_buscar_ruecomparte:
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
 
 tramite_rue_validarnombredistrito:
-    path:     /buscarrue/comparte
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
+    path:     /validar/nombre/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:validarNombreDistrito" }
 
 tramite_rue_busca_tarea:
     path:     /buscatarea

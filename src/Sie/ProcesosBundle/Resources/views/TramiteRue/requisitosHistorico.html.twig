@@ -345,7 +345,15 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <div class="col-md-8">
-                                                                    Certificación emitida por el Gobierno Autónomo Municipal Correspondiente:
+                                                                    Área geográfica establecida por el municipio:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[t.tramite_tipo].i_area_dependencia}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Certificación emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa es del área rural o urbana:
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_certificacion_gam )}}" target="_blank" data-placement="top" title="Ver informe">
@@ -716,7 +724,7 @@
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <div class="col-md-8">
-                                                                Área geográfica:
+                                                                Área geográfica establecida por el municipio:
                                                             </div>
                                                             <div class="col-md-4">
                                                                 {{datos[t.tramite_tipo].i_area_jur}}
@@ -839,6 +847,14 @@
                                                                 <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~ datos[t.tramite_tipo].i_solicitud_infra )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-8">
+                                                                Área geográfica establecida por el municipio:
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                {{datos[t.tramite_tipo].i_area_infra}}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12">

@@ -252,6 +252,19 @@
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <div class="col-md-6">
+                                                            {{ form_label(form.i_area_dependencia) }}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {% for a in form.i_area_dependencia %}
+                                                                <div class="col-md-3 rdio rdio-primary circle">
+                                                                    {{ form_widget(a,{'attr':{'class':'area_dependencia req36'}}) }}
+                                                                    {{ form_label(a) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-6">
                                                             {{ form_label(form.i_certificacion_gam) }}
                                                         </div>
                                                         <div class="col-md-6">
@@ -561,6 +574,19 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         {{ form_widget(form.i_solicitud_infra,{'attr':{'class':'req41'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_area_infra) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {% for a in form.i_area_infra %}
+                                                            <div class="col-md-3 rdio rdio-primary circle">
+                                                                {{ form_widget(a,{'attr':{'class':'area_infra req41'}}) }}
+                                                                {{ form_label(a) }}
+                                                            </div>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">

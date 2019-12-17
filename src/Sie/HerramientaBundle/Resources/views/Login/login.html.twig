@@ -139,8 +139,6 @@
 
             <!-- Login form -->
 
-
-
             <div class="sign-header">
                 <div class="form-group">
                     <div class="sign-text">
@@ -153,44 +151,41 @@
                 </div><!-- /.form-group -->
             </div><!-- /.sign-header -->
             <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post">
-              <div class="sign-body">
-                {% if error %}
-                    <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
-                {% endif %}
-                  <div class="form-group">
-                      <div class="input-group input-group-lg rounded no-overflow">
+                <div class="sign-body">
+                    {% if error %}
+                        <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
+                    {% endif %}
+                    <div class="form-group">
+                        <div class="input-group input-group-lg rounded no-overflow">
                         <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
-                          <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                      </div>
-                  </div><!-- /.form-group -->
-                  <div class="form-group">
-                      <div class="input-group input-group-lg rounded no-overflow">
-                           <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
-                          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                      </div>
-                  </div><!-- /.form-group -->
-
-
-                  <div style="padding:10px; background: #ffffff">
-                      <div class="checkbox" style="margin-left: 15px">
-                          <label style="color:#3174C1">
-                              <input type="checkbox" required="required"> Validar los datos
-                          </label>
-                      </div>
-                  </div>
-              </div><!-- /.sign-body -->
-
-              <div class="sign-footer">
-                <div class="form-group">
-                    <br>
-                    <button class="btn btn-block btn-lg btn-floating-action btn-primary ink-reaction" type="submit"><i class="fa fa-unlock"></i></button>
-                </div><!-- /.form-group -->
-                </form>
-                <div class="form-group">
-                    <a href="{{path('tramite_rue_apertura',{'id':54,'desglose':0})}}" style="color:#3174C1"><i class="fa fa-list"></i> Apertura/Reapertura RUE</a>
-                </div>      
-              </div><!-- /.sign-footer -->
-          {# <div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_apertura"></div> #}
+                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        </div>
+                    </div><!-- /.form-group -->
+                    <div class="form-group">
+                        <div class="input-group input-group-lg rounded no-overflow">
+                            <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
+                            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        </div>
+                    </div><!-- /.form-group -->
+                    <div style="padding:10px; background: #ffffff">
+                        <div class="checkbox" style="margin-left: 15px">
+                            <label style="color:#3174C1">
+                                <input type="checkbox" required="required"> Validar los datos
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.sign-body -->
+                <div class="sign-footer">
+                    <div class="form-group">
+                        <br>
+                        <button class="btn btn-block btn-lg btn-floating-action btn-primary ink-reaction" type="submit"><i class="fa fa-unlock"></i></button>
+                    </div><!-- /.form-group -->
+                </div><!-- /.sign-footer -->
+            </form>
+            <div class="form-group" style="background:white">
+                <a href="{{path('tramite_rue_apertura',{'id':54,'desglose':0})}}" style="color:#3174C1"><i class="fa fa-list"></i> Apertura/Reapertura RUE</a>
+            </div>      
+                
             <!-- /.form-horizontal -->
             <!--/ Login form -->
 
