@@ -394,34 +394,38 @@ class StudentsInscriptionsController extends Controller {
           'rude'     =>$objStudent->getCodigoRude(),
         );
         // get all cardex info
-        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $objStudent->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
-        $query->execute();
-        $dataInscription = $query->fetchAll();
-        foreach ($dataInscription as $key => $inscription) {
-            switch ($inscription['institucioneducativa_tipo_id_raep']) {
-                case '1':
-                    $dataInscriptionR[$key] = $inscription;
-                    break;
-                case '2':
-                    $dataInscriptionA[$key] = $inscription;
-                    break;
-                case '4':
-                    $dataInscriptionE[$key] = $inscription;
-                    break;
-                case '5':
-                    $dataInscriptionP[] = array(
-                      'gestion'=> $inscription['gestion_tipo_id_raep'],
-                      'institucioneducativa'=> $inscription['institucioneducativa_raep'],
-                      'partp'=> ($inscription['parte_p']==1 ||$inscription['parte_p']==2)?'Antiguo':'Actual',
-                      'bloquep'=> $inscription['bloque_p'],
-                      'fini'=> $inscription['fech_ini_p'],
-                      'ffin'=> $inscription['fech_fin_p'],
-                      'curso'=> $inscription['institucioneducativa_curso_id_raep'],
-                      'matricula'=> $inscription['estadomatricula_p'],
-                    );
-                    break;
-            }
-        }
+        // $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $objStudent->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+        // $query->execute();
+        // $dataInscription = $query->fetchAll();
+        // foreach ($dataInscription as $key => $inscription) {
+        //     switch ($inscription['institucioneducativa_tipo_id_raep']) {
+        //         case '1':
+        //             $dataInscriptionR[$key] = $inscription;
+        //             break;
+        //         case '2':
+        //             $dataInscriptionA[$key] = $inscription;
+        //             break;
+        //         case '4':
+        //             $dataInscriptionE[$key] = $inscription;
+        //             break;
+        //         case '5':
+        //         if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
+        //         if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
+        //         if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';
+        //         if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 17)$bloquep = 'Sexto';
+        //             $dataInscriptionP[] = array(
+        //               'gestion'=> $inscription['gestion_tipo_id_raep'],
+        //               'institucioneducativa'=> $inscription['institucioneducativa_raep'],
+        //               'partp'=> ($inscription['parte_p']==1 ||$inscription['parte_p']==2)?'Antiguo':'Actual',
+        //               'bloquep'=> $bloquep,
+        //               'fini'=> $inscription['fech_ini_p'],
+        //               'ffin'=> $inscription['fech_fin_p'],
+        //               'curso'=> $inscription['institucioneducativa_curso_id_raep'],
+        //               'matricula'=> $inscription['estadomatricula_p'],
+        //             );
+        //             break;
+        //     }
+        // }
       }else{
         // look into the PERSON table
         // set arrayCondition2
@@ -438,9 +442,11 @@ class StudentsInscriptionsController extends Controller {
             'paterno'     =>$objStudent->getPaterno(),
             'materno'     =>$objStudent->getMaterno(),
             'nombres'     =>$objStudent->getNombre(),
-            // 'fecNac'      =>$objStudent->getCodigoRude(),
+            'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
             'carnet'      =>$objStudent->getCarnet(),
             'complemento' =>$objStudent->getComplemento(),
+            'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
+
           );
         }
       }
