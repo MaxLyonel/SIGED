@@ -110,20 +110,22 @@ class WFTramite {
             if ($flujoproceso->getEsEvaluacion() == true) 
             {
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
-                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
-                $tarea_sig_id = $wfcondiciontarea[0]->getCondicionTareaSiguiente();
+                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findOneBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
+                $tarea_sig_id = $wfcondiciontarea->getCondicionTareaSiguiente();
             }else{
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
             }
-            $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-            
-            if($uDestinatario == false){
-                $this->em->getConnection()->rollback();
-                $mensaje['dato'] = false;
-                $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
-                return $mensaje;
-            }else{
-                $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
+
+            if($tarea_sig_id != null){
+                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                if($uDestinatario == false){
+                    $this->em->getConnection()->rollback();
+                    $mensaje['dato'] = false;
+                    $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                    return $mensaje;
+                }else{
+                    $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
+                }
             }
             $this->em->flush();
             /**
@@ -135,11 +137,14 @@ class WFTramite {
             $mensaje['dato'] = true;
             $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se guardó correctamente';
             $mensaje['idtramite'] = $tramite->getId();
+            $mensaje['iddatos'] = $wfSolicitudTramite->getId();
+            $mensaje['tipo'] = 'exito';
             return $mensaje;
         } catch (Exception $ex) {
             $this->em->getConnection()->rollback();
             $mensaje['dato'] = false;
             $mensaje['msg'] = '¡Ocurrio un error al guardar el trámite.!';
+            $mensaje['tipo'] = 'error';
             return $mensaje;    
         }
     }
@@ -169,40 +174,21 @@ class WFTramite {
             {
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
                 //dump($tramiteDetalle);die;
-                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
+                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findOneBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
                 //dump($wfcondiciontarea);die;
-                if ($wfcondiciontarea[0]->getCondicionTareaSiguiente() != null){
-                    $tarea_sig_id = $wfcondiciontarea[0]->getCondicionTareaSiguiente();
-                    $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-                    //dump($uDestinatario);die;
-                    if($uDestinatario == false){
-                        //dump($uDestinatario);die;
-                        $this->em->getConnection()->rollback();
-                        $mensaje['dato'] = false;
-                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
-                        return $mensaje;
-                    }else{
-                        $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-                    }
-                    
-                }else{
-                    // si despues de la evaluacion termina el tramite
-                    $tarea_sig_id = null;
-                }
+                $tarea_sig_id = $wfcondiciontarea->getCondicionTareaSiguiente();
             }else{
-                if ($flujoproceso->getTareaSigId() != null){
-                    $tarea_sig_id = $flujoproceso->getTareaSigId();
-                    $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-                    if($uDestinatario == false){
-                        $this->em->getConnection()->rollback();
-                        $mensaje['dato'] = false;
-                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
-                        return $mensaje;
-                    }else{
-                        $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-                    }
+                $tarea_sig_id = $flujoproceso->getTareaSigId();
+            }
+            if($tarea_sig_id != null){
+                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                if($uDestinatario == false){
+                    $this->em->getConnection()->rollback();
+                    $mensaje['dato'] = false;
+                    $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                    return $mensaje;
                 }else{
-                    $tarea_sig_id = null;
+                    $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                 }
             }
             /**
@@ -265,11 +251,13 @@ class WFTramite {
             $this->em->getConnection()->commit();
             $mensaje['dato'] = true;
             $mensaje['idtramite'] = $tramite->getId();
+            $mensaje['tipo'] = 'exito';
             return $mensaje;
         } catch (Exception $ex) {
             $this->em->getConnection()->rollback();
             $mensaje['dato'] = false;
             $mensaje['msg'] = '¡Ocurrio un error al enviar el trámite.!';
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
     }

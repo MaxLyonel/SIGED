@@ -57,7 +57,9 @@
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">
                                                 <div class="panel-body">
-                                                    {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
+                                                    {% if tramite.institucioneducativa %}
+                                                        {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
@@ -219,7 +221,9 @@
             </div>  
         </div>
     </div>
-    {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
+    {% if tramite.institucioneducativa %}
+        {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
+    {% endif %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }} 

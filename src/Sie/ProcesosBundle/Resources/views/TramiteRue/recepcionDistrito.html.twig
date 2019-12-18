@@ -324,8 +324,9 @@
         $('.btn-lilac').click(function(){
             $(this).removeClass("btn-lilac");
             $(this).addClass("btn-teal");
+            
         });
-
+        
         function validacion(){
             if($('.btn-lilac').length > 0){
                 alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
@@ -334,5 +335,6 @@
                 return true;
             }
         }
+        
     </script>   
     {% endblock %}
