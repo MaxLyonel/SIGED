@@ -115,7 +115,11 @@
                                 </tfoot>
                                 <tbody>
                                     {% for participante in listaParticipante %}
-                                        <tr {% if participante.segip_id > 1 or participante.segip_id == 0 %}class="text-danger"{% endif %}>
+                                        {% set participanteObservado = false %}
+                                        {% if participante.segip_id > 1 or participante.segip_id == 0 %}
+                                          {% set participanteObservado = true %}
+                                        {% endif %}
+                                        <tr {% if participanteObservado %}class="text-danger"{% endif %}>
                                             <td style="text-align:center;">
                                                 {% if participante.segip_id > 1 or participante.segip_id == 0 %}
                                                     <buttom onclick="participanteHistorial('{{ participante.estudiante_inscripcion_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-danger btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
@@ -206,7 +210,7 @@
                                                 {% endif %}
 
                                                 {% if registro %}
-                                                    {% if participante.segip_id > 1 or participante.segip_id == 0 %}
+                                                    {% if participanteObservado %}
                                                         <div class="btn-group">
                                                             <buttom type="buttom" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                                 Datos no validados <span class="caret"></span>
