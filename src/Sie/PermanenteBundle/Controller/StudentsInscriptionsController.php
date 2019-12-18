@@ -346,7 +346,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function inscriptionbyCiAction(Request $request){
-      // ini var
+      // ini var to the function
       $em = $this->getDoctrine()->getManager();
       $response = new JsonResponse();
       // get the send values
@@ -412,7 +412,7 @@ class StudentsInscriptionsController extends Controller {
                     $dataInscriptionP[] = array(
                       'gestion'=> $inscription['gestion_tipo_id_raep'],
                       'institucioneducativa'=> $inscription['institucioneducativa_raep'],
-                      'partp'=> $inscription['parte_p'],
+                      'partp'=> ($inscription['parte_p']==1 ||$inscription['parte_p']==2)?'Antiguo':'Actual',
                       'bloquep'=> $inscription['bloque_p'],
                       'fini'=> $inscription['fech_ini_p'],
                       'ffin'=> $inscription['fech_fin_p'],
@@ -422,7 +422,6 @@ class StudentsInscriptionsController extends Controller {
                     break;
             }
         }
-        
       }else{
         // look into the PERSON table
         // set arrayCondition2
