@@ -83,10 +83,9 @@ class NoteConsultationUesController extends Controller {
           if($infoConsolidation){
                 // check if the ue close the operativo
               $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
-              if( in_array($this->session->get('roluser'), array(7,8,10)) ){
-                  $operativo = $operativo - 1;
-              }
-
+              // if(in_array($this->session->get('roluser'), array(7,8,10)) ){
+              //     $operativo = $operativo - 1;
+              // }
               if($operativo <= 3){
                   $message = 'Unidad Educativa no cerro el operativo 4to bimestre';
                     $this->addFlash('warningconsultaue', $message);
