@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.tramiteTipo.tramiteTipo}}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -326,7 +326,7 @@
             $(this).addClass("btn-teal");
             
         });
-        
+
         function validacion(){
             if($('.btn-lilac').length > 0){
                 alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');

@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.tramitetipo.tramiteTipo}}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -57,9 +57,7 @@
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">
                                                 <div class="panel-body">
-                                                    {% if tramite.institucioneducativa %}
-                                                        {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
-                                                    {% endif %}
+                                                    {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
                                                 </div>
                                             </div>
                                         </div>
@@ -221,9 +219,7 @@
             </div>  
         </div>
     </div>
-    {% if tramite.institucioneducativa %}
-        {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
-    {% endif %}
+    {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }} 
