@@ -47,14 +47,14 @@
  * HEADER
  * ======================================================================== */
 body.page-sidebar-minimize #header .navbar-minimize > a {
-  background-color: #f19b69;
+  background-color: #78909C;
   color: #ffffff;
 }
 body.page-sidebar-minimize #header .navbar-minimize:hover > a {
-  background-color: #ef8b52;
+  background-color: #78909C;
 }
 #header .navbar-header {
-  background-color: #f19b69;
+  background-color: #78909C;
 }
 /* ========================================================================
  * SIDEBAR LEFT & RIGHT
@@ -62,12 +62,12 @@ body.page-sidebar-minimize #header .navbar-minimize:hover > a {
 #sidebar-left.sidebar-box .sidebar-content img,
 #sidebar-left.sidebar-rounded .sidebar-content img,
 #sidebar-left.sidebar-circle .sidebar-content img {
-  border: 2px solid #f19b69;
+  border: 2px solid #78909C;
 }
 #sidebar-left.sidebar-box .sidebar-menu > li.active > a > .icon i,
 #sidebar-left.sidebar-rounded .sidebar-menu > li.active > a > .icon i,
 #sidebar-left.sidebar-circle .sidebar-menu > li.active > a > .icon i {
-  background-color: #f19b69;
+  background-color: #90A4AE;
 }
 #sidebar-left.sidebar-box .sidebar-menu > li > ul > li:hover:after,
 #sidebar-left.sidebar-rounded .sidebar-menu > li > ul > li:hover:after,
@@ -177,7 +177,7 @@ body.page-sidebar-minimize-auto .navbar-minimize a i {
  * RESET
  * ======================================================================== */
 a {
-  color: #f19b69;
+  color: #78909C;
 }
 a:hover,
 a:active,

@@ -42,7 +42,7 @@ a:focus {
 }
 @media(min-width:768px) {
     body {
-        background: #34495e url("../assets/images/bgleft.png");
+        background: #CFD8DC url("../assets/images/bgleft.png");
     }
 }
 
@@ -218,7 +218,7 @@ a:focus {
 
 .navbar-top {
     margin-left: 0;
-    background: #34495e url(../assets/images/bgleft.png) 0 0 repeat; /* url("../assets/images/backing.png") repeat;*/
+    background: #546E7A url(../assets/images/bgleft.png) 0 0 repeat; /* url("../assets/images/backing.png") repeat;*/
 }
 
 .navbar-top .navbar-brand a {
@@ -549,7 +549,7 @@ a:focus {
 .navbar-side .side-user .welcome {
     margin: 0;
     font-style: italic;
-    color: #9aa4af;
+    color: #080808;
 }
 
 .navbar-side .side-user .welcome .fa {
@@ -561,7 +561,7 @@ a:focus {
     font-family: "Lato","Ubuntu","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 20px;
     font-weight: 300;
-    color: #ccd1d7;
+    color: #000000;
 }
 
 .navbar-side .side-user .name .last-name {
@@ -610,14 +610,14 @@ a:focus {
 .navbar-side .navbar-nav>li>a:active {
     text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
     outline: none;
-    color: #fff;
-    background-color: #34495e;
+    color: #000000;
+    background-color: #CFD8DC;
 }
 
 .navbar-side .side-nav li,
 .navbar-side .side-nav li.panel {
     border-top: 1px solid #54677a;
-    border-bottom: 1px solid #142638;
+    border-bottom: 1px solid #9e9e97;
 }
 
 .navbar-side .side-nav li.panel ul li {
@@ -693,7 +693,7 @@ a:focus {
 
     .navbar-side .side-nav > li > a:hover {
         color: #fff;
-        background-color: #3d566e;
+        background-color: #7d7b7b;
     }
 
     .navbar-side .side-nav li.panel ul li a:hover,
