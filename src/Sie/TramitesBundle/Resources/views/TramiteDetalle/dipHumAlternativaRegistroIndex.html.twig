@@ -116,6 +116,10 @@
                                                     {% if participante.carnet_identidad == "" %}
                                                         <span class="label label-danger rounded">Sin C.I.</span>
                                                         {% set registro = false %}
+                                                    {% else %}
+                                                        {% if participante.documento_diplomatico != "" %}
+                                                            {% set participanteObservado = false %}
+                                                        {% endif %}
                                                     {% endif %}
                                                 {% endif %}
 

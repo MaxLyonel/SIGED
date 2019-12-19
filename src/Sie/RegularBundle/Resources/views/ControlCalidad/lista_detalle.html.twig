@@ -16,6 +16,30 @@
 
     </div>
 </div>
+
+<div class="modal modal-flex fade" id="myModalSolucionSinCarnet" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Control de Calidad</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('ccalidad_justificar_estudiante_segip')}}" method="post">
+                    <div class="form-group">
+                        <textarea id="formJ_justificacion" name= "formJ[justificacion]" placeholder="Introduzca una descripción por la cual se omitirá la validación con SEGIP" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
+                    </div>
+                    <input type="hidden" id="formJ_idDetalle" name="formJ[idDetalle]" value="">
+                    <input type="hidden" id="formJ_idSolucion" name="formJ[idSolucion]" value="1">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
 {#<div class="col-md-12">
     {% if app.session.get('roluser') == 9 %}
         <div class="alert alert-info" role="alert">
@@ -218,8 +242,12 @@
                                         {% if regla.id == 37 %}
                                             <form action="{{path('ccalidad_validar_estudiante_segip')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_idSolucion" name="form[idSolucion]" value="0">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
                                             </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir</button>
+                                            </div>
                                         {% endif %}
                                         {#{% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 or regla.id == 9 or regla.id == 14 or regla.id == 2 %}#}
                                         {% if 0==1 %}
@@ -398,6 +426,11 @@
                 }
             });
         }
+    }
+
+    var justificarSinCarnet = function(id){
+        $('#formJ_idDetalle').val(id);
+        $('#myModalSolucionSinCarnet').modal('show');
     }
 
     </script>
