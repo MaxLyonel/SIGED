@@ -584,4 +584,32 @@ class Institucioneducativa
     {
         return $this->areaMunicipio;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaFundacion;
+
+
+    /**
+     * Set fechaFundacion
+     *
+     * @param \DateTime $fechaFundacion
+     * @return Institucioneducativa
+     */
+    public function setFechaFundacion($fechaFundacion)
+    {
+        $this->fechaFundacion = $fechaFundacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaFundacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaFundacion()
+    {
+        return $this->fechaFundacion;
+    }
 }

@@ -118,6 +118,11 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             fixed: false
             comment: ''
             column: area_municipio
+        fechaFundacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fundacion
     manyToOne:
         institucioneducativaAcreditacionTipo:
             targetEntity: InstitucioneducativaAcreditacionTipo
