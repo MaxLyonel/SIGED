@@ -71,7 +71,7 @@
                             </div>
                         </div>
                     </div>
-                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validar();'}}) }}
+                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validacion();'}}) }}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-primary">
@@ -169,6 +169,7 @@
                 this.files[0].name = '';
             }
         });
+        
         function buscarSolicitud(){
             if($('#form_tramite_tipo').val()==''){
                 alert('Seleccione el tipo de trámite.');
@@ -202,42 +203,20 @@
             });
         } 
 
-        function requisitos(id){
-            //alert(id);
-            if(id != 54){
-                var formData = {id: id,ie:$('#form_codigo').val()};
-            }else{
-                if($('#form_dependencia').length == 0 || $('#form_dependencia').val() == ''){
-                    alert('Primero debe registrar y validar los datos de la nueva Unidad Educativa.');
-                    $('#modal_'+id).modal('toggle');
-                    return false;
-                }
-                var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:1};
-            }
-            if ( $("#modal_requisitos_"+ id).length ) {
+        $('.btn-lilac').click(function(){
+            alert('entra');
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+        });
+
+        function validacion(){
+            if($('.btn-lilac').length > 0){
+                var tramitetipo = $('#form_tramite_tipo option:selected').text();
+                alert('Debe abrir y verificar todos los archivos adjuntos de los requisitos presentados para: '+ tramitetipo +'.');
                 return false;
+            }else{
+                return true;
             }
-            $.ajax({
-                type: 'GET',
-                url: "{{path('tramite_rue_busca_requisitos')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#modal_'+id).empty();
-                    $("#modal_"+id).append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $('#modal_'+id).empty();
-                    $('#modal_'+id).append(data);
-                     $('.date').datepicker({
-                        orientation: "auto left",
-                        forceParse: false,
-                        autoclose: true,
-                        todayHighlight: true,
-                        language: 'es'
-                    });
-                },
-            });
         }
     </script>
 {% endblock %}

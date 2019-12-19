@@ -752,7 +752,7 @@ class WfTramiteController extends Controller
             * TRAMITE PARA UNIDADES EDUCATIVAS
             */
             $data['tipo'] = "UNIDAD EDUCATIVA: ";
-            $data['codsie'] = $tramite->getInstitucioneducativa()->getId();
+            $data['codsie'] = $tramite->getInstitucioneducativa()?$tramite->getInstitucioneducativa()->getId():'';
             if($tramite->getInstitucioneducativa()){
                 $data['nombre'] = $tramite->getInstitucioneducativa()->getInstitucioneducativa();
             }else{
@@ -768,7 +768,7 @@ class WfTramiteController extends Controller
     
                 $datos = json_decode($wfdatos[0]->getDatos(),true);
                 //dump($datos);die;
-                $data['nombre'] = $datos['institucionEducativa'];
+                $data['nombre'] = $datos['Apertura de Unidad Educativa']['institucioneducativa'];
             }
 
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.fecha_envio-d.fecha_recepcion as duracion
