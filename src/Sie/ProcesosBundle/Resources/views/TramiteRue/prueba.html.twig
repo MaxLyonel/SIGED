@@ -852,6 +852,8 @@
                 url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
                 beforeSend: function () {
                     $("#form_lejurisdiccion").val('');
+                    $("#form_distrito").empty();
+                    $("#form_distrito").append('<option value="">Buscando...</option>');
                     if(censo == 2001){
                         $("#form_provincia2001").empty();
                         $("#form_municipio2001").empty();
@@ -876,7 +878,10 @@
                     
                 },
                 success: function (data) {
+                    $("#form_distrito").empty();
+                    $("#form_distrito").append('<option value="">Seleccionar...</option>');
                     if(censo == 2001){
+                        //console.log(data);
                         $("#form_provincia2001").empty();
                         $("#form_municipio2001").empty();
                         $("#form_canton2001").empty();
@@ -916,7 +921,9 @@
                             $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
                         });*/
                     }
-                    
+                    $.each(data.distrito, function (i, value) {
+                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                    });
                 }
             });
         }
@@ -1028,7 +1035,6 @@
                         $.each(data.localidad, function (i, value) {
                             $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
                         });
-                        $("#form_localidad2001").selectpicker('refresh');
                     }
                 }
             });
@@ -1056,6 +1062,7 @@
                 }
             });
         }
+
         function validarnombredistrito(nombre){
             if ( nombre != '') {
                 return false;

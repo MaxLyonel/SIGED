@@ -3129,30 +3129,39 @@ class TramiteRueController extends Controller
                 );
             }else {
                 $data = array(
-                    'institucuioneducativa'=>$institucioneducativa,
-                    'tramite_tipo'=>$tramite_tipo
+                    'datos'=>null,
+                    'tramite_tipo'=>$tramite_tipo,
+                    'codigo' =>$codigo,
                 );
             }
         }else{
-            $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo'=>$codigo));
-            $datos = json_decode($solicitudTramite->getDatos(),true);
-            $form = $this->createFormBuilder()
-                ->add('codigo', 'hidden',array('data'=>$codigo))
-                ->add('requisitos','choice',array('label'=>'Requisitos:','required'=>true, 'multiple' => true,'expanded' => true,'choices'=>$requisitos))
-                ->add('observacion','textarea',array('label'=>'Observación:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
-                ->add('varevaluacion1','choice',array('label'=>'¿Observar y devolver?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
-                ->add('informedistrito','text',array('label'=>'CITE del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase','placeholder'=>'')))
-                ->add('fechainformedistrito', 'text', array('label'=>'Fecha del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control date','placeholder'=>'')))
-                ->add('adjuntoinforme', 'file', array('label' => 'Adjuntar Informe Técnico (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
-                ->getForm();
-            
-            $data = array(
-                'form' => $form->createView(),
-                'datos'=>$datos,
-                'tramite_tipo'=>$tramite_tipo,
-                'codigo' =>$codigo,
-                'gestion'=>$solicitudTramite->getFechaRegistro()->format('Y'),
-            );
+            $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo'=>$codigo,'estado'=>false));
+            if($solicitudTramite){
+                $datos = json_decode($solicitudTramite->getDatos(),true);
+                $form = $this->createFormBuilder()
+                    ->add('codigo', 'hidden',array('data'=>$codigo))
+                    ->add('requisitos','choice',array('label'=>'Requisitos:','required'=>true, 'multiple' => true,'expanded' => true,'choices'=>$requisitos))
+                    ->add('observacion','textarea',array('label'=>'Observación:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
+                    ->add('varevaluacion1','choice',array('label'=>'¿Observar y devolver?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
+                    ->add('informedistrito','text',array('label'=>'CITE del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase','placeholder'=>'')))
+                    ->add('fechainformedistrito', 'text', array('label'=>'Fecha del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control date','placeholder'=>'')))
+                    ->add('adjuntoinforme', 'file', array('label' => 'Adjuntar Informe Técnico (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
+                    ->getForm();
+                
+                $data = array(
+                    'form' => $form->createView(),
+                    'datos'=>$datos,
+                    'tramite_tipo'=>$tramite_tipo,
+                    'codigo' =>$codigo,
+                    'gestion'=>$solicitudTramite->getFechaRegistro()->format('Y'),
+                );    
+            }else{
+                $data = array(
+                    'datos'=>null,
+                    'tramite_tipo'=>$tramite_tipo,
+                    'codigo' =>$codigo,
+                );
+            }
         }
          
         return $this->render('SieProcesosBundle:TramiteRue:solicitudAperturaReapertura.html.twig', $data);

@@ -265,3 +265,7 @@ sie_app_web_segip:
 #     resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
 #     prefix:   /sie/tramite
 
+sie_app_web_solicitud:
+    resource: "@SieAppWebBundle/Resources/config/routing/solicitud.yml"
+    prefix:   /acceso/solicitud 
+
