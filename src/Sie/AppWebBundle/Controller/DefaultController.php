@@ -46,7 +46,7 @@ class DefaultController extends Controller {
         switch ($request->server->get('HTTP_HOST')) {
             case '172.20.196.9:8011':
             case 'siged.sie.gob.bo':
-                $sysname = 'REGULAR';
+                $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
@@ -74,12 +74,13 @@ class DefaultController extends Controller {
             case 'academicolb.sie.gob.bo':
             case '172.20.196.9:8013':
             case '172.20.0.53:8013':
-                $sysname = 'Herramienta';
+                $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
                 break;
             case '172.20.0.53:8013':
                 $sysname = 'Herramienta';
@@ -115,7 +116,6 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 $this->session->set('color', 'primary');
-                $this->session->set('sistemaid', 3);
                 break;
             case '172.20.196.9:8014':
             case 'rue.sie.gob.bo':
@@ -482,14 +482,7 @@ class DefaultController extends Controller {
         /*
         *  ////// REDIRECCIONAMOS AL FORMULARIO DE LOGIN SEGUN EL SUBSISTEMA
         */
-        switch ($this->session->get('sistemaid')) {
-            case 1: $loginview = 'login1';break;
-            case 2: $loginview = 'login2';break;
-            case 3: $loginview = 'login3';break;
-            default: $loginview = 'login4';break;
-        }
-        $loginview = 'login4';
-        return $this->render('SieAppWebBundle:Login:'.$loginview.'.html.twig',array(
+        return $this->render('SieAppWebBundle:Login:login4.html.twig',array(
             'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
             'error' => $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR) // 'error'=>array('message'=>'¡Ocurrió un error interno!')
         ));
