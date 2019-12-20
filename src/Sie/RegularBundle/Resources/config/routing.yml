@@ -1,3 +1,11 @@
+sie_regular_modifiacion_calificacion_nivelacion:
+    resource: "@SieRegularBundle/Resources/config/routing/modificacionCalificacionNivelacion.yml"
+    prefix:   /sie/modificacion-calificacion-nivelacion
+
+sie_regular_console:
+    resource: "@SieRegularBundle/Resources/config/routing/console.yml"
+    prefix:   /sie/consola
+
 sie_regular_sin_historial_calidad:
     resource: "@SieRegularBundle/Resources/config/routing/historialCalidad.yml"
     prefix:   /sie/historialCalidad

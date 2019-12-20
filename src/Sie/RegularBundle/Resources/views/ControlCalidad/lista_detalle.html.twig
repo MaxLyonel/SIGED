@@ -16,6 +16,30 @@
 
     </div>
 </div>
+
+<div class="modal modal-flex fade" id="myModalSolucionSinCarnet" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Control de Calidad</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('ccalidad_justificar_estudiante_segip')}}" method="post">
+                    <div class="form-group">
+                        <textarea id="formJ_justificacion" name= "formJ[justificacion]" placeholder="Introduzca una descripción por la cual se omitirá la validación con SEGIP" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
+                    </div>
+                    <input type="hidden" id="formJ_idDetalle" name="formJ[idDetalle]" value="">
+                    <input type="hidden" id="formJ_idSolucion" name="formJ[idSolucion]" value="1">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
 {#<div class="col-md-12">
     {% if app.session.get('roluser') == 9 %}
         <div class="alert alert-info" role="alert">
@@ -72,57 +96,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del estado actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
                                             </form>
                                         {% endif %}
-                                        {% if regla.id == 1 %}
-                                            <form action="{{path('maestroAsignacion')}}" method="post" target="_blank">
-                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
-                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
-                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
-                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                            </form>
-                                        {% endif %}
-                                        {% if regla.id == 6 %}
-                                            <form action="{{path('regularizacionDobleInscripcion_result')}}" method="post">
-                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
-                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                            </form>
-                                        {% elseif regla.id == 2 or regla.id == 20 %}
-                                            <form action="{{path('sie_estudiantes_result')}}" method="post" target="_blank">
-                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
-                                                <input type="hidden" id="form_mode1" name="form[mode1]" value="1">
-                                                <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
-                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                            </form>
-                                        {% elseif regla.id == 3 %}
-                                            <form action="{{path('sie_estudiantes_result')}}" method="post" target="_blank">
-                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
-                                                <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
-                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                            </form>
-                                        {% elseif regla.id == 8 %}
-                                            {% if detalle.solucionTipoId == 1 %}
-                                                <form action="{{path('deleteInscriptionQa_index')}}" method="post"  target="_blank">
-                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
-                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
-                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
-                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                                </form>
-                                            {% elseif detalle.solucionTipoId == 2 %}
-                                                {# {{dump(detalle)}} #}
-                                                <form action="{{path('unificacion_index_calidad')}}" method="post"  target="_blank">
-                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
-                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
-                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
-                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
-                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                                </form>
-                                            {% endif %}
-                                        {% elseif regla.id == 16 %}
+                                        {% if regla.id == 16 %}
                                             {% if detalle.solucionTipoId == 0 or detalle.solucionTipoId == 2 %}
                                                 <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
@@ -171,8 +145,63 @@
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución cambiar estado extranjero</button>
                                                 </form>
                                             {% endif %}
-                                            
-                                        {% elseif regla.id == 10 %}
+                                        {% endif %}
+                                        {% if regla.id == 1 %}
+                                            <form action="{{path('maestroAsignacion')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 6 %}
+                                            <form action="{{path('regularizacionDobleInscripcion_result')}}" method="post">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 2 or regla.id == 20 %}
+                                            <form action="{{path('sie_estudiantes_result')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_mode1" name="form[mode1]" value="1">
+                                                <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 3 %}
+                                            <form action="{{path('sie_estudiantes_result')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 8 %}
+                                            {% if detalle.solucionTipoId == 1 %}
+                                                <form action="{{path('deleteInscriptionQa_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                                </form>
+                                            {% elseif detalle.solucionTipoId == 2 %}
+                                                {# {{dump(detalle)}} #}
+                                                <form action="{{path('unificacion_index_calidad')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                        {% if regla.id == 10 %}
                                             <form action="{{path('reg_multigrado_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -180,7 +209,8 @@
                                                 <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
-                                        {% elseif regla.id == 13 %}
+                                        {% endif %}
+                                        {% if regla.id == 13 %}
                                             <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -189,7 +219,8 @@
                                                 <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=1>
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
-                                        {% elseif regla.id == 12 %}
+                                        {% endif %}
+                                        {% if regla.id == 12 %}
                                             <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -198,7 +229,8 @@
                                                 <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
-                                        {% elseif regla.id == 11 %}
+                                        {% endif %}
+                                        {% if regla.id == 11 %}
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionApropiacionRudes({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% endif %}
                                         {% if regla.id == 20 %}
@@ -210,8 +242,12 @@
                                         {% if regla.id == 37 %}
                                             <form action="{{path('ccalidad_validar_estudiante_segip')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_idSolucion" name="form[idSolucion]" value="0">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
                                             </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir</button>
+                                            </div>
                                         {% endif %}
                                         {#{% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 or regla.id == 9 or regla.id == 14 or regla.id == 2 %}#}
                                         {% if 0==1 %}
@@ -390,6 +426,11 @@
                 }
             });
         }
+    }
+
+    var justificarSinCarnet = function(id){
+        $('#formJ_idDetalle').val(id);
+        $('#myModalSolucionSinCarnet').modal('show');
     }
 
     </script>

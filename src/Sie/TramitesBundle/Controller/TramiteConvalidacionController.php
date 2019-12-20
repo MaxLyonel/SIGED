@@ -404,7 +404,7 @@ class TramiteConvalidacionController extends Controller {
         $gestion = $request->get('ges');
         $em = $this->getDoctrine()->getManager();
 
-        $grado = ($gestion <= 2011) ? 4 : 6;
+        $grado = ($gestion < 2011) ? 4 : 6;
         $entity = $em->getRepository('SieAppWebBundle:GradoTipo');
         $query = $entity->createQueryBuilder('gt')               
                 ->where('gt.id = :id')
@@ -417,7 +417,7 @@ class TramiteConvalidacionController extends Controller {
             $agrados[] = array('id'=>$grado->getId(),'grado'=>$grado->getGrado());
         }
 
-        $nivel = ($gestion <= 2011) ? 3 : 13;
+        $nivel = ($gestion < 2011) ? 3 : 13;
         $entity = $em->getRepository('SieAppWebBundle:NivelTipo');
         $query = $entity->createQueryBuilder('nt')               
                 ->where('nt.id = :id')
@@ -541,7 +541,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion1', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2008')
+                                ->where('gt.id > 2006')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-3))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -556,7 +556,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion2', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2008')
+                                ->where('gt.id > 2006')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-2))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -571,7 +571,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion3', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2008')
+                                ->where('gt.id > 2006')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-1))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -586,7 +586,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion4', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2008')
+                                ->where('gt.id > 2006')
                                 ->andWhere('gt.id <= '.($form['gestionActual']))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -704,8 +704,7 @@ class TramiteConvalidacionController extends Controller {
                 return $response->setData(array('estado' => false, 'msg' => $msg));
             }
 
-            $grados = array(1 => 3, 2 => 4, 3 => 5, 4 => 6);
-            $ciclos = array(1 => 1, 2 => 1, 3 => 2, 4 => 2, 5 => 3, 6 => 3);
+            
 
             for ($i = 1 ; $i <= 4 ; $i++){           
 
@@ -721,8 +720,15 @@ class TramiteConvalidacionController extends Controller {
                 }
                 $file = $libreta;
                 //dump($file);die;
+                if($gestion < 2011){
+                    $grados = array(1 => 1, 2 => 2, 3 => 3, 4 => 4);
+                    $ciclos = array(1 => 1, 2 => 1, 3 => 3, 4 => 3);
+                } else {
+                    $grados = array(1 => 3, 2 => 4, 3 => 5, 4 => 6);
+                    $ciclos = array(1 => 1, 2 => 1, 3 => 2, 4 => 2, 5 => 3, 6 => 3);
+                }
                 $grado = $grados[$i];
-                $nivel = ($gestion <= 2011) ? 3 : 13;    
+                $nivel = ($gestion < 2011) ? 3 : 13;    
                 $ciclo = $ciclos[$grado];      
                 
                 if(isset($files['libreta'.$i]) or $studentId == 0){  
@@ -800,7 +806,7 @@ class TramiteConvalidacionController extends Controller {
                         //dump("as");die;
                         //look for the course to the student
                         $objCurso = $studentInstitucioneducativaCurso; 
-    //                    dump($objCurso);die;
+                        //dump($objCurso);die;
                     }
 
                     $studentInscription = new EstudianteInscripcion();

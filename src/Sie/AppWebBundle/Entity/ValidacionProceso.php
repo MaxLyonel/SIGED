@@ -416,4 +416,32 @@ class ValidacionProceso
     {
         return $this->omitido;
     }
+    /**
+     * @var string
+     */
+    private $justificacion;
+
+
+    /**
+     * Set justificacion
+     *
+     * @param string $justificacion
+     * @return ValidacionProceso
+     */
+    public function setJustificacion($justificacion)
+    {
+        $this->justificacion = $justificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get justificacion
+     *
+     * @return string 
+     */
+    public function getJustificacion()
+    {
+        return $this->justificacion;
+    }
 }

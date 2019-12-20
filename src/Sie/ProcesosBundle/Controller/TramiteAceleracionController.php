@@ -451,6 +451,12 @@ class TramiteAceleracionController extends Controller
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
         }
+        $gestion = $request->getSession()->get('currentyear');
+        $operativo = $this->get('funciones')->obtenerOperativo($institucioneducativa_id, $gestion);
+        if ($operativo == 4) {
+            $estado = 500;
+            return $response->setData(array('estado' => $estado, 'msg' => 'La Unidad Educativa no puede iniciar el trámite debido a que ya cuenta con información consolidada.'));
+        }
         $observaciones = $datos['devolucion']==0?'Inicio solicitud de aceleracion educativa':'Reinicio solicitud de aceleracion educativa';
         $tipotramite_id = $tipotramite->getId();
         $tramite_id = $request->get('tramite_id')==null?'':$request->get('tramite_id');
@@ -954,6 +960,7 @@ class TramiteAceleracionController extends Controller
         $estado = 200;
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
+        $gestion = $request->getSession()->get('currentyear');
 
         $datos = array();
         $datos['tramite_id'] = $request->get('tramite_id');
@@ -962,6 +969,9 @@ class TramiteAceleracionController extends Controller
         $datos['observacion'] = $request->get('observacion');
         if ($datos['tiene_obs'] == "NO") {
             $datos['cursoactual'] = $request->get('cursoactual');
+            $curso_inscripcion = json_decode($request->get('cursoactual'));
+            $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_inscripcion->iec_id);
+            $gestion = $iec->getGestionTipo()->getId();
         }
         /* $verificaTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
             ->select('wfd')
@@ -991,6 +1001,11 @@ class TramiteAceleracionController extends Controller
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
+        }
+        $operativo = $this->get('funciones')->obtenerOperativo($institucioneducativa_id, $gestion);
+        if ($operativo == 4) {
+            $estado = 500;
+            return $response->setData(array('estado' => $estado, 'msg' => 'El trámite no podrá finalizar, debido a que la Unidad Educativa ya cuenta con la información consolidada.'));
         }
         $observaciones = 'Datos verificados para aceleración educativa';
         $tipotramite_id = $tipotramite->getId();

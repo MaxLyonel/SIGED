@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    <head>
+        <!-- START @META SECTION -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Acceso al sistema Alternativa - Educación Alternativa - Ministerio de Educación">
+        <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
+        <meta name="author" content="Djava UI">
+        <title>Login - SIE</title>
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/admin/css/pages/sign-type-2.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}">
+
+        <style type="text/css">
+            
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                border: 0;
+                padding: 0;
+                background-color:  #B0BEC5;
+            }
+
+            body{
+                /* background: url("{{asset('images/fondo1.png')}}") no-repeat center center fixed; */
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+
+            #sign-wrapper{
+                height: 100%;
+            }
+
+            .sign-header{
+                color: #ECEFF1;
+                margin-top: 25px;
+                font-size: 1.3em;
+            }
+
+            .sign-header, .sign-text span{
+                background-color: #546E7A;
+                color: #ECEFF1;
+            }
+            .sign-text span{
+                font-size:2em;
+                border-bottom: 1px solid #D6E9ED;
+                text-shadow: 2px 2px #90A4AE;
+            }
+
+            .sign-header{
+                border-color: #B2CCC6;
+            }
+
+            .form-signin{
+                background-color: #D6E9ED;
+                opacity: 1 !important;
+                /* border: 1px solid #CCE9E4; */
+            }
+
+            .sign-body, .sign-footer{
+                /* background: #D6E9ED; */
+                background: #ECEFF1;
+                font-size: 1.2em;
+            }
+
+            .btn-aceptar{
+                background-color: #546E7A;
+                /* background-color: #D6E9ED; */
+                color: #FFFFFF;
+                font-size: 1.1em;
+            }
+
+            .icono{
+                color: #404647 !important;
+            }
+
+            .input-group{
+                border: 1px solid #98A4A9;
+            }
+
+            .img-logo{
+                width: 70%;
+            }
+            .img{
+                text-align: center;
+            }
+            input[type="text"]{
+                color: #404647 !important;
+            }
+
+            input[type=checkbox]
+            {
+              /* Doble-tamaño Checkboxes */
+              -ms-transform: scale(1.5); /* IE */
+              -moz-transform: scale(1.5); /* FF */
+              -webkit-transform: scale(1.5); /* Safari y Chrome */
+              -o-transform: scale(1.5); /* Opera */
+              padding: 5px;
+              margin-right: 20px;
+            }   
+        </style>
+        
+    </head>
+    
+    <body class="page-sound page-backstretch" >
+
+
+        <!-- START @SIGN WRAPPER -->
+        <div id="sign-wrapper">
+
+            {% for flashMessage in app.session.flashbag.get('errorusuario') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            
+            <div class="img">
+                <img class="img-logo" src="{{asset('images/logo-min-edu.png')}}" alt="">
+            </div>
+
+            <div class="sign-header">
+                <div class="form-group">
+                    <div class="sign-text">
+                        <span><i class="fa fa-graduation-cap"></i> SIE</span>
+                    </div>
+                    <center>
+                        <small>{{app.session.get('sysname')|upper}}</small>
+                    </center>
+
+                </div><!-- /.form-group -->
+            </div><!-- /.sign-header -->
+
+            <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post">
+                <div class="sign-body">
+                    {% if error %}
+                        <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
+                    {% endif %}
+                    <div class="form-group">
+                        <div class="input-group input-group-lg rounded no-overflow">
+                            <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
+                            <span class="input-group-addon"><i class="fa fa-user icono"></i></span>
+                        </div>
+                    </div><!-- /.form-group -->
+                    <div class="form-group">
+                        <div class="input-group input-group-lg rounded no-overflow">
+                            <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
+                            <span class="input-group-addon"><i class="fa fa-lock icono"></i></span>
+                        </div>
+                    </div><!-- /.form-group -->
+
+
+                    <div style="padding:10px;">
+                        <div class="checkbox" style="margin-left: 15px">
+                            <label>
+                                <input type="checkbox" required="required"> <span style="margin-left: 10px;">Validar los datos</span>
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.sign-body -->
+
+                <div class="sign-footer">
+                    <div class="form-group">
+                        <br>
+                        <button class="btn btn-lg btn-block no-margin rounded btn-aceptar" type="submit"><i class="fa fa-unlock"></i>Aceptar</button>
+
+                    </div><!-- /.form-group -->
+                </div><!-- /.sign-footer -->
+            </form>
+
+        </div>
+
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+ 
+        <script>
+
+            $("#form_captcha").keyup(function () {
+                $("#form_captcha").val($("#form_captcha").val().toUpperCase());
+            });
+
+            function showCaptcha() {
+                element = document.getElementById("divCaptcha");
+                check = document.getElementById("form_check");
+                captcha = document.getElementById("form_captcha");
+                if (check.checked) {
+                    element.style.display = 'none';
+                    $('#form_captcha').removeAttr("required");
+                    $('#form_captcha').val('');
+                }
+                else {
+                    element.style.display = 'block';
+                    $('#form_captcha').attr('required', 'true');
+                }
+            }
+        </script>
+
+    </body>
+
+</html>

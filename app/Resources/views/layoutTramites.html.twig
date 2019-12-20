@@ -312,6 +312,7 @@
                                 </a>
                                 <ul>
                                     <li><a href="{{ path('tramite_homologacion_certificacion_index') }}">Gestiones anteriores</a></li>
+                                    <li><a href="{{ path('tramite_documento_serie_disponible') }}">Series Disponibles</a></li>
                                     {% if (rol16 or rol8) and 1 == 2%}
                                         <li><a href="#">Generar número de serie</a></li>
                                     {% endif %}
@@ -444,6 +445,7 @@
                                 <ul class="collapse nav">
                                     <li><a href="{{ path('tramite_documento_supletorio') }}">Supletorio</a></li>
                                     <li><a href="{{ path('tramite_reactiva_busca') }}">Reactiva</a></li>
+                                    <li><a href="{{ path('tramite_documento_serie_disponible') }}">Series Disponibles</a></li>
                                 </ul>
                             </li>  
                         {% endif %}
