@@ -1,0 +1,16 @@
+modif_calif_nivelacion_index:
+    path:      /
+    defaults:  { _controller: SieRegularBundle:ModificacionCalificacionNivelacion:index }
+    methods: GET
+
+modif_calif_nivelacion_buscar:
+    path:      /buscar/{codigoRude}
+    defaults:  { _controller: SieRegularBundle:ModificacionCalificacionNivelacion:buscar }
+    options:
+        expose: true
+
+modif_calif_nivelacion_registrar:
+    path:      /registrar
+    defaults:  { _controller: SieRegularBundle:ModificacionCalificacionNivelacion:registrar }
+    options:
+        expose: true
