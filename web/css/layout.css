@@ -701,6 +701,7 @@ body.page-footer-fixed #page-content .footer-content {
   #header .navbar-form .form-group {
     margin-bottom: 0px;
   }
+  
 }
 @media (max-width: 600px) {
   #header .navbar-toolbar .navbar-form input {
@@ -3431,6 +3432,7 @@ body.page-footer-fixed #page-content .footer-content {
   vertical-align: top;
   margin-top: 2px;
 }
+
 
 /* ========================================================================
  * SIDEBAR SETTINGS
