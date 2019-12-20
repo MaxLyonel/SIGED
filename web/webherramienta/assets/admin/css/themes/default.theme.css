@@ -54,7 +54,7 @@ body.page-sidebar-minimize #header .navbar-minimize:hover > a {
   background-color: #71a117;
 }
 #header .navbar-header {
-  background-color: #81b71a;
+  background-color: #90A4AE;
 }
 /* ========================================================================
  * SIDEBAR LEFT & RIGHT
@@ -62,7 +62,7 @@ body.page-sidebar-minimize #header .navbar-minimize:hover > a {
 #sidebar-left.sidebar-box .sidebar-content img,
 #sidebar-left.sidebar-rounded .sidebar-content img,
 #sidebar-left.sidebar-circle .sidebar-content img {
-  border: 2px solid #81b71a;
+  border: 2px solid #455A64;
 }
 #sidebar-left.sidebar-box .sidebar-menu > li.active > a > .icon i,
 #sidebar-left.sidebar-rounded .sidebar-menu > li.active > a > .icon i,
@@ -110,10 +110,10 @@ body.page-sidebar-minimize-auto .navbar-minimize a i {
   color: #ffffff;
 }
 .navbar-minimize-mobile {
-  background-color: #81b71a;
+  background-color: #546E7A;
 }
 .navbar-minimize-mobile:hover {
-  background-color: #71a117;
+  background-color: #546E7A;
 }
 @media (max-width: 768px) {
   body.page-sidebar-left-show .navbar-minimize-mobile,
@@ -177,7 +177,7 @@ body.page-sidebar-minimize-auto .navbar-minimize a i {
  * RESET
  * ======================================================================== */
 a {
-  color: #81b71a;
+  color: #546E7A;
 }
 a:hover,
 a:active,
@@ -587,7 +587,7 @@ a.list-group-item.active:focus {
   background-color: #81b71a !important;
 }
 .sidebar .nicescroll-rails div {
-  background-color: #323232 !important;
+  background-color: #bd1616 !important;
 }
 .cal-month-box {
   border-top: 7px solid #6b9816 !important;

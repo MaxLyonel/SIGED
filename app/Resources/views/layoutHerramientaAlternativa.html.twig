@@ -58,14 +58,15 @@
 
             <!-- START @THEME STYLES -->
             <link href="{{asset('webherramienta/assets/admin/css/reset.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+           
             <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/plugins.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
             {#<link href="{{asset('webherramienta/assets/admin/css/pages/dashboard-retail.css')}}" rel="stylesheet">#}
             <link href="{{asset('webherramienta/assets/admin/css/custom.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/pages/gallery.css')}}" rel="stylesheet">            
+            <link href="{{asset('webherramienta/assets/admin/css/pages/gallery.css')}}" rel="stylesheet"> 
+            <link href="{{asset('css/layout.css')}}" rel="stylesheet">           
             <!--/ END THEME STYLES -->
 
             <!-- START @IE SUPPORT -->
@@ -737,16 +738,16 @@
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
-                <div class="header-content" style="background-color: #6d7b61;">
-                    <h2 style="color: #EEEEEE; font-weight:bold"><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
-                        <span style="color: #EEEEEE"> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
+                <div class="header-content">
+                    <h2 style="font-weight:bold"><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
+                        <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
                             {#{% if (app.session.get('ie_per_estado') != '0') %}#}
                                 : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
                             {#{% endif %}                            #}
                         </span>
                     </h2>
                     <div class="breadcrumb-wrapper hidden-xs">
-                        <span class="label" style="color: #EEEEEE">Sub Centro:</span>
+                        <span class="label">Sub Centro:</span>
                         <ol class="breadcrumb">
                             <li>
                                 <a href="">{{app.session.get('ie_subcea')}}</a>
