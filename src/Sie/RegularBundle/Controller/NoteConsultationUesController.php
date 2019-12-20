@@ -173,7 +173,7 @@ class NoteConsultationUesController extends Controller {
                 $inconsistencia = $query->fetchAll();
                 
                 if ($inconsistencia) {
-                   $message = 'Unidad Educativa presenta observaciones de incosistencia';
+                   $message = 'Unidad Educativa presenta observaciones de inconsistencia';
                     $this->addFlash('warningconsultaue', $message);
                     $exist = false;
                     $arrValidation['observaciones_incosistencia'] = $inconsistencia;
