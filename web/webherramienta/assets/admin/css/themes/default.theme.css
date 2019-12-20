@@ -110,10 +110,10 @@ body.page-sidebar-minimize-auto .navbar-minimize a i {
   color: #ffffff;
 }
 .navbar-minimize-mobile {
-  background-color: #81b71a;
+  background-color: #546E7A;
 }
 .navbar-minimize-mobile:hover {
-  background-color: #71a117;
+  background-color: #546E7A;
 }
 @media (max-width: 768px) {
   body.page-sidebar-left-show .navbar-minimize-mobile,

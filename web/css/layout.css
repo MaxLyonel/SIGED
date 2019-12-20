@@ -2093,7 +2093,7 @@ body.page-footer-fixed #page-content .footer-content {
   color: #d0d0d0;
 }
 .sidebar-menu > li.submenu.active > ul > li.submenu.active > ul > li.active a:before {
-  color: #81B71A;
+  color: #f00;
 }
 .sidebar-menu > li.submenu.active > ul > li.submenu.active > ul > li a {
   color: #777;
