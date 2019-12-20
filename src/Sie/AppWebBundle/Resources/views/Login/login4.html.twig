@@ -25,7 +25,7 @@
                 margin: 0;
                 border: 0;
                 padding: 0;
-                background-color:  #B1D2C6;
+                background-color:  #B0BEC5;
             }
 
             body{
@@ -41,16 +41,17 @@
             }
 
             .sign-header{
-                color: #586061;
+                color: #ECEFF1;
                 margin-top: 25px;
+                font-size: 1.3em;
             }
 
             .sign-header, .sign-text span{
-                background-color: #D6E9ED;
-                color: #586061;
+                background-color: #546E7A;
+                color: #ECEFF1;
             }
             .sign-text span{
-                font-size:1.7em;
+                font-size:1.9em;
                 border-bottom: 1px solid #D6E9ED;
                 text-shadow: 2px 2px #CDE4E7;
             }
@@ -67,52 +68,45 @@
 
             .sign-body, .sign-footer{
                 /* background: #D6E9ED; */
-                background: #FFFFFF;
+                background: #ECEFF1;
+                font-size: 1.2em;
             }
 
             .btn-aceptar{
-                background-color: #D6E9ED;
+                background-color: #546E7A;
                 /* background-color: #D6E9ED; */
-                color: #727D7F;
+                color: #FFFFFF;
                 font-size: 1.1em;
             }
 
             .icono{
-                color: #839192 !important;
+                color: #404647 !important;
             }
 
             .input-group{
-                border: 1px solid #EEF6FB;
+                border: 1px solid #98A4A9;
             }
-            .img-paloma{
-                width: 40%;
-                /* opacity: 0.5; */
-            }
+
             .img-logo{
-                width: 60%;
+                width: 70%;
             }
             .img{
                 text-align: center;
             }
-
-            .bar{
-                position: absolute;
-                width: 100%;
-                height: 60px;
-                background: #D6E9ED;
-                /* background: #FFFFFF; */
-                bottom: 0px;
-                /* top: 700px; */
-                text-align: center;
-                padding: 3px;
+            input[type="text"]{
+                color: #404647 !important;
             }
 
-            .bar > img{
-                /* width: 150%; */
-                /* margin-left: -25%; */
-                width: 30%;
-                height: 100%;
-            }
+            input[type=checkbox]
+            {
+              /* Doble-tamaño Checkboxes */
+              -ms-transform: scale(1.5); /* IE */
+              -moz-transform: scale(1.5); /* FF */
+              -webkit-transform: scale(1.5); /* Safari y Chrome */
+              -o-transform: scale(1.5); /* Opera */
+              padding: 5px;
+              margin-right: 20px;
+            }   
         </style>
         
     </head>
@@ -131,7 +125,6 @@
             {% endfor %}
             
             <div class="img">
-                <img class="img-paloma" src="{{asset('images/paloma2.png')}}" alt="">
                 <img class="img-logo" src="{{asset('images/logo-min-edu.png')}}" alt="">
             </div>
 
@@ -169,7 +162,7 @@
                     <div style="padding:10px;">
                         <div class="checkbox" style="margin-left: 15px">
                             <label>
-                                <input type="checkbox" required="required"> Validar los datos
+                                <input type="checkbox" required="required"> <span style="margin-left: 10px;">Validar los datos</span>
                             </label>
                         </div>
                     </div>
@@ -184,10 +177,6 @@
                 </div><!-- /.sign-footer -->
             </form>
 
-        </div>
-
-        <div class="bar">
-            <img src="{{asset('images/bandera1.png')}}" alt="">
         </div>
 
         <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>

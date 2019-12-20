@@ -488,6 +488,7 @@ class DefaultController extends Controller {
             case 3: $loginview = 'login3';break;
             default: $loginview = 'login4';break;
         }
+        $loginview = 'login4';
         return $this->render('SieAppWebBundle:Login:'.$loginview.'.html.twig',array(
             'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
             'error' => $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR) // 'error'=>array('message'=>'¡Ocurrió un error interno!')
