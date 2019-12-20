@@ -299,6 +299,10 @@
                                                               <i class="fa fa-times"></i>
                                                           </button>
 
+                                                          <button class="btn btn-warning btn-xs" onclick="rudeal('{{infoUe}}', '{{ objStudents.idestins }}')">
+                                                            <i class="fa fa-list"></i>
+                                                          </button>
+
 
                                                       </td>
                                                       {% endif %}
@@ -452,7 +456,9 @@
 
 </small>
 
-
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
@@ -776,6 +782,31 @@
             return false;
         }
     };
+
+    var rudeal = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('perm_estudiante_rudeal_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#modal').modal('show');
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
 
 
 function getSelectedValue()

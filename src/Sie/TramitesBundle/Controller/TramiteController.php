@@ -315,6 +315,7 @@ class TramiteController extends Controller {
         $query = $entity->createQueryBuilder('gt')
                 ->where('gt.id >= :id')
                 ->setParameter('id', $gestionId)
+                ->orderBy('gt.id', 'DESC')
                 ->getQuery();
         try {
             return $query->getResult();

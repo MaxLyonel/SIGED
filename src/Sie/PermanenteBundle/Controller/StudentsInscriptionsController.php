@@ -40,8 +40,8 @@ class StudentsInscriptionsController extends Controller {
         //get the send values
         $infoUe = $request->get('infoUe');
 
-        return $this->render('SiePermanenteBundle:StudentsInscriptions:lookforstudent.html.twig', array(
-          'form'=>$this->findStudentForm($infoUe)->createView()
+        return $this->render('SiePermanenteBundle:StudentsInscriptions:newlookforstudent.html.twig', array(
+          // 'form'=>$this->findStudentForm($infoUe)->createView()
         ));
     }
     /**
@@ -343,6 +343,210 @@ class StudentsInscriptionsController extends Controller {
                         ->add('inscription', 'button', array('label' => 'Inscribir', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'doInscription()')))
                         ->add('infoUe', 'text', array('data' => $data))
                         ->getForm();
+    }
+
+    public function inscriptionbyCiAction(Request $request){
+      // ini var to the function
+      $em = $this->getDoctrine()->getManager();
+      $response = new JsonResponse();
+      // get the send values
+      $ci = $request->get('ci');
+      $complemento = $request->get('complemento');
+      
+      // here is to find the studnen by CI  on table estudiante/persona
+      // first look for student on ESTUDIANTE table 
+      // set array conditions
+      $arrayCondition['carnetIdentidad'] = $ci;
+      if($complemento){
+        $arrayCondition['complemento'] = $complemento;
+      }    
+      // find the student by arrayCondition
+      $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
+      // set result in the process to find
+      $dataInscription = array();
+      $dataInscriptionR = array();
+      $dataInscriptionA = array();
+      $dataInscriptionE = array();
+      $dataInscriptionP = [];
+      $arrGenero = array();
+      $arrPais = array();
+      $arrStudent = array();
+      $arrNewStudent = array();
+      $arrStudent = array();
+      $arrDepto = array();
+      $arrProvincia = array();
+
+      $swstudent        = false;
+      $swperson         = false;
+      $swnewperson      = false;
+      // check if the student exist
+      if($objStudent){
+        $swstudent = true;
+        //get the student data 
+        $arrStudent = array(
+          'paterno'     =>$objStudent->getPaterno(),
+          'materno'     =>$objStudent->getMaterno(),
+          'nombres'     =>$objStudent->getNombre(),
+          'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
+          'carnet'      =>$objStudent->getCarnetIdentidad(),
+          'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
+          'complemento' =>$objStudent->getComplemento(),
+          'rude'     =>$objStudent->getCodigoRude(),
+        );
+        // get all cardex info
+        // $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $objStudent->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+        // $query->execute();
+        // $dataInscription = $query->fetchAll();
+        // foreach ($dataInscription as $key => $inscription) {
+        //     switch ($inscription['institucioneducativa_tipo_id_raep']) {
+        //         case '1':
+        //             $dataInscriptionR[$key] = $inscription;
+        //             break;
+        //         case '2':
+        //             $dataInscriptionA[$key] = $inscription;
+        //             break;
+        //         case '4':
+        //             $dataInscriptionE[$key] = $inscription;
+        //             break;
+        //         case '5':
+        //         if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
+        //         if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
+        //         if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';
+        //         if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 17)$bloquep = 'Sexto';
+        //             $dataInscriptionP[] = array(
+        //               'gestion'=> $inscription['gestion_tipo_id_raep'],
+        //               'institucioneducativa'=> $inscription['institucioneducativa_raep'],
+        //               'partp'=> ($inscription['parte_p']==1 ||$inscription['parte_p']==2)?'Antiguo':'Actual',
+        //               'bloquep'=> $bloquep,
+        //               'fini'=> $inscription['fech_ini_p'],
+        //               'ffin'=> $inscription['fech_fin_p'],
+        //               'curso'=> $inscription['institucioneducativa_curso_id_raep'],
+        //               'matricula'=> $inscription['estadomatricula_p'],
+        //             );
+        //             break;
+        //     }
+        // }
+      }else{
+        // look into the PERSON table
+        // set arrayCondition2
+        $arrayCondition2['carnet'] = $ci;
+        if($complemento){
+          $arrayCondition2['complemento'] = $complemento;
+        }
+        $objStudent = $em->getRepository('SieAppWebBundle:Persona')->findOneBy($arrayCondition2);
+        // check if the person exist on the person table
+        if($objStudent){
+          // the person exist
+          $swperson = true;
+          $arrStudent = array(
+            'paterno'     =>$objStudent->getPaterno(),
+            'materno'     =>$objStudent->getMaterno(),
+            'nombres'     =>$objStudent->getNombre(),
+            'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
+            'carnet'      =>$objStudent->getCarnet(),
+            'complemento' =>$objStudent->getComplemento(),
+            'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
+
+          );
+        }
+      }
+      // this is to the new person
+      // get genero data
+      $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
+      foreach ($objGenero as $value) {
+          if($value->getId()<3){
+              $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());                
+          }
+      }
+      //get pais data
+      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+      foreach ($objPais as $value) {
+        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
+      }
+
+      if(!$swperson  && !$swstudent){
+        //set struct data person
+        $arrNewStudent = array(
+          'paisId'=>'',
+          'lugarNacTipoId'=>'',
+          'lugarProvNacTipoId'=>'',
+          'localidad'=>'',
+        );
+        $swnewperson = true;
+      }
+
+      $arrResponse = array(
+            'status'           => 200,
+            'dataStudent'      => $arrStudent,
+            'dataInscriptionR' => $dataInscriptionR,
+            'dataInscriptionA' => $dataInscriptionA,
+            'dataInscriptionE' => $dataInscriptionE,
+            'dataInscriptionP' => $dataInscriptionP,
+            'swstudent'        => $swstudent,
+            'swperson'         => $swperson,
+            'swnewperson'      => $swnewperson,
+            'arrGenero' => $arrGenero,
+            'arrPais' => $arrPais,
+            'arrNewStudent' => $arrNewStudent,
+      );
+      // dump($arrResponse);die;
+      $response->setStatusCode(200);
+      $response->setData($arrResponse);
+       
+      return $response;    
+      
+    }
+
+
+    public function getDeptoAction(Request $request){
+        $response = new JsonResponse();
+        // get the send values
+        $paisId = $request->get('paisId');
+        // create db conexino
+        $em = $this->getDoctrine()->getManager();
+        // get departamento
+        if ($paisId == 1) {
+            $condition = array('lugarNivel' => 1, 'paisTipoId' => $paisId);
+        } else {
+            $condition = array('lugarNivel' => 8, 'id' => '79355');
+        }
+        $objDepto = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy($condition);
+        $arrDepto = array();
+        foreach ($objDepto as $depto) {
+            $arrDepto[]=array('deptoId'=>$depto->getId(),'depto'=>$depto->getLugar());
+        }
+
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'arrDepto' => $arrDepto,
+        ));
+       
+        return $response;        
+
+
+    }
+
+    public function getProvinciaAction(Request $request){
+    
+      $em = $this->getDoctrine()->getManager();
+      $response = new JsonResponse();
+      $lugarNacTipoId = $request->get('lugarNacTipoId');
+
+      // / get provincias
+      $objProv = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $lugarNacTipoId));
+
+      $arrProvincia = array();
+      foreach ($objProv as $prov) {
+          $arrProvincia[] = array('provinciaId'=>$prov->getid(), 'provincia'=>$prov->getlugar());
+      }
+
+        $response->setStatusCode(200);
+      $response->setData(array(
+          'arrProvincia' => $arrProvincia,
+      ));
+     
+      return $response;
+
     }
 
 }
