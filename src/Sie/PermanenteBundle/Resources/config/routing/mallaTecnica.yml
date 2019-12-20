@@ -24,7 +24,7 @@ permanente_create_modulo_nuevo:
 
 permanente_update_modulo_nuevo:
     path:     /updatemodnuevo/
-    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:updateeModuloNuevo"}
+    defaults: { _controller: "SiePermanenteBundle:MallaTecnica:updateModuloNuevo"}
     options:
          expose: true
 

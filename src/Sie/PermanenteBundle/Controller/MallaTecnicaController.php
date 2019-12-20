@@ -93,8 +93,6 @@ class MallaTecnicaController extends Controller {
     public function seemodulosAction(Request $request) {
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);        
-     //   dump($aInfoUeducativa);die;
-//        die;     
         $em = $this->getDoctrine()->getManager();   
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
@@ -151,9 +149,9 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
-        $query = "SELECT * from (
-select sae.id, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip--, smp.id,smt.modulo --,sfat.facultad_area
-
+        $query = "select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
+						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
+						, sia.id as idsia, sip.id as idsip
         from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
 			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
@@ -167,8 +165,8 @@ select sae.id, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditac
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
-from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
 			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
@@ -184,6 +182,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 //        print_r($query);
 //        die;
         $final = $db->prepare($query);
+       // dump($final);die;
         $params = array();
         $final->execute($params);
         $mallafinal = $final->fetchAll();
@@ -204,6 +203,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
     }
     
     public function seemodulosverAction(Request $request) {
+     //   dump($request);die;
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);        
 //        dump($aInfoUeducativa);
@@ -240,34 +240,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        //$periodos = array();
-//        $ultimoperiodo = array();
-     //   dump($po);die;
-        //$sieaid = $po[0]['sieaid'];
-        //$aInfoUeducativa['ueducativaInfoId']['siea']
-        //AVERIGUA CANTIDAD DE SEMESTRES DE LA CARRERRA
-//        $query = "  select distinct e.id as sieaid, g.id as siepid, g.superior_periodo_tipo_id as superior_periodo_tipoid, x.id as sptid, x.periodo_superior, a.codigo as nivel_id,
-//                        b.codigo as ciclo_id,d.codigo as grado_id ,d.acreditacion as acreditacion
-//
-//                        from superior_facultad_area_tipo a 
-//                        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-//                        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-//                        inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-//                        inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-//                        inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
-//                        inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
-//                        inner join superior_periodo_tipo x on g.superior_periodo_tipo_id = x.id 
-//
-//                        where f.gestion_tipo_id=".$this->session->get('ie_gestion')."
-//                      and f.institucioneducativa_id=".$this->session->get('ie_id')."
-//                      and f.sucursal_tipo_id=".$this->session->get('ie_subcea')."
-//                      and f.periodo_tipo_id=".$this->session->get('ie_per_cod')." 
-//                      and a.codigo = ".$aInfoUeducativa['ueducativaInfoId']['facultad_area_cod']."
-//                      and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']."
-//                      and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3))
-//                      and e.superior_turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id']."
-//                      order by d.codigo";
-        
+               
         $query = "  
                     select c.id as saeid, d.acreditacion
                         from superior_facultad_area_tipo a
@@ -356,153 +329,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
             'infoUe' => $infoUe,
         ));      
     }
-
-    public function changeareaAction(Request $request) {        
-        $var = $request->request->all();
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        $response = new JsonResponse();
-        try {
-            $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($var['pk']);
-            $smp->setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find($var['value']));
-            $em->persist($smp);
-            $em->flush();            
-            $em->getConnection()->commit();
-            return $response->setData(array('mensaje'=>'Proceso realizado exitosamente.'));
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();            
-            return $response->setData(array('mensaje'=>'Proceso detenido.'));
-        }
-    }
-    
-    public function changehorasAction(Request $request) {        
-        $var = $request->request->all();
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        $response = new JsonResponse(); 
-        try {
-            $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($var['pk']);
-            $smp->setHorasModulo($var['value']);
-            $em->persist($smp);
-            $em->flush();            
-            $em->getConnection()->commit();
-            return $response->setData(array('mensaje'=>'Proceso realizado exitosamente.'));
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();            
-            return $response->setData(array('mensaje'=>'Proceso detenido.'));
-        }
-    }
-    
-    public function changesemestreAction(Request $request) {
-        $var = $request->request->all();
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        $response = new JsonResponse(); 
-        try {
-            $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($var['pk']);
-            $smp->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($var['value']));
-            $em->persist($smp);
-            $em->flush();            
-            $em->getConnection()->commit();
-            return $response->setData(array('mensaje'=>'Proceso realizado exitosamente.'));
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();            
-            return $response->setData(array('mensaje'=>'Proceso detenido.'));
-        }
-    }
-    
-    public function changeduracionAction(Request $request) {        
-        $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        $var = $request->request->all();
-        $query = "  
-                    select b.*
-                    from superior_institucioneducativa_acreditacion a 
-                            inner join superior_institucioneducativa_periodo b on b.superior_institucioneducativa_acreditacion_id = a.id
-                                inner join superior_periodo_tipo c on b.superior_periodo_tipo_id = c.id
-                    where a.id = '".$var['pk']."'";
-        $sieat = $db->prepare($query);
-        $params = array();
-        $sieat->execute($params);
-        $duracion = $sieat->fetchAll();
-        $duraacioncount = count($duracion) + 1;
-        $semes = intval($var['value']);
-        
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        $response = new JsonResponse(); 
-        try {
-            if (count($duracion) == $semes){
-                die('es igual no se hace nada');
-            }
-            if ($duraacioncount < $semes){
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_periodo');")->execute();
-                for ($i = $duraacioncount; $i < $semes; $i++) {
-//                    print_r($duraacioncount.' - '.$semes);
-//                    die;
-                    $siep = new SuperiorInstitucioneducativaPeriodo();
-                    $siep->setSuperiorInstitucioneducativaAcreditacion($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($var['pk']));
-                    $siep->setSuperiorPeriodoTipo($em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find($i+1));
-                    $siep->setHorasPeriodo('0');
-                    $em->persist($siep);
-                    $em->flush();
-                }
-                $em->getConnection()->commit();
-                return $response->setData(array('mensaje'=>'Proceso realizado exitosamente.'));
-            }
-            if (count($duracion) >$semes){
-                die('eliminar periodos');
-            }        
-//        dump($duracion);
-//        print_r($var['value']);
-//        die;
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();            
-            return $response->setData(array('mensaje'=>'Proceso detenido.'));
-        }
-    }
-    
-    public function changeduracionauxAction() {        
-        print_r('cambio de duración');
-        die;
-    }
-    
-    public function changeduracionmedAction() {        
-        print_r('cambio de duración');
-        die;
-    }
-    
-    public function changeduracionbasAction() {        
-        print_r('cambio de duración');
-        die;
-    }
-    
-    public function changeduracionnewAction(Request $request) {        
-        $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        $var = $request->request->all();
-
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        $response = new JsonResponse(); 
-        try {            
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_periodo');")->execute();
-            for ($i = 2; $i < $var['value']; $i++) {
-                $siep = new SuperiorInstitucioneducativaPeriodo();
-                $siep->setSuperiorInstitucioneducativaAcreditacion($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($var['pk']));
-                $siep->setSuperiorPeriodoTipo($em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find($i));
-                $siep->setHorasPeriodo('0');
-                $em->persist($siep);
-                $em->flush();
-            }
-            $em->getConnection()->commit();
-//            return $response->setData(array('mensaje'=>'Proceso realizado exitosamente.'));                
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();            
-            return $response->setData(array('mensaje'=>'Proceso detenido.'));
-        }
-    }
-    
+  
     public function addmoduloAction(Request $request) {
         $var = $request->request->all();
         $infoUe = $request->get('infoUe');
@@ -570,31 +397,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
                 $em->flush();
                 
                 $smt = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('1');
-//                if (count($smt) == 1){
-//                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-//                    $smp = new SuperiorModuloPeriodo();
-//                    $smp->setSuperiorModuloTipo($smt[0]);
-//                    $smp->setInstitucioneducativaPeriodo($siep);
-//                    $smp->setHorasModulo($var['horas']);
-//                    $em->persist($smp);
-//                    $em->flush();
-//                }
-//                else{
-//                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
-//                    $smtn = new SuperiorModuloTipo();
-//                    $smtn->setModulo($var['modulo']);
-//                    $smtn->setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find($var['area']));
-//                    $em->persist($smtn);
-//                    $em->flush();
-//
-//                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-//                    $smp = new SuperiorModuloPeriodo();
-//                    $smp->setSuperiorModuloTipo($smtn);
-//                    $smp->setInstitucioneducativaPeriodo($siep);
-//                    $smp->setHorasModulo($var['horas']);
-//                    $em->persist($smp);
-//                    $em->flush();
-//                }
+
             }
             else{
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
@@ -604,19 +407,13 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
                 $em->persist($smt);
                 $em->flush();
 
-             //   $smt = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('1');
-             //   dump($smt);
-     //           dump(count($smt));die;
-//                die;
-              //  dump($smt);die;
-
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($smt);
-                    $smp->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($saerow['0']['siepid']));
-                    $smp->setHorasModulo($var['horas']);
-                    $em->persist($smp);
-                    $em->flush();
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                $smp = new SuperiorModuloPeriodo();
+                $smp->setSuperiorModuloTipo($smt);
+                $smp->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($saerow['0']['siepid']));
+                $smp->setHorasModulo($var['horas']);
+                $em->persist($smp);
+                $em->flush();
             //  dump($smp);die;
 
             }
@@ -802,36 +599,38 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
     }
 
     public function shoModuloNuevoAction(Request $request)
-    {
-       // dump($request);die;
+    {//dump($request);die;
+
         $idsip = $request->get('idsip');
         $idesp = $request->get('idesp');
-      //  dump($request);die;
+        $totalhoras = $request->get('totalhoras');
+        $horas= [80,100,120];
+        $idacreditacion =$request->get('idacred');
         $form = $this->createFormBuilder()
-            // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
-
             ->add('modulo', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-            ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true,'onblur'=>'rangoHoras(this)')))
+            ->add('horas', 'choice', array('choices'=> $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'guardarModulo();')))
             ->add('idsip', 'hidden', array('data' => $idsip))
             ->add('idesp', 'hidden', array('data' => $idesp))
+            ->add('totalhoras', 'hidden', array('data' => $totalhoras))
             ->getForm();
+
+           // dump($totalhoras);die;
             return $this->render('SiePermanenteBundle:MallaTecnica:nuevomodulo.html.twig', array(
-            'form' => $form->createView()
-           // 'idsip'=>$idsip
+                'form' => $form->createView(),
+                'totalhoras'=>$totalhoras,
+                'idacreditacion'=>$idacreditacion
         ));
     }
     public function createModuloNuevoAction(Request $request)
     {
         $form = $request->get('form');
-     //   dump($form);die;
-         // dump($idsip);die;
-      //  $form = $request->get('form');
-        // dump($form);die;
-      //  $modulo = strtoupper($form['modulo']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
-      //  $horas = ($form['horas']);
-      //  dump($modulo);dump($horas);die;
+        $horas= [80,100,120];
+        $horasid = ($form['horas']);
+        $horasmodulo = $horas[$horasid];
         $modulo = strtoupper($form['modulo']);
+        $idsip = $form['idsip'];
+        $idesp = $form['idesp'];
 
         try{
             $em = $this->getDoctrine()->getManager();
@@ -839,6 +638,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
             $smtipo = new SuperiorModuloTipo();
             $smtipo -> setModulo($modulo);
+            $smtipo -> setEsvigente(true);
             $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
             $em->persist($smtipo);
             $em->flush($smtipo);
@@ -851,7 +651,7 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
             $smperiodo = new SuperiorModuloPeriodo();
             $smperiodo ->setSuperiorModuloTipo($smtipo);
             $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($form['idsip']));
-            $smperiodo ->setHorasModulo($form['horas']);
+            $smperiodo ->setHorasModulo($horasmodulo);
             $em->persist($smperiodo);
             $em->flush($smperiodo);
 
@@ -899,6 +699,42 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             $params = array();
             $especialidadnivel->execute($params);
             $po = $especialidadnivel->fetchAll();
+   $db = $em->getConnection();
+            $query = "  select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
+						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
+						, sia.id as idsia, sip.id as idsip
+        from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$form['idesp']." 
+)as nivel
+left join (
+select idsae,idacr
+--,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
+from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$form['idesp']." ) dat
+group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
+)as v on v.idacr = nivel.idacreditacion
+    ";
+            $final = $db->prepare($query);
+            $params = array();
+            $final->execute($params);
+            $mallafinal = $final->fetchAll();
+
             // dump($po);die();
             if ($po){
                 $exist = true;
@@ -910,8 +746,8 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             return $this->render('SiePermanenteBundle:MallaTecnica:listModulos.html.twig', array(
                 'exist' => $exist,
                 'mallaniv' => $mallaniv,
+                'mallafin' => $mallafinal,
                 'malla' => $po
-
             ));
 
 
@@ -966,49 +802,66 @@ from superior_acreditacion_especialidad sae
         }
     }
     public function showModuloEditAction(Request $request)
-    {  $em = $this->getDoctrine()->getManager();
+    {   $em = $this->getDoctrine()->getManager();
         // dump($request);die;
+        $horas= [80,100,120];
         $idmodulo = $request->get('idmodulo');
         $idspm = $request->get('idspm');
         $modulo = $request->get('modulo');
-        $horas = $request->get('horas');
+        $horasmodulo = $request->get('horas');
         $idesp = $request->get('idesp');
-
+        $totalhoras = $request->get('totalhoras');
+        $idacreditacion =$request->get('idacred');
+       for($i=0;$i<=2;$i++)
+       {
+           if($horas[$i]==$horasmodulo){
+               $horasid = $i;
+           }
+       }
 
         $form = $this->createFormBuilder()
             // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
-        ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-            //->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-            ->add('horas', 'text', array( 'required' => true,'data' => $horas, 'attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
+            ->add('horas', 'choice', array('choices'=> $horas,'data' => $horasid, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'updateModulo();')))
-        ->add('idmodulo', 'hidden', array('data' => $idmodulo))
-        ->add('idspm', 'hidden', array('data' => $idspm))
+            ->add('idmodulo', 'hidden', array('data' => $idmodulo))
+            ->add('idspm', 'hidden', array('data' => $idspm))
             ->add('idesp', 'hidden', array('data' => $idesp))
+            ->add('totalhoras', 'hidden', array('data' => $totalhoras))
             ->getForm();
         return $this->render('SiePermanenteBundle:MallaTecnica:editarmodulo.html.twig', array(
-
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'totalhoras'=>$totalhoras,
+            'idacreditacion'=>$idacreditacion,
+            'horasmodulo'=>$horasmodulo
 
         ));
     }
 
     public function showModuloNuevoAction(Request $request)
-    {
-        // dump($request);die;
+    {//dump($request);die;
         $idsip = $request->get('idsip');
         $idesp = $request->get('idesp');
+        $totalhoras = $request->get('totalhoras');
+        $horas= [80,100,120];
+       // $horasmodulo = $request->get('horas');
+        $idacreditacion =$request->get('idacred');
         //  dump($request);die;
         $form = $this->createFormBuilder()
             // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
 
             ->add('modulo', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-            ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('horas', 'choice', array('choices'=> $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+           // ->add('seccioniiProvincia', 'choice', array('choices' => $provNac ? $provNac->getId() : 0, 'label' => 'Provincia', 'required' => false, 'choices' => $provNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'guardarModulo();')))
             ->add('idsip', 'hidden', array('data' => $idsip))
             ->add('idesp', 'hidden', array('data' => $idesp))
+            ->add('totalhoras', 'hidden', array('data' => $totalhoras))
             ->getForm();
         return $this->render('SiePermanenteBundle:MallaTecnica:nuevomodulo.html.twig', array(
-            'form' => $form->createView()
+             'form' => $form->createView(),
+            'totalhoras'=>$totalhoras,
+            'idacreditacion'=>$idacreditacion
             // 'idsip'=>$idsip
         ));
     }
@@ -1016,8 +869,17 @@ from superior_acreditacion_especialidad sae
     public function updateModuloNuevoAction(Request $request)
     {
         $form = $request->get('form');
-       // dump($form);die;
+        //dump($form);die;
         $modulo = strtoupper($form['modulo']);
+        $idspm = $form['idspm'];
+        $idesp = $form['idesp'];
+
+        $horas= [80,100,120];
+        $horasid = ($form['horas']);
+        $horasmodulo = $horas[$horasid];
+
+
+
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -1029,7 +891,7 @@ from superior_acreditacion_especialidad sae
 
             //  dump($smtipo);die;
             $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' => $form['idspm']));
-            $supmodper->setHorasModulo($form['horas']);
+            $supmodper->setHorasModulo($horasmodulo);
             $em->persist($supmodper);
             $em->flush($supmodper);
 
@@ -1056,6 +918,43 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             $params = array();
             $especialidadnivel->execute($params);
             $po = $especialidadnivel->fetchAll();
+        $db = $em->getConnection();
+            $query = "  select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
+						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
+						, sia.id as idsia, sip.id as idsip
+        from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']." 
+)as nivel
+left join (
+select idsae,idacr
+--,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
+from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']." ) dat
+group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
+)as v on v.idacr = nivel.idacreditacion
+    ";
+            $final = $db->prepare($query);
+            $params = array();
+            $final->execute($params);
+            $mallafinal = $final->fetchAll();
+
+
             // dump($po);die();
             if ($po){
                 $exist = true;
@@ -1064,9 +963,11 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
                 $exist = false;
             }
 
+
             return $this->render('SiePermanenteBundle:MallaTecnica:listModulos.html.twig', array(
                 'exist' => $exist,
-                'malla' => $po
+                'malla' => $po,
+                'mallafin' => $mallafinal,
 
             ));
 
@@ -1128,7 +1029,42 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             $params = array();
             $especialidadnivel->execute($params);
             $po = $especialidadnivel->fetchAll();
-            // dump($po);die();
+   $db = $em->getConnection();
+            $query = "  select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
+						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
+						, sia.id as idsia, sip.id as idsip
+        from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$idesp."
+)as nivel
+left join (
+select idsae,idacr
+--,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
+from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$idesp.") dat
+group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
+)as v on v.idacr = nivel.idacreditacion
+    ";
+            $final = $db->prepare($query);
+            $params = array();
+            $final->execute($params);
+            $mallafinal = $final->fetchAll();
+
             if ($po){
                 $exist = true;
             }
@@ -1138,6 +1074,8 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 
             return $this->render('SiePermanenteBundle:MallaTecnica:listModulos.html.twig', array(
                 'exist' => $exist,
+              
+                'mallafin' => $mallafinal,
                 'malla' => $po
             ));
 
