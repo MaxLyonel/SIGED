@@ -46,7 +46,7 @@ class DefaultController extends Controller {
         switch ($request->server->get('HTTP_HOST')) {
             case '172.20.196.9:8011':
             case 'siged.sie.gob.bo':
-                $sysname = 'REGULAR';
+                $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
@@ -62,7 +62,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
             case '172.20.16.239a':
-            case '172.20.196.7':
+            // case '172.20.196.7':
                 $sysname = 'Herramienta';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -74,12 +74,13 @@ class DefaultController extends Controller {
             case 'academicolb.sie.gob.bo':
             case '172.20.196.9:8013':
             case '172.20.0.53:8013':
-                $sysname = 'Herramienta';
+                $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
                 break;
             case '172.20.0.53:8013':
                 $sysname = 'Herramienta';
@@ -92,22 +93,24 @@ class DefaultController extends Controller {
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
             case 'alternativa.local':
-                $sysname = 'Herramienta Alternativa';
+                $sysname = 'Sistema Académico Educación Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 $this->session->set('color', 'success');
+                $this->session->set('sistemaid', 2);
                 break;
             case 'eduper.sie.gob.bo':
-                $sysname = 'PERMANENTE';
+            case '172.20.196.7':
+                $sysname = 'Sistema Académico Educación Permanente';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutPermanente.html.twig';
                 $this->session->set('pathSystem', "SiePermanenteBundle");
                 break;
             case 'www.herramienta.local':
-                $sysname = 'Herramienta';
+                $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
@@ -217,7 +220,7 @@ class DefaultController extends Controller {
             case 'especial.local':
             case '172.20.196.9:8010':
             case '172.20.0.53:8010':
-                $sysname = 'ESPECIAL';
+                $sysname = 'Sistema Académico Educación Especial';
                 $sysporlet = 'red';
                 $sysbutton = true;
                 $layout = 'layoutEspecialSie.html.twig';
@@ -270,7 +273,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
             case '172.20.196.9:8030':
-            case '172.20.196.7':
+            // case '172.20.196.7':
             case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';
@@ -318,7 +321,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 break;
             case 'siged.local':
-                $sysname = 'REGULAR';
+                $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
@@ -356,7 +359,7 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8023':
             case '172.20.0.53:8021':
-            case '172.20.196.7':
+            // case '172.20.196.7':
             case 'infraestructura.local':
                 $sysname = 'INFRAESTRUCTURA';
                 $sysporlet = 'black';
@@ -388,7 +391,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieDiplomaBundle");
                 break;
             case 'www.gis.local':
-            case '172.20.196.7':
+            // case '172.20.196.7':
             case 'sigee.sie.gob.bo':
                 $this->session->set('pathSystem', "SieGisBundle");
                 return $this->render('SieGisBundle:Default:index.html.twig');
@@ -479,7 +482,7 @@ class DefaultController extends Controller {
         /*
         *  ////// REDIRECCIONAMOS AL FORMULARIO DE LOGIN SEGUN EL SUBSISTEMA
         */
-        return $this->render($this->session->get('pathSystem') . ':Login:login.html.twig',array(
+        return $this->render('SieAppWebBundle:Login:login4.html.twig',array(
             'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
             'error' => $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR) // 'error'=>array('message'=>'¡Ocurrió un error interno!')
         ));
@@ -694,15 +697,15 @@ class DefaultController extends Controller {
 
                     switch ($sistema) {
                         case 'SieRegularBundle':
-                            $this->session->set('sysname', 'SIGED');
+                            $this->session->set('sysname', 'SISTEMA SIGED');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieHerramientaBundle':
-                            $this->session->set('sysname', 'ACADEMICO REGULAR');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN REGULAR');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieHerramientaAlternativaBundle':
-                            $this->session->set('sysname', 'ALTERNATIVA ADULTOS Y JOVENES');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN ALTERNATIVA');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieRueBundle':
@@ -722,7 +725,7 @@ class DefaultController extends Controller {
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieEspecialBundle':
-                            $this->session->set('sysname', 'ALTERNATIVA ESPECIAL');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN ESPECIAL');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieDgesttlaBundle':
@@ -742,15 +745,15 @@ class DefaultController extends Controller {
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieOlimpiadasBundle':
-                            $this->session->set('sysname', 'OLIMPIADA CIENTÍFICA ESTUDIANTIL PURINACIONAL BOLIVIANA');
+                            $this->session->set('sysname', 'SISTEMA OLIMPIADAS CIENTÍFICAS');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SiePermanenteBundle':
-                            $this->session->set('sysname', 'EDUCACIÓN PERMANENTE');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN PERMANENTE');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;    
                         default:
-                            $this->session->set('sysname', 'SIGED');
+                            $this->session->set('sysname', 'SISTEMA SIGED');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                     }
