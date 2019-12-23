@@ -44,3 +44,9 @@ per_inscriptionstudent_getprovincia:
     defaults: { _controller: SiePermanenteBundle:StudentsInscriptions:getProvincia }
     options:
         expose: true
+
+per_inscriptionstudent_checkDataStudent:
+    path:     /checkDataStudent
+    defaults: { _controller: SiePermanenteBundle:StudentsInscriptions:checkDataStudent }
+    options:
+        expose: true        

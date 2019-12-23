@@ -549,4 +549,13 @@ class StudentsInscriptionsController extends Controller {
 
     }
 
+    public function checkDataStudentAction(Request $request){
+      // get send data
+      $paterno = $request->get('paterno');
+      dump($paterno);
+      dump($request);
+      die;
+    }
+
+
 }
