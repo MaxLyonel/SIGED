@@ -313,7 +313,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 }
 
                 // Validamos si la inscripcion corresponde a la unidad educativa que realiza la solicitud
-                if ($request->getSession()->get('ie_id') != $form['idInstitucion']) {
+                if ($request->getSession()->get('ie_id') != $form['idInstitucion'] and $request->getSession()->get('roluser') != 8) {
                     $this->get('session')->getFlashBag()->add('noSearch', 'No tiene tuicion sobre la inscripción del estudiante');
                     return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
