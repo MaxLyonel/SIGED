@@ -551,7 +551,19 @@ class StudentsInscriptionsController extends Controller {
 
     public function checkDataStudentAction(Request $request){
       // get send data
+      $paisId = $request->get('paisId');
+      $lugarNacTipoId = $request->get('lugarNacTipoId');
+      $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
+      $localidad = $request->get('localidad');
       $paterno = $request->get('paterno');
+      $materno = $request->get('materno');
+      $nombre = $request->get('nombre');
+      $fecNac = $request->get('fecNac');
+      $generoId = $request->get('generoId');
+      $carnet = $request->get('carnet');
+      $complementoval = $request->get('complementoval');
+
+
       dump($paterno);
       dump($request);
       die;
