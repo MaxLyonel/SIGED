@@ -47,14 +47,14 @@
  * HEADER
  * ======================================================================== */
 body.page-sidebar-minimize #header .navbar-minimize > a {
-  background-color: #5577b4;
+  background-color: #B0BEC5;
   color: #ffffff;
 }
 body.page-sidebar-minimize #header .navbar-minimize:hover > a {
-  background-color: #496ba6;
+  background-color: #B0BEC5;
 }
 #header .navbar-header {
-  background-color: #5577b4;
+  background-color: #B0BEC5;
 }
 /* ========================================================================
  * SIDEBAR LEFT & RIGHT
@@ -110,7 +110,7 @@ body.page-sidebar-minimize-auto .navbar-minimize a i {
   color: #ffffff;
 }
 .navbar-minimize-mobile {
-  background-color: #5577b4;
+  background-color: #90A4AE;
 }
 .navbar-minimize-mobile:hover {
   background-color: #496ba6;

@@ -47,11 +47,11 @@
  * HEADER
  * ======================================================================== */
 body.page-sidebar-minimize #header .navbar-minimize > a {
-  background-color: #81b71a;
+  background-color: #90A4AE;
   color: #ffffff;
 }
 body.page-sidebar-minimize #header .navbar-minimize:hover > a {
-  background-color: #71a117;
+  background-color: #B0BEC5;
 }
 #header .navbar-header {
   background-color: #90A4AE;
@@ -118,11 +118,11 @@ body.page-sidebar-minimize-auto .navbar-minimize a i {
 @media (max-width: 768px) {
   body.page-sidebar-left-show .navbar-minimize-mobile,
   body.page-sidebar-right-show .navbar-minimize-mobile {
-    background-color: #628a14;
+    background-color: #90a4ae;
   }
   body.page-sidebar-left-show .navbar-minimize-mobile:hover,
   body.page-sidebar-right-show .navbar-minimize-mobile:hover {
-    background-color: #71a117;
+    background-color: #90a4ae;
   }
 }
 .navbar-toolbar .navbar-form input:focus {
