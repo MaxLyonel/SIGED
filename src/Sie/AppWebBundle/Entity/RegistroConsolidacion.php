@@ -104,6 +104,16 @@ class RegistroConsolidacion
      */
     private $institucioneducativaTipoId;
 
+    /**
+     * @var integer
+     */
+    private $rude;
+
+    /**
+     * @var integer
+     */
+    private $boletin;
+
 
     /**
      * Set tipo
@@ -540,5 +550,51 @@ class RegistroConsolidacion
     public function getInstitucioneducativaTipoId()
     {
         return $this->institucioneducativaTipoId;
+    }
+
+    /**
+     * Set rude
+     *
+     * @param integer $rude
+     * @return RegistroConsolidacion
+     */
+    public function setRude($rude)
+    {
+        $this->rude = $rude;
+    
+        return $this;
+    }
+
+    /**
+     * Get rude
+     *
+     * @return integer 
+     */
+    public function getRude()
+    {
+        return $this->rude;
+    }
+
+    /**
+     * Set boletin
+     *
+     * @param integer $boletin
+     * @return RegistroConsolidacion
+     */
+    public function setBoletin($boletin)
+    {
+        $this->boletin = $boletin;
+    
+        return $this;
+    }
+
+    /**
+     * Get boletin
+     *
+     * @return integer 
+     */
+    public function getBoletin()
+    {
+        return $this->boletin;
     }
 }

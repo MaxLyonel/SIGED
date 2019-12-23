@@ -106,13 +106,36 @@
               -o-transform: scale(1.5); /* Opera */
               padding: 5px;
               margin-right: 20px;
-            }   
+            }
+
+            .enlaces{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 5px;
+                background: #78909C;
+            }
+            .enlaces > a{
+                color: #F7F7F7;
+                text-decoration: none;
+                font-size: 1.2em;
+            }
+
+            .enlaces > a:hover{
+                color: #FFFFFF;
+            }
+            .consulta{
+                padding-top: 20px;
+            }
         </style>
         
     </head>
     
     <body class="page-sound page-backstretch" >
-
+        
+        <div class="enlaces">
+            
+        </div>
 
         <!-- START @SIGN WRAPPER -->
         <div id="sign-wrapper">
@@ -172,7 +195,11 @@
                     <div class="form-group">
                         <br>
                         <button class="btn btn-lg btn-block no-margin rounded btn-aceptar" type="submit"><i class="fa fa-unlock"></i>Aceptar</button>
-
+                        {% if app.session.get('sistemaid') == 1 %}
+                            <div class="consulta text-center">
+                                <a href="{{path('consultalibreta')}}" style="color:#455A64; font-size:1em;"><span class="glyphicon glyphicon-list-alt"></span> Consultar Libreta</a>
+                            </div>
+                        {% endif %}
                     </div><!-- /.form-group -->
                 </div><!-- /.sign-footer -->
             </form>
