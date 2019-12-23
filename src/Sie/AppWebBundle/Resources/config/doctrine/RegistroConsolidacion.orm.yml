@@ -1,6 +1,7 @@
 Sie\AppWebBundle\Entity\RegistroConsolidacion:
     type: entity
     table: registro_consolidacion
+    repositoryClass: Sie\AppWebBundle\Entity\RegistroConsolidacionRepository    
     id:
         tipo:
             type: integer
