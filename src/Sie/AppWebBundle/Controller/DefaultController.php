@@ -697,15 +697,15 @@ class DefaultController extends Controller {
 
                     switch ($sistema) {
                         case 'SieRegularBundle':
-                            $this->session->set('sysname', 'SIGED');
+                            $this->session->set('sysname', 'SISTEMA SIGED');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieHerramientaBundle':
-                            $this->session->set('sysname', 'ACADEMICO REGULAR');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN REGULAR');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieHerramientaAlternativaBundle':
-                            $this->session->set('sysname', 'ALTERNATIVA ADULTOS Y JOVENES');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN ALTERNATIVA');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieRueBundle':
@@ -725,7 +725,7 @@ class DefaultController extends Controller {
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieEspecialBundle':
-                            $this->session->set('sysname', 'ALTERNATIVA ESPECIAL');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN ESPECIAL');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieDgesttlaBundle':
@@ -745,15 +745,15 @@ class DefaultController extends Controller {
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SieOlimpiadasBundle':
-                            $this->session->set('sysname', 'OLIMPIADA CIENTÍFICA ESTUDIANTIL PURINACIONAL BOLIVIANA');
+                            $this->session->set('sysname', 'SISTEMA OLIMPIADAS CIENTÍFICAS');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                         case 'SiePermanenteBundle':
-                            $this->session->set('sysname', 'EDUCACIÓN PERMANENTE');
+                            $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN PERMANENTE');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;    
                         default:
-                            $this->session->set('sysname', 'SIGED');
+                            $this->session->set('sysname', 'SISTEMA SIGED');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
                     }
