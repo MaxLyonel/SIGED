@@ -556,7 +556,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function checkDataStudentAction(Request $request){
-      dump($request);die;
+      
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -599,6 +599,7 @@ class StudentsInscriptionsController extends Controller {
           // check if the students has the required
           if($yearStudent>15){
             // create rude code to the student
+            
             $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
             $query->bindValue(':sie', $this->session->get('ie_id'));            
             $query->bindValue(':gestion', $this->session->get('currentyear'));
@@ -629,7 +630,7 @@ class StudentsInscriptionsController extends Controller {
                 $estudiante->setLocalidadNac('');
             }
             $estudiante->setSegipId(1);
-            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['Expedido']));
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
             $em->persist($estudiante);
 
             // set the inscription to the new student
