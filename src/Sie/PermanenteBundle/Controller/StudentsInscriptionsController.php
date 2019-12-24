@@ -39,8 +39,12 @@ class StudentsInscriptionsController extends Controller {
     public function indexAction(Request $request){
         //get the send values
         $infoUe = $request->get('infoUe');
-
+        $arrInfoUe = unserialize($infoUe);
+        // dump($arrInfoUe);
+        // die;
         return $this->render('SiePermanenteBundle:StudentsInscriptions:newlookforstudent.html.twig', array(
+          'infoUe'=>$infoUe,
+          'iecId' => $arrInfoUe['ueducativaInfo']['ueducativaInfoId']['iecid']
           // 'form'=>$this->findStudentForm($infoUe)->createView()
         ));
     }
@@ -390,6 +394,7 @@ class StudentsInscriptionsController extends Controller {
           'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
           'carnet'      =>$objStudent->getCarnetIdentidad(),
           'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
+          'generoId'      =>$objStudent->getGeneroTipo()->getId(),
           'complemento' =>$objStudent->getComplemento(),
           'rude'     =>$objStudent->getCodigoRude(),
         );
@@ -446,6 +451,7 @@ class StudentsInscriptionsController extends Controller {
             'carnet'      =>$objStudent->getCarnet(),
             'complemento' =>$objStudent->getComplemento(),
             'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
+            'generoId'    =>$objStudent->getGeneroTipo()->getId(),
 
           );
         }
@@ -548,5 +554,149 @@ class StudentsInscriptionsController extends Controller {
       return $response;
 
     }
+
+    public function checkDataStudentAction(Request $request){
+      
+      //ini json var
+      $response = new JsonResponse();
+      // create db conexion
+      $em = $this->getDoctrine()->getManager();
+      $em->getConnection()->beginTransaction();
+      // get the send data
+      $paisId = $request->get('paisId');
+      $lugarNacTipoId = $request->get('lugarNacTipoId');
+      $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
+      $localidad = $request->get('localidad');
+      $paterno = $request->get('paterno');
+      $materno = $request->get('materno');
+      $nombre = $request->get('nombre');
+      $fecNac = $request->get('fecNac');
+      $generoId = $request->get('generoId');
+      $carnet = $request->get('carnet');
+      $complemento = $request->get('complementoval');
+      $iecId = $request->get('iecId');
+      // set data to validate with segip function
+      $arrParametros = array(
+        'complemento'=>$complemento,
+        'primer_apellido'=>$paterno,
+        'segundo_apellido'=>$materno,
+        'nombre'=>$nombre,
+        'fecha_nacimiento'=>$fecNac
+      );
+      // get info segip
+      $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+      // check if the data person is true
+      if($answerSegip){
+        // now get the Centro info 
+        try {
+         
+          // create fec nac var 
+          $newFecNac = str_replace('/', '-', $fecNac);
+          $fecNac =  date('Y-m-d', strtotime($newFecNac));
+          // get the students years old
+          $yearStudent = (date('Y') - date('Y',strtotime($fecNac)));
+
+          // check if the students has the required
+          if($yearStudent>15){
+            // create rude code to the student
+            
+            $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+            $query->bindValue(':sie', $this->session->get('ie_id'));            
+            $query->bindValue(':gestion', $this->session->get('currentyear'));
+            $query->execute();
+            $codigorude = $query->fetchAll();
+            $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
+            
+            // set the data person to the student table
+            $estudiante = new Estudiante();
+            // set the new student
+            $estudiante->setCodigoRude($codigoRude);
+            $estudiante->setCarnetIdentidad($carnet);
+            $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
+            $estudiante->setPaterno(mb_strtoupper($paterno, 'utf-8'));
+            $estudiante->setMaterno(mb_strtoupper($materno, 'utf-8'));
+            $estudiante->setNombre(mb_strtoupper($nombre, 'utf-8'));                        
+            $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
+            $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
+            $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
+            // check if the country is Bolivia
+            if ($paisId === '1'){                    
+                $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
+                $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
+                $estudiante->setLocalidadNac($localidad);
+            }else{//no Bolivia
+                $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+                $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+                $estudiante->setLocalidadNac('');
+            }
+            $estudiante->setSegipId(1);
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+            $em->persist($estudiante);
+
+            // set the inscription to the new student
+            $studentInscription = new EstudianteInscripcion();
+            $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
+            $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+            $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante->getId()));
+            $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
+            $studentInscription->setObservacion(1);
+            $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
+            $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
+            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+            //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
+            $studentInscription->setCodUeProcedenciaId(0);
+            $em->persist($studentInscription);
+
+            $em->flush();
+
+            // Try and commit the transaction
+            $em->getConnection()->commit();
+
+            $status = 'success';
+            $code = 200;
+            $message = "Estudiante registrado existosamente!!!";
+            $swcreatestudent = true;
+
+          }else{
+
+            $status = 'error';
+            $code = 400;
+            $message = "Estudiante no cumple con la edad Requerida";
+            $swcreatestudent = false;            
+          }
+
+        } catch (Exception $e) {
+          
+          $em->getConnection()->rollback();
+          echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+          
+        }
+      }else{
+
+        $status = 'error';
+        $code = 400;
+        $message = "Datos introducidos no cumplen con la validacion SEGIP!!!";
+        $swcreatestudent = false;
+
+      }
+
+      //send the response info
+       $arrResponse = array(
+            'status'          => $status,
+            'code'            => $code,
+            'message'         => $message,
+            'swcreatestudent' => $swcreatestudent,
+            
+      );
+      
+      $response->setStatusCode(200);
+      $response->setData($arrResponse);
+       
+      return $response;    
+      
+      die;
+    }
+
 
 }

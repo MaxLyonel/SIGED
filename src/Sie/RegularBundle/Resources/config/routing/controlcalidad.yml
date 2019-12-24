@@ -55,3 +55,7 @@ ccalidad_ratificar_edad:
 ccalidad_validar_estudiante_segip:
     path:     /validarEstudianteSegip
     defaults: { _controller: "SieRegularBundle:ControlCalidad:validarEstudianteSegip" }
+
+ccalidad_justificar_estudiante_segip:
+    path:     /justificarEstudianteSegip
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:justificarEstudianteSegip" }
