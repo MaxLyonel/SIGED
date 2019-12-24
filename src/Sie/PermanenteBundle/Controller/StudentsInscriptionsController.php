@@ -373,6 +373,7 @@ class StudentsInscriptionsController extends Controller {
       $dataInscriptionE = array();
       $dataInscriptionP = [];
       $arrGenero = array();
+      $arrExpedido = array();
       $arrPais = array();
       $arrStudent = array();
       $arrNewStudent = array();
@@ -450,13 +451,21 @@ class StudentsInscriptionsController extends Controller {
             'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
             'carnet'      =>$objStudent->getCarnet(),
             'complemento' =>$objStudent->getComplemento(),
+            'expedido'    =>$objStudent->getExpedido()->getSigla(),
+            'expedidoId'  =>$objStudent->getExpedido()->getId(),
             'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
             'generoId'    =>$objStudent->getGeneroTipo()->getId(),
 
+
           );
+          // dump($arrStudent);die;
         }
       }
       // this is to the new person
+      $objExpedido = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
+      foreach ($objExpedido as $value) {
+        $arrExpedido[] = array('expedidoId' => $value->getId(),'expedido' => $value->getSigla());
+      }
       // get genero data
       $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
       foreach ($objGenero as $value) {
@@ -491,9 +500,10 @@ class StudentsInscriptionsController extends Controller {
             'swstudent'        => $swstudent,
             'swperson'         => $swperson,
             'swnewperson'      => $swnewperson,
-            'arrGenero' => $arrGenero,
-            'arrPais' => $arrPais,
-            'arrNewStudent' => $arrNewStudent,
+            'arrGenero'        => $arrGenero,
+            'arrExpedido'      => $arrExpedido,
+            'arrPais'          => $arrPais,
+            'arrNewStudent'    => $arrNewStudent,
       );
       // dump($arrResponse);die;
       $response->setStatusCode(200);
@@ -554,9 +564,8 @@ class StudentsInscriptionsController extends Controller {
       return $response;
 
     }
-
+    // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
-      
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -575,6 +584,7 @@ class StudentsInscriptionsController extends Controller {
       $carnet = $request->get('carnet');
       $complemento = $request->get('complementoval');
       $iecId = $request->get('iecId');
+      $expedidoId = $request->get('expedidoId');
       // set data to validate with segip function
       $arrParametros = array(
         'complemento'=>$complemento,
@@ -630,7 +640,7 @@ class StudentsInscriptionsController extends Controller {
                 $estudiante->setLocalidadNac('');
             }
             $estudiante->setSegipId(1);
-            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
             $em->persist($estudiante);
 
             // set the inscription to the new student
