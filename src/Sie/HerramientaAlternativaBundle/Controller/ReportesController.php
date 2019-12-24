@@ -1587,9 +1587,8 @@ class ReportesController extends Controller {
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $gestion = $this->session->get('ie_gestion');
         $subcea = $this->session->get('ie_subcea');
-        $periodo = 4;
-      
-      
+        $periodo = $this->session->get('ie_per_cod');
+
         //get the values of report
         //create the response object to down load the file
         $response = new Response();
