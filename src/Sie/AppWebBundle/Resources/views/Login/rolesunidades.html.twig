@@ -9,42 +9,65 @@
 
         <title>{{ titulosubsistema }}</title>
 
-        {% if app.session.get('layout') in ['layoutHerramienta.html.twig','layoutEspecialSie.html.twig','layoutHerramientaAlternativa.html.twig'] %}
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
-            <style type="text/css">
-                body{
-                    background: #E9EAED;
-                }
-            </style>
-            {% set card = 'panel' %}
-        {% else %}
-            <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-            <link href="{{asset('css/style.css')}}" rel="stylesheet">
-            {% set card = 'portlet' %}
-        {% endif %}
-
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}">
         <style>
             .container{
                 margin-top: 50px;
             }
+            body{
+                background: #B0BEC5;
+            }
+            .img-logo{
+                width: 235px;
+            }
+            .titulo{
+                background-color: #546E7A;
+                color: #ECEFF1;
+                text-align: center;
+            }
+            .sign-text{
+                margin-bottom: 7px;
+            }
+            .sign-text span{
+                font-size:2em;
+                border-bottom: 1px solid #D6E9ED;
+                text-shadow: 2px 2px #90A4AE;
+            }
+            .subsistema{
+                font-size: 1.3em;
+            }
+            .img-user{
+                width: 60px;
+            }
+            .datos-usuario{
+                /* background: #78909C; */
+                text-align: center;
+            }
+            .encabezado{
+                /* background: #78909C; */
+                padding: 7px;
+                color: #546E7A;
+                font-weight: bold;
+            }
+            /* .alert{
+                width: 200px;
+                position: absolute;
+                top: 0;
+                right: 0;
+            } */
+            .panel-body{
+                background: #ECEFF1 !important;
+            }
+            .btn-aceptar{
+                background-color: #546E7A;
+                /* background-color: #D6E9ED; */
+                color: #FFFFFF;
+                font-size: 1.1em;
+            }
         </style>
-
-        <!-- GLOBAL STYLES -->
-        
-        <!-- PAGE LEVEL PLUGIN STYLES -->
-
-        <!-- THEME STYLES -->
-
-        <!-- THEME DEMO STYLES -->
-        
-
-        <!--[if lt IE 9]>
-        <script src="{{asset('js/html5shiv.js')}}"></script>
-        <script src="{{asset('js/respond.min.js')}}"></script>
-        <![endif]-->
-
     </head>
 
     {#<body class="login" style="background-color:{{ color }} ;">#}
@@ -53,19 +76,51 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="login-banner text-center">
-                        <h1><i class="fa fa-gears"></i> {{ titulosubsistema }}</h1>
-                        {#<h2><i class="fa fa-gears"></i> Gestión de Usuarios</h2>#}
+                        <div class="img">
+                            <img class="img-logo" src="{{asset('images/logo-min-edu.png')}}" alt="">
+                        </div>
                     </div>
+
+                    <br>
                     
-                    <div class="{{card}} {{card}}-{{app.session.get('color')}}">
-                        <div class="{{card}}-heading login-heading">
-                            <div class="{{card}}-title">
+                    <div class="panel">
+                        <div class="panel-heading login-heading titulo">
+                            <div class="form-group">
+                                <div class="sign-text">
+                                    <span><i class="fa fa-graduation-cap"></i> SIE</span>
+                                </div>
+                                <center>
+                                    <small class="subsistema">{{app.session.get('sysname')|upper}}</small>
+                                </center>
+
+                            </div><!-- /.form-group -->
+                            {# <div class="panel-title">
                                 <h4><strong>NOMBRE DE USUARIO</strong> : {{ user }} -- <strong>NOMBRE Y APELLIDO</strong> : {{ persona }} <strong>CI</strong>  : {{ carnet }}</h4>
                             </div>
-
+ #}
                             <div class="clearfix"></div>
                         </div>
-                        <div class="{{card}}-body">
+                        <div class="panel-body">
+
+                            <div class="encabezado">
+                                <i class="fa fa-user"></i> USUARIO:
+                            </div>
+
+                            <div  class="datos-usuario">
+                                {# <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 text-center">
+                                    <img src="{{asset('img/avatar.png')}}" alt="" class="img-user">
+                                </div>
+                                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10"> #}
+                                    <div>Usuario: {{  user }}</div>
+                                    <div>Nombre y Apellido: {{  persona }}</div>
+                                    {# <div>C.I.: {{  carnet }}</div> #}
+                                {# </div> #}
+                            </div>
+                            
+                            <br>
+                            <div class="encabezado">
+                                <i class="fa fa-list"></i> ROLES ASIGNADOS:
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -76,7 +131,7 @@
                                         </div>
                                     {% endfor %}
                                     {% for flashMessage in app.session.flashbag.get('error') %}
-                                        <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <div class="alert alert-warning alert-dismissible" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             <strong>¡Observaciones encontradas!</strong> {{ flashMessage }}
                                         </div>
@@ -84,54 +139,54 @@
                                 </div>
                             </div>
 
-                            <div class="{{card}} {{card}}-default">
+                            <div class="panel panel-default">
                                 {% for flashMessage in app.session.flashbag.get('errorcontraexp') %}
-                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         <strong>¡Su contraseña ha expirado!</strong> {{ flashMessage }} <strong>DESACTIVACIÓN DE SU CUENTA.</strong>
-                                        <form action="{{path('usuariopasswd')}}" method="post">
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Solucionar</button>
+                                        <form action="{{path('usuariopasswd')}}" method="post" style="display:inline-block">
+                                            <button type="submit" class="btn btn-aceptar"><i class="fa fa-gear"></i> Solucionar</button>
                                         </form>
                                     </div>
                                 {% endfor %}
 
                                 {% for flashMessage in app.session.flashbag.get('errorusername') %}
-                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         <strong>¡Su nombre de usuario es distinto a su número de carnet!</strong> {{ flashMessage }} <strong>DESACTIVACIÓN DE SU CUENTA.</strong>
-                                        <form action="{{path('sie_usuarios_update_username_login', {'usuarioid': app.session.get('userId')})}}" method="post">
-                                            <button type="submit" class="btn btn-primary" onclick="return confirm('Está por actualizar su nombre del usuario :{{ user }} por :{{ carnet }}.  Nota: recuerde que a partir de la fecha el usuario de esta cuenta sera el número de carnet y complemento.\n\n ¿Esta seguro de continuar? ');"><i class="fa fa-gear"></i> Solucionar</button>
+                                        <form action="{{path('sie_usuarios_update_username_login', {'usuarioid': app.session.get('userId')})}}" method="post" style="display:inline-block">
+                                            <button type="submit" class="btn btn-aceptar" onclick="return confirm('Está por actualizar su nombre del usuario :{{ user }} por :{{ carnet }}.  Nota: recuerde que a partir de la fecha el usuario de esta cuenta sera el número de carnet y complemento.\n\n ¿Esta seguro de continuar? ');"><i class="fa fa-gear"></i> Solucionar</button>
                                         </form>
                                     </div>
                                 {% endfor %}
 
                                 {% for flashMessage in app.session.flashbag.get('errorusernameexistente') %}
-                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         <strong>¡Su nombre de usuario es distinto a su número de carnet!</strong> {{ flashMessage }}                                        
                                     </div>
                                 {% endfor %}
 
                                 {% for flashMessage in app.session.flashbag.get('mensajedircod4') %}
-                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         <strong>¡Usted tiene un mensaje de mucha importancia, Lea atentamente!</strong> {{ flashMessage }}                                        
                                     </div>
                                 {% endfor %}
 
-                                <div class="{{card}}-heading">
-                                    <div class="{{card}}-title">
+                                {# <div class="panel-heading">
+                                    <div class="panel-title">
                                         <h4>Usted tiene asignados los siguientes roles y/o instituciónes educativas. Selecciones su tipo de acceso al sistema.</h4>
                                     </div>
-                                    <div class="{{card}}-widgets">
+                                    <div class="panel-widgets">
                                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#formControls"><i class="fa fa-chevron-down"></i></a>
                                     </div>
                                     <div class="clearfix"></div>
-                                </div>
+                                </div> #}
 
-                                <div id="formControls" class="{{card}}-collapse collapse in">
-                                    <div class="{{card}}-body">
-                                        <div id="no-more-tables">
+                                <div id="formControls" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
                                             <table class="table table-hover table-bordered">
                                                 <thead>
                                                     <tr>
@@ -154,7 +209,7 @@
                                                             <td>{{ ue.institucioneducativa }}</td>
                                                             <td>{{ ue.orgcurricula }}</td>
                                                             <td class="text-center"> 
-                                                                <a href="{{ path('login_rol_select', {'key': ue.key }) }}" class="btn btn-success btn-xs" data-original-title="Ver" data-placement="top" data-toggle="tooltip" href="#">
+                                                                <a href="{{ path('login_rol_select', {'key': ue.key }) }}" class="btn btn-success btn" data-original-title="Ver" data-placement="top" data-toggle="tooltip" href="#">
                                                                     <i class="fa fa-sign-in"> Registrar mi ingreso -></i>
                                                                 </a>                                                                                                        
                                                             </td> 
@@ -165,7 +220,7 @@
                                         </div>
                                         <br>
                                         <form action="{{path('logout')}}" method="post">
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Salir</button>
+                                            <button type="submit" class="btn btn-aceptar"><i class="fa fa-gear"></i> Salir</button>
                                         </form>
                                     </div>
                                 </div>

@@ -1586,11 +1586,12 @@ class Funciones {
                         ->setParameter('estados', array(4,5,24,26,37,45,46,55,56,57,58)) // Estados que deveria validar
                         ->setParameter('nivel', $nivel)
                         ->setParameter('grado', $grado)
+                        ->setMaxResults(1)
                         ->getQuery()
                         ->getResult();
 
         $response = false;
-        if ($otraInscripcion) {
+        if (is_object($otraInscripcion)) {
             $response = true;
         }
 

@@ -107,7 +107,7 @@
                     {% if app.session.get('currentyear') == gestion and inscripcion.estadomatriculaTipo.id == 4 and tuicion == true and (inscripcion.institucioneducativaCurso.nivelTipo.id == 11 or inscripcion.institucioneducativaCurso.nivelTipo.id == 12 or inscripcion.institucioneducativaCurso.nivelTipo.id == 13) %}
                         <div class="btn-group btn-group-justified">
                         <div class="alert alert-warning">
-                            <strong>Importante:</strong> En caso de no haber reportado las calificaciones, se le hablita la opcioń para poder registrar</br> las mimas.
+                            <strong>Importante:</strong> En caso de no haber reportado las calificaciones, se le habilita la opcioń para poder registrar</br> las mimas.
                         </div>
                         {{form_start(setNotasForm)}}
                             <input type='hidden' id='idInscripcion' name='idInscripcion' value='{{inscripcion.id}}'>
