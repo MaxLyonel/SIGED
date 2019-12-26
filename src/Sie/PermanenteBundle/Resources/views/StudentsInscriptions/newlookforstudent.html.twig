@@ -1,0 +1,528 @@
+<style>
+  label{
+    font-weight: bold
+  }
+</style>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div id="app">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+              <div class="col-md-12">
+                  <!-- Start inline form -->
+                  <div class="panel rounded shadow">
+                      <div class="panel-heading">
+                          <div class="pull-left">
+                              <h3 class="panel-title">Buscar Estudiante por CI</h3>
+                          </div>
+                          <div class="pull-right">
+                              {# <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
+                              {# <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button> #}
+                          </div>
+                          <div class="clearfix"></div>
+                      </div><!-- /.panel-heading -->
+                      <div class="panel-body no-padding">
+                        <form name="form" method="post" data-toggle="validator" role="form" id="idSearchStudentForm" class="form-inline">
+                                <div class="form-body">
+                                  <div class="row">
+                                      <div class="col-md-8 col-md-offset-4">
+                                        <input type="text" v-model="cival" id="form_ci" name="form[ci]" required="required" class="form-control" placeholder="Carnet Identidad" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="18" autocomplete="off" style="text-transform:uppercase">
+                                        <input type="text" v-model="complementoval" id="form_complemento" name="form[complemento]" required="required" class="form-control" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="18" autocomplete="off" style="text-transform:uppercase">
+                                        
+                                        <button v-on:click="lookforStudent()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> </button>
+                                        <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancel</button>
+                                      </div>
+                                  </div>
+                                </div><!-- /.form-body -->
+
+                            <input type="text" id="form_data" name="form[data]"  v-model="iecId">
+                            
+                        </form>
+                      </div><!-- /.panel-body -->
+              </div><!-- /.panel --><!--/ End inline form -->
+          </div>
+        </div>
+
+        <div v-if="buscando" class="text-center">
+          <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+        </div>
+        <div v-else>
+        <small> 
+          <div class="row">
+            <div class="col-xs-12 col-lg-12">
+              <div v-if="swstudent">           
+                  <div class="panel-warning">
+                    <div class="panel-heading">
+                        <a v-on:click=""  class="btn btn-default" ladda-button data-style="expand-left"><i class="fa fa-input"></i> Inscribir </a>
+                    </div>
+                    <div class="panel-body">
+
+                       <h4>Datos del estudiante</h4>
+                          
+                            <div class="row">
+                              <div class="col-sm-2">
+                                <label for="Nombre(s)" >Carnet de Identidad</label></br>
+                                ${dataStudent.carnet}
+                              </div>
+                              <div class="col-sm-2">
+                                <label for="Nombre(s)">Complemento</label></br>
+                                ${dataStudent.complemento}
+                              </div>
+                              <div class="col-sm-2">
+                                <label for="Nombre(s)">Expedido</label></br>
+                                ${dataStudent.expedido}
+                              </div>
+                              <div class="col-sm-2">
+                                <label for="Nombre(s)">F. Nacimiento</label></br>
+                                ${dataStudent.fecNac}
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="Nombre(s)">G&eacute;nero</label></br>
+                                  ${dataStudent.genero}
+                              </div>
+                            </div>
+                            </br>     
+                            <div class="row">
+                              <div class="col-sm-3">
+                                <label for="Nombre(s)">Paterno</label></br>
+                                ${dataStudent.paterno}
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="Nombre(s)">Materno</label></br>
+                                  ${dataStudent.materno}
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="Nombre(s)">Nombre(s)</label></br>
+                                  ${dataStudent.nombres}
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="Nombre(s)">RUDE</label></br>
+                                  ${dataStudent.rude}
+                              </div>
+                            </div>
+                            </br>
+
+                            <button v-on:click="showhistory()" type="button" class="btn btn-primary btn-block"><i class="fa fa-document"></i> Ver Historial</button>
+
+                              {# <h4 align="center" class="text-primary">Programa Nacional de Post-alfabetización</h4><hr>
+                              <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                              <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                                  <thead>
+                                    <tr role="row">
+                                      <th class="text-center">Gestión</th>
+                                      <th class="text-center">Lugar</th>
+                                      <th class="text-center">Plan</th>
+                                      <th class="text-center">Grado</th>
+                                      <th class="text-center">Fecha Inicio</th>
+                                      <th class="text-center">Fecha Fin</th>
+                                      <th class="text-center">Id Curso</th>
+                                      <th class="text-center">Estado Matrícula</th>
+                                      <th class="text-center">Acciones</th>
+                                    </tr>
+                                  </thead>
+
+                                  <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                    <tr v-for="(historyP, index) in historyPer">
+                                      <td>${historyP.gestion}</td>
+                                      <td>${historyP.institucioneducativa}</td>
+                                      <td>${historyP.partp}</td>
+                                      <td>${historyP.bloquep}</td>
+                                      <td></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div> #}
+
+
+
+
+
+                            
+
+                 </div>
+                </div>
+              </div>
+              <div v-if="swperson">
+                  <div class="panel-warning">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                      <h4>Datos de la persona</h4>
+                          
+                        <div class="row">
+                          <div class="col-sm-2">
+                            <label for="Nombre(s)">Carnet de Identidad</label></br>
+                            ${dataStudent.carnet}
+                          </div>
+                          <div class="col-sm-2">
+                            <label for="Nombre(s)">Complemento</label></br>
+                            ${dataStudent.complemento}
+                          </div>
+                          <div class="col-sm-2">
+                            <label for="Nombre(s)">Expedido</label></br>
+                            
+                              <select v-if="dataStudent.expedidoId == 0" name="DBExpedido" id="idarrExpe" v-model="dataStudent.expedidoId" class="custom-select form-control" >  
+                                <option v-for="item in DBExpedido"  :value="item.expedidoId">${ item.expedido }</option>       
+                              </select> 
+                              <div v-else>
+                              ${dataStudent.expedido}
+                              </div>
+                             
+                              
+                          </div>
+                          <div class="col-sm-2">
+                            <label for="Nombre(s)">F. Nacimiento</label></br>
+                              ${dataStudent.fecNac}
+                          </div>
+                          <div class="col-sm-3">
+                            <label for="Nombre(s)">G&eacute;nero</label></br>
+                              ${dataStudent.genero}
+                          </div>
+                        </div>
+                        </br>     
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <label for="Nombre(s)">Paterno</label></br>
+                            ${dataStudent.paterno}
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="Nombre(s)">Materno</label></br>
+                              ${dataStudent.materno}
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="Nombre(s)">Nombre(s)</label></br>
+                              ${dataStudent.nombres}
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <label for="inputEmail4">Pais</label>                                  
+                            <select name="arrPais" id="idarrPais" v-model="newStudent.paisId" class="custom-select form-control" v-on:change="setPais();">
+                              <option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
+                            </select>
+                          </div>
+                          <div class="col-sm-3">
+                              <label for="Materno">Departamento</label>
+                              <select name="arrPais" id="idarrPais" v-model="newStudent.lugarNacTipoId" class="custom-select form-control" v-on:change="setDepto();">  
+                                <option v-for="item in DBDepto"  :value="item.deptoId">${ item.depto }</option>
+                              </select>
+                          </div>
+                          <div class="col-sm-3">
+                              <label for="Nombre(s)">Provincia</label>
+                              <select name="arrPais" id="idarrPais" v-model="newStudent.lugarProvNacTipoId" class="custom-select form-control" >  
+                                <option v-for="item in DBProvincia"  :value="item.provinciaId">${ item.provincia }</option>
+                              </select>
+                          </div>
+                          <div class="col-sm-3">
+                              <label for="Nombre(s)">Localidad</label>
+                              <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="30" autocomplete="off" style="text-transform:uppercase">
+                          </div>
+                        </div>
+                        </br> 
+                        <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar </button>
+                    </div>
+                  </div>       
+              </div>
+              <div v-if="swnewperson">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                        </div>
+                    </div>
+                        <div class="panel-body">
+                          <h4>Datos No encontrados</h4>
+                          <form role="form">
+                            <div class="row">
+                              <div class="col-sm-2">
+                              <label for="Nombre(s)">Carnet de Identidad</label>
+                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="cival">
+                              </div>
+                              <div class="col-sm-2">
+                              <label for="Nombre(s)">Complemento</label>
+                                  <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="complementoval">
+                              </div>
+                              <div class="col-sm-2">
+                              <label for="Nombre(s)">Expedido</label>
+                                <select name="DBExpedido" id="idarrExpe" v-model="newStudent.expedidoId" class="custom-select form-control" v-model="newStudent.expedidoId">  
+                                  <option v-for="item in DBExpedido"  :value="item.expedidoId">${ item.expedido }</option>       
+                                </select> 
+                              </div>
+                              <div class="col-sm-2">
+                              <label for="Nombre(s)">Fec. Nacimiento</label>
+                                  <input type="text" class="form-control" placeholder="Fec. Nacimiento" v-model="newStudent.fecNac">
+                              </div>
+                              <div class="col-sm-3">
+                              <label for="Nombre(s)">Genero</label>
+                                <select name="arrGenero" id="idarrGenero" v-model="newStudent.generoId" class="custom-select form-control" v-model="newStudent.genero">  
+                                  <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
+                                </select>
+                              </div>
+                            </div>
+                            </br>     
+                            <div class="row">
+                              <div class="col-sm-4">
+                              <label for="Nombre(s)">Paterno</label>
+                              <input type="input" class="form-control" placeholder="Paterno" v-model="newStudent.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                              <div class="col-sm-4">
+                              <label for="Nombre(s)">Materno</label>
+                                  <input type="input" class="form-control" placeholder="Materno" v-model="newStudent.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                              <div class="col-sm-4">
+                              <label for="Nombre(s)">Nombre(s)</label>
+                                  <input type="input" class="form-control" placeholder="Nombre(s)" v-model="newStudent.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                            </div>
+                            </br>     
+                            <div class="row">
+                              <div class="col-sm-3">
+                                <label for="inputEmail4">Pais</label>                                  
+                                <select name="arrPais" id="idarrPais" v-model="newStudent.paisId" class="custom-select form-control" v-on:change="setPais();">
+                                  <option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
+                                </select>
+                              </div>
+                              <div class="col-sm-3">
+                                  <label for="Materno">Departamento</label>
+                                  <select name="arrPais" id="idarrPais" v-model="newStudent.lugarNacTipoId" class="custom-select form-control" v-on:change="setDepto();">  
+                                    <option v-for="item in DBDepto"  :value="item.deptoId">${ item.depto }</option>
+                                  </select>
+                              </div>
+                              <div class="col-sm-3">
+                                  <label for="Nombre(s)">Provincia</label>
+                                  <select name="arrPais" id="idarrPais" v-model="newStudent.lugarProvNacTipoId" class="custom-select form-control" >  
+                                    <option v-for="item in DBProvincia"  :value="item.provinciaId">${ item.provincia }</option>
+                                  </select>
+                              </div>
+                              <div class="col-sm-3">
+                                  <label for="Nombre(s)">Localidad</label>
+                                  <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="18" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                            </div>
+                            </br>
+                            <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar </button>
+                          </form>
+                        </div>
+                        <div v-if="swproceso" class="text-center">
+                          <img src="{{asset('img/loading.gif')}}" alt=""> Procesando...
+                        </div>
+                        <div v-if="message"  class=" text-center alert alert-warning alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <strong><i class='fa fa-linux'></i> ${message}</strong>
+                        </div>
+                        
+                    
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal-dialog -->
+
+
+
+<script>
+
+var app = new Vue({
+      delimiters: ['${', '}'],
+      el: '#app',
+      data: {
+
+          cival:'',
+          complementoval:'',
+          iecId:'{{iecId}}',
+          buscando:false,
+          swproceso:false,
+          swstudent:false,
+          swperson:false,
+          swnewperson:false,
+          swcreatestudent:false,
+          message:'',
+          dataStudent:{},
+          newStudent:{},
+          DBGenero:{},
+          DBExpedido:{},
+          DBPais:{},
+          DBDepto:{},
+          DBProvincia:{},
+          historyReg:{},
+          historyAlt:{},
+          historyEsp:{},
+          historyPer:{}
+          
+      },
+      methods: {
+        lookforStudent: function(){
+          this.buscando = true;
+          this.swstudent = false;
+          this.swperson = false;                            
+
+              axios.get(Routing.generate('per_inscriptionstudent_inscriptionbyCi', {
+                  ci: this.cival,
+                  complemento: this.complementoval
+              }))
+              .then(response => {
+                if(response.status == 200){
+                  this.swstudent   = response.data.swstudent;
+                  this.swperson    = response.data.swperson;
+                  this.dataStudent = response.data.dataStudent;
+                  this.swnewperson = response.data.swnewperson;
+                  this.DBGenero    = response.data.arrGenero;
+                  this.DBExpedido    = response.data.arrExpedido;
+                  this.DBPais      = response.data.arrPais;
+                  this.newStudent  = response.data.arrNewStudent;
+                  this.historyReg  = response.data.dataInscriptionR;
+                  this.historyAlt  = response.data.dataInscriptionA;
+                  this.historyEsp  = response.data.dataInscriptionE;
+                  this.historyPer  = response.data.dataInscriptionP;       
+
+                }
+                  console.log(this.dataStudent);
+                  this.buscando = false;
+              })
+              .catch(e => {
+                  console.log(e);
+                  this.buscando = false;
+              });
+          },
+      setPais: function(){
+              var me = this;
+              $.each(this.DBPais, function (i, value) {
+                  if(me.newStudent.paisId == value.paisId) {
+                      me.newStudent.pais = value.pais;
+                  }
+              });
+              
+              if(me.newStudent.paisId == 1){
+                    axios.post(Routing.generate('per_inscriptionstudent_getdepto', me.newStudent ))
+                      .then(response => {
+                          if (response.status == 200) {
+                              this.DBDepto = response.data.arrDepto;
+                              $('[data-toggle="tooltip"]').tooltip();
+                          }
+                          if( response.status == 202){
+                              this.respuesta = response.data;
+                          }
+                      })
+                      .catch(e => {
+                          console.log(e);
+                      });
+              }else{
+                  this.DBDepto = '';
+                  this.DBProvincia = '';
+                  me.newStudent.localidad = '';
+              }
+              
+          },
+      setDepto: function(){
+          var me = this;
+          $.each(this.DBDepto, function (i, value) {
+              if(me.newStudent.lugarNacTipoId == value.deptoId) {
+                  me.newStudent.lugarNacTipo = value.depto;
+              }                        
+          });  
+          
+          if(me.newStudent.paisId == 1 && me.newStudent.lugarNacTipoId>0){
+                axios.post(Routing.generate('per_inscriptionstudent_getprovincia', me.newStudent ))
+                  .then(response => {
+                      if (response.status == 200) {
+                          this.DBProvincia = response.data.arrProvincia;
+                          $('[data-toggle="tooltip"]').tooltip();
+                      }
+                      if( response.status == 202){
+                          this.respuesta = response.data;
+                      }
+
+                      this.buscando = false;
+                  })
+                  .catch(e => {
+                      console.log(e);
+                      this.buscando = false;
+                  });
+          }else{
+              this.DBDepto = '';
+              this.DBProvincia = '';
+              me.newStudent.lugarNacTipoId ='';
+              me.newStudent.lugarProvNacTipoId ='';
+          }
+
+      },
+      setProvincia: function(){
+          var me = this;
+          $.each(this.DBProvincia, function (i, value) {
+              if(me.dataStudentModif.lugarProvNacTipoId == value.provinciaId) {
+                  me.dataStudentModif.lugarProvNacTipo = value.provincia;
+                  me.dataModifyToSend.push({'provinciaId':me.dataStudentModif.lugarProvNacTipoId})
+              }
+          });                    
+      },
+      showhistory: function(){
+        console.log(34343);
+        return ;
+      },
+      validateandregisterNewStudent: function(newperson){
+        
+        if(newperson){
+          this.dataStudent.paisId = this.newStudent.paisId;
+          this.dataStudent.lugarNacTipoId = this.newStudent.lugarNacTipoId;
+          this.dataStudent.lugarProvNacTipoId = this.newStudent.lugarProvNacTipoId;
+          /*this.dataStudent.expedidoId = this.newStudent.expedidoId;
+          this.dataStudent.expedido = this.newStudent.expedido;*/
+          this.dataStudent.iecId = this.iecId;
+          
+        }else{
+          this.newStudent.carnet = this.cival;
+          this.newStudent.complementoval = this.complementoval;
+          this.newStudent.iecId = this.iecId;
+          
+          this.dataStudent = this.newStudent; 
+        }
+        this.swproceso = true;
+        axios.post(Routing.generate('per_inscriptionstudent_checkDataStudent', this.dataStudent ))
+        .then(response => {
+            if (response.status == 200) {
+              this.message = response.data.message;
+              this.swcreatestudent = response.data.swcreatestudent;
+              if(this.swcreatestudent){
+                showListStudent(this.iecId);
+              }
+              
+            }
+            if( response.status == 202){
+                this.respuesta = response.data;
+            }
+
+            this.buscando = false;
+            this.swproceso = false;
+        })
+        .catch(e => {
+            console.log(e);
+            this.buscando = false;
+        });
+
+        console.log(newperson);
+        console.log(this.dataStudent);
+        return ;
+      },
+      
+      
+
+      },
+     
+      mounted(){
+          
+      }
+  });
+
+  var showListStudent = function(iecId){
+    alert(iecId);
+    return;
+
+  }
+</script>
+
