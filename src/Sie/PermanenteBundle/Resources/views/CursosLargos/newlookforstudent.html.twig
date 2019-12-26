@@ -303,17 +303,18 @@
                             <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar </button>
                           </form>
                         </div>
-                </div> 
+                        <div v-if="swproceso" class="text-center">
+                          <img src="{{asset('img/loading.gif')}}" alt=""> Procesando...
+                        </div>
+                        <div v-if="message"  class=" text-center alert alert-warning alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <strong><i class='fa fa-linux'></i> ${message}</strong>
+                        </div>
+                        
+                    
+                </div>
+                
               </div>
-
-                  <div v-if="swproceso" class="text-center">
-                    <img src="{{asset('img/loading.gif')}}" alt=""> Procesando...
-                  </div>
-                  <div v-if="message"  class=" text-center alert alert-warning alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong><i class='fa fa-linux'></i> ${message}</strong>
-                  </div>
-
             </div>
           </div>
         </small>
@@ -519,30 +520,9 @@ var app = new Vue({
   });
 
   var showListStudent = function(iecId){
-    
-      $.ajax({
-        type: 'post',
-        data: ({iecId: iecId}),
-        url: "{{ path('per_inscriptionstudent_showListStudent') }}",
-        beforeSend: function () {
-          $("#listEstudiante").empty();
-          $("#listEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-        },
-        success: function (data) {
-          $("#listEstudiante").empty();
-          $("#listEstudiante").append(data);
-          $('#modal').modal('hide');
-        },
-        statusCode: {
-                500: function () {
+    alert(iecId);
+    return;
 
-            },
-            404: function () {
-
-            }
-        }
-      });
-
-  };
+  }
 </script>
 

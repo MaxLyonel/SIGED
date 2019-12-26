@@ -52,9 +52,12 @@ class StudentsInscriptionsController extends Controller {
         //get the send values
        // dump($request);die;
         $infoUe = $request->get('infoUe');
+        $arrInfoUe = unserialize($infoUe);
 
-        return $this->render('SiePermanenteBundle:CursosLargos:buscarEstudiante.html.twig', array(
-            'form'=>$this->findStudentForm($infoUe)->createView()
+        return $this->render('SiePermanenteBundle:CursosLargos:newlookforstudent.html.twig', array(
+          'infoUe'=>$infoUe,
+          'iecId' => $arrInfoUe['ueducativaInfo']['ueducativaInfoId']['iecid']
+            // 'form'=>$this->findStudentForm($infoUe)->createView()
         ));
     }
     /**
@@ -577,7 +580,7 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
-      
+
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -717,6 +720,11 @@ class StudentsInscriptionsController extends Controller {
        
       return $response;    
       
+      die;
+    }
+
+    public function showListStudentAction(Request $request){
+      dump($request);
       die;
     }
 
