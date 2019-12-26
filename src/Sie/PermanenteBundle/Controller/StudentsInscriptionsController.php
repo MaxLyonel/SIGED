@@ -48,6 +48,15 @@ class StudentsInscriptionsController extends Controller {
           // 'form'=>$this->findStudentForm($infoUe)->createView()
         ));
     }
+     public function indexCLAction(Request $request){
+        //get the send values
+       // dump($request);die;
+        $infoUe = $request->get('infoUe');
+
+        return $this->render('SiePermanenteBundle:CursosLargos:buscarEstudiante.html.twig', array(
+            'form'=>$this->findStudentForm($infoUe)->createView()
+        ));
+    }
     /**
     * create the form to find the student by rude
     **/
