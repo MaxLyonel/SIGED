@@ -2159,7 +2159,7 @@ class DocumentoController extends Controller {
                     , (row_number() over (partition by ds.departamento_tipo_id, ds.gestion_id, ds.documento_tipo_id order by ds.id)) as row_num
                     , ds.*
                     from documento_serie as ds
-                    left join documento as d on d.documento_serie_id = ds.id and d.id is null
+                    left join documento as d on d.documento_serie_id = ds.id
                     where ds.documento_tipo_id in (1,9,6,7) and ds.gestion_id = ".$gestionId." and esanulado = false and d.id is null and case ".$departamentoCodigo." when 0 then true else ds.departamento_tipo_id = ".$departamentoCodigo." end
                     order by ds.id
                 ) as v
