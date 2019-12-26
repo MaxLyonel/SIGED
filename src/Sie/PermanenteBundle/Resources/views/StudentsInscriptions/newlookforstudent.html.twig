@@ -1,4 +1,8 @@
-
+<style>
+  label{
+    font-weight: bold
+  }
+</style>
 <div class="modal-dialog modal-lg">
   <div class="modal-content">
     <div id="app">
@@ -57,15 +61,19 @@
                        <h4>Datos del estudiante</h4>
                           
                             <div class="row">
-                              <div class="col-sm-3">
-                                <label for="Nombre(s)">Carnet de Identidad</label></br>
+                              <div class="col-sm-2">
+                                <label for="Nombre(s)" >Carnet de Identidad</label></br>
                                 ${dataStudent.carnet}
                               </div>
-                              <div class="col-sm-3">
+                              <div class="col-sm-2">
                                 <label for="Nombre(s)">Complemento</label></br>
                                 ${dataStudent.complemento}
                               </div>
-                              <div class="col-sm-3">
+                              <div class="col-sm-2">
+                                <label for="Nombre(s)">Expedido</label></br>
+                                ${dataStudent.expedido}
+                              </div>
+                              <div class="col-sm-2">
                                 <label for="Nombre(s)">F. Nacimiento</label></br>
                                 ${dataStudent.fecNac}
                               </div>
@@ -143,11 +151,11 @@
                       <h4>Datos de la persona</h4>
                           
                         <div class="row">
-                          <div class="col-sm-3">
+                          <div class="col-sm-2">
                             <label for="Nombre(s)">Carnet de Identidad</label></br>
                             ${dataStudent.carnet}
                           </div>
-                          <div class="col-sm-1">
+                          <div class="col-sm-2">
                             <label for="Nombre(s)">Complemento</label></br>
                             ${dataStudent.complemento}
                           </div>
@@ -226,11 +234,11 @@
                           <h4>Datos No encontrados</h4>
                           <form role="form">
                             <div class="row">
-                              <div class="col-sm-3">
-                              <label for="Nombre(s)">CI</label>
+                              <div class="col-sm-2">
+                              <label for="Nombre(s)">Carnet de Identidad</label>
                               <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="cival">
                               </div>
-                              <div class="col-sm-1">
+                              <div class="col-sm-2">
                               <label for="Nombre(s)">Complemento</label>
                                   <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="complementoval">
                               </div>
@@ -295,6 +303,14 @@
                             <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar </button>
                           </form>
                         </div>
+                        <div v-if="swproceso" class="text-center">
+                          <img src="{{asset('img/loading.gif')}}" alt=""> Procesando...
+                        </div>
+                        <div v-if="message"  class=" text-center alert alert-warning alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <strong><i class='fa fa-linux'></i> ${message}</strong>
+                        </div>
+                        
                     
                 </div>
                 
@@ -321,9 +337,12 @@ var app = new Vue({
           complementoval:'',
           iecId:'{{iecId}}',
           buscando:false,
+          swproceso:false,
           swstudent:false,
           swperson:false,
           swnewperson:false,
+          swcreatestudent:false,
+          message:'',
           dataStudent:{},
           newStudent:{},
           DBGenero:{},
@@ -463,16 +482,23 @@ var app = new Vue({
           
           this.dataStudent = this.newStudent; 
         }
-
+        this.swproceso = true;
         axios.post(Routing.generate('per_inscriptionstudent_checkDataStudent', this.dataStudent ))
         .then(response => {
             if (response.status == 200) {
+              this.message = response.data.message;
+              this.swcreatestudent = response.data.swcreatestudent;
+              if(this.swcreatestudent){
+                showListStudent(this.iecId);
+              }
+              
             }
             if( response.status == 202){
                 this.respuesta = response.data;
             }
 
             this.buscando = false;
+            this.swproceso = false;
         })
         .catch(e => {
             console.log(e);
@@ -492,5 +518,11 @@ var app = new Vue({
           
       }
   });
+
+  var showListStudent = function(iecId){
+    alert(iecId);
+    return;
+
+  }
 </script>
 

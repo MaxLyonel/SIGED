@@ -395,9 +395,11 @@ class StudentsInscriptionsController extends Controller {
           'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
           'carnet'      =>$objStudent->getCarnetIdentidad(),
           'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
-          'generoId'      =>$objStudent->getGeneroTipo()->getId(),
+          'generoId'    =>$objStudent->getGeneroTipo()->getId(),
           'complemento' =>$objStudent->getComplemento(),
-          'rude'     =>$objStudent->getCodigoRude(),
+          'rude'        =>$objStudent->getCodigoRude(),
+          'expedido'    =>$objStudent->getExpedido()->getSigla(),
+          'expedidoId'  =>$objStudent->getExpedido()->getId(),
         );
         // get all cardex info
         // $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $objStudent->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
@@ -566,6 +568,7 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
+      
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -578,7 +581,7 @@ class StudentsInscriptionsController extends Controller {
       $localidad = $request->get('localidad');
       $paterno = $request->get('paterno');
       $materno = $request->get('materno');
-      $nombre = $request->get('nombre');
+      $nombre = $request->get('nombres');
       $fecNac = $request->get('fecNac');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');
