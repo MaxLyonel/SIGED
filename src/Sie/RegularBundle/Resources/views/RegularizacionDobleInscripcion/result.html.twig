@@ -1,6 +1,13 @@
 {% extends 'layoutRegular.html.twig' %}
 {% block contentoption  %}
 
+<style>
+    .calificaciones{
+        background: #FFFFFF;
+        padding: 10px;
+    }
+</style>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="page-title">
@@ -21,10 +28,74 @@
 
 {% if arrayInscripciones is defined and arrayInscripciones|length > 0 %}
 
-
-
-
 <div class="row">
+<form class="" action="" method="post" name="form" id="form">
+    {% set cont = 0 %}
+    {% for notas in arrayInscripciones %}
+
+        <input type="hidden" name="rude" value="{{notas.codigoRude}}">
+        <input type="hidden" name="estadoMatriculaActual[]" value="{{notas.estadomatriculaId}}">
+        <input type="hidden" name="idInscripcion[]" value="{{notas.idInscripcion}}" class="idInscripcion" id="{{cont}}_inscripcion">
+        <input type="hidden" id="{{cont}}_nivel" name="nivel[]" value="{{notas.nivelId}}">
+
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div class="calificaciones">
+                <table class="table alert-info">
+                    <tr>
+                        <th>Estudiante</th><td>{{notas.estudiante}}</td>
+                    </tr>
+                    <tr>
+                        <th>Código Rude</th><td>{{notas.codigoRude}}</td>
+                    </tr>
+                    <tr>
+                        <th>Unidad Educativa</th><td>{{notas.institucioneducativa}}</td>
+                    </tr>
+                    <tr>
+                        <th>Nivel - Grado - Paralelo</th>
+                        <td>
+                            {{notas.nivel}} - {{notas.grado}} - {{notas.paralelo}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Gestion</th><td>{{notas.gestion}}</td>
+                    </tr>
+                    <tr>
+                        <th>Estado Matrícula</th><td style="color:#2447E2; font-weight:bold; font-size:1.2em">{{notas.estadomatricula}}</td>
+                    </tr>
+                </table>
+                
+                {% include 'SieAppWebBundle:Services/Notas:regular.html.twig' with {'notas':notas, 'vista':0} %}
+                
+                <table class="table alert-info">
+                    <tr>
+                        {% if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 11 and notas.estadomatriculaId != 28 and notas.estadomatriculaId != 26 and notas.estadomatriculaId != 37 and notas.estadomatriculaId != 55 and notas.estadomatriculaId != 56 and notas.estadomatriculaId != 57 and notas.estadomatriculaId != 58  and  notas.estadomatriculaId != 4%}
+                        <th>Actualizar estado de matrícula a:</th>
+                        <td>
+
+                            <select name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" class="form-control idNuevoEstado">
+                                {% for e in notas.estadosCambiar %}
+                                    <option value="{{e.id}}">{{e.estadomatricula}}</option>
+                                {% endfor %}
+                            </select>
+
+                        </td>
+                        {% else %}
+                            <td colspan="2">No se puede actualizar el estado de matrícula</td>
+                            <input type="hidden" name="estadoMatriculaNuevo[{{cont}}]" id="{{cont}}_nuevoEstado" value="{{notas.estadomatriculaId}}" class="idNuevoEstado">
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% set cont = cont + 1 %}
+    {% endfor %}
+</form>
+</div>
+
+
+
+{# <div class="row">
 <form class="" action="" method="post" name="form" id="form">
     {% set cont = 0 %}
     {% for ai in arrayInscripciones %}
@@ -160,13 +231,16 @@
         {% set cont = cont + 1 %}
     {% endfor %}
 </form>
-</div>
+</div> #}
 
 {% endif %}
+
+
 
 <div id="respuesta" class="alert" style="display:none;">
 
 </div>
+<hr>
 <div class="row">
     <div class="col-lg-12 text-left" style="margin-top:10px">
         <button class="btn btn-success" onclick="guardar()" id="btnGuardar">Guardar</button>
