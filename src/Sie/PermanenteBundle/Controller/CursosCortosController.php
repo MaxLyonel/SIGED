@@ -94,7 +94,7 @@ class CursosCortosController extends Controller {
                     'ueducativaInfoId' => array('subareaId' => $uEducativa['subareaid'], 'cursocortoid' => $uEducativa['cursocortoid'], 'iecid' => $uEducativa['iecid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
-                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['cursocorto']] [$uEducativa['iecid']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto']);
+                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['cursocorto']] [$uEducativa['iecid']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);
 
             }
            // dump($aInfoUnidadEductiva);die;
@@ -1117,12 +1117,15 @@ class CursosCortosController extends Controller {
         //
         $em = $this->getDoctrine()->getManager();
 
-        $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+        // $infoUe = $request->get('infoUe');
+        // $aInfoUeducativa = unserialize($infoUe);
+        // $dataUe=(unserialize($infoUe));
         $exist = true;
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
-      //  dump ($idcurso);die;
+        // $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $infoUe = $request->get('infoUe');
+        $dataUe = array();
+        $idcurso = $request->get('infoUe');
+       // dump ($idcurso);die;
         $objStudents = array();
 
         $query = $em->getConnection()->prepare('
@@ -1225,8 +1228,8 @@ class CursosCortosController extends Controller {
      //   dump($request);die;
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+        $aInfoUeducativa = array();//unserialize($infoUe);
+        $dataUe=array();// = array('' => , );(unserialize($infoUe));
 
         $idinscripcion = $request->get('idestins');
         $idcurso = $request->get('idcurso');

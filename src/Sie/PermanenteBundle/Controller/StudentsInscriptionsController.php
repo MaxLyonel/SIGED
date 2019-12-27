@@ -37,14 +37,18 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function indexAction(Request $request){
+      
         //get the send values
-        $infoUe = $request->get('infoUe');
-        $arrInfoUe = unserialize($infoUe);
-        // dump($arrInfoUe);
+        $infoUe = '';// $request->get('infoUe');
+        // dump($infoUe);
+        // dump($request);
         // die;
+        $arrInfoUe = array();//unserialize($infoUe);
+        $infoUe = json_encode($arrInfoUe);
+        
         return $this->render('SiePermanenteBundle:StudentsInscriptions:newlookforstudent.html.twig', array(
           'infoUe'=>$infoUe,
-          'iecId' => $arrInfoUe['ueducativaInfo']['ueducativaInfoId']['iecid']
+          'iecId' =>$request->get('infoUe')
           // 'form'=>$this->findStudentForm($infoUe)->createView()
         ));
     }
@@ -412,6 +416,7 @@ class StudentsInscriptionsController extends Controller {
           'rude'        =>$objStudent->getCodigoRude(),
           'expedido'    =>$objStudent->getExpedido()->getSigla(),
           'expedidoId'  =>$objStudent->getExpedido()->getId(),
+          'studentId'  =>$objStudent->getId(),
         );
         // get all cardex info
         // $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $objStudent->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
@@ -454,6 +459,7 @@ class StudentsInscriptionsController extends Controller {
           $arrayCondition2['complemento'] = $complemento;
         }
         $objStudent = $em->getRepository('SieAppWebBundle:Persona')->findOneBy($arrayCondition2);
+        // dump($objStudent);die;
         // check if the person exist on the person table
         if($objStudent){
           // the person exist
@@ -717,15 +723,165 @@ class StudentsInscriptionsController extends Controller {
       
       $response->setStatusCode(200);
       $response->setData($arrResponse);
+
+      return $response;
        
-      return $response;    
+    }
+
+    public function studentsInscriptionAction(Request $request){
+      //ini json var
+      $response = new JsonResponse();
+      // get the send values 
+      $iecId = $request->get('iecId');
+      $studentId = $request->get('studentId');
+      // create db conexion
+      $em = $this->getDoctrine()->getManager();
+
+      try {
+        // check if the student has an inscription on this course
+        $objCurrentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$studentId,'institucioneducativaCurso'=>$iecId));
+        
+
+          if(!$objCurrentInscription){
+          // do inscription
+          // set the inscription to the new student
+            $studentInscription = new EstudianteInscripcion();
+            $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
+            $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+            $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
+            $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
+            $studentInscription->setObservacion(1);
+            $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
+            $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
+            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+            //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
+            $studentInscription->setCodUeProcedenciaId(0);
+            $em->persist($studentInscription);
+
+            $em->flush();
+
+            $status = 'success';
+            $code = 200;
+            $message = "Estudiante registrado existosamente!!!";
+            $swcreatestudent = true;   
+
+
+          }else{
+
+            $status = 'error';
+            $code = 400;
+            $message = "Estudiante ya cuenta con una inscripcion en el curso seleccionado";
+            $swcreatestudent = false;   
+
+          }
+
+
+           $arrResponse = array(
+            'status'          => $status,
+            'code'            => $code,
+            'message'         => $message,
+            'swcreatestudent' => $swcreatestudent,
+            
+            );
       
-      die;
+      $response->setStatusCode(200);
+      $response->setData($arrResponse);
+
+      return $response;
+        
+      } catch (Exception $e) {
+        
+      }
+
     }
 
     public function showListStudentAction(Request $request){
-      dump($request);
-      die;
+      $infoUe = $request->get('iecId');
+      // $aInfoUeducativa = unserialize($infoUe);
+      $idcurso = $request->get('iecId');
+      // $dataUe=(unserialize($infoUe));
+      $em = $this->getDoctrine()->getManager();
+      $exist = true;
+            $query = $em->getConnection()->prepare('
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+
+                from estudiante a
+                    inner join estudiante_inscripcion b on b.estudiante_id =a.id
+                        inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
+                            inner join estadomatricula_tipo d on d.id = b.estadomatricula_tipo_id
+                                inner join genero_tipo e on a.genero_tipo_id = e.id
+
+                
+                where c.id =:idcurso      
+
+               
+        ');
+            $query->bindValue(':idcurso', $idcurso);
+            $query->execute();
+            $objStudents= $query->fetchAll();
+            $querya = $em->getConnection()->prepare('
+                 select a.id, a.periodo_tipo_id, a.grado_tipo_id, a.gestion_tipo_id, a.nivel_tipo_id, a.turno_tipo_id,a.fecha_inicio,a.fecha_fin,a.duracionhoras,
+                        b.esabierto, 
+                        c.areatematica, d.poblacion,e.programa, f.sub_area, g.cursocorto,
+                        h.id as codofermaes,h.horasmes, 
+                        i.maestro_inscripcion_id,
+                        k.paterno,k.materno,k.nombre,
+                        m.id as percursocorid,m.sub_area_tipo_id,m.programa_tipo_id, m.areatematica_tipo_id,m.cursocorto_tipo_id,
+                        n.turno
+                    FROM
+                        institucioneducativa_curso a 
+                            left JOIN permanente_institucioneducativa_cursocorto b on a.id= b.institucioneducativa_curso_id
+                                left join permanente_area_tematica_tipo c on b.areatematica_tipo_id =c.id
+                                  left join permanente_poblacion_tipo d on b.poblacion_tipo_id = d.id
+                                      left join permanente_programa_tipo e on b.programa_tipo_id=e.id
+                                            left join permanente_sub_area_tipo f on b.sub_area_tipo_id= f.id
+                                            left join permanente_cursocorto_tipo g on cursocorto_tipo_id = g.id
+                                              left join institucioneducativa_curso_oferta h on  a.id = h.insitucioneducativa_curso_id 
+                                                left join institucioneducativa_curso_oferta_maestro i on h.id = i.institucioneducativa_curso_oferta_id
+                                                  left join maestro_inscripcion j on i.maestro_inscripcion_id = j.id
+                                                      left join persona k on j.persona_id =k.id
+                                                        left join permanente_institucioneducativa_cursocorto m on m.institucioneducativa_curso_id = a.id
+                              left join turno_tipo n on a.turno_tipo_id =n.id
+                                                
+                where  a.nivel_tipo_id= :nivel and a.id=:idcurso
+                
+        ');
+            $querya->bindValue(':nivel', 230);
+            $querya->bindValue(':idcurso', $idcurso);
+            $querya->execute();
+
+            $cursoCorto= $querya->fetchAll();
+            //  dump($cursoCorto);die;
+
+            $estadomatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findAll();
+            $estadomatriculaArray = array();
+            foreach($estadomatricula as $value){
+                if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==5))
+                {
+                    $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                }
+
+            }
+
+            if (count($objStudents) > 0){
+                $existins = true;
+            }
+            else {
+                $existins = false;
+            }
+
+           //$data = $this->getAreas($infoUe);
+            return $this->render('SiePermanenteBundle:InfoEstudianteRequest:seeStudents.html.twig', array(
+                'objStudents' => $objStudents,
+                'exist' => $exist,
+                'objx' => $estadomatriculaArray,
+                'cursocorto'=>$cursoCorto,
+                'existins' => $existins,
+                  'infoUe' => $infoUe,
+                  'dataUe' => array(),
+                'totalInscritos'=>count($objStudents)
+            ));
     }
 
 

@@ -36,7 +36,8 @@
                                   </div>
                                 </div><!-- /.form-body -->
 
-                            <input type="text" id="form_data" name="form[data]"  v-model="iecId">
+                            <input type="hidden" id="form_data" name="form[data]"  v-model="iecId">
+                            <input type="hidden" id="form_data" name="form[data]"  v-model="infoUe">
                             
                         </form>
                       </div><!-- /.panel-body -->
@@ -54,7 +55,7 @@
               <div v-if="swstudent">           
                   <div class="panel-warning">
                     <div class="panel-heading">
-                        <a v-on:click=""  class="btn btn-default" ladda-button data-style="expand-left"><i class="fa fa-input"></i> Inscribir </a>
+                      <button v-on:click="studentsInscription()" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Inscribir </button>                      
                     </div>
                     <div class="panel-body">
 
@@ -160,13 +161,13 @@
                             ${dataStudent.complemento}
                           </div>
                           <div class="col-sm-2">
-                            <label for="Nombre(s)">Expedido</label></br>
+                            <label for="expedido">Expedido</label></br>
                             
-                              <select v-if="dataStudent.expedidoId == 0" name="DBExpedido" id="idarrExpe" v-model="dataStudent.expedidoId" class="custom-select form-control" >  
+                              <select v-if="dataStudent.expedidoId == 0" name="DBExpedido" id="idarrExpe" v-model="dataStudent.expedidoId2  " class="custom-select form-control" >  
                                 <option v-for="item in DBExpedido"  :value="item.expedidoId">${ item.expedido }</option>       
                               </select> 
                               <div v-else>
-                              ${dataStudent.expedido}
+                                ${dataStudent.expedido}
                               </div>
                              
                               
@@ -335,6 +336,7 @@ var app = new Vue({
           cival:'',
           complementoval:'',
           iecId:'{{iecId}}',
+          infoUe:'{{infoUe}}',
           buscando:false,
           swproceso:false,
           swstudent:false,
@@ -359,7 +361,15 @@ var app = new Vue({
         lookforStudent: function(){
           this.buscando = true;
           this.swstudent = false;
-          this.swperson = false;                            
+          this.swperson = false;   
+          this.swproceso = false;   
+          this.message = false; 
+
+          if(this.cival.length == 0){
+            this.message = 'debe introducir un carnet';
+            this.buscando = false;
+            return;
+          }
 
               axios.get(Routing.generate('per_inscriptionstudent_inscriptionbyCi', {
                   ci: this.cival,
@@ -378,10 +388,9 @@ var app = new Vue({
                   this.historyReg  = response.data.dataInscriptionR;
                   this.historyAlt  = response.data.dataInscriptionA;
                   this.historyEsp  = response.data.dataInscriptionE;
-                  this.historyPer  = response.data.dataInscriptionP;       
-
+                  this.historyPer  = response.data.dataInscriptionP;   
                 }
-                  console.log(this.dataStudent);
+                  
                   this.buscando = false;
               })
               .catch(e => {
@@ -465,35 +474,127 @@ var app = new Vue({
         return ;
       },
       validateandregisterNewStudent: function(newperson){
-        
+        /*this.dataStudent.expedidoId2 = 0;*/
         if(newperson){
-          this.dataStudent.paisId = this.newStudent.paisId;
-          this.dataStudent.lugarNacTipoId = this.newStudent.lugarNacTipoId;
-          this.dataStudent.lugarProvNacTipoId = this.newStudent.lugarProvNacTipoId;
-          /*this.dataStudent.expedidoId = this.newStudent.expedidoId;
-          this.dataStudent.expedido = this.newStudent.expedido;*/
-          this.dataStudent.iecId = this.iecId;
-          
+            this.dataStudent.paisId = this.newStudent.paisId;
+            this.dataStudent.lugarNacTipoId = this.newStudent.lugarNacTipoId;
+            this.dataStudent.lugarProvNacTipoId = this.newStudent.lugarProvNacTipoId;
+            this.dataStudent.localidad = this.newStudent.localidad;
+            this.dataStudent.iecId = this.iecId;
+            
+            
+          }else{
+            this.newStudent.carnet = this.cival;
+            this.newStudent.complementoval = this.complementoval;
+            this.newStudent.iecId = this.iecId;
+            this.dataStudent = this.newStudent;
+            this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
+          }
+        
+        /* if(this.dataStudent.expedidoId2 > 0){
+            Swal.fire(
+              'Expedido!',
+              'Debe registrar Expedido del carnet de identidad',
+              'warning'
+            );
+            return;
+          }*/
+        if(this.dataStudent.paisId == null ){
+              Swal.fire(
+                'Pais!',
+                'Debe registrar el Pais',
+                'warning'
+              );
+              return;
         }else{
-          this.newStudent.carnet = this.cival;
-          this.newStudent.complementoval = this.complementoval;
-          this.newStudent.iecId = this.iecId;
-          
-          this.dataStudent = this.newStudent; 
-        }
-        this.swproceso = true;
-        axios.post(Routing.generate('per_inscriptionstudent_checkDataStudent', this.dataStudent ))
+          if(this.dataStudent.paisId == 1){
+            if(!(this.dataStudent.lugarNacTipoId > 0)){
+              Swal.fire(
+                'Departamento!',
+                'Debe registrar el Departamento',
+                'warning'
+              );
+              return;
+            }
+            if(!(this.dataStudent.lugarProvNacTipoId>0)){
+              Swal.fire(
+                'Provincia!',
+                'Debe registrar la Provincia',
+                'warning'
+              );
+              return;
+            }
+            if(this.dataStudent.localidad.length == 0){
+              Swal.fire(
+                'Localidad!',
+                'Debe registrar la Localidad',
+                'warning'
+              );
+              return;
+
+            }
+           }
+        }  
+        
+
+        Swal.fire({
+              title: '¿Realizar incripción?',
+              text: "El estudiante será inscrito en el curso seleccionado",
+              type: 'question',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, continuar...',
+              cancelButtonText: 'Cancelar'
+          }).then((result) => {
+              if (result.value) {
+                  
+                  
+                  this.swproceso = true;
+                  axios.post(Routing.generate('per_inscriptionstudent_checkDataStudent', this.dataStudent ))
+                  .then(response => {
+                      if (response.status == 200) {
+                        this.message = response.data.message;
+                        this.swcreatestudent = response.data.swcreatestudent;
+                        if(this.swcreatestudent){
+                          showListStudent(this.iecId, this.infoUe);
+                        }
+                        
+                      }
+                      if( response.status == 202){
+                          //this.respuesta = response.data;
+                      }
+
+                      this.buscando = false;
+                      this.swproceso = false;
+                  })
+                  .catch(e => {
+                      console.log(e);
+                      this.buscando = false;
+                  });
+
+        /*console.log(newperson);
+        console.log(this.dataStudent);*/
+        //return ;
+           }
+        })
+      },
+      studentsInscription: function(){
+      
+      this.dataStudent.iecId = this.iecId;
+      this.swproceso = true;
+        axios.post(Routing.generate('per_inscriptionstudent_studentsInscription', this.dataStudent ))
         .then(response => {
             if (response.status == 200) {
               this.message = response.data.message;
               this.swcreatestudent = response.data.swcreatestudent;
               if(this.swcreatestudent){
-                showListStudent(this.iecId);
+                showListStudent(this.iecId, this.infoUe);
               }
               
             }
             if( response.status == 202){
-                this.respuesta = response.data;
+                //this.respuesta = response.data;
             }
 
             this.buscando = false;
@@ -503,10 +604,7 @@ var app = new Vue({
             console.log(e);
             this.buscando = false;
         });
-
-        console.log(newperson);
-        console.log(this.dataStudent);
-        return ;
+        
       },
       
       
@@ -518,11 +616,11 @@ var app = new Vue({
       }
   });
 
-  var showListStudent = function(iecId){
+  var showListStudent = function(iecId, infoUe){
     
       $.ajax({
         type: 'post',
-        data: ({iecId: iecId}),
+        data: ({iecId: iecId, infoUe: infoUe}),
         url: "{{ path('per_inscriptionstudent_showListStudent') }}",
         beforeSend: function () {
           $("#listEstudiante").empty();

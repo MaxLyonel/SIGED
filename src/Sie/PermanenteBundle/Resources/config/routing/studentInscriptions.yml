@@ -55,4 +55,10 @@ per_inscriptionstudent_showListStudent:
     path:     /showListStudent
     defaults: { _controller: SiePermanenteBundle:StudentsInscriptions:showListStudent }
     options:
-        expose: true        
+        expose: true 
+        
+per_inscriptionstudent_studentsInscription:
+    path:     /studentsInscription
+    defaults: { _controller: SiePermanenteBundle:StudentsInscriptions:studentsInscription }
+    options:
+        expose: true 
