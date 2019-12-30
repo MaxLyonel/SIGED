@@ -107,10 +107,10 @@ class RegularizacionDobleInscripcionController extends Controller {
                 $inscripcionActual['codigoRude'] = $i['codigoRude'];
                 $inscripcionActual['sie'] = $i['sie'];
                 $inscripcionActual['institucioneducativa'] = $i['institucioneducativa'];
-                $inscripcionActual['nivel'] = $i['nivel'];
+                $inscripcionActual['nivelname'] = $i['nivel'];
                 $inscripcionActual['nivelId'] = $i['nivelId'];
-                $inscripcionActual['grado'] = $i['grado'];
-                $inscripcionActual['paralelo'] = $i['paralelo'];
+                $inscripcionActual['gradoname'] = $i['grado'];
+                $inscripcionActual['paraleloname'] = $i['paralelo'];
                 $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
                 $inscripcionActual['estadomatricula'] = $i['estadomatricula'];
 
@@ -327,6 +327,10 @@ class RegularizacionDobleInscripcionController extends Controller {
       $arrEstadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
       $error = 'done';
       $error1 = '';
+
+      // dump($arrEstudianteEstado);
+      // dump($arrEstadoMatriculaNuevo);
+      // die;
       try {
 
         //validate the students stado
