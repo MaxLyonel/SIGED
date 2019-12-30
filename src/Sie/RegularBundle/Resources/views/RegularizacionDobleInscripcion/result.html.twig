@@ -31,7 +31,14 @@
 <div class="row">
 <form class="" action="" method="post" name="form" id="form">
     {% set cont = 0 %}
+
     {% for notas in arrayInscripciones %}
+
+        {% if notas.nivel == 11 %}
+            {% set col = 12 %}
+        {% else %}
+            {% set col = 6 %}
+        {% endif %}
 
         <input type="hidden" name="rude" value="{{notas.codigoRude}}">
         <input type="hidden" name="estadoMatriculaActual[]" value="{{notas.estadomatriculaId}}">
@@ -39,7 +46,7 @@
         <input type="hidden" id="{{cont}}_nivel" name="nivel[]" value="{{notas.nivelId}}">
 
 
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-12 col-md-{{col}} col-lg-{{col}}">
             <div class="calificaciones">
                 <table class="table alert-info">
                     <tr>
@@ -61,7 +68,7 @@
                         <th>Gestion</th><td>{{notas.gestion}}</td>
                     </tr>
                     <tr>
-                        <th>Estado Matrícula</th><td style="color:#2447E2; font-weight:bold; font-size:1.2em">{{notas.estadomatricula}}</td>
+                        <th>Estado Matrícula</th><td style="color:#2447E2; font-weight:bold; font-size:1.2em">{{notas.estadomatriculaname}}</td>
                     </tr>
                 </table>
                 
@@ -87,6 +94,7 @@
                     </tr>
                 </table>
             </div>
+            <br>
         </div>
         {% set cont = cont + 1 %}
     {% endfor %}

@@ -103,6 +103,7 @@ class RegularizacionDobleInscripcionController extends Controller {
 
                 $inscripcionActual = $this->get('notas')->regular($i['id'], $operativo);
 
+
                 $inscripcionActual['estudiante'] = $i['nombre'].' '.$i['paterno'].' '.$i['materno'];
                 $inscripcionActual['codigoRude'] = $i['codigoRude'];
                 $inscripcionActual['sie'] = $i['sie'];
@@ -112,7 +113,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                 $inscripcionActual['gradoname'] = $i['grado'];
                 $inscripcionActual['paraleloname'] = $i['paralelo'];
                 $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
-                $inscripcionActual['estadomatricula'] = $i['estadomatricula'];
+                $inscripcionActual['estadomatriculaname'] = $i['estadomatricula'];
 
                 // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
                 if ($inscripcionActual['operativo'] >= 1 and $inscripcionActual['cantidadFaltantes'] == 0) {
