@@ -257,6 +257,10 @@
                initMap2($('#latitud').val(),$('#longitud').val());
             }
         });
+        
+        $('.date').keydown(function() {
+            return false;
+        });
         $('input[type="file"]').change(function(){
 	        // this.files[0].size recupera el tamaño del archivo
 	        //alert(this.files[0].size);

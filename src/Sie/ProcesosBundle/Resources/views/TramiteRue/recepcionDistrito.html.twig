@@ -227,6 +227,7 @@
                 language: 'es'
             });
         });
+        
         $(document).on('change','input[type="file"]',function(){
             var fileName = this.files[0].name;
             var fileSize = this.files[0].size;
@@ -236,6 +237,10 @@
                 this.value = '';
                 this.files[0].name = '';
             }
+        });
+
+        $('.date').keydown(function() {
+            return false;
         });
         //$("#form_fechainformesubdireccion").datepicker();
         $('#form_varevaluacion1_0').click(function(){

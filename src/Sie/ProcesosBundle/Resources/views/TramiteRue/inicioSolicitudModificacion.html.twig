@@ -448,7 +448,10 @@
             });
             $('#form_tr').empty(); 
         });
-
+        
+        $('.date').keydown(function() {
+            return false;
+        });
         function siefusion(sie){
             var formData = {idsiefusion: sie,iddistrito:'{{institucioneducativa.leJuridicciongeografica.lugarTipoIdDistrito}}'};
             if(sie.length >= 8){

@@ -278,6 +278,10 @@
             }
         });
         
+        $('.date').keydown(function() {
+            return false;
+        });
+
         function buscarSolicitud(){
             if($('#form_tramite_tipo').val()==''){
                 alert('Seleccione el tipo de trámite.');

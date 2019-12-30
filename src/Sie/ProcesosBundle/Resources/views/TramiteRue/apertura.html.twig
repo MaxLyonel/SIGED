@@ -678,6 +678,10 @@
             initMap();
         });
         
+        $('.date').keydown(function() {
+            return false;
+        });
+
         function siecomparte(sie){
             var formData = {sie: sie};
             if(sie.length >= 8){

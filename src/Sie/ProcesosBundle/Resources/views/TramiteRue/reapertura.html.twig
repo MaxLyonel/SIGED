@@ -237,6 +237,9 @@
             
         });
         
+        $('.date').keydown(function() {
+            return false;
+        });
         function buscarSieReapertura(){
             if($('#form_sie').val().length >= 8){
                 var formData = {sie: $('#form_sie').val()};

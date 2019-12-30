@@ -200,6 +200,14 @@
                                 <a href="{{path('consultalibreta')}}" style="color:#455A64; font-size:1em;"><span class="glyphicon glyphicon-list-alt"></span> Consultar Libreta</a>
                             </div>
                         {% endif %}
+                        {% if app.session.get('pathSystem') == 'SieHerramientaBundle' %}
+                            <div class="consulta text-left">
+                                <a href="{{path('solicitud_rue_apertura',{'id':54,'desglose':0})}}" style="color:#455A64; font-size:1em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura RUE</a>
+                            </div>
+                            <div class="consulta text-left">
+                                <a href="{{path('tramite_rue_reapertura')}}" style="color:#455A64; font-size:1em;"><span class="glyphicon glyphicon-list-alt"></span> Reapertura RUE</a>
+                            </div>
+                        {% endif %}
                     </div><!-- /.form-group -->
                 </div><!-- /.sign-footer -->
             </form>
