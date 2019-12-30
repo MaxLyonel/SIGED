@@ -239,9 +239,10 @@ class TramiteRueController extends Controller
             case 38://cambio de jurisdiccion administrativa
                 $this->iddep = $ie->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo();
                 $this->iddis = $ie->getLeJuridicciongeografica()->getDistritoTipo()->getId();
+                $this->disArray = array(1000,2000,3000,4000,5000,6000,7000,8000,9000,$ie->getLeJuridicciongeografica()->getDistritoTipo()->getId());
                 $form = $form
                     ->add('nuevo_distrito','entity',array('label'=>'Nuevo Distrito:','required'=>true,'multiple' => false,'attr' => array('class' => 'form-control'),'empty_value'=>'Seleccione nuevo distrito','class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $dt){
-                        return $dt->createQueryBuilder('dt')->where('dt.departamentoTipo = :id')->andwhere('dt.id <> :iddis')->setParameter('id',$this->iddep)->setParameter('iddis',$this->iddis)->orderBy('dt.distrito','ASC');},'property'=>'distrito'))
+                        return $dt->createQueryBuilder('dt')->where('dt.departamentoTipo = :id')->andwhere('dt.id not in (:iddis)')->setParameter('id',$this->iddep)->setParameter('iddis',$this->disArray)->orderBy('dt.distrito','ASC');},'property'=>'distrito'))
                     ->getForm();
                 $data = array(
                     'form' => $form->createView(),
@@ -627,25 +628,25 @@ class TramiteRueController extends Controller
                         ->add('iii_kardex_apertura', 'checkbox', array('label' => '3.4 Kardex de maestras y maestros y personal administrativo.','required'  => false))
                         ->add('iii_sippase_apertura', 'checkbox', array('label' => '3.5 Cetificado SIPPASE y REJAP del plantel docente y administrativo (en mérito al D.S. Nro. 1302 y 1320).','required'  => false))
                         ->add('iii_contratos_apertura', 'checkbox', array('label' => '3.7 Contratos firmados por el personal docente con pertinencia académica.','required'  => false));
-                    if($constitucion != 5 ){
+                    if($constitucion != 48 ){
                         $form = $form
                             ->add('i_personeria_apertura', 'checkbox', array('label' => 'Copia legalizada del Testimonio de la Personería Jurídica.','required'  => false));
                     }
-                    if($constitucion == 5){
+                    if($constitucion == 48){
                         $form = $form
                             ->add('i_afcoop_apertura', 'file', array('label' => 'Adjuntar Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")));
                     }
-                    if($constitucion == 2 or $constitucion == 6){
+                    if($constitucion == 45 or $constitucion == 49){
                         $form = $form
                             ->add('i_certificacionculto_apertura', 'file', array('label' => 'Adjuntar Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores. (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")));
                     }
-                    if($constitucion == 3 or $constitucion == 4 or $constitucion == 6){
+                    if($constitucion == 46 or $constitucion == 47 or $constitucion == 49){
                         $form = $form
                             ->add('i_form_fundaempresa_apertura', 'checkbox', array('label' => 'Copia del formulario virtual de Registro de Comercio, emitida por FUNDAEMPRESA.','required'  => false))
                             ->add('nro_fundaempresa_apertura', 'text', array('label' => 'Nro. de Matrícula de Comercio:','required'=>false,'attr' => array('class' => 'form-control')))
                             ->add('fecha_fundaempresa_apertura', 'text', array('label' => 'Fecha de Inscripción:','required'=>false,'attr' => array('class' => 'form-control date')));
                     }
-                    if($constitucion == 6){
+                    if($constitucion == 49){
                         $form = $form
                             ->add('i_convenio_apertura', 'checkbox', array('label' => 'Copia legalizada de convenio entre estados.','required'  => false));
                     }
@@ -696,12 +697,12 @@ class TramiteRueController extends Controller
     public function createInicioNuevoForm($desglose)
     {
         $em = $this->getDoctrine()->getManager();   
-        $constitucion = array(1=>'Asociaciones o Fundaciones sin fines de lucro - ONG',
-            2=>'Instituciones Religiosas',
-            3=>'Sociedad Anónima (S.A.) / Sociedad de Responsabilidad Limitada(S.r.l.)',
-            4=>'Unipersonal',
-            5=>'Cooperativa',
-            6=>'De Convenio (suscrito entre estados)');
+        /* $constitucion = array(1=>'Asociaciones o Fundaciones sin fines de lucro - ONG',
+          45  2=>'Instituciones Religiosas',
+          46  3=>'Sociedad Anónima (S.A.) / Sociedad de Responsabilidad Limitada(S.r.l.)',
+          47  4=>'Unipersonal',
+          48  5=>'Cooperativa',
+          49  6=>'De Convenio (suscrito entre estados)'); */
         $form = $this->createFormBuilder();
         if($desglose == 0){
             $form=$form
@@ -741,7 +742,8 @@ class TramiteRueController extends Controller
         $form = $form            
             ->add('conveniotipo','entity',array('label'=>'Tipo de Convenio:','required'=>false,'multiple' => false,'attr' => array('class' => 'form-control dato54'),'empty_value'=>'Seleccione convenio','class'=>'SieAppWebBundle:ConvenioTipo','query_builder'=>function(EntityRepository $ct){
                 return $ct->createQueryBuilder('ct')->where('ct.id <>99')->orderBy('ct.convenio','ASC');},'property'=>'convenio'))
-            ->add('constitucion', 'choice', array('label' => 'Constitución de la Unidad Educativa:','required'=>false, 'choices'=>$constitucion,'empty_value'=>'Seleccione constitución','attr' => array('class' => 'form-control dato54')))
+            ->add('constitucion','entity',array('label'=>'Constitución de la Unidad Educativa:','required'=>false,'multiple' => false,'attr' => array('class' => 'form-control dato54'),'empty_value'=>'Seleccione constitución','class'=>'SieAppWebBundle:ConvenioTipo','query_builder'=>function(EntityRepository $c){
+                return $c->createQueryBuilder('c')->where('c.codDependenciaId =3')->andWhere("c.tipoConvenio ='Constitucion'")->orderBy('c.convenio','ASC');},'property'=>'convenio'))
             ->add('niveltipo','entity',array('label'=>'Ampliacion','required'=>false,'multiple' => true,'expanded' => true,'class'=>'SieAppWebBundle:NivelTipo','query_builder'=>function(EntityRepository $nt){
                 return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id',array(11,12,13))->orderBy('nt.id','ASC');},'property'=>'nivel'))
             ->add('siecomparte', 'text', array('label' => 'Comparte el edificio con (Señale solo 1):','required'=>false,'attr' => array('class' => 'form-control dato54 validar','maxlength'=>8)))
@@ -1078,7 +1080,7 @@ class TramiteRueController extends Controller
                         $datos[$tramite['tramite_tipo']]['conveniotipo']=array('id'=>$form['conveniotipo'],'convenio'=>$em->getRepository('SieAppWebBundle:ConvenioTipo')->find($form['conveniotipo'])->getConvenio());
                     }
                     if($form['dependencia'] == 3){
-                        $datos[$tramite['tramite_tipo']]['constitucion']=array('id'=>$form['constitucion'],'constitucion'=>$this->constitucion($form['constitucion']));
+                        $datos[$tramite['tramite_tipo']]['constitucion']=array('id'=>$form['constitucion'],'constitucion'=>$em->getRepository('SieAppWebBundle:ConvenioTipo')->find($form['constitucion'])->getConvenio());
                     }
                     $nivel = $em->getRepository('SieAppWebBundle:NivelTipo')->createQueryBuilder('nt')
                         ->select('nt.id,nt.nivel')
@@ -1142,10 +1144,10 @@ class TramiteRueController extends Controller
                         $datos[$tramite['tramite_tipo']]['i_testimonioconvenio']=$form['i_testimonioconvenio'];
                     }
                     if($form['dependencia'] == 3){                        
-                        if($form['constitucion']!=5){
+                        if($form['constitucion']!=48){
                             $datos[$tramite['tramite_tipo']]['i_personeria_apertura']=$form['i_personeria_apertura'];
                         }
-                        if($form['constitucion']==5){
+                        if($form['constitucion']==48){
                             $datos[$tramite['tramite_tipo']]['i_afcoop_apertura']=$this->upload($files['i_afcoop_apertura'],$ruta);
                         }                        
                         $datos[$tramite['tramite_tipo']]['i_fotocopia_nit_apertura']=$form['i_fotocopia_nit_apertura'];
@@ -1156,16 +1158,16 @@ class TramiteRueController extends Controller
                         $datos[$tramite['tramite_tipo']]['ci_apertura']=$form['ci_apertura'];
                         $datos[$tramite['tramite_tipo']]['i_funcionamiento_apertura']=$this->upload($files['i_funcionamiento_apertura'],$ruta);
                         $datos[$tramite['tramite_tipo']]['i_estatutos_apertura']=$form['i_estatutos_apertura'];
-                        if(($form['constitucion']==2 or $form['constitucion']==6) and isset($files['i_certificacionculto_apertura'])){
+                        if(($form['constitucion']==45 or $form['constitucion']==49) and isset($files['i_certificacionculto_apertura'])){
                             $datos[$tramite['tramite_tipo']]['i_certificacionculto_apertura']=$this->upload($files['i_certificacionculto_apertura'],$ruta);
                         }
-                        if($form['constitucion']==3 or $form['constitucion']==4 or $form['constitucion']==6){
+                        if($form['constitucion']==46 or $form['constitucion']==47 or $form['constitucion']==49){
                             $datos[$tramite['tramite_tipo']]['i_form_fundaempresa_apertura']=$form['i_form_fundaempresa_apertura'];
                             $datos[$tramite['tramite_tipo']]['nro_fundaempresa_apertura']=$form['nro_fundaempresa_apertura'];
                             $datos[$tramite['tramite_tipo']]['fecha_fundaempresa_apertura']=$form['fecha_fundaempresa_apertura'];
                         }
                         $datos[$tramite['tramite_tipo']]['i_empleadores_apertura']=$this->upload($files['i_empleadores_apertura'],$ruta);
-                        if($form['constitucion']==6){
+                        if($form['constitucion']==49){
                             $datos[$tramite['tramite_tipo']]['i_convenio_apertura']=$form['i_convenio_apertura'];
                         }                        
                         $datos[$tramite['tramite_tipo']]['ii_alquiler_apertura']=$form['ii_alquiler_apertura'];
@@ -1884,6 +1886,7 @@ class TramiteRueController extends Controller
                                         $vAnterior['area_municipio'] = $tareasDatos[0]['datos']['institucioneducativa']['area_municipio'];
                                         $vNuevo['area_municipio'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['area_dependencia'];
                                     }else{ //fiscal
+                                        $institucioneducativa->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById(0));
                                         $vAnterior['conveniotipo']['id'] = $tareasDatos[0]['datos']['institucioneducativa']['convenio_tipo_id'];
                                         $vAnterior['conveniotipo']['convenio'] = $tareasDatos[0]['datos']['institucioneducativa']['convenio'];
                                     }
@@ -1972,10 +1975,12 @@ class TramiteRueController extends Controller
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[1]['datos']['resolucion'],$tareasDatos[1]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
                                 }elseif($t['id'] == 54){
                                     //$nuevaInstitucioneducativa = $this->registrarInstitucioneducativa($tareasDatos[0][$t['tramite_tipo']]);
+                                    $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];
+                                    //dump($datosSolicitud);die;
                                     if(isset($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion'])){
-                                        $codLe = $this->obtieneCodigoLe($tareasDatos[0]['datos'][$t['tramite_tipo']],$tareasDatos[0]['datos'][$t['tramite_tipo']]['iddistrito'],$usuario);
-                                    }else{
                                         $codLe = $tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion'];
+                                    }else{
+                                        $codLe = $this->obtieneCodigoLe($tareasDatos[0]['datos'][$t['tramite_tipo']],$tareasDatos[0]['datos'][$t['tramite_tipo']]['iddistrito'],$usuario);                                        
                                     }
                                     $query = $em->getConnection()->prepare('SELECT get_genera_codigo_ue(:codle)');
                                     $query->bindValue(':codle', $codLe);
@@ -1992,7 +1997,14 @@ class TramiteRueController extends Controller
                                     $entity->setFechaFundacion(new \DateTime($datosSolicitud['fechafundacion']));
                                     $entity->setNroResolucion(mb_strtoupper($tipo=='desglose'?$tareasDatos[2]['datos']['resolucion']:$tareasDatos[1]['datos']['resolucion'], 'utf-8'));
                                     $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($datosSolicitud['dependencia']['id']));
-                                    $entity->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById(($datosSolicitud['dependencia']['id'] == 2) ?$datosSolicitud['conveniotipo']['id'] : 0));
+                                    if($datosSolicitud['dependencia']['id'] == 2){
+                                        $convenio = $datosSolicitud['conveniotipo']['id'];
+                                    }elseif($datosSolicitud['dependencia']['id'] == 3){
+                                        $convenio = $datosSolicitud['constitucion']['id'];
+                                    }else{
+                                        $convenio = 0;
+                                    }
+                                    $entity->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($convenio));
                                     $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(10));
                                     $entity->setInstitucioneducativaTipo($ieducativatipo);
                                     $entity->setObsRue($observacion);
@@ -2445,6 +2457,8 @@ class TramiteRueController extends Controller
             $entity->setValidacionGeograficaTipo($em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneById(0));
             $entity->setZona(mb_strtoupper($le['zona'], 'utf-8'));
             $entity->setDireccion(mb_strtoupper($le['direccion'], 'utf-8'));
+            $entity->setCordx($le['latitud']);
+            $entity->setCordy($le['longitud']);
             $entity->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(1));
             $entity->setUsuarioId($id_usuario);
             $entity->setFechaRegistro(new \DateTime('now'));
@@ -3286,10 +3300,10 @@ class TramiteRueController extends Controller
         $datos[$tramitetipo]['fechafundacion']=$form['fechafundacion'];
         $datos[$tramitetipo]['telefono']=$form['telefono'];
         $datos[$tramitetipo]['director']=trim(mb_strtoupper($form['director'],'utf-8'));
-        if(isset($form['siecomparte'])){
+        if($form['siecomparte']){
             $datos[$tramitetipo]['siecomparte']=$form['siecomparte'];
         }
-        if(isset($form['lejurisdiccion'])){
+        if($form['lejurisdiccion']){
             $datos[$tramitetipo]['lejurisdiccion']=$form['lejurisdiccion'];
         }
         $datos[$tramitetipo]['zona']=trim(mb_strtoupper($form['zona'],'utf-8'));
@@ -3322,7 +3336,7 @@ class TramiteRueController extends Controller
         }
         if($form['dependencia'] == 3){
             //$datos[$tramitetipo]['constitucion']=array('id'=>$form['constitucion'],'constitucion'=>$this->obtieneConstitucion($form['constitucion']));
-            $datos[$tramitetipo]['constitucion']=array('id'=>$form['constitucion']);
+            $datos[$tramitetipo]['constitucion']=array('id'=>$form['constitucion'],'constitucion'=>$em->getRepository('SieAppWebBundle:ConvenioTipo')->find($form['constitucion'])->getConvenio());
         }
         //dump($datos);die;
         $nivel = $em->getRepository('SieAppWebBundle:NivelTipo')->createQueryBuilder('nt')
@@ -3387,10 +3401,10 @@ class TramiteRueController extends Controller
             $datos[$tramitetipo]['i_testimonioconvenio']=$form['i_testimonioconvenio'];
         }
         if($form['dependencia'] == 3){                        
-            if($form['constitucion']!=5){
+            if($form['constitucion']!=48){
                 $datos[$tramitetipo]['i_personeria_apertura']=$form['i_personeria_apertura'];
             }
-            if($form['constitucion']==5){
+            if($form['constitucion']==48){
                 $datos[$tramitetipo]['i_afcoop_apertura']=$this->upload($files['i_afcoop_apertura'],$ruta);
             }                        
             $datos[$tramitetipo]['i_fotocopia_nit_apertura']=$form['i_fotocopia_nit_apertura'];
@@ -3401,16 +3415,16 @@ class TramiteRueController extends Controller
             $datos[$tramitetipo]['ci_apertura']=$form['ci_apertura'];
             $datos[$tramitetipo]['i_funcionamiento_apertura']=$this->upload($files['i_funcionamiento_apertura'],$ruta);
             $datos[$tramitetipo]['i_estatutos_apertura']=$form['i_estatutos_apertura'];
-            if(($form['constitucion']==2 or $form['constitucion']==6) and isset($files['i_certificacionculto_apertura'])){
+            if(($form['constitucion']==45 or $form['constitucion']==49) and isset($files['i_certificacionculto_apertura'])){
                 $datos[$tramitetipo]['i_certificacionculto_apertura']=$this->upload($files['i_certificacionculto_apertura'],$ruta);
             }
-            if($form['constitucion']==3 or $form['constitucion']==4 or $form['constitucion']==6){
+            if($form['constitucion']==46 or $form['constitucion']==47 or $form['constitucion']==49){
                 $datos[$tramitetipo]['i_form_fundaempresa_apertura']=$form['i_form_fundaempresa_apertura'];
                 $datos[$tramitetipo]['nro_fundaempresa_apertura']=$form['nro_fundaempresa_apertura'];
                 $datos[$tramitetipo]['fecha_fundaempresa_apertura']=$form['fecha_fundaempresa_apertura'];
             }
             $datos[$tramitetipo]['i_empleadores_apertura']=$this->upload($files['i_empleadores_apertura'],$ruta);
-            if($form['constitucion']==6){
+            if($form['constitucion']==49){
                 $datos[$tramitetipo]['i_convenio_apertura']=$form['i_convenio_apertura'];
             }                        
             $datos[$tramitetipo]['ii_alquiler_apertura']=$form['ii_alquiler_apertura'];

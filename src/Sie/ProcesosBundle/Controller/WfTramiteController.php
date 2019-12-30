@@ -448,7 +448,8 @@ class WfTramiteController extends Controller
      * Listado de los tipo de flujos para iniciar un tramite
      */
     public function listaNuevos($pathSystem){
-
+        
+        $rol = $this->session->get('roluser');
         $em = $this->getDoctrine()->getManager();
         $iet = 0;
         switch ($pathSystem){
@@ -478,8 +479,11 @@ class WfTramiteController extends Controller
         $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
                 ->select('ft')
                 ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
+                ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
                 ->where('wf.institucioneducativaTipo =' . $iet)
                 ->andWhere("ft.obs like '%ACTIVO%'")
+                ->andWhere("fp.orden = 1")
+                ->andWhere("fp.rolTipo = ".$rol)
                 ->getQuery()
                 ->getResult();
 

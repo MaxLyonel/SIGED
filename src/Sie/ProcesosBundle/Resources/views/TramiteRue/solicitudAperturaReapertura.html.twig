@@ -304,7 +304,7 @@
                                                         <strong>Constitución de la Unidad Educativa:</strong>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        {{datos['Apertura de Unidad Educativa'].constitucion.id}}
+                                                        {{datos['Apertura de Unidad Educativa'].constitucion.constitucion}}
                                                     </div>
                                                 </div>
                                             {% endif %}
@@ -680,7 +680,7 @@
                                                             </div>
                                                         {% endif %}
                                                         {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
-                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id != 5 %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id != 48 %}
                                                                 <div  class="form-group col-md-12 ">
                                                                     <div class="ckbox ckbox-primary">
                                                                         <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
@@ -688,7 +688,7 @@
                                                                     </div>
                                                                 </div>
                                                             {% endif %}
-                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id == 5 %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id == 48 %}
                                                                 <div  class="form-group col-md-12">
                                                                     <div class="col-md-8">
                                                                         Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas:
@@ -756,7 +756,7 @@
                                                                     <label for="checkbox-primary">Copia notariada de la escritura de constitución y sus estatutos.</label>
                                                                 </div>
                                                             </div>
-                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id in [2,6] %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id in [45,49] %}
                                                                 <div  class="form-group col-md-12">
                                                                     <div class="col-md-8">
                                                                         Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores:
@@ -768,7 +768,7 @@
                                                                     </div>
                                                                 </div>
                                                             {% endif %}
-                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id in [3,4,6] %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id in [46,47,49] %}
                                                                 <div  class="form-group col-md-12 ">
                                                                     <div class="ckbox ckbox-primary">
                                                                         <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
@@ -792,7 +792,7 @@
                                                                     </div>
                                                                 </div>
                                                             {% endif %}
-                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id == 6 %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id == 49 %}
                                                                 <div  class="form-group col-md-12 ">
                                                                     <div class="ckbox ckbox-primary">
                                                                         <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
@@ -1250,3 +1250,9 @@
 {% else %}
     <div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>El código es incorrecto</div>
 {% endif %}
+<script>
+    $('.btn-lilac').click(function(){
+        $(this).removeClass("btn-lilac");
+        $(this).addClass("btn-teal");
+    });
+</script>

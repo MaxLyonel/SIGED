@@ -1431,10 +1431,10 @@
                     }
                     if(dependenciaId == 3){
                         var constitucion = 1;
-                        if (constitucion != 5 && $('#form_i_personeria_apertura').is(':checked')==false){
+                        if (constitucion != 48 && $('#form_i_personeria_apertura').is(':checked')==false){
                             alert('Seleccione la presentación de la Copia legalizada del Testimonio de la Personería Jurídica.');
                             return false;
-                        }else if (constitucion == 5 && $('#form_i_afcoop_apertura').val()==''){
+                        }else if (constitucion == 48 && $('#form_i_afcoop_apertura').val()==''){
                             alert('Debe adjuntar la Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas.');
                             return false;
                         }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==false){
@@ -1443,7 +1443,7 @@
                         }else if ($('#form_nit_apertura').val()==''){
                             alert('Ingrese el Nro. de N.I.T.');
                             return false;
-                        }else if(constitucion != 2 && $('#form_i_balance_apertura').is(':checked')==false){
+                        }else if(constitucion != 45 && $('#form_i_balance_apertura').is(':checked')==false){
                             alert('Seleccione la presentación de la Copia de Balance de apertura, sellado por el Servicio de Impuestos Nacionales SIN.');
                             return false;
                         }else if($('#form_i_representante_apertura').is(':checked')==false){
@@ -1461,22 +1461,22 @@
                         }else if($('#form_i_estatutos_apertura').is(':checked')==false){
                             alert('Seleccione la presentación de la Copia notariada de la escritura de constitución y sus estatutos.');
                             return false;
-                        }else if ((constitucion == 2 || constitucion == 6) && $('#form_i_certificacionculto_apertura').val()==''){
+                        }else if ((constitucion == 45 || constitucion == 49) && $('#form_i_certificacionculto_apertura').val()==''){
                             alert('Debe adjuntar la Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores.');
                             return false;
-                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_i_form_fundaempresa_apertura').is(':checked')==false){
+                        }else if ((constitucion == 46 || constitucion == 47 || constitucion == 49) && $('#form_i_form_fundaempresa_apertura').is(':checked')==false){
                             alert('Seleccione la presentación de la Copia del formulario virtual de Registro de Comercio, emitida por FUNDAEMPRESA.');
                             return false;
-                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_nro_fundaempresa_apertura').val()==''){
+                        }else if ((constitucion == 46 || constitucion == 47 || constitucion == 49) && $('#form_nro_fundaempresa_apertura').val()==''){
                             alert('Ingrese el Nro. de Matrícula de Comercio.');
                             return false;
-                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_fecha_fundaempresa_apertura').val()==''){
+                        }else if ((constitucion == 46 || constitucion == 47 || constitucion == 49) && $('#form_fecha_fundaempresa_apertura').val()==''){
                             alert('Ingrese la Fecha de Inscripción.');
                             return false;
                         }else if ($('#form_i_empleadores_apertura').val()==''){
                             alert('Debe adjuntar el Registro obligatorio de empleadores.');
                             return false;
-                        }else if (constitucion == 6 && $('#form_i_convenio_apertura').is(':checked')==false){
+                        }else if (constitucion == 49 && $('#form_i_convenio_apertura').is(':checked')==false){
                             alert('Seleccione la presentación de la Copia legalizada de convenio entre estados.');
                             return false;
                         }
