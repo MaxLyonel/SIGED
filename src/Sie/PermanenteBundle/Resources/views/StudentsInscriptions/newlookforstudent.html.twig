@@ -106,7 +106,7 @@
 
                             <button v-on:click="showhistory()" type="button" class="btn btn-primary btn-block"><i class="fa fa-document"></i> Ver Historial</button>
 
-                              {# <h4 align="center" class="text-primary">Programa Nacional de Post-alfabetización</h4><hr>
+                              {# <h4 align="center" class="text-primary">Programa Nacional de Post-alfabetiselect * from persona limit 10zación</h4><hr>
                               <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
                               <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
                                   <thead>
@@ -380,6 +380,7 @@ var app = new Vue({
                   this.swstudent   = response.data.swstudent;
                   this.swperson    = response.data.swperson;
                   this.dataStudent = response.data.dataStudent;
+                  this.dataStudent = response.data.dataStudent;
                   this.swnewperson = response.data.swnewperson;
                   this.DBGenero    = response.data.arrGenero;
                   this.DBExpedido    = response.data.arrExpedido;
@@ -390,7 +391,7 @@ var app = new Vue({
                   this.historyEsp  = response.data.dataInscriptionE;
                   this.historyPer  = response.data.dataInscriptionP;   
                 }
-                  
+                  console.log(this.dataStudent);
                   this.buscando = false;
               })
               .catch(e => {
@@ -490,15 +491,7 @@ var app = new Vue({
             this.dataStudent = this.newStudent;
             this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
           }
-        
-        /* if(this.dataStudent.expedidoId2 > 0){
-            Swal.fire(
-              'Expedido!',
-              'Debe registrar Expedido del carnet de identidad',
-              'warning'
-            );
-            return;
-          }*/
+
         if(this.dataStudent.paisId == null ){
               Swal.fire(
                 'Pais!',
@@ -524,7 +517,7 @@ var app = new Vue({
               );
               return;
             }
-            if(this.dataStudent.localidad.length == 0){
+            if(this.dataStudent.localidad == undefined){
               Swal.fire(
                 'Localidad!',
                 'Debe registrar la Localidad',
@@ -533,6 +526,14 @@ var app = new Vue({
               return;
 
             }
+          if(!(this.dataStudent.expedidoId2 > 0)){
+             Swal.fire(
+              'Expedido!',
+              'Debe registrar Expedido del carnet de identidad',
+              'warning'
+             );
+             return;
+            }            
            }
         }  
         

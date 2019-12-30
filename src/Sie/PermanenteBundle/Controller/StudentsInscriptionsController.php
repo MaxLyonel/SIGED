@@ -416,6 +416,7 @@ class StudentsInscriptionsController extends Controller {
           'rude'        =>$objStudent->getCodigoRude(),
           'expedido'    =>$objStudent->getExpedido()->getSigla(),
           'expedidoId'  =>$objStudent->getExpedido()->getId(),
+          'expedidoId2'  =>$objStudent->getExpedido()->getId(),
           'studentId'  =>$objStudent->getId(),
         );
         // get all cardex info
@@ -473,6 +474,7 @@ class StudentsInscriptionsController extends Controller {
             'complemento' =>$objStudent->getComplemento(),
             'expedido'    =>$objStudent->getExpedido()->getSigla(),
             'expedidoId'  =>$objStudent->getExpedido()->getId(),
+            'expedidoId2'  =>$objStudent->getExpedido()->getId(),
             'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
             'generoId'    =>$objStudent->getGeneroTipo()->getId(),
 
