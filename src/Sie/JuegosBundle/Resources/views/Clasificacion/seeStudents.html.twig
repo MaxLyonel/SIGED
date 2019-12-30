@@ -382,7 +382,7 @@
                 },
                  success: function (data) {
                     $('#row'+row).prop("disabled", false);
-                    $('#row'+row).remove();             
+                    //             
                 
                     if(data.msg_incorrecto){
                         if(data.msg_incorrecto != ''){
@@ -393,6 +393,7 @@
                     if(data.msg_correcto){
                         if(data.msg_correcto != ''){
                             $("#idPersonData").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                            $('#row'+row).remove(); 
                         }
                     }
                 },

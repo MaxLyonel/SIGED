@@ -344,12 +344,12 @@ class ConsolidationSieController extends Controller {
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
-                // $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5'));
-                // if($objAllowUE){
-                //   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
-                //   system('rm -fr ' . $dirtmp);
-                //   return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                // }
+                $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5,7'));
+                if($objAllowUE){
+                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
+                  system('rm -fr ' . $dirtmp);
+                  return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                }
 
                 //validation up old file ... only by tec distrito, depto
                 $aAccess = array(5, 2, 9);
@@ -377,7 +377,10 @@ class ConsolidationSieController extends Controller {
 
                     }else{
                       if(
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0
+                        (
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0 || 
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.2'))) === 0 
+                        )
                             and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED8'))) === 0
                       ){
 

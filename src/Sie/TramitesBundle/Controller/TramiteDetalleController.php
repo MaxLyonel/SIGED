@@ -2760,7 +2760,8 @@ class TramiteDetalleController extends Controller {
             	WHEN iec.nivel_tipo_id > 17 THEN
             	'Alternativa Técnica'
             END AS subsistema,
-            t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id
+            t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id, eid.documento_numero as documento_diplomatico
+            , ei.estadomatricula_inicio_tipo_id as estadomatricula_inicio_tipo_id
             from tramite as t
             inner join tramite_detalle as td on td.tramite_id = t.id
             inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
@@ -2776,6 +2777,7 @@ class TramiteDetalleController extends Controller {
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo as pat on pat.id = e.pais_tipo_id
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (1,9) and d.documento_estado_id = 1
+            left join estudiante_inscripcion_diplomatico as eid on eid.estudiante_inscripcion_id = ei.id
             where td.tramite_estado_id = 1 and td.flujo_proceso_id = ".$flujoProcesoId." and iec.gestion_tipo_id = ".$gestionId."::INT and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
             order by e.paterno, e.materno, e.nombre
         ");
@@ -3827,8 +3829,19 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+            $options = array(
+                'http'=>array(
+                    'method'=>"GET",
+                    'header'=>"Accept-language: en\r\n",
+                    "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                    "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+                )
+            );            
+            $context = stream_context_create($options);
+
             // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -4179,7 +4192,18 @@ class TramiteDetalleController extends Controller {
                 $response = new Response();
                 $response->headers->set('Content-type', 'application/pdf');
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+
+                $options = array(
+                    'http'=>array(
+                        'method'=>"GET",
+                        'header'=>"Accept-language: en\r\n",
+                        "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                        "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+                    )
+                );            
+                $context = stream_context_create($options);
+
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
                 $response->setStatusCode(200);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
                 $response->headers->set('Pragma', 'no-cache');

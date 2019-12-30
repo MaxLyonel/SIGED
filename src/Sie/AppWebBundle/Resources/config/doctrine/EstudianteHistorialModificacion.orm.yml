@@ -2,12 +2,12 @@ Sie\AppWebBundle\Entity\EstudianteHistorialModificacion:
     type: entity
     table: estudiante_historial_modificacion
     indexes:
-        IDX_8B4CDE41DB38439E:
-            columns:
-                - usuario_id
         IDX_8B4CDE4159590C39:
             columns:
                 - estudiante_id
+        IDX_8B4CDE41DB38439E:
+            columns:
+                - usuario_id
     id:
         id:
             type: integer
@@ -52,16 +52,14 @@ Sie\AppWebBundle\Entity\EstudianteHistorialModificacion:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        urlDocumento:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+            column: url_documento
     manyToOne:
-        usuario:
-            targetEntity: Usuario
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                usuario_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         estudiante:
             targetEntity: Estudiante
             cascade: {  }
@@ -69,6 +67,15 @@ Sie\AppWebBundle\Entity\EstudianteHistorialModificacion:
             inversedBy: null
             joinColumns:
                 estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

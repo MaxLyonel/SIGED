@@ -248,4 +248,32 @@ class EstudianteHistorialModificacion
     {
         return $this->estudiante;
     }
+    /**
+     * @var string
+     */
+    private $urlDocumento;
+
+
+    /**
+     * Set urlDocumento
+     *
+     * @param string $urlDocumento
+     * @return EstudianteHistorialModificacion
+     */
+    public function setUrlDocumento($urlDocumento)
+    {
+        $this->urlDocumento = $urlDocumento;
+    
+        return $this;
+    }
+
+    /**
+     * Get urlDocumento
+     *
+     * @return string 
+     */
+    public function getUrlDocumento()
+    {
+        return $this->urlDocumento;
+    }
 }

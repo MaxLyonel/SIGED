@@ -239,7 +239,7 @@ class NoteConsultationParentsController extends Controller {
 
         $tuicion = false;
 
-        if($this->session->get('sysname') == 'SIGED') {
+        if($this->session->get('sistemaid') == 1) {
             $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
             $query->bindValue(':user_id', $this->session->get('userId'));
             $query->bindValue(':sie', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId());

@@ -224,7 +224,7 @@
                                 <td>{{ entity.nombre }}</td>
                                 <td>
                                     {% if entity.ruta_reporte %} {#si tiene reporte #}
-                                        <form action="{{ path(entity.ruta_reporte, { 'idtramite': entity.id,'id_td': entity.id_td }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();" target="_blank">                                    
+                                        <form action="{{ path(entity.ruta_reporte, { 'idtramite': entity.id,'id_td': entity.id_td }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();" target="_blank">
                                             <button type="submit" class="btn btn-danger btn-xs text-primary tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Comprobante" onclick="disabled = true;this.form.submit()">
                                                 <i class="glyphicon glyphicon-print"></i>
                                             </button>

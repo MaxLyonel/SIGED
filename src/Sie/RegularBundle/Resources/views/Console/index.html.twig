@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Console</title>
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+	<style type="text/css">
+	    #respuesta{
+	    	margin-top: 10px;
+	        padding: 10px;
+	        height: 500px;
+	        resize: vertical;
+	        overflow: auto;
+	    }
+	    .consola{
+	        /* background: #000000; */
+	        /* color:  #FFFFFF; */
+	        /* opacity: 0; */
+	    }
+	    [v-cloak]{
+	        display: none;
+	    }
+	    input{
+	    	border: none;
+	    	position: fixed;
+	    	right: 10px;
+	    	bottom: 20px;
+	    	color: #FFFFFF;
+	    }
+	    textarea{
+	    	border: none;
+	    }
+	    .panel-body{
+	    	border-bottom: none;
+	    	box-shadow: none;
+	    }
+	</style>
+</head>
+<body>
+	<div id="app" class="container">
+		<div v-cloak>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				    <div class="panel" v-bind:style="{opacity: valueop}">
+				        <div class="panel-body">
+				            <div class="consola">
+				                <h5>Consultas</h5>
+				                <textarea name="consulta" id="consulta" cols="30" rows="10" class="form-control">select * from registro_consolidacion limit 5</textarea>
+				                <br>
+				                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				                    <button class="btn btn-primary btn-block" onclick="ejecutarConsulta()">Ejecutar</button>
+				                </div>
+				                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				                    <button class="btn btn-warning btn-block" onclick="cancelarConsulta()">Cancelar</button>
+				                </div>
+				                <div id="respuesta" class="table-responsive">
+				                    
+				                </div>
+				            </div>
+				        </div>
+				    </div>
+				    <input v-if="valueop == 0" type="text" v-model="newValue" @keyup.enter="display">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+	<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+			delimiters: ['${', '}'],
+            el: '#app',
+			data(){
+				return {
+					valueop: 0,
+					newValue: null
+				}
+			},
+			methods: {
+				display(){
+					if (this.newValue == 'show') {
+						this.valueop = 1
+					}else{
+						this.valueop = 0
+					}
+				}
+			}
+		});
+	</script>
+	<script>
+	    var xhr;
+
+	    function ejecutarConsulta(){
+	        var consulta = $('#consulta').val();
+	        xhr = $.ajax({
+	            url: Routing.generate('console_execute'),
+	            type: 'post',
+	            data: {consulta: consulta},
+	            beforeSend: function(){
+	                $('#respuesta').empty();
+	                $('#respuesta').append('<p>Ejecutando...</p>');
+	            },
+	            success: function(data){
+	                $('#respuesta').empty();
+	                var control = '';
+	                if (data.length > 0) {
+	                    var keys = Object.keys(data[0]);
+
+	                    control += '<p>'+ data.length +' registros encontrados</p>';
+	                    control += '<table class="table table-condensed table-bordered"><thead><tr>';
+	                    $.each(keys, function(index, val) {
+	                        control += '<th>' + val + '</th>';
+	                    });
+	                    control += '</tr></thead><tbody>';
+
+	                    $.each(data, function(index, val) {
+	                        control += '<tr>';
+	                        var values = Object.values(val);
+	                        $.each(values, function(index1, val1) {
+	                            control += '<td>' + val1 + '</td>';
+	                        });
+	                        control += '</tr>';
+	                    });
+
+	                    control += '</tbody></table>';
+	                }else{
+	                    control += '<p>Sin resultados</p>';
+	                }
+
+	                document.getElementById("respuesta").innerHTML = control;
+	            },
+	            error: function(data){
+	                document.getElementById("respuesta").innerHTML = '<p>Ocurrio un error.</p>';
+	            }
+	        });
+	    }
+
+	    function cancelarConsulta(){
+	        xhr.abort();
+	        document.getElementById("respuesta").innerHTML = '<p>Cancelado.</p>';
+	    }
+	</script>
+</body>
+</html>

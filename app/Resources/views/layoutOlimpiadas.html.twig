@@ -50,7 +50,7 @@
 
             <!-- START @THEME STYLES -->
             <link href="{{asset('webolimpiadas/assets/admin/css/reset.css')}}" rel="stylesheet">
-            <link href="{{asset('webolimpiadas/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('css/layout.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/admin/css/components.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/admin/css/plugins.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/admin/css/themes/blue-gray.theme.css')}}" rel="stylesheet" id="theme">
@@ -207,7 +207,7 @@
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
                                         <span class="avatar"><img src="{{asset('webolimpiadas/img/avatar/35/1.png')}}" class="img-circle" alt="admin"></span>
-                                        <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
+                                        <span class="text hidden-xs hidden-sm">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
                                 </a>
@@ -279,7 +279,7 @@
                     </li>
 
                     {#{% if app.session.get('roluser') in [35,8,7,10,9,2] %}#}
-                    {#{% if app.session.get('roluser') in [35] %}
+                    {% if app.session.get('roluser') in [35] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-globe"></i></span>
@@ -323,10 +323,9 @@
                                 <li><a href="{{ path('olimestadistica_registrados_area_categoria')}}">Registrados por área y categoría</a></li>
                             </ul>
                         </li>
-                    {% endif %}#}
+                    {% endif %}
                     <!-- Start navigation - dashboard -->
-                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
-                    {#{{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}#}
+                    
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 

@@ -178,7 +178,7 @@
 			                        <div class="col-lg-6">
 				                        <form action="{{path('solicitudCambiarestado')}}" method="post">
 				                        	<input type="hidden" name="idSolicitud" value="{{solicitud.id}}">
-				                        	<textarea name="observacion" id="" required rows="5" class="form-control" style="border-color:#03B967; resize: vertical" placeholder="Debe registrar el número de RESOLUCIÓN ADMINISTRATIVA que autoriza la modificación o adición de calificaciones. (requerido)"></textarea>
+				                        	<textarea name="observacion" id="" required rows="5" class="form-control" style="border-color:#03B967; resize: vertical" placeholder="Debe registrar el número de RESOLUCIÓN ADMINISTRATIVA que autoriza la modificación o adición de calificaciones. (requerido). Esta información esta sujeta a auditoría"></textarea>
 				                        	<input type="hidden" name="state" value="approved">
 				                        	<button class="btn btn-green btn-block" onclick="return confirm('¿Esta seguro de aprobar la solicitud?');"><i class="glyphicon glyphicon-ok"></i>Aprobar</button>
 				                        </form>

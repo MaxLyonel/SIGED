@@ -379,7 +379,14 @@ class RemoveInscriptionController extends Controller {
                 foreach ($objRudeTurnoTrabajo as $element) {
                     $em->remove($element);
                 }
-                $em->flush();      
+                $em->flush();
+
+                $objRudeMesesTrabajados = $em->getRepository('SieAppWebBundle:RudeMesesTrabajados')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeMesesTrabajados as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
             }
 
 

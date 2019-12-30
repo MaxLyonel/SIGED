@@ -233,6 +233,13 @@ class InboxController extends Controller {
               # plena
               $this->session->set('ue_plena', true);
               $this->session->set('acceso_total', true);
+              $arrGradoTipoBth = false;
+              if($objValidateUePlena->getGradoTipo()->getId()>=6){
+                $arrGradoTipoBth = array(5,6);
+              }else{
+                $gradoTipoBth = $objValidateUePlena->getGradoTipo()->getId()==5?$arrGradoTipoBth = array(5):false;
+              }
+              $this->session->set('gradoTipoBth', $arrGradoTipoBth);
               break;
             case 2:
                 # tec teg
@@ -630,7 +637,7 @@ class InboxController extends Controller {
         $dataInfo = array('id' => $data['id'], 'gestion' => $data['gestion'], 'ieducativa' => $ieducativa);
 
         //get and set the operativo
-        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($data['id'],$data['gestion']);
+        $operativo = $this->get('funciones')->obtenerOperativo($data['id'],$data['gestion']);
         $this->session->set('lastOperativo', $operativo);
 
         //verificar - crear registro en InstitucioneducativaHumanisticoTecnico

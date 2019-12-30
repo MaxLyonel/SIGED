@@ -30,6 +30,8 @@
                                 <thead>
                                     <tr>
                                         <th style="width:50px; text-align:center;">#</th>
+                                        <th style="text-align:center;">Trámite</th>
+                                        <th style="text-align:center;">Documento</th>
                                         <th style="text-align:center;">Estado</th>
                                         <th style="text-align:center;">Código RUDE</th>
                                         <th style="text-align:center;">C.I.</th>
@@ -48,6 +50,8 @@
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
+                                        <th>Trámite</th>
+                                        <th>Documento</th>
                                         <th>Estado</th>
                                         <th>Código RUDE</th>
                                         <th>C.I.</th>
@@ -76,9 +80,11 @@
                                                     <buttom onclick="participanteHistorial('{{ participante.estudiante_inscripcion_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
                                                 {% endif %}
                                             </td>
+                                            <td>{{ participante.tramite_id }}</td>
+                                            <td>{{ participante.documento_serie_id }}</td>
                                             <td>{{ participante.estadomatricula }}</td>
                                             <td>{{ participante.codigo_rude }}</td>
-                                            <td>{{ participante.carnet_identidad }}</td>
+                                            <td>{% if participante.carnet_identidad != "" %}{{ participante.carnet_identidad }}{% else %}{{ participante.documento_diplomatico }}{% endif %}</td>
                                             <td>{{ participante.paterno }}</td>
                                             <td>{{ participante.materno }}</td>
                                             <td>{{ participante.nombre }}</td>
@@ -95,6 +101,7 @@
                                                     {% set registro = false %}
                                                   {% endif %}
                                                 {% endif %}
+
                                                 {% if participante.documento_id != "" %}
                                                     <span class="label label-success rounded">Dip. {{ participante.documento_serie_id }}</span>
                                                     {% set registro = false %}
@@ -104,10 +111,16 @@
                                                         {% set registro = false %}
                                                     {% endif %}
                                                 {% endif %}
-
-                                                {% if participante.carnet_identidad == "" %}
-                                                    <span class="label label-danger rounded">Sin C.I.</span>
-                                                    {% set registro = false %}
+                                                
+                                                {% if participante.estadomatricula_inicio_tipo_id != 45 %}
+                                                    {% if participante.carnet_identidad == "" and participante.documento_diplomatico == "" %}
+                                                        <span class="label label-danger rounded">Sin C.I.</span>
+                                                        {% set registro = false %}
+                                                    {% else %}
+                                                        {% if participante.documento_diplomatico != "" %}
+                                                            {% set participanteObservado = false %}
+                                                        {% endif %}
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if participante.fecha_nacimiento == "" %}
@@ -128,10 +141,21 @@
                                                 {% endif %}
 
                                                 {% if registro %}
-                                                    <div class="ckbox ckbox-info">
-                                                        <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
-                                                        <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
-                                                    </div>
+                                                    {% if participanteObservado %}
+                                                        <div class="btn-group">
+                                                            <buttom type="buttom" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                Datos no validados <span class="caret"></span>
+                                                            </buttom>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li class="btnValidar" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"><a>Validar</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="ckbox ckbox-info">
+                                                            <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
+                                                            <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
+                                                        </div>
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                         </tr>

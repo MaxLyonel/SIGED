@@ -49,7 +49,7 @@ class InfoEstudianteBjpController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        return $this->redirect($this->generateUrl('principal_web'));
+        //return $this->redirect($this->generateUrl('principal_web'));
         $pagoTipo = 0; //En tiempo
         if($request->getMethod()=='POST'){
             $pagoTipo = 1; //Rezagados
@@ -60,14 +60,14 @@ class InfoEstudianteBjpController extends Controller {
         if ($pagoTipo == 0) {
             $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findBy(array(
                 'institucioneducativaId' => $this->session->get('ie_id'),
-                'gestionTipoId' => $this->session->get('currentyear')-1,
+                'gestionTipoId' => 2019,
                 'esactivo' => 't'
             ));
     
             if($bjp) {
                 return $this->redirect($this->generateUrl('sie_app_web_close_modules_bjp', array(
                     'sie' => $this->session->get('ie_id'),
-                    'gestion' => $this->session->get('currentyear')-1,
+                    'gestion' => 2019,
                 )));
             }
         }
@@ -84,7 +84,7 @@ class InfoEstudianteBjpController extends Controller {
         $query->execute();
         $aTuicion = $query->fetchAll();
         $institucion = $arrSieInfo['id'];
-        $gestion = $this->session->get('currentyear')-1;
+        $gestion = 2019;
 
         $repository = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaCursoValidacion');
 
@@ -93,7 +93,7 @@ class InfoEstudianteBjpController extends Controller {
             ->where('biv.institucioneducativaId = :sie')
             ->andwhere('biv.gestionTipo = :gestion')
             ->setParameter('sie', $institucion)
-            ->setParameter('gestion', $this->session->get('currentyear')-1)
+            ->setParameter('gestion', 2019)
             ->addOrderBy('biv.turnoTipoId, biv.nivelTipoId, biv.gradoTipoId, biv.paralelo')
             ->getQuery();
 
@@ -759,7 +759,7 @@ class InfoEstudianteBjpController extends Controller {
         $gradoTipoId = $verificarPago['grado'];
         $paralelo = $verificarPago['paralelo'];
         $pagoTipo = $verificarPago['pagoTipo'];
-        $gestion = $this->session->get('currentyear')-1;
+        $gestion = 2019;
 
         $estudiantesBjp = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array('institucioneducativaId' => $sie, 'turnoTipoId'=> $turnoTipoId, 'nivelTipoId' => $nivelTipoId, 'gradoTipoId' => $gradoTipoId, 'paralelo' => $paralelo, 'gestionTipoId' => $gestion, 'pagoTipoId' => $pagoTipo, 'esPagado' => 't'));
 
@@ -830,7 +830,7 @@ class InfoEstudianteBjpController extends Controller {
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
 
         $institucion = $arrSieInfo['id'];
-        $gestion = $this->session->get('currentyear')-1;
+        $gestion = 2019;
 
         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
         $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
@@ -861,7 +861,7 @@ class InfoEstudianteBjpController extends Controller {
         $estudianteValidacion = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array(
             'codigoRude' => $form['rude'],
             'institucioneducativaId' => $form['sie'],
-            'gestionTipoId' => $this->session->get('currentyear')-1
+            'gestionTipoId' => 2019
         ));
         
         if ($estudianteValidacion) {
@@ -907,7 +907,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpnew->setFechaNacimiento(new \DateTime($form['fechaNac']['year'].'-'.$form['fechaNac']['month'].'-'.$form['fechaNac']['day']));
             $bjpnew->setGenero($genero);
             $bjpnew->setFechaRegistro(new \DateTime('now'));
-            $bjpnew->setGestionTipoId($this->session->get('currentyear')-1);
+            $bjpnew->setGestionTipoId(2019);
 
             $em->persist($bjpnew);
             $em->flush();
@@ -924,7 +924,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpieduca->setGradoTipoId($form['grado']);
             $bjpieduca->setGrado($objGrado->getGrado());
             $bjpieduca->setParalelo($form['paralelo']);
-            $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')-1));
+            $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(2019));
 
             $em->persist($bjpieduca);
             $em->flush();
@@ -979,7 +979,7 @@ class InfoEstudianteBjpController extends Controller {
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
 
         $institucion = $arrSieInfo['id'];
-        $gestion = $this->session->get('currentyear')-1;
+        $gestion = 2019;
 
         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
         $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
@@ -1025,11 +1025,11 @@ class InfoEstudianteBjpController extends Controller {
                 ->setParameter('sie', $form['sie'])
                 ->setParameter('gestion', $form['gestion'])
                 ->setParameter('estudiante', $estudiante->getId())
-                ->setParameter('matricula', array(0,4,5,11,55,70,71,72,73))
+                ->setParameter('matricula', array(0,4,5,11,28,55,70,71,72,73))
                 ->getQuery();
 
             $estudianteInscripcion = $query->getOneOrNullResult();
-            
+
             if ($estudianteInscripcion) {
                 return $this->render($this->session->get('pathSystem') . ':InfoEstudianteBjp:nuevo_estudiante_bjp.html.twig', array(
                     'estudianteInscripcion' => $estudianteInscripcion,
@@ -1070,7 +1070,7 @@ class InfoEstudianteBjpController extends Controller {
         $estudianteValidacion = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array(
             'codigoRude' => $estudiante->getCodigoRude(),
             'institucioneducativaId' => $form['sie'],
-            'gestionTipoId' => $this->session->get('currentyear')-1
+            'gestionTipoId' => 2019
         ));
         
         if ($estudianteValidacion) {
@@ -1120,7 +1120,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpnew->setFechaNacimiento($estudiante->getFechaNacimiento());
             $bjpnew->setGenero($genero);
             $bjpnew->setFechaRegistro(new \DateTime('now'));
-            $bjpnew->setGestionTipoId($this->session->get('currentyear')-1);
+            $bjpnew->setGestionTipoId(2019);
             
             $em->persist($bjpnew);
             $em->flush();
@@ -1137,7 +1137,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpieduca->setGradoTipoId($objGrado->getid());
             $bjpieduca->setGrado($objGrado->getGrado());
             $bjpieduca->setParalelo($objParalelo->getParalelo());
-            $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')-1));
+            $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(2019));
             
             $em->persist($bjpieduca);
             $em->flush();
@@ -1158,14 +1158,14 @@ class InfoEstudianteBjpController extends Controller {
         if($request->get('pagoTipo') == 0) {
             $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findOneBy(array(
                 'institucioneducativaId' => $this->session->get('ie_id'),
-                'gestionTipoId' => $this->session->get('currentyear')-1,
+                'gestionTipoId' => 2019,
                 'esactivo' => 'f'
             ));
             $reporte = 'reg_dj_bonojuancitopinto_estadistica_pagados_norezagados_v1_ma';
         } else {
             $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findOneBy(array(
                 'institucioneducativaId' => $this->session->get('ie_id'),
-                'gestionTipoId' => $this->session->get('currentyear')-1,
+                'gestionTipoId' => 2019,
                 'esactivo' => 't'
             ));
             $reporte = 'reg_dj_bonojuancitopinto_estadistica_pagados_rezagados_v1_ma';
@@ -1196,15 +1196,21 @@ class InfoEstudianteBjpController extends Controller {
     }
     public function printDdjjAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $idInstitucion = $request->get('idInstitucion');
+        $gestion = $request->get('gestion');
+        $pagoTipo = $request->get('pagoTipo');
 
-        $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
-        
-        $gestion = $this->session->get('currentyear')-1;
-        $arch = 'DECLARACION_JURADA_'.$arrSieInfo['id'].'_' . date('YmdHis') . '.pdf';
+        if($pagoTipo == 0) {
+            $reporte = 'reg_dj_bonojuancitopinto_estadistica_pagados_norezagados_v1_ma';
+        } else {
+            $reporte = 'reg_dj_bonojuancitopinto_estadistica_pagados_rezagados_v1_ma';
+        }
+
+        $arch = 'DECLARACION_JURADA_'.$idInstitucion.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_bonojuancitopinto_estadistica_pagados_norezagados_v1_ma.rptdesign&ue='.$arrSieInfo['id'].'&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$reporte.'.rptdesign&ue='.$idInstitucion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1215,7 +1221,7 @@ class InfoEstudianteBjpController extends Controller {
     public function repBjpDptoAction(Request $request) {
         $form = $request->get('form');
 
-        $gestion = $this->session->get('currentyear')-1;
+        $gestion = 2019;
         $arch = 'REPORTE_BJP_DPTO_'.$form['dpto'].'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');

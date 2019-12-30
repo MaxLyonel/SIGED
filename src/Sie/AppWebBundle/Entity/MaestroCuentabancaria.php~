@@ -556,4 +556,144 @@ class MaestroCuentabancaria
     {
         return $this->gestionTipo;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return MaestroCuentabancaria
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return MaestroCuentabancaria
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaNacimiento;
+
+    /**
+     * @var string
+     */
+    private $apellidoEsposo;
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return MaestroCuentabancaria
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
+
+    /**
+     * Set fechaNacimiento
+     *
+     * @param \DateTime $fechaNacimiento
+     * @return MaestroCuentabancaria
+     */
+    public function setFechaNacimiento($fechaNacimiento)
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaNacimiento
+     *
+     * @return \DateTime 
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * Set apellidoEsposo
+     *
+     * @param string $apellidoEsposo
+     * @return MaestroCuentabancaria
+     */
+    public function setApellidoEsposo($apellidoEsposo)
+    {
+        $this->apellidoEsposo = $apellidoEsposo;
+    
+        return $this;
+    }
+
+    /**
+     * Get apellidoEsposo
+     *
+     * @return string 
+     */
+    public function getApellidoEsposo()
+    {
+        return $this->apellidoEsposo;
+    }
 }

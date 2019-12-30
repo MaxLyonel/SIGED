@@ -739,4 +739,79 @@ class ControlCalidadController extends Controller {
         ));
     }
 
+    public function validarEstudianteSegipAction(Request $request) {
+
+        $gestion = $this->session->get('idGestionCalidad');
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $form = $request->get('form');
+
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneByCodigoRude($vproceso->getLlave());
+
+        $datos = array(
+            'complemento'=>$estudiante->getComplemento(),
+            'primer_apellido'=>$estudiante->getPaterno(),
+            'segundo_apellido'=>$estudiante->getMaterno(),
+            'nombre'=>$estudiante->getNombre(),
+            'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
+        );
+        
+        if($estudiante){
+            if($estudiante->getCarnetIdentidad()){
+                $resultadoEstudiante = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($estudiante->getCarnetIdentidad(),$datos,'prod','academico');
+
+                if($resultadoEstudiante){
+                    $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante:".$estudiante->getCodigoRude().", se validaron correctamente con SEGIP.";
+                    $estudiante->setSegipId(1);
+                    $em->persist($estudiante);
+                    $em->flush();
+                    $this->ratificar($vproceso);
+                    $this->addFlash('success', $mensaje);
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP. Verifique la información de el la/el estudiante.";
+                    $this->addFlash('warning', $mensaje);
+                }                
+            } else {
+                $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de el la/el estudiante.";
+                $this->addFlash('warning', $mensaje);
+            }
+        } else {
+            $mensaje = "No se realizó la validación con SEGIP. No existe información de la /el estudiante con el código RUDE proporcionado.";
+            $this->addFlash('warning', $mensaje);
+        }
+            
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+    }
+
+    public function justificarEstudianteSegipAction(Request $request) {
+
+        $gestion = $this->session->get('idGestionCalidad');
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $form = $request->get('formJ');
+        $justificacion= mb_strtoupper($form['justificacion'], 'utf-8');
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+
+        if($vproceso){
+            $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
+            $vproceso->setJustificacion($justificacion);
+            $em->persist($vproceso);
+            $em->flush();
+            $this->ratificar($vproceso);
+            $this->addFlash('success', $mensaje);
+        } else {
+            $mensaje = "No se encontró la inconsistencia.";
+            $this->addFlash('warning', $mensaje);
+        }
+            
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+    }
 }

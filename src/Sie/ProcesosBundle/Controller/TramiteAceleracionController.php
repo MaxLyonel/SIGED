@@ -76,10 +76,20 @@ class TramiteAceleracionController extends Controller
                 $grados = array();
                 if (!empty($estudiante_result)) {
                     $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $estudiante_result));
-                    $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
-                    if (!empty($einscripcion_result)) {
-                        $estudianteinscripcion_id = $einscripcion_result->getId();
-                        $institucioneducativa = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa();
+                    // $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
+                    $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+                        ->select('eins')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+                        ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+                        ->where('eins.estudiante='.$estudiante_result->getId())
+                        ->andWhere('eins.estadomatriculaTipo=4')
+                        ->andWhere('ie.institucioneducativaTipo=1')
+                        ->orderBy("eins.id", "DESC")
+                        ->getQuery()
+                        ->getResult();
+                    if (count($einscripcion_result)>0) {
+                        $estudianteinscripcion_id = $einscripcion_result[0]->getId();
+                        $institucioneducativa = $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa();
                         $estudiante = array(
                             'id' => $estudiante_result->getId(),
                             'nombre' => $estudiante_result->getNombre(),
@@ -92,17 +102,17 @@ class TramiteAceleracionController extends Controller
                             'estudiante_id' => $estudiante_result->getId()
                         );
 
-                        $codigo_sie = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-                        $nivel_id = $einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-                        $grado_id = $einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-                        $paralelo_id = $einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-                        $turno_id = $einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+                        $codigo_sie = $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                        $nivel_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+                        $grado_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+                        $paralelo_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+                        $turno_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
                         $inscripcion = array(
-                            'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                            'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                            'grado_id'=>$grado_id, 'grado'=>$einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                            'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
-                            'turno_id'=>$turno_id, 'turno'=>$einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
+                            'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                            'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                            'grado_id'=>$grado_id, 'grado'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                            'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                            'turno_id'=>$turno_id, 'turno'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
                         );
                         $talento = array(
                             'tipo_talento' => strtoupper($estudiante_talento->getTalentoTipo()),
@@ -150,17 +160,27 @@ class TramiteAceleracionController extends Controller
             if(empty($estudiante_talento)){
                 return $response->setData(array('msg' => 'notalento'));
             }
-            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));//Evaluar 'estadomatriculaTipo' => 4
-            if (!empty($einscripcion_result)) {
+            // $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));//Evaluar 'estadomatriculaTipo' => 4
+            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+                ->select('eins')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+                ->where('eins.estudiante='.$estudiante_result->getId())
+                ->andWhere('eins.estadomatriculaTipo=4')
+                ->andWhere('ie.institucioneducativaTipo=1')
+                ->orderBy("eins.id", "DESC")
+                ->getQuery()
+                ->getResult();
+            if (count($einscripcion_result)>0) {
                 // Verifica si la Unidad Educativa es regular
-                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativaTipo()->getId() != 1) {
+                if ($einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativaTipo()->getId() != 1) {
                     return $response->setData(array('msg' => 'noregular'));
                 }
                 // Verifica si el Estudiante está inscrito en su Unidad Educativa
-                if ($einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
+                if ($einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() != $request->getSession()->get('ie_id')) {
                     return $response->setData(array('msg' => 'noue'));
                 }
-                $estudianteinscripcion_id = $einscripcion_result->getId();
+                $estudianteinscripcion_id = $einscripcion_result[0]->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
@@ -202,17 +222,17 @@ class TramiteAceleracionController extends Controller
                     'segundo' => $valida
                 );
 
-                $codigo_sie = $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-                $nivel_id = $einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-                $grado_id = $einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-                $paralelo_id = $einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-                $turno_id = $einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+                $codigo_sie = $einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                $nivel_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+                $grado_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+                $paralelo_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+                $turno_id = $einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
                 $inscripcion = array(
-                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                    'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                    'grado_id'=>$grado_id, 'grado'=>$einscripcion_result->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
-                    'turno_id'=>$turno_id, 'turno'=>$einscripcion_result->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
+                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                    'nivel_id'=>$nivel_id, 'nivel'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                    'grado_id'=>$grado_id, 'grado'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                    'turno_id'=>$turno_id, 'turno'=>$einscripcion_result[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno()
                 );
                 $talento = array(
                     'tipo_talento' => strtoupper($estudiante_talento->getTalentoTipo()),
@@ -431,6 +451,12 @@ class TramiteAceleracionController extends Controller
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
         }
+        $gestion = $request->getSession()->get('currentyear');
+        $operativo = $this->get('funciones')->obtenerOperativo($institucioneducativa_id, $gestion);
+        if ($operativo == 4) {
+            $estado = 500;
+            return $response->setData(array('estado' => $estado, 'msg' => 'La Unidad Educativa no puede iniciar el trámite debido a que ya cuenta con información consolidada.'));
+        }
         $observaciones = $datos['devolucion']==0?'Inicio solicitud de aceleracion educativa':'Reinicio solicitud de aceleracion educativa';
         $tipotramite_id = $tipotramite->getId();
         $tramite_id = $request->get('tramite_id')==null?'':$request->get('tramite_id');
@@ -492,12 +518,22 @@ class TramiteAceleracionController extends Controller
         $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
 
-        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
-        $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-        $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-        $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-        $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-        $turno_id = $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+            ->select('eins')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+            ->where('eins.estudiante='.$restudiante->getId())
+            ->andWhere('eins.estadomatriculaTipo=4')
+            ->andWhere('ie.institucioneducativaTipo=1')
+            ->orderBy("eins.id", "DESC")
+            ->getQuery()
+            ->getResult();
+        $codigo_sie = $restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $nivel_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $paralelo_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $turno_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
 
         $arrayActas = array();
         for ($i=1; $i < $datos->grado_cantidad; $i++) {
@@ -552,12 +588,12 @@ class TramiteAceleracionController extends Controller
             $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'paraleloTipo' => $paralelo_id, 'turnoTipo' => $turno_id, 'gestionTipo' => $this->session->get('currentyear')));
             $arrayActas[] = array(
                 'curso' => array(
-                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
-                    'nivel_id'=>$nivel_id, 'nivel'=>($nivel_tipo)?$nivel_tipo->getNivel():'',//$restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
-                    'grado_id'=>$grado_id, 'grado'=>($grado_tipo)?$grado_tipo->getGrado():'',//$restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
-                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+                    'codigo_sie'=>$codigo_sie, 'nombre_sie'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+                    'nivel_id'=>$nivel_id, 'nivel'=>($nivel_tipo)?$nivel_tipo->getNivel():'',//$restudianteinst[0]->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+                    'grado_id'=>$grado_id, 'grado'=>($grado_tipo)?$grado_tipo->getGrado():'',//$restudianteinst[0]->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+                    'paralelo_id'=>$paralelo_id, 'paralelo'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
                     'paralelos'=>$queryParalelo->getResult(),
-                    'turno_id'=>$turno_id, 'turno'=>$restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
+                    'turno_id'=>$turno_id, 'turno'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
                     'turnos'=>$queryTurno->getResult(),
                     'iec_id'=>($iecurso)?$iecurso->getId():0),
                 'materiasnotas' => $materiasnotas
@@ -787,7 +823,17 @@ class TramiteAceleracionController extends Controller
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
 
-        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
+        $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
+            ->select('eins')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
+            ->where('eins.estudiante='.$restudiante->getId())
+            ->andWhere('eins.estadomatriculaTipo=4')
+            ->andWhere('ie.institucioneducativaTipo=1')
+            ->orderBy("eins.id", "DESC")
+            ->getQuery()
+            ->getResult();
         
         // Obtiene el ultimo código SIE
         $curso_asignatura = json_decode($datos2->curso_asignatura_notas);
@@ -795,11 +841,11 @@ class TramiteAceleracionController extends Controller
         $codigo_sie = $curso_asignatura[$posicion_sie-1]->curso->sie;
         $institucion_e = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($codigo_sie);
         $nombre_ie = $institucion_e->getInstitucioneducativa();
-        // $codigo_sie = $restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
-        $nivel_id = $restudianteinst->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-        $grado_id = $restudianteinst->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-        $paralelo_id = $restudianteinst->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
-        $turno_id = $restudianteinst->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        // $codigo_sie = $restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $nivel_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $paralelo_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $turno_id = $restudianteinst[0]->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
 
         for ($i=1; $i < $datos1->grado_cantidad; $i++) {
             if ($nivel_id == 11) {
@@ -867,7 +913,7 @@ class TramiteAceleracionController extends Controller
         }
         $cursoActual = array(
             'codigo_sie' => $codigo_sie,
-            'nombre_sie' => $nombre_ie,//$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
+            'nombre_sie' => $nombre_ie,//$restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
             'nivel_id' => $nivel_id,
             'nivel' => ($nivel_tipo)?$nivel_tipo->getNivel():'',
             'grado_id' => $grado_id,
@@ -895,7 +941,7 @@ class TramiteAceleracionController extends Controller
             'tramite_id' => $tramite_id,
             'institucioneducativa_id'=>$datos1->institucioneducativa_id,
             'codigo_sie'=>$datos1->institucioneducativa_id,
-            // 'codigo_sie'=>$restudianteinst->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
+            // 'codigo_sie'=>$restudianteinst[0]->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
             'rude' => $rude,
             'estudiante' => $estudiante,
             'procede_aceleracion' => $datos1->procede_aceleracion,
@@ -914,6 +960,7 @@ class TramiteAceleracionController extends Controller
         $estado = 200;
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
+        $gestion = $request->getSession()->get('currentyear');
 
         $datos = array();
         $datos['tramite_id'] = $request->get('tramite_id');
@@ -922,6 +969,9 @@ class TramiteAceleracionController extends Controller
         $datos['observacion'] = $request->get('observacion');
         if ($datos['tiene_obs'] == "NO") {
             $datos['cursoactual'] = $request->get('cursoactual');
+            $curso_inscripcion = json_decode($request->get('cursoactual'));
+            $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_inscripcion->iec_id);
+            $gestion = $iec->getGestionTipo()->getId();
         }
         /* $verificaTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
             ->select('wfd')
@@ -951,6 +1001,11 @@ class TramiteAceleracionController extends Controller
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
+        }
+        $operativo = $this->get('funciones')->obtenerOperativo($institucioneducativa_id, $gestion);
+        if ($operativo == 4) {
+            $estado = 500;
+            return $response->setData(array('estado' => $estado, 'msg' => 'El trámite no podrá finalizar, debido a que la Unidad Educativa ya cuenta con la información consolidada.'));
         }
         $observaciones = 'Datos verificados para aceleración educativa';
         $tipotramite_id = $tipotramite->getId();
@@ -1415,6 +1470,8 @@ class TramiteAceleracionController extends Controller
         $pdf->SetFont('helvetica', '', 9, '', true);
         $pdf->startPageGroup();
         $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+        $image_path = base64_decode('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');
+        $pdf->Image('@'.$image_path, 9, 9, 30, 24, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
         /* $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $cabecera, $border = 0, $ln = 0, $fill = 0, $reseth = true,
             $align = '', $autopadding = true
         ); */
@@ -1465,11 +1522,12 @@ class TramiteAceleracionController extends Controller
             ->getSingleResult();
         // dump(json_decode($datos2->curso_asignatura_notas));die;
 
-        $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
-        $image_path = str_replace("/app_dev.php", "", $image_path);
+        // $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
+        // $image_path = str_replace("/app_dev.php", "", $image_path);
+        // <img src="'.$image_path.'" width="60" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span>
         $cabecera = '<table border="0">';
         $cabecera .='<tr>';
-            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="'.$image_path.'" width="60" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
+            $cabecera .='<td width="15%" align="center" style="font-size: 6px"></td>';
             $cabecera .='<td width="70%" align="center"><h2>ACTA SUPLETORIA DE PROMOCIÓN PARA<br>TALENTO EXTRAORDINARIO</h2></td>';
             $cabecera .='<td width="15%" align="right"><img src="http://172.20.0.114/index.php?data='.$queryEstudiante['codigoRude'].'|'.$queryEstudiante['carnetIdentidad'].'|'.'Aceleración_Educativa'.'|'.$tramite_id.'" width="66" height="66"></td>';
         $cabecera .='</tr>';
@@ -1633,7 +1691,7 @@ class TramiteAceleracionController extends Controller
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>1. Datos del Estudiante</b></td></tr>';
         $datosTramite.='<tr><td><b>Código RUDE:</b></td><td colspan="3">'.$queryEstudiante['codigoRude'].'</td></tr>';
         $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryEstudiante['estudiante'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryEstudiante['carnetIdentidad'].' '.$queryEstudiante['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryEstudiante['complemento'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Identidad:</b></td><td>'.$queryEstudiante['carnetIdentidad'].' '.$queryEstudiante['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryEstudiante['complemento'].'</td></tr>';
         // Datos de la unidad educativa
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>2. Datos de la Unidad Educativa</b></td></tr>';
         $datosTramite.='<tr><td><b>Unidad Educativa:</b></td><td colspan="3">'.$queryMaestroUE['sie'].' - '.$queryMaestroUE['institucioneducativa'].'</td></tr>';
@@ -1648,7 +1706,7 @@ class TramiteAceleracionController extends Controller
         // Datos de talento extraordinario
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>3. Datos del Director(a)</b></td></tr>';
         $datosTramite.='<tr><td><b>Nombre:</b></td><td colspan="3">'.$queryMaestroUE['maestro'].'</td></tr>';
-        $datosTramite.='<tr><td><b>Cédula de Indentidad:</b></td><td>'.$queryMaestroUE['carnet'].' '.$queryMaestroUE['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
+        $datosTramite.='<tr><td><b>Cédula de Identidad:</b></td><td>'.$queryMaestroUE['carnet'].' '.$queryMaestroUE['expedido'].'</td><td><b>Complemento:</b></td><td>'.$queryMaestroUE['complemento'].'</td></tr>';
         $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $datos1->estudiante_id));
         // Datos del director
         $datosTramite.='<tr style="background-color:#ddd;"><td colspan="4" height="14" style="line-height: 14px;"><b>4. Datos de Talento Extraordinario</b></td></tr>';
