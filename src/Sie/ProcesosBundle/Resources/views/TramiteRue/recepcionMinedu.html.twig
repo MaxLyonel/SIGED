@@ -1,8 +1,14 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+{% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.tramiteTipo.tramiteTipo}}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -56,6 +62,7 @@
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">
                                                 <div class="panel-body">
+                                                    {# {{dump(datos)}} #}
                                                     {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
                                                 </div>
                                             </div>
@@ -117,155 +124,35 @@
     {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }} 
+    {{ parent() }}
+    
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
     <script>
-        $('#form_tramitetipo').change(function(){
-            if($('#form_tramitetipo').val()!=27){
-                $('#codrue').show();
-                $('#form_buscar').show();
-                $('#form_idrue').val('');
-            }else{
-                $('#codrue').hide();
-                $('#form_buscar').hide();
-                $('#form_institucionEducativa').val('');
-                $("#form_dependenciaTipo").val('');
-                $('#form_idrue').val('');
+        $( document ).ready(function() {
+            if('{{mapa}}'==true){
+               initMap2($('#latitud').val(),$('#longitud').val());
             }
         });
-
-        {# $('#form_buscar').click(function(){
-            var formData = {idrue: $('#form_idrue').val()};
-            $.ajax({
-                type: 'GET',
-                url: "{{path('tramite_rue_buscar_rue')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#form_institucionEducativa').val('');
-                    $("#form_dependenciaTipo").val('');
-                    $("#form_tipoeducacion").val('');
-                },
-                success: function (data) {
-                    if (data.msg){
-                        $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
-                    }else{
-                        $('#form_institucionEducativa').val(data.ie);
-                        $("#form_dependenciaTipo").val(data.dep);
-                        $("#form_tipoeducacion").val(data.ietipo);
-                    }
-                },
-            });
-        });  #}
-        function provincia(d) {
-            //alert(d);
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d}),
-                beforeSend: function () {
-                    $("#form_provincia").empty();
-                    $("#form_municipio").empty();
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_distrito").empty();
-                    $("#form_provincia").append('<option value="">Buscando...</option>');
-                    $("#form_municipio").append('<option value="">Buscando...</option>');
-                    $("#form_canton").append('<option value="">Buscando...</option>');
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
-                    $("#form_distrito").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_provincia").empty();
-                    $("#form_municipio").empty();
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_distrito").empty();
-                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
-                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
-                    $("#form_canton").append('<option value="">Seleccionar...</option>');
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $("#form_distrito").append('<option value="">Seleccionar...</option>');
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $.each(data.distrito, function (i, value) {
-                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        function municipio(p) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p}),
-                beforeSend: function () {
-                    $("#form_municipio").empty();
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_municipio").append('<option value="">Buscando...</option>');
-                    $("#form_canton").append('<option value="">Buscando...</option>');
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_municipio").empty();
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
-                    $("#form_canton").append('<option value="">Seleccionar...</option>');
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.municipio, function (i, value) {
-                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        function canton(m) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m}),
-                beforeSend: function () {
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_canton").append('<option value="">Buscando...</option>');
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_canton").empty();
-                    $("#form_localidad").empty();
-                    $("#form_canton").append('<option value="">Seleccionar...</option>');
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.canton, function (i, value) {
-                        $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
-                    });
-
-                }
-            });
-        }
-
-        function localidad(c) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c}),
-                beforeSend: function () {
-                    $("#form_localidad").empty();
-                    $("#form_localidad").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_localidad").empty();
-                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.localidad, function (i, value) {
-                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $("#form_localidad").selectpicker('refresh');
-                }
-            });
-        } 
         $(function(){
             $(".validar").keydown(function(event){
                 if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
                     return false;
                 }
             });
-        }); 
+        });
+
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+            
+        });
+
+        function validacion(){
+            if($('.btn-lilac').length > 0){
+                alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
+                return false;
+            }
+        }
     </script>
     {% endblock %}

@@ -139,8 +139,6 @@
 
             <!-- Login form -->
 
-
-
             <div class="sign-header">
                 <div class="form-group">
                     <div class="sign-text">
@@ -153,41 +151,41 @@
                 </div><!-- /.form-group -->
             </div><!-- /.sign-header -->
             <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post">
-              <div class="sign-body">
-                {% if error %}
-                    <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
-                {% endif %}
-                  <div class="form-group">
-                      <div class="input-group input-group-lg rounded no-overflow">
+                <div class="sign-body">
+                    {% if error %}
+                        <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
+                    {% endif %}
+                    <div class="form-group">
+                        <div class="input-group input-group-lg rounded no-overflow">
                         <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
-                          <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                      </div>
-                  </div><!-- /.form-group -->
-                  <div class="form-group">
-                      <div class="input-group input-group-lg rounded no-overflow">
-                           <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
-                          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                      </div>
-                  </div><!-- /.form-group -->
-
-
-                  <div style="padding:10px; background: #ffffff">
-                      <div class="checkbox" style="margin-left: 15px">
-                          <label style="color:#3174C1">
-                              <input type="checkbox" required="required"> Validar los datos
-                          </label>
-                      </div>
-                  </div>
-              </div><!-- /.sign-body -->
-
-              <div class="sign-footer">
-              <div class="form-group">
-                <br>
-                <button class="btn btn-block btn-lg btn-floating-action btn-primary ink-reaction" type="submit"><i class="fa fa-unlock"></i></button>
-
-              </div><!-- /.form-group -->
-              </div><!-- /.sign-footer -->
-          </form>
+                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        </div>
+                    </div><!-- /.form-group -->
+                    <div class="form-group">
+                        <div class="input-group input-group-lg rounded no-overflow">
+                            <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
+                            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        </div>
+                    </div><!-- /.form-group -->
+                    <div style="padding:10px; background: #ffffff">
+                        <div class="checkbox" style="margin-left: 15px">
+                            <label style="color:#3174C1">
+                                <input type="checkbox" required="required"> Validar los datos
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.sign-body -->
+                <div class="sign-footer">
+                    <div class="form-group">
+                        <br>
+                        <button class="btn btn-block btn-lg btn-floating-action btn-primary ink-reaction" type="submit"><i class="fa fa-unlock"></i></button>
+                    </div><!-- /.form-group -->
+                </div><!-- /.sign-footer -->
+            </form>
+            <div class="form-group" style="background:white">
+                <a href="{{path('solicitud_rue_apertura',{'id':54,'desglose':0})}}" style="color:#3174C1"><i class="fa fa-list"></i> Apertura RUE</a></br>
+                <a href="{{path('tramite_rue_reapertura')}}" style="color:#3174C1"><i class="fa fa-list"></i>Reapertura RUE</a>
+            </div>
             <!-- /.form-horizontal -->
             <!--/ Login form -->
 
@@ -221,25 +219,71 @@
 
         <!-- START GOOGLE ANALYTICS -->
         <script>
+             {# $( document ).ready(function() {
+                $.fn.datepicker.dates['es'] = {
+                    days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+                    daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                    daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                    months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    format:'dd-mm-yyyy',
+                    titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                    weekStart: 0
+                };
+                $('.date').datepicker({
+                    orientation: "auto left",
+                    forceParse: false,
+                    autoclose: true,
+                    todayHighlight: true,
+                    language: 'es'
+                });
+                $('#form_tr').empty(); 
+            }); #}
+            $("#form_captcha").keyup(function () {
+                $("#form_captcha").val($("#form_captcha").val().toUpperCase());
+            });
 
-                                        $("#form_captcha").keyup(function () {
-                                            $("#form_captcha").val($("#form_captcha").val().toUpperCase());
-                                        });
+            function showCaptcha() {
+                element = document.getElementById("divCaptcha");
+                check = document.getElementById("form_check");
+                captcha = document.getElementById("form_captcha");
+                if (check.checked) {
+                    element.style.display = 'none';
+                    $('#form_captcha').removeAttr("required");
+                    $('#form_captcha').val('');
+                }
+                else {
+                    element.style.display = 'block';
+                    $('#form_captcha').attr('required', 'true');
+                }
+            }
+            
+           {#  function apertura(){
+                var formData = {id: 54,desglose:0};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('tramite_rue_apertura')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#modal_apertura').empty();
+                        $("#modal_apertura").append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                    },
+                    success: function (data) {
+                        //console.log(data);
+                        $('#modal_apertura').empty();
+                        $('#modal_apertura').append(data);
+                        $('.date').datepicker({
+                            orientation: "auto left",
+                            forceParse: false,
+                            autoclose: true,
+                            todayHighlight: true,
+                            language: 'es'
+                        });
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                });
+            } #}
 
-                                        function showCaptcha() {
-                                            element = document.getElementById("divCaptcha");
-                                            check = document.getElementById("form_check");
-                                            captcha = document.getElementById("form_captcha");
-                                            if (check.checked) {
-                                                element.style.display = 'none';
-                                                $('#form_captcha').removeAttr("required");
-                                                $('#form_captcha').val('');
-                                            }
-                                            else {
-                                                element.style.display = 'block';
-                                                $('#form_captcha').attr('required', 'true');
-                                            }
-                                        }
         </script>
         <!--/ END GOOGLE ANALYTICS -->
         <script src="{{asset('validator/js/validator.js')}}"></script>

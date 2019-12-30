@@ -1,8 +1,14 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+{% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.tramitetipo.tramiteTipo}}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -59,6 +65,7 @@
                                                 <div class="panel-body">
                                                     {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
                                                 </div>
+                                                {% set t = 54 %}
                                             </div>
                                         </div>
                                     </div>
@@ -77,7 +84,7 @@
                                 </div><!-- /.panel-heading -->   
                                 <div class="panel-body">
                                     <div class="row">
-                                        {{ form_start(form) }}
+                                        {{ form_start(form,{ 'attr': {'role': 'form','onsubmit':'return validacion()'}}) }}
                                         <div class="form-group  col-md-12">
                                             <div class="col-md-3"><strong>TRÁMITE PROCEDENTE:</strong></div>
                                             <div class="col-md-9">
@@ -222,7 +229,9 @@
     {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }} 
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
     <script>
         $( document ).ready(function() {
             $(".varevaluacion").prop('checked',false);
@@ -243,6 +252,10 @@
                 todayHighlight: true,
                 language: 'es'
             });
+            
+            if('{{mapa}}'==true){
+               initMap2($('#latitud').val(),$('#longitud').val());
+            }
         });
         $('input[type="file"]').change(function(){
 	        // this.files[0].size recupera el tamaño del archivo
@@ -295,5 +308,20 @@
                 }
             });
         }); 
+
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+            
+        });
+
+        function validacion(){
+            if($('.btn-lilac').length > 0){
+                alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
+                return false;
+            }else{
+                return true;
+            }
+        }
     </script>
 {% endblock %}

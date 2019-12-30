@@ -1,0 +1,359 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+{% endblock %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        {% if tramite %}
+            <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        {% else %}
+            <h2><i class="fa fa-list-alt"></i> TRAMITE RUE: <span>{{tarea.flujoTipo.flujo}}</span></h2>
+        {% endif %}
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index')}}">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if app.session.flashBag.has('exito') %}
+                                <div class="alert alert-success">
+                                    {% for msg in app.session.flashBag.get('exito') %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {{ msg }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if app.session.flashBag.has('error') %}
+                                <div class="alert alert-danger">
+                                    {% for msg in app.session.flashBag.get('error') %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {{ msg }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">{{tarea.proceso.procesoTipo}}</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    {% if tramite %}
+                                        <div class="panel-group">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="pull-left">
+                                                        <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div id="collapse1" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validacion();'}}) }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">DATOS DE LA SOLICITUD</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <div class="col-md-6">
+                                                    {{ form_label(form.tramite_tipo) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_widget(form.tramite_tipo) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <div class="col-md-6">
+                                                    {{ form_label(form.codigo) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_widget(form.codigo) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <div class="col-md-6">
+                                                    {{ form_widget(form.buscar) }}
+                                                </div>
+                                                <div class="col-md-6">                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <div class="table-responsive col-md-12">
+                                                    <div id="contenido">
+                                                    </div>
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contenido">
+                        </div>
+                        <div class="row informe"  style={% if tramite %} "display:block" {% else %} "display:none" {% endif %}>
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group  col-md-12">
+                                                <div class="col-md-4"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                                <div class="col-md-8">
+                                                    {% for a in form.varevaluacion1 %}
+                                                        <div class="col-md-3 rdio rdio-primary circle">
+                                                            {% if tramite == null and a.vars.value == 'NO' %}
+                                                                {{ form_widget(a,{'attr':{'disabled':'disabled','class':'evaluacion'}}) }}
+                                                            {% else %}
+                                                                {{ form_widget(a,{'attr':{'required':true,'class':'evaluacion'}}) }}
+                                                            {% endif %}                                                            
+                                                            {{ form_label(a) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-4"><strong>REQUISITOS PRESENTADOS:</strong></div>
+                                                <div class="col-md-8">
+                                                {% for r in form.requisitos %}
+                                                    <div class="ckbox ckbox-primary">
+                                                        {{ form_widget(r,{'attr':{'required':true}}) }}
+                                                        {{ form_label(r) }}
+                                                    </div>
+                                                {% endfor %}   
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
+                        </div>
+                        <div class="row informe"  style={% if tramite %} "display:block" {% else %} "display:none" {% endif %}>
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title" id="titulo">DATOS DEL INFORME</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.informedistrito) }}
+                                                </div>   
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.informedistrito) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.fechainformedistrito) }}
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.fechainformedistrito) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.adjuntoinforme) }}
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.adjuntoinforme) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.observacion) }}
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.observacion) }}
+                                                </div>
+                                            </div>
+                                        </div>                                  
+                                    </div><!-- /.panel- body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="form-group col-md-3">
+                                {% if tramite %}  
+                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                                {% else %}  
+                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary','disabled':'{{disabled}}'} }) }}
+                                {% endif %}                                
+                                <a href="{{path('wf_tramite_index')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {{ form_end(form) }}                   
+                </div><!-- /.end panel -->  
+            </div>
+        </div>
+    </div>    
+{% if tramite %}
+    {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
+{% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                format:'dd-mm-yyyy',
+                titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                weekStart: 0
+            };
+
+            $('.date').datepicker({
+                orientation: "auto left",
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true,
+                language: 'es'
+            });
+
+            if('{{mapa}}' == true){
+                initMap2($('#latitud').val(),$('#longitud').val(),'map');
+            }
+            
+        });
+        $(document).on('change','input[type="file"]',function(){
+            var fileName = this.files[0].name;
+            var fileSize = this.files[0].size;
+            var sizePermitido = 3 * (1024 * 1024)
+            if(fileSize > sizePermitido){
+                alert('El archivo adjunto no debe superar los 3MB');
+                this.value = '';
+                this.files[0].name = '';
+            }
+        });
+        
+        function buscarSolicitud(){
+            if($('#form_tramite_tipo').val()==''){
+                alert('Seleccione el tipo de trámite.');
+                return false;
+            }else if($('#form_codigo').val()==''){
+                alert('Ingrese el Código de la solicitud o el código SIE.');
+                return false;
+            }
+            var tramitetipo = $('#form_tramite_tipo option:selected').text();
+            var formData = {tramite_tipo:$('#form_tramite_tipo').val(),codigo:$('#form_codigo').val()}
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_buscar_solicitud')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#contenido').empty();
+                    $("#contenido").append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    $('.date').datepicker({
+                        orientation: "auto left",
+                        forceParse: false,
+                        autoclose: true,
+                        todayHighlight: true,
+                        language: 'es'
+                    });
+                    $('.informe').show();
+                    $('#form_guardar').prop('disabled',false);
+                    if($('#form_tramite_tipo').val()==54 && $('#latitud2').length >0){
+                        //console.log(datos);
+                        //alert();
+
+                        initMap2($('#latitud2').val(),$('#longitud2').val(),'map2');
+                    }
+                },
+            });
+        }
+
+        $('.evaluacion').click(function(){
+            //alert($(this).val());
+            if($(this).val()=='NO'){
+                $('#contenido').empty();
+                $('#form_tramite_tipo').val('');
+                $('#form_codigo').val('');
+                $('#form_tramite_tipo').attr('required',false);
+                $('#form_codigo').attr('required',false);
+            }else{
+                $('#form_tramite_tipo').attr('required',true);
+                $('#form_codigo').attr('required',true);
+            }
+        });
+
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+        }); 
+
+        $('.btn-lilac').click(function(){
+            alert('entra');
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+        });
+
+        function validacion(){
+            if($("#form_varevaluacion1_0").is(':checked') && $('#solicitud').length == 0){
+                alert('Debe buscar los datos de la solicitud de: '+$('#form_tramite_tipo option:selected').text());
+                return false;
+            }else if($('.btn-lilac').length > 0){
+                //var tramitetipo = $('#form_tramite_tipo option:selected').text();
+                alert('Debe abrir y verificar todos los archivos adjuntos de los requisitos presentados.');
+                return false;
+            }else{
+                return true;
+            }
+        }
+    </script>
+{% endblock %}

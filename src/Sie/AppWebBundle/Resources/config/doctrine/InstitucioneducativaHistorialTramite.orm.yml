@@ -1,0 +1,123 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaHistorialTramite:
+    type: entity
+    table: institucioneducativa_historial_tramite
+    indexes:
+        IDX_AC13E54CDADD026:
+            columns:
+                - usuario_modificacion_id
+        IDX_AC13E54C1EEFD20:
+            columns:
+                - usuario_registro_id
+        IDX_AC13E54C4FE8BC31:
+            columns:
+                - tramite_tipo_id
+        IDX_AC13E54C820C2849:
+            columns:
+                - tramite_id
+        IDX_AC13E54C3AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nroResolucion:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            column: nro_resolucion
+        fechaResolucion:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_resolucion
+        fechaFormulario:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_formulario
+        valorAnterior:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: valor_anterior
+        valorNuevo:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: valor_nuevo
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        usuarioModificacion:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_modificacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioRegistro:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_registro_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteTipo:
+            targetEntity: TramiteTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramite:
+            targetEntity: Tramite
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

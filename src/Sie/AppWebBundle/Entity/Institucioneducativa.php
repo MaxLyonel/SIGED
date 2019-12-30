@@ -109,7 +109,18 @@ class Institucioneducativa
      */
     private $convenioTipo;
 
-
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Institucioneducativa
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
+    }
     /**
      * Get id
      *
@@ -555,5 +566,61 @@ class Institucioneducativa
     public function getConvenioTipo()
     {
         return $this->convenioTipo;
+    }
+    /**
+     * @var string
+     */
+    private $areaMunicipio;
+
+
+    /**
+     * Set areaMunicipio
+     *
+     * @param string $areaMunicipio
+     * @return Institucioneducativa
+     */
+    public function setAreaMunicipio($areaMunicipio)
+    {
+        $this->areaMunicipio = $areaMunicipio;
+    
+        return $this;
+    }
+
+    /**
+     * Get areaMunicipio
+     *
+     * @return string 
+     */
+    public function getAreaMunicipio()
+    {
+        return $this->areaMunicipio;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $fechaFundacion;
+
+
+    /**
+     * Set fechaFundacion
+     *
+     * @param \DateTime $fechaFundacion
+     * @return Institucioneducativa
+     */
+    public function setFechaFundacion($fechaFundacion)
+    {
+        $this->fechaFundacion = $fechaFundacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaFundacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaFundacion()
+    {
+        return $this->fechaFundacion;
     }
 }

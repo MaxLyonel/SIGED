@@ -1,0 +1,1730 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> 
+<html lang="en"> <!--<![endif]-->
+    <!-- START @HEAD -->
+        <head>
+            <!-- START @META SECTION -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
+            <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
+            <meta name="author" content="Djava UI">
+            <title>SIGED | Herramienta web</title>
+            <!--/ END META SECTION -->
+
+            <!-- START @FAVICONS -->
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
+                        <!--/ END FAVICONS -->
+
+            <!-- START @FONT STYLES -->
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
+            <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+            <!--/ END FONT STYLES -->
+                        <!-- START @GLOBAL MANDATORY STYLES -->
+            <link href="/webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+            <!--/ END GLOBAL MANDATORY STYLES -->
+
+            <!-- START @PAGE LEVEL STYLES -->
+            <link href="/webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+            <link href="/webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css" rel="stylesheet">
+            <link href="/webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
+            <link href="/webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css" rel="stylesheet">
+            <link href="/webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css" rel="stylesheet">
+            <link href="/juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css" rel="stylesheet">
+            <link href="/juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css" rel="stylesheet">
+            
+            <link rel="stylesheet" type="text/css" href="/webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css">
+            <!--/ END PAGE LEVEL STYLES -->
+
+            <!-- START @THEME STYLES -->
+            <link href="/webherramienta/assets/admin/css/reset.css" rel="stylesheet">
+            <link href="/webherramienta/assets/admin/css/layout.css" rel="stylesheet">
+            <link href="/webherramienta/assets/admin/css/components.css" rel="stylesheet">
+            <link href="/webherramienta/assets/admin/css/plugins.css" rel="stylesheet">
+            <link href="/webherramienta/assets/admin/css/themes/blue-gray.theme.css" rel="stylesheet" id="theme">
+            <link href="/webherramienta/assets/admin/css/custom.css" rel="stylesheet">
+            <link href="/webherramienta/assets/admin/css/menuTree.css" rel="stylesheet">
+            
+            <!--/ END THEME STYLES -->
+            <link href="https://openlayers.org/api/theme/default/style.css" rel="stylesheet">
+
+            <!-- START @IE SUPPORT -->
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+            <!--[if lt IE 9]>
+            <script src="/webherramienta/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js"></script>
+            <script src="/webherramienta/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js"></script>
+            <![endif]-->
+            <!--/ END IE SUPPORT -->
+            <link href="/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+            <link href="/webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css" rel="stylesheet" />
+            <link href="/css/plugins/bootstrap-datepicker/datepicker3.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+                integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+                crossorigin=""/>
+        </head>
+    <!--/ END HEAD -->
+    <body>
+        <!--[if lt IE 9]>
+        <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- START @WRAPPER -->
+        <style>
+            /* Tooltip */
+            .msg + .tooltip > .tooltip-inner {
+                background-color: #E9F9FC; 
+                color: #01B1E1; 
+                border: 1px solid #01B1E1; 
+                padding: 15px;
+            }
+            #map{
+                width: 700px ;
+                height: 500px ;
+                background-color: grey;
+                position: relative;
+                outline: none;
+            }
+		
+        </style>
+        <section id="wrapper">
+            <!-- START @HEADER -->
+            <header id="header">
+                <!-- Start header left -->
+                <div class="header">
+                    <h2 align="center" style="color:grey">REGISTRO DE UNIDADES EDUCATIVAS RUE</h2>
+                    <div class="clearfix"></div>
+                </div><!-- /.header-left -->
+            </header> <!-- /#header -->
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="panel" style="max-width:1000px;margin-left:auto;margin-right:auto;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="pull-left">
+                                                <h3 class="panel-title">FORMULARIO DE APERTURA RUE-001</h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.panel-heading -->
+                                        {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validar();'}}) }}
+                                            <div class="panel-body">                                            
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <!-- Start basic wizard vertical -->
+                                                        <div id="basic-wizard-vertical">
+                                                            <div class="panel panel-tab panel-tab-double panel-tab-vertical rounded shadow">
+                                                                <!-- Start tabs heading -->
+                                                                <div class="panel-heading no-padding col-md-3">
+                                                                    <ul class="nav nav-tabs nav-pills">
+                                                                        <li class="active">
+                                                                            <a href="#tab1-1" data-toggle="tab" aria-expanded="true">
+                                                                                <i class="fa fa-file-text"></i>
+                                                                                <div>
+                                                                                    <span class="text-strong">DATOS GENERALES</span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="">
+                                                                            <a href="#tab1-2" data-toggle="tab" aria-expanded="false">
+                                                                                <i class="glyphicon glyphicon-home"></i>
+                                                                                <div>
+                                                                                    <span class="text-strong">UBICACIÓN GEOGRÁFICA</span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="">
+                                                                            <a href="#tab1-3" data-toggle="tab" aria-expanded="false">
+                                                                                <i class="glyphicon glyphicon-check"></i>
+                                                                                <div>
+                                                                                    <span class="text-strong">DEPENDENCIA</span>
+                                                                                    <span class="text-strong">NIVEL</span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="">
+                                                                            <a href="#tab1-4" data-toggle="tab" aria-expanded="false">
+                                                                                <i class="fa fa-users"></i>
+                                                                                <div>
+                                                                                    <span class="text-strong">CANTIDAD</span>
+                                                                                    <span><small>ESTUDIANTES POR GRADO</small></span>
+                                                                                    {# <span><small>PERSONAL</small></span> #}
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="">
+                                                                            <a href="#tab1-5" data-toggle="tab" aria-expanded="false">
+                                                                                <i class="glyphicon glyphicon-user"></i>
+                                                                                <div>
+                                                                                    <span class="text-strong">CANTIDAD</span>
+                                                                                    <span><small>PERSONAL</small></span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="">
+                                                                            <a href="#tab1-6" data-toggle="tab" aria-expanded="false">
+                                                                                <i class="glyphicon glyphicon-globe"></i>
+                                                                                <div>
+                                                                                    <span class="text-strong">INFORMACIÓN</span>
+                                                                                    <span class="text-strong">GEOREFERENCIAL</span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div><!-- /.panel-heading -->
+                                                                <!--/ End tabs heading -->
+                                                                <!-- Start tabs content -->
+                                                                <div class="panel-body tab-content col-md-9">
+                                                                    <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                    DATOS GENERALES<br>
+                                                                                </h4>
+                                                                                <div class="form-body">
+                                                                                    <div class="row">
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-4">
+                                                                                                {{ form_label(form.institucioneducativa) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-8">
+                                                                                                {{ form_widget(form.institucioneducativa) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-4">
+                                                                                                {{ form_label(form.fechafundacion) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-8">
+                                                                                                {{ form_widget(form.fechafundacion) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-4">
+                                                                                                {{ form_label(form.telefono) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-8">
+                                                                                                {{ form_widget(form.telefono) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-4">
+                                                                                                {{ form_label(form.director) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-8">
+                                                                                                {{ form_widget(form.director) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {# <div class="form-group col-md-12">
+                                                                                            <div class="col-md-6">
+                                                                                                ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:
+                                                                                            </div>
+                                                                                            <div class="col-md-6">
+                                                                                                {% for a in form.area %}
+                                                                                                    <div class="col-md-6 rdio rdio-primary circle">
+                                                                                                        {{ form_widget(a) }}
+                                                                                                        {{ form_label(a) }}
+                                                                                                    </div>
+                                                                                                {% endfor %}
+                                                                                            </div>
+                                                                                        </div> #}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade inner-all" id="tab1-2">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                    UBICACIÓN GEOGRÁFICA<br>
+                                                                                </h4>
+                                                                                <div class="form-body">
+                                                                                    <div class="row">
+                                                                                        <div id="msgcomparte"></div>
+                                                                                        COMPARTE EL EDIFICIO CON (Señale solo 1)
+                                                                                        <table class="table table-bordered table-striped" id="tabla">
+                                                                                            <tr>
+                                                                                                <th>Coódigo SIE</th> 
+                                                                                                <th>Nombre de la Institucion Educativa</th>
+                                                                                                <th>Subsistema</th>
+                                                                                                <th>Dependencia</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>{{ form_widget(form.siecomparte,{'attr':{'oninput':'siecomparte(this.value)'}}) }}</td> 
+                                                                                                <td id="ie"></td>
+                                                                                                <td id="org"></td>
+                                                                                                <td id="dependencia"></td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div></br>
+                                                                                    <div class="row">
+                                                                                        <div class="form-group  col-md-12">
+                                                                                            <div class="col-md-4">  
+                                                                                                {{ form_label(form.lejurisdiccion) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-8 form-inline">
+                                                                                                {{ form_widget(form.lejurisdiccion,{'attr':{'oninput':'buscarEdificioEscolar(this.value)'} }) }}
+                                                                                                <span class="glyphicon glyphicon-question-sign msg" data-toggle="tooltip" title="Si la nueva infraestructura ya cuenta con un Código de local educativo." data-placement="top"></span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-6">
+                                                                                            <div class="col-md-12">
+                                                                                                <h5 class="page-header">Ubicación Geográfica</br>(Censo 2001 - R.U.E.)</h5>
+                                                                                            </div>
+                                                                                            <div class="form-group col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.departamento2001) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.departamento2001,{'attr':{'onchange':'provincia(this.value,2001)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.provincia2001) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.provincia2001,{'attr':{'onchange':'municipio(this.value,2001)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.municipio2001) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.municipio2001,{'attr':{'onchange':'canton(this.value,2001)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.canton2001) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.canton2001,{'attr':{'onchange':'localidad(this.value,2001)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.localidad2001) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.localidad2001) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-6">
+                                                                                            <div class="col-md-12">
+                                                                                                <h5 class="page-header">Ubicación Geográfica </br>
+                                                                                                (Censo 2012 - información referencial)</h5>
+                                                                                            </div>
+                                                                                            <div class="form-group col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.departamento2012) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.departamento2012,{'attr':{'onchange':'provincia(this.value,2012)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.provincia2012) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.provincia2012,{'attr':{'onchange':'municipio(this.value,2012)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.municipio2012) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.municipio2012,{'attr':{'onchange':'comunidad(this.value,2012)'}}) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.comunidad2012) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.comunidad2012) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group  col-md-12">
+                                                                                                <div class="col-md-5">
+                                                                                                    {{ form_label(form.distrito) }}
+                                                                                                </div>
+                                                                                                <div class="col-md-7">
+                                                                                                    {{ form_widget(form.distrito) }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <h5 class="page-header">Dirección</h5>
+                                                                                        </div>
+                                                                                        <div class="form-group  col-md-12">
+                                                                                            <div class="col-md-2">
+                                                                                                {{ form_label(form.zona) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-10">
+                                                                                                {{ form_widget(form.zona) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group  col-md-12">
+                                                                                            <div class="col-md-2">
+                                                                                                {{ form_label(form.direccion) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-10">
+                                                                                                {{ form_widget(form.direccion) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade inner-all" id="tab1-3">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                    DEPENDENCIA<br>
+                                                                                </h4>
+                                                                                <div class="row">
+                                                                                    <div class="form-group col-md-12">
+                                                                                        <div class="col-md-4">
+                                                                                            {{ form_label(form.dependencia) }}
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ form_widget(form.dependencia) }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12" style="display:none" id="convenio">
+                                                                                        <div class="col-md-4">
+                                                                                            {{ form_label(form.conveniotipo) }}
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ form_widget(form.conveniotipo) }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-12" style="display:none" id="constitucion">
+                                                                                        <div class="col-md-4">
+                                                                                            {{ form_label(form.constitucion) }}
+                                                                                        </div>
+                                                                                        <div class="col-md-8">
+                                                                                            {{ form_widget(form.constitucion) }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <h4 class="page-header">
+                                                                                NIVEL DE ORGANIZACIÓN CURRICULAR<br>
+                                                                                </h4>
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        {% for a in form.niveltipo %}
+                                                                                            <div class="ckbox ckbox-primary">
+                                                                                                {{ form_widget(a,{'attr':{'required':false,'class':'nivel'}}) }}
+                                                                                                {{ form_label(a) }}
+                                                                                            </div>
+                                                                                        {% endfor %}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>    
+                                                                    </div>
+                                                                    <div class="tab-pane fade inner-all" id="tab1-4">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                CANTIDAD DE ESTUDIANTES POR GRADO<br>
+                                                                                </h4>
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <strong>Educación Inicial en Familia Comunitaria</strong>
+                                                                                        <table class="table table-bordered table-striped" id="tabla">
+                                                                                            <tr>
+                                                                                                <th>1ro</th> 
+                                                                                                <th>2do</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>{{ form_widget(form.cantidad_11_1) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_11_2) }}</td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div>                                        
+                                                                                    <div class="col-md-12">
+                                                                                        <strong>Educación Primaria Comunitaria Vocacional</strong>
+                                                                                        <table class="table table-bordered table-striped" id="tabla">
+                                                                                            <tr>
+                                                                                                <th>1ro</th> 
+                                                                                                <th>2do</th>
+                                                                                                <th>3ro</th> 
+                                                                                                <th>4to</th>
+                                                                                                <th>5to</th> 
+                                                                                                <th>6to</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>{{ form_widget(form.cantidad_12_1) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_12_2) }}</td>
+                                                                                                <td>{{ form_widget(form.cantidad_12_3) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_12_4) }}</td>
+                                                                                                <td>{{ form_widget(form.cantidad_12_5) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_12_6) }}</td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <strong>Educación Secundaria Comunitaria Productiva</strong>
+                                                                                        <table class="table table-bordered table-striped" id="tabla">
+                                                                                            <tr>
+                                                                                                <th>1ro</th> 
+                                                                                                <th>2do</th>
+                                                                                                <th>3ro</th> 
+                                                                                                <th>4to</th>
+                                                                                                <th>5to</th> 
+                                                                                                <th>6to</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>{{ form_widget(form.cantidad_13_1) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_13_2) }}</td>
+                                                                                                <td>{{ form_widget(form.cantidad_13_3) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_13_4) }}</td>
+                                                                                                <td>{{ form_widget(form.cantidad_13_5) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_13_6) }}</td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade inner-all" id="tab1-5">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                CANTIDAD DE PERSONAL<br>
+                                                                                </h4>
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <table class="table table-striped table-bordered" id="tabla">
+                                                                                            <tr>
+                                                                                                <th>Administrativo</th> 
+                                                                                                <th>Docente (Maestros)</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>{{ form_widget(form.cantidad_adm) }}</td> 
+                                                                                                <td>{{ form_widget(form.cantidad_maestro) }}</td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade inner-all" id="tab1-6">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                INFORMACIÓN GEOREFERENCIAL<br>
+                                                                                </h4>
+                                                                                <div id="map"></div>
+                                                                            </div>
+                                                                            <div class="form-group col-md-6 form-inline">
+                                                                                {{ form_label(form.latitud) }}
+                                                                                {{ form_widget(form.latitud) }}
+                                                                            </div>
+                                                                            <div class="form-group col-md-6 form-inline">
+                                                                                {{ form_label(form.longitud) }}
+                                                                                {{ form_widget(form.longitud) }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div><!-- /.panel-body -->
+                                                                <!--/ End tabs content -->
+                                                                <!--/ End pager -->
+                                                            </div><!-- /.panel -->
+                                                        </div><!-- /#basic-wizard-horizontal -->
+                                                        <!--/ End basic wizard horizontal-->
+                                                    </div>
+                                                </div></br>
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal_54" data-placement="top" title="Requisitos de apertura" onclick="requisitos(54)"><i class="glyphicon glyphicon-plus"></i>Adicionar Requisitos</button>
+                                                    </div>
+                                                    <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_54" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                            <div class="panel-footer">
+                                                <div class="form-group col-md-12">
+                                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                                                    <a href="{{path('login')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.end panel -->  
+                    </div>
+                </div>
+            </div>
+            
+        </section><!-- /#page-content -->
+        <!-- Start footer content -->
+        <footer class="footer-content">
+            2016 - <span id="copyright-year"></span> &copy; Ministerio de Educación.
+            <span class="pull-right">0.01 GB(0%) of 15 GB used</span>
+        </footer><!-- /.footer-content -->
+        <!--/ End footer content -->
+    </body>
+<!--/ END PAGE CONTENT -->
+<!--/ END BACK TOP -->            
+    <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
+    <!-- START @CORE PLUGINS -->
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery.sparkline.min/index.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js"></script>
+
+        <!-- Highcharts Charts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/funnel.js"></script>
+    <script src="/js/highcharts/highcharts-3d.js"></script>
+    <script src="/js/highcharts/exporting.js"></script>
+    <!--/ END CORE PLUGINS -->
+
+    <script src="/webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js"></script>
+
+    <!-- START @PAGE LEVEL PLUGINS -->
+    <script src="/webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/holderjs/holder.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js"></script>
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js"></script>
+    <script src="/juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js"></script>
+    <script src="/juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js"></script>
+
+    <!--/ END PAGE LEVEL PLUGINS -->
+
+    <!-- START @PAGE LEVEL SCRIPTS -->
+    <script src="/webherramienta/assets/admin/js/apps.js"></script>
+    <script src="/webherramienta/assets/admin/js/pages/blankon.form.element.js"></script>
+    <script src="/webherramienta/assets/admin/js/pages/blankon.form.validation.js"></script>
+    <script src="/webherramienta/assets/admin/js/demo.js"></script>
+    <script src="/webherramienta/assets/admin/js/menuTree.js"></script>
+    <!--/ END PAGE LEVEL SCRIPTS -->
+    <!--/ END JAVASCRIPT SECTION -->
+
+
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js"></script>
+
+    <!-- START GOOGLE ANALYTICS -->
+    <script>
+
+    </script>
+    <script src="/bundles/fosjsrouting/js/router.js"></script>
+    <script src="/app_dev.php/js/routing?callback=fos.Router.setData"></script>
+    <script src="/bower_components/select2/dist/js/select2.min.js"></script>
+    <script src="/js/jquery.alphanum.js"></script>
+    <!--/ END GOOGLE ANALYTICS -->
+    <script src="/webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js"></script>
+
+    <script src="/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+
+    <script src="/js/initialize.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
+    <!--/ END GOOGLE ANALYTICS -->     
+        
+    <script>
+        
+        $( document ).ready(function() {
+            $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                format:'dd-mm-yyyy',
+                titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                weekStart: 0
+            };
+            $('.date').datepicker({
+                orientation: "auto left",
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true,
+                language: 'es'
+            });
+            $('#form_tr').empty();
+            initMap();
+        });
+        
+        function siecomparte(sie){
+            var formData = {sie: sie};
+            if(sie.length >= 8){
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('tramite_rue_buscar_ruecomparte')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#msgcomparte').empty();
+                        $('#ie').empty();
+                        $('#org').empty();
+                        $('#dependencia').empty();
+                    },
+                    success: function (data) {
+                        //console.log(data);
+                        if (data.msg){
+                            $("#msgcomparte").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                            $('#form_siecomparte').val('');
+                        }else{
+                            $('#ie').append(data.institucioneducativa);
+                            $('#org').append(data.subsistema);
+                            $('#dependencia').append(data.dependencia);
+                            $('#form_lejurisdiccion').val(data.codigole);
+                            buscarEdificioEscolar($('#form_lejurisdiccion').val());
+                        }
+                    },
+                });
+            }else{
+                $('#ie').empty();
+                $('#org').empty();
+                $('#dependencia').empty();
+                $('#form_lejurisdiccion').val('');
+                buscarEdificioEscolar('');
+            }
+        }
+
+        function buscarEdificioEscolar(idLe) {
+            if(idLe.length >= 8){
+                var formData = {idLe:idLe,lugarTipoIdDistrito:0};
+                $.ajax({
+                    type: 'get',
+                    url: "{{path('tramite_rue_buscar_edificio')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $("#form_departamento2012").empty();
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_departamento2001").empty();
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_zona").empty();
+                        $("#form_direccion").empty();
+                        $("#form_departamento2012").append('<option value="">Buscando...</option>');
+                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                        $("#form_departamento2001").append('<option value="">Buscando...</option>');
+                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                        $("#form_distrito").append('<option value="">Buscando...</option>');
+                        $("#form_zona").val('');
+                        $("#form_direccion").val('');
+                        $("#msg").empty();
+                    },
+                    success: function (data) {
+                        //console.log(data);
+                        if(data.msg){
+                            $("#form_lejurisdiccion").val('');
+                            $("#form_departamento2012").empty();
+                            $("#form_departamento2012").append('<option value="">Seleccione...</option>');
+                            $("#form_provincia2012").empty();
+                            $("#form_municipio2012").empty();
+                            $("#form_comunidad2012").empty();
+                            $("#form_departamento2001").empty();
+                            $("#form_departamento2001").append('<option value="">Seleccione...</option>');
+                            $("#form_provincia2001").empty();
+                            $("#form_municipio2001").empty();
+                            $("#form_canton2001").empty();
+                            $("#form_localidad2001").empty();
+                            $("#form_distrito").empty();
+                            $("#form_zona").val('');
+                            $("#form_direccion").val('');
+                            $.each(data.lugar.c2012.dep.lista, function (i, value) {
+                                $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.dep.lista, function (i, value) {
+                                $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $('#form_departamento2012').removeAttr( 'style' );
+                            $("#form_provincia2012").removeAttr( 'style' );
+                            $("#form_municipio2012").removeAttr( 'style' );
+                            $("#form_comunidad2012").removeAttr( 'style' );
+                            $("#form_departamento2001").removeAttr( 'style' );
+                            $("#form_provincia2001").removeAttr( 'style' );
+                            $("#form_municipio2001").removeAttr( 'style' );
+                            $("#form_canton2001").removeAttr( 'style' );
+                            $("#form_localidad2001").removeAttr( 'style' );
+                            $("#form_distrito").removeAttr( 'style' );
+                            $('#form_zona').removeAttr( 'style' );
+                            $('#form_direccion').removeAttr( 'style' );
+                            $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                        }else{
+                            $.each(data.lugar.c2012.dep.lista, function (i, value) {
+                                $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2012.prov.lista, function (i, value) {
+                                $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2012.mun.lista, function (i, value) {
+                                $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2012.comu.lista, function (i, value) {
+                                $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.dep.lista, function (i, value) {
+                                $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.prov.lista, function (i, value) {
+                                $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.mun.lista, function (i, value) {
+                                $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.can.lista, function (i, value) {
+                                $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.c2001.loc.lista, function (i, value) {
+                                $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.lugar.distrito.lista, function (i, value) {
+                                $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $("#form_departamento2012").val(data.lugar.c2012.dep.id);
+                            $("#form_provincia2012").val(data.lugar.c2012.prov.id);
+                            $("#form_municipio2012").val(data.lugar.c2012.mun.id);
+                            $("#form_comunidad2012").val(data.lugar.c2012.comu.id);
+                            $("#form_departamento2001").val(data.lugar.c2001.dep.id);
+                            $("#form_provincia2001").val(data.lugar.c2001.prov.id);
+                            $("#form_municipio2001").val(data.lugar.c2001.mun.id);
+                            $("#form_canton2001").val(data.lugar.c2001.can.id);
+                            $("#form_localidad2001").val(data.lugar.c2001.loc.id);
+                            $("#form_distrito").val(data.lugar.distrito.id);
+                            $("#form_zona").val(data.lugar.zona);
+                            $("#form_direccion").val(data.lugar.direccion);
+                            $('#form_departamento2012').css('pointer-events','none');
+                            $("#form_provincia2012").css('pointer-events','none');
+                            $("#form_municipio2012").css('pointer-events','none');
+                            $("#form_comunidad2012").css('pointer-events','none');
+                            $("#form_departamento2001").css('pointer-events','none');
+                            $("#form_provincia2001").css('pointer-events','none');
+                            $("#form_municipio2001").css('pointer-events','none');
+                            $("#form_canton2001").css('pointer-events','none');
+                            $("#form_localidad2001").css('pointer-events','none');
+                            $("#form_distrito").css('pointer-events','none');
+                            $('#form_zona').css('pointer-events','none');
+                            $('#form_direccion').css('pointer-events','none');
+                        }
+                    }   
+                });
+            }else{
+                $("#form_departamento2012").val('');
+                $('#form_departamento2012 option[value=""]').text("Seleccione departamento");
+                $("#form_provincia2012").empty();
+                $("#form_municipio2012").empty();
+                $("#form_comunidad2012").empty();
+                $("#form_departamento2001").val('');
+                $('#form_departamento2001 option[value=""]').text("Seleccione departamento");
+                $("#form_provincia2001").empty();
+                $("#form_municipio2001").empty();
+                $("#form_canton2001").empty();
+                $("#form_localidad2001").empty();
+                $("#form_distrito").empty();
+                $("#form_zona").val('');
+                $("#form_direccion").val('');
+                $('#form_departamento2012').removeAttr( 'style' );
+                $("#form_provincia2012").removeAttr( 'style' );
+                $("#form_municipio2012").removeAttr( 'style' );
+                $("#form_comunidad2012").removeAttr( 'style' );
+                $("#form_departamento2001").removeAttr( 'style' );
+                $("#form_provincia2001").removeAttr( 'style' );
+                $("#form_municipio2001").removeAttr( 'style' );
+                $("#form_canton2001").removeAttr( 'style' );
+                $("#form_localidad2001").removeAttr( 'style' );
+                $("#form_distrito").removeAttr( 'style' );
+                $('#form_zona').removeAttr( 'style' );
+                $('#form_direccion').removeAttr( 'style' );
+                /*if(idLe == '40730010' ){
+                    $("#form_lejurisdiccion").val('');
+                    alert('El Código Edificio Educativo debe ser diferente al actual.')
+                }*/
+            }
+
+        }
+        function provincia(d,censo) {
+            $("#form_lejurisdiccion").val('');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
+                beforeSend: function () {
+                    $("#form_lejurisdiccion").val('');
+                    $("#form_distrito").empty();
+                    $("#form_distrito").append('<option value="">Buscando...</option>');
+                    if(censo == 2001){
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }else if (censo == 2012){
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
+                    
+                },
+                success: function (data) {
+                    $("#form_distrito").empty();
+                    $("#form_distrito").append('<option value="">Seleccionar...</option>');
+                    if(censo == 2001){
+                        //console.log(data);
+                        $("#form_provincia2001").empty();
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_provincia2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_provincia2001").attr('required',true);
+                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2001").attr('required',true);
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").attr('required',true);
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").attr('required',true);
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }else if (censo == 2012){
+                        $("#form_provincia2012").empty();
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_provincia2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_provincia2012").attr('required',true);
+                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_municipio2012").attr('required',true);
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").attr('required',true);
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                    $.each(data.distrito, function (i, value) {
+                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function municipio(p,censo) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p,'censo':censo}),
+                beforeSend: function () {
+                    if(censo == 2001){
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }else if (censo == 2012){
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
+                },
+                success: function (data) {
+                    if(censo == 2001){
+                        $("#form_municipio2001").empty();
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }else if (censo == 2012){
+                        $("#form_municipio2012").empty();
+                        $("#form_comunidad2012").empty();
+                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                }
+            });
+        }
+
+        function comunidad(p,censo) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p,'censo':censo}),
+                beforeSend: function () {
+                    if(censo == 2012){
+                        $("#form_comunidad2012").empty();
+                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
+                    }
+                },
+                success: function (data) {
+                    if(censo == 2012){
+                        $("#form_comunidad2012").empty();
+                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
+                        $.each(data.comunidad, function (i, value) {
+                            $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                }
+            });
+        }
+        function canton(m,censo) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m,'censo':censo}),
+                beforeSend: function () {
+                    if(censo == 2001){
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_canton2001").append('<option value="">Buscando...</option>');
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }
+                },
+                success: function (data) {
+                    if(censo == 2001){
+                        $("#form_canton2001").empty();
+                        $("#form_localidad2001").empty();
+                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.canton, function (i, value) {
+                            $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                }
+            });
+        }
+
+        function localidad(c,censo) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c,'censo':censo}),
+                beforeSend: function () {
+                    if(censo == 2001){
+                        $("#form_localidad2001").empty();
+                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                    }
+                },
+                success: function (data) {
+                    if(censo == 2001){
+                        $("#form_localidad2001").empty();
+                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
+                        $.each(data.localidad, function (i, value) {
+                            $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                }
+            });
+        } 
+
+        $(function(){
+            $(".validar").keydown(function(event){
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+        
+        function validarnombre(nombre,tipo){
+            //alert(nombre);
+            nombre = nombre.toUpperCase();
+            var generico = ['ESCUELA','COLEGIO','FISCAL','CONVENIO','PRIVADA','PRIVADO','KINDER','INSTITUTO','CENTRO INTEGRADO','TECNICO TECNOLOGICO','TÉCNICO TECNOLOGICO','TÉCNICO TECNOLÓGICO','TÉCNICO TECNOLÓGICO','HUMANISTICO','HUMANÍSTICO'];
+            $.each(generico, function (index,value){
+                if(nombre.search(value) != -1){
+                    if(tipo == 0){
+                        $('#form_institucioneducativa').val('');
+                    }else{
+                        $('#form_nuevo_nombre').val('');
+                    }                    
+                    alert('El nombre de la Unidad Educativa no puede llevar el denominativo genérico: '+value);
+                }
+            });
+        }
+
+        function validarnombredistrito(nombre){
+            if ( nombre != '') {
+                return false;
+            }
+            var formData = {nombre: nombre};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('tramite_rue_validarnombredistrito')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#msg').empty();
+                },
+                success: function (data) {
+                    //console.log(data);
+                    if(data.msg){
+                        $("#msg").append('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                        $('#form_nuevo_nombre').val('');
+                    }
+                },
+            });
+        }        
+
+        function requisitos(id){
+            //alert(id);            
+            if($('#form_dependencia').length == 0 || $('#form_dependencia').val() == ''){
+                alert('Primero debe ingresar los datos de la nueva Unidad Educativa.');
+                $('#modal_'+id).modal('toggle');
+                return false;
+            }
+            if ( $("#modal_requisitos_"+ id).length ) {
+                return false;
+            }
+            var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:$('#form_constitucion').val()};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_busca_requisitos')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal_'+id).empty();
+                    $("#modal_"+id).append('<div style="text-align:center">Cargango datos...<img src="/img/loading.gif"  /></div>');
+                },
+                success: function (data) {
+                    //console.log(data);
+                    $('#modal_'+id).empty();
+                    $('#modal_'+id).append(data);
+                     $('.date').datepicker({
+                        orientation: "auto left",
+                        forceParse: false,
+                        autoclose: true,
+                        todayHighlight: true,
+                        language: 'es'
+                    });
+                },
+            });
+        }
+
+        function verificarRequisitos(id,dependenciaId){
+            switch (id){
+                case 34: //ampliacion de nivel
+                    if($('#form_i_solicitud_ampliar').val()==''){
+                        alert('Debe adjuntar la solicitud de ampliacion de nivel.');
+                        return false;
+                    }else if($('.alquiler').is(':checked') == false){
+                        alert('Seleccione si la infraestructura es arrendada o no.');
+                        return false;
+                    }else if($('#form_i_alquiler_ampliar_0').is(':checked') == true && $('#form_i_contrato_ampliar').val()==''){
+                        alert('Debe adjuntar la copia notariada de arrendamiento.');
+                        return false;
+                    }else if($('#form_i_certificado_ampliar').is(':checked') == false){
+                        alert('Seleccione la presentación original de Certificado RUE.');
+                        return false;
+                    }else if($('#form_ii_planos_ampliar').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de planos arquitectónicos.');
+                        return false;
+                    }else if($('#form_ii_infra_ampliar').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la actualización de datos de infraestructura en el SIE.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 35: //Reduccion de Nivel
+                    if($('#form_i_solicitud_reducir').val()==''){
+                        alert('Debe adjuntar la solicitud de reducción de nivel.');
+                        return false;
+                    }else if($('.alquilerReducir').is(':checked') == false){
+                        alert('Seleccione si la infraestructura es arrendada o no.');
+                        return false;
+                    }else if($('#form_i_alquiler_reducir_0').is(':checked') == true && $('#form_i_contrato_reducir').val()==''){
+                        alert('Debe adjuntar la copia notariada de arrendamiento.');
+                        return false;                    
+                    }else if($('#form_i_certificado_reducir').is(':checked') == false){
+                        alert('Seleccione la presentación original de Certificado RUE.');
+                        return false;
+                    }else if($('#form_ii_planos_reducir').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de planos arquitectónicos.');
+                        return false;
+                    }else if($('#form_ii_infra_reducir').is(':checked') == false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la actualización de datos de infraestructura en el SIE.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 36: //cambio de dependencia
+                    if(dependenciaId == 1){
+                        if(dependenciaId == 1 && $('#form_i_solicitud_dependencia').val()==''){
+                            alert('Debe adjuntar la solicitud de Cambio de Dependencia.');
+                            return false;
+                        }else if($('#form_i_actafundacion').val()==''){
+                            alert('Debe adjuntar Acta de Fundación.');
+                            return false;
+                        }else if($('#form_i_folio_dependencia').is(':checked') == false){
+                            alert('Seleccione la presentación del Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.');
+                            return false;
+                        }else if($('#form_i_nrofolio_dependencia').val()==''){
+                            alert('Ingrese el número de Folio Real.');
+                            return false;
+                        }else if(dependenciaId == 1 && $('.alquilerDependencia').is(':checked') == false){
+                            alert('Seleccione si la infraestructura es arrendada o no.');
+                            return false;
+                        }else if($('#form_i_esalquiler_dependencia_0').is(':checked') == true && $('#form_i_contrato_dependencia').val()==''){
+                            alert('Debe adjuntar la copia notariada del contrato de arrendamiento.');
+                            return false;
+                        }else if($('#form_i_convenio_dependencia').val()==''){
+                            alert('Debe adjuntar convenio vigente de prestación de servicios.');
+                            return false;
+                        }else if($('#form_i_certificacion_gam').val()==''){
+                            alert('Debe adjuntar Certificación emitida por el Gobierno Autónomo Municipal Correspondiente.');
+                            return false;
+                        }else if($('#form_i_certificacionde_convenio').val()==''){
+                            alert('Debe adjuntar Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios.');
+                            return false;
+                        }else if($('#form_i_acta_constitucion').is(':checked') == false){
+                            alert('Seleccione la presentación del Copia Notariada del Acta de Constitución y estatutos de la Institución prestadora de servicios.');
+                            return false;
+                        }else if($('#form_i_form_fundaempresa').is(':checked') == true && $('#form_nro_fundaempresa').val()==''){
+                            alert('Ingrese el número de la Matrícula de Comercio.');
+                            return false;                     
+                        }else if($('#form_i_form_fundaempresa').is(':checked') == true && $('#form_fecha_fundaempresa').val()==''){
+                            alert('Ingrese la fecha de Inscripción de la Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit').is(':checked') == true && $('#form_nit_dependencia').val()==''){
+                            alert('Ingrese el número de N.I.T..');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit').is(':checked') == true && $('#form_i_balance_apertura').is(':checked') == false){
+                            alert('Seleccione la presentación del Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN.');
+                            return false;
+                        }else if($('#form_i_testimonioconvenio').val()==''){
+                            alert('Ingresar el Nro. del Testimonio de personeria jurídica de la entidad prestadora de servicio.');
+                            return false;
+                        }else if($('#form_fecha_testimonioconvenio').val()==''){
+                            alert('Ingresar la Fecha del Testimonio de personeria jurídica de la entidad prestadora de servicio.');
+                            return false;
+                        }
+                    }else{
+                        if($('#form_i_informe_dependencia').val()==''){
+                            alert('Debe adjuntar Informe estableciendo aspectos técnicos de infraestructura y de cambio de dependencia.');
+                            return false;
+                        }
+                    }
+                    if($('#form_i_certificadorue_dependencia').is(':checked') == false){
+                        alert('Seleccione la presentación del Original de Certificado RUE.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 37: //cambio de nombre
+                    if($('#form_i_solicitud_cn').val()==''){
+                        alert('Debe adjuntar la solicitud de cambio de nombre.');
+                        return false;
+                    }
+                    if(dependenciaId == 1 || dependenciaId == 2){
+                        if($('#form_i_ley_cn').is(':checked') == false){
+                            alert('Seleccione la presentación de la Ley emitida por el Gobierno Autónomo Municipal que autoriza el cambio de nombre.');
+                            return false;
+                        }
+                    }
+                    if(dependenciaId == 2 || dependenciaId == 3){
+                        if($('#form_i_actaconstitucion_cn').is(':checked') == false){
+                            alert('Seleccione la presentación de la Copia Notariada del Acta de Constitución y estatutos de la Unidad Educativa.');
+                            return false;
+                        }else if($('#form_i_copianit_cn').is(':checked') == true && $('#form_i_nit_cn').val()==''){
+                            alert('Ingrese el Nro. de N.I.T..');
+                            return false;
+                        }else if($('#form_i_nrotestimonio_cn').val()==''){
+                            alert('Ingrese el Nro. de testimonio del poder de representante legal.');
+                            return false;
+                        }else if($('#form_i_fecha_testimonio_cn').val()==''){
+                            alert('Ingrese la Fecha del testimonio del poder de representante legal.');
+                            return false;
+                        }else if($('#form_i_licenciafuncionamiento_cn').is(':checked') == false){
+                            alert('Seleccione la presentación de la Copia legalizada de la Licencia de Funcionamiento Municipal.');
+                            return false;
+                        }
+                    }
+                    if(dependenciaId == 3){
+                        if($('#form_i_form_fundaempresa_cn').is(':checked') == false){
+                            alert('Seleccione la presentación de la Copia del formulario de registro de comercio, emitido por FUNDAEMPRESA.');
+                            return false;                        
+                        }else if($('#form_i_nro_fundaempresa_cn').val()==''){
+                            alert('Ingrese el Nro. de la Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_nro_fundaempresa_cn').val()==''){
+                            alert('Ingrese el Nro. de la Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_fecha_fundaempresa_cn').val()==''){
+                            alert('Ingrese la fecha de Inscripción de la Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_licenciafuncionamiento_cn').is(':checked') == false){
+                            alert('Seleccione la presentación de la Copia legalizada de la Licencia de Funcionamiento Municipal.');
+                            return false;
+                        }
+                    }
+                    if($('#form_i_certificadorue_cn').is(':checked') == false){
+                        alert('Seleccione la presentación del Original del Certificado RUE.');
+                        return false;                        
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 38: //cambio de jurisdiccion administrativa
+                    if($('#form_i_resolucion_jur').val()==''){
+                        alert('Debe adjuntar la Resolución Administrativa de Autorización de apertura y funcionamiento emitida por la DDE.');
+                        return false;
+                    }else if($('#form_i_certificacion_jur').val()==''){
+                        alert('Debe adjuntar el Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuyo cambio de jurisdicción administrativa es del área rural o urbana.');
+                        return false;
+                    }else if($('.area_jur').is(':checked') == false){
+                        alert('Seleccione el área geográfica.');
+                        return false;
+                    }
+                    if(dependenciaId == 2){
+                        if($('#form_i_cert_convenio_jur').is(':checked') == false){
+                            alert('Seleccione la presentación del Certificación de convenio emitido por el responsable de la Institución prestadora de Servicios.');
+                            return false;
+                        }
+                    }
+                    if($('#form_i_certificadorue_jur').is(':checked') == false){
+                        alert('Seleccione la presentación del Original de Certificado RUE.');
+                        return false;
+                    }else if($('#form_ii_planos_jur').is(':checked') == false){
+                        alert('En el punto 2. Requisitos de Infraestructura, seleccione la presentación de planos arquitectónicos.');
+                        return false;
+                    }else if($('#form_ii_inventario_jur').is(':checked') == false){
+                        alert('En el punto 2. Requisitos de Infraestructura, seleccione la presentación del Inventario del mobiliario y equipamento de la unidad educativa de acuerdo a norma.');
+                        return false;
+                    }else if($('#form_iii_partemensual_jur').is(':checked') == false){
+                        alert('En el punto 3. Requisitos de Administrativos, seleccione la presentación del parte mensual.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 39: //Fusion
+                    break;
+                case 40: //desglose
+                    break;
+                case 41: //cambio de infraestructura
+                    if($('#form_i_solicitud_infra').val()==''){
+                        alert('Debe adjuntar la Solicitud de Cambio de Infraestructura.');
+                        return false;
+                    }else if($('#form_i_certificacion_infra').val()==''){
+                        alert('Debe adjuntar la Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana.');
+                        return false;
+                    }
+                    if(dependenciaId == 2){
+                        if($('#form_i_certificacionconvenio_infra').val()==''){
+                            alert('Debe adjuntar la Certificación de convenio emitida por el reponsable de la Entidad Prestadora de Servicios .');
+                            return false;
+                        }    
+                    }
+                    if($('#form_i_resolucion_infra').val()==''){
+                        alert('Debe adjuntar la Adjuntar Fotocopia legalizada de la Resolución Administrativa de Autorización de funcionamiento emitida por la DDE.');
+                        return false;
+                    }else if($('#form_i_certificadorue_infra').is(':checked') == false){
+                        alert('Seleccione la presentación del Original de Certificado RUE.');
+                        return false;
+                    }else if($('#form_ii_folio_infra').is(':checked') == false){
+                        alert('En el punto 2. Requisitos de Infraestructura, seleccione la presentación de la Copia legalizada del testimonio o folio real emitido por Derechos Reales a nombre de la Entidad prestadora de servicio (fiscal o convenio) o propietario (persona natural o jurídica, en caso de Unidad Educativa Privada).');
+                        return false;                    
+                    }else if($('#form_ii_nrofolio_infra').val()==''){
+                        alert('En el punto 2. Requisitos de Infraestructura, ingresar el Nro. de Folio.');
+                        return false;
+                    }else if($('#form_ii_planos_infra').is(':checked') == false){
+                        alert('En el punto 2. Requisitos de Administrativos, seleccione la presentación de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal para infraestructura.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 42: //cierre temporal
+                case 43: //cierre definitivo
+                    if($('#form_i_solicitud_cierre').val()==''){
+                        alert('Debe adjuntar la Solicitud de cierre temporal o definitivo.');
+                        return false;
+                     }else if($('#form_i_resolucion_cierre').val()==''){
+                        alert('Debe adjuntar la Fotocopia legalizada de la Resolución Administrativa de Autorización de apertura y funcionamiento de la unidad educativa.');
+                        return false;
+                    }else if($('#form_i_archivos_cierre').is(':checked') == false){
+                        alert('Seleccione la presentación de los Archivos electrónicos e impresos actulizados de toda la documentación d elos estudiantes que cursaron sus estudios en la unidad educativa (RUDE, centralizador de calificaciones, boletines y otros).');
+                        return false;
+                    }else if($('#form_i_certificadorue_cierre').is(':checked') == false){
+                        alert('Seleccione la presentación del Original de Certificado RUE.');
+                        return false;                    
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos verificados con éxtio.</div>');
+                    }
+                    break;
+                case 44: //Reapertura
+                    break;
+                case 45: //nuevo certifcado rue
+                    if($('#form_i_solicitud_nuevorue').val()==''){
+                        alert('Debe adjuntar el Adjuntar Informe Técnico circunstanciado de extravío del Original del Certificado RUE.');
+                        return false;                  
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxtio.</div>');
+                    }
+                    break;
+                case 54: //apertura
+                    if($('#form_i_solicitud_apertura').val()==''){
+                        alert('Debe adjuntar la solicitud de apertura.');
+                        return false;                  
+                    }
+                    if(dependenciaId == 1){
+                        if($('#form_i_solicitud_apertura').val()==''){
+                            alert('Debe adjuntar la solicitud de apertura.');
+                            return false;
+                        }else if($('#form_i_folio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.');
+                            return false;
+                        }else if($('#form_i_certificacion_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.');
+                            return false;
+                        }else if($('.areaApertura').is(':checked')==false){
+                            alert('Seleccione el área geográfica.');
+                            return false;
+                        }else if($('#form_i_compromiso_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación del Compromiso Municipal de dotación y mantenimiento de infraestructura y equipamiento para la unidad educativa a crearse (en caso de unidades educativas fiscales y de convenio).');
+                            return false;
+                        }
+                    }
+                    if(dependenciaId == 2){
+                        if($('#form_i_representante_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio de Poder del representante legal.');
+                            return false;
+                        }else if($('#form_i_actafundacion_apertura').val()==''){
+                            alert('Debe adjuntar la Copia legalizada del Acta de Fundación');
+                            return false;
+                        }else if($('#form_i_folio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre de la entidad prestadora de servicio.');
+                            return false;
+                        }else if($('#form_i_convenio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación del Convenio vigente de prestación de servicios educativos firmado entre la Institución Prestadora de Servicios y el Ministerio de Educación (ME) o el Director Departamental de Educación, según corresponda.');
+                            return false;                        
+                        }else if($('#form_i_certificacion_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.');
+                            return false;
+                        }else if($('.areaApertura').is(':checked')==false){
+                            alert('Seleccione el área geográfica.');
+                            return false;
+                        }else if($('#form_i_constitucion_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia notaria actualizada del Acta de Constitución y estatutos de la Institución prestadora de servicios.');
+                            return false;
+                        }else if($('#form_i_form_fundaempresa_apertura').is(':checked')==true && $('#form_nro_fundaempresa_apertura').val()==''){
+                            alert('Ingrese el Nro. de Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_form_fundaempresa_apertura').is(':checked')==true && $('#form_fecha_fundaempresa_apertura').val()==''){
+                            alert('Ingrese la fecha de inscripción de la Matrícula de Comercio.');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==true && $('#form_nit_apertura').val()==''){
+                            alert('Ingrese el Nro. de N.I.T..');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==true && $('#form_i_balance_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación del Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).');
+                            return false;
+                        }else if($('#form_i_testimonioconvenio').val()==''){
+                            alert('Ingrese el Nro. del Testimonio de personeria jurídica emitido por la entidad correspondiente');
+                            return false;
+                        }
+                    }
+                    if(dependenciaId == 3){
+                        var constitucion = 1;
+                        if (constitucion != 5 && $('#form_i_personeria_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio de la Personería Jurídica.');
+                            return false;
+                        }else if (constitucion == 5 && $('#form_i_afcoop_apertura').val()==''){
+                            alert('Debe adjuntar la Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas.');
+                            return false;
+                        }else if($('#form_i_fotocopia_nit_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia de registro del Número de Identificación Tributaria (NIT).');
+                            return false;
+                        }else if ($('#form_nit_apertura').val()==''){
+                            alert('Ingrese el Nro. de N.I.T.');
+                            return false;
+                        }else if(constitucion != 2 && $('#form_i_balance_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia de Balance de apertura, sellado por el Servicio de Impuestos Nacionales SIN.');
+                            return false;
+                        }else if($('#form_i_representante_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada del Testimonio de Poder del representante legal.');
+                            return false;
+                        }else if($('#form_i_copia_ci_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia de Cedula de Identidad del representante legal.');
+                            return false;
+                        }else if ($('#form_ci_apertura').val()==''){
+                            alert('Ingrese el Nro. de C.I.');
+                            return false;
+                        }else if ($('#form_i_funcionamiento_apertura').val()==''){
+                            alert('Debe adjuntar la Copia legalizada de la Licencia de Funcionamiento Municipal.');
+                            return false;
+                        }else if($('#form_i_estatutos_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia notariada de la escritura de constitución y sus estatutos.');
+                            return false;
+                        }else if ((constitucion == 2 || constitucion == 6) && $('#form_i_certificacionculto_apertura').val()==''){
+                            alert('Debe adjuntar la Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores.');
+                            return false;
+                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_i_form_fundaempresa_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia del formulario virtual de Registro de Comercio, emitida por FUNDAEMPRESA.');
+                            return false;
+                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_nro_fundaempresa_apertura').val()==''){
+                            alert('Ingrese el Nro. de Matrícula de Comercio.');
+                            return false;
+                        }else if ((constitucion == 3 || constitucion == 4 || constitucion == 6) && $('#form_fecha_fundaempresa_apertura').val()==''){
+                            alert('Ingrese la Fecha de Inscripción.');
+                            return false;
+                        }else if ($('#form_i_empleadores_apertura').val()==''){
+                            alert('Debe adjuntar el Registro obligatorio de empleadores.');
+                            return false;
+                        }else if (constitucion == 6 && $('#form_i_convenio_apertura').is(':checked')==false){
+                            alert('Seleccione la presentación de la Copia legalizada de convenio entre estados.');
+                            return false;
+                        }
+                    }
+                    if (dependenciaId == 3 && $('.alquilerApertura').is(':checked')==false){
+                        alert('Seleccione si la infraestructura es arrendada o no.');
+                        return false;
+                    }else if (dependenciaId == 3 && $('#form_ii_alquiler_apertura_0').is(':checked')==true && $('#form_ii_contrato_apertura').val()==''){
+                        alert('Debe adjuntar la Copia notariada de compromiso de contrato por un plazo no menor a seis años');
+                        return false;
+                    }else if (dependenciaId == 3 && $('#form_ii_alquiler_apertura_1').is(':checked')==true && $('#form_ii_folio_apertura').is(':checked')==false){
+                        alert('Seleccione la presentación de la Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales estableciendo que la infraestructura esta destinada a la unidad educativa y pertenece a los propietarios de la misma.');
+                        return false;
+                    }else if($('#form_ii_inventario_apertura').is(':checked')==false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación del Inventario de mobiliario y equipamento de la Unidad Educativa de acuerdo a norma.');
+                        return false;
+                    }else if($('#form_ii_planos_apertura').is(':checked')==false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de la Copia legalizada de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal correspondiente, para infraestructura de ambientes propios, que contemplen la adecuación progresiva para la atención de la población con discapacidad leve, en el caso de área dispersa, el cumplimiento de este requisito se incluirá en el informe del Director Distrital de Educación correspondiente.');
+                        return false;
+                    }else if($('#form_ii_planos_apertura').is(':checked')==false){
+                        alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación de la Copia legalizada de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal correspondiente, para infraestructura de ambientes propios, que contemplen la adecuación progresiva para la atención de la población con discapacidad leve, en el caso de área dispersa, el cumplimiento de este requisito se incluirá en el informe del Director Distrital de Educación correspondiente.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_reglamento_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Reglamento interno de funcionamiento de disposiciones administrativas.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_convivencia_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Reglamento de convivencia armónica y pacífica que contenga los mecanismos preventivos, medidas reparadoras de solución de conflictos, tipificación de infracciones, procedimientos y sanciones.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_manual_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Manual de organización y funciones (misión, objetivos, estructura organizativa, objetivos de áreas, descripción y objetivos de funciones, superviciones y coordinación).');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_kardex_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Kardex de maestras y maestros y personal administrativo.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_sippase_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Cetificado SIPPASE y REJAP del plantel docente y administrativo (en mérito al D.S. Nro. 1302 y 1320).');
+                        return false;
+                    }else if($('#form_iii_poa_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación del Plan Operativo Anual (POA) de la gestión en la que iniarán actividades, firmado por la o el Director Distrital de Educación correspondiente.');
+                        return false;
+                    }else if(dependenciaId == 3 && $('#form_iii_contratos_apertura').is(':checked')==false){
+                        alert('En el punto 3. Requisitos Administrativos, seleccione la presentación de los Contratos firmados por el personal docente con pertinencia académica.');
+                        return false;
+                    }else{
+                        $('#validar'+id).val(1);
+                        $('#msg'+id).empty();
+                        $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxtio.</div>');
+                    }
+                    break;
+            }
+        }
+
+        function validar(){
+            //alert($('#tabla tr').length);
+            if($('#form_institucioneducativa').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar el nombre de la nueva Unidad Educativa.');
+                return false;
+            }else if($('#form_fechafundacion').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar la fecha de fundación.');
+                return false;
+            }else if($('#form_telefono').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar el Telefono de Referencia.');
+                return false;
+            }else if($('#form_director').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar los Datos del Director/Encargado/Propietario.');
+                return false;
+            }else if($('#form_departamento2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_provincia2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_municipio2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_canton2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el canton de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_localidad2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la localidad de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_departamento2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_provincia2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_municipio2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_comunidad2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la comunidad de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_distrito').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el distrito educativo.');
+                return false;
+            }else if($('#form_zona').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la zona.');
+                return false;
+            }else if($('#form_direccion').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la direccion.');
+                return false;
+            }else if($('#form_dependencia').val()==''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Dependencia.');
+                return false;
+            }else if($('#form_dependencia').val() == 2 && $('#form_conveniotipo').val() == ''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el tipo de convenio.');
+                return false;
+            }else if($('#form_dependencia').val() == 3 && $('#form_constitucion').val() == ''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Constitución de la Unidad Educativa.');
+                return false;
+            }else if($('.nivel').is(':checked') == false){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el o los niveles de organización curricular.');
+                return false;
+            }else if($('.nivel').is(':checked') == true){
+                $('.nivel').each(function() {
+                    if ($(this).is(':checked') ) {
+                        if($(this).val() == 11 && ($('#form_cantidad_11_1').val()=='' || $('#form_cantidad_11_2').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Inicial en Familia Comunitaria.');
+                            return false;            
+                        }
+                        if($(this).val() == 12 && ($('#form_cantidad_12_1').val()=='' || $('#form_cantidad_12_2').val()=='' || $('#form_cantidad_12_3').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Primaria Comunitaria Vocacional.');
+                            return false;            
+                        }
+                        if($(this).val() == 13 && ($('#form_cantidad_13_1').val()=='' || $('#form_cantidad_13_2').val()=='' || $('#form_cantidad_13_3').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Secundaria Comunitaria Productiva.');
+                            return false;            
+                        }
+                    }
+                });
+            }
+            if($('#form_cantidad_adm').val() == ''){
+                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de personal administrativo.');
+                return false;
+            }else if($('#form_cantidad_maestro').val() == ''){
+                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de Docente (Maestros).');
+                return false;
+            }else if($('#form_latitud').val() == -16.50626 || $('#form_longitud').val() == -68.12794){
+                alert('Debe seleccionar la informacion georeferencial.');
+                return false;
+            }else if($('#modal_requisitos_54').length == 0){
+                alert('Ingrese los requisitos de la solicitud de Apertura de Unidad Educativa');
+                return false;
+            }else if($('#validar54').val() == 0){
+                alert('Debe validar los requisitos de la nueva Unidad Educativa');
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        $("#form_dependencia").change(function(){
+            //alert($(this).val());
+            $('#convenio').hide();
+            $('#constitucion').hide();
+            if($(this).val()==2){
+                $('#convenio').show();
+            }
+            if($(this).val()==3){
+                $('#constitucion').show();
+            }
+        });
+
+        $(".nivel").change(function () {	 
+            if($(this).val()==11){
+                $('.nivel11').val('');
+                if($(this).is(':checked')==true){
+                    $('.nivel11').attr('disabled',false);
+                }else{
+                    $('.nivel11').attr('disabled',true);
+                }
+            }
+            if($(this).val()==12){
+                $('.nivel12').val('');
+                if($(this).is(':checked')==true){
+                    $('.nivel12').attr('disabled',false);
+                }else{
+                    $('.nivel12').attr('disabled',true);
+                }
+            }
+            if($(this).val()==13){
+                $('.nivel13').val('');
+                if($(this).is(':checked')==true){
+                    $('.nivel13').attr('disabled',false);
+                }else{
+                    $('.nivel13').attr('disabled',true);
+                }
+            }
+        });
+
+        $(".dato54").click(function(){
+            $('#validarApertura').val(0);
+            $('#msgApertura').empty();
+        });
+
+    </script>
+</body>
+    <!--/ END BODY -->
+
+</html>

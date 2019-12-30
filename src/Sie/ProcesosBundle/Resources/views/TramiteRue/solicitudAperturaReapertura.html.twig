@@ -1,0 +1,1252 @@
+{% if datos %}
+    {% if tramite_tipo.id == 54 %} {# apertura #}
+        <style>
+            #map2{
+                width: 700px ;
+                height: 500px ;
+                background-color: grey;
+                position: relative;
+                outline: none;
+            }
+		
+        </style>
+        <div class="row" id="solicitud">
+            <div class="col-md-12">
+                <!-- Start basic wizard vertical -->
+                <div id="basic-wizard-vertical">
+                    <div class="panel panel-tab panel-tab-double panel-tab-vertical rounded shadow">
+                        <!-- Start tabs heading -->
+                        <div class="panel-heading no-padding col-md-3">
+                            <ul class="nav nav-tabs nav-pills">
+                                <li class="active">
+                                    <a href="#tab1-1" data-toggle="tab" aria-expanded="true">
+                                        <i class="fa fa-file-text"></i>
+                                        <div>
+                                            <span class="text-strong">DATOS GENERALES</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-2" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-home"></i>
+                                        <div>
+                                            <span class="text-strong">UBICACIÓN GEOGRÁFICA</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-3" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-check"></i>
+                                        <div>
+                                            <span class="text-strong">DEPENDENCIA</span>
+                                            <span class="text-strong">NIVEL</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-4" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-users"></i>
+                                        <div>
+                                            <span class="text-strong">CANTIDAD</span>
+                                            <span><small>ESTUDIANTES POR GRADO</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-5" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-user"></i>
+                                        <div>
+                                            <span class="text-strong">CANTIDAD</span>
+                                            <span><small>PERSONAL</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-6" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-globe"></i>
+                                        <div>
+                                            <span class="text-strong">INFORMACIÓN</span>
+                                            <span class="text-strong">GEOREFERENCIAL</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.panel-heading -->
+                        <!--/ End tabs heading -->
+                        <!-- Start tabs content -->
+                        <div class="panel-body tab-content col-md-9">
+                            <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            DATOS GENERALES<br>
+                                        </h4>
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Nombre de la Unidad Educativa:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{datos['Apertura de Unidad Educativa'].institucioneducativa}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Fecha de Fundación:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{datos['Apertura de Unidad Educativa'].fechafundacion}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Telefono de Referencia:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{datos['Apertura de Unidad Educativa'].telefono}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Datos del Director/Encargado/Propietario:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{datos['Apertura de Unidad Educativa'].director}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-2">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            UBICACIÓN GEOGRÁFICA<br>
+                                        </h4>
+                                        <div class="form-body">
+                                            {% if datos['Apertura de Unidad Educativa'].siecomparte is defined  %}
+                                                <div class="row">
+                                                    <div id="msgcomparte"></div>
+                                                    COMPARTE EL EDIFICIO CON (Señale solo 1)
+                                                    <table class="table table-bordered table-striped" id="tabla">
+                                                        <tr>
+                                                            <th>Coódigo SIE</th> 
+                                                            <th>Nombre de la Institucion Educativa</th>
+                                                            <th>Subsistema</th>
+                                                            <th>Dependencia</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{datos['Apertura de Unidad Educativa'].siecomparte}}</td> 
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                </div></br>
+                                            {% endif %}
+                                            <div class="row">
+                                                {% if datos['Apertura de Unidad Educativa'].lejurisdiccion is defined %}
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-4">  
+                                                            <strong>Código Edificio Educativo:</strong>
+                                                        </div>
+                                                        <div class="col-md-8 form-inline">
+                                                            {{datos['Apertura de Unidad Educativa'].lejurisdiccion}}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <h5 class="page-header">Ubicación Geográfica</br>(Censo 2001 - R.U.E.)</h5>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Departamento:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].departamento2001}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Provincia:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].provincia2001}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Municipio:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].municipio2001}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Cantón:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].canton2001}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Localidad:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].localidad2001}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <h5 class="page-header">Ubicación Geográfica </br>
+                                                        (Censo 2012 - información referencial)</h5>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Departamento:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].departamento2012}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Provincia:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].provincia2012}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Municipio:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].municipio2012}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Comunidad:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].comunidad2012}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Distrito:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].distrito}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h5 class="page-header">Dirección</h5>
+                                                </div>
+                                                <div class="form-group  col-md-12">
+                                                    <div class="col-md-2">
+                                                        <strong>Zona:</strong>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        {{datos['Apertura de Unidad Educativa'].zona}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group  col-md-12">
+                                                    <div class="col-md-2">
+                                                        <strong>Dirección:</strong>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        {{datos['Apertura de Unidad Educativa'].direccion}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            DEPENDENCIA<br>
+                                        </h4>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-4">
+                                                    <strong>Dependencia:</strong>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{datos['Apertura de Unidad Educativa'].dependencia.dependencia}}
+                                                </div>
+                                            </div>
+                                            {% if datos['Apertura de Unidad Educativa'].dependencia.id == 2 %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Tipo de Convenio:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{datos['Apertura de Unidad Educativa'].conveniotipo.convenio}}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                            {% if datos['Apertura de Unidad Educativa'].dependencia.id == 3 %}
+                                                <div class="form-group col-md-12" >
+                                                    <div class="col-md-4">
+                                                        <strong>Constitución de la Unidad Educativa:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{datos['Apertura de Unidad Educativa'].constitucion.id}}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <h4 class="page-header">
+                                        NIVEL DE ORGANIZACIÓN CURRICULAR<br>
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {% set nivel = [] %}
+                                                {% for n in datos['Apertura de Unidad Educativa'].niveltipo %}
+                                                    <li type=square>{{ n.nivel }}</li> 
+                                                    {% set nivel = nivel|merge([n.id]) %}
+                                                {% endfor %}  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                        CANTIDAD DE ESTUDIANTES POR GRADO<br>
+                                        </h4>
+                                        <div class="row">
+                                            {% if 11 in nivel %}
+                                                <div class="col-md-12">
+                                                    <strong>Educación Inicial en Familia Comunitaria</strong>
+                                                    <table class="table table-bordered table-striped" id="tabla">
+                                                        <tr>
+                                                            <th>1ro</th> 
+                                                            <th>2do</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{datos['Apertura de Unidad Educativa'].cantidad_11_1}}</td> 
+                                                            <td>{{datos['Apertura de Unidad Educativa'].cantidad_11_2}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                            {% if 12 in nivel %}
+                                                <div class="col-md-12">
+                                                    <strong>Educación Primaria Comunitaria Vocacional</strong>
+                                                    <table class="table table-bordered table-striped" id="tabla">
+                                                        <tr>
+                                                            <th>1ro</th> 
+                                                            <th>2do</th>
+                                                            <th>3ro</th> 
+                                                            <th>4to</th>
+                                                            <th>5to</th> 
+                                                            <th>6to</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_12_1 }}</td> 
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_12_2 }}</td>
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_12_3 }}</td> 
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_12_4 }}</td>
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_12_5 }}</td> 
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_12_6 }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                            {% if 13 in nivel %}
+                                                <div class="col-md-12">
+                                                    <strong>Educación Secundaria Comunitaria Productiva</strong>
+                                                    <table class="table table-bordered table-striped" id="tabla">
+                                                        <tr>
+                                                            <th>1ro</th> 
+                                                            <th>2do</th>
+                                                            <th>3ro</th> 
+                                                            <th>4to</th>
+                                                            <th>5to</th> 
+                                                            <th>6to</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_13_1 }}</td> 
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_13_2 }}</td>
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_13_3 }}</td> 
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_13_4 }}</td>
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_13_5 }}</td> 
+                                                            <td>{{ datos['Apertura de Unidad Educativa'].cantidad_13_6 }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-5">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                        CANTIDAD DE PERSONAL<br>
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-striped table-bordered" id="tabla">
+                                                    <tr>
+                                                        <th>Administrativo</th> 
+                                                        <th>Docente (Maestros)</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ datos['Apertura de Unidad Educativa'].cantidad_adm }}</td> 
+                                                        <td>{{ datos['Apertura de Unidad Educativa'].cantidad_maestro }}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                        INFORMACIÓN GEOREFERENCIAL<br>
+                                        </h4>
+                                        <div id="map2"></div>
+                                        <div class="form-group col-md-6 form-inline">
+                                            <strong>Latitud:</strong> {{ datos['Apertura de Unidad Educativa'].latitud }}
+                                            <input type="hidden" id="latitud2" value="{{ datos['Apertura de Unidad Educativa'].latitud }}">
+                                        </div>
+                                        <div class="form-group col-md-6 form-inline">
+                                            <strong>Longitud:</strong> {{ datos['Apertura de Unidad Educativa'].longitud }}
+                                            <input type="hidden" id="longitud2" value="{{ datos['Apertura de Unidad Educativa'].longitud }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.panel-body -->
+                        <!--/ End tabs content -->
+                        <!--/ End pager -->
+                    </div><!-- /.panel -->
+                </div><!-- /#basic-wizard-horizontal -->
+                <!--/ End basic wizard horizontal-->
+            </div>
+        </div></br>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal_54_solicitud" data-placement="top" title="Requisitos de apertura"><i class="glyphicon glyphicon-plus"></i>Ver Requisitos Presentados</button>
+            </div>
+        </div>
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_54_solicitud" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" id="modal_54_solicitud">
+                <div class="modal-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{tramite_tipo.tramiteTipo|upper}}</span></h3>
+                            </div>
+                            <div class="pull-rigth">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Start basic wizard horizontal -->
+                                    <div id="basic-wizard-horizontal">
+                                        <div class="panel panel-tab rounded shadow">
+                                            <!-- Start tabs heading -->
+                                            <div class="panel-heading no-padding">
+                                                <ul class="nav nav-tabs nav-pills">
+                                                    <li class="active">
+                                                        <a href="#tab1-1-solicitud" data-toggle="tab" aria-expanded="false">
+                                                            <i class="fa fa-file-text"></i>
+                                                            <div>
+                                                                <span class="text-strong">1. Requisitos Legales</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="">
+                                                        <a href="#tab1-2-solicitud" data-toggle="tab" aria-expanded="false">
+                                                            <i class="glyphicon glyphicon-home"></i>
+                                                            <div>
+                                                                <span class="text-strong">2. Requisitos de infraestructura</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="">
+                                                        <a href="#tab1-3-solicitud" data-toggle="tab" aria-expanded="false">
+                                                            <i class="glyphicon glyphicon-home"></i>
+                                                            <div>
+                                                                <span class="text-strong">2. Requisitos Administrativos</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div><!-- /.panel-heading -->
+                                            <!--/ End tabs heading -->
+                                            <!-- Start tabs content -->
+                                            <div class="panel-body tab-content">
+                                                <div class="tab-pane fade inner-all in active" id="tab1-1-solicitud">
+                                                    <div class="row">
+                                                        <div  class="form-group col-md-12">
+                                                            <div class="col-md-8">
+                                                                {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 1 %}
+                                                                    Solicitud de apertura dirigida a la Dirección Distrital Educativa correspondiente:
+                                                                {% elseif datos[tramite_tipo.tramiteTipo].dependencia.id == 2 %}
+                                                                    Solicitud de apertura dirigida a la Dirección Distrital Educativa correspondiente por la o el representante legal de la entidad prestadora de servicio:
+                                                                {% elseif datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
+                                                                    Solicitud de apertura de la unidad educativa privada, dirigida por el propietario o representante legal, a la Dirección Distrital Educativa correspondiente:
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_solicitud_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                    <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 1 %}
+                                                            <div  class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Acta de Fundación de la Unidad Educativa
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_actafundacion_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                        <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre del Gobierno Autónomo Municipal correspondiente.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Área geográfica:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[tramite_tipo.tramiteTipo].i_area_apertura}}
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Compromiso Municipal de dotación y mantenimiento de infraestructura y equipamiento para la unidad educativa a crearse (en caso de unidades educativas fiscales y de convenio).</label>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 2 %}
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia legalizada del Testimonio de Poder del representante legal.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Copia legalizada del Acta de Fundación
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_actafundacion_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                        <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales a nombre de la entidad prestadora de servicio.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Convenio vigente de prestación de servicios educativos firmado entre la Institución Prestadora de Servicios y el Ministerio de Educación (ME) o el Director Departamental de Educación, según corresponda.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_convenioadministracion_apertura == 1 %}checked="checked" {% endif %} type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Convenio de administración de infraestructura firmado entre el Gobierno Autónomo Municipal correspondiente y la institución prestadora del servicio (si corresponde).</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Área geográfica:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[tramite_tipo.tramiteTipo].i_area_apertura}}
+                                                                </div>
+                                                            </div>                                                            
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia notaria actualizada del Acta de Constitución y estatutos de la Institución prestadora de servicios.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_registro_culto_apertura == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">En caso de Institucionaes Religiosas, fotocopia legalizada del certificado de registro de culto emitido por el Ministerio de Relaciones Exteriores.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_org_nogubernamental_apertura == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Para organizaciones no gubernamentales, fotocopia legalizada del certificado de registro del Viceministerio de Inversion Pública y Financiamiento Externo.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_form_fundaempresa_apertura == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia legalizada del formulario virtual de registro de comercio, emitido por FUNDAEMPRESA, (si corresponde).</label>
+                                                                </div>
+                                                            </div>
+                                                            {% if datos[tramite_tipo.tramiteTipo].i_form_fundaempresa_apertura == 1 %}
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Nro. de Matrícula de Comercio:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[tramite_tipo.tramiteTipo].nro_fundaempresa_apertura}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Fecha de Inscripción:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[tramite_tipo.tramiteTipo].fecha_fundaempresa_apertura}}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_fotocopia_nit_apertura == 1 %} checked="checked" {% endif %} type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Fotocopia legalizada del certificado del Número de Identificación Tributaria NIT, (si corresponde).</label>
+                                                                </div>
+                                                            </div>
+                                                            {% if datos[tramite_tipo.tramiteTipo].i_fotocopia_nit_apertura == 1 %}
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Nro. de N.I.tramiteTipo.:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[tramite_tipo.tramiteTipo].nit_apertura}}
+                                                                    </div>
+                                                                </div>
+                                                                <div  class="form-group col-md-12 ">
+                                                                    <div class="ckbox ckbox-primary">
+                                                                        <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                        <label for="checkbox-primary">Balance de apertura de la unidad educativa, sellado por el Servicio de Impuestos Nacionales SIN (si corresponde).</label>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Nro. del Testimonio de personeria jurídica emitido por la entidad correspondiente:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[tramite_tipo.tramiteTipo].i_testimonioconvenio}}
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id != 5 %}
+                                                                <div  class="form-group col-md-12 ">
+                                                                    <div class="ckbox ckbox-primary">
+                                                                        <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                        <label for="checkbox-primary">Copia legalizada del Testimonio de la Personería Jurídica.</label>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id == 5 %}
+                                                                <div  class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Copia legalizada de la Resolución de Personalidad Jurídica Conferida por AFCOOP e inscrita en el Registro Estatal de Cooperativas:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_afcoop_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                            <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia de registro del Número de Identificación Tributaria (NIT).</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Nro. de N.I.tramiteTipo.:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[tramite_tipo.tramiteTipo].nit_apertura}}
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia de Balance de apertura, sellado por el Servicio de Impuestos Nacionales SIN.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia legalizada del Testimonio de Poder del representante legal.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia de Cedula de Identidad del representante legal.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Nro. de C.I.:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[tramite_tipo.tramiteTipo].ci_apertura}}
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Copia legalizada de la Licencia de Funcionamiento Municipal:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_funcionamiento_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                        <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia notariada de la escritura de constitución y sus estatutos.</label>
+                                                                </div>
+                                                            </div>
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id in [2,6] %}
+                                                                <div  class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Certificación de registro de culto emitido por el Ministerio de Relaciones Exteriores:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_certificacionculto_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                            <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id in [3,4,6] %}
+                                                                <div  class="form-group col-md-12 ">
+                                                                    <div class="ckbox ckbox-primary">
+                                                                        <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                        <label for="checkbox-primary">Copia del formulario virtual de Registro de Comercio, emitida por FUNDAEMPRESA.</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Nro. de Matrícula de Comercio:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[tramite_tipo.tramiteTipo].nro_fundaempresa_apertura}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Fecha de Inscripción:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{datos[tramite_tipo.tramiteTipo].fecha_fundaempresa_apertura}}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if datos[tramite_tipo.tramiteTipo].constitucion.id == 6 %}
+                                                                <div  class="form-group col-md-12 ">
+                                                                    <div class="ckbox ckbox-primary">
+                                                                        <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
+                                                                        <label for="checkbox-primary">Copia legalizada de convenio entre estados.</label>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade inner-all" id="tab1-2-solicitud">
+                                                    <div class="row">
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
+                                                            <div class="form-group col-md-12">
+                                                                <div class="col-md-8">
+                                                                    Infraestructura arrendada:
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{datos[tramite_tipo.tramiteTipo].ii_alquiler_apertura}}
+                                                                </div>
+                                                            </div>
+                                                            {% if datos[tramite_tipo.tramiteTipo].ii_alquiler_apertura == 'SI' %}
+                                                                <div  class="form-group col-md-12">
+                                                                    <div class="col-md-8">
+                                                                        Contrato:
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].ii_contrato_apertura )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                            <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            {% else %}
+                                                                <div  class="form-group col-md-12 ">
+                                                                    <div class="ckbox ckbox-primary">
+                                                                        <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                        <label for="checkbox-primary1">Copia legalizada del Testimonio o Folio Real emitido po Derechos Reales estableciendo que la infraestructura esta destinada a la unidad educativa y pertenece a los propietarios de la misma.</label>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                        <div  class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">2.1 Inventario de mobiliario y equipamento de la Unidad Educativa de acuerdo a norma.</label>
+                                                            </div>
+                                                        </div>
+                                                        <div  class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">2.2 Copia legalizada de los Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal correspondiente, para infraestructura de ambientes propios, que contemplen la adecuación progresiva para la atención de la población con discapacidad leve, en el caso de área dispersa, el cumplimiento de este requisito se incluirá en el informe del Director Distrital de Educación correspondiente.</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade inner-all" id="tab1-3-solicitud">
+                                                    <div class="row">
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">3.1 Reglamento interno de funcionamiento de disposiciones administrativas.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">3.2 Reglamento de convivencia armónica y pacífica que contenga los mecanismos preventivos, medidas reparadoras de solución de conflictos, tipificación de infracciones, procedimientos y sanciones.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">3.3 Manual de organización y funciones (misión, objetivos, estructura organizativa, objetivos de áreas, descripción y objetivos de funciones, superviciones y coordinación).</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">3.4 Kardex de maestras y maestros y personal administrativo.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">3.5 Cetificado SIPPASE y REJAP del plantel docente y administrativo (en mérito al D.S. Nro. 1302 y 1320).</label>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        <div  class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">Plan Operativo Anual (POA) de la gestión en la que iniarán actividades, firmado por la o el Director Distrital de Educación correspondiente.</label>
+                                                            </div>
+                                                        </div>
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
+                                                            <div  class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">3.7 Contratos firmados por el personal docente con pertinencia académica.</label>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                            <!--/ End tabs content -->
+                                            <!--/ End pager -->
+                                        </div><!-- /.panel -->
+                                    </div><!-- /#basic-wizard-horizontal -->
+                                    <!--/ End basic wizard horizontal-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-dialog -->
+        </div>
+    {% else %} {# reapertura #}
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">1. DATOS GENERALES</strong></h5></div>
+        <div class="row" id="solicitud">
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CÓDIGO SIE:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.id }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CÓDIGO DE EDIFICIO EDUCATIVO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.le_juridicciongeografica_id }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPENDENCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.dependencia|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DISTRITO EDUCATIVO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.distrito }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>FECHA DE FUNDACIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {# {{ datos.fechafundacion|date('d-m-Y') }} #}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6"><strong>NIVELES DE ORGANIZACIÓN CURRICULAR:</strong>
+                        <ul>
+                            {% for n in datos.institucioneducativaNivel %}
+                                <li type=square>{{ n.nivel }}</li> 
+                            {% endfor %}            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>UNIDAD EDUCATIVA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.institucioneducativa }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ESTADO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.estadoinstitucion|upper }}
+                    </div>
+                </div>
+                {% if datos.institucioneducativa.dependencia_tipo_id == 2 %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+                            <strong>CONVENIO:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            {{ datos.institucioneducativa.convenio }}
+                        </div>
+                    </div>
+                {% endif %}
+                {# <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>TELEFONO DE REFERENCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.telefono1 }}
+                    </div>
+                </div> #}
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">2. UBICACIÓN GEOGRÁFICA</strong></h5></div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-12" style="background:#E9F9FC">
+                    <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPARTAMENTO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.departamento2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>PROVINCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.provincia2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.municipio2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>COMUNIDAD:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.comunidad2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ZONA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.zona|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DIRECCIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.direccion|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {% if datos.institucioneducativa.area_municipio == 'U' %}
+                            URBANO
+                        {% elseif datos.institucioneducativa.area_municipio == 'R'  %}
+                            RURAL
+                        {% else %}
+                            NO DEFINIDO
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12" style="background:#E9F9FC">
+                    <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPARTAMENTO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.departamento2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>PROVINCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.provincia2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.municipio2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CANTÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.canton2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>LOCALIDAD:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.localidad2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ZONA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.zona }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DIRECCIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.direccion }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">3. DATOS A MODIFICAR</strong></h5></div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped" id="tablahistorico">
+                        <tr>
+                            <th>Tipo de trámite</th> 
+                            <th>Dato antiguo</th>
+                            <th>Dato nuevo</th>
+                            <th>Ver Requisitos Presentados</th>
+                        </tr>
+                        <tr>
+                            <td>{{datos.tramites[0].tramite_tipo}}</td>
+                            <td>
+                                {{datos.institucioneducativa.estadoinstitucion|upper}}
+                            </td>
+                            <td>
+                                {{datos['Reapertura de Unidades Educativas'].estadoinstitucion|upper}}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_44" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>    
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">4. JUSTIFICACIÓN DE LA MODIFICACIÓN</strong></h5></div>
+        <div class="row">
+            <div class="form-group  col-md-12">
+                <div class="col-md-3">
+                    <strong>JUSTIFICACIÓN:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ datos.justificacion }}
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_44" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" id="modal_{{tramite_tipo.id}}">
+                <div class="modal-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{tramite_tipo.tramiteTipo|upper}}</span></h3>
+                            </div>
+                            <div class="pull-rigth">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Start basic wizard horizontal -->
+                                    <div id="basic-wizard-horizontal">
+                                        <div class="panel panel-tab rounded shadow">
+                                            <!-- Start tabs heading -->
+                                            <div class="panel-heading no-padding">
+                                                <ul class="nav nav-tabs nav-pills">
+                                                    <li class="active">
+                                                        <a href="#tab1-1-solicitud" data-toggle="tab" aria-expanded="false">
+                                                            <i class="fa fa-file-text"></i>
+                                                            <div>
+                                                                <span class="text-strong">1. Requisitos Legales</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div><!-- /.panel-heading -->
+                                            <!--/ End tabs heading -->
+                                            <!-- Start tabs content -->
+                                            <div class="panel-body tab-content">
+                                                <div class="tab-pane fade inner-all in active" id="tab1-1-solicitud">
+                                                    <div class="row">
+                                                        <div  class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                Solicitud de Reapertura adjunto:
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~datos.institucioneducativa.id~'/rue/'~gestion~'/'~ datos[tramite_tipo.tramiteTipo].i_solicitud_reapertura )}}" target="_blank" data-placement="top" title="Ver solicitud">
+                                                                    <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                            <!--/ End tabs content -->
+                                            <!--/ End pager -->
+                                        </div><!-- /.panel -->
+                                    </div><!-- /#basic-wizard-horizontal -->
+                                    <!--/ End basic wizard horizontal-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-dialog -->
+        </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>El código es incorrecto</div>
+{% endif %}
