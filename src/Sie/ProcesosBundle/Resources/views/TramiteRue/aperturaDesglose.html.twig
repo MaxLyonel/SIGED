@@ -6,6 +6,14 @@
         border: 1px solid #01B1E1; 
         padding: 15px;
     }
+
+    #map{
+        width: 700px ;
+        height: 500px ;
+        background-color: grey;
+        position: relative;
+        outline: none;
+    }
 </style>
 <div class="modal-dialog" id="modal_apertura_datos" style="width: 1000px">
     <div class="modal-content">
@@ -313,7 +321,7 @@
                                                     <div class="col-md-12">
                                                         {% for a in form.niveltipo %}
                                                             <div class="ckbox ckbox-primary">
-                                                                {{ form_widget(a,{'attr':{'required':false,'class':'nivel'}}) }}
+                                                                {{ form_widget(a,{'attr':{'required':false,'class':'nivel dato54'}}) }}
                                                                 {{ form_label(a) }}
                                                             </div>
                                                         {% endfor %}
@@ -417,9 +425,15 @@
                                                 <h4 class="page-header">
                                                    INFORMACIÓN GEOREFERENCIAL<br>
                                                 </h4>
-                                                <div class="row">
-                                                                
-                                                </div>
+                                                <div id="map"></div>
+                                            </div>
+                                            <div class="form-group col-md-6 form-inline">
+                                                {{ form_label(form.latitud) }}
+                                                {{ form_widget(form.latitud) }}
+                                            </div>
+                                            <div class="form-group col-md-6 form-inline">
+                                                {{ form_label(form.longitud) }}
+                                                {{ form_widget(form.longitud) }}
                                             </div>
                                         </div>
                                     </div>
@@ -434,8 +448,8 @@
             </div>
             <div class="panel-footer">
                 <div class="pull-left">
-                    <div id="msg{{id}}"></div>
-                    <input type="hidden" id="validar{{id}}" value="0">
+                    <div id="msgApertura"></div>
+                    <input type="hidden" id="validarApertura" value="0">
                 </div>
                 <div class="pull-right">
                     <button type="button" class="btn btn-success" onclick="verificarApertura()">Validar Datos</button>
@@ -446,7 +460,6 @@
         </div>
     </div>
 </div><!-- /.modal-dialog -->
-
 <script>
     $(function(){
         $(".validar").keydown(function(event){
@@ -455,7 +468,8 @@
             }
         });
     });
-     $(".nivel").change(function () {	 
+
+    $(".nivel").change(function () {	 
         if($(this).val()==11){
             $('.nivel11').val('');
             if($(this).is(':checked')==true){
@@ -481,10 +495,12 @@
             }
         }
     });
-    $(".req54").click(function(){
-        $('#validar54').val(0);
-        $('#msg54').empty();
+
+    $(".dato54").click(function(){
+        $('#validarApertura').val(0);
+        $('#msgApertura').empty();
     });
+
     $("#form_dependencia").change(function(){
         //alert($(this).val());
         $('#convenio').hide();

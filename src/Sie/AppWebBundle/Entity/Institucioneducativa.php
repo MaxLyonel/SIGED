@@ -109,7 +109,18 @@ class Institucioneducativa
      */
     private $convenioTipo;
 
-
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return Institucioneducativa
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
+    }
     /**
      * Get id
      *

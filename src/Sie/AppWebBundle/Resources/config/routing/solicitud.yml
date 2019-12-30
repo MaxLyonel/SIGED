@@ -60,3 +60,16 @@ tramite_rue_busca_requisitos:
 tramite_rue_apertura_guardar:
     path:     /apertura/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:aperturaGuardar" }
+
+tramite_rue_reapertura:
+    path:     /rue/reapertura/
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:reapertura" }
+
+tramite_rue_reapertura_guardar:
+    path:     /reapertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:reaperturaGuardar" }
+
+tramite_rue_buscar_siereapertura:
+    path:     /buscar/siereapertura
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarSieReapertura" }
+

@@ -64,6 +64,9 @@
             <link href="/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
             <link href="/webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css" rel="stylesheet" />
             <link href="/css/plugins/bootstrap-datepicker/datepicker3.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+                integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+                crossorigin=""/>
         </head>
     <!--/ END HEAD -->
     <body>
@@ -80,6 +83,14 @@
                 border: 1px solid #01B1E1; 
                 padding: 15px;
             }
+            #map{
+                width: 700px ;
+                height: 500px ;
+                background-color: grey;
+                position: relative;
+                outline: none;
+            }
+		
         </style>
         <section id="wrapper">
             <!-- START @HEADER -->
@@ -211,7 +222,7 @@
                                                                                                 {{ form_widget(form.director) }}
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="form-group col-md-12">
+                                                                                        {# <div class="form-group col-md-12">
                                                                                             <div class="col-md-6">
                                                                                                 ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:
                                                                                             </div>
@@ -223,7 +234,7 @@
                                                                                                     </div>
                                                                                                 {% endfor %}
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </div> #}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -522,9 +533,15 @@
                                                                                 <h4 class="page-header">
                                                                                 INFORMACIÓN GEOREFERENCIAL<br>
                                                                                 </h4>
-                                                                                <div class="row">
-                                                                                                
-                                                                                </div>
+                                                                                <div id="map"></div>
+                                                                            </div>
+                                                                            <div class="form-group col-md-6 form-inline">
+                                                                                {{ form_label(form.latitud) }}
+                                                                                {{ form_widget(form.latitud) }}
+                                                                            </div>
+                                                                            <div class="form-group col-md-6 form-inline">
+                                                                                {{ form_label(form.longitud) }}
+                                                                                {{ form_widget(form.longitud) }}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -540,7 +557,7 @@
                                                     <div class="form-group col-md-12">
                                                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal_54" data-placement="top" title="Requisitos de apertura" onclick="requisitos(54)"><i class="glyphicon glyphicon-plus"></i>Adicionar Requisitos</button>
                                                     </div>
-                                                    <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_54" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+                                                    <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_54" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>
                                                 </div>
                                             </div><!-- /.panel-body -->
                                             <div class="panel-footer">
@@ -633,9 +650,12 @@
 
     <script src="/js/initialize.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <!--/ END GOOGLE ANALYTICS -->         
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
+    <!--/ END GOOGLE ANALYTICS -->     
+        
     <script>
+        
         $( document ).ready(function() {
             $.fn.datepicker.dates['es'] = {
                 days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
@@ -654,7 +674,8 @@
                 todayHighlight: true,
                 language: 'es'
             });
-            $('#form_tr').empty(); 
+            $('#form_tr').empty();
+            initMap();
         });
         
         function siecomparte(sie){
@@ -694,8 +715,8 @@
         }
 
         function buscarEdificioEscolar(idLe) {
-            if(idLe.length >= 8 && idLe != '40730010' ){
-                var formData = {idLe:idLe,lugarTipoIdDistrito:'31455'};
+            if(idLe.length >= 8){
+                var formData = {idLe:idLe,lugarTipoIdDistrito:0};
                 $.ajax({
                     type: 'get',
                     url: "{{path('tramite_rue_buscar_edificio')}}",
@@ -721,6 +742,7 @@
                         $("#form_municipio2001").append('<option value="">Buscando...</option>');
                         $("#form_canton2001").append('<option value="">Buscando...</option>');
                         $("#form_localidad2001").append('<option value="">Buscando...</option>');
+                        $("#form_distrito").append('<option value="">Buscando...</option>');
                         $("#form_zona").val('');
                         $("#form_direccion").val('');
                         $("#msg").empty();
@@ -740,6 +762,7 @@
                             $("#form_municipio2001").empty();
                             $("#form_canton2001").empty();
                             $("#form_localidad2001").empty();
+                            $("#form_distrito").empty();
                             $("#form_zona").val('');
                             $("#form_direccion").val('');
                             $.each(data.lugar.c2012.dep.lista, function (i, value) {
@@ -757,6 +780,7 @@
                             $("#form_municipio2001").removeAttr( 'style' );
                             $("#form_canton2001").removeAttr( 'style' );
                             $("#form_localidad2001").removeAttr( 'style' );
+                            $("#form_distrito").removeAttr( 'style' );
                             $('#form_zona').removeAttr( 'style' );
                             $('#form_direccion').removeAttr( 'style' );
                             $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
@@ -788,6 +812,9 @@
                             $.each(data.lugar.c2001.loc.lista, function (i, value) {
                                 $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
                             });
+                            $.each(data.lugar.distrito.lista, function (i, value) {
+                                $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                            });
                             $("#form_departamento2012").val(data.lugar.c2012.dep.id);
                             $("#form_provincia2012").val(data.lugar.c2012.prov.id);
                             $("#form_municipio2012").val(data.lugar.c2012.mun.id);
@@ -797,6 +824,7 @@
                             $("#form_municipio2001").val(data.lugar.c2001.mun.id);
                             $("#form_canton2001").val(data.lugar.c2001.can.id);
                             $("#form_localidad2001").val(data.lugar.c2001.loc.id);
+                            $("#form_distrito").val(data.lugar.distrito.id);
                             $("#form_zona").val(data.lugar.zona);
                             $("#form_direccion").val(data.lugar.direccion);
                             $('#form_departamento2012').css('pointer-events','none');
@@ -808,6 +836,7 @@
                             $("#form_municipio2001").css('pointer-events','none');
                             $("#form_canton2001").css('pointer-events','none');
                             $("#form_localidad2001").css('pointer-events','none');
+                            $("#form_distrito").css('pointer-events','none');
                             $('#form_zona').css('pointer-events','none');
                             $('#form_direccion').css('pointer-events','none');
                         }
@@ -825,6 +854,7 @@
                 $("#form_municipio2001").empty();
                 $("#form_canton2001").empty();
                 $("#form_localidad2001").empty();
+                $("#form_distrito").empty();
                 $("#form_zona").val('');
                 $("#form_direccion").val('');
                 $('#form_departamento2012').removeAttr( 'style' );
@@ -836,12 +866,13 @@
                 $("#form_municipio2001").removeAttr( 'style' );
                 $("#form_canton2001").removeAttr( 'style' );
                 $("#form_localidad2001").removeAttr( 'style' );
+                $("#form_distrito").removeAttr( 'style' );
                 $('#form_zona').removeAttr( 'style' );
                 $('#form_direccion').removeAttr( 'style' );
-                if(idLe == '40730010' ){
+                /*if(idLe == '40730010' ){
                     $("#form_lejurisdiccion").val('');
                     alert('El Código Edificio Educativo debe ser diferente al actual.')
-                }
+                }*/
             }
 
         }
@@ -859,21 +890,17 @@
                         $("#form_municipio2001").empty();
                         $("#form_canton2001").empty();
                         $("#form_localidad2001").empty();
-                        //$("#form_distrito2001").empty();
                         $("#form_provincia2001").append('<option value="">Buscando...</option>');
                         $("#form_municipio2001").append('<option value="">Buscando...</option>');
                         $("#form_canton2001").append('<option value="">Buscando...</option>');
                         $("#form_localidad2001").append('<option value="">Buscando...</option>');
-                        //$("#form_distrito2001").append('<option value="">Buscando...</option>');
                     }else if (censo == 2012){
                         $("#form_provincia2012").empty();
                         $("#form_municipio2012").empty();
                         $("#form_comunidad2012").empty();
-                        //$("#form_distrito2012").empty();
                         $("#form_provincia2012").append('<option value="">Buscando...</option>');
                         $("#form_municipio2012").append('<option value="">Buscando...</option>');
                         $("#form_comunidad2012").append('<option value="">Buscando...</option>');
-                        //$("#form_distrito2012").append('<option value="">Buscando...</option>');
                     }
                     
                 },
@@ -886,7 +913,6 @@
                         $("#form_municipio2001").empty();
                         $("#form_canton2001").empty();
                         $("#form_localidad2001").empty();
-                        //$("#form_distrito2001").empty();
                         $("#form_provincia2001").append('<option value="">Seleccionar...</option>');
                         $("#form_provincia2001").attr('required',true);
                         $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
@@ -895,31 +921,22 @@
                         $("#form_canton2001").attr('required',true);
                         $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
                         $("#form_localidad2001").attr('required',true);
-                        //$("#form_distrito2001").append('<option value="">Seleccionar...</option>');
                         $.each(data.provincia, function (i, value) {
                             $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
                         });
-                        /*$.each(data.distrito, function (i, value) {
-                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                        });*/
                     }else if (censo == 2012){
                         $("#form_provincia2012").empty();
                         $("#form_municipio2012").empty();
                         $("#form_comunidad2012").empty();
-                        //$("#form_distrito2012").empty();
                         $("#form_provincia2012").append('<option value="">Seleccionar...</option>');
                         $("#form_provincia2012").attr('required',true);
                         $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
                         $("#form_municipio2012").attr('required',true);
                         $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
                         $("#form_comunidad2012").attr('required',true);
-                        //$("#form_distrito2012").append('<option value="">Seleccionar...</option>');
                         $.each(data.provincia, function (i, value) {
                             $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
                         });
-                        /*$.each(data.distrito, function (i, value) {
-                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                        });*/
                     }
                     $.each(data.distrito, function (i, value) {
                         $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
@@ -1050,6 +1067,7 @@
         
         function validarnombre(nombre,tipo){
             //alert(nombre);
+            nombre = nombre.toUpperCase();
             var generico = ['ESCUELA','COLEGIO','FISCAL','CONVENIO','PRIVADA','PRIVADO','KINDER','INSTITUTO','CENTRO INTEGRADO','TECNICO TECNOLOGICO','TÉCNICO TECNOLOGICO','TÉCNICO TECNOLÓGICO','TÉCNICO TECNOLÓGICO','HUMANISTICO','HUMANÍSTICO'];
             $.each(generico, function (index,value){
                 if(nombre.search(value) != -1){
@@ -1563,69 +1581,99 @@
 
         function validar(){
             //alert($('#tabla tr').length);
-            var filas = $('#tabla tr').length - 1;
-            if (filas == 0){
-                alert('Seleccione datos a modificar.');
+            if($('#form_institucioneducativa').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar el nombre de la nueva Unidad Educativa.');
                 return false;
-            }else if(JSON.parse($('#form_tr').val()).includes(39) == true && $('#form_siefusion').val().length < 8){
-                alert('Ingrese codigo SIE a Cerrar Definitivamente válido.');
+            }else if($('#form_fechafundacion').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar la fecha de fundación.');
                 return false;
-            }
-            if(JSON.parse($('#form_tr').val()).includes(34) == true){
-                var ok = 0;
-                $('.niveltipo').each(function() {
+            }else if($('#form_telefono').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar el Telefono de Referencia.');
+                return false;
+            }else if($('#form_director').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar los Datos del Director/Encargado/Propietario.');
+                return false;
+            }else if($('#form_departamento2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_provincia2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_municipio2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_canton2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el canton de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_localidad2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la localidad de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_departamento2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_provincia2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_municipio2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_comunidad2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la comunidad de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_distrito').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el distrito educativo.');
+                return false;
+            }else if($('#form_zona').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la zona.');
+                return false;
+            }else if($('#form_direccion').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la direccion.');
+                return false;
+            }else if($('#form_dependencia').val()==''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Dependencia.');
+                return false;
+            }else if($('#form_dependencia').val() == 2 && $('#form_conveniotipo').val() == ''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el tipo de convenio.');
+                return false;
+            }else if($('#form_dependencia').val() == 3 && $('#form_constitucion').val() == ''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Constitución de la Unidad Educativa.');
+                return false;
+            }else if($('.nivel').is(':checked') == false){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el o los niveles de organización curricular.');
+                return false;
+            }else if($('.nivel').is(':checked') == true){
+                $('.nivel').each(function() {
                     if ($(this).is(':checked') ) {
-                        ok = ok + 1;
+                        if($(this).val() == 11 && ($('#form_cantidad_11_1').val()=='' || $('#form_cantidad_11_2').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Inicial en Familia Comunitaria.');
+                            return false;            
+                        }
+                        if($(this).val() == 12 && ($('#form_cantidad_12_1').val()=='' || $('#form_cantidad_12_2').val()=='' || $('#form_cantidad_12_3').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Primaria Comunitaria Vocacional.');
+                            return false;            
+                        }
+                        if($(this).val() == 13 && ($('#form_cantidad_13_1').val()=='' || $('#form_cantidad_13_2').val()=='' || $('#form_cantidad_13_3').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Secundaria Comunitaria Productiva.');
+                            return false;            
+                        }
                     }
                 });
-                if(ok == 0){
-                    alert('Seleccione el o los niveles a ampliar.');
-                    return false;
-                }
             }
-            if(JSON.parse($('#form_tr').val()).includes(35) == true){
-                var ok = 0;
-                $('.niveltipo').each(function() {
-                    if (!$(this).is(':checked') ) {
-                        ok = ok + 1;
-                    }
-                });
-                if(ok == 0){
-                    alert('Deseleccione el o los niveles a reducir.');
-                    return false;
-                }
-            }
-            if(JSON.parse($('#form_tr').val()).length > 0){
-                var arr = [];
-                $.each(JSON.parse($('#form_tr').val()),function(index,value){
-                    if($('#modal_requisitos_'+value).length == 0 && value!=39 && value!=40){
-                        var texto = $('#fila_'+value+' td').html().replace('<strong>', '');
-                        texto = texto.replace('</strong>', '');
-                        arr.push(texto);
-                        //arr.push($('#fila_'+value+' td').html());
-                    }
-                });
-                //console.log(arr);
-                if (arr.length > 0){
-                    alert('Registre los requisitos de el/los trámite/s: '+arr.toString());
-                    return false;
-                }
-            }
-            if(JSON.parse($('#form_tr').val()).length > 0){
-                var arr = [];
-                $.each(JSON.parse($('#form_tr').val()),function(index,value){
-                    if($('#validar'+value).val() == 0){
-                        var texto = $('#fila_'+value+' td').html().replace('<strong>', '');
-                        texto = texto.replace('</strong>', '');
-                        arr.push(texto);
-                        //arr.push($('#fila_'+value+' td').html());
-                    }
-                });
-                //console.log(arr);
-                if (arr.length > 0){
-                    alert('Debe validar los requisitos de el/los trámite/s: '+arr,toString());
-                    return false;
-                }
+            if($('#form_cantidad_adm').val() == ''){
+                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de personal administrativo.');
+                return false;
+            }else if($('#form_cantidad_maestro').val() == ''){
+                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de Docente (Maestros).');
+                return false;
+            }else if($('#form_latitud').val() == -16.50626 || $('#form_longitud').val() == -68.12794){
+                alert('Debe seleccionar la informacion georeferencial.');
+                return false;
+            }else if($('#modal_requisitos_54').length == 0){
+                alert('Ingrese los requisitos de la solicitud de Apertura de Unidad Educativa');
+                return false;
+            }else if($('#validar54').val() == 0){
+                alert('Debe validar los requisitos de la nueva Unidad Educativa');
+                return false;
             }else{
                 return true;
             }
@@ -1669,6 +1717,12 @@
                 }
             }
         });
+
+        $(".dato54").click(function(){
+            $('#validarApertura').val(0);
+            $('#msgApertura').empty();
+        });
+
     </script>
 </body>
     <!--/ END BODY -->

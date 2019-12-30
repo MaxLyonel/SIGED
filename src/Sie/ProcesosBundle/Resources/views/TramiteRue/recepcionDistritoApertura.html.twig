@@ -1,4 +1,10 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+{% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
@@ -121,9 +127,103 @@
                         </div>
                         <div id="contenido">
                         </div>
+                        <div class="row informe"  style={% if tramite %} "display:block" {% else %} "display:none" {% endif %}>
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group  col-md-12">
+                                                <div class="col-md-4"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                                <div class="col-md-8">
+                                                    {% for a in form.varevaluacion1 %}
+                                                        <div class="col-md-3 rdio rdio-primary circle">
+                                                            {% if tramite == null and a.vars.value == 'NO' %}
+                                                                {{ form_widget(a,{'attr':{'disabled':'disabled','class':'evaluacion'}}) }}
+                                                            {% else %}
+                                                                {{ form_widget(a,{'attr':{'required':true,'class':'evaluacion'}}) }}
+                                                            {% endif %}                                                            
+                                                            {{ form_label(a) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-4"><strong>REQUISITOS PRESENTADOS:</strong></div>
+                                                <div class="col-md-8">
+                                                {% for r in form.requisitos %}
+                                                    <div class="ckbox ckbox-primary">
+                                                        {{ form_widget(r,{'attr':{'required':true}}) }}
+                                                        {{ form_label(r) }}
+                                                    </div>
+                                                {% endfor %}   
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
+                        </div>
+                        <div class="row informe"  style={% if tramite %} "display:block" {% else %} "display:none" {% endif %}>
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title" id="titulo">DATOS DEL INFORME</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.informedistrito) }}
+                                                </div>   
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.informedistrito) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.fechainformedistrito) }}
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.fechainformedistrito) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.adjuntoinforme) }}
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.adjuntoinforme) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.observacion) }}
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form_widget(form.observacion) }}
+                                                </div>
+                                            </div>
+                                        </div>                                  
+                                    </div><!-- /.panel- body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
+                        </div>
                         <div class="panel-footer">
                             <div class="form-group col-md-3">
-                                {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary','disabled':'disabled'} }) }}
+                                {% if tramite %}  
+                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                                {% else %}  
+                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary','disabled':'{{disabled}}'} }) }}
+                                {% endif %}                                
                                 <a href="{{path('wf_tramite_index')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
                             </div>
                             <div class="clearfix"></div>
@@ -139,6 +239,8 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
     <script>
         $( document ).ready(function() {
             $.fn.datepicker.dates['es'] = {
@@ -151,6 +253,7 @@
                 titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
                 weekStart: 0
             };
+
             $('.date').datepicker({
                 orientation: "auto left",
                 forceParse: false,
@@ -158,6 +261,11 @@
                 todayHighlight: true,
                 language: 'es'
             });
+
+            if('{{mapa}}' == true){
+                initMap2($('#latitud').val(),$('#longitud').val(),'map');
+            }
+            
         });
         $(document).on('change','input[type="file"]',function(){
             var fileName = this.files[0].name;
@@ -198,10 +306,36 @@
                         todayHighlight: true,
                         language: 'es'
                     });
+                    $('.informe').show();
                     $('#form_guardar').prop('disabled',false);
+                    if($('#form_tramite_tipo').val()==54 && $('#latitud2').length >0){
+                        //console.log(datos);
+                        //alert();
+
+                        initMap2($('#latitud2').val(),$('#longitud2').val(),'map2');
+                    }
                 },
             });
-        } 
+        }
+
+        $('.evaluacion').click(function(){
+            //alert($(this).val());
+            if($(this).val()=='NO'){
+                $('#contenido').empty();
+                $('#form_tramite_tipo').val('');
+                $('#form_codigo').val('');
+                $('#form_tramite_tipo').attr('required',false);
+                $('#form_codigo').attr('required',false);
+            }else{
+                $('#form_tramite_tipo').attr('required',true);
+                $('#form_codigo').attr('required',true);
+            }
+        });
+
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+        }); 
 
         $('.btn-lilac').click(function(){
             alert('entra');
@@ -210,9 +344,12 @@
         });
 
         function validacion(){
-            if($('.btn-lilac').length > 0){
-                var tramitetipo = $('#form_tramite_tipo option:selected').text();
-                alert('Debe abrir y verificar todos los archivos adjuntos de los requisitos presentados para: '+ tramitetipo +'.');
+            if($("#form_varevaluacion1_0").is(':checked') && $('#solicitud').length == 0){
+                alert('Debe buscar los datos de la solicitud de: '+$('#form_tramite_tipo option:selected').text());
+                return false;
+            }else if($('.btn-lilac').length > 0){
+                //var tramitetipo = $('#form_tramite_tipo option:selected').text();
+                alert('Debe abrir y verificar todos los archivos adjuntos de los requisitos presentados.');
                 return false;
             }else{
                 return true;

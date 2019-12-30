@@ -1032,7 +1032,7 @@
             </div><!-- /.modal-dialog -->
         </div>
     {% elseif t.id == 44 %}{# Reapertura #}
-        <div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_{{t.id}}">
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_{{t.id}}">
             <div class="modal-dialog modal-lg" id="modal_{{t.id}}">
                 <div class="modal-content">
                     <div class="panel panel-primary">
@@ -1062,14 +1062,6 @@
                                                             </div>
                                                         </a>
                                                     </li>
-                                                    <li class="">
-                                                        <a href="#tab1-2-{{t.id}}" data-toggle="tab" aria-expanded="false">
-                                                            <i class="glyphicon glyphicon-home"></i>
-                                                            <div>
-                                                                <span class="text-strong">2. Requisitos de infraestructura</span>
-                                                            </div>
-                                                        </a>
-                                                    </li>
                                                 </ul>
                                             </div><!-- /.panel-heading -->
                                             <!--/ End tabs heading -->
@@ -1079,51 +1071,13 @@
                                                     <div class="row">
                                                         <div  class="form-group col-md-12">
                                                             <div class="col-md-6">
-                                                                <strong>Solicitud de Ampliación de Nivel:</strong>
+                                                                Solicitud de Reapertura:
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~tramite.gestionId~'/'~ datos[t.tramite_tipo].i_solicitud_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~tramite.gestionId~'/'~ datos[t.tramite_tipo].i_solicitud_reapertura )}}" target="_blank" data-placement="top" title="Ver informe">
                                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>
                                                                 </a>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <div class="col-md-6">
-                                                                <strong>Infraestructura arrendada:</strong>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                {{datos[t.tramite_tipo].i_alquiler_ampliar}}
-                                                            </div>
-                                                        </div>
-                                                        {% if datos[t.tramite_tipo].i_alquiler_ampliar == 'SI' %}
-                                                            <div  class="form-group col-md-12">
-                                                                <div class="col-md-6">
-                                                                    <strong>Copia notariada de arrendamiento:</strong>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~tramite.institucioneducativa.id~'/rue/'~tramite.gestionId~'/'~ datos[t.tramite_tipo].i_contrato_ampliar )}}" target="_blank" data-placement="top" title="Ver informe">
-                                                                        <i class="fa fa-file-pdf-o fa-2x" >  </i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                        <div  class="form-group col-md-12 ">
-                                                            <div class="ckbox ckbox-primary">
-                                                                <input id="checkbox-primary" checked="checked" type="checkbox" disabled="disabled">
-                                                                <label for="checkbox-primary">Original de Certificado RUE</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade inner-all" id="tab1-2-{{t.id}}">
-                                                    <div class="row">
-                                                        <div class="ckbox ckbox-primary">
-                                                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
-                                                            <label for="checkbox-primary1">Planos arquitectónicos</label>
-                                                        </div>
-                                                        <div class="ckbox ckbox-primary">
-                                                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
-                                                            <label for="checkbox-primary1">Actualización de datos de infraestructura en el SIE</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1147,7 +1101,7 @@
             </div><!-- /.modal-dialog -->
         </div>
     {% elseif t.id == 45 %}{# nuevo certifcado rue #}
-        <div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_{{t.id}}">
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_{{t.id}}">
             <div class="modal-dialog modal-lg" id="modal_{{t.id}}">
                 <div class="modal-content">
                     <div class="panel panel-primary">
@@ -1216,8 +1170,17 @@
             </div><!-- /.modal-dialog -->
         </div>
     {% elseif t.id == 54 %}{# apertura #}
-        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_{{t.id}}">
-            <div class="modal-dialog modal-lg" id="modal_{{t.id}}">
+        <style>
+            #maph{
+                width: 700px ;
+                height: 500px ;
+                background-color: grey;
+                position: relative;
+                outline: none;
+            }                                        
+        </style>
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_{{t.id}}h">
+            <div class="modal-dialog modal-lg" id="modal_{{t.id}}h">
                 <div class="modal-content">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -2025,7 +1988,7 @@
                                                                             <strong>Constitución de la Unidad Educativa:</strong>
                                                                         </div>
                                                                         <div class="col-md-8">
-                                                                            {{datos[t.tramite_tipo].constitucion.constitucion}}
+                                                                            {{datos[t.tramite_tipo].constitucion.id}}
                                                                         </div>
                                                                     </div>
                                                                 {% endif %}
@@ -2146,8 +2109,14 @@
                                                             <h4 class="page-header">
                                                             INFORMACIÓN GEOREFERENCIAL<br>
                                                             </h4>
-                                                            <div class="row">
-                                                                            
+                                                            <div id="map"></div>
+                                                            <div class="form-group col-md-3 form-inline">
+                                                                <strong>Latitud:</strong> {{ datos['Apertura de Unidad Educativa'].latitud }}
+                                                                <input type="hidden" id="latitud" value="{{ datos['Apertura de Unidad Educativa'].latitud }}">
+                                                            </div>
+                                                            <div class="form-group col-md-3 form-inline">
+                                                                <strong>Longitud:</strong> {{ datos['Apertura de Unidad Educativa'].longitud }}
+                                                                <input type="hidden" id="longitud" value="{{ datos['Apertura de Unidad Educativa'].longitud }}">
                                                             </div>
                                                         </div>
                                                     </div>

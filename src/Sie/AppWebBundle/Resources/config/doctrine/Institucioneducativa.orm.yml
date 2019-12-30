@@ -1,6 +1,7 @@
 Sie\AppWebBundle\Entity\Institucioneducativa:
     type: entity
     table: institucioneducativa
+    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaRepository
     indexes:
         fk_dat_rue_unidad_educativa_cl4:
             columns:
@@ -34,8 +35,6 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             unsigned: false
             comment: ''
             id: true
-            generator:
-                strategy: SEQUENCE
     fields:
         institucioneducativa:
             type: string

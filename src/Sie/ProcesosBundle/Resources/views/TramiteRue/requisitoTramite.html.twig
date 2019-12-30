@@ -688,7 +688,7 @@
                                                         {{ form_label(form.i_solicitud_reapertura) }}
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ form_widget(form.i_solicitud_reapertura) }}
+                                                        {{ form_widget(form.i_solicitud_reapertura,{'attr':{'class':'req44'}}) }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1264,6 +1264,10 @@
             $('#validar43').val(0);
             $('#msg43').empty();
         }
+    });
+    $(".req44").click(function(){
+        $('#validar44').val(0);
+        $('#msg44').empty();
     });
     $(".req45").click(function(){
         $('#validar45').val(0);

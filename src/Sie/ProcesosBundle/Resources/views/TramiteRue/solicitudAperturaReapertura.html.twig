@@ -1,6 +1,16 @@
 {% if datos %}
-    {% if tramite_tipo.id == 54 %}
-        <div class="row">
+    {% if tramite_tipo.id == 54 %} {# apertura #}
+        <style>
+            #map2{
+                width: 700px ;
+                height: 500px ;
+                background-color: grey;
+                position: relative;
+                outline: none;
+            }
+		
+        </style>
+        <div class="row" id="solicitud">
             <div class="col-md-12">
                 <!-- Start basic wizard vertical -->
                 <div id="basic-wizard-vertical">
@@ -230,6 +240,14 @@
                                                             {{datos['Apertura de Unidad Educativa'].comunidad2012}}
                                                         </div>
                                                     </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Distrito:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{datos['Apertura de Unidad Educativa'].distrito}}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h5 class="page-header">Dirección</h5>
@@ -407,8 +425,14 @@
                                         <h4 class="page-header">
                                         INFORMACIÓN GEOREFERENCIAL<br>
                                         </h4>
-                                        <div class="row">
-                                                        
+                                        <div id="map2"></div>
+                                        <div class="form-group col-md-6 form-inline">
+                                            <strong>Latitud:</strong> {{ datos['Apertura de Unidad Educativa'].latitud }}
+                                            <input type="hidden" id="latitud2" value="{{ datos['Apertura de Unidad Educativa'].latitud }}">
+                                        </div>
+                                        <div class="form-group col-md-6 form-inline">
+                                            <strong>Longitud:</strong> {{ datos['Apertura de Unidad Educativa'].longitud }}
+                                            <input type="hidden" id="longitud2" value="{{ datos['Apertura de Unidad Educativa'].longitud }}">
                                         </div>
                                     </div>
                                 </div>
@@ -423,11 +447,11 @@
         </div></br>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal_54" data-placement="top" title="Requisitos de apertura"><i class="glyphicon glyphicon-plus"></i>Ver Requisitos Presentados</button>
+                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal_54_solicitud" data-placement="top" title="Requisitos de apertura"><i class="glyphicon glyphicon-plus"></i>Ver Requisitos Presentados</button>
             </div>
         </div>
-        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_54" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg" id="modal_54">
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_54_solicitud" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" id="modal_54_solicitud">
                 <div class="modal-content">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -449,7 +473,7 @@
                                             <div class="panel-heading no-padding">
                                                 <ul class="nav nav-tabs nav-pills">
                                                     <li class="active">
-                                                        <a href="#tab1-1-{{tramite_tipo.id}}" data-toggle="tab" aria-expanded="false">
+                                                        <a href="#tab1-1-solicitud" data-toggle="tab" aria-expanded="false">
                                                             <i class="fa fa-file-text"></i>
                                                             <div>
                                                                 <span class="text-strong">1. Requisitos Legales</span>
@@ -457,7 +481,7 @@
                                                         </a>
                                                     </li>
                                                     <li class="">
-                                                        <a href="#tab1-2-{{tramite_tipo.id}}" data-toggle="tab" aria-expanded="false">
+                                                        <a href="#tab1-2-solicitud" data-toggle="tab" aria-expanded="false">
                                                             <i class="glyphicon glyphicon-home"></i>
                                                             <div>
                                                                 <span class="text-strong">2. Requisitos de infraestructura</span>
@@ -465,7 +489,7 @@
                                                         </a>
                                                     </li>
                                                     <li class="">
-                                                        <a href="#tab1-3-{{tramite_tipo.id}}" data-toggle="tab" aria-expanded="false">
+                                                        <a href="#tab1-3-solicitud" data-toggle="tab" aria-expanded="false">
                                                             <i class="glyphicon glyphicon-home"></i>
                                                             <div>
                                                                 <span class="text-strong">2. Requisitos Administrativos</span>
@@ -477,7 +501,7 @@
                                             <!--/ End tabs heading -->
                                             <!-- Start tabs content -->
                                             <div class="panel-body tab-content">
-                                                <div class="tab-pane fade inner-all in active" id="tab1-1-{{tramite_tipo.id}}">
+                                                <div class="tab-pane fade inner-all in active" id="tab1-1-solicitud">
                                                     <div class="row">
                                                         <div  class="form-group col-md-12">
                                                             <div class="col-md-8">
@@ -779,7 +803,7 @@
                                                         {% endif %}
                                                     </div>
                                                 </div>
-                                                <div class="tab-pane fade inner-all" id="tab1-2-{{tramite_tipo.id}}">
+                                                <div class="tab-pane fade inner-all" id="tab1-2-solicitud">
                                                     <div class="row">
                                                         {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
                                                             <div class="form-group col-md-12">
@@ -824,7 +848,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="tab-pane fade inner-all" id="tab1-3-{{tramite_tipo.id}}">
+                                                <div class="tab-pane fade inner-all" id="tab1-3-solicitud">
                                                     <div class="row">
                                                         {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 3 %}
                                                             <div  class="form-group col-md-12 ">
@@ -893,446 +917,336 @@
                 </div>
             </div><!-- /.modal-dialog -->
         </div>
-    {% else %}
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">1. DATOS GENERALES</h3>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="form-body">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>CÓDIGO SIE:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.id }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>CÓDIGO DE EDIFICIO EDUCATIVO:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.leJuridicciongeografica.id }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>DEPENDENCIA:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.dependenciaTipo.dependencia|upper }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>DISTRITO EDUCATIVO:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.leJuridicciongeografica.distritoTipo.distrito }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>FECHA DE FUNDACIÓN:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.fechaResolucion|date('d-m-Y') }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6"><strong>NIVELES DE ORGANIZACIÓN CURRICULAR:</strong>
-                                            <ul>
-                                                {% set nivel = [] %}
-                                                {% for n in ieNivel %}
-                                                    <li type=square>{{ n.nivelTipo.nivel }}</li> 
-                                                    {% set nivel = nivel|merge([n.nivelTipo.id]) %}
-                                                {% endfor %}      
-                                                <input type='hidden' id='nivel' value='{{nivel|json_encode}}'>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>UNIDAD EDUCATIVA:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.institucioneducativa }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-6">
-                                            <strong>ESTADO:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ institucioneducativa.estadoinstitucionTipo.estadoinstitucion|upper }}
-                                        </div>
-                                    </div>
-                                    {% if institucioneducativa.dependenciaTipo.id == 2 %}
-                                        <div class="form-group col-md-12">
-                                            <div class="col-md-6">
-                                                <strong>CONVENIO:</strong>
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ institucioneducativa.convenioTipo.convenio|upper }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">2. UBICACIÓN GEOGRÁFICA</h3>
-                        </div>                                    
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <div class="form-group col-md-12" style="background:#E9F9FC">
-                                    <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>DEPARTAMENTO:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>PROVINCIA:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>MUNICIPIO:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ lugarTipo2012.lugartipo.lugar|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>COMUNIDAD:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ lugarTipo2012.lugar|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>ZONA:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.zona|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>DIRECCIÓN:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.direccion|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {% for a in form.area %}
-                                            <div class="col-md-6 rdio rdio-primary circle">
-                                                {{ form_widget(a) }}
-                                                {{ form_label(a) }}
-                                            </div>
-                                        {% endfor %}
-                                        {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
-                                            URBANO
-                                        {% else %}
-                                            RURAL
-                                        {% endif %} #}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group col-md-12" style="background:#E9F9FC">
-                                    <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>DEPARTAMENTO:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>PROVINCIA:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugartipo.lugar }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>MUNICIPIO:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugartipo.lugar }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>CANTÓN:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>LOCALIDAD:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugar }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>ZONA:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.zona }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <strong>DIRECCIÓN:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ institucioneducativa.leJuridicciongeografica.direccion }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">3. DATOS A MODIFICAR</h3>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <div class="table-responsive col-md-12">
-                                    <table class="table table-bordered table-striped" id="tabla">
-                                        <tr>
-                                            <th>Tipo de trámite</th> 
-                                            <th>Dato antiguo</th>
-                                            <th>Dato nuevo</th>
-                                            <th>Ver Requisitos</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{tramite_tipo.tramiteTipo}}</td>
-                                            <td>
-                                                {{institucioneducativa.estadoinstitucionTipo.estadoinstitucion|upper}}
-                                            </td>
-                                            <td>
-                                                <div class="col-md-12 ckbox ckbox-primary">
-                                                    ABIERTA
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{tramite_tipo.id}}" data-placement="top" title="Ver Requisitos Presentados" onclick="requisitos({{tramite_tipo.id}})"><i class="glyphicon glyphicon-plus"></i></button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <div id="requisitos">
-                                        <div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_{{tramite_tipo.id}}" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>
-                                    </div>
-                                </div>    
-                            </div>
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">4. JUSTIFICACIÓN DE LA MODIFICACIÓN</h3>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="form-group  col-md-12">
-                                <div class="col-md-3">
-                                    <strong>JUSTIFICACIÓN:</strong>
-                                </div>
-                                <div class="col-md-9">
-                                    dfbfsdbsdfbsdb
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div>
-            </div>
-        </div>
-        {# <div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>LA UNIDAD EDUCATIVA SE ENCUENTRA <strong>ABIERTA</strong> POR LO QUE NO CORRESPONDE LA REAPERTURA</div> #}
-    {% endif %}
-    <div class="row">
-        <div class="col-md-12">                    
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="pull-left">
-                        <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+    {% else %} {# reapertura #}
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">1. DATOS GENERALES</strong></h5></div>
+        <div class="row" id="solicitud">
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CÓDIGO SIE:</strong>
                     </div>
-                    <div class="clearfix"></div>
-                </div><!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <div class="col-md-4"><strong>REQUISITOS PRESENTADOS:</strong></div>
-                            <div class="col-md-8">
-                            {% for r in form.requisitos %}
-                                <div class="ckbox ckbox-primary">
-                                    {{ form_widget(r,{'attr':{'required':true}}) }}
-                                    {{ form_label(r) }}
-                                </div>
-                            {% endfor %}   
-                            </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.id }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CÓDIGO DE EDIFICIO EDUCATIVO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.le_juridicciongeografica_id }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPENDENCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.dependencia|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DISTRITO EDUCATIVO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.distrito }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>FECHA DE FUNDACIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {# {{ datos.fechafundacion|date('d-m-Y') }} #}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6"><strong>NIVELES DE ORGANIZACIÓN CURRICULAR:</strong>
+                        <ul>
+                            {% for n in datos.institucioneducativaNivel %}
+                                <li type=square>{{ n.nivel }}</li> 
+                            {% endfor %}            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>UNIDAD EDUCATIVA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.institucioneducativa }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ESTADO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.estadoinstitucion|upper }}
+                    </div>
+                </div>
+                {% if datos.institucioneducativa.dependencia_tipo_id == 2 %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+                            <strong>CONVENIO:</strong>
                         </div>
-                        <div class="form-group  col-md-12">
-                            <div class="col-md-4"><strong>TRÁMITE PROCEDENTE:</strong></div>
-                            <div class="col-md-8">
-                                {% for a in form.varevaluacion1 %}
-                                    <div class="col-md-3 rdio rdio-primary circle">
-                                        {{ form_widget(a) }}
-                                        {{ form_label(a) }}
-                                    </div>
-                                {% endfor %}
-                            </div>
+                        <div class="col-md-6">
+                            {{ datos.institucioneducativa.convenio }}
                         </div>
                     </div>
-                </div><!-- /.panel-body -->
-            </div><!-- /.panel-primary -->
-        </div>
-    </div>
-    <div class="row" style="display:none" id="informe">
-        <div class="col-md-12">                    
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="pull-left">
-                        <h3 class="panel-title" id="titulo">DATOS DEL INFORME</h3>
+                {% endif %}
+                {# <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>TELEFONO DE REFERENCIA:</strong>
                     </div>
-                    <div class="clearfix"></div>
-                </div><!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="form-group col-md-12 inf">
-                            <div class="col-md-4">
-                                {{ form_label(form.informedistrito) }}
-                            </div>   
-                            <div class="col-md-8">
-                                {{ form_widget(form.informedistrito) }}
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12 inf">
-                            <div class="col-md-4">
-                                {{ form_label(form.fechainformedistrito) }}
-                            </div>
-                            <div class="col-md-8">
-                                {{ form_widget(form.fechainformedistrito) }}
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12 inf">
-                            <div class="col-md-4">
-                                {{ form_label(form.adjuntoinforme) }}
-                            </div>
-                            <div class="col-md-8">
-                                {{ form_widget(form.adjuntoinforme) }}
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-4">
-                                {{ form_label(form.observacion) }}
-                            </div>
-                            <div class="col-md-8">
-                                {{ form_widget(form.observacion) }}
-                            </div>
-                        </div>
-                    </div>                                  
-                </div><!-- /.panel- body -->
-            </div><!-- /.panel-primary -->
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.telefono1 }}
+                    </div>
+                </div> #}
+            </div>
         </div>
-    </div>
-    <script>
-        $('#form_varevaluacion1_0').click(function(){
-            //alert('entra');
-            if ($("#form_varevaluacion1_0").is(':checked')){
-                $('#informe').show();
-                $('.inf').show();
-                $('#titulo').text('DATOS DEL INFORME');
-                $('#form_observacion').attr('required',false);
-                $("#form_informedistrito").attr('required',true);
-                $("#form_fechainformedistrito").attr('required',true);
-                $("#form_adjuntoinforme").attr('required',true);
-                limpiarInforme();
-                limpiarObs();
-            }
-        });
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">2. UBICACIÓN GEOGRÁFICA</strong></h5></div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-12" style="background:#E9F9FC">
+                    <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPARTAMENTO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.departamento2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>PROVINCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.provincia2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.municipio2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>COMUNIDAD:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.comunidad2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ZONA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.zona|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DIRECCIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.direccion|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {% if datos.institucioneducativa.area_municipio == 'U' %}
+                            URBANO
+                        {% elseif datos.institucioneducativa.area_municipio == 'R'  %}
+                            RURAL
+                        {% else %}
+                            NO DEFINIDO
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12" style="background:#E9F9FC">
+                    <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPARTAMENTO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.departamento2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>PROVINCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.provincia2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.municipio2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CANTÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.canton2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>LOCALIDAD:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.localidad2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ZONA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.zona }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DIRECCIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.direccion }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">3. DATOS A MODIFICAR</strong></h5></div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped" id="tablahistorico">
+                        <tr>
+                            <th>Tipo de trámite</th> 
+                            <th>Dato antiguo</th>
+                            <th>Dato nuevo</th>
+                            <th>Ver Requisitos Presentados</th>
+                        </tr>
+                        <tr>
+                            <td>{{datos.tramites[0].tramite_tipo}}</td>
+                            <td>
+                                {{datos.institucioneducativa.estadoinstitucion|upper}}
+                            </td>
+                            <td>
+                                {{datos['Reapertura de Unidades Educativas'].estadoinstitucion|upper}}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_44" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
+                            </td>
 
-        $('#form_varevaluacion1_1').click(function(){
-            if ($("#form_varevaluacion1_1").is(':checked')){
-                $('#informe').show();
-                $('.inf').hide();
-                $('#titulo').text('DATOS DE LA OBSERVACIÓN');
-                $('#form_observacion').attr('required',false);
-                $("#form_informedistrito").attr('required',false);
-                $("#form_fechainformedistrito").attr('required',false);
-                $("#form_adjuntoinforme").attr('required',false);
-                limpiarInforme();
-                limpiarObs();
-            }
-        });
-        $('.btn-lilac').click(function(){
-            $(this).removeClass("btn-lilac");
-            $(this).addClass("btn-teal");
-        });
-    </script>
+                        </tr>
+                    </table>
+                </div>    
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">4. JUSTIFICACIÓN DE LA MODIFICACIÓN</strong></h5></div>
+        <div class="row">
+            <div class="form-group  col-md-12">
+                <div class="col-md-3">
+                    <strong>JUSTIFICACIÓN:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ datos.justificacion }}
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"  role="dialog" aria-hidden="true" id="modal_44" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" id="modal_{{tramite_tipo.id}}">
+                <div class="modal-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><span>REQUISITOS PRESENTADOS: {{tramite_tipo.tramiteTipo|upper}}</span></h3>
+                            </div>
+                            <div class="pull-rigth">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Start basic wizard horizontal -->
+                                    <div id="basic-wizard-horizontal">
+                                        <div class="panel panel-tab rounded shadow">
+                                            <!-- Start tabs heading -->
+                                            <div class="panel-heading no-padding">
+                                                <ul class="nav nav-tabs nav-pills">
+                                                    <li class="active">
+                                                        <a href="#tab1-1-solicitud" data-toggle="tab" aria-expanded="false">
+                                                            <i class="fa fa-file-text"></i>
+                                                            <div>
+                                                                <span class="text-strong">1. Requisitos Legales</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div><!-- /.panel-heading -->
+                                            <!--/ End tabs heading -->
+                                            <!-- Start tabs content -->
+                                            <div class="panel-body tab-content">
+                                                <div class="tab-pane fade inner-all in active" id="tab1-1-solicitud">
+                                                    <div class="row">
+                                                        <div  class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                Solicitud de Reapertura adjunto:
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <a  class="btn btn-lilac btn-xs" href="{{asset('uploads/archivos/flujos/'~datos.institucioneducativa.id~'/rue/'~gestion~'/'~ datos[tramite_tipo.tramiteTipo].i_solicitud_reapertura )}}" target="_blank" data-placement="top" title="Ver solicitud">
+                                                                    <i class="fa fa-file-pdf-o fa-2x" >  </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                            <!--/ End tabs content -->
+                                            <!--/ End pager -->
+                                        </div><!-- /.panel -->
+                                    </div><!-- /#basic-wizard-horizontal -->
+                                    <!--/ End basic wizard horizontal-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-dialog -->
+        </div>
+    {% endif %}
 {% else %}
     <div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>El código es incorrecto</div>
 {% endif %}

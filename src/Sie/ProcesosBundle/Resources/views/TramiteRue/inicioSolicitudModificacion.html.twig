@@ -1,4 +1,10 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+{% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
@@ -418,7 +424,9 @@
 {% endif %}
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }} 
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
     <script>
         $( document ).ready(function() {
             $.fn.datepicker.dates['es'] = {
@@ -962,11 +970,17 @@
             }
         }   
         
-        function validarnombre(nombre){
+        function validarnombre(nombre,tipo){
+            nombre = nombre.toUpperCase();
+            //alert(nombre);
             var generico = ['ESCUELA','COLEGIO','FISCAL','CONVENIO','PRIVADA','PRIVADO','KINDER','INSTITUTO','CENTRO INTEGRADO','TECNICO TECNOLOGICO','TÉCNICO TECNOLOGICO','TÉCNICO TECNOLÓGICO','TÉCNICO TECNOLÓGICO','HUMANISTICO','HUMANÍSTICO'];
             $.each(generico, function (index,value){
                 if(nombre.search(value) != -1){
-                    $('#form_nuevo_nombre').val('');
+                    if(tipo == 0){
+                        $('#form_institucioneducativa').val('');
+                    }else{
+                        $('#form_nuevo_nombre').val('');
+                    }                    
                     alert('El nombre de la Unidad Educativa no puede llevar el denominativo genérico: '+value);
                 }
             });
@@ -1517,7 +1531,7 @@
 
         function apertura(id){
             
-            var formData = {id: id,ie:'{{institucioneducativa.id}}'};
+            var formData = {id: id,desglose:1,ie:'{{institucioneducativa.id}}'};
             if ( $("#modal_apertura_datos").length ) {
                 return false;
             }
@@ -1542,8 +1556,96 @@
                         language: 'es'
                     });
                     $('[data-toggle="tooltip"]').tooltip();
+                    initMap();
+                
                 },
             });
+        }
+
+        function verificarApertura(){
+            if($('#form_institucioneducativa').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar el nombre de la nueva Unidad Educativa.');
+                return false;
+            }else if($('#form_fechafundacion').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar la fecha de fundación.');
+                return false;
+            }else if($('#form_telefono').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar el Telefono de Referencia.');
+                return false;
+            }else if($('#form_director').val()==''){
+                alert('En el punto DATOS GENERALES, debe ingresar los Datos del Director/Encargado/Propietario.');
+                return false;
+            }else if($('#form_departamento2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_provincia2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_municipio2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_canton2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el canton de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_localidad2001').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la localidad de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
+                return false;
+            }else if($('#form_departamento2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_provincia2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_municipio2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_comunidad2012').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la comunidad de la Ubicación Geográfica(Censo 2012 - información referencial).');
+                return false;
+            }else if($('#form_zona').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la zona.');
+                return false;
+            }else if($('#form_direccion').val()==''){
+                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la direccion.');
+                return false;
+            }else if($('#form_dependencia').val()==''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Dependencia.');
+                return false;
+            }else if($('#form_dependencia').val() == 2 && $('#form_conveniotipo').val() == ''){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el tipo de convenio.');
+                return false;
+            }else if($('.nivel').is(':checked') == false){
+                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el o los niveles de organización curricular.');
+                return false;
+            }else if($('.nivel').is(':checked') == true){
+                $('.nivel').each(function() {
+                    if ($(this).is(':checked') ) {
+                        if($(this).val() == 11 && ($('#form_cantidad_11_1').val()=='' || $('#form_cantidad_11_2').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Inicial en Familia Comunitaria.');
+                            return false;            
+                        }
+                        if($(this).val() == 12 && ($('#form_cantidad_12_1').val()=='' || $('#form_cantidad_12_2').val()=='' || $('#form_cantidad_12_3').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Primaria Comunitaria Vocacional.');
+                            return false;            
+                        }
+                        if($(this).val() == 13 && ($('#form_cantidad_13_1').val()=='' || $('#form_cantidad_13_2').val()=='' || $('#form_cantidad_13_3').val()=='')){
+                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Secundaria Comunitaria Productiva.');
+                            return false;            
+                        }
+                    }
+                });
+            }
+            if($('#form_cantidad_adm').val() == ''){
+                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de personal administrativo.');
+                return false;
+            }else if($('#form_cantidad_maestro').val() == ''){
+                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de Docente (Maestros).');
+                return false;
+            }else{
+                $('#validarApertura').val(1);
+                $('#msgApertura').empty();
+                $('#msgApertura').append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Datos de apertura validados con éxtio.</div>');
+            }
         }
 
         function borrarFila(id){
@@ -1628,6 +1730,14 @@
                     return false;
                 }
             }
+
+            if(JSON.parse($('#form_tr').val()).includes(54) == true){
+                if($('#validarApertura').val() == 0){
+                    alert('Debe validar los datos de la nueva Unidad Educativa');
+                    return false;
+                }
+            }
+
             if(JSON.parse($('#form_tr').val()).length > 0){
                 var arr = [];
                 $.each(JSON.parse($('#form_tr').val()),function(index,value){

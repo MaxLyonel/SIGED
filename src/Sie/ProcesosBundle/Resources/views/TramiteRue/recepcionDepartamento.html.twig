@@ -1,4 +1,10 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+{% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
@@ -59,6 +65,7 @@
                                                 <div class="panel-body">
                                                     {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos,'tramite':tramite} %}
                                                 </div>
+                                                {% set t = 54 %}
                                             </div>
                                         </div>
                                     </div>
@@ -222,7 +229,9 @@
     {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }} 
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
     <script>
         $( document ).ready(function() {
             $(".varevaluacion").prop('checked',false);
@@ -243,6 +252,10 @@
                 todayHighlight: true,
                 language: 'es'
             });
+            
+            if('{{mapa}}'==true){
+               initMap2($('#latitud').val(),$('#longitud').val());
+            }
         });
         $('input[type="file"]').change(function(){
 	        // this.files[0].size recupera el tamaño del archivo
