@@ -612,4 +612,116 @@ class MaestroCuentabancaria
     {
         return $this->fechaModificacion;
     }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaNacimiento;
+
+    /**
+     * @var string
+     */
+    private $apellidoEsposo;
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return MaestroCuentabancaria
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
+
+    /**
+     * Set fechaNacimiento
+     *
+     * @param \DateTime $fechaNacimiento
+     * @return MaestroCuentabancaria
+     */
+    public function setFechaNacimiento($fechaNacimiento)
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaNacimiento
+     *
+     * @return \DateTime 
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * Set apellidoEsposo
+     *
+     * @param string $apellidoEsposo
+     * @return MaestroCuentabancaria
+     */
+    public function setApellidoEsposo($apellidoEsposo)
+    {
+        $this->apellidoEsposo = $apellidoEsposo;
+    
+        return $this;
+    }
+
+    /**
+     * Get apellidoEsposo
+     *
+     * @return string 
+     */
+    public function getApellidoEsposo()
+    {
+        return $this->apellidoEsposo;
+    }
+    /**
+     * @var string
+     */
+    private $expedido;
+
+
+    /**
+     * Set expedido
+     *
+     * @param string $expedido
+     * @return MaestroCuentabancaria
+     */
+    public function setExpedido($expedido)
+    {
+        $this->expedido = $expedido;
+    
+        return $this;
+    }
+
+    /**
+     * Get expedido
+     *
+     * @return string 
+     */
+    public function getExpedido()
+    {
+        return $this->expedido;
+    }
 }

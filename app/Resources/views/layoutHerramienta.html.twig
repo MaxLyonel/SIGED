@@ -45,7 +45,7 @@
 
             <!-- START @THEME STYLES -->
             <link href="{{asset('webherramienta/assets/admin/css/reset.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('css/layout.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/plugins.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/themes/blue-gray.theme.css')}}" rel="stylesheet" id="theme">
@@ -199,7 +199,7 @@
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
                                         <span class="avatar"><img src="{{asset('webherramienta/img/avatar/35/1.png')}}" class="img-circle" alt="admin"></span>
-                                        <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
+                                        <span class="text hidden-xs hidden-sm text-white">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
                                 </a>
@@ -313,7 +313,7 @@
                     {% endif %}
 
                     {% if app.session.get('roluser') == 9 %}
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -325,7 +325,7 @@
                             <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                             <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
                         </ul>
-                    </li> #}
+                    </li>
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -335,11 +335,11 @@
                         <ul>
                             {#<li><a href="{{ path('herramienta_change_paralelo_sie_index_calidad')}}">Cambio de Paralelo</a></li>#}
                             <li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>
-                            <li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li>
+                            {# <li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li> #}
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
                         </ul>
                     </li>
-                    
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -347,11 +347,13 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
+                           
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
+                            
                         </ul>
                     </li>
-                   
-                    {# <li class="submenu">
+                    {% endif %}
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bono Juancito Pinto</span>
@@ -360,7 +362,8 @@
                         <ul>
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
-                    </li> #}
+                    </li>
+                    
                     <li class="submenu">
                       <a href="javascript:void(0);">
                         <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -389,7 +392,7 @@
                     {#
                     #}
                     
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -400,8 +403,9 @@
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                         {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
+                            <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
                         </ul>
-                    </li> #}
+                    </li>
                     
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -410,11 +414,13 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
+                            {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
+                            {% endif %}
                             <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
                         </ul>
                     </li>
-
+                   
                         {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>

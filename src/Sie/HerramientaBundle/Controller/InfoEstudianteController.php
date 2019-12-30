@@ -15,9 +15,13 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEliminados;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico;
+use Sie\AppWebBundle\Entity\BthEstudianteInscripcionGestionEspecialidad;
+use Sie\AppWebBundle\Entity\BthControlOperativoModificacionEspecialidades;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 
 
 use Doctrine\DBAL\Types\Type;
@@ -78,7 +82,7 @@ class InfoEstudianteController extends Controller {
                 ));
 
                 //send the values to the next steps
-                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa,'nivelId'=> $uEducativa['nivelId'],'gradoId'=> $uEducativa['gradoId']);
 
                 if($uEducativa['nivelId'] == 13 and $uEducativa['gradoId'] == 6){
                     $tieneSextoSec = true;
@@ -115,7 +119,64 @@ class InfoEstudianteController extends Controller {
                 $mostrarSextoCerrado = true;
             }
         }
+       //evaluar el estado del operatvo de modificar/eiminar especialidades, t= operativoCerrado f = operativoHabilitado 
+        $entity = $em->getRepository('SieAppWebBundle:BthControlOperativoModificacionEspecialidades')->findOneBy(array('institucioneducativaId'=>$sie, 'gestionTipoId'=>$gestion,'estadoOperativo'=>true));
+        //dump($entity);die;
+        //evaluar si la ue es plena 
 
+             $query = $em->getConnection()->prepare("SELECT * 
+            from institucioneducativa_humanistico_tecnico 
+            WHERE institucioneducativa_id = $sie and gestion_tipo_id = $gestion
+            and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (5,6)");
+            $query->execute();
+            $entity_validacion = $query->fetchAll();
+            //dump($entity_validacion);die;
+
+
+        $ue_plena =($entity_validacion)?true:false;
+        //dump($ue_plena);die;
+
+        if($ue_plena){
+            if($entity){
+            $estado = false;
+            }else{
+                $estado =  true;
+            }
+        }else{
+            $estado = false;
+        }
+
+
+        //get variables to show and hidde the close sexto secc operativo
+        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $query->execute();
+        $objDataOperativo = $query->fetchAll();
+        $haslevel = false;
+        $hasgrado = false;
+        if(sizeof($objDataOperativo)>0){
+            $haslevel = 13;
+            $hasgrado = 6;
+        }
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+        // set variables to show and ejecute the close operativo sexto fo secc 
+        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
+        // dump($arrLevelandGrado);die;
+
+
+        
+        // if($entity){
+        //     if($ue_plena == false){
+        //         $estado = false;
+        //     }
+
+        // }else{
+        //     $estado =  true;
+        // }
+        //dump($estado);die;
+
+        //obterner el grado para los reportes de  operatvo de modificar/eiminar
+        $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
+        $gradoId = implode(",",$grado);
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                     'sie' => $form['sie'],
@@ -125,7 +186,10 @@ class InfoEstudianteController extends Controller {
                     'exist' => $exist,
           //          'levelAutorizados' => $objInfoAutorizadaUe,
                     'odataUedu' => $odataUedu,
-                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'estado'=>$estado,
+                    'arrLevelandGrado'=>$arrLevelandGrado,
+                    'gradoId'=>$gradoId
         ));
     }
 
@@ -660,7 +724,7 @@ class InfoEstudianteController extends Controller {
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
 
         $imprimirLibreta = false;
-        $estadosPermitidosImprimir = array(4,5,11,55);
+        $estadosPermitidosImprimir = array(4,5,11,55,28);
 
         if($tipoUE){
             /*
@@ -668,7 +732,8 @@ class InfoEstudianteController extends Controller {
              */
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2){
+                // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
                     $imprimirLibreta = true;
                 }
                 // Unidades educativas tecnicas tecnologicas
@@ -706,7 +771,7 @@ class InfoEstudianteController extends Controller {
                 // }
             }
         }else{
-            if($gestion > 2014 and $operativo >= 4){
+            if($gestion > 2014 and $operativo >= 4 and $gestion < 2019){
                 $imprimirLibreta = true;
             }
         }
@@ -777,7 +842,8 @@ class InfoEstudianteController extends Controller {
                     'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
-                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion)
         ));
     }
 
@@ -1361,6 +1427,499 @@ class InfoEstudianteController extends Controller {
             
         return new Response('Curso cerrado con exito!!');
 
+    }
+
+    public function getStudentsBthAction(Request $request){
+        // get the send values
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        //view the template response
+        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:getStudentsBth.html.twig', array(
+            'infoUe' => $infoUe,
+            'iecId'  => $aInfoUeducativa['ueducativaInfoId']['iecId']
+        ));
+
+    }
+
+    private function getBthStudents($iecId, $optionCallFunction){
+
+        $em = $this->getDoctrine()->getManager();
+        switch ($optionCallFunction) {
+            case 1:
+                // get studen
+                $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseBTH($iecId);
+                break;
+            case 2:
+                // get studen
+                $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseOnlyBTH($iecId);
+                break;            
+            default:
+                # code...
+                break;
+        }
+        
+        //get the students has BTH
+        $arrStudents = array();
+        $arrStudentsStatus = array(4,5,11,28);
+        if($objStudents){
+            foreach ($objStudents as $value) {
+                if( in_array($value['estadomatriculaId'], $arrStudentsStatus)){
+                    $arrStudents[] = array(
+                        
+                        'studentId'=>$value['id'],
+                        'carnetIdentidad'=>$value['carnetIdentidad'],
+                        'complemento'=>$value['complemento'],
+                        'codigoRude'=>$value['codigoRude'],
+                        'paterno'=>$value['paterno'],
+                        'materno'=>$value['materno'],
+                        'nombre'=>$value['nombre'],
+                        'estadomatricula'=>$value['estadomatricula'],
+                        'estadomatriculaId'=>$value['estadomatriculaId'],
+                        'eInsId'=>$value['eInsId'],
+                        'studentId'=>$value['id'],
+                        'specialty'=>$value['especialidad'],
+                        'studentSpecialtyId'=>$value['ethtId'],
+                        'studentSpecialtyIdNew'=>($value['ethtId']!=null)?$value['ethtId']:false,
+                        'deletebthOption'=>false,
+                        'updatebthOption'=>false,
+                        'mainoption'=>true,
+                        'justificativo'=>'',
+                        
+                    );
+                }
+            }
+        }
+
+        return $arrStudents;
+    }
+    private function getSpeciality(){
+
+        $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
+        $objSpeciality = $this->get('funciones')->getSpeciality($arrdata);
+        $arrSpeciality = array();
+        if($objSpeciality){
+            foreach ($objSpeciality as $value) {
+                $arrSpeciality[]=array('specialtyId'=>$value->getId(), 'specialty'=>$value->getEspecialidad());
+            }
+        }
+        
+        return($arrSpeciality);        
+    }
+    
+    /**
+    *to do the add and/or update the speciality
+    *parameters: var iec id
+    *return json data(studnets, specialityies)
+    **/
+    public function addupdateStudentbthAction(Request $request){
+               
+        //get the send values
+        $iecId = $request->get('iecId');
+        // create var to send the next values
+        $response = new JsonResponse();
+
+        // check if the Ue has finished the all operativo
+        $operativo = $this->get('funciones')->obtenerOperativo($this->session->get('ie_id'), $this->session->get('currentyear'));
+        //set the values to continue the process
+        $arrStudents   = array();
+        $arrSpeciality = array();
+        $operativoUeEnd = false;
+
+        if($operativo!=5){
+            // get students bth
+            $arrStudents = $this->getBthStudents($iecId,1);
+            // get specialities             
+            $arrSpeciality = $this->getSpeciality();
+        }else{
+            $operativoUeEnd = true;
+        }
+        $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
+        
+        //return values
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'students'       => $arrStudents,
+            'swaddupdate'    => true,
+            'DBspeciality'   => $arrSpeciality,
+            'operativoUeEnd' => $operativoUeEnd
+        ));
+        return $response;   
+    }
+
+    /**
+    *to do the removing the speciality
+    *parameters: var iec id
+    *return json data(studnets, specialityies)
+    **/
+    public function removeStudentBthAction(Request $request){
+        //get the send values
+        $iecId = $request->get('iecId');
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // create var to send the next values
+        $response = new JsonResponse();
+        // get students bth        
+        $arrStudents = $this->getBthStudents($iecId,2);
+        // $arrStudents = $this->getRemoveAsigBthStudents($iecId,1);
+        $arrStudentsWithoutBTH = $this->getRemoveAsigBthStudents($iecId,3);
+        
+        // get specialities 
+        $arrdata = array('currentSie'=>$this->session->get('ie_id'),'currentGestion'=>$this->session->get('currentyear'));
+        $arrSpeciality = $this->getSpeciality();
+        
+        //return values
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'studentsBTH'     => $arrStudents,
+            'studentswithoutBTH'     => $arrStudentsWithoutBTH,
+            'swremove'  => true,
+            'DBspeciality' => $arrSpeciality
+        ));
+        return $response;   
+    }
+
+        private function getRemoveAsigBthStudents($iecId,$operativoType){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListRemoveAsigBthStudents($iecId,$operativoType);
+        //get the students has BTH
+        $arrStudents = array();
+        if($objStudents){
+            foreach ($objStudents as $value) {
+                $arrStudents[] = array(
+                    
+                    'studentId'=>$value['id'],
+                    'carnetIdentidad'=>$value['carnetIdentidad'],
+                    'complemento'=>$value['complemento'],
+                    'codigoRude'=>$value['codigoRude'],
+                    'paterno'=>$value['paterno'],
+                    'materno'=>$value['materno'],
+                    'nombre'=>$value['nombre'],
+                    'estadomatricula'=>$value['estadomatricula'],
+                    'estadomatriculaId'=>$value['estadomatriculaId'],
+                    'eInsId'=>$value['eInsId'],
+                    'studentId'=>$value['id'],
+                    
+                );
+            }
+        }
+
+        return $arrStudents;
+    }    
+
+
+
+
+
+    public function addupStudentbthAction(Request $request){
+        // get the send values
+        $eInsId = $request->get('eInsId');
+        $specialityId = $request->get('specialityId');
+        $iecId = $request->get('iecId');
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+
+        // create var to send the next values
+        $response = new JsonResponse();
+        try {
+            
+            // look for the speciality by student
+            $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$eInsId));
+            // check if the student has speciality to do the save or update        
+            $operativoSpeciality = 1;
+            $arrEstudianteInscripcionHumnisticoTecnico = array();
+            if(!$especialidadEstudiante){    
+                $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
+                $operativoSpeciality = 2;
+            }else{
+                //get the EstudianteInscripcionHumnisticoTecnico
+                $arrEstudianteInscripcionHumnisticoTecnico = array(
+                    'horas'=>$especialidadEstudiante->getHoras(),
+                    'InstitucioneducativaHumanisticoTecnicoTipo'=>$especialidadEstudiante->getInstitucioneducativaHumanisticoId(),
+                    'EspecialidadTecnicoHumanisticoTipo'=>$especialidadEstudiante->getEspecialidadTecnicoHumanisticoTipo()->getId(),
+                );
+            }
+            
+            if($specialityId != $especialidadEstudiante->getEspecialidadTecnicoHumanisticoTipo()->getId()){    
+
+                // set tthe add or update
+                $arrCondition = array('institucioneducativa'=>$this->session->get('ie_id'), 'gestionTipo'=>$this->session->get('currentyear'), 'especialidadTecnicoHumanisticoTipo'=>$specialityId);
+                    $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findOneBy($arrCondition);
+                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
+                $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($specialityId));
+                $especialidadEstudiante->setHoras(0);
+                $em->persist($especialidadEstudiante);
+
+                  //set the backup info
+                $objBthEstudianteInscripcionGestionEspecialidad = new BthEstudianteInscripcionGestionEspecialidad();
+                $objBthEstudianteInscripcionGestionEspecialidad->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
+                $objBthEstudianteInscripcionGestionEspecialidad->setOperativoGestionEspecialidadTipo($em->getRepository('SieAppWebBundle:OperativoGestionEspecialidadTipo')->find($operativoSpeciality));
+                $objBthEstudianteInscripcionGestionEspecialidad->setData(json_encode($arrEstudianteInscripcionHumnisticoTecnico));
+                $objBthEstudianteInscripcionGestionEspecialidad->setFechaRegistro(new \DateTime('now'));
+                $objBthEstudianteInscripcionGestionEspecialidad->setUsuarioId($this->session->get('userId'));
+                $em->persist($objBthEstudianteInscripcionGestionEspecialidad);
+
+
+                $em->flush();
+            }
+
+            // get the set data on students
+            $arrStudents = $this->getBthStudents($iecId,1);
+            $response->setStatusCode(200);
+            $response->setData(array(
+                'students'     => $arrStudents,
+                'status'     => 'goog',
+            ));
+            return $response;   
+
+        } catch (Exception $e) {
+            
+        }
+
+    }
+
+    public function doRemoveStudentBthAction(Request $request){
+        
+        // // get the send values
+        $jsonData = $request->get('datos');
+        $arrData = json_decode($jsonData,true);
+
+        $eInsId = $arrData['eInsId'];
+        $specialityId = $arrData['studentSpecialtyId'];
+        $justificativo = $arrData['justificativo'];
+        $iecId = $request->get('iecId');
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // create var to send the next values
+        $response = new JsonResponse();
+
+        // set the backup info after to remove it
+        // look for the speciality by student
+        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$eInsId));
+
+        // check if the student has speciality to do the save or update        
+        $operativoSpeciality = 3;
+        $arrEstudianteInscripcionHumnisticoTecnico = array();
+        if($especialidadEstudiante){     
+            //get the EstudianteInscripcionHumnisticoTecnico
+            $arrEstudianteInscripcionHumnisticoTecnico = array(
+                'horas'=>$especialidadEstudiante->getHoras(),
+                'InstitucioneducativaHumanisticoTecnicoTipo'=>$especialidadEstudiante->getInstitucioneducativaHumanisticoId(),
+                'EspecialidadTecnicoHumanisticoTipo'=>$especialidadEstudiante->getEspecialidadTecnicoHumanisticoTipo()->getId(),
+            );
+        }
+
+        //get the info to do the remove about the student to remove
+        $arrInfoStudent = $this->getInfoStudent($eInsId);
+        if(sizeof($arrInfoStudent)>0){
+            foreach ($arrInfoStudent as $value) {                
+                // // remove the nota
+                $objStudentNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($value['enotaId']);
+                $arrEstudianteInscripcionHumnisticoTecnico['nota'][]= array('usuario'=> $objStudentNota->getUsuarioId(), 'notaTipo'=>$objStudentNota->getNotaTipo()->getId(), 'nota'=>$objStudentNota->getNotaCuantitativa());
+                $em->remove($objStudentNota);            
+                // // set the materia        
+                $arrEstudianteInscripcionHumnisticoTecnico['estudianteAsignatura']= $value['easigId'];
+                
+            }
+            // remove the materia 
+            if($arrEstudianteInscripcionHumnisticoTecnico['estudianteAsignatura']>0){
+                $objStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($arrEstudianteInscripcionHumnisticoTecnico['estudianteAsignatura']);
+                $em->remove($objStudentAsignatura);                
+            }
+        }
+
+        // check if the file exists
+        if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                $type = $file['type'];
+                $size = $file['size'];
+                $tmp_name = $file['tmp_name'];
+                $name = $file['name'];
+                $extension = explode('.', $name);
+                $extension = $extension[count($extension)-1];
+                $new_name = date('YmdHis').'.'.$extension;
+
+                $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId);
+
+                // GUARDAMOS EL ARCHIVO
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/bthGestionStudentSpeciality/' .date('Y');
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/bthGestionStudentSpeciality/' .date('Y').'/'.$objStudentInscription->getEstudiante()->getId();
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/bthGestionStudentSpeciality/' .date('Y').'/'.$objStudentInscription->getEstudiante()->getId().'/'.$eInsId;
+                if (!file_exists($directoriomove)) {
+                    mkdir($directoriomove, 0775, true);
+                }
+
+                $archivador = $directoriomove.'/'.$new_name;
+                //unlink($archivador);
+                if(!move_uploaded_file($tmp_name, $archivador)){
+                    $response->setStatusCode(500);
+                    return $response;
+                }
+
+                // CREAMOS LOS DATOS DE LA IMAGEN
+                $informe = array(
+                    'name' => $name,
+                    'type' => $type,
+                    'tmp_name' => 'nueva_ruta',
+                    'size' => $size,
+                    'new_name' => $new_name
+                );
+            }else{
+                $informe = null;
+                $archivador = 'empty';
+            }
+
+        //set the backup info
+        $objBthEstudianteInscripcionGestionEspecialidad = new BthEstudianteInscripcionGestionEspecialidad();
+        $objBthEstudianteInscripcionGestionEspecialidad->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
+        $objBthEstudianteInscripcionGestionEspecialidad->setOperativoGestionEspecialidadTipo($em->getRepository('SieAppWebBundle:OperativoGestionEspecialidadTipo')->find($operativoSpeciality));
+        $objBthEstudianteInscripcionGestionEspecialidad->setData(json_encode($arrEstudianteInscripcionHumnisticoTecnico));
+        $objBthEstudianteInscripcionGestionEspecialidad->setFechaRegistro(new \DateTime('now'));
+        $objBthEstudianteInscripcionGestionEspecialidad->setUsuarioId($this->session->get('userId'));
+        $objBthEstudianteInscripcionGestionEspecialidad->setJustificativo($justificativo);
+        $objBthEstudianteInscripcionGestionEspecialidad->setRutaArchivo($archivador);
+        $em->persist($objBthEstudianteInscripcionGestionEspecialidad);
+
+        // remove the speciality
+        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$eInsId));
+        $em->remove($especialidadEstudiante);
+        $em->flush();
+
+
+        $arrStudents = $this->getBthStudents($iecId,1);
+
+
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'students'     => $arrStudents,
+            'status'     => 'goog',
+        ));
+        return $response;   
+    }
+    
+        // select eno.id as enotaId, ieco.id as iecoId, easig.id as easigId
+        // from estudiante_inscripcion ei
+        // left join estudiante_asignatura easig on (ei.id  = easig.estudiante_inscripcion_id)
+        // left join institucioneducativa_curso_oferta ieco on (easig.institucioneducativa_curso_oferta_id = ieco.id)
+        // left join estudiante_nota eno on (easig.id = eno.estudiante_asignatura_id)
+        // where ei.id = 458269781 and ieco.asignatura_tipo_id = 1037
+        /**
+     * to get the info about the notas and asignaura
+     * @param type array data
+     * @return type - array data ids nota and asignatura
+     */
+        //IDENTITY(eno.id) as enotaId,IDENTITY(ieco.id) as iecoId,IDENTITY(easig.id) as easigId
+    private function getInfoStudent($eInsId) {
+        $em = $this->getDoctrine()->getManager();
+        $inscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $inscription->createQueryBuilder('ei')
+                ->select('eno.id as enotaId, ieco.id as iecoId, easig.id as easigId')
+                ->leftjoin('SieAppWebBundle:EstudianteAsignatura', 'easig', 'WITH', 'ei.id  = easig.estudianteInscripcion')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco', 'WITH', 'easig.institucioneducativaCursoOferta = ieco.id')
+                ->leftjoin('SieAppWebBundle:EstudianteNota', 'eno', 'WITH', 'easig.id = eno.estudianteAsignatura')
+                ->where('ei.id = :id')
+                ->andwhere('ieco.asignaturaTipo  = :asigTipo')
+                ->setParameter('id', $eInsId)
+                ->setParameter('asigTipo', 1039)
+                ->getQuery();
+
+        $studentInscription = $query->getResult();
+
+        return $studentInscription;
+    }
+
+    public function operativoEspecialidadesBthAction ( Request $request){ 
+        $em = $this->getDoctrine()->getManager();
+        try {
+            $bthOperativo=new bthControlOperativoModificacionEspecialidades();
+            $bthOperativo->setInstitucioneducativaId($request->get('sie'));
+            $bthOperativo->setGestionTipoId($request->get('gestion'));
+            $bthOperativo->setInstitucioneducativaOperativoLogTipo ($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(9));
+            $bthOperativo->setEstadoOperativo(true);
+            $bthOperativo->setFechaCierre(new \DateTime('now'));
+           
+            $em->persist($bthOperativo);
+            $em->flush();
+            $res = 1;
+            $msg = "Se cerro el operativo correctamente";
+            return  new JsonResponse(array('estado' => $res, 'msg' => $msg));
+        }catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+            $res = 0;
+            $msg = "Error al cerrar el Operativo";
+            return  new JsonResponse(array('estado' => $res, 'msg' => $msg));
+        }
+
+    }
+
+    public function closeOperativoSextoSeccAction(Request $request){
+        
+        $response = new JsonResponse();
+        // get the send values
+        $sie     = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $bimestre = 4;
+        $level = 13;
+        $grado = 6;
+
+        $em = $this->getDoctrine()->getManager();
+
+        try {
+            // check if the UE has observation in level 13 and grado 6
+            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+            $query->execute();
+            $responseOpe = $query->fetchAll();//function db
+            $arrResponse = array();
+            // chek if the validation has error
+            if(sizeof($responseOpe)>0){
+                // error; send the errors to show on the view
+                $swObservations = true;
+                $arrResponse = $responseOpe;                
+            }else{
+                $swObservations = false;
+                // no error save the success validation
+                $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+                $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
+                $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+                $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+                $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+                $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+                $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($this->session->get('lastOperativo')));
+                $institucioneducativaOperativoLog->setDescripcion('...');
+                $institucioneducativaOperativoLog->setEsexitoso('t');
+                $institucioneducativaOperativoLog->setEsonline('t');
+                $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
+                $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+                $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+                $em->persist($institucioneducativaOperativoLog);
+                $em->flush();
+
+                return $response->setData(array('reloadIt'=>true, 'mssg'=>'Se verifico el operativo Sexto de Secundaria sin problemas'));
+
+            }
+            
+          
+            $msg = "Se cerro el operativo correctamente";
+        }catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+            $res = 0;
+            $msg = "Error al cerrar el Operativo";
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:closeOperativoSextoSecc.html.twig', array(
+                'arrResponse' => $arrResponse,
+                'swObservations' => $swObservations,
+        ));
     }
 
 }

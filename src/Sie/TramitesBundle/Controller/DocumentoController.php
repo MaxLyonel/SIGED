@@ -299,7 +299,7 @@ class DocumentoController extends Controller {
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo as pat on pat.id = e.pais_tipo_id
             where iec.gestion_tipo_id = ".$gestionId."::double precision and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
-            and td.tramite_estado_id <> 4 and td.flujo_proceso_id = 5
+            and td.tramite_estado_id <> 4 and (td.flujo_proceso_id = 5 or td.flujo_proceso_id = 9)
             order by e.paterno, e.materno, e.nombre
         ");
         $queryEntidad->execute();
@@ -391,7 +391,7 @@ class DocumentoController extends Controller {
         }
     }
 
-    //****************************************************************************************************
+    //************************gestiones****************************************************************************
     // DESCRIPCION DEL METODO:
     // Funcion que valida el estado activo de un determinado numero de serie
     // PARAMETROS: serie
@@ -943,7 +943,7 @@ class DocumentoController extends Controller {
     public function creaFormAnulaDocumentoSerie($routing, $serie, $obs) {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
-            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,10}$', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,12}$', 'maxlength' => '12', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('obs', 'textarea', array('label' => 'OBS.', 'attr' => array('value' => $obs, 'class' => 'form-control', 'placeholder' => 'Comentario', 'pattern' => '^@?(\w){1,200}$', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
@@ -959,7 +959,7 @@ class DocumentoController extends Controller {
     public function creaFormBuscaDocumentoSerie($routing, $serie) {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
-            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,10}$', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,12}$', 'maxlength' => '12', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
         return $form;
@@ -2065,6 +2065,109 @@ class DocumentoController extends Controller {
             inner join persona_tipo as pt on pt.id = df1.persona_tipo_id
             -- where dfa.esactivo = true
             order by dfa.fecha_registro desc, dfa.id desc
+        ");
+        $queryEntidad->execute();
+        $entity = $queryEntidad->fetchAll();
+        
+        if (count($entity)>0){
+            $entity = $entity;
+        } else {
+            $entity = array();
+        }
+
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera el listado de numeros de serie disponibles para su asignacion
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function serieDisponibleAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rolPermitido = array(16,8,42);
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        $usuarioLugarId = $this->getCodigoLugarRol($id_usuario,8);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,array(8));
+        
+        if ($esValidoUsuarioRol){
+            $usuarioLugarId = 0;
+        } else {
+            $usuarioLugarId = $this->getCodigoLugarRol($id_usuario,16);
+        }
+        $gestionId = $gestionActual->format('Y');
+        $formGestion = $request->get('gestion');
+        if ($formGestion) {
+            $gestionId = $formGestion;
+        } 
+
+        $lista = $this->getSerieDisponible($usuarioLugarId,$gestionId);
+
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
+
+        $gestionEntity = $tramiteController->getGestiones(2010);
+        // dump($lista);die;
+
+        return $this->render($this->session->get('pathSystem') . ':Documento:serieDisponible.html.twig', array(
+            'series' => $lista
+            , 'gestiones' => $gestionEntity
+            , 'gestion' => $gestionId
+            , 'titulo' => 'Numero y Serie'
+            , 'subtitulo' => 'Disponible'
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los números de serie disponibles
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getSerieDisponible($departamentoCodigo,$gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select vv.*, dot.documento_tipo, dt.departamento from (
+                select v.departamento_tipo_id, v.gestion_id, v.documento_tipo_id
+                , array_agg(distinct v.id order by v.id) as ids, string_agg(distinct v.serie, ',') as serie, array_length(array_agg(distinct v.id),1) as count
+                , (array_agg(distinct v.id))[1] as primer, (array_agg(distinct v.id))[array_length(array_agg(distinct v.id),1)] as ultimo
+                from (
+                    select (cast((case when ds.gestion_id in (2010,2013) then substring(ds.id from 1 for LENGTH(ds.id)-2) when ds.gestion_id in (2011,2012,2014) then substring(ds.id from 1 for LENGTH(ds.id)-1) else substring(ds.id from 1 for 6) end) as integer)) - (row_number() over (partition by ds.departamento_tipo_id, ds.gestion_id
+                    , ds.documento_tipo_id order by ds.id)) as group_id
+                    , case when ds.gestion_id in (2010,2013) then substring(ds.id from 1 for LENGTH(ds.id)-2) when ds.gestion_id in (2011,2012,2014) then substring(ds.id from 1 for LENGTH(ds.id)-1) else substring(ds.id from 1 for 6) end as numero
+                    , case when ds.gestion_id in (2010,2013) then substring(ds.id from LENGTH(ds.id)-1 for LENGTH(ds.id)) when ds.gestion_id in (2011,2012,2014) then substring(ds.id from LENGTH(ds.id) for LENGTH(ds.id)) else substring(ds.id from 7 for 11)  end as serie
+                    , (row_number() over (partition by ds.departamento_tipo_id, ds.gestion_id, ds.documento_tipo_id order by ds.id)) as row_num
+                    , ds.*
+                    from documento_serie as ds
+                    left join documento as d on d.documento_serie_id = ds.id
+                    where ds.documento_tipo_id in (1,9,6,7) and ds.gestion_id = ".$gestionId." and esanulado = false and d.id is null and case ".$departamentoCodigo." when 0 then true else ds.departamento_tipo_id = ".$departamentoCodigo." end
+                    order by ds.id
+                ) as v
+                group by v.departamento_tipo_id, v.gestion_id, v.documento_tipo_id, v.group_id
+            ) as vv
+            inner join departamento_tipo as dt on vv.departamento_tipo_id = dt.id
+            inner join documento_tipo as dot on vv.documento_tipo_id = dot.id
+            order by vv.departamento_tipo_id, vv.gestion_id, vv.documento_tipo_id
         ");
         $queryEntidad->execute();
         $entity = $queryEntidad->fetchAll();

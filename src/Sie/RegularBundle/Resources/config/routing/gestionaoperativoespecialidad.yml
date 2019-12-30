@@ -1,0 +1,15 @@
+gestionaoperativoespecialidad_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:GestionaOperativoEspecialidad:index }
+
+gestionaoperativoespecialidad_lookfor_sie:
+    path:     /lookforSie
+    defaults: { _controller: SieRegularBundle:GestionaOperativoEspecialidad:lookforSie }
+    options:
+        expose: true
+
+gestionaoperativoespecialidad_change_status_operativo:
+    path:     /changeStatusOperativo
+    defaults: { _controller: SieRegularBundle:GestionaOperativoEspecialidad:changeStatusOperativo }
+    options:
+        expose: true    

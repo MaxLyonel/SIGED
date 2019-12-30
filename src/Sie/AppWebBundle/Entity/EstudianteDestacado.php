@@ -752,4 +752,60 @@ class EstudianteDestacado
     {
         return $this->promedioSem2;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaNacimiento;
+
+    /**
+     * @var string
+     */
+    private $complemento;
+
+
+    /**
+     * Set fechaNacimiento
+     *
+     * @param \DateTime $fechaNacimiento
+     * @return EstudianteDestacado
+     */
+    public function setFechaNacimiento($fechaNacimiento)
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaNacimiento
+     *
+     * @return \DateTime 
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * Set complemento
+     *
+     * @param string $complemento
+     * @return EstudianteDestacado
+     */
+    public function setComplemento($complemento)
+    {
+        $this->complemento = $complemento;
+    
+        return $this;
+    }
+
+    /**
+     * Get complemento
+     *
+     * @return string 
+     */
+    public function getComplemento()
+    {
+        return $this->complemento;
+    }
 }

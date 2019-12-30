@@ -628,12 +628,12 @@ class DownloadController extends Controller {
 
         // Validamos que tipo de libreta se ha de imprimir
         // Modular y plena
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
         if($this->session->get('ue_tecteg') == false){
-            $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion == 2019){
+            if($gestion >= 2019){
                 switch ($nivel) {
                     case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v2_rcm.rptdesign'; break;
                     case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v2_rcm.rptdesign'; break;
@@ -689,7 +689,20 @@ class DownloadController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
+        if($gestion >= 2019){
+            // VERIFICAMOS SI EL CURSO ES DE SEXTO DE SECUNDARIA Y CERRO OPERATIVO DE SEXTO 
+            // PARA IMPRIMIR LIBRETA COMO OPERATIVO CERRADO HASTA 4TO BIMESTRE
+            if($operativo == 3 and $nivel == 13 and $grado == 6){
+                $validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
+                if($validacionSexto){
+                    $operativo = 4;
+                }
+            }
+            
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&bimestre=' . $operativo . '&&__format=pdf&'));
+        }else{
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
+        }
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1210,17 +1223,11 @@ class DownloadController extends Controller {
         return $response;
     }
 
-    /*====================================================================================
-    =            REPORTES TRAMITE DE ADICION Y MODIFICACION DE CALIFICACIONES            =
-    ====================================================================================*/
-    
-    /*----------  FORMULARIO IMPRESO POR LA UNIDAD EDUCATIVA  ----------*/
-    
-    public function tramiteModificacionCalificacionesFormularioAction(Request $request, $idTramite, $codigoQR) {
+    public function tramiteModificacionCalificacionesAction(Request $request, $idTramite) {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'formulario_tramite_modificacion_calificaciones_'.$idTramite.'.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_formulario_ue_gral_v1_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR . '&&__format=pdf&'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'tramite_modificacion_calificaciones_' . $idTramite . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_tramite_modificacion_calificaciones_ue_gral_v1_jqc.rptdesign&id_tramite=' . $idTramite . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1228,20 +1235,108 @@ class DownloadController extends Controller {
         return $response;
     }
 
-    /*----------  ACTA IMPRESA POR LA DIRECCION DEPARTAMENTAL  ----------*/
-    
-    public function tramiteModificacionCalificacionesActaAction(Request $request, $idTramite, $codigoQR) {
+    public function downstudentHistModificationAction(Request $request, $id, $studentId){
         $response = new Response();
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$id.'|'.$studentId;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($data);
+
+
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'acta_tramite_modificacion_calificaciones_'.$idTramite.'.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_tramite_modificacion_calificaciones_acta_ue_gral_v1_jqc.rptdesign&tramite_id=' . $idTramite . '&codigo_qr=' . $codigoQR .'&&__format=pdf&'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'mod_student_'.$id.'_'.$studentId. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_modificacion_datos_v2_pvc.rptdesign&id=' . $id.'&estudiante_id='. $studentId.'&lk='. $link . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
     }
+   
+
+     public function bthEspecialidadesAction(Request $request, $ue, $gestion,$gradoId) {
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_espe_mod_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_modificacion_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&gradoId='.$gradoId. '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    public function bthEspecialidadesEliminadasAction(Request $request, $ue, $gestion,$gradoId){
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_espe_elim_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_especialidades_bth_eliminacion_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&gradoId='.$gradoId. '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    /*
+    report nivelation bth per course
+    */
+    public function boletinNivelacionBthAction(Request $request, $iecId, $codue){
+
+        $response = new Response();
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$iecId.'|'.$codue;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($data);
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'bth_niv_'.$codue.'_'.$iecId. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinCentralizadorNivelacionBTH_TTG_v1_ma.rptdesign&inscripid=' . $iecId.'&codue='. $codue.'&lk='. $link . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
     
-    /*=====  End of REPORTES TRAMITE DE ADICION Y MODIFICACION DE CALIFICACIONES  ======*/
+    /*
+    report nivelation bth ttg per course
+    */
+    public function boletinNivelacionTTGBthAction(Request $request, $iecId, $codue){
+
+        $response = new Response();
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$iecId.'|'.$codue;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($data);
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'bth_niv_'.$codue.'_'.$iecId. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinCentralizadorNivelacionBTH_TTG_v1_ma.rptdesign&inscripid=' . $iecId.'&codue='. $codue.'&lk='. $link . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
+    /*
+    report nivelation bth ttg per course
+    */
+    public function boletinNivelacionTTEBthAction(Request $request, $iecId, $codue){
+
+        $response = new Response();
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$iecId.'|'.$codue;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($data);
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'bth_niv_'.$codue.'_'.$iecId. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinCentralizadorNivelacionBTH_TTE_v1_ma.rptdesign&inscripid=' . $iecId.'&codue='. $codue.'&lk='. $link . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }    
+
 
 }

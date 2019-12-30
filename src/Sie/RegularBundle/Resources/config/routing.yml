@@ -1,3 +1,15 @@
+sie_regular_modifiacion_calificacion_nivelacion:
+    resource: "@SieRegularBundle/Resources/config/routing/modificacionCalificacionNivelacion.yml"
+    prefix:   /sie/modificacion-calificacion-nivelacion
+
+sie_regular_console:
+    resource: "@SieRegularBundle/Resources/config/routing/console.yml"
+    prefix:   /sie/consola
+
+sie_regular_sin_historial_calidad:
+    resource: "@SieRegularBundle/Resources/config/routing/historialCalidad.yml"
+    prefix:   /sie/historialCalidad
+
 sie_regular_modificacion_notas_cero:
     resource: "@SieRegularBundle/Resources/config/routing/modificacionNotasCero.yml"
     prefix:   /sie/modificacionCalificacionesCero
@@ -371,3 +383,11 @@ sie_regular_reactivar_bth:
 sie_regular_specialmodificationdata_student:
      resource: "@SieRegularBundle/Resources/config/routing/specialmodificationdatastudent.yml"
      prefix:   /sie/modificationdata
+
+sie_regular_gestionaoperativoespecialidad:
+     resource: "@SieRegularBundle/Resources/config/routing/gestionaoperativoespecialidad.yml"
+     prefix:   /sie/admopespeciality
+
+sie_regular_lista_operativo_notas_sexto:
+    resource: "@SieRegularBundle/Resources/config/routing/ListaOperativoNotasSexto.yml"
+    prefix:   /sie/listaOperativoNotasSexto

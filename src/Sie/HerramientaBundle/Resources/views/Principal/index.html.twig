@@ -20,6 +20,48 @@
 
     <div class="body-content animated fadeIn">
         <div class="row">
+            <div class="col-md-6">
+                <!-- Start input fields - basic form -->
+                <div class="panel rounded shadow">
+                    <div class="panel panel-warning shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Consideraciones para la descarga del Certificado CUT-TTM</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="alert alert-success">
+                                 Para habilitar el Certificado Único de Trámites CUT-TTM, el sistema valida la siguiente información del estudiante:
+                                </div>
+                                 <ul>
+                                    <li><strong> Carga Horaria</strong></li> 
+                                        Para la impresión del CUT-TTM, el estudiante debe cumplir las 1920 Horas.
+                                    <li><strong>Nivelación</strong> </li>
+                                        La Unidad Educativa debió registrar en el sistema de Información Educativa(SIE), las calificaciones obtenidas en el proceso de nivelación.
+                                    <li><strong>Especilidad</strong> </li>
+                                        Las y los estudiantes del 6to año de escolaridad que no hayan cambiado su especialidad, que tengan su formación Técnica Tecnológica Especializada de 5to año de escolaridad en diferente especialidad y hayan sido aporbados por homologaciones, no tendrán ninguna dificultad en la impresion CUT.
+                                    <li><strong>Validación SEGIP</strong> </li>
+                                        El sistema valida la información del estudiante con el SEGIP, los datos validados son paterno, materno, nombres y Fecha de Nacimiento.
+                                </ul>
+                            </div>
+                            <div class="row">
+                                <div class="text-center">
+                                <a class="btn btn-lilac btn-xs btn-facebook" href="{{asset('uploads/archivos/Consideraciones_CUT.pdf' )}}" target="_blank" download>
+                                  <i class="fa fa-file-pdf-o fa-2x" ></i> Descargar consideraciones para el Certificado Único de Trámites CUT-TTM
+                                 </a>
+                             </div>
+                                {# <div class="col-md-6 col-md-offset-3">
+                                  <button type="button" class="btn btn-facebook btn-md" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' >
+                                            <i class="fa fa-group" ></i>  Habilitar el Certificado Único de Trámites CUT-TTM
+                                  </button>
+                                </div> #}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% if app.session.get('ie_id') > 0 %}
         
             <div class="col-md-3">
@@ -87,6 +129,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-md-6">
                 <!-- Start input fields - basic form -->
                 <div class="panel rounded shadow">

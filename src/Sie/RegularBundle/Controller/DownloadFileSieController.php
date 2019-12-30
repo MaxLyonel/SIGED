@@ -111,7 +111,7 @@ class DownloadFileSieController extends Controller {
           * return type of UE *
           * *
           \************************************/
-          $form['reglasUE'] = '1,2,3,5';
+          $form['reglasUE'] = '1,2,3,5,7';
           $objAllowUE = $this->getObservationAllowUE($form);
 
           if ($objAllowUE) {
@@ -516,21 +516,25 @@ class DownloadFileSieController extends Controller {
                 $operativo = $form['bimestre'] + 1;
                 // switch ($form['gestion']) {
                 //     case $this->session->get('currentyear'):
-                      switch ($operativo) {
-                        case '1':
-                          # code...
-                          $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                          break;
-                        case '2':
-                        case '3':
-                        case '4':
-                        case '5':
-                            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                          break;
-                        default:
-                          # code...
-                          break;
-                      }
+                if($form['gestion'] == 2019 && $operativo == 5){
+                  $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_sin_6to('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                }else{              
+                  switch ($operativo) {
+                    case '1':
+                      # code...
+                      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                      break;
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                      break;
+                    default:
+                      # code...
+                      break;
+                  }
+                }
 
                 //         break;
                 //     case '2015':
@@ -829,7 +833,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v1291.exe';
+        $file = 'instalador_SIGED_SIE_v1292.exe';
 
         //create response to donwload the file
         $response = new Response();

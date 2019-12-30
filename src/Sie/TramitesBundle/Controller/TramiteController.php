@@ -315,6 +315,7 @@ class TramiteController extends Controller {
         $query = $entity->createQueryBuilder('gt')
                 ->where('gt.id >= :id')
                 ->setParameter('id', $gestionId)
+                ->orderBy('gt.id', 'DESC')
                 ->getQuery();
         try {
             return $query->getResult();
@@ -3866,7 +3867,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(16);
 
@@ -3949,7 +3950,7 @@ class TramiteController extends Controller {
                     select e.id as estudianteId, ei.id as estudianteInscripcionId, iec.gestion_tipo_id from estudiante as e
                     inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges."
+                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges." and ei.estadomatricula_tipo_id in (5,55)
                     and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and iec.grado_tipo_id=3) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=5 and iec.grado_tipo_id=2) else iec.nivel_tipo_id=13 and iec.grado_tipo_id=6 end
                 ");
                 $query->execute();
@@ -4338,5 +4339,79 @@ class TramiteController extends Controller {
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
         return $objEntidad;
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que verifica el dato personal del estudiante
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function datoPersonalVerificaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $msg = "";
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $response = new JsonResponse();
+        //return $response->setData(array('estado' => true, 'obs' => $msg));
+        if ($request->isMethod('POST')) {
+            $estudianteInscripcionId = base64_decode($request->get('val'));
+            if ($estudianteInscripcionId != ""){                
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+                    $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                    if(count($estudianteInscripcion)>0){                        
+                        $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
+                        $paterno = $estudianteInscripcion->getEstudiante()->getPaterno();
+                        $materno = $estudianteInscripcion->getEstudiante()->getMaterno();
+                        $carnetIdentidad = $estudianteInscripcion->getEstudiante()->getCarnetIdentidad();
+                        $complemento = $estudianteInscripcion->getEstudiante()->getComplemento();
+                        $fechaNacimiento = $estudianteInscripcion->getEstudiante()->getFechaNacimiento();
+
+                        $arrParametros = array('complemento'=>$complemento, 'primer_apellido'=>$paterno, 'segundo_apellido'=>$materno, 'nombre'=>$nombre, 'fecha_nacimiento'=>$fechaNacimiento->format('d-m-Y'));
+
+                        $answerSegip = false;
+                        if ($carnetIdentidad > 0){
+                            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
+                        }
+                        
+                        if($answerSegip){
+                            $entityEstudiante = $estudianteInscripcion->getEstudiante();
+                            $entityEstudiante->setSegipId(1);
+                            $em->persist($entityEstudiante);
+                            $em->flush();
+                            $em->getConnection()->commit();
+                            $msg = 'Datos del estudiante '.$nombre.' '.$paterno.' '.$materno.', validado correctamente';
+                        } else {
+                            $msg = 'Datos del estudiante '.$nombre.' '.$paterno.' '.$materno.', no validados';
+                        }                       
+                        return $response->setData(array('estado' => $answerSegip, 'obs' => $msg));
+                    } else {
+                        return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'.$tramiteId));
+                    }
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                }
+            } else {
+                return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+            }
+        } else {
+            return $response->setData(array('estado' => false, 'obs' => 'Error al enviar el formulario, intente nuevamente'));
+        }
     }
 }

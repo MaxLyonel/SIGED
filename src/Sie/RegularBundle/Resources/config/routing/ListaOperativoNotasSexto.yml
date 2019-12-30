@@ -1,0 +1,14 @@
+
+lista_operativo_sexto_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ListaOperativoNotasSexto:index }
+
+lista_operativo_sexto_find:
+    path:     /find
+    defaults: { _controller: SieRegularBundle:ListaOperativoNotasSexto:find }
+    options:
+        expose: true
+
+review_up_sie_file_download_file:
+    path:     /downloadFile
+    defaults: { _controller: SieRegularBundle:ReviewUpSieFile:downloadFile }

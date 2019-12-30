@@ -349,7 +349,7 @@ class UnificacionRudeController extends Controller {
                         goto corrinc;
                     }
                 }
-                if(($studenta->getSegipId() == 1 or $studentb->getSegipId() == 1) and $sw == 0){
+                if(($studenta->getSegipId() == 1 xor $studentb->getSegipId() == 1) and $sw == 0){
                     if ($studenta->getSegipId() == 1 and $studentb->getSegipId() == 0){
                         $corr = $rudea;
                         $inc = $rudeb;
@@ -572,7 +572,7 @@ class UnificacionRudeController extends Controller {
         $queryverdipb->execute();
         $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
         //*************GENERANDO BACKUP DEL RUDE INCORRECTO
-                
+        //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
         //UPDATES
         try {
             $sesion = $request->getSession();
@@ -616,6 +616,13 @@ class UnificacionRudeController extends Controller {
                     $em->flush();
                 }                    
             }
+            //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
+            $students = $em->createQueryBuilder()
+                ->delete('SieAppWebBundle:EstudianteHistorialModificacion','ehm')
+                ->where('ehm.estudiante = :id')
+                ->setParameter('id', $studentinc->getId())
+                ->getQuery()
+                ->execute();
             //**********ESTUDIANTE APODERADOS
             /*if (($apodeinc) && ($studentcor)) {
                 foreach ($inscripcorr as $inscrip) {

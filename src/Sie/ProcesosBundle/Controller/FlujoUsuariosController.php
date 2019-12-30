@@ -167,7 +167,8 @@ class FlujoUsuariosController extends Controller
     {
         $form = $this->createFormBuilder()
             ->add('flujotipo','entity',array('label'=>'Tipo de proceso:','required'=>true,'class'=>'SieAppWebBundle:FlujoTipo','query_builder'=>function(EntityRepository $ft){
-                return $ft->createQueryBuilder('ft')->where('ft.id > 5')->andWhere("ft.obs like '%ACTIVO%'")->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione proceso'))
+                //return $ft->createQueryBuilder('ft')->where('ft.id > 5')->andWhere("ft.obs like '%ACTIVO%'")->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione proceso'))
+                return $ft->createQueryBuilder('ft')->where('ft.id > 5')->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione proceso'))
             ->add('buscar', 'button', array('label'=>'Buscar','attr'=>array('class'=>'btn btn-primary')))
             ->getForm();
         return $form;

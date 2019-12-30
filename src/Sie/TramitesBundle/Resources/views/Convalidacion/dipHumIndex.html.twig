@@ -1,0 +1,125 @@
+{% extends "::layoutTramites.html.twig"%}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Inicio</a>
+            <i class="fa fa-angle-right"></i>
+            <a href="#">Convalidación</a>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption%}
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Formulario de busqueda
+                </div>
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'id': 'form', 'data-toggle': 'validator','role': "form", 'class': "form-horizontal form-bordered"} } )}}
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    {{form_label(form.paterno, null, {'label_attr':{'class':'col-md-4'}})}}
+                                    <div class="col-sm-8">{{form_widget(form.paterno)}}</div>
+                                </div>
+                                <div class="col-md-3">
+                                    {{form_label(form.materno, null, {'label_attr':{'class':'col-md-4'}})}}
+                                    <div class="col-sm-8">{{form_widget(form.materno)}}</div>
+                                </div>
+                                <div class="col-md-3">
+                                    {{form_label(form.nombre, null, {'label_attr':{'class':'col-md-4'}})}}
+                                    <div class="col-sm-8">{{form_widget(form.nombre)}}</div>
+                                </div>
+                                <div class="col-md-3">
+                                    {{ form_widget(form.buscar,{'id':'formBuscar', 'attr':{'class':'btn btn-primary col-md-12'}} ) }}
+                                </div>
+                            </div>
+                        </div>
+                    {{form_end(form)}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="formContent">
+    </div>
+    <div class="row" id="formInscripcion">
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function(){    
+            $("#form_paterno").focus();
+            $("#form").submit(function (e) {
+                e.preventDefault();
+                var form = $('#form').serialize();
+                $.ajax({
+                    type: 'get',
+                    data: form,
+                    url: Routing.generate('tramite_convalidacion_diploma_humanistico_estudiante_busca'),
+                    beforeSend: function () {
+                        $("#formContent").empty();
+                        $("#formContent").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#formContent").empty();
+                        $("#formContent").append(data);
+                    },
+                    error: function(error){
+                        $("#formContent").empty();
+                        $("#formContent").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+                    },
+                });
+            });
+
+            
+        });
+
+        function dep(es) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+        
+    </script>
+{% endblock %}

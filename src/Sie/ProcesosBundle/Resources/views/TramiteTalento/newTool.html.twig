@@ -98,6 +98,9 @@
                                             <option value="{{item.id}}">{{item.id}} - {{item.institucioneducativa}}</option>
                                             {% endfor %}
                                         </select>
+                                        {% if centros|length == 0 %}
+                                        <span class="text-danger">No existen Centros Educativos autorizados en su departamento.</span>
+                                        {% endif %}
                                     </div>
                                     {# <div class="form-group">
                                         <label for="fecha_solicitud">Fecha Solicitud</label>
