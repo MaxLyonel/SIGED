@@ -7,8 +7,10 @@
                 <div class="panel-heading no-padding">
                     <ul class="nav nav-tabs nav-pills">
                         {% for d in datos %}
-                            {% if d.flujoProceso.id != 67 %}
-                                {% if d.flujoProceso.id == 84 %}
+                            {# {% if d.flujoProceso.id != 67 %} #}
+                            {% if d.flujoProceso.id != 48 %}
+                                {# {% if d.flujoProceso.id == 84 %} #}
+                                {% if d.flujoProceso.id == 51 %}
                                     <li class={% if d.flujoProceso.orden == 1 %}"active" {% else %} ""{% endif %}>
                                         <a href="#{{d.flujoProceso.flujotipo.id}}" data-toggle="tab" aria-expanded="false">
                                             <div>
@@ -17,7 +19,8 @@
                                         </a>
                                     </li>
                                 {% endif %}
-                                <li class={% if d.flujoProceso.orden == 1 and d.flujoProceso.id == 64  %}"active" {% else %} ""{% endif %}>
+                                {# <li class={% if d.flujoProceso.orden == 1 and d.flujoProceso.id == 64  %}"active" {% else %} ""{% endif %}> #}
+                                <li class={% if d.flujoProceso.orden == 1 and d.flujoProceso.id == 45  %}"active" {% else %} ""{% endif %}>
                                     <a href="#{{d.flujoProceso.id}}" data-toggle="tab" aria-expanded="false">
                                         <div>
                                             <span class="text-strong">{{d.flujoProceso.proceso.procesoTipo}}</span>
@@ -34,7 +37,8 @@
                 <div class="panel-body">
                     <form action="#" class="tab-content form-horizontal">
                         {% for d in datos %}
-                            {% if d.flujoProceso.id == 84 %}
+                            {# {% if d.flujoProceso.id == 84 %} #}
+                            {% if d.flujoProceso.id == 51 %}
                                 <div class={% if d.flujoProceso.orden == 1 %}"tab-pane fade in active inner-all" {% else %} "tab-pane fade inner-all"{% endif %} id="{{d.flujoProceso.flujoTipo.id}}">
                                     {% if d.datos.tramites[0].id == 54 %}
                                         <style>
@@ -753,8 +757,11 @@
                                     {% endif %}
                                 </div>    
                             {% endif %}
-                            <div class={% if d.flujoProceso.orden == 1 and d.flujoProceso.id == 64 %}"tab-pane fade in active inner-all" {% else %} "tab-pane fade inner-all"{% endif %} id="{{d.flujoProceso.id}}">
-                                {% if d.flujoProceso.id == 64 %} {# inicio modificacion #}
+                            {# <div class={% if d.flujoProceso.orden == 1 and d.flujoProceso.id == 64 %}"tab-pane fade in active inner-all" {% else %} "tab-pane fade inner-all"{% endif %} id="{{d.flujoProceso.id}}"> #}
+                            <div class={% if d.flujoProceso.orden == 1 and d.flujoProceso.id == 45 %}"tab-pane fade in active inner-all" {% else %} "tab-pane fade inner-all"{% endif %} id="{{d.flujoProceso.id}}">
+                                {# {% if d.flujoProceso.id == 64 %} inicio modificacion #}
+                                {% if d.flujoProceso.id == 45 %} {# inicio modificacion #}
+                                
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
@@ -1346,7 +1353,8 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                {% if d.flujoProceso.id in [65,84] %} {# distrito modificacion #}
+                                {# {% if d.flujoProceso.id in [65,84] %} distrito modificacion #}
+                                {% if d.flujoProceso.id in [46,51] %} {# distrito modificacion #}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
@@ -1457,7 +1465,8 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                {% if d.flujoProceso.id in [66,85] %} {# departamental #}
+                                {# {% if d.flujoProceso.id in [66,85] %} departamental #}
+                                {% if d.flujoProceso.id in [47,52] %} {# departamental #}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
@@ -1584,7 +1593,8 @@
                                         </div><!-- /.panel-body -->
                                     </div><!-- /.panel-primary -->
                                 {% endif %}
-                                {% if d.flujoProceso.id in [68,86] %} {# nacional #}
+                                {# {% if d.flujoProceso.id in [68,86] %} nacional #}
+                                {% if d.flujoProceso.id in [49,53] %} {# nacional #}
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
