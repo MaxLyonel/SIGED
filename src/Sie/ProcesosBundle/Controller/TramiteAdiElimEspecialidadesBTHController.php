@@ -110,11 +110,15 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             and institucioneducativa_id = $id_institucion AND gestion_tipo_id = $gestion");
         $query->execute();
         $valida_ue = $query->fetch();
-        if((int)$valida_ue['cantidad']==0){
-            $estado = 1; // La Unidad Educativa es plena para los grados(5-6) y puede hacer la solicitud
-        }else{
-            $estado = 0; // La Unidad Educativa no plena para los grados(5-6) y no puede hacer la solicitud
+        $ue_autorizada = 0;
+        if($id_institucion == '40730065'){
+            $ue_autorizada = 1;
         }
+        if((int)$valida_ue['cantidad']==0 or  $ue_autorizada == 0 ){
+            $estado = 1; // La Unidad Educativa no plena para los grados(5-6) y no puede hacer la solicitud
+        }else{
+            $estado = 0; // La Unidad Educativa es plena para los grados(5-6) y puede hacer la solicitud
+        }//dump((int)$valida_ue['cantidad'],$ue_autorizada,$estado);die;
         
         return $estado;
     }
