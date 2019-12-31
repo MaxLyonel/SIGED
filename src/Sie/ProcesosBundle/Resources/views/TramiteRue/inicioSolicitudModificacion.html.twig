@@ -1651,6 +1651,12 @@
             }
         }
 
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+            
+        });
+
         function borrarFila(id){
             var array = JSON.parse($('#form_tr').val());
             if ((id == 34 || id == 43) && $('#form_tr').val()!= "" && JSON.parse($('#form_tr').val()).includes(39)==true){

@@ -210,7 +210,7 @@ class TramiteRueController extends Controller
                         ->add('dependencia','entity',array('label'=>'Dependencia','required'=>true,'multiple' => true,'expanded' => true,'class'=>'SieAppWebBundle:DependenciaTipo','query_builder'=>function(EntityRepository $dt){
                             return $dt->createQueryBuilder('dt')->where('dt.id = 2');},'property'=>'dependencia'))
                         ->add('conveniotipo','entity',array('label'=>'Tipo de Convenio:','required'=>true,'multiple' => false,'attr' => array('class' => 'form-control'),'empty_value'=>'Seleccione convenio','class'=>'SieAppWebBundle:ConvenioTipo','query_builder'=>function(EntityRepository $ct){
-                            return $ct->createQueryBuilder('ct')->where('ct.id <>99')->orderBy('ct.convenio','ASC');},'property'=>'convenio'))
+                            return $ct->createQueryBuilder('ct')->where('ct.codDependenciaId =2')->orderBy('ct.convenio','ASC');},'property'=>'convenio'))
                         ->getForm();
                 }else{
                     $form = $form
