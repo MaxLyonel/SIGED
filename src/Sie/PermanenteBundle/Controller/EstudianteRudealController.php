@@ -53,33 +53,27 @@ class EstudianteRudealController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
-        $infoUe = $request->get('infoUe');
-        $infoStudent = $request->get('infoStudent');
+        $idInscripcion = $request->get('infoStudent');
 
         // $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent);
 
         $editar = $request->get('editar');
 
-        $aInfoUeducativa = unserialize($infoUe);
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
+        // $aInfoUeducativa = unserialize($infoUe);
         // dump($aInfoUeducativa);die;
         // $aInfoStudent = json_decode($infoStudent, TRUE);
         
 
-        $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid']);
-            $sie = $iec->getInstitucioneducativa()->getId();
-        $gestion = $iec->getGestionTipo()->getId();
-
-        $idInscripcion = $infoStudent;
-        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
 
         $estudiante = $inscripcion->getEstudiante();
-        // Validacion de datos del estudiante
-        // if()
 
         $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array(
-            'estudianteInscripcion'=>$inscripcion->getId()
+            'estudianteInscripcion'=>$idInscripcion
         ));
-
 
         if(!is_object($rude)){
             /**
@@ -104,7 +98,7 @@ class EstudianteRudealController extends Controller {
                     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');")->execute();
                     $rude = clone $rudeAnterior;
                     $rude->setEstudianteInscripcion($inscripcion);
-                    $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
+                    $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(5));
                     $em->persist($rude);
                     $em->flush();
 

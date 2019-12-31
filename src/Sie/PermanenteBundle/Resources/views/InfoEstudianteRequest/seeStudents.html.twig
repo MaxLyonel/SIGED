@@ -299,7 +299,7 @@
                                                               <i class="fa fa-times"></i>
                                                           </button>
 
-                                                          <button class="btn btn-warning btn-xs" onclick="rudeal('{{infoUe}}', '{{ objStudents.idestins }}')">
+                                                          <button class="btn btn-warning btn-xs" onclick="rudeal('{{ objStudents.idestins }}')">
                                                             <i class="fa fa-list"></i>
                                                           </button>
 
@@ -783,10 +783,10 @@
         }
     };
 
-    var rudeal = function (infoUe, infoStudent) {
+    var rudeal = function (infoStudent) {
         $.ajax({
             type: 'post',
-            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            data: ({infoStudent: infoStudent}),
             url: "{{ path('perm_estudiante_rudeal_index') }}",
             beforeSend: function () {
                 $('#modal').empty();
