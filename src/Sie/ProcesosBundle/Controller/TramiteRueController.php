@@ -371,7 +371,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                     //'ieNivel'=>$ienivel
                 );
                 break;
@@ -390,7 +391,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 break;
             case 36://cambio de dependencia
@@ -432,7 +434,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 //dump($data);die;
                 break;
@@ -467,7 +470,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 break;
             case 38://cambio de jurisdiccion administrativa
@@ -490,7 +494,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 break;
             case 39://Fusion
@@ -519,7 +524,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 break;
             case 42://cierre temporal
@@ -536,7 +542,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0,
                 );
                 break;
             case 44://Reapertura
@@ -549,7 +556,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 break;
             case 45://nuevo certifcado rue
@@ -562,7 +570,8 @@ class TramiteRueController extends Controller
                     'id' => $id,
                     'tramitetipo' => $tramitetipo,
                     'requisitos' => $requisitos,
-                    'dependencia' => $ie->getDependenciaTipo()
+                    'dependencia' => $ie->getDependenciaTipo(),
+                    'constitucion' => 0
                 );
                 break;
             case 54://apertura
@@ -1046,7 +1055,11 @@ class TramiteRueController extends Controller
                     $datos[$tramite['tramite_tipo']]['telefono']=$form['telefono'];
                     $datos[$tramite['tramite_tipo']]['director']=trim(mb_strtoupper($form['director'],'utf-8'));
                     if($form['siecomparte']){
-                        $datos[$tramite['tramite_tipo']]['siecomparte']=$form['siecomparte'];
+                        $siecomparte = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find(trim($form['siecomparte']));
+                        $datos[$tramite['tramite_tipo']]['siecomparte']['id']=$siecomparte->getId();
+                        $datos[$tramite['tramite_tipo']]['siecomparte']['nombre']=$siecomparte->getInstitucioneducativa();
+                        $datos[$tramite['tramite_tipo']]['siecomparte']['subsistema']=$siecomparte->getOrgcurricularTipo()->getOrgcurricula();
+                        $datos[$tramite['tramite_tipo']]['siecomparte']['dependencia']=$siecomparte->getDependenciaTipo()->getDependencia();
                     }
                     if($form['lejurisdiccion']){
                         $datos[$tramite['tramite_tipo']]['lejurisdiccion']=$form['lejurisdiccion'];
