@@ -943,7 +943,7 @@ class DocumentoController extends Controller {
     public function creaFormAnulaDocumentoSerie($routing, $serie, $obs) {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
-            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,10}$', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,12}$', 'maxlength' => '12', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('obs', 'textarea', array('label' => 'OBS.', 'attr' => array('value' => $obs, 'class' => 'form-control', 'placeholder' => 'Comentario', 'pattern' => '^@?(\w){1,200}$', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
@@ -959,7 +959,7 @@ class DocumentoController extends Controller {
     public function creaFormBuscaDocumentoSerie($routing, $serie) {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
-            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,10}$', 'maxlength' => '10', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+            ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,12}$', 'maxlength' => '12', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
         return $form;
@@ -2159,7 +2159,7 @@ class DocumentoController extends Controller {
                     , (row_number() over (partition by ds.departamento_tipo_id, ds.gestion_id, ds.documento_tipo_id order by ds.id)) as row_num
                     , ds.*
                     from documento_serie as ds
-                    left join documento as d on d.documento_serie_id = ds.id and d.id is null
+                    left join documento as d on d.documento_serie_id = ds.id
                     where ds.documento_tipo_id in (1,9,6,7) and ds.gestion_id = ".$gestionId." and esanulado = false and d.id is null and case ".$departamentoCodigo." when 0 then true else ds.departamento_tipo_id = ".$departamentoCodigo." end
                     order by ds.id
                 ) as v

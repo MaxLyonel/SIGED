@@ -347,7 +347,6 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 }
             }
 
-
             // Validamos que no tenga diploma impreso
             $tieneDiploma = $this->get('funciones')->validarTieneDiploma($idInscripcion);
             if($tieneDiploma){
@@ -475,6 +474,11 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
             $arrayAsignaturasEstudiante = array();
 
+            // dump(count($asignaturas));
+            // dump(count($asignaturasCurso));
+            // dump($asignaturasCurso);
+            // die;
+            // dump($idInscripcion);die;
 
             if((count($asignaturas) != count($asignaturasCurso) and $gestion < 2019) or ((count($asignaturas) != count($asignaturasCurso)) and $gestion >= 2019 and $nivel != 13) or ((count($asignaturas) != count($asignaturasCurso)) and (count($asignaturasCurso) - count($asignaturas)) > 1 and $gestion >= 2019 and $nivel == 13)) {
                 foreach ($asignaturas as $a) {
@@ -498,10 +502,11 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         
                         $em->flush();
 
-                        //dump($newAsignatura);die;
+                        // dump($newAsignatura);
                     }//die('adsf');
 
                 }
+                // die;
                 goto vuelta;
 
             }else if(count($asignaturasCurso) == 0){
@@ -777,6 +782,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $idInscripcionEstudiante = $idInscripcion;
 
             if(!$notasArray){
+                $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('noSearch', 'El estudiante no cuenta con áreas, debe realizar la adicion de areas y calificaciones.');
                 return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
             }
@@ -785,6 +791,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
             // Verificamos si el mismo estudiante tiene una solicitud pendiente
             $solicitudPendiente = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitud')->findOneBy(array('estudianteInscripcionId'=>$idInscripcionEstudiante,'estado'=>1,'tipo'=>1));
             if($solicitudPendiente){
+                $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('sendError', 'Ya hay una solicitud pendiente (S-'.$solicitudPendiente->getId().') para el estudiante, debe esperar a que se responda la solicitud anterior');
                 return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
             }
@@ -970,6 +977,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $nombreUsuario = $usuario->getPersona()->getPaterno()." ".$usuario->getPersona()->getMaterno()." ".$usuario->getPersona()->getNombre();
 
             $em->getConnection()->commit();
+
             return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:new.html.twig', array(
                         'asignaturas' => $notasArray, 'gestion' => $gestion, 'estudiante'=>$estudiante,
                         'titulos_notas' =>$titulos_notas, 'curso'=>$institucionCurso,
@@ -1009,7 +1017,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 ->setAction($this->generateUrl('solicitudModificacionCalificaciones_search'))
                 ->add('codigoRude','text',array('label'=>'Código Rude','data'=>'','attr'=>array('class'=>'form-control jnumbersletters','placeholder'=>'Código Rude','pattern'=>'[0-9A-Z]{11,20}','autocomplete'=>'off','maxlength'=>'20')))
                 ->add('idInstitucion','text',array('label'=>'Sie','data'=>'','attr'=>array('class'=>'form-control jnumbers','placeholder'=>'Sie Unidad Educativa' ,'pattern'=>'[0-9]{6,8}','autocomplete'=>'off','maxlength'=>'8')))
-                ->add('gestion','choice',array('label'=>'Gestión','choices'=>$gestiones,'attr'=>array('class'=>'form-control')))
+                ->add('gestion','choice',array('label'=>'Gestión','choices'=>$gestiones,'data'=>'','attr'=>array('class'=>'form-control')))
                 ->add('buscar','submit',array('attr'=>array('class'=>'btn btn-primary')))
                 ->getForm();
         }else{
@@ -1293,10 +1301,12 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
                     // SI EL NUEVO ESTADO ES PROMOVIDO VERIFICAMOS
                     if ($nuevoEstadoMatricula == 5){
+                        // dump('nuevo estado promovido');
                         // VERIFICAMOS SI SE TIENE OTRA INSCRIPCION DEL MISMO GRADO Y NIVEL APROBADO O EFECTIVO
                         // RETURN TRUE OR FALSE
                         $inscripcionSimilarAprobada = $this->get('funciones')->existeInscripcionSimilarAprobado($idInscripcion);
                         if ($inscripcionSimilarAprobada) {
+                            // dump('tiene inscripcion similar');
                             $this->get('session')->getFlashBag()->add('error', 'La solicitud no puede ser aprobada porque el estudiante ya cuenta con una inscripcion del mismo nivel y grado con un estado de matrícula Promovido o Efectivo.');
                             return $this->redirectToRoute('solicitudModificacionCalificaciones');
                         }

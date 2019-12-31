@@ -21,6 +21,13 @@
                                 <button class="btn-link" style="color:#4E4E4E" type="submit">Inscripciones</button>
                             </form>
                         </li>
+                    {% else %}
+                        <li><i class="fa fa-file"></i>
+                            <form action="{{path('history_new_inscription_index')}}" method="post" style="display:inline-block">
+                                <input type="hidden" name="form[codigoRudeHistory]" value="{{estudiante.codigoRude}}">
+                                <button type="submit" class="btn-link" style="color:#4E4E4E"> Historial de Inscripciones</button>
+                            </form>
+                        </li>        
                     {% endif %}
                     <li><i class="fa fa-list-alt"></i> Calificaciones</li>
                 </ol>
