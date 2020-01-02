@@ -213,11 +213,90 @@ class ReportesController extends Controller {
 
     }
 
+    public function socioeconomicoAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        //get the data send to the report           
+        $gestion = $this->session->get('gestion');
+        $sucursalId = $this->session->get('ie_suc_id');
+        $codrude = $request->get('rude');
+        $inscripcionId = $request->get('inscripcionId');
+        $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
+
+        $db = $em->getConnection();
+        
+        //dump($codrude,$sucursalId,$inscripcionId);die;
+        //si el estudiante no es inmigrante
+        //if($rude->getMunicipioLugarTipo() != null and $rude->getMunicipioLugarTipo() != 0){
+        //dump($rude->getLocalidadLugarTipo());die;
+        if($rude->getLocalidadLugarTipo() != null and $rude->getLocalidadLugarTipo()->getId() != 0){
+                $lt5_id = $rude->getLocalidadLugarTipo()->getLugarTipo();
+                //$lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+                $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+                $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+                $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
+                $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
+
+                //$m_id = $rude->getMunicipioLugarTipo()->getId();
+                $l_id = $rude->getLocalidadLugarTipo()->getId();
+                $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+                $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
+                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
+        }else{
+            $l_id = 0;
+            $c_id = 0;
+            $m_id = 0;
+            $p_id = 0;
+            $d_id = 0;
+        }
+
+        /*----------  DATOS CURSO CORTO  ----------*/
+        $cursoCorto = $em->createQueryBuilder()
+                        ->select('att.areatematica, cct.cursocorto, ppt.programa, sat.subArea')
+                        ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->innerJoin('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto','piecc','with','piecc.institucioneducativaCurso = iec.id')
+                        ->innerJoin('SieAppWebBundle:PermanenteAreaTematicaTipo','att','with','piecc.areatematicaTipo = att.id')
+                        ->innerJoin('SieAppWebBundle:PermanenteCursocortoTipo','cct','with','piecc.cursocortoTipo = cct.id')
+                        ->innerJoin('SieAppWebBundle:PermanenteProgramaTipo','ppt','with','piecc.programaTipo = ppt.id')
+                        ->innerJoin('SieAppWebBundle:PermanenteSubAreaTipo','sat','with','piecc.subAreaTipo = sat.id')
+                        ->where('ei.id = :idInscripcion')
+                        ->setParameter('idInscripcion', $inscripcionId)
+                        ->getQuery()
+                        ->getResult();
 
 
+        if (count($cursoCorto) > 0) {
+            $facilitadorComunitario = '';
+            $educacionProductiva = '';
+            $otros = '';
+            $curso = $cursoCorto[0]['cursocorto']
+        }else{
 
+            /*----------  DATOS CURSO LARGO  ----------*/
+            $facilitadorComunitario = '';
+            $educacionProductiva = '';
+            $otros = '';
+            $curso = 'CURSO LARGO'
+        }
+        // dump($codrude);
+        // dump($sucursalId);
+        // dump($inscripcionId);
+        // dump($d_id);
+        // dump($p_id);
+        // dump($m_id);
+        // dump($l_id);
+        // die;
 
-
-
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $codrude . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id. '&dirLoc=' . $l_id . '&fc=' . $facilitadorComunitario .'&ep=' . $educacionProductiva . '&otros=' . $otros . '&curso=' . $curso .'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 
 }
