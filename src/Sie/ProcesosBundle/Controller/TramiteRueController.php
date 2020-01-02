@@ -40,7 +40,7 @@ class TramiteRueController extends Controller
     public $iddis;
     public $tramiteTipoArray;
     public $nivelArray;
- 
+    
     /**
      * the class constructor
      */
@@ -803,6 +803,7 @@ class TramiteRueController extends Controller
         //dump($tramites,$form);die;
         $em = $this->getDoctrine()->getManager();
 
+        $gestionActual = 2019;//$this->session->get('currentyear');
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $flujotipo = $form['flujotipo'];
@@ -819,11 +820,11 @@ class TramiteRueController extends Controller
          */
         $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1
                 FROM institucioneducativa ie
-                join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+                left join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
                 join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
                 join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
                 left join convenio_tipo ct on ct.id=ie.convenio_tipo_id
-                where ies.gestion_tipo_id=' . $this->session->get('currentyear') .'
+                where ies.gestion_tipo_id=' . $gestionActual .'
                 and ie.id='. $form['idrue']);
                 $query->execute();
         $institucioneducativa = $query->fetchAll();
@@ -833,6 +834,7 @@ class TramiteRueController extends Controller
                 WHERE ien.institucioneducativa_id='. $form['idrue']);
                 $query->execute();
         $ieNivelAutorizado = $query->fetchAll();
+        //dump($institucioneducativa);die;
         $query = $em->getConnection()->prepare('SELECT le.id,le.zona,le.direccion,le.distrito_tipo_id,dt.distrito,
                 lt.id as localidad2001_id,lt.lugar as localidad2001,lt1.id as canton2001_id,lt1.lugar as canton2001,lt2.id as municipio2001_id,lt2.lugar as municipio2001,lt3.id as provincia2001_id,lt3.lugar as provincia2001,lt4.id as departamento2001_id,lt4.lugar as departamento2001,lt.area2001,
                 lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012
@@ -867,7 +869,7 @@ class TramiteRueController extends Controller
         //$datos['area'] = $form['area'];
         $datos['justificacion'] = trim(mb_strtoupper($form['observacion'], 'utf-8'));
         if($form['tramite']==''){
-            $gestion = $this->session->get('currentyear');
+            $gestion = $gestionActual;
         }else{
             $gestion =$em->getRepository('SieAppWebBundle:Tramite')->find($form['tramite'])->getGestionId();
         }
@@ -1524,12 +1526,13 @@ class TramiteRueController extends Controller
         $form = $request->get('form');
         $file = $request->files->get('form');
         $em = $this->getDoctrine()->getManager();
+        $gestionActual = $this->session->get('currentyear');
         //dump($form,$file);die;
         $datos=array();
         $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo'=>$form['codigo']));
         $datosSolicitud = json_decode($solicitudTramite->getDatos(),true);
         //dump($form);die;
-        $gestion = $form['tramite']==''?$this->session->get('currentyear'):$em->getRepository('SieAppWebBundle:Tramite')->find($form['tramite'])->getGestionId();
+        $gestion = $form['tramite']==''?$gestionActual:$em->getRepository('SieAppWebBundle:Tramite')->find($form['tramite'])->getGestionId();
         $datos['observacion']=$form['observacion'];
         $datos['varevaluacion1']=$form['varevaluacion1'];
         $datos['requisitos']=$form['requisitos'];
