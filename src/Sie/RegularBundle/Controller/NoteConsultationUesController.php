@@ -107,7 +107,7 @@ class NoteConsultationUesController extends Controller {
                     $exist = false;
               }
               // this for the current year and close this task
-              if($gestion == $this->session->get('currentyear')){
+              if($gestion == $this->session->get('currentyear')-1){
                 // check if the UE close the RUDE task
                 if(!$infoConsolidation->getRude()){
                   $message = 'Unidad Educativa no consolido el operativo RUDE';
