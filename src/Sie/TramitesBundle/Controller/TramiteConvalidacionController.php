@@ -822,12 +822,6 @@ class TramiteConvalidacionController extends Controller {
                     $studentInscription->setCodUeProcedenciaId(0);
                     $em->persist($studentInscription);
                     //$em->flush(); 
-                    $studentInscriptionDocumento = new EstudianteInscripcionDocumento();
-                    $studentInscriptionDocumento->setEstudianteInscripcion($studentInscription);
-                    $studentInscriptionDocumento->setDocumentoTipo($entidadDocumentoTipo);                
-                    $studentInscriptionDocumento->setObservacion('Convalidación de libretas para emision de Diploma de Bachiller');
-                    $em->persist($studentInscriptionDocumento); 
-                    //$em->flush(); 
                     
                     $filename = "";
                     $filename = $rude.'_LibretaEscolar_'.$gestion.'_'.$studentInscription->getId().'.'.$file->guessExtension();
@@ -839,6 +833,14 @@ class TramiteConvalidacionController extends Controller {
                         $msg  = 'La fotografía ('.$file->getClientOriginalName().') del '.$grados[$i].'° año de escolaridad, no fue registrada.';
                         return $response->setData(array('estado' => false, 'msg' => $msg));
                     }     
+
+                    $studentInscriptionDocumento = new EstudianteInscripcionDocumento();
+                    $studentInscriptionDocumento->setEstudianteInscripcion($studentInscription);
+                    $studentInscriptionDocumento->setDocumentoTipo($entidadDocumentoTipo);    
+                    $studentInscriptionDocumento->setRutaImagen($rude.'/'.$filename);                   
+                    $studentInscriptionDocumento->setObservacion('Convalidación de libretas para emision de Diploma de Bachiller');
+                    $em->persist($studentInscriptionDocumento); 
+                    //$em->flush(); 
                 }                     
             }
             $em->flush(); 

@@ -88,6 +88,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                                 ->innerJoin('SieAppWebBundle:EstadomatriculaTipo','emt','with','ei.estadomatriculaTipo = emt.id')
                                 ->where('e.codigoRude = :rude')
                                 ->andWhere('gt.id = :gestion')
+                                ->andWhere('ie.institucioneducativaTipo = 1')
                                 ->orderBy('ei.fechaInscripcion','ASC')
                                 ->setParameter('rude',$rude)
                                 ->setParameter('gestion',$gestion)
@@ -114,9 +115,10 @@ class RegularizacionDobleInscripcionController extends Controller {
                 $inscripcionActual['paraleloname'] = $i['paralelo'];
                 $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
                 $inscripcionActual['estadomatriculaname'] = $i['estadomatricula'];
+                $inscripcionActual['cantidadTotal'] = count($inscripcionActual['cuantitativas'])*$inscripcionActual['operativo'];
 
                 // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
-                if ($inscripcionActual['operativo'] >= 1 and $inscripcionActual['cantidadFaltantes'] == 0) {
+                if ($inscripcionActual['operativo'] >= 1 and $inscripcionActual['cantidadRegistrados'] > 0 and $inscripcionActual['cantidadRegistrados'] < $inscripcionActual['cantidadTotal']) {
                   $estadosdisp = [9]; // RETIRO TRASLADO
                 }else{
                   $estadosdisp = [6]; // NO INCORPORADO
@@ -152,14 +154,14 @@ class RegularizacionDobleInscripcionController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
 
-            $defaultController = new DefaultCont();
-            $defaultController->setContainer($this->container);
+            // $defaultController = new DefaultCont();
+            // $defaultController->setContainer($this->container);
 
             // $idEstudianteNota = $request->get('idEstudianteNota');
             // $nota = $request->get('nota');
-            $nivel = $request->get('nivel');
+            $nivel = $request->get('arrNivel');
             $rude = $request->get('rude');
-            $idInscripcion = $request->get('idInscripcion');
+            $idInscripcion = $request->get('arrIdInscripcion');
             // for($i=0; $i<count($idInscripcion); $i++){
             //     if(isset($idEstudianteNota[$i])){
             //         $op = $idEstudianteNota[$i];
@@ -277,12 +279,12 @@ class RegularizacionDobleInscripcionController extends Controller {
             // }
 
             //set new ESTADOS
-            $response =$this->validateEstadoStudent($request);
+            $response = $this->validateEstadoStudent($request);
 
             $em->getConnection()->commit();
             //verifcatiokn
             
-            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[0]);
 
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_estados(:option::VARCHAR,:rude::VARCHAR,:gestion::VARCHAR)');
             $query->bindValue(':option', 2);
@@ -319,11 +321,12 @@ class RegularizacionDobleInscripcionController extends Controller {
 
       private function validateEstadoStudent($request){
       // Create DB conexxion
+      // dump($request);die;
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the current states
       $arrEstudianteEstado = $request->get('estadoMatriculaActual');
-      $arrIdInscripcion = $request->get('idInscripcion');
+      $arrIdInscripcion = $request->get('arrIdInscripcion');
       // $arridEstudianteAsignatura = $request->get('idEstudianteAsignatura');
       $arrEstadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
       $error = 'done';
