@@ -10,6 +10,7 @@ use Sie\AppWebBundle\Form\EstudianteType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionDocumento;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -642,6 +643,8 @@ class TramiteHomologacionController extends Controller {
      * 
      */
     public function dipHumEstudianteGuardaAction(Request $request) {
+        $fechaActual = new \DateTime();
+        $gestion = $fechaActual->format('Y');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
@@ -661,6 +664,7 @@ class TramiteHomologacionController extends Controller {
                 $digits = 4;
                 $mat = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
                 $rude = $form['institucionEducativa'] . $form['gestion'] . $mat . $this->generarRude($form['institucionEducativa'] . $this->session->get('currentyear') . $mat);
+                $gestion = $form['gestion'];
                 //dump($newStudent['fnacimiento']);die;
                 //look for the course to the student
                 $fechaNacimiento = new \Datetime(date($newStudent['fnacimiento']));
@@ -835,13 +839,6 @@ class TramiteHomologacionController extends Controller {
             $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(45));
             $studentInscription->setCodUeProcedenciaId(0);
             $em->persist($studentInscription);
-           
-            $entidadDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->find(1);
-            $studentInscriptionDocumento = new EstudianteInscripcionDocumento();
-            $studentInscriptionDocumento->setEstudianteInscripcion($studentInscription);
-            $studentInscriptionDocumento->setDocumentoTipo($entidadDocumentoTipo);                
-            $studentInscriptionDocumento->setObservacion('Convalidación de libretas para emision de Diploma de Bachiller');
-            $em->persist($studentInscriptionDocumento); 
 
             $filename = "";
             $filename = $rude.'_DiplomaDeBachillerExtranjero_'.$gestion.'_'.$studentInscription->getId().'.'.$file->guessExtension();
@@ -853,6 +850,14 @@ class TramiteHomologacionController extends Controller {
                 $msg  = 'La fotografía ('.$file->getClientOriginalName().') del '.$grados[$i].'° año de escolaridad, no fue registrada.';
                 return $response->setData(array('estado' => false, 'msg' => $msg));
             }  
+           
+            $entidadDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->find(1);
+            $studentInscriptionDocumento = new EstudianteInscripcionDocumento();
+            $studentInscriptionDocumento->setEstudianteInscripcion($studentInscription);
+            $studentInscriptionDocumento->setDocumentoTipo($entidadDocumentoTipo);      
+            $studentInscriptionDocumento->setRutaImagen($rude.'/'.$filename);              
+            $studentInscriptionDocumento->setObservacion('Convalidación de libretas para emision de Diploma de Bachiller');
+            $em->persist($studentInscriptionDocumento); 
 
             $em->flush();
             //do the commit of DB

@@ -24,6 +24,13 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionDocumento:
             length: 255
             fixed: false
             comment: ''
+        rutaImagen:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: ruta_imagen
     manyToOne:
         documentoTipo:
             targetEntity: DocumentoTipo
