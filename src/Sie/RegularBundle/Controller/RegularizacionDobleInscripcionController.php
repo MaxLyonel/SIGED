@@ -97,6 +97,8 @@ class RegularizacionDobleInscripcionController extends Controller {
 
             // $arrayInscripciones = array();
             $arrayInscripciones1 = array();
+            $arrayEstados = [];
+
             foreach ($ins as $i) {
                 // $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($i['id']);
                 // $arrayInscripciones[] = $arrayNotas;
@@ -119,7 +121,7 @@ class RegularizacionDobleInscripcionController extends Controller {
 
                 // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
                 if ($inscripcionActual['operativo'] >= 1 and $inscripcionActual['cantidadRegistrados'] > 0 and $inscripcionActual['cantidadRegistrados'] < $inscripcionActual['cantidadTotal']) {
-                  $estadosdisp = [9]; // RETIRO TRASLADO
+                  $estadosdisp = [9,10]; // RETIRO TRASLADO, RETIRADO ABANDONO
                 }else{
                   $estadosdisp = [6]; // NO INCORPORADO
                 }
@@ -130,7 +132,15 @@ class RegularizacionDobleInscripcionController extends Controller {
                 }
 
                 $arrayInscripciones1[] = $inscripcionActual;
+                $arrayEstados[] = $i['estadomatriculaId'];
             }
+
+            // $esigual = count(array_unique($arrayEstados));
+            // dump($esigual);die;
+
+            // foreach ($arrayInscripciones1 as $ai) {
+            //     // if
+            // }
 
             // dump($arrayInscripciones);
             // dump($arrayInscripciones1);
