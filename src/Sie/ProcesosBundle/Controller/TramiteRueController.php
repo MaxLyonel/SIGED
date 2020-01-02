@@ -92,7 +92,7 @@ class TramiteRueController extends Controller
         $lugar_tipo2012 = $em->getRepository('SieAppWebBundle:LugarTipo')->find($institucioneducativa->getLeJuridicciongeografica()->getLugarTipoIdLocalidad2012());
         $institucioneducativaNivel = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa'=>$idrue));
         $inicioForm = $this->createInicioModificacionForm($flujotipo,$tarea->getId(),$tramite,$idrue,$institucioneducativa); 
-        //dump($recepcionForm);die;
+        //dump($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$idrue,'gestionTipo'=>$this->session->get('currentyear'))));die;
         return $this->render('SieProcesosBundle:TramiteRue:inicioSolicitudModificacion.html.twig', array(
             'form' => $inicioForm->createView(),
             'institucioneducativa'=>$institucioneducativa,
@@ -1231,7 +1231,7 @@ class TramiteRueController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
-        $file = 'rue_iniciosolicitudModificacion_v1_pvc.rptdesign';    
+        $file = 'rue_iniciosolicitudModificacion_v2_pvc.rptdesign';    
         $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
@@ -3280,22 +3280,22 @@ class TramiteRueController extends Controller
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', 'exito');
-            $idtramite = 1671371;
+            $idsolicitud = $solicitudTramite->getId();
             //dump($idtramite,$id_td);die;
             //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
             $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
-            $file = 'rue_iniciosolicitudModificacion_v1_pvc.rptdesign';    
+            $file = 'rue_iniciosolicitudApertura_v1_pvc.rptdesign';    
             $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&lk='. $lk .'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
             $response->headers->set('Expires', '0');
             return $response;
-        }catch (Exception $ex) {
+        }catch (\Exception $ex) {
             $em->getConnection()->rollback();            
             $request->getSession()
                 ->getFlashBag()
@@ -3583,22 +3583,22 @@ class TramiteRueController extends Controller
             $solicitudTramite->setCodigo($codigo);
             $em->flush();
             $em->getConnection()->commit();
-            $idtramite = 1671371;
             //dump($idtramite,$id_td);die;
             //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+            $idsolicitud = $solicitudTramite->getId();
             $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
-            $file = 'rue_iniciosolicitudModificacion_v1_pvc.rptdesign';    
+            $file = 'rue_iniciosolicitudReapertura_v1_pvc.rptdesign';    
             $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&lk='. $lk .'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
             $response->headers->set('Expires', '0');
             return $response;
-        }catch (Exception $ex) {
+        }catch (\Exception $ex) {
             $em->getConnection()->rollback();            
             $request->getSession()
                 ->getFlashBag()
