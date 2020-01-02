@@ -55,12 +55,13 @@ class StudentsInscriptionsController extends Controller {
      public function indexCLAction(Request $request){
         //get the send values
        // dump($request);die;
-        $infoUe = $request->get('infoUe');
-        $arrInfoUe = unserialize($infoUe);
+        $infoUe = '';//$request->get('infoUe');
+        $arrInfoUe = array();//unserialize($infoUe);
+        $infoUe = json_encode($arrInfoUe);
 
         return $this->render('SiePermanenteBundle:CursosLargos:newlookforstudent.html.twig', array(
           'infoUe'=>$infoUe,
-          'iecId' => $arrInfoUe['ueducativaInfo']['ueducativaInfoId']['iecid']
+          'iecId' =>$request->get('infoUe')
             // 'form'=>$this->findStudentForm($infoUe)->createView()
         ));
     }
@@ -731,6 +732,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
+      // dump($request);die;
       //ini json var
       $response = new JsonResponse();
       // get the send values 
@@ -884,6 +886,142 @@ class StudentsInscriptionsController extends Controller {
                   'dataUe' => array(),
                 'totalInscritos'=>count($objStudents)
             ));
+    }
+
+    public function showListStudentCursoLargoAction(Request $request){
+        //   dump($request);die;
+        //create the conexion DB
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        // $form= $request->get('form');
+        $aInfoUeducativa = array();//unserialize($form['data']);
+        $dataUe= array();//unserialize($form['data']);
+        // $infoUe = $form['data'];
+        $infoUe = $request->get('iecId');
+        //set the validate year
+        $validateYear = false;
+     
+        try {
+
+            //reload the students list
+          //  $aInfoUeducativa = unserialize($infoUe);
+         //   $dataUe=(unserialize($infoUe));
+            //dump ($aInfoUeducativa);die;
+            $exist = true;
+            // $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+            $idcurso=$request->get('iecId');
+            $objStudents = array();
+
+            $query = $em->getConnection()->prepare('
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                from estudiante a
+                    inner join estudiante_inscripcion b on b.estudiante_id =a.id
+                        inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
+                            inner join estadomatricula_tipo d on d.id = b.estadomatricula_tipo_id
+                                inner join genero_tipo e on a.genero_tipo_id = e.id
+                where c.id =:idcurso      
+        ');
+            $query->bindValue(':idcurso', $idcurso);
+            $query->execute();
+            $objStudents= $query->fetchAll();
+            $query = $em->getConnection()->prepare('    
+                  
+          select a.id as iecid, a.periodo_tipo_id, a.grado_tipo_id, a.gestion_tipo_id, a.nivel_tipo_id, a.turno_tipo_id,tt.turno,a.fecha_inicio,a.fecha_fin,a.duracionhoras,
+                        b.esabierto, b.lugar_tipo_departamento_id as deptoid,depto.lugar as departamento,  b.lugar_tipo_provincia_id as provid,prov.lugar as provincia,  b.lugar_tipo_municipio_id as munid,mun.lugar as municipio, b.lugar_detalle as comunidad,b.poblacion_detalle,
+                        c.areatematica, d.poblacion,e.programa, f.sub_area, g.cursocorto,
+                        h.id as codofermaes,h.horasmes, 
+                        i.maestro_inscripcion_id,
+                        k.paterno,k.materno,k.nombre,
+                        m.id as cursolargoid,m.sub_area_tipo_id,m.programa_tipo_id, m.areatematica_tipo_id,m.cursocorto_tipo_id,
+                        sip.id as superid,
+                        sia.id as siaid,
+                        sae.id as saeid,
+                        sat.acreditacion,
+                        sespt.especialidad,
+                        sfat.facultad_area as areaprograma
+                        
+                    FROM
+                        institucioneducativa_curso a 
+                            left JOIN permanente_institucioneducativa_cursocorto b on a.id= b.institucioneducativa_curso_id
+                                left join permanente_area_tematica_tipo c on b.areatematica_tipo_id =c.id
+                                  left join permanente_poblacion_tipo d on b.poblacion_tipo_id = d.id
+                                      left join permanente_programa_tipo e on b.programa_tipo_id=e.id
+                                            left join permanente_sub_area_tipo f on b.sub_area_tipo_id= f.id
+                                            left join permanente_cursocorto_tipo g on cursocorto_tipo_id = g.id
+                                              left join institucioneducativa_curso_oferta h on  a.id = h.insitucioneducativa_curso_id 
+                                                left join institucioneducativa_curso_oferta_maestro i on h.id = i.institucioneducativa_curso_oferta_id
+                                                  left join maestro_inscripcion j on i.maestro_inscripcion_id = j.id
+                                                      left join persona k on j.persona_id =k.id
+                                                        left join permanente_institucioneducativa_cursocorto m on m.institucioneducativa_curso_id = a.id
+                                                            inner join superior_institucioneducativa_periodo sip on a.superior_institucioneducativa_periodo_id = sip.id
+                                                                inner join lugar_tipo depto on depto.id= b.lugar_tipo_departamento_id  
+                                                                  inner join lugar_tipo prov on prov.id = b.lugar_tipo_provincia_id
+                                                                    inner join lugar_tipo mun on mun.id = b.lugar_tipo_municipio_id
+                                                                inner join turno_tipo tt on tt.id= a.turno_tipo_id
+                                                                    inner join superior_periodo_tipo spt on spt.id  = sip.superior_periodo_tipo_id
+                                                                      inner join superior_institucioneducativa_acreditacion sia on sia.id = sip.superior_institucioneducativa_acreditacion_id
+                                                                        inner join institucioneducativa ie on ie.id =sia.institucioneducativa_id
+                                                                          inner join superior_acreditacion_especialidad sae on sae.id = sia.acreditacion_especialidad_id
+                                                                            inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
+                                                                              inner join superior_especialidad_tipo sespt on sespt.id = sae.superior_especialidad_tipo_id
+                                                                                inner join superior_facultad_area_tipo sfat on sfat.id = sespt.superior_facultad_area_tipo_id
+                    where  a.nivel_tipo_id= 231 and a.id=:curso
+          ');
+            $query->bindValue(':curso', $idcurso);
+            $query->execute();
+            $cursosLargos= $query->fetchAll();
+            //  dump($cursosLargos);die;
+
+            if (count($objStudents) > 0){
+                $existins = true;
+            }
+            else {
+                $existins = false;
+            }
+            $estadomatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findAll();
+            $estadomatriculaArray = array();
+
+            $query = $em->getConnection()->prepare('
+                select ieco.id as idieco, smp.id as idsmp, smp.horas_modulo, smt.id as idsmt, smt.modulo,iecom.id as idiecom,mi.id as idmi, per.id as idper,
+                  (per.paterno||\' \'||per.materno||\' \'||per.nombre) as nombre
+                 --per.nombre, per.paterno,per.materno
+          from institucioneducativa_curso iec
+              inner join institucioneducativa_curso_oferta ieco on ieco.insitucioneducativa_curso_id=iec.id
+                  inner join superior_modulo_periodo smp on ieco.superior_modulo_periodo_id = smp.id
+                      inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id = smt.id
+                            left join institucioneducativa_curso_oferta_maestro iecom on iecom.institucioneducativa_curso_oferta_id = ieco.id
+                                left join maestro_inscripcion mi on mi.id = iecom.maestro_inscripcion_id
+                                    left join persona per on per.id = mi.persona_id
+                                    
+                      where iec.id=:idcurso
+                      order by iecom.id desc
+        ');
+            $query->bindValue(':idcurso',$idcurso);
+            $query->execute();
+            $listamodcurso= $query->fetchAll();
+            $form = $this->createFormBuilder()
+                ->add('matricula', 'choice', array('required' => false, 'choices' => $estadomatriculaArray,  'attr' => array('class' => 'form-control')))
+                ->getForm();
+
+
+            return $this->render('SiePermanenteBundle:CursosLargos:seeInscritos.html.twig', array(
+                'objStudents' => $objStudents,
+                'objx' => $estadomatriculaArray,
+                //'form' => $this->createFormStudentInscription($form['data'])->createView(),
+                'form' => $form->createView(),
+                'lstmod'=>$listamodcurso,
+                'exist' => $exist,
+                'cursolargo'=>$cursosLargos,
+                'existins' => $existins,
+                'infoUe' => $infoUe,
+                'dataUe' => $dataUe,
+                'totalInscritos'=>count($objStudents)
+
+            ));
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
     }
 
 

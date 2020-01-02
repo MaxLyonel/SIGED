@@ -61,4 +61,10 @@ per_inscriptionstudent_studentsInscription:
     path:     /studentsInscription
     defaults: { _controller: SiePermanenteBundle:StudentsInscriptions:studentsInscription }
     options:
-        expose: true 
+        expose: true
+
+per_inscriptionstudent_showListStudentCursoLargo:
+    path:     /showListStudentCursoLargo
+    defaults: { _controller: SiePermanenteBundle:StudentsInscriptions:showListStudentCursoLargo }
+    options:
+        expose: true

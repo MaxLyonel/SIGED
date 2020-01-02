@@ -144,7 +144,7 @@ class NoteConsultationUesController extends Controller {
                 $arrDataVal = array(
                   'sie' => $sie,
                   'gestion' => $gestion,
-                  'reglas' => '1,2,3,10,12,13,16,27,48'
+                  'reglas' => '1,2,3,4,5,6,7,8,10,11,12,13,16,20,27,37,48'
                 );
               
                 $objObsQA = $this->get('funciones')->appValidationQuality($arrDataVal);

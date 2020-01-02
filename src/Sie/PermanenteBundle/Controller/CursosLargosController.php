@@ -93,7 +93,7 @@ class CursosLargosController extends Controller {
                     'ueducativaInfoId' => array('subareaid' => $uEducativa['subareaid'],'programaid' => $uEducativa['programaid'], 'cursolargoid' => $uEducativa['cursolargoid'], 'acreditacionid' => $uEducativa['acreditacionid'], 'iecid' => $uEducativa['iecid'], 'paraleloId' => $uEducativa['paraleloid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
-                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto']);
+                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'],'iecId'=> $uEducativa['iecid']);
 
             }
          //   dump($aInfoUnidadEductiva);die;
@@ -2174,11 +2174,12 @@ from estudiante_asignatura ea
         $em = $this->getDoctrine()->getManager();
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+        $aInfoUeducativa = array();//unserialize($infoUe);
+        $dataUe=array();//(unserialize($infoUe));
        // dump ($aInfoUeducativa);die;
         $exist = true;
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        // $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $idcurso=$request->get('infoUe');
           //dump ($idcurso);die;
         $objStudents = array();
 
