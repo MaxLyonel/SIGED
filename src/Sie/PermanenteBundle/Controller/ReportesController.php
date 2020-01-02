@@ -270,14 +270,15 @@ class ReportesController extends Controller {
             $facilitadorComunitario = '';
             $educacionProductiva = '';
             $otros = '';
-            $curso = $cursoCorto[0]['cursocorto']
+            $curso = $cursoCorto[0]['cursocorto'];
+
         }else{
 
             /*----------  DATOS CURSO LARGO  ----------*/
             $facilitadorComunitario = '';
             $educacionProductiva = '';
             $otros = '';
-            $curso = 'CURSO LARGO'
+            $curso = 'CURSO LARGO';
         }
         // dump($codrude);
         // dump($sucursalId);
