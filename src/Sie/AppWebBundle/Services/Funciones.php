@@ -1591,7 +1591,7 @@ class Funciones {
                         ->getResult();
 
         $response = false;
-        if (is_object($otraInscripcion)) {
+        if (count($otraInscripcion) > 0) {
             $response = true;
         }
 

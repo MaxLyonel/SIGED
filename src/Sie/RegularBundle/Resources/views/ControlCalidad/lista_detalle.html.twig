@@ -147,6 +147,12 @@
                                             {% endif %}
                                         {% endif %}
                                         {% if regla.id == 1 %}
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
                                             <form action="{{path('maestroAsignacion')}}" method="post" target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -287,7 +293,14 @@
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionFinanciamientoMaestro({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% endif %}
                                     {% elseif regla.id == 14 %}
-                                            <button type="submit" class="btn btn-link" onclick="mostrarSolucionEliminarMaestro({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
+                                        <form action="{{path('ccalidad_verificar')}}" method="post">
+                                            <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                            <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                            <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                            <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                            <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                        </form>
+                                        <button type="submit" class="btn btn-link" onclick="mostrarSolucionEliminarMaestro({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
                                     {% endif %}
                                     </td>
                                 </tr>
