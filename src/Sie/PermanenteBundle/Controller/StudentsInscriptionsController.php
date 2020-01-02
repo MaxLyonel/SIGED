@@ -385,10 +385,7 @@ class StudentsInscriptionsController extends Controller {
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
       // set result in the process to find
       $dataInscription = array();
-      $dataInscriptionR = array();
-      $dataInscriptionA = array();
-      $dataInscriptionE = array();
-      $dataInscriptionP = [];
+      
       $arrGenero = array();
       $arrExpedido = array();
       $arrPais = array();
@@ -420,39 +417,7 @@ class StudentsInscriptionsController extends Controller {
           'expedidoId2'  =>$objStudent->getExpedido()->getId(),
           'studentId'  =>$objStudent->getId(),
         );
-        // get all cardex info
-        // $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $objStudent->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
-        // $query->execute();
-        // $dataInscription = $query->fetchAll();
-        // foreach ($dataInscription as $key => $inscription) {
-        //     switch ($inscription['institucioneducativa_tipo_id_raep']) {
-        //         case '1':
-        //             $dataInscriptionR[$key] = $inscription;
-        //             break;
-        //         case '2':
-        //             $dataInscriptionA[$key] = $inscription;
-        //             break;
-        //         case '4':
-        //             $dataInscriptionE[$key] = $inscription;
-        //             break;
-        //         case '5':
-        //         if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
-        //         if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
-        //         if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';
-        //         if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 17)$bloquep = 'Sexto';
-        //             $dataInscriptionP[] = array(
-        //               'gestion'=> $inscription['gestion_tipo_id_raep'],
-        //               'institucioneducativa'=> $inscription['institucioneducativa_raep'],
-        //               'partp'=> ($inscription['parte_p']==1 ||$inscription['parte_p']==2)?'Antiguo':'Actual',
-        //               'bloquep'=> $bloquep,
-        //               'fini'=> $inscription['fech_ini_p'],
-        //               'ffin'=> $inscription['fech_fin_p'],
-        //               'curso'=> $inscription['institucioneducativa_curso_id_raep'],
-        //               'matricula'=> $inscription['estadomatricula_p'],
-        //             );
-        //             break;
-        //     }
-        // }
+        
       }else{
         // look into the PERSON table
         // set arrayCondition2
@@ -505,10 +470,13 @@ class StudentsInscriptionsController extends Controller {
       if(!$swperson  && !$swstudent){
         //set struct data person
         $arrNewStudent = array(
-          'paisId'=>'',
-          'lugarNacTipoId'=>'',
-          'lugarProvNacTipoId'=>'',
-          'localidad'=>'',
+          'paisId'=>null,
+          'lugarNacTipoId'=>null,
+          'lugarProvNacTipoId'=>null,
+          'localidad'=>null,
+          'paterno'=>null,
+          'materno'=>null,
+          'nombre'=>null,
         );
         $swnewperson = true;
       }
@@ -516,10 +484,10 @@ class StudentsInscriptionsController extends Controller {
       $arrResponse = array(
             'status'           => 200,
             'dataStudent'      => $arrStudent,
-            'dataInscriptionR' => $dataInscriptionR,
-            'dataInscriptionA' => $dataInscriptionA,
-            'dataInscriptionE' => $dataInscriptionE,
-            'dataInscriptionP' => $dataInscriptionP,
+            // 'dataInscriptionR' => $dataInscriptionR,
+            // 'dataInscriptionA' => $dataInscriptionA,
+            // 'dataInscriptionE' => $dataInscriptionE,
+            // 'dataInscriptionP' => $dataInscriptionP,
             'swstudent'        => $swstudent,
             'swperson'         => $swperson,
             'swnewperson'      => $swnewperson,
@@ -1023,6 +991,100 @@ class StudentsInscriptionsController extends Controller {
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";
         }
     }
+
+    public function showHistoryAction(Request $request){
+      // ini vars
+      $response = new JsonResponse();
+      $em = $this->getDoctrine()->getManager();
+      //get the send data
+      $rude = $request->get('rude');
+      // set values to response
+      $dataInscriptionR = array();
+      $dataInscriptionA = array();
+      $dataInscriptionE = array();
+      $dataInscriptionP = [];
+
+      if($rude){
+      // // get all cardex info
+        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+        $query->execute();
+        $dataInscription = $query->fetchAll();
+        
+        foreach ($dataInscription as $key => $inscription) {
+            switch ($inscription['institucioneducativa_tipo_id_raep']) {
+                case '1':
+                    $dataInscriptionR[$key] = $inscription;
+                    break;
+                case '2':
+                    $dataInscriptionA[$key] = $inscription;
+                    break;
+                case '4':
+                    $dataInscriptionE[$key] = $inscription;
+                    break;
+                case '5':
+                if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
+                if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
+                if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';
+                if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 17)$bloquep = 'Sexto';
+                    $dataInscriptionP[] = array(
+                      'gestion'=> $inscription['gestion_tipo_id_raep'],
+                      'institucioneducativa'=> $inscription['institucioneducativa_raep'],
+                      'partp'=> ($inscription['parte_p']==1 ||$inscription['parte_p']==2)?'Antiguo':'Actual',
+                      'bloquep'=> $bloquep,
+                      'fini'=> $inscription['fech_ini_p'],
+                      'ffin'=> $inscription['fech_fin_p'],
+                      'curso'=> $inscription['institucioneducativa_curso_id_raep'],
+                      'matricula'=> $inscription['estadomatricula_p'],
+                    );
+                    break;
+            }
+        }
+//         dump($dataInscriptionR);
+//         dump($dataInscriptionA);
+//         dump($dataInscriptionE);
+//         dump($dataInscriptionP);
+// die;
+        $dataInscriptionR = (sizeof($dataInscriptionR)>0)?$dataInscriptionR:false;
+        $dataInscriptionA = (sizeof($dataInscriptionA)>0)?$dataInscriptionA:false;
+        $dataInscriptionE = (sizeof($dataInscriptionE)>0)?$dataInscriptionE:false;
+        $dataInscriptionP = (sizeof($dataInscriptionP)>0)?$dataInscriptionP:false;
+
+        $status = 'success';
+        $code = 200;
+        $message = "historial del estudiante!!!";
+        $swhistory = true;   
+      
+      }else{
+        $status = 'error';
+        $code = 400;
+        $message = "No existe estudiante";
+        $swhistory = true;   
+      }
+
+
+
+      $arrResponse = array(
+      'status'          => $status,
+      'code'            => $code,
+      'message'         => $message,
+      'swhistory' => $swhistory,
+      'dataInscriptionR' => $dataInscriptionR,
+      'dataInscriptionA' => $dataInscriptionA,
+      'dataInscriptionE' => $dataInscriptionE,
+      'dataInscriptionP' => $dataInscriptionP,
+      );
+      
+      $response->setStatusCode(200);
+      $response->setData($arrResponse);
+
+      return $response;
+
+
+
+    }
+
+
+
 
 
     public function saveInscriptionCLAction(Request $request){

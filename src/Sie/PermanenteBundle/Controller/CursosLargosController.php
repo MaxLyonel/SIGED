@@ -2409,8 +2409,8 @@ from estudiante_asignatura ea
      //   dump($request);die;
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+        $aInfoUeducativa = array();//unserialize($infoUe);
+        $dataUe=array();//(unserialize($infoUe));
 
         $idinscripcion = $request->get('idestins');
         $idcurso = $request->get('idcurso');
