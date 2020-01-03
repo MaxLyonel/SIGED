@@ -116,7 +116,7 @@ class NoteConsultationUesController extends Controller {
                 }
                 // check if the UE close the boletin
                 if(!$infoConsolidation->getBoletin()){
-                  $message = 'Unidad Educativa no consolido el operativo CALIDAD - BOLETIN';
+                  $message = 'Unidad Educativa aún tiene observaciones en control de CALIDAD';
                   $this->addFlash('warningconsultaue', $message);
                   $exist = false;
                 }
