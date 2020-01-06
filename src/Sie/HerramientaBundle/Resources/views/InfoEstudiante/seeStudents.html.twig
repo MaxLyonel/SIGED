@@ -226,7 +226,7 @@
 
                                     {# REGISTRO DE NOTAS #}
                                     {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4) %}
-                                        {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
+                                        {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [5,11,55] and operativo <= 4) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
                                             {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
                                             {% if gestion >= 2019 and nivel == 13 and grado >= 5 %}
 
