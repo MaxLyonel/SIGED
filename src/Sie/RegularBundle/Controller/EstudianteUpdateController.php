@@ -80,8 +80,14 @@ class EstudianteUpdateController extends Controller {
     public function resultAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        $calidad = false;
         $this->session->set('yearQA',isset($form['gestion'])?$form['gestion']:$this->session->get('currentyear'));
 
+        //que no esté en sexto y que esté en calidad
+        if (isset($form['gestion'])) {
+            $calidad = true;
+        }
+      
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => trim($form['codigoRude']) ));
         //verificamos si existe el estudiante
         if ($student) {
@@ -94,7 +100,7 @@ class EstudianteUpdateController extends Controller {
           }
           
           // to validate the tuicion value
-          if(!$this->get('funciones')->getInscriptionToValidateTuicion($form)){
+          if(!$this->get('funciones')->getInscriptionToValidateTuicion($form, $this->session->get('yearQA'), $calidad)){
             $this->session->getFlashBag()->add('noticemodi', 'No tiene tuición sobre la UNIDAD EDUCATIVA o el estado de la/el estudiante no es el permitido.');
             return $this->redirectToRoute('sie_estudiantes');
           }

@@ -1511,7 +1511,7 @@ class Funciones {
      * Service to check the users tuicion
      * @param  [array] $codrude    [codigoRude, userId, gestion]
      */
-    public function getInscriptionToValidateTuicion($form){
+    public function getInscriptionToValidateTuicion($form, $gestion, $calidad){
         //look for the current inscription on 4.5.11 matricula id
         $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
@@ -1519,11 +1519,15 @@ class Funciones {
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->where('e.codigoRude = :id')
-                ->andwhere('ei.estadomatriculaTipo IN (:mat)')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->setParameter('id', $form['codigoRude'])
-                ->setParameter('mat', array(4, 5, 11, 61, 62, 63))
-                ->setParameter('gestion', $this->session->get('currentyear'))
+                ->andWhere('ei.estadomatriculaTipo IN (:mat)')
+                ->andWhere('iec.gestionTipo = :gestion');
+        if($calidad) {
+            $query = $query->andWhere('iec.nivelTipo <> 13')
+                ->andWhere('iec.gradoTipo <> 6');
+        }
+        $query = $query->setParameter('id', $form['codigoRude'])
+                ->setParameter('mat', array(4, 5, 11, 28, 61, 62, 63))
+                ->setParameter('gestion', $gestion)
                 ->orderBy('ei.fechaInscripcion', 'DESC')
                 ->getQuery();
         
