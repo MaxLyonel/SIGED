@@ -60,7 +60,7 @@ class CursosController extends Controller {
                     'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'],'sfatCodigo'=>$uEducativa['sfatCodigo'],'setId'=>$uEducativa['setId'],'periodoId'=>$uEducativa['periodoId'],)
                 ));
 
-                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId']);
+                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId'], 'iecId' => $uEducativa['iecId']);
 
             }
         } else {
@@ -78,11 +78,11 @@ class CursosController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
+        // dump($request);die;
         $em = $this->getDoctrine()->getManager();
-
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-// dump($aInfoUeducativa);die;
+        // dump($aInfoUeducativa);die;
         $exist = true;
         $objStudents = array();
         $dataUe=(unserialize($infoUe));
@@ -141,7 +141,8 @@ class CursosController extends Controller {
                     'dataUe'=> $dataUe['ueducativaInfo'],
                     'totalInscritos'=>count($objStudents),
                     'swSetNameModIntEmer' => $swSetNameModIntEmer,
-                    'primariaNuevo' => $primariaNuevo
+                    'primariaNuevo' => $primariaNuevo,
+                    'iecId'  => $request->get('iecId')
         ));
     }
 
@@ -636,6 +637,8 @@ class CursosController extends Controller {
     * values to send infoUe and infoStudent
     **/
     public function removeInscriptionAction(Request $request){
+        // dump($request);
+        // die;
         // create the conexion to DB
         $em = $this->getDoctrine()->getManager();
         // $em->getConnection()->beginTransaction();
@@ -953,7 +956,8 @@ class CursosController extends Controller {
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe' => $arrInfoUe['ueducativaInfo'],
                         'totalInscritos' => count($objStudents),
-                        'primariaNuevo' => $primariaNuevo
+                        'primariaNuevo' => $primariaNuevo,
+                        'iecId'  => $arrInfoUe['ueducativaInfoId']['iecId']
             ));
         } catch (Exception $e) {
             $em->getConnection()->rollback();

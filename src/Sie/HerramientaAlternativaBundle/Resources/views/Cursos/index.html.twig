@@ -86,7 +86,7 @@
                                                                     {% for paraleloKey, dataParalelo in dataGrado %}
                                                                         <li>
                                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
-                                                                                <a href="#" onclick="seeStudents('{{ dataParalelo.infoUe }}');">
+                                                                                <a href="#" onclick="seeStudents('{{ dataParalelo.infoUe }}', {{dataParalelo.iecId}});">
                                                                                 <span ><i class="icon-leaf"></i>
                                                                                     {{ paraleloKey }}
                                                                                 </span>
@@ -219,10 +219,10 @@
                 }
             });
         };
-        var seeStudents = function (infoUe) {
+        var seeStudents = function (infoUe, iecId) {
             $.ajax({
                 type: 'get',
-                data: ({infoUe: infoUe}),
+                data: ({infoUe: infoUe, iecId: iecId}),
                 url: Routing.generate('herramienta_alter_info_estudianterequest_see_students'),
                 beforeSend: function () {
                     $("#idstudents").empty();
