@@ -51,7 +51,8 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            {% if (vista > 0 and inscripcion.estadomatriculaTipo.id in notas.estadosPermitidos) or ((inscripcion.estadomatriculaTipo.id in [55]) and inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 and notas.operativo == 4 and notas.nivel == 13) %}
+            {% if vista > 0 and inscripcion.estadomatriculaTipo.id in notas.estadosPermitidos %}
+            {# {% if (vista > 0 and inscripcion.estadomatriculaTipo.id in notas.estadosPermitidos) or ((inscripcion.estadomatriculaTipo.id in [55]) and inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 and notas.operativo == 4 and notas.nivel == 13) %} #}
 	            <button type="submit" class="btn btn-theme">Guardar Cambios</button>
 	        {% endif %}
         </div>
