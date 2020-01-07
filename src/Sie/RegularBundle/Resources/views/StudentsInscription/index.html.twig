@@ -90,3 +90,35 @@
     </div>
 
 {% endblock %}
+{% block javascripts %}
+    {{parent()}}
+<script>
+    var getYearOfUe = function(sie){
+
+
+    if(sie.length > 7){
+        
+       $.ajax({
+                    type: 'post',
+                    data: ({sie: sie}),
+                    url: Routing.generate('students_inscriptions_getYearOfUe'),
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        //$("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_gestion").empty();
+                        $("#form_gestion").append('<option value="">Seleccionar</option>');
+                        $.each(data.arryearsofue, function (i, value) {
+                            $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                }); 
+        
+    }
+    
+
+    };
+</script>
+{% endblock %}
+

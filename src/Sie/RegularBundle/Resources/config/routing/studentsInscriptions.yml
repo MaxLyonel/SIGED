@@ -18,4 +18,10 @@ students_inscriptions_openhistoric:
     path:     /openhistoric/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
     defaults: { _controller: "SieRegularBundle:StudentsInscriptions:openhistoric" }     
     options:
-         expose: true    
+         expose: true
+
+students_inscriptions_getYearOfUe:
+    path:     /getYearOfUe
+    defaults: { _controller: "SieRegularBundle:StudentsInscriptions:getYearOfUe" }     
+    options:
+         expose: true
