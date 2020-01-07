@@ -337,6 +337,7 @@ class StudentsInscriptionsController extends Controller {
       // get the send values
       $ci = $request->get('ci');
       $complemento = $request->get('complemento');
+      $iecId = $request->get('iecId');
       
       // here is to find the studnen by CI  on table estudiante/persona
       // first look for student on ESTUDIANTE table 
@@ -444,21 +445,32 @@ class StudentsInscriptionsController extends Controller {
         );
         $swnewperson = true;
       }
+      //get info about the course
+      $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPerIecid($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'), $iecId);
+
+      $objUeducativa = $objUeducativa[0];
+
+      $sinfoUeducativa = (array(
+                'ueducativaInfo' => array('ciclo' => $objUeducativa['ciclo'], 'nivel' => $objUeducativa['nivel'], 'grado' => $objUeducativa['grado'], 'paralelo' => $objUeducativa['paralelo'], 'turno' => $objUeducativa['turno']),
+                'ueducativaInfoId' => array('nivelId' => $objUeducativa['nivelId'], 'cicloId' => $objUeducativa['cicloId'], 'gradoId' => $objUeducativa['gradoId'], 'turnoId' => $objUeducativa['turnoId'], 'paraleloId' => $objUeducativa['paraleloId'], 'iecId' => $objUeducativa['iecId'], 'setCodigo'=>$objUeducativa['setCodigo'], 'satCodigo'=>$objUeducativa['satCodigo'],'sfatCodigo'=>$objUeducativa['sfatCodigo'],'setId'=>$objUeducativa['setId'],'periodoId'=>$objUeducativa['periodoId'],)
+            ));
+      // added validation to show the inscription menor option
+      $showCaseSpecialOption = ($sinfoUeducativa['ueducativaInfoId']['nivelId'] ==15 && $sinfoUeducativa['ueducativaInfoId']['cicloId']==2)?true:false;
+      // user allowed to show the special inscription option
+      $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
       $arrResponse = array(
-            'status'           => 200,
-            'dataStudent'      => $arrStudent,
-            // 'dataInscriptionR' => $dataInscriptionR,
-            // 'dataInscriptionA' => $dataInscriptionA,
-            // 'dataInscriptionE' => $dataInscriptionE,
-            // 'dataInscriptionP' => $dataInscriptionP,
-            'swstudent'        => $swstudent,
-            'swperson'         => $swperson,
-            'swnewperson'      => $swnewperson,
-            'arrGenero'        => $arrGenero,
-            'arrExpedido'      => $arrExpedido,
-            'arrPais'          => $arrPais,
-            'arrNewStudent'    => $arrNewStudent,
+            'status'                   => 200,
+            'dataStudent'              => $arrStudent,
+            'swstudent'                => $swstudent,
+            'swperson'                 => $swperson,
+            'showCaseSpecialOption'    => $showCaseSpecialOption,
+            'userAllowedOnCasespecial' => $userAllowedOnCasespecial,
+            'swnewperson'              => $swnewperson,
+            'arrGenero'                => $arrGenero,
+            'arrExpedido'              => $arrExpedido,
+            'arrPais'                  => $arrPais,
+            'arrNewStudent'            => $arrNewStudent,
       );
       // dump($arrResponse);die;
       $response->setStatusCode(200);
