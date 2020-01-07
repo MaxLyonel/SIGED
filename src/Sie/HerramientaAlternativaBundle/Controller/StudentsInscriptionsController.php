@@ -459,6 +459,14 @@ class StudentsInscriptionsController extends Controller {
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
+      // get all data about EstudianteInscripcionAlternativaExcepcionalTipo
+      $objExcepcional = $em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->findAll();
+      $arrExcepcional = array();
+      foreach ($objExcepcional as $value) {
+        $arrExcepcional[] = array('id'=>$value->getId(), 'description' => $value->getDescripcion());
+        
+      }
+
       $arrResponse = array(
             'status'                   => 200,
             'dataStudent'              => $arrStudent,
@@ -471,6 +479,7 @@ class StudentsInscriptionsController extends Controller {
             'arrExpedido'              => $arrExpedido,
             'arrPais'                  => $arrPais,
             'arrNewStudent'            => $arrNewStudent,
+            'arrExcepcional'           => $arrExcepcional,
       );
       // dump($arrResponse);die;
       $response->setStatusCode(200);
@@ -626,6 +635,7 @@ class StudentsInscriptionsController extends Controller {
             $studentInscription->setCodUeProcedenciaId(0);
             $em->persist($studentInscription);
 
+
             $em->flush();
 
             // Try and commit the transaction
@@ -767,15 +777,21 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
-      // dump($request);die;
+      dump($request);die;
       //ini json var
       $response = new JsonResponse();
       // get the send values 
       $iecId = $request->get('iecId');
       $studentId = $request->get('studentId');
+      
+      $casespecial = isset($request->get('casespecial'))?$request->get('casespecial'):false;
+      $excepcional = $request->get('excepcional');
+      $infocomplementaria = $request->get('infocomplementaria');
+      
+
       // create db conexion
       $em = $this->getDoctrine()->getManager();
-
+      $em->getConnection()->beginTransaction();
       try {
         // check if the student has an inscription on this course
         $objCurrentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$studentId,'institucioneducativaCurso'=>$iecId));
@@ -797,6 +813,17 @@ class StudentsInscriptionsController extends Controller {
             //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
             $studentInscription->setCodUeProcedenciaId(0);
             $em->persist($studentInscription);
+
+            //save the inscription data when the inscription is excepcional
+            if($casespecial){
+              $estudianteInscripcionAlternativaExcepcionalObjNew = new EstudianteInscripcionAlternativaExcepcional();
+              $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcionAlternativaExcepcionalTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->find($excepcional));
+              $estudianteInscripcionAlternativaExcepcionalObjNew->setFecha(new \DateTime('now'));
+              $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentId));
+              $estudianteInscripcionAlternativaExcepcionalObjNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+              $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
+              $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
+            }
 
             $em->flush();
 
@@ -830,6 +857,8 @@ class StudentsInscriptionsController extends Controller {
       return $response;
         
       } catch (Exception $e) {
+        echo 'error in save the data inscription';
+        $em->getConnection()->rollback();
         
       }
 
