@@ -139,7 +139,6 @@ class StudentsInscriptionsController extends Controller {
         $arryearsOfUe = $query->fetchAll();
         $arryearsofue = array();
         foreach ($arryearsOfUe as $yearofue) {
-            dump($yearofue['gestion_tipo_id']);
             $arryearsofue[$yearofue['gestion_tipo_id']] = $yearofue['gestion_tipo_id'];
         }
         $response = new JsonResponse();
