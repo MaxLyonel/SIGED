@@ -316,8 +316,8 @@ class ReportesController extends Controller {
 
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $codrude . '_' . $gestion . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id. '&dirLoc=' . $l_id . '&fc=' . $facilitadorComunitario .'&ep=' . $educacionProductiva . '&otros=' . $otros . '&curso=' . $curso .'&&__format=pdf&'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudeal_' . $codrude . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_rude_socioeconomico_gral_v1_jqc.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id. '&dirLoc=' . $l_id . '&fc=' . $facilitadorComunitario .'&ep=' . $educacionProductiva . '&otros=' . $otros . '&curso=' . $curso .'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
