@@ -1259,7 +1259,7 @@ class DocumentoController extends Controller {
                                 $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["serie"].'" fue legalizado'));
                                 $em->getConnection()->commit();        
                             } else {
-                                throw new exception('Dificultades al realizar el registro, intente nuevamente');
+                                throw new exception('Dificultades al realizar el registro, '.$valFirmaDisponible[1].', intente nuevamente');
                             }
                             $formBusqueda = array('serie'=>$entity[0]["serie"]);      
                             return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie_detalle', ['form' => $formBusqueda], 307);  

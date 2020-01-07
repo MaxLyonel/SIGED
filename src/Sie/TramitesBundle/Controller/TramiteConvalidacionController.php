@@ -541,7 +541,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion1', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2006')
+                                ->where('gt.id > 2005')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-3))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -556,7 +556,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion2', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2006')
+                                ->where('gt.id > 2005')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-2))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -571,7 +571,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion3', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2006')
+                                ->where('gt.id > 2005')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-1))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -586,7 +586,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion4', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2006')
+                                ->where('gt.id > 2005')
                                 ->andWhere('gt.id <= '.($form['gestionActual']))
                                 ->orderBy('gt.id', 'DESC');
                     },
