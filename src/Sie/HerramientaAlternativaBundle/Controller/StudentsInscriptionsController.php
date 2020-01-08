@@ -380,7 +380,10 @@ class StudentsInscriptionsController extends Controller {
           'expedido'    =>$objStudent->getExpedido()->getSigla(),
           'expedidoId'  =>$objStudent->getExpedido()->getId(),
           'expedidoId2'  =>$objStudent->getExpedido()->getId(),
-          'studentId'  =>$objStudent->getId(),
+          'studentId'    =>$objStudent->getId(),
+          'casespecial'  =>false,
+          'excepcional'=>null,
+          'infocomplementaria'=>null,
         );
         
       }else{
@@ -408,7 +411,9 @@ class StudentsInscriptionsController extends Controller {
             'expedidoId2'  =>$objStudent->getExpedido()->getId(),
             'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
             'generoId'    =>$objStudent->getGeneroTipo()->getId(),
-
+            'casespecial'  =>false,
+            'excepcional'=>null,
+            'infocomplementaria'=>null,
 
           );
           // dump($arrStudent);die;
@@ -442,6 +447,9 @@ class StudentsInscriptionsController extends Controller {
           'paterno'=>null,
           'materno'=>null,
           'nombre'=>null,
+          'casespecial'  =>false,
+          'excepcional'=>null,
+          'infocomplementaria'=>null,
         );
         $swnewperson = true;
       }
@@ -777,21 +785,27 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
-      dump($request);die;
+
       //ini json var
       $response = new JsonResponse();
+      $em = $this->getDoctrine()->getManager();
+      $em->getConnection()->beginTransaction();
       // get the send values 
       $iecId = $request->get('iecId');
       $studentId = $request->get('studentId');
       
-      $casespecial = isset($request->get('casespecial'))?$request->get('casespecial'):false;
+      $casespecial = $request->get('casespecial');
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
-      
+      $fecNac = $request->get('fecNac');
 
+     
+
+
+      $swyearStudent = $this->validateYearsStudent( array('fecNac' => $fecNac , 'casespecial'=>$casespecial, 'iecId' => $iecId) );
+      
       // create db conexion
-      $em = $this->getDoctrine()->getManager();
-      $em->getConnection()->beginTransaction();
+      
       try {
         // check if the student has an inscription on this course
         $objCurrentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$studentId,'institucioneducativaCurso'=>$iecId));
@@ -861,6 +875,92 @@ class StudentsInscriptionsController extends Controller {
         $em->getConnection()->rollback();
         
       }
+
+    }
+
+    private function validateYearsStudent($arrStudent){
+      // create db conexion
+      $em = $this->getDoctrine()->getManager();
+      
+        if(($arrStudent['casespecial'])){
+
+           //get curso info
+          $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPerIecid($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'), $arrStudent['iecId']);
+
+          $objUeducativa = $objUeducativa[0];
+
+          $aInfoUeducativa = (array(
+              'ueducativaInfo' => array('ciclo' => $objUeducativa['ciclo'], 'nivel' => $objUeducativa['nivel'], 'grado' => $objUeducativa['grado'], 'paralelo' => $objUeducativa['paralelo'], 'turno' => $objUeducativa['turno']),
+              'ueducativaInfoId' => array('nivelId' => $objUeducativa['nivelId'], 'cicloId' => $objUeducativa['cicloId'], 'gradoId' => $objUeducativa['gradoId'], 'turnoId' => $objUeducativa['turnoId'], 'paraleloId' => $objUeducativa['paraleloId'], 'iecId' => $objUeducativa['iecId'], 'setCodigo'=>$objUeducativa['setCodigo'], 'satCodigo'=>$objUeducativa['satCodigo'],'sfatCodigo'=>$objUeducativa['sfatCodigo'],'setId'=>$objUeducativa['setId'],'periodoId'=>$objUeducativa['periodoId'],)
+          ));
+
+        //get the curso info
+        $objInstitucioneducativaCursoStudent=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($arrStudent['iecId']);
+
+        //get the students year old
+
+        // $yearStudent = (date('Y') - date('Y',strtotime($form['dateStudent'])));
+        $arrYearStudent =$this->get('funciones')->tiempo_transcurrido($arrStudent['fecNac'], '30-6-'.date('Y'));
+        dump($arrYearStudent);
+        $yearStudent = $arrYearStudent[0];
+        $yearStudent =$this->get('funciones')->getTheCurrentYear($arrStudent['fecNac'], '30-6-'.date('Y'));
+        dump($yearStudent);
+        die;
+        // dump($objInstitucioneducativaCursoStudent);
+        // dump($yearStudent);
+        // die;
+        //validate the humanisticos
+        // if($objInstitucioneducativaCursoStudent->getNivelTipo()->getId()==15){
+        if($aInfoUeducativa['ueducativaInfoId']['nivelId']==15){
+          //validate to nivel=15 - ciclo=1 - grado=1
+          // if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==1 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==1){
+          //   if(!($yearStudent>=15)){
+          //     $validateYear=true;
+          //   }
+          // }
+          // elementales
+          if($aInfoUeducativa['ueducativaInfoId']['cicloId']==1 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==1){
+            if(!($yearStudent>=15)){
+              $validateYear=true;
+            }
+          }
+          // avanzados
+          //validate to nivel=15 - ciclo=1 - grado=2
+          if($aInfoUeducativa['ueducativaInfoId']['cicloId']==1 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==2){
+            if(!($yearStudent>=16)){
+              $validateYear=true;
+            }
+          }
+          // aplicados
+          //validate to nivel=15 - ciclo=2 - grado=1
+          if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==1){
+            if(!($yearStudent>=17)){
+              $validateYear=true;
+            }
+          }
+          // complementarios
+          //validate to nivel=15 - ciclo=2 - grado=2
+          if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==2){
+            if(!($yearStudent>=18)){
+              $validateYear=true;
+            }
+          }
+          // avanzados
+          //validate to nivel=15 - ciclo=2 - grado=3
+          if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==3){
+            if(!($yearStudent>=18)){
+              $validateYear=true;
+            }
+          }
+
+        } else{
+            if(!($yearStudent>=16)){
+              $validateYear=true;
+            }
+        }//end first if - validate the humanisticos
+
+      }
+      die;
 
     }
 
