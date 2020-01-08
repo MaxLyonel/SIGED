@@ -98,6 +98,30 @@ class InstitucioneducativaCursoRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getStudentCourseAlterPerStudentId($studentId,$gestionId) {
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+
+                ->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.complemento, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId, IDENTITY(h.gestionTipo) as gestion')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'j', 'WITH', 'i.estudiante=j.id')
+                ->innerJoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'i.estadomatriculaTipo = emt.id')
+                ->where('j.id = :studentId')
+                ->andwhere('h.gestionTipo = :gestionId')
+                ->orderBy('h.gestionTipo, a.codigo,b.codigo ,d.codigo')
+                ->setParameter('studentId', $studentId)
+                ->setParameter('gestionId', $gestionId)
+        ;
+        return $qb->getQuery()->getResult();
+    }    
+
     public function getListStudentPerCourseTodoInscriptionAlter($ie_id, $ie_gestion, $ie_subcea, $per_id_cod, $realLevel, $setCodigo, $satCodigo, $paralelo, $turno) {
         $qb = $this->getEntityMAnager()->createQueryBuilder();//echo "$ie_id, $ie_gestion, $ie_subcea, $per_id_cod, $realLevel";
         $qb
