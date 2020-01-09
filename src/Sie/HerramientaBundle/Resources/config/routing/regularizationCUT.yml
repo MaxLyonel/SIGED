@@ -1,0 +1,26 @@
+regularizacion_cut_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:index}
+
+
+regularizacion_cut_history:
+    path:     /sie/seehistory/
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:history }
+    options:
+         expose: true
+
+regularizacion_cut_regularization:
+    path:     /sie/regularization/
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:regularization }
+    options:
+         expose: true
+
+regularizacion_cut_registerNivelation:
+    path:     /sie/registerNivelation/
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:registerNivelation }
+    options:
+         expose: true
+
+regularizacion_cut_listHistory:
+    path:     /listHistory/{form}
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:listHistory}         

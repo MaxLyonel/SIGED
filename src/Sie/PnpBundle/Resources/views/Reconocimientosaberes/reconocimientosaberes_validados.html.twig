@@ -53,33 +53,33 @@
                                 <label class="col-sm-2 control-label">Lugar</label>
                                 <div class="col-sm-10">
                                     <select data-placeholder="Seleccionar" name="lugar" class="form-control chosen-select" tabindex="1" >
-                                        <option value="0">BOLIVIA</option>
-                                        <option value="80480300">CHUQUISACA</option>
-                                        <option value="80730794">LA PAZ</option>
-                                        <option value="80980569">COCHABAMBA</option>
-                                        <option value="81230297">ORURO</option>
-                                        <option value="81480201">POTOSI</option>
-                                        <option value="81730264">TARIJA</option>
-                                        <option value="81981501">SANTA CRUZ</option>
-                                        <option value="82230130">BENI</option>
-                                        <option value="82480050">PANDO</option>
+                                        <option {% if 0 == lugar %}selected="selected"{% endif %} value="0">BOLIVIA</option>
+                                        <option {% if 80480300 == lugar %}selected="selected"{% endif %} value="80480300">CHUQUISACA</option>
+                                        <option {% if 80730794 == lugar %}selected="selected"{% endif %} value="80730794">LA PAZ</option>
+                                        <option {% if 80980569 == lugar %}selected="selected"{% endif %} value="80980569">COCHABAMBA</option>
+                                        <option {% if 81230297 == lugar %}selected="selected"{% endif %} value="81230297">ORURO</option>
+                                        <option {% if 81480201 == lugar %}selected="selected"{% endif %} value="81480201">POTOSI</option>
+                                        <option {% if 81730264 == lugar %}selected="selected"{% endif %} value="81730264">TARIJA</option>
+                                        <option {% if 81981501 == lugar %}selected="selected"{% endif %} value="81981501">SANTA CRUZ</option>
+                                        <option {% if 82230130 == lugar %}selected="selected"{% endif %} value="82230130">BENI</option>
+                                        <option {% if 82480050 == lugar %}selected="selected"{% endif %} value="82480050">PANDO</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group col-xs-12 col-lg-3">
                                 <label class="col-sm-1 control-label">de:</label>
                                 <div class="col-sm-11">
-                                    <input type="text" name="inicio" id="inicio" class="form-control" onkeypress="return false">
+                                    <input type="text" name="inicio" id="inicio" class="form-control" onkeypress="return false" value="{{inicio}}">
                                 </div>
                             </div>
                             <div class="form-group col-xs-12 col-lg-3">
                                 <label class="col-sm-1 control-label">a:</label>
                                 <div class="col-sm-11">
-                                    <input type="text" name="fin" id="fin" class="form-control" onkeypress="return false">
+                                    <input type="text" name="fin" id="fin" class="form-control" onkeypress="return false" value="{{fin}}">
                                 </div>
                             </div>
                             <div class="form-group col-xs-12 col-lg-2">
-                                <button type="submit" class="btn btn-success" onclick="return ver_fechas(inicio,fin)">Ver</button>
+                                <button type="submit" class="btn rounded btn-success" onclick="return ver_fechas(inicio,fin)">Ver</button>
                             </div>
                         </form>
                     </div>
@@ -101,7 +101,7 @@
                                             <th>Fecha Nac.</th>                            
                                             <th>Homologado a</th>                            
                                             <th>Fecha</th>                            
-                                            <th>Usuario</th>                            
+                                            <th>Fecha Homologado</th>                            
                                             <th>Certificación</th>  
                                         </tr>
                                     </thead>
@@ -117,12 +117,12 @@
                                             <td>{{ fila.fecha_nacimiento|date('d-m-Y') }}</td>
                                             <td>{{ fila.curso_nombre }}</td>
                                             <td>{{ fila.fecha_creacion|date('d-m-Y') }}</td>
-                                            <td>{{ fila.usuario_id }}</td>
+                                            <td>{{ fila.fecha_homologacion|date('d-m-Y') }}</td>
                                             {% if fila.homologado == false %}    
                                                 <td>En Revisi&oacute;n...</td>
                                             {% else %}
                                                 <td>
-                                                    <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" > Certificaci&oacute;n</a>
+                                                    <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" > Certificaci&oacute;n</a>
                                                 </td>
                                             {% endif %}
                                         </tr>
@@ -145,15 +145,15 @@
     <script type="text/javascript">
      function ver_fechas(inicio,fin){
         
-        array_fecha = inicio.value.split("/");
-        var dia=array_fecha[0];
+        array_fecha = inicio.value.split("-");
+        var ano=array_fecha[0];
         var mes=(array_fecha[1]-1);
-        var ano=(array_fecha[2]);
+        var dia=(array_fecha[2]);
         var fecha_inicio = new Date(ano,mes,dia);
-        array_fecha = fin.value.split("/");
-        var dia=array_fecha[0];
+        array_fecha = fin.value.split("-");
+        var ano=array_fecha[0];
         var mes=(array_fecha[1]-1);
-        var ano=(array_fecha[2]);
+        var dia=(array_fecha[2]);
         var fecha_fin = new Date(ano,mes,dia);
         if(fecha_fin >= fecha_inicio)
             return true;
@@ -161,18 +161,19 @@
             alert("Error!, la fecha final no puede ser menor que la inicial");
             return false;
         }
+            
         
     }
  $("#inicio").datepicker({
             autoclose: true,
             todayHighlight: true,
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
             language: "es",
         });
      $("#fin").datepicker({
             autoclose: true,
             todayHighlight: true,
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
             language: "es",
         });
     

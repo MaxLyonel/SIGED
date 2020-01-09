@@ -1,0 +1,42 @@
+{% extends 'layoutGestmenu.html.twig' %}
+{% block contentoption %}
+    {{ parent() }}
+    <div class="header-content">
+        <h2><i class="fa fa-th animated flip"></i><strong>Sistema de Menús</strong>  </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href={{path('principal_web')}}>Inicio </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div id="mensajes">
+        {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if app.session.flashBag.has('error') %}
+            <div class="alert alert-danger">
+                {% for msg in app.session.flashBag.get('error') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+
+
+

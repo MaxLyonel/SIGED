@@ -1,0 +1,99 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Seleccione el usuario a quien se derivara los trámites</h4></br>
+            </div>
+            <div class="clearfix"></div>
+            <div class="panel-body">
+                <div class="form-group col-md-12">
+                    <div class="form-group row">
+                        <div class="col-md-2 list-group-item-info text-inverse">DEL USUARIO:</div>
+                        <div class="col-md-10">{{usuario}}</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-2 list-group-item-info text-inverse">TAREA:</div>
+                        <div class="col-md-10">{{ tarea }}</div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="pull-left">
+                        <button class="btn btn-md btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" title=""><i class="glyphicon glyphicon-chevron-down"></i>Ver detalle de trámites</button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="panel-body collapse" id="collapseExample">
+                        <div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Nro. Trámite</th>
+                                        <th>Tipo trámite</th>
+                                        <th>Tarea</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for t in tramites %}
+                                    <tr>
+                                        <td class="text-center">{{ t.id }}</a></td>
+                                        <td>{{ t.flujo }}</td>
+                                        <td>{{ t.proceso_tipo }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="caegando2"></div>
+                <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped" id="data_tabla2">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Lugar</th>
+                                <th>Nivel</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Lugar</th>
+                                <th>Nivel</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for u in usuarios %}
+                            <tr>
+                                <td>{{ u.username }}</a></td>
+                                <td>{{ u.nombre }}</td>
+                                <td>{{ u.paterno }}</td>
+                                <td>{{ u.materno }}</td>
+                                <td>{{ u.lugar }}</td>
+                                <td>{{ u.nivel }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-xs text-bold" data-toggle="tooltip" data-placement="top" title="Derivar Trámites" onclick="derivarTramite({{u.id}},{{u.flujo_proceso_id}},{{idusuario}},'{{tramites|serialize()}}')">
+                                        Derivar
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal-dialog -->

@@ -135,6 +135,7 @@
                                         <th>Género</th>
                                         <th>Disciplina</th>
                                         <th>Prueba</th>
+                                        <th>Equipo</th>
                                         <th style="min-width: 50px">&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -162,6 +163,7 @@
                                             <td align="">{{genero}}</td>
                                             <td align="">{{disciplina}}</td>
                                             <td align="">{{prueba}}</td>
+                                            <td align="">{{equipoNombre}}</td>
                                             <td align="">
                                                 <form name="formElimina" id="formElimina" role="form" action="{{ path('sie_juegos_eliminacion_clasificacion_estudiante') }}" method="POST">  
                                                     <input type="hidden" name="inscripcion" value="{{ data.eInsId }}" />
@@ -185,6 +187,7 @@
                                             <th>Género</th>
                                             <th>Disciplina</th>
                                             <th>Prueba</th>
+                                            <th>Equipo</th>
                                             <th style="min-width: 50px">&nbsp;</th>
                                         </tr>
                                     </tr>
@@ -201,14 +204,16 @@
     <!-- Start body content -->
     <!--/ End body content -->
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-
     </div><!-- /.modal -->
+
+    
     <!--/ End body content -->
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
-    <script>          
+    <script type="text/javascript">        
 
+    
         /**
          * this is to the tree menu option
          * @returns {undefined}

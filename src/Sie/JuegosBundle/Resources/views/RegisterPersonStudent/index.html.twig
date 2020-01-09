@@ -1,0 +1,568 @@
+{# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro de Entrenador <span>----</span></h2>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+            <div class="col-md-12">
+
+                <!-- Start comment form -->
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Busqueda</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+
+                        
+                            {{form_start(form)}}
+                            <div class="form-body">
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{form_widget(form.sie)}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{form_widget(form.nivel)}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{form_widget(form.genero)}}
+                                        </div>
+                                    </div>
+                                </div><!-- /.form-group -->
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {{form_widget(form.disciplina)}}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{form_widget(form.prueba)}}
+                                        </div>
+                                    </div>
+
+                                </div><!-- /.form-group -->
+                              
+                            </div><!-- /.form-body -->
+                            <div class="form-footer">
+                                <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                            </div><!-- /.form-footer -->
+                        {{form_end(form)}}
+
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End comment form -->
+
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div id="listaParticipante">
+            </div> 
+        </div>
+
+</div>
+
+
+<!-- Start inside form layout -->
+        <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+        <!-- <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"> -->
+           
+        </div>
+        <!-- /.modal -->
+        <!--/ End inside form layout -->
+        <!--/ END ALL MODALS -->
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+
+    var listar_nivel = function(sie){
+
+
+          if (sie.length > 7) {
+
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('RegisterPersonStudent_busqueda_nivel'),
+                    data: {'sie': sie},
+                    beforeSend: function () {
+                          $("#form_nivel").attr('disabled', 'true');
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value="">Cargando Datos..</option>');
+                        $("#form_genero").attr('disabled', 'true');
+                        $('#form_genero').empty();
+                        $("#form_genero").append('<option value="">Seleccionar género </option>');
+                        $("#form_disciplina").attr('disabled', 'true');
+                        $('#form_disciplina').empty();
+                        $("#form_disciplina").append('<option value="">Seleccionar disciplina</option>');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar prueba</option>');
+                        $("#form_posicion").attr('disabled', 'true');
+                        $('#form_posicion').empty();
+                        $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+                        $("#form_grado").empty();
+                        $("#form_grado_participante").empty();
+                        $("#listaSeleccionado").empty();
+                        $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
+                        $("#botonLista").attr('disabled', 'true');
+                    },
+                    success: function (data) {
+                        if (data.niveles == '') {
+                            $("#form_nivel").attr('disabled', 'true');
+                        } else {
+                            $("#form_nivel").removeAttr('disabled');
+                            $("#form_nivel").focus();
+                            $('#form_nivel').empty();
+                            $("#form_nivel").append('<option value=""></option>');
+                            for (var i in data.niveles) {
+                                $("#form_nivel").append('<option value="' + data.niveles[i].id + '">' + data.niveles[i].nivel + '</option>');
+                            }
+                            $("#id").val(sie);
+                            $("#botonLista").removeAttr('disabled');
+                        }
+                    }
+                });
+            } else {
+
+                //$("#form_institucionEducativaName").val(data.nombre);
+                $("#form_nivel").empty();
+                $("#form_grado").empty();
+                $("#form_paralelo").empty();
+                $("#form_turno").empty();
+
+
+            }
+
+
+    };
+
+    var listar_genero = function(nivel){
+        if(nivel != ''){
+
+
+
+
+        var sie = $("#form_sie").val() 
+
+           $.ajax({
+                    type: 'post',
+                    url: Routing.generate('RegisterPersonStudent_busqueda_genero'),
+                    data: {'sie': sie, 'nivel': nivel},
+                    beforeSend: function () {
+                        $("#form_genero").attr('disabled', 'true');
+                        $('#form_genero').empty();
+                        $("#form_genero").append('<option value="">Cargando Datos..</option>');
+                        $("#form_disciplina").attr('disabled', 'true');
+                        $('#form_disciplina').empty();
+                        $("#form_disciplina").append('<option value="">Seleccionar disciplina</option>');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar prueba</option>');
+                        $("#form_posicion").attr('disabled', 'true');
+                        $('#form_posicion').empty();
+                        $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+                        $("#form_grado").empty();
+                        $("#form_grado_participante").empty();
+                        $("#listaSeleccionado").empty();
+                        $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
+                    },
+                     success: function (data) {
+                        if (data.generos == '') {
+                            $("#form_genero").attr('disabled', 'true');
+                        } else {
+                            $("#form_genero").removeAttr('disabled');
+                            $("#form_genero").focus();
+                            $('#form_genero').empty();
+                            $("#form_genero").append('<option value=""></option>');
+                            for (var i in data.generos) {
+                                $("#form_genero").append('<option value="' + data.generos[i].id + '">' + data.generos[i].genero + '</option>');
+                            }
+                        }
+                    }
+                });
+
+        }else{
+
+             $("#form_genero").attr('disabled', 'true');
+                        $('#form_genero').empty();
+                        $("#form_genero").append('<option value="">Seleccionar Genero</option>');
+                        $("#form_disciplina").attr('disabled', 'true');
+                        $('#form_disciplina').empty();
+                        $("#form_disciplina").append('<option value="">Seleccionar disciplina</option>');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar prueba</option>');
+                        $("#form_posicion").attr('disabled', 'true');
+                        $('#form_posicion').empty();
+                        $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+                        $("#form_grado").empty();
+                        $("#form_grado_participante").empty();
+                        $("#listaSeleccionado").empty();
+                        $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
+            alert('El campo nivel es requerido');
+            return false;
+        }
+
+    };
+
+
+    var listar_disciplina = function(genero){
+
+
+
+
+     var sie = $("#form_sie").val();
+     var nivel =  $("#form_nivel").val();
+
+
+        if(genero != ''){
+
+            $.ajax({
+                    type: 'post',
+                    url: Routing.generate('RegisterPersonStudent_busqueda_grado_disciplina'),
+                    data: {'sie': sie, 'nivel': nivel, 'genero': genero},
+                    beforeSend: function () {
+                        $("#form_disciplina").attr('disabled', 'true');
+                        $('#form_disciplina').empty();
+                        $("#form_disciplina").append('<option value="">Cargando Datos..</option>');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar prueba</option>');
+                        $("#form_posicion").attr('disabled', 'true');
+                        $('#form_posicion').empty();
+                        $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+                        $('#form_grado').empty();
+                        $('#form_grado_participante').empty();
+                        $("#listaSeleccionado").empty();
+                        $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
+                    },
+                     success: function (data) {
+
+                      if (data.disciplinas == '') {
+                            $("#form_disciplina").attr('disabled', 'true');
+                        } else {
+                            $("#form_disciplina").removeAttr('disabled');
+                            $("#form_disciplina").focus();
+                            $('#form_disciplina').empty();
+                            $("#form_disciplina").append('<option value=""></option>');
+                            for (var i in data.disciplinas) {
+                                $("#form_disciplina").append('<option value="' + data.disciplinas[i].id + '">' + data.disciplinas[i].disciplina + '</option>');
+                            }
+                            $('#form_grado').empty();
+                            for (var i in data.grados) {
+                               if (i == 0){
+                                  $("#form_grado").append('<li class="nav-border nav-border-top-primary" onclick="listar_grado_estudiante(' + data.grados[i].id + ')"><a href="#tab' + data.grados[i].id + '" data-toggle="tab" class="text-center" aria-expanded="true">' + data.grados[i].grado + '</li>');
+                               } else {
+                                  $("#form_grado").append('<li class="nav-border nav-border-top-primary" onclick="listar_grado_estudiante(' + data.grados[i].id + ')"><a href="#tab' + data.grados[i].id + '" data-toggle="tab" class="text-center" aria-expanded="true">' + data.grados[i].grado + '</li>');
+                               }
+                            }
+                            $('#form_grado_participante').empty();
+                            for (var j in data.grados) {
+                               if (j == 0){
+                                  $("#form_grado_participante").append('<div class="tab-pane fade in" id="tab' + data.grados[j].id + '"></div>');
+                               } else {
+                                  $("#form_grado_participante").append('<div class="tab-pane fade in" id="tab' + data.grados[j].id + '"></div>');
+                               }
+                            }
+                        }
+                    },
+                });
+
+        }else{
+                $("#form_disciplina").attr('disabled', 'true');
+                        $('#form_disciplina').empty();
+                        $("#form_disciplina").append('<option value="">Cargando Datos..</option>');
+                        $("#form_prueba").attr('disabled', 'true');
+                        $('#form_prueba').empty();
+                        $("#form_prueba").append('<option value="">Seleccionar prueba</option>');
+                        $("#form_posicion").attr('disabled', 'true');
+                        $('#form_posicion').empty();
+                        $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+                        $('#form_grado').empty();
+                        $('#form_grado_participante').empty();
+                        $("#listaSeleccionado").empty();
+                        $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
+            alert('El campo genero es requerido');
+            return false;
+        }
+
+    };
+
+   var chekedOff = function () {
+            $('input[type=checkbox]').attr('checked',false);
+    };
+
+    var listar_prueba = function(disciplina){
+
+    if(disciplina!=''){
+
+
+         var sie = $("#form_sie").val();
+         var nivel =  $("#form_nivel").val();
+         var genero =  $("#form_genero").val();
+         
+                $.ajax({
+                        type: 'post',
+                        url: Routing.generate('RegisterPersonStudent_busqueda_disciplina_prueba'),
+                        data: {'sie': sie, 'nivel': nivel,'genero': genero, 'disciplina': disciplina},
+                        beforeSend: function () {
+                           $("#form_prueba").attr('disabled', 'true');
+                            $('#form_prueba').empty();
+                            $("#form_prueba").append('<option value="">Cargando Datos..</option>');
+                            $("#form_posicion").attr('disabled', 'true');
+                            $('#form_posicion').empty();
+                            $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+                            $("#listaSeleccionado").empty();
+                            $("#listaParticipante").empty();
+                            $("#listaEquipo").empty();
+                            chekedOff();
+                        },
+                         success: function (data) {
+
+                            if (data.pruebas == '') {
+                                $("#form_prueba").attr('disabled', 'true');
+                            } else {
+                                $("#form_prueba").removeAttr('disabled');
+                                $("#form_prueba").focus();
+                                $('#form_prueba').empty();
+                                $("#form_prueba").append('<option value=""></option>');
+                                for (var i in data.pruebas) {
+                                    $("#form_prueba").append('<option value="' + data.pruebas[i].id + '">' + data.pruebas[i].prueba + '</option>');
+                                }
+                            }
+
+                        
+                        },
+                    });
+        }else{
+            $("#form_prueba").attr('disabled', 'true');
+            $('#form_prueba').empty();
+            $("#form_prueba").append('<option value="">Seleccionar prueba..</option>');
+            $("#form_posicion").attr('disabled', 'true');
+            $('#form_posicion').empty();
+            $("#form_posicion").append('<option value="">Seleccionar posición</option>');
+            $("#listaSeleccionado").empty();
+            $("#listaParticipante").empty();
+            $("#listaEquipo").empty();
+            chekedOff();
+            alert('El campo disciplina es requerido');
+            return false;
+        }
+
+    };
+
+
+    var listar_registrado = function(prueba){
+
+
+         var sie = $("#form_sie").val();
+         var nivel =  $("#form_nivel").val();
+         var genero =  $("#form_genero").val();
+         var disciplina =  $("#form_disciplina").val();
+
+
+
+         if(prueba!=''){
+
+
+         
+                $.ajax({
+                        type: 'post',
+                        url: Routing.generate('RegisterPersonStudent_busqueda_unidadeducativa_prueba_deportista'),
+                        data: {'nivel': nivel,'genero': genero, 'disciplina': disciplina,'prueba': prueba, 'sie': sie},
+                        beforeSend: function () {
+                           $("#listaSeleccionado").empty();
+                            $("#listaParticipante").empty();
+                            $("#listaEquipo").empty();
+                            $("#listaParticipante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                            chekedOff();
+                            $("#form_posicion").attr('disabled', 'true');
+                            $('#form_posicion').empty();
+                            $("#form_posicion").append('<option value="">Cargando Datos..</option>');
+                        },
+                         success: function (data) {
+                            $('#listaParticipante').empty();
+                            $('#listaParticipante').append(data);
+
+                        
+                        },
+                    });
+         }else{
+                 $("#listaSeleccionado").empty();
+                    $("#listaParticipante").empty();
+                    $("#listaEquipo").empty();
+                    $("#listaParticipante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    chekedOff();
+                    $("#form_posicion").attr('disabled', 'true');
+                    $('#form_posicion').empty();
+                    $("#form_posicion").append('<option value="">Seleccionar prueba</option>');
+                alert('El campo prueba es requerido');
+                return false;
+            }
+
+    };
+
+
+    var lookForPerson = function(){
+        var carnet = $('#form_carnet').val();
+        
+        if(carnet != '' && !isNaN(carnet)){
+
+           var formData = $('#formLookForPersonId').serialize();
+
+            $.ajax({
+                        type: 'post',
+                        url: Routing.generate('RegisterPersonStudent_find_person'),
+                        data: formData,
+                        beforeSend: function () {
+                           
+                            $('#idPersonData').empty();
+                            $("#idPersonData").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        },
+                         success: function (data) {
+                            $('#idPersonData').empty();
+                            $('#idPersonData').append(data);
+
+             
+                        
+                        
+                        },
+                    });
+        }else{
+            alert('El campo Carnet de Identidad es requerido y/o el formato no es el apropiado');
+            return false;
+        }//end if
+
+    };
+
+    var registerPerson = function(){        
+        var formData = $('#idFormPersonToRegister').serialize()
+        // $('#modal').modal('hide');
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('RegisterPersonStudent_register_person'),
+            data: formData,
+            beforeSend: function () {
+                $('#idPersonData').empty();
+                $("#idPersonData").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+             success: function (data) {
+
+                // $('#form_carnet').val('');
+                // $('#form_complemento').val('');
+                $('#idPersonData').empty();
+                $('#idPersonData').append(data);
+
+            },
+        });
+    };
+
+    var openRegisterCouch = function(jsondata){
+
+         $.ajax({
+            type: 'post',
+            url: Routing.generate('RegisterPersonStudent_open_register'),
+            data: {'jsondata':jsondata},
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+             success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+
+            },
+        });
+
+    };
+
+    var showRegisterCouch = function(jsondata, jsonMainData){
+
+         $.ajax({
+            type: 'post',
+            url: Routing.generate('RegisterPersonStudent_show_couch'),
+            data: {'jsondata':jsondata, 'jsonMainData': jsonMainData},
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+             success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+
+            },
+        });
+
+    };
+
+    var removeCouch = function(jsonIdRemove){
+        if(confirm('esta seguro de eliminar?')){
+             $.ajax({
+                type: 'post',
+                url: Routing.generate('RegisterPersonStudent_remove_couch'),
+                data: {'jsonIdRemove':jsonIdRemove},
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                 success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+            });
+             return true;
+        }else{
+            return false;
+        }
+
+    };
+
+    var confirmaFoto = function(){
+        var r = confirm("¿ Está seguro de modificar la fotografía ?");
+        if (r == true) {
+            var formulario = $('#formFoto')[0];
+            var formData = new FormData(formulario);
+            alert("correcto");return false;
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_documento_firma_modifica_guarda'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#modal').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    $('#modal').modal('hide');
+                },
+                success: function (data) {
+                    $('#img'+$('#form_id').val()+'').empty();
+                    $('#img'+$('#form_id').val()+'').append('<img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,'+escape(data.firma1)+'" />');
+                },
+                error: function(error){
+                    $('#modal').modal('toggle');
+                },
+            }); 
+            return true;
+        } else {
+            return false;
+        }
+    }; 
+
+    </script>
+   
+
+
+{%endblock%}

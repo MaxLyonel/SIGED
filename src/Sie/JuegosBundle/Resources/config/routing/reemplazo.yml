@@ -1,0 +1,21 @@
+sie_juegos_reemplazo_index:
+    path:    /index
+    defaults: { _controller: SieJuegosBundle:Reemplazo:index }
+
+sie_juegos_reemplazo_busqueda_prueba:
+    path:    /busqueda/prueba
+    defaults: { _controller: SieJuegosBundle:Reemplazo:busquedaPrueba }
+    options:
+         expose: true
+
+sie_juegos_reemplazo_busqueda_fase:
+    path:    /busqueda/fase
+    defaults: { _controller: SieJuegosBundle:Reemplazo:busquedaFase }
+    options:
+         expose: true
+
+sie_juegos_reemplazo_guarda:
+    path:    /guarda
+    defaults: { _controller: SieJuegosBundle:Reemplazo:guarda }
+    options:
+         expose: true

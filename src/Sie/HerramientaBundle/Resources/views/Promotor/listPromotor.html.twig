@@ -1,0 +1,252 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+<div class="header-content">
+    <h2><i class="fa fa-list-alt"></i> Registro Promotor <span> Busqueda</span></h2>
+      <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Registro Promotor</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+      </div><!-- /.breadcrumb-wrapper -->
+</div>
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">   
+
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Promotor</h3>
+                    </div>
+                    <div class="pull-right">
+                        <h3 class="panel-title">
+                            <a href="#" onclick="newPromotor('{{jsonDataUe}}');" class="btn btn-xs btn-facebook"> Registrar Promotor</a>                        
+                        </h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                <div id="listPromotoresId">
+                    <div class="table-responsive mb-20">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Promotor</th>
+                                                <th>Club</th>
+                                                <th colspan="4">Opcines</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for promotor in objPromotor%}
+                                            <tr>
+                                                <td class="text-center">{{loop.index}}</td>
+                                                <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
+                                                <td>{{promotor.nombreClub}}</td>
+                                                <td align="center">
+                                                    <button type="button" class="btn-link" onclick="removePromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
+                                               
+                                                    <button type="button" class="btn-link" onclick="editPromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Editar"> <i class="fa fa-edit"></i>  </button>
+                                                    
+                                                    <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
+                                                        <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
+                                                        <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
+                                                        <button class="btn btn-xs btn-success" type="submit">Miembros</button>
+                                                    </form>
+                                                
+                                                    <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
+                                                        <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
+                                                        <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
+                                                        <button class="btn btn-xs btn-success" type="submit">Lectura</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {% endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                        
+                    </div><!-- /.panel-body -->                
+                </div>
+
+                   
+
+            </div>            
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div class="modal fade" id="modalNewPromotor"></div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var newPromotor =  function(jsonDataUe){
+            $.ajax({
+                url: Routing.generate('aca_promotor_newpromotor'),
+                type: 'post',
+                data: {jsonDataUe: jsonDataUe},
+                beforeSend: function(){
+
+                },
+                success: function(data){
+                    $('#modalNewPromotor').empty();
+                    $('#modalNewPromotor').append(data);
+                    $('#modalNewPromotor').modal('show');
+                },
+                error: function(data){
+
+                }
+            });
+        }
+
+        var findPromotor = function(){
+            var dataForm = $('#findPromotorId').serialize();
+             $.ajax({
+                url: Routing.generate('aca_promotor_findpromotor'),
+                type: 'post',
+                data: dataForm,
+                beforeSend: function(){
+                    $('#resultPromotorId').empty();
+                },
+                success: function(data){
+                    $('#resultPromotorId').empty();
+                    $('#resultPromotorId').append(data);
+                },
+                error: function(data){
+
+                }
+            });
+        }
+
+        var registerPromotor = function(){
+
+            var nameCDL = $('#form_nombreclub').val();
+            if(!(nameCDL.length > 0)){
+                alert('El Nombre de Club es obligatorio...');
+                return false;
+            }
+            
+            var dataForm = $('#registerPromotorId').serialize();
+            
+            swal({
+    		    title: "¿Está segura/o de agregar al promotor?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+                    $('#modalNewPromotor').modal('hide');
+                    $.ajax({
+                        url: Routing.generate('aca_promotor_registerpromotor'),
+                        type: 'post',
+                        data: dataForm,
+                        beforeSend: function(){
+                            $('#listPromotoresId').empty();
+                        },
+                        success: function(data){
+                            $('#listPromotoresId').empty();
+                            $('#listPromotoresId').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });                      
+		        }
+		    });
+        }
+
+        
+        var removePromotor = function(cdlId,jsonDataUe){
+            
+           // $('#modalNewPromotor').modal('hide');
+            swal({
+    		    title: "¿Está segura/o de eliminar de la lista al promotor?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+                        $.ajax({
+                        url: Routing.generate('aca_promotor_removepromotor'),
+                        type: 'post',
+                        data: {cdlId:cdlId,jsonDataUe:jsonDataUe},
+                        beforeSend: function(){
+                            $('#listPromotoresId').empty();
+                        },
+                        success: function(data){
+                            $('#listPromotoresId').empty();
+                            $('#listPromotoresId').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });
+		        }
+		    });
+        }
+
+
+         var editPromotor =  function(cdlId,jsonDataUe){
+            $.ajax({
+                url: Routing.generate('aca_promotor_editpromotor'),
+                type: 'post',
+                data: {cdlId:cdlId,jsonDataUe:jsonDataUe},
+                beforeSend: function(){
+
+                },
+                success: function(data){
+                    $('#modalNewPromotor').empty();
+                    $('#modalNewPromotor').append(data);
+                    $('#modalNewPromotor').modal('show');
+                },
+                error: function(data){
+
+                }
+            });
+        }
+
+        var updatePromotor = function(){
+            var dataForm = $('#editPromotorId').serialize();
+            swal({
+    		    title: "¿Está segura/o de modificar datos del club de lectura?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+                    $('#modalNewPromotor').modal('hide');
+                    $.ajax({
+                        url: Routing.generate('aca_promotor_updatepromotor'),
+                        type: 'post',
+                        data: dataForm,
+                        beforeSend: function(){
+                            $('#listPromotoresId').empty();
+                        },
+                        success: function(data){
+                            $('#listPromotoresId').empty();
+                            $('#listPromotoresId').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });                      
+		        }
+		    });
+        }
+
+    </script>
+{% endblock %}

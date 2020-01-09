@@ -1,0 +1,201 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+     <div class="header-content">
+        <h2><i class="fa fa-eye animated flip"></i>REPORTE DE RECONOCIMIENTO DE SABERES <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-eye"></i>
+                    <a href="#">
+                    Ver
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Reporte de Reconocimiento de Saberes</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+  
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+         <!-- /.row -->
+
+        <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Reporte de Reconocimientos de Saberes Listar 
+                    </div>
+                    <div class="panel-body">
+                        <form action="{{path('sie_pnp_reconocimiento_saberes_reporte_rs')}}" class="form-horizontal" method="post">
+                            <div class="form-group col-xs-12 col-lg-5">
+                                <label class="col-sm-1 control-label">de:</label>
+                                <div class="col-sm-11">
+                                    <input type="text" name="inicio" id="inicio" class="form-control" onkeypress="return false" value="{{inicio}}">
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-5">
+                                <label class="col-sm-1 control-label">a:</label>
+                                <div class="col-sm-11">
+                                    <input type="text" name="fin" id="fin" class="form-control" onkeypress="return false" value="{{fin}}">
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-2">
+                                <button type="submit" class="btn rounded btn-success" onclick="return ver_fechas(inicio,fin)">Ver</button>
+                            </div>
+                        </form>
+                    </div>
+                    {% if filas %}
+                        <div class="panel-heading">
+                            Resultado de búsqueda
+                        </div>
+                        <div class="panel-body">
+                            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                                    <thead>
+                                        <tr>
+                                            <th>Departamento</th>
+                                            <th>Segundo</th>
+                                            <th>Tercero</th>
+                                            <th>Quinto</th>
+                                            <th>Sexto</th>                            
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for fila in filas %}
+                                        <tr>
+                                            <td>{{ fila.depto }}</td>
+                                            <td>{{ fila.segundo }}</td>
+                                            <td>{{ fila.tercero }}</td>                            
+                                            <td>{{ fila.quinto }}</td>
+                                            <td>{{ fila.sexto }}</td> 
+                                            <td>{{ fila.total }}</td> 
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td><strong>TOTAL</strong></td>
+                                        <td><strong>{{tot["segundo"]}}</strong></td>
+                                        <td><strong>{{tot["tercero"]}}</strong></td>
+                                        <td><strong>{{tot["quinto"]}}</strong></td>
+                                        <td><strong>{{tot["sexto"]}}</strong></td>
+                                        <td><strong>{{tot["total"]}}</strong></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+              
+
+                
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+     function ver_fechas(inicio,fin){
+        
+        array_fecha = inicio.value.split("-");
+        var ano=array_fecha[0];
+        var mes=(array_fecha[1]-1);
+        var dia=(array_fecha[2]);
+        var fecha_inicio = new Date(ano,mes,dia);
+        array_fecha = fin.value.split("-");
+        var ano=array_fecha[0];
+        var mes=(array_fecha[1]-1);
+        var dia=(array_fecha[2]);
+        var fecha_fin = new Date(ano,mes,dia);
+        if(fecha_fin >= fecha_inicio)
+            return true;
+        else{
+            alert("Error!, la fecha final no puede ser menor que la inicial");
+            return false;
+        }
+            
+        
+    }
+ $("#inicio").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            language: "es",
+        });
+     $("#fin").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            language: "es",
+        });
+    
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
+        
+        $('#tablaTotales tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaTotales').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    </script>
+{% endblock %}

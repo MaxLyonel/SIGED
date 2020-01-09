@@ -11,7 +11,7 @@
                                     <th>Gestión</th>
                                     <th>Periodo</th>
                                     <th>Estado</th>
-                                    <th class="text-center">Operativos</th>
+                                    <th class="text-center">Operativo</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
@@ -25,7 +25,7 @@
                                     <th>Gestión</th>
                                     <th>Periodo</th>
                                     <th>Estado</th>
-                                    <th class="text-center"></th>
+                                    <th class="text-center">Operativo</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
@@ -35,14 +35,14 @@
                                         <td class="text-center">{{ loop.index }}</td>
                                         <td>
                                             {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
-                                            <span>{{ reg.lugar }}</span>
+                                            <span>{{ reg.departamento }}</span>
                                         </td>
-                                        <td>{{ reg.distrito_cod }}</td>
-                                        <td>{{ reg.ieid }}</td>
+                                        <td>{{ reg.codigo }}</td>
+                                        <td>{{ reg.id }}</td>
                                         <td>{{ reg.institucioneducativa }}</td>
-                                        <td class="text-center">{{ reg.nombre_subcea }}</td>
+                                        <td class="text-center">{{ reg.sucursal_tipo_id }}</td>
                                         <td class="text-center">{{ reg.gestion_tipo_id }}</td>
-                                        <td>{{ reg.semestre }}</td>
+                                        <td>{{ reg.periodo_tipo }}</td>
                                         {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
                                         <td>{{ reg.tramite_estado }}</td>
                                         <td class="text-center">
@@ -52,21 +52,28 @@
                                                     Operativo Cerrado
                                                 </button>
                                             {% else %}
-                                                {% if reg.ttid == 5 %}
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                {% if reg.operativo_clave == 1 %}
+                                                    <button class="btn-danger btn-stroke tooltips" data-toggle="modal" data-target="#modal" data-placement="top" data-original-title="ver observaciones" onclick="verObservaciones({{reg.id}},{{reg.sucursal_tipo_id}},{{reg.gestion_tipo_id}},{{reg.periodo_tipo_id}},{{reg.periodo_estado_id}})">
                                                         <i class="fa fa-hand-paper-o"></i>
-                                                        {{reg.tramite_tipo}}
-                                                    </button>
-                                                {% elseif  reg.ttid == 4 %}
-                                                    <button type="submit" class="btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-hand-paper-o"></i>
-                                                        {{reg.tramite_tipo}}
+                                                        {{reg.operativo_estado}}{% if reg.fecha_fin %} Venció el {{reg.fecha_fin|date('d-m-Y')}}{% endif %}, haga Clic para ver observaciones
                                                     </button>
                                                 {% else %}
-                                                    <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-hand-paper-o"></i>
-                                                        {{reg.tramite_tipo}}
-                                                    </button>
+                                                    {% if reg.te_id in [12,9]  %}
+                                                        <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                            <i class="fa fa-hand-paper-o"></i>
+                                                            {{reg.tramite_tipo}}
+                                                        </button>
+                                                    {% elseif  reg.te_id in [10,8,14] %}
+                                                        <button type="submit" class="btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                            <i class="fa fa-hand-paper-o"></i>
+                                                            {{reg.tramite_tipo}}
+                                                        </button>
+                                                    {% else %}
+                                                        <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                            <i class="fa fa-hand-paper-o"></i>
+                                                            {{reg.tramite_tipo}}
+                                                        </button>
+                                                    {% endif %}
                                                 {% endif %}
                                             {% endif %}
                                         </td>

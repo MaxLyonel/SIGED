@@ -1,0 +1,102 @@
+Sie\AppWebBundle\Entity\JdpPruebaRegla:
+    type: entity
+    table: jdp_prueba_regla
+    indexes:
+        IDX_DA56AB655A51DE01:
+            columns:
+                - prueba_tipo_id
+        IDX_DA56AB65179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_DA56AB659E27EC77:
+            columns:
+                - fase_tipo_id
+        IDX_DA56AB652DC23E1A:
+            columns:
+                - clasificacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        iniGestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ini_gestion_tipo_id
+        finGestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: fin_gestion_tipo_id
+        cupoInscripcion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cupo_inscripcion
+        cupoPresentacion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cupo_presentacion
+        comisionCupoInscripcion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'CANTIDAD DE REGISTRO PERMITIDOS POR TIPO DE COMISION'
+            default: '1'
+            column: comision_cupo_inscripcion
+        comisionCupoPresentacion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'CANTIDAD DE COMISIONES PERMITIDAS POR PRUEBA'
+            default: '1'
+            column: comision_cupo_presentacion
+    manyToOne:
+        pruebaTipo:
+            targetEntity: JdpPruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        faseTipo:
+            targetEntity: JdpFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fase_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        clasificacionTipo:
+            targetEntity: JdpClasificacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                clasificacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

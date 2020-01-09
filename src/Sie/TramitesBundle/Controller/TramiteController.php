@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Sie\AppWebBundle\Entity\Tramite;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionDiplomatico;
 
 use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
@@ -122,6 +123,90 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que lista un tramite activo en funcion al id del estudiante y tipo de trámite
+    // PARAMETROS: id, gestionId, tramitetipoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEstudianteTramiteTipoActivo($estudianteId, $tramiteTipoId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $entity->createQueryBuilder('t')
+                ->select("t.id as id, ei.id as estudiante_inscripcion_id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:Documento', 'd', 'WITH', 'd.tramite = t.id and d.documentoEstado = 1 and d.documentoTipo in (1,9)')
+                ->innerJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
+                ->where('e.id = :id')
+                ->andWhere('gt.id = :gestionId')
+                ->andWhere('tt.id = :tramiteTipoId')
+                ->andWhere('t.esactivo = true')
+                ->setParameter('id', $estudianteId)
+                ->setParameter('tramiteTipoId', $tramiteTipoId)
+                ->setParameter('gestionId', $gestionId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un estudiante en funcion al id y gestion
+    // PARAMETROS: id, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEstudianteInscripcionGestion($estudianteId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select("ei.id as estudiante_inscripcion_id, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad")
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('e.id = :id')
+                ->andWhere('gt.id = :gestionId')
+                ->setParameter('id', $estudianteId)
+                ->setParameter('gestionId', $gestionId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un estudiante en funcion al id 
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEstudiante($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select("e.id as estudiante_id, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad")
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('e.id = :id')
+                ->setParameter('id', $estudianteId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que lista un tramite en funcion a la cédula de identidad
     // PARAMETROS: id
     // AUTOR: RCANAVIRI
@@ -177,10 +262,10 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         // $rolPermitido = array(8,13);
-        $rolPermitido = array(9);
+        $rolPermitido = array(9,8);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -230,6 +315,7 @@ class TramiteController extends Controller {
         $query = $entity->createQueryBuilder('gt')
                 ->where('gt.id >= :id')
                 ->setParameter('id', $gestionId)
+                ->orderBy('gt.id', 'DESC')
                 ->getQuery();
         try {
             return $query->getResult();
@@ -374,6 +460,7 @@ class TramiteController extends Controller {
 
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
+        $gestionInscripcionId = $gestionActual->format('Y');
         $especialidadId = 0;
         $periodoId = 3;
         $nivelId = 0;
@@ -399,8 +486,8 @@ class TramiteController extends Controller {
                 $messageError = "";
                 foreach ($participantes as $participante) {
                     $estudianteInscripcionId = (Int) base64_decode($participante);
-
                     $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                    //dump(count($entidadEstudianteInscripcion));die;
                     $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
                     $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
                     $msgContenido = "";
@@ -416,8 +503,17 @@ class TramiteController extends Controller {
                         } else {
                             $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
                         }
+                        $gestionInscripcionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                        $tipoMallaEstudianteInscripcion = $this->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
+                        
+                        $mallaNueva = false;
+                        if(count($tipoMallaEstudianteInscripcion)>0){
+                            $mallaNueva = $tipoMallaEstudianteInscripcion[0]['vigente'];
+                        } 
+
                         $msg = array('0'=>true, '1'=>$participante);
-                        $msgContenido = $this->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                        $msgContenido = $this->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
+                        // $msgContenido = "";
                         //dump($msgContenido);die;
                         // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
                         $valCertTecTramiteEspNivel = $this->getCertTecTramiteEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId);
@@ -449,6 +545,8 @@ class TramiteController extends Controller {
                                 break;
                         }
 
+                        $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                        
                         $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
 
                         $tramiteProcesoController = new tramiteProcesoController();
@@ -487,8 +585,7 @@ class TramiteController extends Controller {
                 'infoAutorizacionCentro' => $entityAutorizacionCentro,
             ));
             */
-
-            $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
+            $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionInscripcionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
             return $this->redirectToRoute('tramite_certificado_tecnico_registro_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
@@ -522,9 +619,9 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,10,13);
+        $rolPermitido = array(13,14,16,8,10,41,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -568,9 +665,9 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,10,13);
+        $rolPermitido = array(13,14,16,8,10,41,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -586,6 +683,426 @@ class TramiteController extends Controller {
             'titulo' => 'Registro',
             'subtitulo' => 'Trámite - Diploma Humanístico Alternativa',
             ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega un formulario para buscar el estudiante diplomatico
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegistroDiplomaticoBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime("Y");
+        $gestion = $fechaActual->format('Y');
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+
+        $rolPermitido = array(16,8,42);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
+        $gestionInicio = $gestion - 2;
+
+        return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumDiplomaticoIndex.html.twig', array(
+            'formBusqueda' => $this->creaFormBuscaRudeGestion('tramite_diploma_humanistico_registro_diplomatico_lista','',$entidadGestionTipo, $gestionInicio)->createView(),
+            'titulo' => 'Registro Diplomatico',
+            'subtitulo' => 'Diploma Humanístico Regular',
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la busqueda de un bachiller por código rude en una gestión dada
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaRudeGestion($routing, $rude, $gestion, $gestionInicio) {
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('rude', 'text', array('label' => 'Código Rude', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $rude, 'style' => 'text-transform:uppercase', 'placeholder' => 'Código Rude' , 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
+            ->add('gestion', 'entity', array('data' => $gestion, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'required' => true), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id > :gestionInicio')
+                                ->setParameter('gestionInicio', 2016)
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega informacion del estudiante diplomatico, para su respectivo registro
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegistroDiplomaticoListaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime("Y");
+        $gestionActual = $fechaActual->format('Y');
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $registro = true;
+        $rude = '';
+        $gestion = $gestionActual;
+        $tramiteId = 0;
+        $estudianteInscripcionId = 0;
+        $em = $this->getDoctrine()->getManager();
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $rude = $form['rude'];
+                $gestion = $form['gestion'];
+                // dump($rude);dump($gestion);
+
+                $entidadEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
+                if(count($entidadEstudiante)<=0){
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del estudiante con el codigo rude '.$rude));
+                    $registro = false;
+                }
+
+
+                if($registro){
+                    $entidadTramite = $this->getEstudianteTramiteTipoActivo($entidadEstudiante->getId(), 1, $gestion);     
+                    if(count($entidadTramite) > 0){
+                        $entidadTramite = $entidadTramite[0];
+                        $tramiteId = $entidadTramite['id'];
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' ya cuenta con un trámite de Diploma de Bachiller ('.$tramiteId.')'));
+                        $registro = false;   
+                    }          
+                } 
+                
+
+                if($registro){
+                    $entidadTramite = $this->getEstudianteInscripcionGestion($entidadEstudiante->getId(), $gestion);     
+                    if(count($entidadTramite) > 0){
+                        $entidadTramite = $entidadTramite[0];
+                        $estudianteInscripcionId = $entidadTramite['estudiante_inscripcion_id'];
+                        // $tramiteId = $entidadTramite['id'];
+                    } else {
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' no cuenta con una inscripcion en la gestion '.$gestion));
+                        $registro = false;   
+                        $entidadTramite = $this->getEstudiante($entidadEstudiante->getId()); 
+                        if (count($entidadTramite) > 0){
+                            $entidadTramite = $entidadTramite[0];
+                        } else {
+                            $entidadTramite = array();
+                        }
+                    }          
+                } 
+                // dump($entidadTramite);dump($registro);
+
+                if($registro){
+                    $estudiantePaisId = $entidadEstudiante->getPaisTipo()->getId();
+                    // dump($estudiantePaisId);
+                    if($estudiantePaisId == 1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' tiene nacionalidad Boliviana, no corresponde su registro por este medio'));
+                        $registro = false;
+                    }
+                }
+
+                if($registro){
+                    $estudianteSegipId = $entidadEstudiante->getSegipId();
+                    // dump($estudianteSegipId);
+                    if($estudianteSegipId == 1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'Los datos personales del estudiante con codigo rude '.$rude.' fue validado por segip, realize su tramite de forma regular'));
+                        $registro = false;
+                    }
+                }
+
+                if($registro){
+                    $estudianteDobleNacionalidad = $entidadEstudiante->getEsDobleNacionalidad();
+                    // dump($estudianteDobleNacionalidad);
+                    if($estudianteDobleNacionalidad){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con codigo rude '.$rude.' tiene nacionalidad Boliviana y Extranjera, no corresponde su registro por este medio'));
+                        $registro = false;
+                    }
+                }
+              
+                if($registro){
+                    $entidadEstudianteInscripcionRegular = $this->getEstudiantesRegularHumanisticaVerifica($entidadEstudiante->getId(),$gestion);
+                    $entidadEstudianteInscripcionAlternativa = $this->getEstudiantesAlternativaHumanisticaVerifica($entidadEstudiante->getId(),$gestion);
+                    // dump($entidadEstudianteInscripcionRegular);dump($entidadEstudianteInscripcionAlternativa);
+                    // $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $entidadEstudiante->getId(), ''));
+                    if(count($entidadEstudianteInscripcionRegular)>0 and count($entidadEstudianteInscripcionAlternativa)>0){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' en la gestión '.$gestion.', esta registrado como bachiller en los subsistemas de Educación Regular y Educación de Adultos'));
+                        $registro = false;
+                    }
+
+                    if(count($entidadEstudianteInscripcionRegular)<1 and count($entidadEstudianteInscripcionAlternativa)<1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' no esta registrado como bachiller en la gestión '.$gestion));
+                        $registro = false;
+                    }
+
+                    if(count($entidadEstudianteInscripcionRegular)>1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' en la gestión '.$gestion.', cuenta con mas de un registro como bachiller en el subsistema de Educación Regular'));
+                        $registro = false;
+                    }
+
+                    if(count($entidadEstudianteInscripcionAlternativa)>1){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estudiante con el codigo rude '.$rude.' en la gestión '.$gestion.', cuenta con mas de un registro como bachiller en el subsistema de Educación de Adultos'));
+                        $registro = false;
+                    }
+                    
+                    $estudianteInscripcionEstadoId = 0;
+                    $estudianteInscripcionEstado = "";
+                    $estudianteInstitucionEducativaId = 0;
+                    if(count($entidadEstudianteInscripcionRegular) == 1){
+                        $estudianteInscripcionEstadoId = $entidadEstudianteInscripcionRegular[0]['estadomatricula_tipo_id'];
+                        $estudianteInscripcionEstado = $entidadEstudianteInscripcionRegular[0]['estadomatricula'];
+                        $estudianteInstitucionEducativaId = $entidadEstudianteInscripcionRegular[0]['institucioneducativa_id'];
+                    }
+
+                    if(count($entidadEstudianteInscripcionAlternativa) == 1){
+                        $estudianteInscripcionEstadoId = $entidadEstudianteInscripcionAlternativa[0]['estadomatricula_tipo_id'];
+                        $estudianteInscripcionEstado = $entidadEstudianteInscripcionAlternativa[0]['estadomatricula'];
+                        $estudianteInstitucionEducativaId = $entidadEstudianteInscripcionAlternativa[0]['institucioneducativa_id'];
+                    }
+                    // dump($entidadEstudianteInscripcionRegular);dump($entidadEstudianteInscripcionAlternativa);
+
+                    if(count($entidadEstudianteInscripcionRegular)>0 or count($entidadEstudianteInscripcionAlternativa)>0){
+                        if(($gestion < $gestionActual and !in_array($estudianteInscripcionEstadoId,array(5,55))) or ($gestion == $gestionActual and !in_array($estudianteInscripcionEstadoId,array(4,5,55))) ){
+                            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'El estado de matrícula ('.$estudianteInscripcionEstado.') del estudiante '.$rude.' no corresponde, para la emisión de un Diploma de Bachiller'));
+                            $registro = false;
+                        }  
+                    }                   
+                    // dump($entidadEstudiante);dump($estudianteInscripcionEstado);
+                }
+
+                $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
+                $gestionInicio = $gestion - 2;
+
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+
+                $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($tramiteId);
+                // dump($entityTramiteDetalle);
+
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($tramiteId);
+                // dump($entityDocumentoDetalle);
+
+                return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumDiplomaticoIndex.html.twig', array(
+                    'formBusqueda' => $this->creaFormBuscaRudeGestion('tramite_diploma_humanistico_registro_diplomatico_lista',$rude,$entidadGestionTipo, $gestionInicio)->createView(),
+                    'titulo' => 'Registro Diplomatico',
+                    'subtitulo' => 'Diploma Humanístico Regular',
+                    'listaDocumento' => $entidadTramite,
+                    'listaTramiteDetalle' => $entityTramiteDetalle,
+                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                    'registro' => $registro,
+                    'form' => $this->creaFormularioTramiteDiplomatico($estudianteInscripcionId, $rude, $gestion)->createView()
+                ));
+            } else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_diploma_humanistico_registro_diplomatico_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error en el envio, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_diploma_humanistico_registro_diplomatico_busca'));
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra el trámite del estudiante diplomatico
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegistroDiplomaticoGuardaAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d g:i:s'));
+        $gestionActual = (int)$fechaActual->format('Y');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $token = $request->get('_token');
+        if (!$this->isCsrfTokenValid('diplomatico', $token)) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_busca');
+        }
+       
+        $form = $request->get('form');
+
+        if(!$form){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_busca');
+        }
+        
+        $rude= base64_decode($form['rude']);
+        $gestion = base64_decode($form['gestion']);
+        $documento = ($form['documento']);
+        $estudianteInscripcionId = base64_decode($form['inscripcion']);
+        $foto = $request->files->get('form');
+        $formBusqueda = array('rude'=>$rude,'gestion'=>$gestion);
+        // dump($rude);dump($gestion);dump($documento);dump($estudianteInscripcionId);dump($foto);dump($formBusqueda);die;
+
+        if(!$foto){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+        }
+
+        //dump($request->get('form'));die;
+        $filename = "";
+        if (null != $foto['foto']) {
+            $file = $foto['foto'];
+            // $file = $entityEstudianteDatopersonal->getFoto();
+            if(!in_array($file->guessExtension(), array('jpg','jpeg','png','bmp'))){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Formato de la imagen no permitido, intente nuevamente con aquellos permitidos (.jpg, .jpeg, .png, .bmp)'));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            }
+            $filename = $rude.'_CarnetDiplomatico_'.$gestion.'_'.$estudianteInscripcionId.'.'.$file->guessExtension();
+            $filesize = $file->getClientSize();
+            if ($filesize/1024 <= 5120) {                
+                $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_estudiante/'.$rude.'/';                               
+            } else {                
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().' excede el tamaño permitido, Fotografia muy grande, favor ingresar una fotografía que no exceda los 5MB.'));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            } 
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            // $entityUsuarioRemitente = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
+            // $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $entityTramiteDetalle[0]->getTramite()->getId()));
+            // $entityTramiteDetalleEstado = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 1));
+            // $entityFlujoProceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('id' => $flujoProcesoId));
+
+            $entidadEstudianteInscripcionDiplomatico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionDiplomatico')->findBy(array('estudianteInscripcion' => $estudianteInscripcionId));
+            $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+
+            if(count($entidadEstudianteInscripcionDiplomatico)>0){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante '.$rude.' ya se encuentra registrado como hijo de diplomatico en la gestion '.$gestion));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            }
+
+            $entidadEstudianteInscripcionDiplomatico = new EstudianteInscripcionDiplomatico();
+            //dump($entidadEstudianteInscripcionDiplomatico);die;
+            $entidadEstudianteInscripcionDiplomatico->setestudianteInscripcion($entidadEstudianteInscripcion);
+            $entidadEstudianteInscripcionDiplomatico->setDocumentoPath($rude.'/'.$filename);
+            $entidadEstudianteInscripcionDiplomatico->setDocumentoNumero($documento);
+            $entidadEstudianteInscripcionDiplomatico->setObs('Estudiante Registrado como hijo de diplomatico en fecha'.$fechaActual->format('d-m-Y'));
+            $em->persist($entidadEstudianteInscripcionDiplomatico);
+
+            $messageCorrecto = "";
+            $messageError = "";
+            
+            $participanteNombre = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+            $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+            $msgContenido = "";
+            $msg = array('0'=>true, '1'=>'');
+            if(count($entidadEstudianteInscripcion)>0){
+                $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                $gestionId = $gestion;
+                $msg = array('0'=>true, '1'=>$participanteNombre);
+                $msgContenido = $this->getDipHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId);
+                if($msgContenido != ""){
+                    $msg = array('0'=>false, '1'=>$participanteNombre.' ('.$msgContenido.')');
+                }
+            } else {
+                $msg = array('0'=>false, '1'=>'Inscripcion del estudiante '.$rude.' en la gestion '.$gestion.' no encontrado');
+            }
+            
+            $flujoTipoId = 1;
+            $tramiteTipoId = 1;
+            if ($msg[0]) {
+                $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+                $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
+                $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+
+                $file->move($adjuntoDir, $filename);
+                if (!file_exists($adjuntoDir.'/'.$filename)){
+                    $em->getConnection()->rollback();
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().', no fue registrada.'));
+                    return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+                } 
+
+                $em->flush();   
+                $em->getConnection()->commit();
+                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Registro guardado correctamente'));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_busca');
+            } else {
+                $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
+                return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+            }
+
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
+            return $this->redirectToRoute('tramite_diploma_humanistico_registro_diplomatico_lista', ['form' => $formBusqueda], 307);
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para el registro del estudiante diplomatico 
+    // PARAMETROS: estudianteInscripcionId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function creaFormularioTramiteDiplomatico($estudianteInscripcionId, $rude, $gestion)
+    { 
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('tramite_diploma_humanistico_registro_diplomatico_guarda'))
+            ->add('inscripcion', 'hidden', array('attr' => array('value' => base64_encode($estudianteInscripcionId))))
+            ->add('rude', 'hidden', array('attr' => array('value' => base64_encode($rude))))
+            ->add('gestion', 'hidden', array('attr' => array('value' => base64_encode($gestion))))
+            ->add('documento', 'text', array('label' => 'Número de documento', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[A-Za-z0-9\/\-]{1,12}', 'maxlength' => '12',  'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Número de Documento', 'style' => 'text-transform:uppercase')))
+            ->add('foto', 'file', array('label' => 'Fotografía (.jpg - .jpeg - .png -.bmp)', 'required' => true, 'attr' => array('accept=' => 'image/jpg,image/jpeg,image/png,image/bmp') )) 
+            ->add('save', 'submit', array('label' => 'Registrar Trámite', 'attr' => array('class' => 'form-control btn btn-blue')))
+            ->getForm();
+        return $form;        
     }
 
     //****************************************************************************************************
@@ -1069,7 +1586,7 @@ class TramiteController extends Controller {
             --inner join turno_tipo q on iec.turno_tipo_id=q.id ------
             left join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
-            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
+            where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) -- and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
             ");
         $queryEntidad->execute();
@@ -1120,6 +1637,38 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
             select * from get_estudiante_bachiller_humanistico_alternativa(".$institucionEducativaId."::INT,".$gestionId."::INT) as v
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega un listado de incripciones del bachiller en educacion regular humanistica
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getEstudiantesRegularHumanisticaVerifica($estudianteId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select * from get_estudiante_bachiller_humanistico_verifica_regular(".$estudianteId."::INT,".$gestionId."::INT) as v
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega un listado de incripciones del bachiller en educacion alternativa humanistica
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getEstudiantesAlternativaHumanisticaVerifica($estudianteId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select * from get_estudiante_bachiller_humanistico_verifica_alternativa(".$estudianteId."::INT,".$gestionId."::INT) as v
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -1345,7 +1894,7 @@ class TramiteController extends Controller {
     // PARAMETROS: participanteId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId) {
+    public function getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId, $mallaNueva) {
         $msg = array('0'=>true, '1'=>'');
         $nivel = '';
         
@@ -1367,11 +1916,11 @@ class TramiteController extends Controller {
 
         if(count($objCargaHoraria)>0){
             $cargaHoraria = $objCargaHoraria[0]['carga_horaria'];
-            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId, $cargaHoraria, $mallaNueva);
             if ($verCargaHorariaNivel != "") {
                 $msg = array('0'=>false, '1'=>$verCargaHorariaNivel);
             } else {
-                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId, $cargaHoraria, $mallaNueva);
                 $msg = array('0'=>true, '1'=>$cargaHoraria);
             }
         } else {
@@ -1381,11 +1930,11 @@ class TramiteController extends Controller {
 
             if(count($objCargaHorariaHomologacion)>0){
                 $cargaHoraria = $objCargaHorariaHomologacion[0]['carga_horaria'];
-                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId, $cargaHoraria, $mallaNueva);
                 if ($verCargaHorariaNivel!="") {
                     $msg = array('0'=>false, '1'=>$participante.$verCargaHorariaNivel);
                 }  else {
-                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId, $cargaHoraria, $mallaNueva);
                     $msg = array('0'=>true, '1'=>$cargaHoraria);
                 }
             } else {
@@ -1402,7 +1951,7 @@ class TramiteController extends Controller {
     // PARAMETROS: participanteId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+    public function getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva) {
         $msg = array('0'=>true, '1'=>'');
         $nivel = '';
         
@@ -1424,11 +1973,11 @@ class TramiteController extends Controller {
 
         if(count($objCargaHoraria)>0){
             $cargaHoraria = $objCargaHoraria[0]['carga_horaria'];
-            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria, $mallaNueva);
             if ($verCargaHorariaNivel != "") {
                 $msg = array('0'=>false, '1'=>$verCargaHorariaNivel);
             } else {
-                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria, $mallaNueva);
                 $msg = array('0'=>true, '1'=>$cargaHoraria);
             }
         } else {
@@ -1438,11 +1987,11 @@ class TramiteController extends Controller {
 
             if(count($objCargaHorariaHomologacion)>0){
                 $cargaHoraria = $objCargaHorariaHomologacion[0]['carga_horaria'];
-                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria, $mallaNueva);
                 if ($verCargaHorariaNivel!="") {
                     $msg = array('0'=>false, '1'=>$participante.$verCargaHorariaNivel);
                 }  else {
-                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria, $mallaNueva);
                     $msg = array('0'=>true, '1'=>$cargaHoraria);
                 }
             } else {
@@ -1459,22 +2008,41 @@ class TramiteController extends Controller {
     // PARAMETROS: nivelId, cargaHoraria
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria) {
+    public function certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria, $mallaNueva) {
         $msg = '';
-        if ($nivelId == 1) {
-            if ($cargaHoraria < 800){
-                $msg = 'Solo cuenta con '.$cargaHoraria.' de 800 horas minimas en Técnico Básico';
+        if($mallaNueva){
+            if ($nivelId == 1) {
+                if ($cargaHoraria < 500){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Básico';
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria < 500){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Auxiliar';
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria < 1000){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 1000 horas minimas en Técnico Medio';
+                }
+            } else {
+                $msg = 'Nivel no encontrado';
             }
-        } elseif ($nivelId == 2) {
-            if ($cargaHoraria < 400){
-                $msg = 'Solo cuenta con '.$cargaHoraria.' de 400 horas minimas en Técnico Auxiliar';
-            }
-        } elseif ($nivelId == 3) {
-            if ($cargaHoraria < 500){
-                $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Medio';
-            }
+
         } else {
-            $msg = 'Nivel no encontrado';
+            if ($nivelId == 1) {
+                if ($cargaHoraria < 800){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 800 horas minimas en Técnico Básico';
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria < 400){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 400 horas minimas en Técnico Auxiliar';
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria < 500){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Medio';
+                }
+            } else {
+                $msg = 'Nivel no encontrado';
+            }
         }
         return $msg;
     }
@@ -1485,28 +2053,52 @@ class TramiteController extends Controller {
     // PARAMETROS: nivelId, cargaHoraria
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria) {
+    public function certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria, $mallaNueva) {
         $msg = 0;
-        if ($nivelId == 1) {
-            if ($cargaHoraria > 1000){
-                $msg = 1000;
+        if($mallaNueva){
+            if ($nivelId == 1) {
+                if ($cargaHoraria > 500){
+                    $msg = 500;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria > 500){
+                    $msg = 500;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria > 1000){
+                    $msg = 1000;
+                } else {
+                    $msg = $cargaHoraria;
+                }
             } else {
-                $msg = $cargaHoraria;
-            }
-        } elseif ($nivelId == 2) {
-            if ($cargaHoraria > 500){
-                $msg = 500;
-            } else {
-                $msg = $cargaHoraria;
-            }
-        } elseif ($nivelId == 3) {
-            if ($cargaHoraria > 800){
-                $msg = 800;
-            } else {
-                $msg = $cargaHoraria;
+                $msg = 0;
             }
         } else {
-            $msg = 0;
+            if ($nivelId == 1) {
+                if ($cargaHoraria > 1000){
+                    $msg = 1000;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria > 500){
+                    $msg = 500;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria > 800){
+                    $msg = 800;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } else {
+                $msg = 0;
+            }
         }
         return $msg;
     }
@@ -1602,6 +2194,7 @@ class TramiteController extends Controller {
                 WHERE
                 estudiante.id = ".$participanteId." and estudiante_inscripcion.estadomatricula_tipo_id in (4,5,55) and institucioneducativa_curso.nivel_tipo_id in (3,13)
                 AND case when institucioneducativa_curso.gestion_tipo_id > 2010 then institucioneducativa_curso.ciclo_tipo_id in (2,3) else true end
+                AND institucioneducativa_curso.gestion_tipo_id > 2010
             GROUP BY
                 estudiante.codigo_rude,
                 estudiante.carnet_identidad,
@@ -1626,6 +2219,7 @@ class TramiteController extends Controller {
             then (b1 is null or b1 = 0)
             when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < date_part('year',current_date))
             then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
+
             else (t1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
           end
           group by
@@ -1694,7 +2288,7 @@ class TramiteController extends Controller {
           then
             case
             when (gestion_tipo_id::double precision > 2015) then (n4 is null or n4 = 0)
-            else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
+            else (n4 is null or n4 = 0) -- (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
             end
           else
             false
@@ -1713,6 +2307,45 @@ class TramiteController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function getCertTecCargaHorariaEspecialidadNivel($participanteId, $especialidadId, $nivelId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+                select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                    select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo
+                    from superior_facultad_area_tipo as sfat
+                    inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                    inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                    inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                    inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                    inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                    inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                    inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                    inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                    inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                    inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                    inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                    inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                    inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                    inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                    where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                    and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
+                -- group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                -- , smp.horas_modulo, smt.modulo -- having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla la carga horaria  de un estudiante segun su especialidad y nivel sin contar con los modulos repetidos
+    // PARAMETROS: participanteId, especialidadId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecCargaHorariaDiferenciandoModuloEspecialidadNivel($participanteId, $especialidadId, $nivelId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
@@ -1752,6 +2385,46 @@ class TramiteController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function getCertTecCargaHorariaEspecialidadNivelGestionPeriodo($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+                select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                        , smp.horas_modulo, smt.modulo
+                        from superior_facultad_area_tipo as sfat
+                        inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                        inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                        inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                        inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                        inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                        inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                        inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                        inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                        inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                        inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                        inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                        inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                        inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
+                        left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        and case when ies.gestion_tipo_id = date_part('year',current_date) and pet.id = ".$periodoId." then true else en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END end
+                    -- group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                   --  , smp.horas_modulo, smt.modulo having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla la carga horaria  de un estudiante segun su especialidad y nivel
+    // PARAMETROS: participanteId, especialidadId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecCargaHorariaSinModuloDuplicadoEspecialidadNivelGestionPeriodo($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
@@ -2224,7 +2897,7 @@ class TramiteController extends Controller {
     // PARAMETROS: estudianteId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId) {
+    public function getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId, $mallaNueva) {
         $msgContenido = "";
         $cargaHorariaTotal = 0;
 
@@ -2239,13 +2912,13 @@ class TramiteController extends Controller {
         }
 
         // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-        $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
-        if(count($objModulosObservados)>0){
-            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-        }
+        // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
+        // if(count($objModulosObservados)>0){
+        //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+        // }
 
         // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
-        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId);
+        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId, $mallaNueva);
         $cargaHoraria = 0;
         if(!$valCertTecCargaHoraria[0]){
             $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
@@ -2256,18 +2929,18 @@ class TramiteController extends Controller {
         // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
         // TECNICO MEDIO
         if($nivelId == 3){
-            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2);
+            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $cargaHorariaAuxiliar = 0;
             $cargaHorariaBasico = 0;
             if(!$valCertTecCargaHorariaAuxiliar[0]){
@@ -2290,12 +2963,12 @@ class TramiteController extends Controller {
 
         // TECNICO AUXILIAR
         if($nivelId == 2){
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $cargaHorariaBasico = 0;
             if(!$valCertTecCargaHorariaBasico[0]){
                 $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
@@ -2326,7 +2999,7 @@ class TramiteController extends Controller {
     // PARAMETROS: estudianteId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+    public function getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva) {
         $msgContenido = "";
         $cargaHorariaTotal = 0;
 
@@ -2341,13 +3014,13 @@ class TramiteController extends Controller {
         }
 
         // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-        $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
-        if(count($objModulosObservados)>0){
-            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-        }
+        // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
+        // if(count($objModulosObservados)>0){
+        //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+        // }
 
         // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
-        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
         $cargaHoraria = 0;
         if(!$valCertTecCargaHoraria[0]){
             $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
@@ -2358,18 +3031,18 @@ class TramiteController extends Controller {
         // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
         // TECNICO MEDIO
         if($nivelId == 3){
-            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 2, $gestionId, $periodoId);
+            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 2, $gestionId, $periodoId, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 1, $gestionId, $periodoId);
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 1, $gestionId, $periodoId, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $cargaHorariaAuxiliar = 0;
             $cargaHorariaBasico = 0;
             if(!$valCertTecCargaHorariaAuxiliar[0]){
@@ -2392,12 +3065,12 @@ class TramiteController extends Controller {
 
         // TECNICO AUXILIAR
         if($nivelId == 2){
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $cargaHorariaBasico = 0;
             if(!$valCertTecCargaHorariaBasico[0]){
                 $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
@@ -2538,12 +3211,12 @@ class TramiteController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
 
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
@@ -3194,7 +3867,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(16);
 
@@ -3211,7 +3884,8 @@ class TramiteController extends Controller {
                     ->add('gestion', 'entity', array('data' => '', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                         'query_builder' => function(EntityRepository $er) {
                             return $er->createQueryBuilder('gt')
-                                    ->where('gt.id > 2008')
+                                    ->where('gt.id < 2017')
+                                    ->andwhere('gt.id > 2008')
                                     ->orderBy('gt.id', 'DESC');
                         },
                     ))
@@ -3276,7 +3950,7 @@ class TramiteController extends Controller {
                     select e.id as estudianteId, ei.id as estudianteInscripcionId, iec.gestion_tipo_id from estudiante as e
                     inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges."
+                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges." and ei.estadomatricula_tipo_id in (5,55)
                     and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and iec.grado_tipo_id=3) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=5 and iec.grado_tipo_id=2) else iec.nivel_tipo_id=13 and iec.grado_tipo_id=6 end
                 ");
                 $query->execute();
@@ -3388,8 +4062,7 @@ class TramiteController extends Controller {
                 ->add('gestion', 'entity', array('label' => 'Gestión Cartón', 'data' => $value2, 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id < 2017')
-                                ->andWhere('gt.id > 2008')
+                                ->where('gt.id > 2008')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))
@@ -3554,6 +4227,52 @@ class TramiteController extends Controller {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
                 }
                 break;
+            case 2017 :
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2017_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2017_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2017_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+            case 2018 :
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2018_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2018_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2018_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
             default :
                 if ($depto == 1) {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
@@ -3585,5 +4304,114 @@ class TramiteController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla la carga horaria  de un estudiante segun id de inscripción 
+    // PARAMETROS: participanteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecTipoMallaInscripcion($participanteId, $especialidadId, $nivelId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select distinct e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+            , ies.gestion_tipo_id as gestion, pt.periodo as periodo, ie.id as institucioneducativa_id, ie.institucioneducativa, smt.esvigente as vigente
+            from superior_facultad_area_tipo as sfat
+            inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+            inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+            inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+            inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+            inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+            inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+            inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+            inner join (select * from estudiante_inscripcion where id = ".$participanteId.") as ei on iec.id=ei.institucioneducativa_curso_id
+            inner join estudiante as e on ei.estudiante_id=e.id
+            inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+            inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+            inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+            inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+            inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
+            inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." 
+            order by smt.esvigente
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que verifica el dato personal del estudiante
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function datoPersonalVerificaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $msg = "";
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $response = new JsonResponse();
+        //return $response->setData(array('estado' => true, 'obs' => $msg));
+        if ($request->isMethod('POST')) {
+            $estudianteInscripcionId = base64_decode($request->get('val'));
+            if ($estudianteInscripcionId != ""){                
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+                    $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                    if(count($estudianteInscripcion)>0){                        
+                        $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
+                        $paterno = $estudianteInscripcion->getEstudiante()->getPaterno();
+                        $materno = $estudianteInscripcion->getEstudiante()->getMaterno();
+                        $carnetIdentidad = $estudianteInscripcion->getEstudiante()->getCarnetIdentidad();
+                        $complemento = $estudianteInscripcion->getEstudiante()->getComplemento();
+                        $fechaNacimiento = $estudianteInscripcion->getEstudiante()->getFechaNacimiento();
+
+                        $arrParametros = array('complemento'=>$complemento, 'primer_apellido'=>$paterno, 'segundo_apellido'=>$materno, 'nombre'=>$nombre, 'fecha_nacimiento'=>$fechaNacimiento->format('d-m-Y'));
+
+                        $answerSegip = false;
+                        if ($carnetIdentidad > 0){
+                            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
+                        }
+                        
+                        if($answerSegip){
+                            $entityEstudiante = $estudianteInscripcion->getEstudiante();
+                            $entityEstudiante->setSegipId(1);
+                            $em->persist($entityEstudiante);
+                            $em->flush();
+                            $em->getConnection()->commit();
+                            $msg = 'Datos del estudiante '.$nombre.' '.$paterno.' '.$materno.', validado correctamente';
+                        } else {
+                            $msg = 'Datos del estudiante '.$nombre.' '.$paterno.' '.$materno.', no validados';
+                        }                       
+                        return $response->setData(array('estado' => $answerSegip, 'obs' => $msg));
+                    } else {
+                        return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'.$tramiteId));
+                    }
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                }
+            } else {
+                return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+            }
+        } else {
+            return $response->setData(array('estado' => false, 'obs' => 'Error al enviar el formulario, intente nuevamente'));
+        }
     }
 }

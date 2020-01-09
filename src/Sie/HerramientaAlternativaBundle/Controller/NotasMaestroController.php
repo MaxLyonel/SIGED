@@ -21,8 +21,30 @@ class NotasMaestroController extends Controller {
         $this->session = new Session();
     }
 
-    public function indexAction(Request $request) {
+    public function seleccionarGestionAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $gestiones = $em->createQueryBuilder()
+                ->select('distinct(gt)')
+                ->from('SieAppWebBundle:MaestroInscripcion','mi')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','mi.institucioneducativa = ie.id')
+                ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','mi.gestionTipo = gt.id')
+                ->where('mi.persona = :idPersona')
+                ->andWhere('gt.id >= 2016')
+                ->orderBy('gt.id', 'desc')
+                ->setParameter('idPersona',$this->session->get('personaId'))
+                ->getQuery()
+                ->getResult();
 
+        $arrayGestiones = [];
+        foreach ($gestiones as $g) {
+            $arrayGestiones[] = $g[1];
+        }
+        
+        return $this->render('SieHerramientaAlternativaBundle:NotasMaestro:seleccionarGestion.html.twig',array('gestiones'=>$arrayGestiones));
+    }
+
+    public function indexAction(Request $request) {
+        $gestion = $request->get('gestion');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
@@ -34,7 +56,7 @@ class NotasMaestroController extends Controller {
                 ->where('mi.persona = :idPersona')
                 ->andWhere('mi.gestionTipo = :idGestion')
                 ->setParameter('idPersona',$this->session->get('personaId'))
-                ->setParameter('idGestion',$this->session->get('currentyear'))
+                ->setParameter('idGestion',$gestion)
                 ->getQuery()
                 ->getResult();
 
@@ -42,6 +64,7 @@ class NotasMaestroController extends Controller {
         foreach ($ues as $ue) {
             $codigosSie[] = $ue['id'];
         }
+        // dump($codigosSie);die;
         // 
         //dump($this->session->get('ie_per_estado'));die;
 
@@ -54,11 +77,12 @@ class NotasMaestroController extends Controller {
         // $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($this->session->get('ie_suc_id'));
         // $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find(611764);
         // if($sucursal){
+        // stt.turnoSuperior as turno,
             $asignaturas = $em->createQueryBuilder()
                             ->select('smt.modulo,
                                     ie.id as sie,
                                     ie.institucioneducativa,
-                                    stt.turnoSuperior as turno,
+                                    tt.turno,
                                     iec.id as idCurso,
                                     ieco.id as idCursoOferta,
                                     pt.paralelo,
@@ -98,7 +122,7 @@ class NotasMaestroController extends Controller {
                             ->orderBy('sat.id','ASC')
                             ->addOrderBy('sespt.id','ASC')
                             ->setParameter('idPersona',$this->session->get('personaId'))
-                            ->setParameter('idGestion',$this->session->get('currentyear'))
+                            ->setParameter('idGestion',$gestion)
                             ->setParameter('estados',array(8,14))
                             ->setParameter('sies', $codigosSie)
                             // ->setParameter('idSucursal',611764)
@@ -114,24 +138,31 @@ class NotasMaestroController extends Controller {
         //dump($this->session->get('personaId'));
         //die;
         $em->getConnection()->commit();
-        return $this->render('SieHerramientaAlternativaBundle:NotasMaestro:index.html.twig',array('asignaturas'=>$asignaturas));
+        return $this->render('SieHerramientaAlternativaBundle:NotasMaestro:index.html.twig',array(
+            'asignaturas'=>$asignaturas,
+            'gestion'=>$gestion
+        ));
     }
 
     public function newAction(Request $request){
         try {
             // $this->session->set('ie_per_estado', 2);
+            $gestion = $request->get('gestion');
+
+            // return $this->redirect($this->generateUrl('herramienta_alter_notas_maestro_index', array('gestion'=>$gestion)));
+
             $idCursoOferta = $request->get('idCursoOferta');
             $idSucursal = $request->get('idSucursal');
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $curso = $em->createQueryBuilder()
-                        ->select('supet.especialidad,sat.acreditacion,smt.modulo,stt.turnoSuperior, sast.areaSuperior, pt.paralelo, ie.id as sie, ie.institucioneducativa, gt.gestion,
+                        ->select('supet.especialidad,sat.acreditacion,smt.modulo,tt.turno, sast.areaSuperior, pt.paralelo, ie.id as sie, ie.institucioneducativa, gt.gestion,
                                 spt.periodoSuperior, sfat.codigo as idNivel, iec.id as idCurso, spt.id as idPeriodo
                         ')
                         ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
                         ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
                         ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
-                        //->innerJoin('SieAppWebBundle:NivelTipo','nt','with','iec.nivelTipo = nt.id')
+                        ->innerJoin('SieAppWebBundle:TurnoTipo','tt','with','iec.turnoTipo = tt.id')
                         ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','with','iec.paraleloTipo = pt.id')
                         ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
                         ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo','smp','with','ieco.superiorModuloPeriodo = smp.id')
@@ -286,7 +317,7 @@ class NotasMaestroController extends Controller {
 
             //dump('adsfadsf');die;
             $em->getConnection()->commit();
-            return $this->render('SieHerramientaAlternativaBundle:NotasMaestro:notas.html.twig',array('curso'=>$curso,'estudiantes'=>$arrayEst,'estadosAsignatura'=>$estadosAsignatura, 'primariaNuevo'=>$primariaNuevo));
+            return $this->render('SieHerramientaAlternativaBundle:NotasMaestro:notas.html.twig',array('curso'=>$curso,'estudiantes'=>$arrayEst,'estadosAsignatura'=>$estadosAsignatura, 'primariaNuevo'=>$primariaNuevo, 'gestion'=>$gestion));
         } catch (Exception $e) {
 
         }
@@ -303,6 +334,8 @@ class NotasMaestroController extends Controller {
             $idNotaTipo = $request->get('idNotaTipo');
             $idNotaTipo = $request->get('idNotaTipo');
             $notas = $request->get('notas');
+
+            $gestion = $request->get('gestion');
 
             $idNotaCualitativa = $request->get('idNotaCualitativa');
             $notaCualitativa = $request->get('notaCualitativa');
@@ -456,7 +489,7 @@ class NotasMaestroController extends Controller {
 
             $em->getConnection()->commit();
 
-            return $this->redirect($this->generateUrl('herramienta_alter_notas_maestro_index'));
+            return $this->redirect($this->generateUrl('herramienta_alter_notas_maestro_index', array('gestion'=>$gestion)));
         } catch (Exception $e) {
             print_r($e);die;
             $em->getConnection()->rollback();

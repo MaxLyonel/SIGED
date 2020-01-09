@@ -86,7 +86,7 @@ class ReconocimientosaberesController extends Controller
 
     public function reconocimiento_saberes_validarAction($opcion,$reconocimiento_saberes_id,Request $request){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
         if($opcion==1){//Validar
             try{
@@ -207,7 +207,7 @@ class ReconocimientosaberesController extends Controller
     public function buscar_estudianteAction($ci,$complemento,$rude,$opc,Request $request){
         //return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('cant'=>$cant));
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
         $po = array();
         $userId = $this->session->get('userId');   
@@ -331,7 +331,7 @@ class ReconocimientosaberesController extends Controller
     }
     public function reconocimiento_saberes_listarAction(){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
 
          $userId = $this->session->get('userId');    
@@ -480,28 +480,185 @@ class ReconocimientosaberesController extends Controller
     public function reconocimiento_saberes_validadosAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-          $query = "SELECT  max(date_part('year', fecha_homologacion) ) as maximo,min(date_part('year', fecha_homologacion) ) as minimo FROM pnp_reconocimiento_saberes 
+        $lugar=0;$inicio="";$fin="";
+        $filas=0;
+         if($request->getMethod()=="POST") { 
+            $lugar=$request->get("lugar");
+            $inicio=$request->get("inicio");
+            $fin=$request->get("fin");
+            if($lugar==0)$where="";else $where="and rs.institucioneducativa_id=$lugar";
+            $query = "SELECT 
+                      e.id as estudiante_id,
+                      e.codigo_rude, 
+                      e.carnet_identidad,
+                      e.complemento, 
+                      e.paterno, 
+                      e.materno, 
+                      e.nombre, 
+                      e.fecha_nacimiento,
+                      rs.id as reconocimiento_saberes_id,
+                      rs.institucioneducativa_id,
+                      rs.curso,
+                      rs.homologado,
+                      rs.usuario_id,
+                      rs.usuario_homologado_id,
+                      rs.fecha_creacion,
+                      rs.fecha_homologacion,
+                      CASE
+                            WHEN rs.institucioneducativa_id = 80480300 THEN
+                                'CHUQUISACA'
+                            WHEN rs.institucioneducativa_id = 80730794 THEN
+                                'LA PAZ'
+                            WHEN rs.institucioneducativa_id = 80980569 THEN
+                                'COCHABAMBA'
+                            WHEN rs.institucioneducativa_id = 81230297 THEN
+                                'ORURO'
+                            WHEN rs.institucioneducativa_id = 81480201 THEN
+                                'POTOSI'
+                            WHEN rs.institucioneducativa_id = 81730264 THEN
+                                'TARIJA'
+                            WHEN rs.institucioneducativa_id = 81981501 THEN
+                                'SANTA CRUZ'
+                            WHEN rs.institucioneducativa_id = 82230130 THEN
+                                'BENI'
+                            WHEN rs.institucioneducativa_id = 82480050 THEN
+                                'PANDO'                         
+                          END AS depto,
+                      CASE
+                            WHEN rs.curso = 2 THEN
+                                'SEGUNDO'
+                            WHEN rs.curso = 3 THEN
+                                'TERCERO'
+                            WHEN rs.curso = 5 THEN
+                                'QUINTO'
+                            WHEN rs.curso = 6 THEN
+                                'SEXTO'                       
+                          END AS curso_nombre
+                    FROM 
+                      estudiante e
+                      INNER JOIN pnp_reconocimiento_saberes rs ON e.id = rs.estudiante_id
+                      where rs.homologado=true $where and  fecha_homologacion BETWEEN '$inicio 00:00:00' AND '$fin 23:59:59' 
+order by fecha_homologacion
                       ";
         
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        $gestion = array();
-        foreach ($po as $p) {
-            $gestion["maximo"] = $p["maximo"];
-            $gestion["minimo"] = $p["minimo"];
-        }
         $filas = array();
-        if($request->getMethod()=="POST") { 
-            $lugar=$request->get("lugar");
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $datos_filas["reconocimiento_saberes_id"] = $p["reconocimiento_saberes_id"];
+            $datos_filas["reconocimiento_saberes_id_enc"] = $this->encriptar($p["reconocimiento_saberes_id"]);
+            $datos_filas["estudiante_id"] = $p["estudiante_id"];
+            $datos_filas["codigo_rude"] = $p["codigo_rude"];
+            $datos_filas["carnet_identidad"] = $p["carnet_identidad"];
+            $datos_filas["complemento"] = $p["complemento"];
+            $datos_filas["paterno"] = $p["paterno"];
+            $datos_filas["materno"] = $p["materno"];
+            $datos_filas["nombre"] = $p["nombre"];
+            $datos_filas["fecha_nacimiento"] = $p["fecha_nacimiento"];
+            $datos_filas["institucioneducativa_id"] = $p["institucioneducativa_id"];
+            $datos_filas["curso"] = $p["curso"];
+            $datos_filas["homologado"] = $p["homologado"];
+            $datos_filas["usuario_id"] = $p["usuario_id"];
+            $datos_filas["usuario_homologado_id"] = $p["usuario_homologado_id"];
+            $datos_filas["fecha_creacion"] = $p["fecha_creacion"];
+            $datos_filas["fecha_homologacion"] = $p["fecha_homologacion"];
+            $datos_filas["depto"] = $p["depto"];
+            $datos_filas["curso_nombre"] = $p["curso_nombre"];
+            $filas[] = $datos_filas;
+        }
+
+        }
+        
+        return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_validados.html.twig', array(
+            'filas'=>$filas,'lugar'=>$lugar,'inicio'=>$inicio,'fin'=>$fin
+            )); 
+    }
+
+      public function reconocimiento_saberes_reporteAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $inicio="";$fin="";
+        $tot = array('segundo' => 0,'tercero' => 0,'quinto' => 0,'sexto' => 0,'total' => 0, );
+        $filas=0;
+         if($request->getMethod()=="POST") { 
             $inicio=$request->get("inicio");
             $fin=$request->get("fin");
-            
+            $query = "SELECT depto,
+SUM(CASE WHEN curso_nombre='SEGUNDO' THEN cantidad ELSE 0 END) AS segundo,
+SUM(CASE WHEN curso_nombre='TERCERO' THEN cantidad ELSE 0 END) AS tercero,
+SUM(CASE WHEN curso_nombre='QUINTO' THEN cantidad ELSE 0 END) AS quinto,
+SUM(CASE WHEN curso_nombre='SEXTO' THEN cantidad ELSE 0 END) AS sexto,
+SUM (cantidad) as total
+from (
+select *, count(*) as cantidad from (
+SELECT
+                      
+                      CASE
+                            WHEN rs.institucioneducativa_id = 80480300 THEN
+                                'CHUQUISACA'
+                            WHEN rs.institucioneducativa_id = 80730794 THEN
+                                'LA PAZ'
+                            WHEN rs.institucioneducativa_id = 80980569 THEN
+                                'COCHABAMBA'
+                            WHEN rs.institucioneducativa_id = 81230297 THEN
+                                'ORURO'
+                            WHEN rs.institucioneducativa_id = 81480201 THEN
+                                'POTOSI'
+                            WHEN rs.institucioneducativa_id = 81730264 THEN
+                                'TARIJA'
+                            WHEN rs.institucioneducativa_id = 81981501 THEN
+                                'SANTA CRUZ'
+                            WHEN rs.institucioneducativa_id = 82230130 THEN
+                                'BENI'
+                            WHEN rs.institucioneducativa_id = 82480050 THEN
+                                'PANDO'                         
+                          END AS depto,
+                      CASE
+                            WHEN rs.curso = 2 THEN
+                                'SEGUNDO'
+                            WHEN rs.curso = 3 THEN
+                                'TERCERO'
+                            WHEN rs.curso = 5 THEN
+                                'QUINTO'
+                            WHEN rs.curso = 6 THEN
+                                'SEXTO'                       
+                          END AS curso_nombre
+                    FROM 
+                      estudiante e
+                      INNER JOIN pnp_reconocimiento_saberes rs ON e.id = rs.estudiante_id
+                      where rs.homologado=true  and  fecha_homologacion BETWEEN '$inicio 00:00:00'AND '$fin 23:59:59'  
+order by fecha_homologacion) as t1 
+GROUP BY depto,curso_nombre) as t2
+GROUP BY depto
+                      ";
+        
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $datos_filas["depto"] = $p["depto"];
+            $datos_filas["segundo"] = $p["segundo"];
+            $tot["segundo"]=$tot["segundo"]+$p["segundo"];
+            $datos_filas["tercero"] = $p["tercero"];
+            $tot["tercero"]=$tot["tercero"]+$p["tercero"];
+            $datos_filas["quinto"] = $p["quinto"];
+            $tot["quinto"]=$tot["quinto"]+$p["quinto"];
+            $datos_filas["sexto"] = $p["sexto"];
+            $tot["sexto"]=$tot["sexto"]+$p["sexto"];
+            $datos_filas["total"] = $p["total"];
+            $tot["total"]=$tot["total"]+$p["total"];
+            $filas[] = $datos_filas;
         }
-        return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_validados.html.twig', array(
-            'gestion'=>$gestion,
-            'filas'=>$filas,
+
+    }
+        return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_reporte.html.twig', array(
+            'filas'=>$filas,'tot'=>$tot,'inicio'=>$inicio,'fin'=>$fin
             )); 
     }
 
@@ -523,7 +680,7 @@ class ReconocimientosaberesController extends Controller
 // buscar datos estudiantes
     public function retornar_estudianteAction($ci,$where){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
         $query = "SELECT
                       estudiante.id as id,
@@ -559,7 +716,6 @@ class ReconocimientosaberesController extends Controller
     // buscar datos persona
     public function retornar_personaAction($ci){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
         $query = "SELECT
                   p.id,p.carnet as carnet_identidad,p.rda,p.paterno,p.materno,p.nombre,p.fecha_nacimiento,g.genero
@@ -577,7 +733,7 @@ class ReconocimientosaberesController extends Controller
     //buscar archivos
      public function retornar_archivos_personaAction($persona_id,$ie){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
     $query = "
             select persona.carnet, persona.nombre, persona.paterno, persona.materno,

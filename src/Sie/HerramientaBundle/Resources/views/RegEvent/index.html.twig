@@ -1,0 +1,240 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Registro de Lecturas <span> Búsqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('aca_promotor_index')}}">Registro Promotor</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="#">Registro de Lecturas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            {% if app.session.flashBag.has('exito') %}
+                <div class="alert alert-success">
+                    {% for msg in app.session.flashBag.get('exito') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if app.session.flashBag.has('error') %}
+                <div class="alert alert-danger">
+                    {% for msg in app.session.flashBag.get('error') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div id="mensajeeventos"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Lecturas del Club: <strong>{{ club }}</strong> </h3>
+                        </div>
+                            <div class="pull-right">
+                                <h3 class="panel-title">
+                                    <a class="btn btn-xs btn-facebook" {#data-toggle="modal" data-target="#modal_evento"#} onclick="showModalEvent()"> Nueva Lectura</a>
+                                    {#<a class="btn btn-xs btn-danger" onclick="showModalRes()">   Nuevo Resultado</a>#}
+                                </h3>
+                                
+                            </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {% if listaeventos is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table" id="eventos">
+                                        <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Título&nbsp;de&nbsp;la&nbsp;Lectura</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for listaeventos in listaeventos %}
+                                            <tr>
+                                                <td data-title="N°">{{ loop.index }}</td>
+                                                <td data-title="evento">{{ listaeventos.nombre_evento }}</td>
+                                                <td data-title="fechainicio">{{ listaeventos.fecha_inicio|date('d-m-Y') }}</td>
+                                                <td data-title="fechafin">{{ listaeventos.fecha_fin|date('d-m-Y') }}</td>
+                                                    <td data-title="Acciones">
+                                                        <button class="btn-link" onclick="showeditEvento({{ listaeventos.id }},'{{ listaeventos.nombre_evento  }}','{{ listaeventos.fecha_inicio }}','{{ listaeventos.fecha_fin }}');"><i class="fa fa-edit"></i> </button>
+                                                        <form action="{{path('regevent_event_delete')}}" method="post" style="display: inline-block">
+                                                            <input type="hidden" name="idEvento" value="{{listaeventos.id}}">
+                                                            <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
+                                                            <input type="hidden" name="gestion" value="{{id_gestion}}">
+                                                            <input type="hidden" name="id_club" value="{{id_club}}">
+                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminará la lectura!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
+                                                        </form>
+                                                        <form action="{{path('regresultevent')}}" method="post" style="display:inline-block">
+                                                            <input type="hidden" name="idEvento" value="{{listaeventos.id}}">
+                                                            <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
+                                                            <input type="hidden" name="gestion" value="{{id_gestion}}">
+                                                            <input type="hidden" name="club" value="{{club}}">
+                                                            <input type="hidden" name="id_club" value="{{id_club}}">
+                                                            <button type="submit" class="btn-link"><i class="fa fa-eye text-warning"></i> Producto</button>
+                                                        </form>
+                                                    </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay Eventos registrados
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal_evento" class="modal in" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog modal-md modal-primary" id="">
+            <div class="modal-content">
+                <form id="form_eventos">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Nueva Lectura</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id_evento" id="id_evento" value="0">
+                    <input type="hidden" name="id_club" id="id_club" value="{{ id_club }}">
+                    <div class="form-group">
+                        <label for="club">Club de Lectura: </label> {{ club }}
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreevento">Titulo de la Lectura</label>
+                        <input type="text" class="form-control" name="nombreevento" id="nombreevento" style="text-transform: uppercase" maxlength="32" autocomplete="off" required>
+                    </div>
+                    <div class="row">
+                        <div id='sandbox-container'>
+                            <div class="input-daterange" id="datepicker">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fecha_inicio" >Día Inicio</label>
+                                        <input class="form-control" name="fecha_inicio" id="fecha_inicio" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fecha_fin" >Día Fin</label>
+                                        <input class="form-control" name="fecha_fin" id="fecha_fin" autocomplete="off" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-theme" id="guardar">Registrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+            $(".alert").slideUp(1000);
+        });
+        function showModalEvent() {
+            $('#nombreevento').val('');
+            $('#fecha_inicio').val('');
+            $('#fecha_fin').val('');
+            $('#id_evento').val('0');
+            $('#modal_evento').modal('show');
+        }
+
+        $("#form_eventos").submit( function (event) {
+            event.preventDefault();
+            $("#guardar").attr('disabled', true);
+            var formdata = $('#form_eventos').serialize();
+            $.ajax({
+                type: 'post',
+                url: "{{ path('regevent_event_register') }}",
+                data: formdata,
+                beforeSend: function () {
+                    $("#eventos").empty();
+                    $("#eventos").append('<div class="text-center">Cargando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#guardar").attr('disabled', false);
+                    if (data.estado == 200) {
+                        $('#modal_evento').modal('hide');
+                        mesage("success","Notificación",data.msg);
+                        window.location.reload(true)
+                        //setTimeout(function () { window.location.reload(true);}, 2000);
+                    }else{mesage("danger","Notificación",data.msg);}
+
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        });
+
+         function showeditEvento (id,nombre,fecha_i,fecha_f) {
+
+           $('#id_evento').val(id);
+           $('#nombreevento').val(nombre);
+           $('#fecha_inicio').val(fecha_i);
+           $('#fecha_fin').val(fecha_f);
+           $('#modal_evento').modal('show');
+        }
+
+        function mesage(tipo, titulo, msg) {
+            $("#mensajeeventos").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+
+        }
+
+        $('.calendario').datepicker({
+            format: 'dd-mm-yyyy',
+            todayBtn: 'linked'
+        });
+        // DateRangePicker
+        $('#sandbox-container .input-daterange').datepicker({
+            format: 'dd-mm-yyyy',
+            todayBtn: 'linked'
+        });
+        /*$('#fecha_inicio').on('change',function(){
+            if($("#fecha_fin").val().length < 1){
+                $("#fecha_fin").val($('#fecha_inicio').val());
+            }
+        });
+        $('#fecha_fin').on('change',function(){
+            //if($("#form_fechaFin").val().length >= 1){
+            if($("#fecha_fin").val() < $("#fecha_inicio").val()){
+                $("#fecha_fin").val($('#fecha_inicio').val());
+            }
+           // }
+        });*/
+
+    </script>
+{% endblock %}

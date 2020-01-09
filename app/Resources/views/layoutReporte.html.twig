@@ -354,7 +354,7 @@
                 <!--/ End left navigation -  profile shortcut -->
 
                 <!-- Start left navigation - menu -->
-                <ul id="tour-4" class="sidebar-menu">                                        
+                <ul id="tour-4" class="sidebar-menu">                           
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -362,23 +362,105 @@
                             <span class="arrow open fa-angle-double-down"></span>
                         </a>
                         <ul>
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="text">Matricula Educativa</span>
+                                    <span class="arrow open fa-angle-double-down"></span>
+                                </a>
+                                <ul>                                        
+                                    <li>
+                                        <a href="{{path('reporte_regular_index')}}">Estadística General</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_bth_matricula_index')}}">Bachiller Técnico Humanístico</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_modular_matricula_index')}}">Modular</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="text">Unidades Educativas</span>
+                                    <span class="arrow open fa-angle-double-down"></span>
+                                </a>
+                                <ul>                                        
+                                    <li>
+                                        <a href="{{path('reporte_regular_informacion_general_unidad_educativa')}}">Estadística General</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_bth_unidadeducativa_index')}}">Bachiller Técnico Humanístico</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('sie_herramienta_estadistica_modular_unidadeducativa_index')}}">Modular</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="text">Educación de personas jóvenes y adultos</span>
+                            <span class="arrow fa-angle-double-down"></span>
+                        </a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="text">Matricula Educativa</span>
+                                    <span class="arrow open fa-angle-double-down"></span>
+                                </a>
+                                <ul>                                        
+                                    <li>
+                                        <a href="{{path('reporte_adultos_index')}}">Estadística General</a>
+                                    </li>
+                                    {% if 1 > 1 %}
+                                    <li>
+                                        <a href="{{path('reporte_diversa_index')}}">Educación Diversa</a>
+                                    </li>                                   
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="text">Unidades Educativas</span>
+                                    <span class="arrow open fa-angle-double-down"></span>
+                                </a>
+                                <ul>                                        
+                                    <li>
+                                        <a href="">Estadística General</a>
+                                    </li>
+                                    {% if 1 > 1 %}
+                                    <li>
+                                        <a href="">Educación Diversa</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    {% if 1 > 1 %}
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="text">Educación Permanente</span>
+                            <span class="arrow fa-angle-double-down"></span>
+                        </a>
+                        <ul>
                             <li>
-                                <a href="{{path('reporte_regular_index')}}">
+                                <a href="{{path('reporte_permanente_index')}}">
                                     <span class="text">Estadística Matrícula Educativa</span>
-                                    <span class="label label-danger pull-right">Nuevo</span>
                                     <span class="selected"></span>
                                 </a>
                             </li>
                         </ul>
-                        <ul>
-                            <li>
-                                <a href="{{path('reporte_regular_informacion_general_unidad_educativa')}}">
-                                    <span class="text">Estadística Unidad Educativa</span>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-                    <!--<li class="submenu">
+                    {% endif %}
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
                             <span class="text">Educación Especial</span>
@@ -391,10 +473,39 @@
                                     <span class="selected"></span>
                                 </a>
                             </li>
+                            {% if 1 > 1 %}
+                            <li>
+                                <a href="{{path('reporte_especial_centro_educativo_index')}}">
+                                    <span class="text">Estadística Centro de Educación Especial</span>
+                                    <span class="selected"></span>
+                                </a>
+                            </li>
+                            {% endif %}
                         </ul>
-                    </li>-->
-
-                    {% if ingresaAdmin == 1 %}                         
+                    </li>
+                     {% if 1 > 1 %}
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="text">Educación Superior</span>
+                            <span class="arrow open fa-angle-double-down"></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{path('reporte_informacion_general_institutos_tecnicos')}}">
+                                    <span class="text">Estadística Institutos Técnicos y Tecnológicos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{path('reporte_superior_directorio_itts')}}">
+                                    <span class="icon"><i class="fa fa-home"></i></span>
+                                    <span class="text">Directorio de Institutos</span>
+                                </a>
+                            </li>  
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% if ingresaAdmin == 1 or app.session.get('userId') == '13855318' %}                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-globe"></i></span>
@@ -416,7 +527,7 @@
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Directorio de I.E.</span>
                         </a>
-                    </li>             
+                    </li>               
                     <!--
                     <li class="submenu">
                         <a href="javascript:void(0);">

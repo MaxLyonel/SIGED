@@ -273,7 +273,7 @@
                     {% if app.session.get('roluser') == 8 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-globe"></i></span>
+                                <span class="icon"><i class="glyphicon glyphicon-tasks"></i></span>
                                 <span class="text">Procesos</span>
                                 <span class="arrow"></span>
                             </a>
@@ -284,8 +284,6 @@
                                 
                             </ul>
                         </li>
-                    {% endif %}
-                    {% if app.session.get('roluser') == 8 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-bars"></i></span>
@@ -297,9 +295,18 @@
                                 <li><a href="{{ path('flujoproceso_rol')}}">Buscar por rol</a></li>
                             </ul>
                         </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-user"></i></span>
+                                <span class="text">Usuarios</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('flujousuarios_listado')}}">Gestion de usuarios</a></li>
+                            </ul>
+                        </li>
                     {% endif %}
-                    {% if app.session.get('roluser') in [7,8,10] %}
-                        
+                    {# {% if app.session.get('roluser') in [7,8,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-bars"></i></span>
@@ -336,7 +343,7 @@
                                 </li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
                     
                     <!-- Start navigation - dashboard -->
 
@@ -1157,7 +1164,7 @@
             <script src="{{ asset('js/initialize.js')}}"></script>
             <!--/ END GOOGLE ANALYTICS -->
             <script>
-                $('#nro').click(function(){
+               {#  $('#nro').click(function(){
                     formData = {flujotipo: 6,rol: '{{app.session.get('roluser')}}',usuario: '{{app.session.get('userId')}}'};
                     //alert('{{app.session.get('roluser')}}');
                     $.ajax({
@@ -1170,7 +1177,7 @@
                             });
                         },
                     }); 
-                });
+                }); #}
             </script>
         {% endblock %}
     </body>

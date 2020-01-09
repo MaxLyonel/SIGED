@@ -69,8 +69,8 @@ class InfoEstudianteNotasController extends Controller {
                     $plantilla = 'modular';
                     $vista = 1;
                 }else{
-                    // Verificamos si el tipo es 1:plena, 2:tecnica tecnologica, 3:modular, 5: humanistica (las que hayan hecho una solicitud pàra trabajar gestion actual)
-                    if($tipoUE['id'] == 1 or $tipoUE['id'] == 2 or $tipoUE['id'] == 3 or $tipoUE['id'] == 5){
+                    // Verificamos si el tipo es 1:plena, 2:tecnica tecnologica, 3:modular, 5: humanistica 7:transformacion (las que hayan hecho una solicitud pàra trabajar gestion actual)
+                    if($tipoUE['id'] == 1 or $tipoUE['id'] == 2 or $tipoUE['id'] == 3 or $tipoUE['id'] == 5 or $tipoUE['id'] == 7){
                         $plantilla = 'regular';
                         $vista = 1;
                     }else{
@@ -88,7 +88,7 @@ class InfoEstudianteNotasController extends Controller {
                 $plantilla = 'regular';
                 $vista = 0;
             }
-            $swspeciality    = false;
+            $swspeciality  = false;
             $objLevelModular    = false;
             foreach ($notas['cuantitativas'] as $key => $value) {
               if($value['idAsignatura']==1039){
@@ -100,6 +100,22 @@ class InfoEstudianteNotasController extends Controller {
               }
 
             }
+            
+            /*==================================================================================
+            =            VALIDACION DE CIERRE DE CALIFICACIONES SEXTO DE SECUNDARIA            =
+            ==================================================================================*/
+            
+            if($gestion >= 2019 and $operativo == 4 and $nivel == 13 and $grado == 6){
+                $validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
+                if($validacionSexto){
+                    if ($inscripcion->getEstadomatriculaTipo()->getId() != 4) {
+                        $vista = 0;
+                    }
+                }
+            }
+            
+            /*=====  End of VALIDACION DE CIERRE DE CALIFICACIONES SEXTO DE SECUNDARIA  ======*/
+            
 
             return $this->render('SieHerramientaBundle:InfoEstudianteNotas:bimestre.html.twig',array(
                 'notas'=>$notas,

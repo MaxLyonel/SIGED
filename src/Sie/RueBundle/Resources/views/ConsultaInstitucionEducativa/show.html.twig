@@ -1,5 +1,34 @@
 {% extends 'SieRueBundle:Default:rueConsulta.html.twig' %}
 
+{% block stylesheets %}
+{{parent()}}
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+    	#lienzoMapa {
+			top: 0;
+			bottom: 0;
+			width: 100%;
+			height: 540px;
+		}
+		.marker {
+			background-image: url("{{asset('images/mapbox-icon.png')}}");
+			background-size: cover;
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		.mapboxgl-popup {
+			max-width: 200px;
+		}  
+		.mapboxgl-popup-content {
+			text-align: center;
+			font-family: 'Open Sans', sans-serif;
+		}		  
+    </style>
+{% endblock %}
+
 {% block contentoption %}
 
     <div class="block-header">
@@ -172,7 +201,7 @@
 				</div>
 				<div class="body">
 					{% if (institucion.cordx and institucion.cordy) %}
-						<div id="lienzoMapa" style="width: auto; height: 550px;"></div>
+						<div id="lienzoMapa"></div>
 					{% else %}
 						<div class="text-center"><span class="label label-danger">No se cuenta con coordenadas para mostrar la localización geográfica de la U.E.</span></div>							
 					{% endif %}
@@ -185,33 +214,57 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {% if (institucion.cordx and institucion.cordy) %}
-        <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
-        <script type="text/javascript">
-            function initialize() {
-                var marcadores = [['{{institucion.ieducativa}}', {{institucion.cordx}}, {{institucion.cordy}}]];
-                var map = new google.maps.Map(document.getElementById('lienzoMapa'), {
-                    zoom: 16,
-                    center: new google.maps.LatLng({{institucion.cordx}}, {{institucion.cordy}}),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                });
-                var infowindow = new google.maps.InfoWindow();
-                var marker, i;
-                for (i = 0; i < marcadores.length; i++) {
-                    marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(marcadores[i][1], marcadores[i][2]),
-                        map: map
-                    });
-                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                        return function () {
-                            infowindow.setContent('<div><b>Unidad Educativa: </b>' + marcadores[i][0] + '</div>');
-                            infowindow.open(map, marker);
-                        }
-                    })(marker, i));
-                }
-            }
-            google.maps.event.addDomListener(window, 'load', initialize);
-        </script>
-    {% endif %}
+	{{ parent() }}
+	{% if (institucion.cordx and institucion.cordy) %}
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js'></script>
+		<script>
+			mapboxgl.accessToken = 'pk.eyJ1Ijoic2lnZWUiLCJhIjoiY2p5c3FmOWgxMG44ajNsbG0weTdmbHFqMCJ9.xzWqmSJjMqpM86r1Kf1jhg';
+
+			var map = new mapboxgl.Map({
+				container: 'lienzoMapa',
+				style: 'mapbox://styles/mapbox/streets-v11',
+				center: [{{institucion.cordy}}, {{institucion.cordx}}],
+				zoom: 15,
+				minZoom: 10
+			});
+
+			var geojson = {
+				type: 'FeatureCollection',
+				features: [{
+				  	type: 'Feature',
+				  	geometry: {
+						type: 'Point',
+						coordinates: [{{institucion.cordy}}, {{institucion.cordx}}]
+				  	},
+				  	properties: {
+						ieducativa: '{{institucion.ieducativa}}',
+						ieducativaId: '{{institucion.ieducativaId}}'
+				  	}
+				}]
+			};			  
+			  
+			// add markers to map
+			geojson.features.forEach(function(marker) {
+
+				// create a HTML element for each feature
+				var el = document.createElement('div');
+				el.className = 'marker';
+	
+				// make a marker for each feature and add to the map
+				new mapboxgl.Marker(el)
+				.setLngLat(marker.geometry.coordinates)
+				.addTo(map);
+
+				new mapboxgl.Marker(el)
+				.setLngLat(marker.geometry.coordinates)
+				.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+				.setHTML('<p><strong>Código RUE: </strong>' + marker.properties.ieducativaId + '<p><strong>Institución Educativa: </strong>' + marker.properties.ieducativa + '</p>'))
+				.addTo(map);
+			});
+
+			// Add controls to the map.
+			map.addControl(new mapboxgl.FullscreenControl());
+			map.addControl(new mapboxgl.NavigationControl());
+		</script>
+	{% endif %}
 {% endblock %}

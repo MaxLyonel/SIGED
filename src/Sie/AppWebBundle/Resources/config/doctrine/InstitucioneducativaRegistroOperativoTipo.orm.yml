@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaRegistroOperativoTipo:
+    type: entity
+    table: institucioneducativa_registro_operativo_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operativo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        obs:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

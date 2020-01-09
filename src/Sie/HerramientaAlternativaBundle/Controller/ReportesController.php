@@ -59,7 +59,12 @@ class ReportesController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja4_maestro_v1_rcm.rptdesign&__format=pdf&gestion='.$this->session->get('ie_gestion').'&codigo_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
+        $gestion= $this->session->get('ie_gestion');
+        if($gestion>=2019){
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja4_maestro_v2_ma.rptdesign&__format=pdf&gestion='.$this->session->get('ie_gestion').'&codigo_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
+        }else{
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja4_maestro_v1_rcm.rptdesign&__format=pdf&gestion='.$this->session->get('ie_gestion').'&codigo_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
+        }
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -584,6 +589,71 @@ class ReportesController extends Controller {
 //     die;
     }
 
+
+
+    public function reportAlterPrimariaPdfAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        // dump($arrDataInfo);
+        // dump($reporte);die;
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA';
+
+        $response = new Response();
+        //   dump($periodo);dump($gestion);dump($lugar);die;
+         //     dump($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=pdf&');die;
+        // por defecto
+        $response->headers->set('Content-type', 'application/pdf');
+        // dump($roluser);die;
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+
+    }
+    //'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    public function reportAlterPrimariaExcelAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        //dump($arrDataInfo);
+        $roluser = $arrDataInfo['roluser'];
+       // $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        //$lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA PRIMARIA ';
+        $response = new Response();
+
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+     //   dump(($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));die;
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
+
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
     public function reportEstAction(Request $request, $dataInfo){
 
         $arrDataInfo = unserialize($dataInfo);
@@ -738,8 +808,6 @@ class ReportesController extends Controller {
 
 
     }
-
-
 
     public function reportEspPeceAction(Request $request, $dataInfo){
 
@@ -1519,9 +1587,8 @@ class ReportesController extends Controller {
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $gestion = $this->session->get('ie_gestion');
         $subcea = $this->session->get('ie_subcea');
-        $periodo = 4;
-      
-      
+        $periodo = $this->session->get('ie_per_cod');
+
         //get the values of report
         //create the response object to down load the file
         $response = new Response();

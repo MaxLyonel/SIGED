@@ -50,7 +50,7 @@
 
             <!-- START @THEME STYLES -->
             <link href="{{asset('webolimpiadas/assets/admin/css/reset.css')}}" rel="stylesheet">
-            <link href="{{asset('webolimpiadas/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('css/layout.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/admin/css/components.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/admin/css/plugins.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/admin/css/themes/blue-gray.theme.css')}}" rel="stylesheet" id="theme">
@@ -207,7 +207,7 @@
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
                                         <span class="avatar"><img src="{{asset('webolimpiadas/img/avatar/35/1.png')}}" class="img-circle" alt="admin"></span>
-                                        <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
+                                        <span class="text hidden-xs hidden-sm">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
                                 </a>
@@ -325,8 +325,7 @@
                         </li>
                     {% endif %}
                     <!-- Start navigation - dashboard -->
-
-
+                    
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 

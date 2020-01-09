@@ -10,11 +10,20 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Recibidos</a>
+                    <a href="#">Inicio</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-
-                <li class="active">Index</li>
+                <li>
+                    <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion': gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
+                    <i class="fa fa-angle-right">
+                    </i>
+                </li>
+                <li>
+                    <a href="{{path('herramienta_especial_info_maestro_index')}}">Personal Docente</a>
+                    <i class="fa fa-angle-right">
+                    </i>
+                </li>
+                <li class="active">Nuevo Docente</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
@@ -54,7 +63,7 @@
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-6">
                                         {{ form_widget(form.buscar ) }}
-                                        <a href="{{ path('herramienta_especial_info_personal_adm_index') }}" class="btn btn-default">Cancelar</a>
+                                        <a href="{{ path('herramienta_especial_info_maestro_index') }}" class="btn btn-default">Cancelar</a>
                                     </div>
                                 </div>
                             </div>

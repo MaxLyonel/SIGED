@@ -302,7 +302,7 @@
                             <td><strong>Promedio Final</strong></td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'PROMEDIO FINAL' %}
-                                   <td align="center"><strong><div id="nt">{{ nota.nota_cuantitativa }}</div></strong></td>
+                                   <td align="center"><strong><div id="nt">{{ nota.nota_cuantitativa|round }}</div></strong></td>
                                     <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
                                     <td align="center"><input readonly="readonly" style="display: none;" type="number" id="nota{{ i }}" required="required" name="nota[]" style="width: 50px;" size="3px" min="0" max="70" maxlength="2" value="{{ nota.nota_cuantitativa }}" /></td>
                                     <td colspan="3"> <strong>Estado: </strong>
@@ -326,7 +326,7 @@
 </div>
 <div class="row">
     <div class="col-xs-12">
-        <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button>
+        <button type="submit" class="btn rounded btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button>
     </div>
 </div>
 </form>

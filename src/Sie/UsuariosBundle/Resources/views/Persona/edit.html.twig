@@ -20,7 +20,7 @@
                 <div class="portlet-heading">
                     <div class="portlet-title">
                         {% if segipId == true   %}
-                            <h4>Información Persona <span class="label label-danger">Este registro esta validado por el SEGIP solo podra actualizar la información de genero y correo electrónico.</span></h4>
+                            <h4>Información Persona <span class="label label-danger">Este registro esta validado por el SEGIP solo podrá actualizar la información de fecha de nacimiento, género y correo electrónico.</span></h4>
                         {% else %}
                             <h4>Información Persona <span class="label label-warning">Complete el formulario para realizar la validación correspondiente.</span></h4>
                         {% endif %}
@@ -78,8 +78,12 @@
                                     {{ form_row(form.generoTipo, { 'id': 'genero' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
-                                <div class="col-lg-9">
+                                <div class="col-lg-6">
                                     {{ form_row(form.correo, { 'id': 'correo' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    {{ form_row(form.departamentoTipo, { 'id': 'departamentoTipo' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -172,7 +176,7 @@
                     url: Routing.generate('sie_usuario_persona_update'),
                     data: formData,
                     beforeSend: function () {
-                        {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}
+                        
                     },
                     success: function (data) {
                         
@@ -181,16 +185,10 @@
                         if (numfila != ''){
                             //ACTUALIZANDO TABLA alert(numfila+data.username);                            
                             $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<span class="label label-warning">Registro Actualizado!</span>'
-                            
-                            {#$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[3].innerHTML = $("#carnet").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[4].innerHTML = $("#nombre").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[5].innerHTML = $("#paterno").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[6].innerHTML = $("#materno").val().toUpperCase();#}
                         }
                         
                         $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
                         $('#ModalUser').modal('hide');                        
-                        {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}
                     },
                     error: function () {                        
                         $("#divAlertUser").empty();

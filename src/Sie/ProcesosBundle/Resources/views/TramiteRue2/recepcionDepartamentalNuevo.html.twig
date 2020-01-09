@@ -1,0 +1,1241 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i>TRAMITE RUE NRO. {{ idtramite }}: <span>RECEPCIÓN DEPARTAMENTAL-FORMULARIO ÚNICO DE TRÁMITE</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">FORMULARIO ÚNICO DE TRÁMITE RUE</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="panel-group">
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div id="collapse1" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+			            </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div>
+            </div>
+{{ form_start(form,{ 'attr': {'id':'form_nuevo','role': 'form','onsubmit':'return validacion()'}}) }}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">I. NATURALEZA DE LA SOLICITUD</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group col-md-12">
+		        				<div class="col-md-5">
+                                    <strong>TIPO DE TRÁMITE:</strong>
+                                </div>
+                                <div class="col-md-7">
+								    {{ tipotramite }}
+                                </div>
+						    </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-5">
+        	    		            <strong>TIPO DE EDUCACIÓN:</strong>
+                                </div>
+                                <div class="col-md-7">
+                                    {{ tipoeducacion.descripcion }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-5">
+        	    		            <strong>DEPENDENCIA:</strong>
+                                </div>
+                                <div class="col-md-7">
+                                    {{ dependenciaTipo.dependencia }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-5">
+                                    <strong>TURNOS:</strong>
+                                </div>
+                                <div class="col-md-7">
+                                    {{ form_widget(form.turnotipo) }}
+                                </div>
+                            </div>
+                            {% if tipoeducacion.id in [2,4,5]  %}
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-5">
+                                        <strong>CANTIDAD DE PARTICIPANTES:</strong>
+                                    </div>
+                                    <div class="col-md-7">
+                                        {{ form_widget(form.participantes) }}
+                                    </div>
+					            </div>
+                            {% endif %} 
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="col-md-12"><strong>NIVELES AUTORIZADOS:</strong></div>
+						    {% for a in form.niveltipo %}
+                                <div class="col-md-12 ckbox ckbox-primary">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %} 
+					    </div>
+                        {% if tipoeducacion.id == 4 %}
+                            <div class="form-group col-md-3">
+                                <div class="col-md-12"><strong>ÁREAS AUTORIZADAS:</strong></div>
+						        {% for a in form.areaEspecialTipo %}
+                                    <div class="col-md-12  ckbox ckbox-primary">
+                                        {{ form_widget(a) }}
+                                        {{ form_label(a) }}
+                                    </div>
+                                {% endfor %}   
+					        </div>
+                        {% endif %}
+                    </div>
+                </div>
+			</div><!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">II. IDENTIFICACIÓN GENERAL DE LA UNIDAD EDUCATIVA</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="msgLe"></div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.lejurisdiccion) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.lejurisdiccion,{'attr':{'onblur':'buscarEdificioEscolar(this.value)'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-3">
+        	    		        {{ form_label(form.departamento) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.departamento,{'attr':{'onchange':'provincia(this.value)'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.provincia) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.provincia,{'attr':{'onchange':'municipio(this.value)'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.municipio) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.municipio,{'attr':{'onchange':'canton(this.value)'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.canton) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.canton,{'attr':{'onchange':'localidad(this.value)'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.localidad) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.localidad) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.distrito) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.distrito) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.institucioneducativa) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.institucioneducativa) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.zona) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.zona) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.direccion) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.direccion) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div><!-- /.panel-body -->
+        </div><!-- /.panel-primary -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">III. INFORMACIÓN LEGAL</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+        	    		    {{ form_label(form.solicitante) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.solicitante) }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12" style="display:none" id="sol_otro">
+                        <div class="col-md-6">
+                            {{ form_label(form.solicitante_otro) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.solicitante_otro) }}
+                        </div>
+                    </div>
+                    {% if dependenciaTipo.id == 3 %}
+                    <div class="form-group  col-md-12">
+                         <div class="form-group  col-md-12">
+                            <h5><strong>PRESENTACIÓN DE REQUISITOS LEGALES (Privadas)</strong></h5>
+                        </div>
+                        <div class="col-md-6">{{ form_label(form.iiia_acta) }}</div>
+                        <div class="col-md-6">
+                            {% for a in form.iiia_acta %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiib_estatutos) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiib_estatutos %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiic_resolucion) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiic_resolucion %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiid_fundaempresa) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiid_fundaempresa %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiie_nit) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiie_nit %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiif_ci) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiif_ci %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiig_balance) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiig_balance %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiih_ultimobalance) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiih_ultimobalance %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiii_acreditacion) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiii_acreditacion %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiij_padron) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiij_padron %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiik_funcionamientoculto) }}
+                        </div>
+                        <div class="col-md-6">
+                            {% for a in form.iiik_funcionamientoculto %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiil_nombrerepresentante) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iiil_nombrerepresentante) }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iiim_direccionrepresentante) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iiim_direccionrepresentante) }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+			</div><!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">IV. ÁREAS DEL TERRENO</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iv_areaterreno) }}<sup>2</sup>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iv_areaterreno) }}
+                        </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iv_areaconstruida) }}<sup>2</sup>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iv_areaconstruida) }}
+                        </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iv_areaesparcimiento) }}<sup>2</sup>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iv_areaesparcimiento) }}
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iv_areanoconstruida) }}<sup>2</sup>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iv_areanoconstruida) }}
+                        </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iv_areacultivo) }}<sup>2</sup>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iv_areacultivo) }}
+                        </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                        <div class="col-md-6">
+                            {{ form_label(form.iv_edificioes) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.iv_edificioes) }}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">V. DOCUMENTACIÓN DE INFRAESTRUCTURA, MOBILIARIO Y EQUIPAMIENTO</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">{{ form_label(form.va_folioreal) }}</div>
+                        <div class="col-md-4">
+                            {% for a in form.va_folioreal %}
+                                <div class="col-md-4 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            {{ form_label(form.vb_copiacontratoalquiler) }}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vb_copiacontratoalquiler %}
+                                <div class="col-md-4 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            {{ form_label(form.vc_planos) }}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vc_planos %}
+                                <div class="col-md-4 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            {{ form_label(form.vd_detallemobiliario) }}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vd_detallemobiliario %}
+                                <div class="col-md-4 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            {{ form_label(form.ve_tallereslaboratorios) }}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.ve_tallereslaboratorios %}
+                                <div class="col-md-4 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div><!-- /.row -->
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel-primary -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">VI. REQUISITOS CURRICULARES</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class=" form-group col-md-12"><h5><strong>MODALIDADES:</strong></h5></div>
+                    <div class=" form-group col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    {{ form_label(form.vi_modalidadatencion) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_widget(form.vi_modalidadatencion) }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    {{ form_label(form.vi_modalidadlengua) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_widget(form.vi_modalidadlengua) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    {{ form_label(form.vi_modalidadaprendizaje) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_widget(form.vi_modalidadaprendizaje) }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    {{ form_label(form.vi_modalidaddocencia) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_widget(form.vi_modalidaddocencia) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><h5><strong>PLANES Y PROGRAMAS:</strong></h5></div>
+                    <div class="form-group col-md-5"></div>
+                    <div class="form-group col-md-3"><h5><strong>DOCUMENTOS PRESENTADOS:</strong></h5></div>
+                    <div class="form-group col-md-4"><h5><strong>DOCUMENTOS EVALUADOS:</strong></h5></div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-5">{{ form_label(form.via_teorico) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.via_teorico %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.via_teoricoEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vib_intercultural) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vib_intercultural %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vib_interculturalEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vic_propuestalengua) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vic_propuestalengua %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vic_propuestalenguaEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vid_propuestaciclos) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vid_propuestaciclos %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vid_propuestaciclosEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vie_propuestaintegracion) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vie_propuestaintegracion %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vie_propuestaintegracionEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vif_denominacionnivel) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vif_denominacionnivel %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vif_denominacionnivelEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vig_organizacionciclos) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vig_organizacionciclos %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vig_organizacionciclosEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vih_temastransversales) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vih_temastransversales %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vih_temastransversalesEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vii_areascurriculares) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vii_areascurriculares %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vii_areascurricularesEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vij_competencias) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vij_competencias %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vij_competenciasEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vik_indicadores) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vik_indicadores %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vik_indicadoresEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vil_contenidos) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vil_contenidos %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vil_contenidosEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vim_metodologia) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vim_metodologia %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vim_metodologiaEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vin_evaluacion) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vin_evaluacion %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vin_evaluacionEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vio_horario) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vio_horario %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vio_horarioEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vip_calendario) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vip_calendario %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vip_calendarioEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.viq_textos) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.viq_textos %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.viq_textosEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vir_curriculo) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vir_curriculo %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vir_curriculoEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">{{ form_label(form.vis_areasnoincluidas) }}</div>
+                        <div class="col-md-3">
+                            {% for a in form.vis_areasnoincluidas %}
+                                <div class="col-md-3 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {% for a in form.vis_areasnoincluidasEvaluado %}
+                                <div class="col-md-5 rdio rdio-primary circle">
+                                    {{ form_widget(a) }}
+                                    {{ form_label(a) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">
+                            {{ form_label(form.vi_planesprogramas) }}
+                        </div>
+                        <div class="col-md-7">
+                            {{ form_widget(form.vi_planesprogramas) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-5">
+                            {{ form_label(form.observacion) }}
+                        </div>
+                        <div class="col-md-7">
+                            {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}
+                        </div>
+				    </div>
+                </div>
+                
+			</div><!-- /.panel-body -->
+            <div class="panel-footer">
+                {{ form_label(form.guardar) }}
+                {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                <a href="{{path('wf_tramite_index',{'tipo':2})}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-footer -->
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('#form_solicitante').click(function(){
+            if($('#form_solicitante').val()=='Otro'){
+               $('#sol_otro').show();
+            }else{
+                $('#form_solicitante_otro').val('');
+                $('#sol_otro').hide();
+            }
+        });
+        $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+        function validacion(){
+            if('{{tipoeducacion.id}}'!=1 && $('#form_participantes').val()==''){
+                alert('Debe ingresar la cantidad de participantes en el punto 1.');
+                return false;
+            }else if($('#form_solicitante').val()=='Otro' && $('#form_solicitante_otro').val()==''){
+                alert('En el punto 3. debe llenar el campo Otro:');
+                return false;
+            }
+            return true;
+        }
+
+        function buscarEdificioEscolar(idLe) {
+            if(idLe){
+                var formData = {idLe:idLe};
+                $.ajax({
+                    type: 'get',
+                    url: "{{path('tramite_rue_buscar_edificio')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $("#form_departamento").empty();
+                        $("#form_provincia").empty();
+                        $("#form_municipio").empty();
+                        $("#form_canton").empty();
+                        $("#form_localidad").empty();
+                        $("#form_distrito").empty();
+                        $("#form_zona").empty();
+                        $("#form_direccion").empty();
+                        $("#form_departamento").append('<option value="">Buscando...</option>');
+                        $("#form_provincia").append('<option value="">Buscando...</option>');
+                        $("#form_municipio").append('<option value="">Buscando...</option>');
+                        $("#form_canton").append('<option value="">Buscando...</option>');
+                        $("#form_localidad").append('<option value="">Buscando...</option>');
+                        $("#form_distrito").append('<option value="">Buscando...</option>');
+                    },
+                    success: function (data) {
+                        if(data.msg){
+                            //$("#msgLe").append('hola');
+                            $("#form_departamento").empty();
+                            $("#form_departamento").append('<option value="">Seleccione...</option>');
+                            $("#form_lejurisdiccion").val('');
+                            $("#form_provincia").empty();
+                            $("#form_municipio").empty();
+                            $("#form_canton").empty();
+                            $("#form_localidad").empty();
+                            $("#form_distrito").empty();
+                            $("#form_zona").val('');
+                            $("#form_direccion").val('');
+                            $.each(data.departamento, function (i, value) {
+                                $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            alert(data.msg);
+                        }else{
+                            $.each(data.departamento, function (i, value) {
+                                $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.provincia, function (i, value) {
+                                $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.municipio, function (i, value) {
+                                $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.canton, function (i, value) {
+                                $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.localidad, function (i, value) {
+                                $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $.each(data.distrito, function (i, value) {
+                                $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $("#form_departamento").val(data.iddepartamento);
+                            $("#form_provincia").val(data.idprovincia);
+                            $("#form_municipio").val(data.idmunicipio);
+                            $("#form_canton").val(data.idcanton);
+                            $("#form_localidad").val(data.idlocalidad);
+                            $("#form_distrito").val(data.iddistrito);
+                            $("#form_zona").val(data.zona);
+                            $("#form_direccion").val(data.direccion);
+                        }
+                    }   
+                });
+            }
+        }
+
+        function provincia(d) {
+            //alert(d);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d}),
+            beforeSend: function () {
+                $("#form_provincia").empty();
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_distrito").empty();
+                $("#form_provincia").append('<option value="">Buscando...</option>');
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $("#form_distrito").append('<option value="">Buscando...</option>');
+                $("#form_zona").val('');
+                $("#form_direccion").val('');
+            },
+            success: function (data) {
+                $("#form_provincia").empty();
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_distrito").empty();
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $("#form_distrito").append('<option value="">Seleccionar...</option>');
+                $.each(data.provincia, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $.each(data.distrito, function (i, value) {
+                    $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+        }
+
+    function municipio(p) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p}),
+            beforeSend: function () {
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+            },
+            success: function (data) {
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.municipio, function (i, value) {
+                    $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function canton(m) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m}),
+            beforeSend: function () {
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+            },
+            success: function (data) {
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.canton, function (i, value) {
+                    $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                });
+
+            }
+        });
+    }
+
+    function localidad(c) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c}),
+            beforeSend: function () {
+                $("#form_localidad").empty();
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+            },
+            success: function (data) {
+                $("#form_localidad").empty();
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.localidad, function (i, value) {
+                    $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_localidad").selectpicker('refresh');
+            }
+        });
+    }    
+    </script>
+    {% endblock %}    
+
+

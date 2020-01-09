@@ -16,17 +16,59 @@
                         <input type="text" id="plan" name="plan" value="" required="required" style="display:none" />
                         <input type="text" id="ciclo_tipo_id" name="ciclo_tipo_id" value="" required="required" style="display:none" />
                         <input type="text" id="grado_tipo_id" name="grado_tipo_id" value="" required="required" style="display:none" />
-                        Fecha Inicio:
-                        <input type="text" id="fecha_inicio" class="form-control" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;<br>
-                        Fecha Fin:
-                        <input type="text" id="fecha_fin" class="form-control" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Departamento:</label>
+                            <div class="col-sm-8">
+                                 <input type="text" id="form_departamento" name="grado_tipo_id" value="" required="required"  style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" readonly="readonly" />
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Provincia:</label>
+                            <div class="col-sm-8">
+                                <select required="required" data-placeholder="Seleccionar"  id="form_provincia" class="form-control chosen-select" name="form_provincia">
+                                    <option value="">Provincia</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Municipio:</label>
+                            <div class="col-sm-8">
+                                <select required="required" data-placeholder="Seleccionar" id="form_municipio" class="form-control chosen-select" name="form_municipio" >
+                                    <option value=""></option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-4 control-label">Localidad:</label>
+                            <div class="col-sm-8">
+                               <input required="required" type="text" maxlength="40" id="localidad" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="localidad" >
+                            </div>
+                        </div>
+                        <div class="row"></div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-5 control-label">Fecha Inicio:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="fecha_inicio" class="form-control" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>
+                                <input type="hidden" id="fecha_inicio_ant" class="form-control" name="fecha_inicio_ant" placeholder="Digite Fecha Final" required="required" value=""/>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-6">
+                            <label class="col-sm-5 control-label">Fecha Fin:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="fecha_fin" class="form-control" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
+                            </div>
+                        </div>
+                        
                         <br><br>
-                        <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
+                        <button type="submit" class="btn btn-success rounded btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
                     </form>
                 </div>
             </div>
             <div class="editar-pie">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
             </div>                    
         </div>                
     </div>
@@ -93,8 +135,10 @@
                         </div>
                         <div class="panel-body">
                             {% if (totales) %}
+                            <input type="hidden" name="roluser" id="roluser" value="{{ roluser}}">
+                            <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaTotales"> Copiar Lista</button>
                                 <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                                    <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                                    <table id="tablaTotales" class="display" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>Id Curso</th>
@@ -103,8 +147,8 @@
                                                 <th>Nombre</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>                            
-                                                <th>Inicio</th>                            
-                                                <th>Fin</th>                            
+                                                <th>Fecha_Inicio</th>                            
+                                                <th>Fecha_Fin</th>                            
                                                 <th>Ciclo</th>                            
                                                 <th>Grado</th>
                                                 <th>Aprobados</th>  
@@ -122,10 +166,10 @@
                                                 <tr>
                                                    <td>{{ fila.id }}</td>
                                                    <td>
-                                                        <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Impimir Consolidado"></a>
-                                                        <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc,'val':0 }) }}" title="Ingresar Curso" ></a>
+                                                        <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Impimir Consolidado"></a>
+                                                        <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc,'val':0 }) }}" title="Ingresar Curso" ></a>
                                                         {% if fila.esactivo != 1 %}
-                                                            <a role="button" class="glyphicon glyphicon-edit btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}');" title="Editar Fechas"></a>
+                                                            <a role="button" class="glyphicon glyphicon-edit btn btn-info btn-xs rounded" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}','{{fila.depto}}','{{fila.depto_id}}','{{fila.provincia_id}}','{{fila.lugar_id}}','{{fila.localidad}}');" title="Editar Datos"></a>
                                                         {% endif %}
                                                     </td>
                                                     <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
@@ -143,7 +187,7 @@
                                                     <td>{{ fila.localidad }}</td>
                                                     <td>{{ fila.usu_a }}</td>
                                                     {% if fila.esactivo != 1 %}
-                                                    <td><a role="button" class="btn btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id_enc }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
+                                                    <td><a role="button" class="btn rounded btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id_enc }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
                                                     {% else %}
                                                         <td>{{ fila.usu_c }}</td>
                                                     {% endif %}
@@ -156,7 +200,7 @@
                     </div>
                 </div>
             {% else %}
-                {% if ('8' == app.session.get('roluser')) %}
+                {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}
                     <div class="panel panel-icon panel-primary">
                         <div class="panel-heading">
                             Reporte de cursos
@@ -286,7 +330,33 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+
+ (function(){
+    new Clipboard('#copy-button');
+})();
+</script>
     <script type="text/javascript">
+      $("#form_provincia").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').trigger("chosen:updated");
+                    }
+                });            
+            });
     var espanol = {"sProcessing": "Procesando...",
                      "sLengthMenu": "Mostrar _MENU_ registros",
                      "sZeroRecords": "No se encontraron resultados",
@@ -323,7 +393,8 @@
             format: 'dd/mm/yyyy',
             language: "es",
         });
-        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
+      
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,"lengthMenu": [ [10, 50, 100, 1000, -1], [10, 50, 100, 1000, "Todos"] ]} );
         
         $('#tablaTotales tbody').on( 'click', 'tr', function () {
             if ( $(this).hasClass('selected') ) {
@@ -343,24 +414,78 @@
         });#}
         
     });
-    function ver_fecha_fin(id,fecha_fin,fecha_inicio,plan,ciclo_tipo_id,grado_tipo_id){
+    function ver_fecha_fin(id,fecha_fin,fecha_inicio,plan,ciclo_tipo_id,grado_tipo_id,depto,depto_id,provincia_id,lugar_id,localidad){
          $('#Modal_fecha').modal('show');
+         $('#localidad').val(localidad);
          $('#curso_id').val(id);
          $('#fecha_fin').val(fecha_fin);
+         $('#fecha_inicio_ant').val(fecha_inicio);
          $('#fecha_inicio').val(fecha_inicio);
          $('#plan').val(plan);
          $('#ciclo_tipo_id').val(ciclo_tipo_id);
          $('#grado_tipo_id').val(grado_tipo_id);
+         $('#form_departamento').val(depto);
+         $('#form_provincia').html("<option>Seleccionar</option>");
+          var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: depto_id });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_provincia").empty();                       
+                        var $province_selector = $('#form_provincia');
+
+                        $province_selector.html('<option value="">Provincia</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            if(datos[i].id==provincia_id)
+                                $province_selector.append('<option selected value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                            else
+                                $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_provincia').trigger("chosen:updated");
+                        $('#form_municipio').html("<option>Municipio</option>");
+                    }
+                });
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: provincia_id });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            if(datos[i].id==lugar_id)
+                                $province_selector.append('<option selected value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        else
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').trigger("chosen:updated");
+                    }
+                });                  
     }
 
     function validar_fecha(){
         var f1 = document.getElementById("fecha_inicio").value;
+        var f1a = document.getElementById("fecha_inicio_ant").value;
         var f2 = document.getElementById("fecha_fin").value;
         var plan = document.getElementById("plan").value;
         var b = document.getElementById("ciclo_tipo_id").value;
         var p = document.getElementById("grado_tipo_id").value;
+        var roluser = document.getElementById("roluser").value;
         var aFecha1 = f1.split('/'); 
         var aFecha2 = f2.split('/'); 
+        var aFecha1a = f1a.split('/'); 
+        
+        if(aFecha1[2] < aFecha1a[2] && roluser != 8){
+            alert("Error, Fecha inicial nueva no puede ser de gestión menor que la anterior fecha.");
+            return false;
+        }
         var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
         var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
         var dif = fFecha2 - fFecha1;
@@ -419,11 +544,11 @@
             }    
         }
         else{//PLAN NUEVO
-            if(dias>=140 && dias<=180){
+            if(dias>=140 && dias<=200){
                 return true;
             }
             else{
-                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 200 días (5 meses a 6 meses)");
                 return false;
             }
         }

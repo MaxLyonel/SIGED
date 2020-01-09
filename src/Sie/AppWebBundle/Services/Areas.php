@@ -69,7 +69,7 @@ class Areas {
         $matpriant = array(201, 203, 204, 205, 206, 207, 208, 209, 210, 251, 258);
         $matsecantter = array(301, 302, 303, 304, 305, 307, 308, 309, 310, 311, 312, 313, 315, 316, 317, 318, 319, 320, 321);
 
-        $matsecantcua = array(301, 302, 303, 304, 305, 309, 313, 316, 317, 318, 319);
+        $matsecantcua = array(301, 302, 303, 304, 305, 307, 308, 309, 210, 311, 312, 313, 316, 317, 318, 319);
         $matsecantquisex = array(301, 302, 303, 305, 307, 308, 310, 311, 312, 313, 315, 316, 317, 318, 319, 362);
 
 
@@ -98,7 +98,15 @@ class Areas {
         $matsecf2018 = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1043,1044,1051,1052,1053);
         $matsecg2018 = array(1031,1032,1033,1034,1035,1036,1037,1040,1043,1044,1051,1052,1053);
 
-
+        /**
+         * Para gestion 2019 en adelante
+         */
+        $matsece2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        $matsecf2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        $matsecg2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        // Plenas
+        $matsecf2019plena = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1041,1042,1043,1044);
+        $matsecg2019plena = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1041,1042,1043,1044);
 
         $idsAsignaturas = array();
         switch ($gestion) {
@@ -229,10 +237,15 @@ class Areas {
                                     // Para unidades educativas nocturnas
                                     $idsAsignaturas = $matnoctb;
                                 }else{
-                                    if($gestion >= 2018){
+                                    $idsAsignaturas = $matsece;
+                                    if($gestion == 2018){
                                         $idsAsignaturas = $matsece2018;
-                                    }else{
-                                        $idsAsignaturas = $matsece;
+                                    }
+                                    if($gestion == 2019){
+                                        $idsAsignaturas = $matsece2019;
+                                        if($tipoUEId == 1 or ($tipoUEId == 7 and $grado <= $gradoUEId)){
+                                            $idsAsignaturas = $matsecf2019plena;
+                                        }
                                     }
                                 }
                                 break;
@@ -243,16 +256,20 @@ class Areas {
                                     $idsAsignaturas = $matnoctb;
                                 }else{
                                     if($tipoUEId == 1 and $grado <= $gradoUEId){
-                                        if($gestion >= 2018){
+                                        $idsAsignaturas = $matsecf;
+                                        if($gestion == 2018){
                                             $idsAsignaturas = $matsecf2018;
-                                        }else{
-                                            $idsAsignaturas = $matsecf;
+                                        }
+                                        if($gestion == 2019){
+                                            $idsAsignaturas = $matsecg2019plena;
                                         }
                                     }else{
-                                        if($gestion >= 2018){
+                                        $idsAsignaturas = $matsecg;
+                                        if($gestion == 2018){
                                             $idsAsignaturas = $matsecg2018;     
-                                        }else{
-                                            $idsAsignaturas = $matsecg;
+                                        }
+                                        if($gestion == 2019){
+                                            $idsAsignaturas = $matsecg2019;     
                                         }
                                     }
                                 }
@@ -382,7 +399,7 @@ class Areas {
                 // Verificamos si se puede adicionar materias, en base al operativo antes de tercer bimestre
                 if($gestion == $this->session->get('currentyear')){
                     $operativo = $this->funciones->obtenerOperativo($sie,$gestion);
-                    if($operativo <= 3 or ($tipoUE['id'] == 3 and in_array($nivel, array(3,13)))){
+                    if($operativo < 5 or ($tipoUE['id'] == 3 and in_array($nivel, array(3,13)))){
                         $vista = 1;
                     }else{
                         $vista = 0;
@@ -407,7 +424,7 @@ class Areas {
                     'posiblesEliminar'=>$posiblesEliminar,
                     'vista'=>$vista
                 );
-            } 
+            }
             return null;
         } catch (Exception $e) {
             return null;
@@ -490,7 +507,10 @@ class Areas {
             $this->em->getConnection()->beginTransaction();
 
             $curso = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
-            $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+            $gestion = $curso->getGestionTipo()->getId();
+            $nivel = $curso->getNivelTipo()->getId();
+            $grado = $curso->getGradoTipo()->getId();
+            // $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
             // Registramos la nueva Área
             $newArea = new InstitucioneducativaCursoOferta();
             $newArea->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find($idAsignatura));
@@ -500,20 +520,25 @@ class Areas {
             $this->em->flush();
 
             // Registro de materia curso oferta en el log
-            /*
+            $arrayArea = [];
+            $arrayArea['id'] = $newArea->getId();
+            $arrayArea['asignaturaTipo'] = $newArea->getAsignaturaTipo()->getId();
+            $arrayArea['institucioneducativaCurso'] = $newArea->getInsitucioneducativaCurso()->getId();
+            $arrayArea['horasMes'] = $newArea->getHorasmes();
+            
             $this->funciones->setLogTransaccion(
                 $newArea->getId(),
                 'institucioneducativa_curso_oferta',
                 'C',
                 '',
-                $newArea,
+                $arrayArea,
                 '',
                 'ACADEMICO',
                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-            );*/
+            );
 
             // Actualizamos el id de la tabla estudiante asignatura
-            $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+            // $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
             // Listamos los estudinates inscritos
             // para registrar el curso a los estudiantes
             $inscritos = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso' => $idCurso));
@@ -522,27 +547,35 @@ class Areas {
                 // Verificamos si el estudiante ya tiene la asignatura
                 $estInscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(),'institucioneducativaCursoOferta'=>$newArea->getId()));
                 if(!$estInscripcion){
-                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
-                    $newEstAsig = new EstudianteAsignatura();
-                    $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($curso->getGestionTipo()->getId()));
-                    $newEstAsig->setFechaRegistro(new \DateTime('now'));
-                    $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($ins->getId()));
-                    $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($newArea->getId()));
-                    $this->em->persist($newEstAsig);
-                    $this->em->flush();
+                    if($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $idAsignatura != 1038 and $idAsignatura != 1039) or ($gestion >= 2019 and $nivel != 13) or ($gestion >= 2019 and $nivel == 13 and $grado<3)) {
+                        // $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                        $newEstAsig = new EstudianteAsignatura();
+                        $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($curso->getGestionTipo()->getId()));
+                        $newEstAsig->setFechaRegistro(new \DateTime('now'));
+                        $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($ins->getId()));
+                        $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($newArea->getId()));
+                        $this->em->persist($newEstAsig);
+                        $this->em->flush();
 
-                    // Registro de materia para estudiantes estudiante_asignatura en el log
-                    /*
-                    $this->funciones->setLogTransaccion(
-                        $newEstAsig->getId(),
-                        'estudiante_asignatura',
-                        'C',
-                        '',
-                        $newEstAsig,
-                        '',
-                        'ACADEMICO',
-                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                    );*/
+                        // Registro de materia para estudiantes estudiante_asignatura en el log
+                        $arrayEstAsig = [];
+                        $arrayEstAsig['id'] = $newEstAsig->getId();
+                        $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                        $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                        $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                        $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                        
+                        $this->funciones->setLogTransaccion(
+                            $newEstAsig->getId(),
+                            'estudiante_asignatura',
+                            'C',
+                            '',
+                            $arrayEstAsig,
+                            '',
+                            'ACADEMICO',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                        );
+                    }
                 }
 
                 // Actualizamos los estados de matricula de los estudiantes

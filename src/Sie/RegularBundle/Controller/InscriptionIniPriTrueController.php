@@ -42,7 +42,7 @@ class InscriptionIniPriTrueController extends Controller {
     public function indexAction() {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
-
+        // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -194,6 +194,7 @@ class InscriptionIniPriTrueController extends Controller {
                 ->add('newdata', 'hidden', array('data' => serialize($data)))
                 ->add('gestionIns', 'hidden', array('data' => $gestionIns))
                 ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
+                ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
                 ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
                 ->getForm();
     }
@@ -219,7 +220,7 @@ class InscriptionIniPriTrueController extends Controller {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6 ))
+                ->setParameter('mat', array( 3,4,5,6,10 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
@@ -239,6 +240,21 @@ class InscriptionIniPriTrueController extends Controller {
       //get values all data
       $form = $request->get('form');
       $setNotasInscription=false;
+
+      //validtation abuut if the ue close SEXTO
+      if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestionIns'])){
+          $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
+          $this->addFlash('idNoInscription', $message);
+          return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+      }
+
+      // validation if the ue is over 4 operativo
+      $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
+      if($operativo >= 4){
+        $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+        $this->addFlash('idNoInscription', $message);
+        return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+      }
 
       //validation inscription in the same U.E
       $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']);
@@ -285,7 +301,7 @@ class InscriptionIniPriTrueController extends Controller {
         // dump($newInfInscription);
       }
       // dump($currentLevelStudent);die;
-      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
+      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];// dump($newLevelStudent);die;
 //dump(((str_replace('-','',$newLevelStudent)) ));
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
@@ -296,6 +312,7 @@ class InscriptionIniPriTrueController extends Controller {
          //do the inscription
 
          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+
 
          if($keyNextLevelStudent >= 0){
            if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
@@ -325,8 +342,8 @@ class InscriptionIniPriTrueController extends Controller {
              //validate the level selected
              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
                //do the inscriptin
-             }else{
-               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+             }else{//dump($newInfInscription);die;
+               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
                $this->addFlash('idNoInscription', $message);
                $swCorrectInscription = false;
              }
@@ -343,10 +360,12 @@ class InscriptionIniPriTrueController extends Controller {
     }else{
       //do inscription inicial/ primaria or extranjero
       //get the year of student
+
       $dataStudent = unserialize($form['newdata']);
+      $arrStudentFecnac = array();
       $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
       list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
-      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-2016');
+      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
 
       //new student validation
         if ($tiempo[0]<=6){
@@ -392,6 +411,16 @@ class InscriptionIniPriTrueController extends Controller {
              'gestionTipo' => $this->session->get('currentyear')
          ));
          //$student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['codigoRude']));
+          //Recupero el CodUE de procedencia $form['codigoRude']
+           $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'] ));
+           $query = $em->getConnection()->prepare('SELECT cod_ue_procedencia_id 
+                                                   FROM estudiante_inscripcion  
+                                                   WHERE estudiante_id ='. $estudiante->getId() .'
+                                                   ORDER BY fecha_inscripcion desc limit 1');
+           $query->execute();
+           $ue_procedencia = $query->fetch();
+
+          // $obsId=($em->getRepository('SieAppWebBundle:ObservacionInscripcionTipo')->find(6))->getId();
          //inscriptions
          $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
          $query->execute();
@@ -400,12 +429,14 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-         $studentInscription->setObservacion(1);
+         $studentInscription->setObservacion($form['observacionOmitido']);
+         $studentInscription->setObservacionId(6);
          $studentInscription->setFechaInscripcion(new \DateTime('now'));
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
          $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
-         $studentInscription->setCodUeProcedenciaId(0);
+         $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
+         $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();
 
@@ -887,6 +918,7 @@ class InscriptionIniPriTrueController extends Controller {
         $cursos = $this->aCursosOld;
         //this is a switch to find the courses
         $sw = 1;
+        $ind=0;
         //loof for the courses of student
         while (( $acourses = current($cursos)) !== FALSE && $sw) {
             if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
@@ -1048,9 +1080,11 @@ class InscriptionIniPriTrueController extends Controller {
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('i.institucioneducativaTipo = :insteducativaTipo')
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('insteducativaTipo', 1)
                 ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();

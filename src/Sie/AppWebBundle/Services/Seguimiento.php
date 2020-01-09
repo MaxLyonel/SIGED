@@ -199,25 +199,29 @@ class Seguimiento {
 
   public function getStudentObservationQA($data){
 
-    $query = $this->em->getConnection()->prepare(
-      "
-           
-          SELECT
-          c.entidad,
-          b.descripcion,
-          a.obs,
-          a.institucion_educativa_id
-          FROM validacion_regla_entidad_tipo AS c
-          INNER JOIN validacion_regla_tipo AS b ON b.validacion_regla_entidad_tipo_id = c.id
-          INNER JOIN validacion_proceso AS a ON a.validacion_regla_tipo_id = b.id
-          WHERE
-          b.es_activo is true AND
-          a.es_activo ='f' AND
-          a.llave = '".$data['codigoRude']."' AND
-          a.gestion_tipo_id = ".$data['gestion']
-    );
-    $query->execute();
-    $objStudentObservation = $query->fetchAll();
+    if($data['gestion'] != '' and isset($data['gestion'])) {
+      $query = $this->em->getConnection()->prepare(
+        "
+            SELECT
+            c.entidad,
+            b.descripcion,
+            a.obs,
+            a.institucion_educativa_id
+            FROM validacion_regla_entidad_tipo AS c
+            INNER JOIN validacion_regla_tipo AS b ON b.validacion_regla_entidad_tipo_id = c.id
+            INNER JOIN validacion_proceso AS a ON a.validacion_regla_tipo_id = b.id
+            WHERE
+            b.es_activo is true AND
+            a.es_activo ='f' AND
+            a.llave = '".$data['codigoRude']."' AND
+            a.gestion_tipo_id = ".$data['gestion']
+      );
+      $query->execute();
+      $objStudentObservation = $query->fetchAll();
+    } else {
+      $objStudentObservation = array();
+    }
+
     return $objStudentObservation;
     // dump($objStudentObservation);die;
   }
@@ -240,9 +244,9 @@ class Seguimiento {
 
 
       return $objobsQA;
-    }
+  }
 
-    public function getSubSistemaInstitucionEducativa($institucionEducativaId){
+  public function getSubSistemaInstitucionEducativa($institucionEducativaId){
       
       //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
       // $em = $this->getDoctrine()->getManager();
@@ -261,8 +265,8 @@ class Seguimiento {
 
 
       return $objIE;
-    }
-    public function getNotasHistorialRegular($participanteId){
+  }
+  public function getNotasHistorialRegular($participanteId){
       // dump($participanteId);die;
       //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
       // $em = $this->getDoctrine()->getManager();
@@ -348,7 +352,7 @@ class Seguimiento {
       $query->execute();
       $entityInscripcion = $query->fetchAll();
 
-dump($entityInscripcion);die;
+      //dump($entityInscripcion);die;
       $gradoId = 0;
       $i = 0;
       $j = 0;
@@ -421,16 +425,16 @@ dump($entityInscripcion);die;
       //dump($listaHistorial);
       //die;
       return $listaHistorial;
-    }
+  }
 
-    public function getYearsOldsStudentByFecha($fecha_nacimiento, $fecha_control){
+  public function getYearsOldsStudentByFecha($fecha_nacimiento, $fecha_control){
 
       $fecha_actual = $fecha_control;
 
       if (!strlen($fecha_actual)) {
           $fecha_actual = date('d-m-Y');
       }
-// dump($fecha_actual);
+      // dump($fecha_actual);
       // separamos en partes las fechas
       $array_nacimiento = explode("-", str_replace('/', '-', $fecha_nacimiento));
       $array_actual = explode("-", $fecha_actual);
@@ -511,66 +515,62 @@ dump($entityInscripcion);die;
       $tiempo[2] = $dias;
 
       return $tiempo;
-}
-
-function bisiesto($anio_actual) {
-  $bisiesto = false;
-  //probamos si el mes de febrero del año actual tiene 29 días
-  if (checkdate(2, 29, $anio_actual)) {
-      $bisiesto = true;
   }
-  return $bisiesto;
-}
 
+  function bisiesto($anio_actual) {
+    $bisiesto = false;
+    //probamos si el mes de febrero del año actual tiene 29 días
+    if (checkdate(2, 29, $anio_actual)) {
+        $bisiesto = true;
+    }
+    return $bisiesto;
+  }
 
+  public function getReportCalificationsByStudentInscription($studentInscription){
 
-public function getReportCalificationsByStudentInscription($studentInscription){
+    $query = $this->em->getConnection()->prepare("
 
-  $query = $this->em->getConnection()->prepare("
-
-  select 
-  case when b1 > 0 then '1' else '' end b1,
-  case when b2 > 0 then '1' else '' end b2,
-  case when b3 > 0 then '1' else '' end b3,
-  case when b4 > 0 then '1' else '' end b4,
-  case when t1 > 0 then '1' else '' end t1,
-  case when t2 > 0 then '1' else '' end t2,
-  case when t3 > 0 then '1' else '' end t3
-  from (
-  SELECT
-  public.estudiante_inscripcion.id,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 1 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 1 then 1 else 0 end) b1,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 2 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 2 then 1 else 0 end) b2,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 3 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 3 then 1 else 0 end) b3,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 4 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 4 then 1 else 0 end) b4,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 6 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 6 then 1 else 0 end) t1,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 7 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 7 then 1 else 0 end) t2,
-  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 8 then public.estudiante_nota.nota_cuantitativa
-  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 8 then 1 else 0 end) t3
-  FROM
-  public.estudiante_inscripcion
-  INNER JOIN public.estudiante_asignatura ON public.estudiante_asignatura.estudiante_inscripcion_id = public.estudiante_inscripcion.id
-  INNER JOIN public.estudiante_nota ON public.estudiante_nota.estudiante_asignatura_id = public.estudiante_asignatura.id
-  INNER JOIN public.institucioneducativa_curso ON public.estudiante_inscripcion.institucioneducativa_curso_id = public.institucioneducativa_curso.id
-  WHERE
-  public.estudiante_inscripcion.id = ".$studentInscription."
-  GROUP BY
-  public.estudiante_inscripcion.id) a
-  
+    select 
+    case when b1 > 0 then '1' else '' end b1,
+    case when b2 > 0 then '1' else '' end b2,
+    case when b3 > 0 then '1' else '' end b3,
+    case when b4 > 0 then '1' else '' end b4,
+    case when t1 > 0 then '1' else '' end t1,
+    case when t2 > 0 then '1' else '' end t2,
+    case when t3 > 0 then '1' else '' end t3
+    from (
+    SELECT
+    public.estudiante_inscripcion.id,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 1 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 1 then 1 else 0 end) b1,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 2 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 2 then 1 else 0 end) b2,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 3 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 3 then 1 else 0 end) b3,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 4 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 4 then 1 else 0 end) b4,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 6 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 6 then 1 else 0 end) t1,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 7 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 7 then 1 else 0 end) t2,
+    sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 8 then public.estudiante_nota.nota_cuantitativa
+    when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 8 then 1 else 0 end) t3
+    FROM
+    public.estudiante_inscripcion
+    INNER JOIN public.estudiante_asignatura ON public.estudiante_asignatura.estudiante_inscripcion_id = public.estudiante_inscripcion.id
+    INNER JOIN public.estudiante_nota ON public.estudiante_nota.estudiante_asignatura_id = public.estudiante_asignatura.id
+    INNER JOIN public.institucioneducativa_curso ON public.estudiante_inscripcion.institucioneducativa_curso_id = public.institucioneducativa_curso.id
+    WHERE
+    public.estudiante_inscripcion.id = ".$studentInscription."
+    GROUP BY
+    public.estudiante_inscripcion.id) a
     ");
-  $query->execute();
-  $objReportCalifications = $query->fetch();
-  // dump($objReportCalifications);die;
+    $query->execute();
+    $objReportCalifications = $query->fetch();
+    // dump($objReportCalifications);die;
 
-  return $objReportCalifications;
-
-}
+    return $objReportCalifications;
+  }
 
   public function getBachiller($id) {
         
@@ -592,8 +592,81 @@ public function getReportCalificationsByStudentInscription($studentInscription){
         } catch (Exception $ex) {
             return $ex;
         }
-    }
+  }
 
+  public function getDiploma($rude) {
+    //dump($rude);die;
+    $query = $this->em->createQueryBuilder('t')
+        ->select('t')
+        ->from('SieAppWebBundle:Tramite','t')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei', 'WITH', 'ei.id= t.estudianteInscripcion')
+        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
+        ->where('t.esactivo = true')
+        ->andwhere('e.codigoRude = :rude')
+        ->andwhere('t.tramiteTipo in (1,2,6,7,8)')
+        ->setParameter('rude', $rude)
+        ->getQuery()
+        ->getResult();
+    if($query){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  public function getJuegos($rude) {
+    //dump($rude);die;
+    $query = $this->em->createQueryBuilder('j')
+        ->select('j')
+        ->from('SieAppWebBundle:EstudianteInscripcionJuegos','j')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei', 'WITH', 'ei.id= j.estudianteInscripcion')
+        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
+        ->where('e.codigoRude = :rude')
+        ->setParameter('rude', $rude)
+        ->getQuery()
+        ->getResult();
+    if($query){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  public function getOlimpiadas($rude) {
+    //dump($rude);die;
+    $query = $this->em->createQueryBuilder('o')
+        ->select('o')
+        ->from('SieAppWebBundle:OlimEstudianteInscripcion','o')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei', 'WITH', 'ei.id= o.estudianteInscripcion')
+        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
+        ->where('e.codigoRude = :rude')
+        ->setParameter('rude', $rude)
+        ->getQuery()
+        ->getResult();
+    if($query){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  public function getBachillerDestacado($rude) {
+    //dump($rude);die;
+    $query = $this->em->createQueryBuilder('b')
+        ->select('b')
+        ->from('SieAppWebBundle:EstudianteDestacado','b')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei', 'WITH', 'ei.id= b.estudianteInscripcion')
+        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
+        ->where('e.codigoRude = :rude')
+        ->setParameter('rude', $rude)
+        ->getQuery()
+        ->getResult();
+    if($query){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
 }
  ?>

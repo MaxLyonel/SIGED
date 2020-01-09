@@ -1,0 +1,98 @@
+Sie\AppWebBundle\Entity\Tmpobssegip:
+    type: entity
+    table: tmpobssegip
+    id:
+        idest:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        complementovisible:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        numerodocumento:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        nombres:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        primerapellido:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        segundoapellido:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        apellidoesposo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechanacimiento:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        esvalido:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        mensaje:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        tipomensaje:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        codigorespuesta:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        codigounico:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        descripcionrespuesta:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

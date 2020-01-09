@@ -1,0 +1,74 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <!-- Start page header -->
+        <div class="modal-header">
+            <h4><i class="fa fa-table"></i> Formulario <span>Firma Electrónica</span></h4>
+        </div><!-- /.header-content -->
+        <!--/ End page header -->
+        <div class="modal-body">
+            {% if form is defined  %}
+                {{form_start(form, { 'attr': {'id':'form', 'data-toggle': 'validator','role': "form"} } )}}   
+                    {{ form_widget( form.id ) }} 
+                    {{ form_widget( form.firma ) }} 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                <div class="fileinput-preview thumbnail col-md-12" style="min-height: 200px;" data-trigger="fileinput" ></div>
+                                <div>
+                                    <span class="btn btn-info btn-file">
+                                        <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                        <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                        {{ form_widget(form.foto, { 'attr': {'class': 'col-sm-12'} }) }} 
+                                    </span>
+                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                </div>
+                            </div> 
+                        </div> 
+                    </div> 
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_widget(form.save,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12',  'data-dismiss':'modal' } } ) }}
+                        </div>
+                    </div>                  
+                {{form_end(form)}}
+            {% endif %}
+        </div> 
+    </div>    
+</div>
+
+<script>            
+    var confirma = function(){
+        var r = confirm("¿ Está seguro de modificar la firma ingresada ?");
+        if (r == true) {
+            var formulario = $('#form')[0];
+            var formData = new FormData(formulario);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_documento_firma_modifica_guarda'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#modal').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    $('#modal').modal('hide');
+                },
+                success: function (data) {
+                    $('#img'+$('#form_id').val()+'').empty();
+                    $('#img'+$('#form_id').val()+'').append('<img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,'+escape(data.firma1)+'" />');
+                },
+                error: function(error){
+                    $('#modal').modal('toggle');
+                },
+            }); 
+            return true;
+        } else {
+            return false;
+        }
+    }      
+
+    $(document).ready(function () { 
+        
+    });
+
+</script>

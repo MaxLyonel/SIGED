@@ -29,7 +29,7 @@
                                     <address>
                                         <strong>Código RUDE/RUDEAL: </strong>{{listaDocumento.rude}}<br>
                                         <strong>Cédula de Identidad: </strong>{{listaDocumento.carnetIdentidad}}<br>
-                                        <strong>Código SIE: </strong>{{listaDocumento.sie}}<br>
+                                        <strong>Código SIE: </strong>{{listaDocumento.sie}} - {{listaDocumento.gestion}}<br>
                                         <strong>Fecha de nacimiento: </strong>{{listaDocumento.fechanacimiento|date('d/m/Y') }}<br>
                                         <strong>Lugar de nacimiento: </strong>
                                             {% if listaDocumento.departamentonacimiento != "" %}{{ listaDocumento.departamentonacimiento }} - {% endif %}
@@ -67,12 +67,13 @@
             </div>
         </div>
         <div class="row message-wrapper rounded shadow mb-20">
-            <div class="col-lg-9 col-md-9 col-sm-6 message-sideleft">
-                <div class="panel panel-invoice rounded">
-                    <div class="panel-sub-heading">
-                        <button type="button" class="btn btn-success btn-lg btn-block"><strong>{{listaDocumento.tramiteTipo}}</strong></button>
-                    </div><!-- /.panel-sub-heading -->
-                    <div class="panel-body">
+            {% if listaTramiteDetalle is defined %}
+                <div class="col-lg-9 col-md-9 col-sm-6 message-sideleft">
+                    <div class="panel panel-invoice rounded">
+                        <div class="panel-sub-heading">
+                            <button type="button" class="btn btn-success btn-lg btn-block"><strong>{{listaDocumento.tramiteTipo}}</strong></button>
+                        </div><!-- /.panel-sub-heading -->
+                        <div class="panel-body">
                             <div class="profile-timeline">
                                 <div class="timeline">
                                     <div class="timeline-item alt">
@@ -168,28 +169,29 @@
                                 </div>
                                 <!--/ End timeline -->
                             </div>
-                    </div><!-- /.panel-body -->
-                    <div class="panel-footer">
-                        {% if msgReactivaTramite is defined  %}
-                            {% if msgReactivaTramite != ""  %}
-                                <div class="alert alert-warning ">
-                                    <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
-                                    <div class="notification-info">
-                                        <ul class="clearfix notification-meta">
-                                            <li class="pull-left notification-sender">{{msgReactivaTramite}}</li>
-                                            <li class="pull-right notification-time"></li>
-                                        </ul>
-                                        <p>
-                                            Verifique sus datos e intente nuevamente
-                                        </p>
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                            {% if msgReactivaTramite is defined  %}
+                                {% if msgReactivaTramite != ""  %}
+                                    <div class="alert alert-warning ">
+                                        <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                        <div class="notification-info">
+                                            <ul class="clearfix notification-meta">
+                                                <li class="pull-left notification-sender">{{msgReactivaTramite}}</li>
+                                                <li class="pull-right notification-time"></li>
+                                            </ul>
+                                            <p>
+                                                Verifique sus datos e intente nuevamente
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </div><!-- /.panel-footer -->
+                        </div><!-- /.panel-footer -->
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 message-sideright clearfix">
+            {% endif %}
+            <div {% if listaTramiteDetalle is defined %}class="col-lg-3 col-md-3 col-sm-6 message-sideright clearfix"{% else %}class="col-lg-12 col-md-12 col-sm-12 message-sideright clearfix"{% endif %}>
                 <div class="panel panel-invoice rounded">
                     <div class="panel-sub-heading">
                         <button type="button" class="btn btn-lilac btn-lg btn-block"><strong>&nbsp;</strong></button>

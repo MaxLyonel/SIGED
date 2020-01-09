@@ -19,9 +19,11 @@ sie_juegos_clasificacion_lista_deportistas:
 sie_juegos_clasificacion_lista_deportistas_registro:
     path:    /lista/deportistas/registro
     defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasRegistro }
+    options:
+         expose: true  
 
 sie_juegos_eliminacion_clasificacion_deportista:
-    path:    /eliminacion/prueba/estudiantes/f1/{inscripcion}
+    path:    /eliminacion/prueba/estudiantes
     defaults: { _controller: SieJuegosBundle:Clasificacion:eliminaPruebaInscripcion }
     options:
          expose: true 
@@ -33,6 +35,10 @@ sie_juegos_clasificacion_lista_deportistas_inscritos_fase:
 sie_juegos_clasificacion_lista_deportistas_inscritos_fase_nacional:
     path:    /lista/deportistas/clasificados/fase/nacional/{fase}/{usuario}
     defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasClasificadosNacionalDescargaPdf } 
+
+sie_juegos_clasificacion_seguimiento_deportistas_inscritos_fase_nacional:
+    path:    /lista/deportistas/clasificados/seguimiento/fase/nacional/{fase}/{usuario}
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasClasificadosSeguimientoDescargaPdf } 
 
 sie_juegos_clasificacion_lista_deportistas_aspirantes_fase:
     path:    /lista/deportistas/aspirante/fase/{fase}/{usuario}

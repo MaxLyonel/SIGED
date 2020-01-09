@@ -4,6 +4,7 @@
     </div>
     <div class="panel-body">
         <div class="row" align="center">
+        <input type="hidden" name="roluser" id="roluser" value="{{app.session.get('roluser')}}">
             <div class="form-group col-lg-4 col-md-6" align="center">
                <h4>Nombre(s): <small>{{ persona.nombre }}</small></h4>
             </div>
@@ -95,8 +96,8 @@
                         {% if plan == 1 and (fila.ciclo_tipo_id == 1 or fila.ciclo_tipo_id == 2) or plan == 2 and (fila.ciclo_tipo_id == 34  or fila.ciclo_tipo_id == 35) %}
                         <tr>
                             <td>{{ fila.id }}</td>
-                            <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Imprimir Curso"></a></td>
-                            <!--<td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
+                            <td><a role="button" class="btn rounded rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Imprimir Curso"></a></td>
+                            <!--<td><a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
                             <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
                             <td>{{ fila.nombre }}</td>                            
                             <td>{{ fila.paterno }}</td>
@@ -111,7 +112,7 @@
                                 <td>Último Curso</td>
                             {% else %}
                                 {% if fila.esactivo == 1 %}
-                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
+                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn rounded btn-success rounded btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
                                 {% else %}
                                     <td>Curso Abierto.</td>
                                 {% endif %}
@@ -203,8 +204,7 @@ function modaluserclose(){
     });
 
  function validar_fecha(){
-    
-
+    var roluser = document.getElementById("roluser").value;
     var f1 = document.getElementById("form_fecha_inicio").value;
     var f2 = document.getElementById("form_fecha_fin").value;
     var plan = document.getElementById("form_plan").value;
@@ -226,8 +226,12 @@ function modaluserclose(){
    // alert(dias_a);return false;
     
     //validamos primero q la fecha (año) inicio no sea mayor que la fecha actual (año)
-    var array_fechasol = f1.split("/")
-    var anio = parseInt(array_fechasol[2])
+    var array_fechasol = f1.split("/");
+    var anio = parseInt(array_fechasol[2]);
+    var array_fechasol = fecha_actual.split("/");
+    var anio_actual = parseInt(array_fechasol[2]);
+    var array_fechasol = f2.split("/")
+    var anio_final = parseInt(array_fechasol[2]);
     // plan antiguo 1 debe estar estre 2009-2017
     if (plan == 1){
         if(anio > 2017 || anio < 2009){
@@ -236,9 +240,17 @@ function modaluserclose(){
         }
     }
     else{//plan 2 nuevo 20018 pero no antes q hoy
-        if(anio < 2018 || dias_a > 0){
-            alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018 y no mayor a la fecha de hoy");
-            return false;   
+        if(roluser == 29){
+            if(anio_final < anio_actual || dias_a > 0){
+                alert("Error!!!. La gestión de la fecha inicial debe ser actual y no mayor a la fecha de hoy");
+                return false;   
+            }
+        }
+        else{
+            if(anio < 2018 || dias_a > 0){
+                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018 y no mayor a la fecha de hoy");
+                return false;   
+            }
         }
     }
     /////////////////////////////////
@@ -260,12 +272,12 @@ function modaluserclose(){
             }    
         }
         else{ // PLAN 2
-            if(dias>=140 && dias<190){
+            if(dias>=140 && dias<=200){
                 document.getElementById("save").style.visibility = 'hidden';
                 return true;
             }
             else{
-                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 200 días (5 meses a 6 meses)");
                 return false;
             }   
         }

@@ -39,6 +39,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
         $this->session->set('removeinscription', false);
+        // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -108,7 +109,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //check if the student exists
         if ($objStudent) {
-            $objInscriptionCurrent = $em->getRepository('SieAppWebBundle:Estudiante')->findCurrentStudentInscriptionWithOutEstado($objStudent->getId(), $form['gestion']);
+            // $objInscriptionCurrent = $em->getRepository('SieAppWebBundle:Estudiante')->findCurrentStudentInscriptionWithOutEstado($objStudent->getId(), $form['gestion']);
 
             //validate to student with nivel 11
             /*if($objInscriptionCurrent[0]['nivelId'] == 11){
@@ -150,7 +151,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
       //get the send dataInfo
       $dataInfo = $request->get('dataInfo');
       $arrDataInfo = json_decode($dataInfo,true);
-      //get data student
+
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($arrDataInfo['estId']);
       //get the student's inscription
       $objEstudiantInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
@@ -186,9 +187,10 @@ class RemoveInscriptionStudentFreeController extends Controller {
       // $arrEstados = array('4'=>'Efectivo', '10'=>'Abandono');
       $rolesAllowed = array(7,8,10);
       if(in_array($rolUser,$rolesAllowed)){
-        $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
+        $arrEstados = array('4'=>'EFECTIVO', /*'10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO',*//*'9'=>'RETIRADO TRASLADO'*/);
       }else{
-        $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
+        // $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
+        $arrEstados = array();
       }
 
       return $this->createFormBuilder()
@@ -551,6 +553,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
           $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
           $oldInscriptionStudent = clone $inscriptionStudent;
           $inscriptionStudent->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoNew']));
+          $inscriptionStudent->setObservacion($form['justificacionCE']==null?'':$form['justificacionCE']);//$form['justificacionCE']
           $em->persist($inscriptionStudent);
           $em->flush();
           

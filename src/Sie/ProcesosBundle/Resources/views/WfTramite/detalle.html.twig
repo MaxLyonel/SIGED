@@ -1,0 +1,78 @@
+{# <div class="modal-dialog modal-lg"> #}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="modal-title">
+                <div class="row">
+                    <div class="col-md-3"><h4>Trámite:</h4></div>
+                    <div class="col-md-8"><h4>{{ idtramite }}</h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><h4>Fecha de finalización:</h4></div>
+                    <div class="col-md-8"><h4>{% if fecha_fin != null %}{{ fecha_fin }}{% else %} <span class="label label-warning">PENDIENTE</span> {% endif %}</h4></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="modal-body">
+            <div class="row">
+                
+            </div>
+            <table class="table table-bordered table-primary">
+                <thead>
+                    <tr>
+                        <th style="max-width: 5px">Nro.</th>
+                        <th>Pasos del trámite</th>
+                        <th>Fecha de recepción</th>
+                        <th>Fecha de envío</th>
+                        <th>Fecha de vencimiento</th>
+                        <th>Tiempo duración</th>
+                        <th>Plazo</th>
+                        <th>Estado</th>
+                        <th>Observación</th>
+                        <th>Usuario remitente</th>
+                        <th>Usuario destinatario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in detalle %}
+                        
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ d.proceso_tipo }}</td>
+                            <td>{{ d.fecha_recepcion ? d.fecha_recepcion|date('d-m-Y'):"" }}</td>
+                            <td>{{ d.fecha_envio ? d.fecha_envio|date('d-m-Y'):"" }}</td>
+                            <td class="text-danger">{{ d.fecha_vencimiento ? d.fecha_vencimiento|date('d-m-Y'):"" }}</td>
+                            <td>{{ d.duracion }}</td>
+                            <td>{{ d.plazo }}</td>
+                            {% if d.tramite_estado %}
+                                {% set fecha_fin = d.fecha_fin %}
+                                {% if d.tarea_sig_id == null and d.fecha_envio %}
+                                    <td ><span class="label label-success">TRAMITE CONCLUIDO</span></td>
+                                {% else %}
+                                    <td><span class={% if d.tramite_estado_id in [3,15] %}"label label-success"{% else %}"label label-danger" {% endif %}>{{ d.tramite_estado }}</span></td>
+                                {% endif %}
+                                {% if d.es_evaluacion == true  and d.fecha_envio %}
+                                    <td>¿{{d.variable_evaluacion}}?</br>
+                                         {{d.valor_evaluacion}}</br>
+                                        {% if d.obs  %} Observación: {{d.obs}} {% endif %}
+                                    </td>
+                                {% else %}
+                                    <td>{% if d.obs  %} Observación: {{d.obs}} {% endif %}</td>
+                                {% endif %}
+                            {% else %}
+                                <td> {% if fecha_fin == null %}<span class="label label-warning">PENDIENTE</span>{% endif %}</td>
+                                <td></td>
+                            {% endif %}
+                            <td>{{d.usuario_remitente}}</td>
+                            <td>{{d.usuario_destinatario}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>

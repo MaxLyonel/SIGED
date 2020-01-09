@@ -41,3 +41,7 @@ tramite_documento_supletorio_guarda:
 tramite_documento_supletorio_pdf:
     path:     /supletorio/pdf
     defaults: { _controller: SieTramitesBundle:Documento:supletorioPdf }
+
+tramite_documento_serie_disponible:
+    path:     /serie/disponible
+    defaults: { _controller: SieTramitesBundle:Documento:serieDisponible }

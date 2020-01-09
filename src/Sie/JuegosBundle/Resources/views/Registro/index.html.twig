@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <!-- Start color horizontal tabs -->
                 <div class="panel panel-tab panel-tab-double shadow">
                     <!-- Start tabs heading -->
@@ -61,57 +61,135 @@
                 <!--/ End color horizontal tabs -->
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                <div class="panel shadow">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Estudiantes para registrar</h3>
-                        </div><!-- /.pull-left -->
-                        <div class="pull-right">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Estudiantes para registrar</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
 
-                        </div><!-- /.pull-right -->
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label class="required">Deportistas Seleccionados: </label>
-                                        <div id="listaSeleccionado"></div>
+                                </div><!-- /.pull-right -->
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="listaEquipo"></div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="form-group">                                   
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="required">Deportistas Seleccionados: </label>
+                                            <div id="listaSeleccionado"></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button type="button" name="botonAceptar" id="botonAceptar" class="btn btn-success col-md-12" disabled="true" onclick="return verificaCampos()">Guardar</button>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" name="botonAceptar" id="botonAceptar" class="btn btn-success col-md-12" disabled="true" onclick="return verificaCampos()">Guardar</button>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--/ End project overview -->
-                    </div><!-- /.panel-body -->
-                </div>
-                <div class="panel shadow">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Deportistas Registrados</h3>
-                        </div><!-- /.pull-left -->
-                        <div class="pull-right">
-                            <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':0,'usuario':app.session.get('userId')}) }}" method="POST">
-                                <input type="hidden" name="id" id="id" value="" />
-                                <button id="botonLista" name="botonLista" type="submit" title="Descargar en formato PDF" class="btn btn-lilac" disabled="true">
-                                    <i class="fa fa-1x fa-file-pdf-o" aria-hidden="true"></i> Listado
-                                </button>
-                            </form>
+                                <!--/ End project overview -->
+                            </div><!-- /.panel-body -->
                         </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <ul class="list-unstyled list-real-estate">
-                            <div id="listaParticipante"></div>
-                        </ul>
-                    </div><!-- /.panel-body -->
+                    </div>    
                 </div>
+                {% if 1 > 1 %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Acompañantes para registrar</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+
+                                    </div><!-- /.pull-right -->
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="required">Acompañantes Seleccionados: </label>
+                                                <div id="listaDelegadoSeleccionado"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" name="botonAceptar" id="botonAceptar" class="btn btn-success col-md-12" disabled="true" onclick="return verificaCampos()">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/ End project overview -->
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>    
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Deportistas Registrados</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
+                                    <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':0,'usuario':app.session.get('userId')}) }}" method="POST">
+                                        <input type="hidden" name="id" id="id" value="" />
+                                        <button id="botonLista" name="botonLista" type="submit" title="Descargar en formato PDF" class="btn btn-lilac" disabled="true">
+                                            <i class="fa fa-1x fa-file-pdf-o" aria-hidden="true"></i> Listado
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body small">      
+                                <div id="listaParticipante"></div> 
+                            </div><!-- /.panel-body -->
+                        </div>     
+                    </div>
+                </div>
+                {% if 1 > 1 %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Acompañantes Registrados</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                        <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':0,'usuario':app.session.get('userId')}) }}" method="POST">
+                                            <input type="hidden" name="id" id="id" value="" />
+                                            <button id="botonLista" name="botonLista" type="submit" title="Descargar en formato PDF" class="btn btn-lilac" disabled="true">
+                                                <i class="fa fa-1x fa-file-pdf-o" aria-hidden="true"></i> Listado
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <ul class="list-unstyled list-real-estate">
+                                        <div id="listaParticipanteDelegado"></div>
+                                    </ul>
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <!-- /.row -->
         </div>
@@ -131,7 +209,8 @@
             $("#form_sie").focus();
         });
 
-        function validarBotonGuardar(){
+        
+        var validarBotonGuardar = function (){
             if($('[name="deportistas[]"]').length > 0 && $("#form_prueba").val() != ""){
                 $("#botonAceptar").removeAttr('disabled');
             } else {
@@ -142,14 +221,15 @@
             //});
         }
 
-        function chekedOff() {
+        var chekedOff = function () {
             $('input[type=checkbox]').attr('checked',false);
         };
 
-        function verificaCampos(){
+        var verificaCampos = function (){
             var peticion;
             var selecionados = $('[name="deportistas[]"]');
             var deportistas = new Array();
+            var equipo = $("#equipo").val();
             var sie = $("#form_sie").val();
             var prueba = $("#form_prueba").val();
             var nivel = $("#form_nivel").val();
@@ -165,7 +245,7 @@
                     peticion = $.ajax({
                         type: 'POST',
                         url: '{{ path('sie_juegos_registro_fp_busqueda_grado_estudiante_save')}}',
-                        data: {'sie': sie, 'prueba': prueba, 'deportistas': deportistas, 'nivel': nivel},
+                        data: {'sie': sie, 'prueba': prueba, 'deportistas': deportistas, 'nivel': nivel, 'equipo': equipo},
                         beforeSend: function () {
                             $("#form_nivel").attr('disabled', 'true');
                             $("#form_genero").attr('disabled', 'true');
@@ -174,8 +254,7 @@
                             //$("#form_posicion").attr('disabled', 'true');
                             $("#botonAceptar").attr('disabled', 'true');
                             //$('[name="estudiantes[]"]').attr('disabled',true);
-                            $("#listaParticipante").empty();
-                            $("#listaParticipante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                            $("#listaParticipante").prepend('<div id="load" name="load" style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                         },
                         success: function (data) {
                             $("#form_nivel").removeAttr('disabled');
@@ -186,20 +265,87 @@
                             $('[name="estudiantes[]"]').removeAttr('disabled');
                             $("#listaSeleccionado").empty();
                             chekedOff();
-                            $("#listaParticipante").empty();
-                            if(data.msg_incorrecto != ''){
-                                $("#listaParticipante").append('<div class="alert alert-danger"><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
-                            }
-                            if(data.msg_correcto != ''){
-                                $("#listaParticipante").append('<div class="alert alert-success"><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                            $("#load").remove();
+
+                            var divLista = "";
+                            var c = 0;
+                            var expanded = "";
+                            if (data.registrados){
+                                $("#listaParticipante").empty();
+                                if (data.conjunto){         
+                                    divLista = '<div class="panel-group rounded shadow" id="accordionlistaParticipante">';                     
+                                    $.each(data.registrados, function (i, participante) {                 
+                                        divLista = divLista + '<div class="panel panel-default">';                 
+                                        divLista = divLista + '<div class="panel-heading no-border">';                 
+                                        divLista = divLista + '<h5 class="panel-title">';  
+                                        if(c == 0){
+                                            var expanded = 'aria-expanded="true"';
+                                            var expandedClass = 'in';
+                                        } else {
+                                            var expanded = 'aria-expanded="false" class="collapsed"';
+                                            var expandedClass = '';
+                                        }             
+                                        divLista = divLista + '<a data-toggle="collapse" data-parent="#accordionlistaParticipante" href="#collapse'+i+'" '+expanded+'>Equipo'+i+'</a>';                 
+                                        divLista = divLista + '</h5>';                       
+                                        divLista = divLista + '</div>';     
+                                        divLista = divLista + '<div id="collapse'+i+'" class="panel-collapse collapse '+expandedClass+'" '+expanded+' >';                 
+                                        divLista = divLista + '<div class="panel-body">';                     
+                                        divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                        $.each(participante, function (j, value) {
+                                            divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                        });                                            
+                                        divLista = divLista + '</ul>';  
+                                        divLista = divLista + '</div>';                               
+                                        divLista = divLista + '</div>';    
+                                        c = c + 1;  
+                                    });                             
+                                    divLista = divLista + '</div>';  
+                                // var equipos = data.equipos;
+                                    $("#listaEquipo").empty();
+                                    $("#listaEquipo").append('<select id="equipo" name="equipo" required="required" class="form-control input-sm"></select>');
+                                    $("#equipo").empty();
+                                    $.each(data.equipos, function (i, value) {
+                                        $("#equipo").append('<option value="' + i + '">' + value + '</option>');
+                                    });
+                                } else {
+                                    $.each(data.registrados, function (i, participante) {   
+                                        divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                        $.each(participante, function (j, value) {
+                                            divLista = divLista + '<li id="list' + j + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                        });                                            
+                                        divLista = divLista + '</ul>'; 
+                                    });
+                                }                           
+                                $("#listaParticipante").append(divLista);    
+                                $("#form_posicion").removeAttr('disabled');
+                                $("#form_posicion").focus();
+                                $('#form_posicion').empty();
+                                $("#form_posicion").append('<option value=""></option>');
+                                for (var i in data.posiciones) {
+                                    $("#form_posicion").append('<option value="' + data.posiciones[i].id + '">' + data.posiciones[i].posicion + '</option>');
+                                }
                             }
 
-                            $.each(data.registrados, function (i, value) {
-                                $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-times-circle fg-danger"></i></span></a></div></li>');
-                            });
+                            if(data.msg_incorrecto){
+                                if(data.msg_incorrecto != ''){
+                                    $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                                }
+                            }
+                            if(data.msg_correcto){
+                                if(data.msg_correcto != ''){
+                                    $("#listaParticipante").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto: </strong> '+data.msg_correcto+'</div>');
+                                }
+                            }
+                            
                         },
                         statusCode: {
                             500: function () {
+                                $("#form_nivel").removeAttr('disabled');
+                                $("#form_genero").removeAttr('disabled');
+                                $("#form_disciplina").removeAttr('disabled');
+                                $("#form_prueba").removeAttr('disabled');
+                                $('[name="estudiantes[]"]').removeAttr('disabled');
+                                $("#listaParticipante").prepend('<div class="alert alert-danger"><strong>Error: </strong> intente nuevamente</div>');
                             },
                             404: function () {
                             }
@@ -212,10 +358,13 @@
                 alert("Debe seleccionar una prueba y un estudiante como mínimo");
                 return false;
             }
-        }
+        };
 
-        function listar_nivel(sie) {
+        var listar_nivel = function (sie) {
             var peticion;
+            
+            var sie =  sie.replace(/[^0-9]/g,'');
+
             if(sie.length>=8){
                 peticion = $.ajax({
                     type: 'POST',
@@ -241,6 +390,7 @@
                         $("#form_grado_participante").empty();
                         $("#listaSeleccionado").empty();
                         $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
                         $("#botonLista").attr('disabled', 'true');
                     },
                     success: function (data) {
@@ -258,6 +408,7 @@
                             $("#botonLista").removeAttr('disabled');
                         }
                     },
+                    timeout: 5000, // sets timeout to 3 seconds
                     statusCode: {
                         500: function () {
                         },
@@ -266,6 +417,7 @@
                     }
                 });
             } else {
+                $("#form_sie").val(sie);
                 $("#form_nivel").attr('disabled', 'true');
                 $('#form_nivel').empty();
                 $("#form_nivel").append('<option value="">Seleccionar nivel</option>');
@@ -285,12 +437,13 @@
                 $("#form_grado_participante").empty();
                 $("#listaSeleccionado").empty();
                 $("#listaParticipante").empty();
+                $("#listaEquipo").empty();
                 $("#botonLista").attr('disabled', 'true');
                 return false;
             }
-        }
+        };
 
-        function listar_genero(nivel) {
+        var listar_genero = function (nivel) {
             var peticion;
             if(nivel != "" && $("#form_sie").val() != ""){
                 peticion = $.ajax({
@@ -314,6 +467,7 @@
                         $("#form_grado_participante").empty();
                         $("#listaSeleccionado").empty();
                         $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
                     },
                     success: function (data) {
                         if (data.generos == '') {
@@ -352,11 +506,12 @@
                 $("#form_grado_participante").empty();
                 $("#listaSeleccionado").empty();
                 $("#listaParticipante").empty();
+                $("#listaEquipo").empty();
                 return false;
             }
-        }
+        };
 
-        function listar_disciplina(genero) {
+        var listar_disciplina = function (genero) {
             var peticion;
             if(genero != "" && $("#form_nivel").val() != "" && $("#form_sie").val() != ""){
                 peticion = $.ajax({
@@ -377,6 +532,7 @@
                         $('#form_grado_participante').empty();
                         $("#listaSeleccionado").empty();
                         $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
                     },
                     success: function (data) {
                         if (data.disciplinas == '') {
@@ -426,11 +582,12 @@
                 $("#form_posicion").append('<option value="">Seleccionar posición</option>');
                 $("#listaSeleccionado").empty();
                 $("#listaParticipante").empty();
+                $("#listaEquipo").empty();
                 return false;
             }
-        }
+        };
 
-        function listar_prueba(disciplina) {
+        var listar_prueba = function (disciplina) {
             var peticion;
             if(disciplina != "" && $("#form_genero").val() != ""){
                 peticion = $.ajax({
@@ -446,6 +603,7 @@
                         $("#form_posicion").append('<option value="">Seleccionar posición</option>');
                         $("#listaSeleccionado").empty();
                         $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
                         chekedOff();
                     },
                     success: function (data) {
@@ -477,12 +635,13 @@
                 $("#form_posicion").append('<option value="">Seleccionar posición</option>');
                 $("#listaSeleccionado").empty();
                 $("#listaParticipante").empty();
+                $("#listaEquipo").empty();
                 chekedOff();
                 return false;
             }
-        }
+        };
 
-        function listar_posicion(prueba) {
+        var listar_posicion = function (prueba) {
             var peticion;
             if(prueba != ""){
                 peticion = $.ajax({
@@ -520,9 +679,9 @@
                 $("#form_posicion").append('<option value="">Seleccionar posición</option>');
                 return false;
             }
-        }
+        };
 
-        function listar_grado_estudiante(grado){
+        var listar_grado_estudiante = function (grado){
             var peticion;
             if(grado != "" && $("#form_nivel").val() != "" && $("#form_sie").val() != "" && $("#form_genero").val() != ""){
                 peticion = $.ajax({
@@ -554,18 +713,19 @@
                 $("#form_posicion").append('<option value="">Seleccionar posición</option>');
                 return false;
             }
-        }
+        };
 
-        function listar_registrado(prueba){
+        var listar_registrado = function (prueba){
             var peticion;
             if(prueba != "" && $("#form_sie").val() != "" ){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_fp_busqueda_unidadeducativa_prueba_deportista')}}',
+                    url: "{{ path('sie_juegos_registro_fp_busqueda_unidadeducativa_prueba_deportista')}}",
                     data: {'prueba': prueba, 'sie': $("#form_sie").val()},
                     beforeSend: function () {
                         $("#listaSeleccionado").empty();
                         $("#listaParticipante").empty();
+                        $("#listaEquipo").empty();
                         $("#listaParticipante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                         chekedOff();
                         $("#form_posicion").attr('disabled', 'true');
@@ -574,9 +734,55 @@
                     },
                     success: function (data) {
                         $("#listaParticipante").empty();
-                        $.each(data.participantes, function (i, value) {
-                            $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-times-circle fg-danger"></i></span></a></div></li>');
-                        });
+                        var divLista = "";
+                        var c = 0;
+                        var expanded = "";
+
+                        if (data.conjunto){         
+                            divLista = '<div class="panel-group rounded shadow" id="accordionlistaParticipante">';                     
+                            $.each(data.participantes, function (i, participante) {                 
+                                divLista = divLista + '<div class="panel panel-default">';                 
+                                divLista = divLista + '<div class="panel-heading no-border">';                 
+                                divLista = divLista + '<h5 class="panel-title">';  
+                                if(c == 0){
+                                    var expanded = 'aria-expanded="true"';
+                                    var expandedClass = 'in';
+                                } else {
+                                    var expanded = 'aria-expanded="false" class="collapsed"';
+                                    var expandedClass = '';
+                                }             
+                                divLista = divLista + '<a data-toggle="collapse" data-parent="#accordionlistaParticipante" href="#collapse'+i+'" '+expanded+'>Equipo'+i+'</a>';                 
+                                divLista = divLista + '</h5>';                       
+                                divLista = divLista + '</div>';     
+                                divLista = divLista + '<div id="collapse'+i+'" class="panel-collapse collapse '+expandedClass+'" '+expanded+' >';                 
+                                divLista = divLista + '<div class="panel-body">';                     
+                                divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                $.each(participante, function (j, value) {
+                                    divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                });                                            
+                                divLista = divLista + '</ul>';  
+                                divLista = divLista + '</div>';                               
+                                divLista = divLista + '</div>';    
+                                c = c + 1;  
+                            });                             
+                            divLista = divLista + '</div>';  
+                        // var equipos = data.equipos;
+                            $("#listaEquipo").empty();
+                            $("#listaEquipo").append('<select id="equipo" name="equipo" required="required" class="form-control input-sm"></select>');
+                            $("#equipo").empty();
+                            $.each(data.equipos, function (i, value) {
+                                $("#equipo").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                        } else {
+                            $.each(data.participantes, function (i, participante) {   
+                                divLista = divLista + '<ul class="list-group no-margin">';                                                    
+                                $.each(participante, function (j, value) {
+                                    divLista = divLista + '<li id="list' + j + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                });                                            
+                                divLista = divLista + '</ul>'; 
+                            });
+                        }                           
+                        $("#listaParticipante").append(divLista);                     
                         $("#form_posicion").removeAttr('disabled');
                         $("#form_posicion").focus();
                         $('#form_posicion').empty();
@@ -595,17 +801,18 @@
             } else {
                 $('#listaParticipante').empty();
                 $("#listaSeleccionado").empty();
+                $("#listaEquipo").empty();
                 chekedOff();
                 $("#form_posicion").attr('disabled', 'true');
                 $('#form_posicion').empty();
                 $("#form_posicion").append('<option value="">Seleccionar posición</option>');
                 return false;
             }
-        }
+        };
 
 
 
-        function listar_selecionado(es, des){
+        var listar_selecionado = function (es, des){
             var deportistas = document.getElementsByName('deportistas[]');
             //var botonAceptar = document.getElementById('form_submit');
             var elemento = document.getElementById('idd' + es.value);
@@ -634,9 +841,9 @@
                 }
             }
             validarBotonGuardar();
-        }
+        };
 
-        function getEliminarInscripcion(es) {
+        var getEliminarInscripcion = function (es) {
             var r = confirm("¿ Desea eliminar al estudiante seleccionados ?");
             if (r == true) {
                 $.ajax({
@@ -646,14 +853,16 @@
                     beforeSend: function () {
                     },
                     success: function (data) {
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                            }
+                        }
+                        var elemento = document.getElementById('list' + es);
                         if(data.registro[0]){
-                            $("#listaParticipante").empty();
-                            $("#listaParticipante").append('<div class="alert alert-success"><strong>Correcto: </strong> '+data.registro[1]+'</div>');
-                            $.each(data.participantes, function (i, value) {
-                                $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-times-circle fg-danger"></i></span></a></div></li>');
-                            });
+                            elemento.remove();
                         } else {
-                            $("#listaParticipante").append('<div class="alert alert-danger"><strong>Error: </strong> '+data.registro[1]+'</div>');
+                            $("#listaParticipante").prepend('<div class="alert alert-danger"><strong>Error: </strong> '+data.registro[1]+'</div>');
                         }
                     },
                     statusCode: {
@@ -666,7 +875,7 @@
             } else {
                 return false;
             }
-        }
+        };
 
         /**
          * this is to the tree menu option

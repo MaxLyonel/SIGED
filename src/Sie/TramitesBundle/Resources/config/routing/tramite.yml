@@ -65,6 +65,18 @@ tramite_diploma_humanistico_alternativa_registro_guarda:
     path:     /diploma/humanistico/alternativa/registro/guarda
     defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroGuarda }
 
+tramite_diploma_humanistico_registro_diplomatico_busca:
+    path:     /diploma/humanistico/registro/diplomatico/busca
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegistroDiplomaticoBusca }
+
+tramite_diploma_humanistico_registro_diplomatico_lista:
+    path:     /diploma/humanistico/registro/diplomatico/lista
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegistroDiplomaticoLista }
+
+tramite_diploma_humanistico_registro_diplomatico_guarda:
+    path:     /diploma/humanistico/registro/diplomatico/guarda
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegistroDiplomaticoGuarda }
+
 # DIPLOMA TÉCNICO HUMANISTICO GESTIONES PASADAS PARA REGULARIZACION
 tramite_tecnico_humanistico_recepcion:
     path:     /tecnico/humanistico/recepcion
@@ -104,5 +116,11 @@ tramite_reactiva_guarda:
 tramite_anula:
     path:     /anula
     defaults: { _controller: SieTramitesBundle:Tramite:anulaGuarda }
+    options:
+         expose: true  
+
+tramite_dato_personal_verifica:
+    path:     /dato/persona/verifica
+    defaults: { _controller: SieTramitesBundle:Tramite:datoPersonalVerifica }
     options:
          expose: true  

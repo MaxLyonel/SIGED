@@ -102,13 +102,24 @@
                                 {% for estudiante in estudiantesF%}
                                     <tr>
                                         <td style="width: .1em">{{ loop.index }}</td>
-                                        <td><a href="#" onclick="openHistoryInsc({{estudiante.estId}})" data-toggle="tooltip" data-placement="right" title="Ver historial de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-info-circle"></i> {{ estudiante.codigoRude }}</a></td>
+                                        <td>{{ estudiante.codigoRude }}</td>
                                         <td>{{ estudiante.carnetIdentidad }}</td>
                                         <td>{{ estudiante.paterno }}</td>
                                         <td>{{ estudiante.materno }}</td>
                                         <td>{{ estudiante.nombre }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
-                                        <td class="text-center"><a href="#" onclick="openRegistroBachiller({{estudiante.estId}}, {{estudiante.estinsId}}, {{estudiante.instId}}, {{estudiante.genId}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a></td>
+                                        <td class="text-center">
+                                            {% if estudiante.segipId == 1 %}
+                                                <a href="#" onclick="openRegistroBachiller({{estudiante.estId}}, {{estudiante.estinsId}}, {{estudiante.instId}}, {{estudiante.genId}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>
+                                            {% else %}
+                                                <span class="text-danger">Estudiante con observación</span>
+                                                <form action="{{path('bach_exc_alt_validar_estudiante_segip')}}" method="post">
+                                                    <input type="hidden" id="form_idEstudiante" name="form[idEstudiante]" value="{{estudiante.estId}}">
+                                                    <input type="hidden" id="form_subsistema" name="form[subsistema]" value="1">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -148,13 +159,24 @@
                                 {% for estudiante in estudiantesM%}
                                     <tr>
                                         <td style="width: .1em">{{ loop.index }}</td>
-                                        <td><a href="#" onclick="openHistoryInsc({{estudiante.estId}})" data-toggle="tooltip" data-placement="right" title="Ver historial de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-info-circle"></i> {{ estudiante.codigoRude }}</a></td>
+                                        <td>{{ estudiante.codigoRude }}</td>
                                         <td>{{ estudiante.carnetIdentidad }}</td>
                                         <td>{{ estudiante.paterno }}</td>
                                         <td>{{ estudiante.materno }}</td>
                                         <td>{{ estudiante.nombre }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
-                                        <td class="text-center"><a href="#" onclick="openRegistroBachiller('{{estudiante.estId}}', '{{estudiante.estinsId}}', '{{estudiante.instId}}', '{{estudiante.genId}}')" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-pencil-square"></i> Registrar Calificación</a></td>
+                                        <td class="text-center">
+                                            {% if estudiante.segipId == 1 %}
+                                                <a href="#" onclick="openRegistroBachiller('{{estudiante.estId}}', '{{estudiante.estinsId}}', '{{estudiante.instId}}', '{{estudiante.genId}}')" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>
+                                            {% else %}
+                                                <span class="text-danger">Estudiante con observación</span>
+                                                <form action="{{path('bach_exc_alt_validar_estudiante_segip')}}" method="post">
+                                                    <input type="hidden" id="form_idEstudiante" name="form[idEstudiante]" value="{{estudiante.estId}}">
+                                                    <input type="hidden" id="form_subsistema" name="form[subsistema]" value="1">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

@@ -606,7 +606,6 @@ class DefaultController extends Controller
         $em->getConnection()->beginTransaction();
         $data = $request->get('sie_usuarios_form');
         $response = new JsonResponse();
-        
 //        print_r($data['maestroinsid']);
 //        die('g');
         try {
@@ -629,7 +628,8 @@ class DefaultController extends Controller
                 $em->flush();
             }
             if ($data['accion'] === 'new'){
-                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($data['idusuario']);
+                $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['idpersona']);
+                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona'=>$data['idpersona']));
             }
 //            if ($data['accion'] === 'update'){    
 //                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($data['idusuario']);
@@ -916,17 +916,21 @@ class DefaultController extends Controller
         $response = new JsonResponse();        
         try {
             $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->find($usuariorolid);
+            $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuarioid);
             $esActivoRol = $usuariorol->getEsActivo();                    
+
             if ($esActivoRol == 'true')
                 {
-                $usuariorol->setEsActivo('false');            
+                $usuariorol->setEsActivo('false');
+                $em->flush();            
                 }
             else
                 {
-                $usuariorol->setEsActivo('true');                
+                $usuariorol->setEsActivo('true'); 
+                $em->flush();               
+                $usuario->setEsActivo('true');  
+                $em->flush();
                 }
-            $em->persist($usuariorol);
-            $em->flush();
             
             $em->getConnection()->commit();
             return $response->setData(array(

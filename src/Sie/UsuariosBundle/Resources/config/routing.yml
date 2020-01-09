@@ -128,4 +128,8 @@ sie_gestion_estudiante:
     
 sie_usuarios_estadisticas:
     path:     /estadisticasusuarios
-    defaults: { _controller: SieUsuariosBundle:Default:estadisticasusuarios }    
+    defaults: { _controller: SieUsuariosBundle:Default:estadisticasusuarios }
+
+sie_gestion_menu_principal:
+    path:     /sie/gestionmenu_principal/
+    defaults: { _controller:  SieAppWebBundle:GestionMenu:inicio  }

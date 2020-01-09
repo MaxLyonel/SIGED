@@ -7,11 +7,13 @@ cantidad: {{ contador }}
 			<th>NUM</th>
 			<th>DEPTO</th>
 			<th>MUNICIPIO</th>
+			<th>LOCALIDAD</th>
 			<th>ID_CURSO</th>
 			<th>FACILITADOR</th>
 			<th>CARNET</th>
-			<th>BLOQUE</th>
-			<th>PARTE</th>
+			<th>COMPLEMENTO</th>
+			<th>CICLO</th>
+			<th>GRADO</th>
 			<th>INSC</th>
 			<th>GRAD</th>
 			<th>FECHA_INICIO</th>
@@ -25,9 +27,11 @@ cantidad: {{ contador }}
 				<td>{{fila.num}}</td>
 				<td>{{fila.depto}}</td>
 				<td>{{fila.municipio}}</td>
+				<td>{{fila.localidad|title}}</td>
 				<td>{{fila.id_curso}}</td>
-				<td>{{fila.facilitador}}</td>
+				<td>{{fila.facilitador|title}}</td>
 				<td>{{fila.carnet}}</td>
+				<td>{{fila.complemento}}</td>
 				<td>{{fila.bloque}}</td>
 				<td>{{fila.parte}}</td>
 				<td>{{fila.insc}}</td>

@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityRepository;
 
 use Sie\AppWebBundle\Entity\FlujoTipo;
 use Sie\AppWebBundle\Form\FlujoTipoType;
+use Sie\AppWebBundle\Entity\WfFlujoInstitucioneducativaTipo;
+
 
 
 /**
@@ -43,7 +45,11 @@ class FlujoTipoController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('SieAppWebBundle:FlujoTipo')->findBy(array(),array('id'=>'ASC'));
+        $entities = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
+                    ->select('ft')
+                    ->where('ft.id >4')
+                    ->getQuery()
+                    ->getResult();
 
         return $this->render('SieProcesosBundle:FlujoTipo:index.html.twig', array(
             'entities' => $entities,
@@ -55,10 +61,13 @@ class FlujoTipoController extends Controller
      */
     public function createAction(Request $request)
     {
+        //dump($request->get('sie_appwebbundle_flujotipo'));die;
+        $datos = $request->get('sie_appwebbundle_flujotipo');
         $entity = new FlujoTipo();
         $form = $this->createCreateForm($entity);
+        
         $form->handleRequest($request);
-
+        //dump($datos);die;
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();   
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('flujo_tipo');")->execute();
@@ -66,8 +75,21 @@ class FlujoTipoController extends Controller
             $query->execute();
             $proceso = $query->fetchAll();
             if(!$proceso){
+                $entity->setFlujo(mb_strtoupper($datos['flujo'],'UTF-8'));
+                $entity->setObs(mb_strtoupper($datos['obs'],'UTF-8'));
                 $em->persist($entity);
                 $em->flush();
+                
+                foreach($datos['institucioneducativaTipo'] as $iet){
+                    //dump($ieFlujo,$iet);die;
+                    $wfFlujoiet = new WfFlujoInstitucioneducativaTipo();
+                    $wfFlujoiet->setFlujoTipo($em->getRepository('SieAppWebBundle:FlujoTipo')->find($entity->getId()));
+                    $wfFlujoiet->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($iet));
+                    $wfFlujoiet->setEsactivo(true);
+                    $em->persist($wfFlujoiet);
+                    $em->flush();
+                }
+
                 $mensaje = 'El proceso ' . $entity->getFlujo() . ' se registró con éxito';
                 $request->getSession()
                     ->getFlashBag()
@@ -97,7 +119,7 @@ class FlujoTipoController extends Controller
      */
     private function createCreateForm(FlujoTipo $entity)
     {
-        $form = $this->createForm(new FlujoTipoType(), $entity, array(
+            $form = $this->createForm(new FlujoTipoType($this->getDoctrine()->getManager()), $entity, array(
             'action' => $this->generateUrl('flujotipo_create'),
             'method' => 'POST',
         ));
@@ -179,7 +201,7 @@ class FlujoTipoController extends Controller
     */
     private function createEditForm(FlujoTipo $entity)
     {
-        $form = $this->createForm(new FlujoTipoType(), $entity, array(
+        $form = $this->createForm(new FlujoTipoType($this->getDoctrine()->getManager()), $entity, array(
             'action' => $this->generateUrl('flujotipo_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -197,7 +219,7 @@ class FlujoTipoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SieAppWebBundle:FlujoTipo')->find($id);
-
+        
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find FlujoTipo entity.');
         }
@@ -207,6 +229,27 @@ class FlujoTipoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $form = $request->get('sie_appwebbundle_flujotipo');
+            $entity->setFlujo(strtoupper($form['flujo']));
+            $entity->setObs(strtoupper($form['obs']));
+            
+            //ELIMINAMOS LOS SISTEMAS DEL FLUJO
+            $eliminarSistemas = $em->createQueryBuilder()
+            ->delete('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf')
+            ->where('wf.flujoTipo = '.$id)
+            ->getQuery()
+            ->getResult();
+            
+            //REGISTRAMOS LOS SISTEMAS DEL FLUJO
+            foreach($form['institucioneducativaTipo'] as $iet){
+                $wfFlujoiet = new WfFlujoInstitucioneducativaTipo();
+                $wfFlujoiet->setFlujoTipo($em->getRepository('SieAppWebBundle:FlujoTipo')->find($id));
+                $wfFlujoiet->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($iet));
+                $wfFlujoiet->setEsactivo(true);
+                $em->persist($wfFlujoiet);
+                $em->flush();
+            }
+
             $em->flush();
 
             $mensaje = 'El proceso se modificó con éxito';
@@ -265,8 +308,15 @@ class FlujoTipoController extends Controller
                 $query->execute();
                 $query = $em->getConnection()->prepare("delete from wf_pasos_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $id . ")");
                 $query->execute();
+                $query = $em->getConnection()->prepare("delete from wf_usuario_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $id . ")");
+                $query->execute();
                 $query = $em->getConnection()->prepare("delete from flujo_proceso where flujo_tipo_id=" . $id);
                 $query->execute();
+                $eliminarSistemas = $em->createQueryBuilder()
+                                    ->delete('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf')
+                                    ->where('wf.flujoTipo = '.$id)
+                                    ->getQuery()
+                                    ->getResult();
                 $em->remove($entity);
                 $em->flush();
                 $mensaje = 'El proceso se eliminó con éxito';

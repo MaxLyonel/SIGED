@@ -1,3 +1,15 @@
+sie_regular_modifiacion_calificacion_nivelacion:
+    resource: "@SieRegularBundle/Resources/config/routing/modificacionCalificacionNivelacion.yml"
+    prefix:   /sie/modificacion-calificacion-nivelacion
+
+sie_regular_console:
+    resource: "@SieRegularBundle/Resources/config/routing/console.yml"
+    prefix:   /sie/consola
+
+sie_regular_sin_historial_calidad:
+    resource: "@SieRegularBundle/Resources/config/routing/historialCalidad.yml"
+    prefix:   /sie/historialCalidad
+
 sie_regular_modificacion_notas_cero:
     resource: "@SieRegularBundle/Resources/config/routing/modificacionNotasCero.yml"
     prefix:   /sie/modificacionCalificacionesCero
@@ -114,6 +126,10 @@ sie_app_web_usuariogestion:
 sie_regular_students_inscriptions:
     resource: "@SieRegularBundle/Resources/config/routing/studentsInscriptions.yml"
     prefix:   /sie/estudiantesInscritos
+
+sie_regular_students_inscriptions_seguimiento:
+    resource: "@SieRegularBundle/Resources/config/routing/studentsInscriptionSeguimiento.yml"
+    prefix:   /sie/estudiantesInscritoSeguimiento
 
 sie_regular_donwload_file_sie:
     resource: "@SieRegularBundle/Resources/config/routing/downloadFileSie.yml"
@@ -237,7 +253,7 @@ sie_regular_upfileftp_sie_zero:
 
 sie_regular_ue_informacion:
     resource: "@SieRegularBundle/Resources/config/routing/institucionEducativaInformacion.yml"
-    prefix:   /sie/ue/informacion
+    prefix:   /reg/ue/informacion
 
 sie_alternativa_up_file_emp:
     resource: "@SieRegularBundle/Resources/config/routing/upFileEmp.yml"
@@ -355,3 +371,23 @@ sie_app_web_downloadrudefile:
 sie_regular_promedio_calidad:
     resource: "@SieRegularBundle/Resources/config/routing/promedioCalidad.yml"
     prefix:   /sie/promedioCalidad
+
+sie_regular_review_up_sie_file:
+    resource: "@SieRegularBundle/Resources/config/routing/ReviewUpSieFile.yml"
+    prefix:   /sie/reviewupsiefile
+
+sie_regular_reactivar_bth:
+     resource: "@SieRegularBundle/Resources/config/routing/reactivarBTH.yml"
+     prefix:   /sie/reactivarbth
+
+sie_regular_specialmodificationdata_student:
+     resource: "@SieRegularBundle/Resources/config/routing/specialmodificationdatastudent.yml"
+     prefix:   /sie/modificationdata
+
+sie_regular_gestionaoperativoespecialidad:
+     resource: "@SieRegularBundle/Resources/config/routing/gestionaoperativoespecialidad.yml"
+     prefix:   /sie/admopespeciality
+
+sie_regular_lista_operativo_notas_sexto:
+    resource: "@SieRegularBundle/Resources/config/routing/ListaOperativoNotasSexto.yml"
+    prefix:   /sie/listaOperativoNotasSexto

@@ -331,12 +331,19 @@ class ChangestadoqaController extends Controller {
 
             }
             // dump($arrDataInfo);die;
-            $objJuegos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
+            $objJuegos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
             if ($objJuegos) {
                 $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Juegos Plurinacionales";
                 $this->addFlash('okchange', $message);
                 return new JsonResponse(array('message'=>$message, 'gestionSelected'=>$gestionSelected, 'typeMessage'=>0));
             }
+              //verificamos si esta en la tabla de olim_estudiante_inscripcion
+              $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
+              if ($objolim_estudiante_inscripcion) {
+                  $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
+                  $this->addFlash('warningremoveins', $message);
+                  return $this->redirectToRoute('remove_inscription_sie_index');
+              }
               //find the estudent's inscription to do the change
               $inscriptionStudentOBs = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
               foreach ($inscriptionStudentOBs as $key => $value) {
@@ -362,6 +369,126 @@ class ChangestadoqaController extends Controller {
                   $em->remove($element3);
               }
 
+            //paso X borrando objHumanistico
+            $objHumanistico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            foreach ($objHumanistico as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
+              /////////////////////////////////////rude tables
+            $objApoIns = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            //dump($objApoIns);die;
+
+            foreach ($objApoIns as $element) {
+                $objApoInsDat = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findBy(array('apoderadoInscripcion' => $element->getId()));
+                foreach ($objApoInsDat as $element1){
+                    $em->remove($element1);
+                }
+                $em->remove($element);
+            }
+            $em->flush();              
+
+                          //to remove all info about RUDE
+            $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion' =>  $arrDataInfo['estInsId'] ));
+
+            if($objRude){
+
+                $objRudeAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude' => $objRude->getId() ));
+
+                foreach ($objRudeAbandono as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+
+                $objRudeAccesoInternet = $em->getRepository('SieAppWebBundle:RudeAccesoInternet')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeAccesoInternet as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeActividad = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeActividad as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeCentroSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeCentroSalud as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeDiscapacidadGrado = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeDiscapacidadGrado as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeEducacionDiversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeEducacionDiversa as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeIdioma = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeIdioma as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeMedioTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeMedioTransporte as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeMediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeMediosComunicacion as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeRecibioPago = $em->getRepository('SieAppWebBundle:RudeRecibioPago')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeRecibioPago as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeServicioBasico = $em->getRepository('SieAppWebBundle:RudeServicioBasico')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeServicioBasico as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeTurnoTrabajo = $em->getRepository('SieAppWebBundle:RudeTurnoTrabajo')->findBy(array('rude' => $objRude->getId() ));
+                foreach ($objRudeTurnoTrabajo as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();      
+            }
+
+             $objRudeApoderadoInscripcion = $em->getRepository('SieAppWebBundle:RudeApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            foreach ($objRudeApoderadoInscripcion as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
+            $objCdlInscripcion = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId'] ));
+            foreach ($objCdlInscripcion as $element) {
+                $em->remove($element);
+            }
+            $em->flush();            
+
+
+            if ($objRude) {
+                $em->remove($objRude);
+            }
+            $em->flush();
+
+              /////////////////////////////////////rude tables
+
               $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
               $em->remove($inscriptionStudent);
               $em->flush();
@@ -374,6 +501,7 @@ class ChangestadoqaController extends Controller {
                   $em->flush();
                 //}
               }
+
 
               //update the validation process table
               $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($idProceso);

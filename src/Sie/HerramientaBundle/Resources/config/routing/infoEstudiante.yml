@@ -64,6 +64,10 @@ herramienta_info_estudiante_areas:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAreas.yml"
     prefix:   /sie/estudiante_areas
 
+herramienta_info_estudiante_areas_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAreasEstudiante.yml"
+    prefix:   /sie/estudiante_areas_estudiante
+
 herramienta_info_estudiante_notas:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteNotas.yml"
     prefix:   /sie/estudiante_notas
@@ -99,3 +103,51 @@ herramienta_info_estudiante_cerrarRude:
     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:cerrarRude }
     options:
          expose: true
+
+herramienta_info_estudiante_cerrarSextoGrado:
+    path:     /sie/cerrarSextoGrado/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:cerrarSextoGrado }
+    options:
+         expose: true
+
+herramienta_info_estudiante_optionsBth:
+    path:     /sie/getstudentsbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:getStudentsBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_addupdateStudentbth:
+    path:     /sie/addupdateStudentbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:addupdateStudentbth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_removeStudentBth:
+    path:     /sie/removeStudentBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:removeStudentBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_addupStudentbth:
+    path:     /sie/addupStudentbth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:addupStudentbth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_doRemoveStudentBth:
+    path:     /sie/doRemoveStudentBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:doRemoveStudentBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_operativoEspecialidadesBth:
+    path:     /sie/operativoEspecialidadesBth/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:operativoEspecialidadesBth }
+    options:
+         expose: true
+
+herramienta_info_estudiante_closeOperativoSextoSecc:
+    path:     /sie/closeOperativoSextoSecc/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:closeOperativoSextoSecc }
+    options:
+         expose: true         

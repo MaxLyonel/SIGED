@@ -40,23 +40,36 @@
                 {% if mallafin is not empty %}
                     {% for malla in mallafin %}
                         <div class="panel panel-teal">
-                            <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - {{ malla.cantidad }} </div>
+                            <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - Cant. Módulos -
+                             {%  if (malla.cantidad) %}
+                                 {{ malla.cantidad }}
+                                {% else %}
+                                 0
+                                {% endif %}
+                                - Horas -
+                                {%  if (malla.tothoras) %}
+                                    {{ malla.tothoras }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                                </div>
                             <div class="panel-body">
 
-                                {% if (malla.idacreditacion == '1') %}
-                                    {% if (malla.cantidad < '5') %}
-                                        <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
-                                    {% endif %}
-                                {% elseif (malla.idacreditacion == '20') %}
-                                    {% if (malla.cantidad < '5') %}
-                                        <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
-                                    {% endif %}
-                                {% elseif (malla.idacreditacion == '32') %}
-                                    {% if (malla.cantidad < '10') %}
-                                        <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
+                                {% if (app.session.get('ie_per_estado') != '0') %}
+                                    {% if (malla.idacreditacion == '1') %}
+                                        {% if (malla.tothoras < '500') %}
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                        {% endif %}
+                                    {% elseif (malla.idacreditacion == '20') %}
+                                        {% if (malla.tothoras < '500') %}
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                        {% endif %}
+                                    {% elseif (malla.idacreditacion == '32') %}
+                                        {% if (malla.tothoras < '1000') %}
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
-
                                 <br>
                                 {% if (malla.modulo!='') %}
 
@@ -91,8 +104,11 @@
                                                         <td data-title="Acciones" class="text-center">
                                                             {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                                             {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                                            <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-pencil"></i></a>
-                                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
+                                                            {% if (app.session.get('ie_per_estado') != '0') %}
+                                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
+                                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
+
+                                                             {% endif %}
 
                                                         </td>
                                                     </tr>
@@ -129,37 +145,72 @@
 {% block javascripts %}
 
     <script>
-    var nuevoModulo= function (idsip,idesp) {
-       // alert(idesp);
-            $.ajax({
-                type: 'post',
-                url: "{{ path('herramienta_show_modulo_nuevo') }}",
-                data: ({idsip:idsip, idesp:idesp}),
+    var nuevoModulo= function (idsip,idesp,totalhoras,idacred) {
+//       alert(idacred);
+            if((idacred==1)||(idacred==20))
+            {
+                if(totalhoras<=420){
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ path('herramienta_show_modulo_nuevo') }}",
+                        data: ({idsip:idsip, idesp:idesp,totalhoras:totalhoras,idacred:idacred}),
 
-                beforeSend: function () {
-                    $('#modal').empty();
-                },
-                success: function (data) {
-                    $('#modal').empty();
+                        beforeSend: function () {
+                            $('#modal').empty();
+                        },
+                        success: function (data) {
+                            $('#modal').empty();
 
-                    $('#modal').append(data);
-                    $('#modal').modal('show');
-                },
+                            $('#modal').append(data);
+                            $('#modal').modal('show');
+                        },
 
-                statusCode: {
-                    500: function () {
-                    },
-                    404: function () {
-                    }
+                        statusCode: {
+                            500: function () {
+                            },
+                            404: function () {
+                            }
+                        }
+                    });
+                }else{
+                    alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs, por lo que antes de proceder y añadir uno Nuevo, debera editar y cambiar las horas de los modulos anteriormente guardados...');
                 }
-            });
+            }else {
+                if(totalhoras<=920){
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ path('herramienta_show_modulo_nuevo') }}",
+                        data: ({idsip:idsip, idesp:idesp,totalhoras:totalhoras,idacred:idacred}),
+
+                        beforeSend: function () {
+                            $('#modal').empty();
+                        },
+                        success: function (data) {
+                            $('#modal').empty();
+
+                            $('#modal').append(data);
+                            $('#modal').modal('show');
+                        },
+
+                        statusCode: {
+                            500: function () {
+                            },
+                            404: function () {
+                            }
+                        }
+                    });
+                }else{
+                    alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs, por lo que antes de proceder y añadir uno Nuevo, debera editar y cambiar las horas de los modulos anteriormente guardados...');
+                }
+            }
+
         };
 
-    var editarModulo= function (idmodulo,idspm,modulo,horas,idesp) {
+    var editarModulo= function (idmodulo,idspm,modulo,horas,idesp,totalhoras,idacred) {
         $.ajax({
             type: 'post',
             url: "{{ path('herramienta_show_modulo_edit') }}",
-            data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp}),
+            data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp,totalhoras:totalhoras,idacred:idacred}),
             beforeSend: function () {
                 $('#modal').empty();
             },

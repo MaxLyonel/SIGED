@@ -1,0 +1,419 @@
+{% if estado == false %}    
+    <div class="col-xs-12 col-lg-12" id="message">
+        <div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No corresponde la convalidación de libretas escolares para el estudiante {% if formDatoPersonal is defined %}{{ formDatoPersonal.codigoRude }} - {{ formDatoPersonal.nombre }} {{ formDatoPersonal.paterno }} {{ formDatoPersonal.materno }}{% endif %}</div>
+    </div>
+{% else %}
+    <div class="col-xs-12 col-lg-12" id="message">
+    </div>
+    <div class="col-xs-12 col-lg-12">
+        <div class="panel panel-icon panel-teal">
+            {% if formDatoPersonal is defined %}
+                <div class="panel-heading">
+                    Dato personal
+                </div>
+                <div class="panel-body">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Código R.U.D.E.:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.codigoRude }}</button>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Cédula de Identidad:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.carnetIdentidad }}</button>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Complemento:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.complemento }}</button>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Expedido:</label>
+                                <button class="btn form-control btn-xs border">{% if formDatoPersonal.lugarEmitidoId > 0 %}{{ formDatoPersonal.lugarEmitido }}{% endif %}</button>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Pasaporte:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.pasaporte }}</button>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Género:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.genero }}</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label">Paterno:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.paterno }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Materno:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.materno }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Nombre:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.nombre }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Fecha de Nacimiento:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.fechaNacimiento|date('d/m/Y') }}</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label">Pais:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.pais }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Departamento:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.lugarDepartamento }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Provincia:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.lugarProvincia }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Localidad:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.localidad }}</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label">Oficialia:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.oficialia }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Libro:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.libro }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Partida:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.partida }}</button>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Folio:</label>
+                                <button class="btn form-control btn-xs border">{{ formDatoPersonal.folio }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-xs-12 col-lg-12">
+        <div class="panel panel-icon panel-teal">
+            {{form_start(formDatoAcademico, { 'attr': {'id': 'formEstudianteDatoAcademico', 'data-toggle': 'validator','role': "form"} } )}}
+                <input type="hidden" name="form[est]" id="form_est" value="{{formDatoPersonal.id|base64_encode}}" />
+                <div class="panel-heading">
+                    Dato Academico
+                </div>
+                <div class="panel-body">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            {{form_label(formDatoAcademico.institucionEducativa)}}
+                            {{form_widget(formDatoAcademico.institucionEducativa)}}
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(formDatoAcademico.institucionEducativaName)}}
+                            {{form_widget(formDatoAcademico.institucionEducativaName)}}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <button class="btn btn-lilac form-control btn-xs border">3ro.</button>
+                            {{form_widget(formDatoAcademico.gestion1)}}
+                            {% if inscripciones.grado1.estado == false %}
+                                <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                    <div class="fileinput-preview thumbnail col-md-12" style="height: 300px;" data-trigger="fileinput" >                                    
+                                    </div>
+                                    <div>
+                                        <span class="btn btn-info btn-file">
+                                            <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                            <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                            {{ form_widget(formDatoAcademico.libreta1, { 'attr': {'class': 'col-sm-12', 'accept':'image/*'} }) }} 
+                                        </span>
+                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {{ form_widget(formDatoAcademico.libreta1) }} 
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-lilac form-control btn-xs border">4to.</button>
+                            {{form_widget(formDatoAcademico.gestion2)}}
+                            {% if inscripciones.grado2.estado == false %}
+                                <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                    <div class="fileinput-preview thumbnail col-md-12" style="height: 300px;" data-trigger="fileinput" >                                    
+                                    </div>
+                                    <div>
+                                        <span class="btn btn-info btn-file">
+                                            <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                            <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                            {{ form_widget(formDatoAcademico.libreta2, { 'attr': {'class': 'col-sm-12', 'accept':'image/*'} }) }} 
+                                        </span>
+                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {{ form_widget(formDatoAcademico.libreta2) }} 
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-lilac form-control btn-xs border">5to.</button>
+                            {{form_widget(formDatoAcademico.gestion3)}}
+                            {% if inscripciones.grado3.estado == false %}
+                                <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                    <div class="fileinput-preview thumbnail col-md-12" style="height: 300px;" data-trigger="fileinput" >                                    
+                                    </div>
+                                    <div>
+                                        <span class="btn btn-info btn-file">
+                                            <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                            <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                            {{ form_widget(formDatoAcademico.libreta3, { 'attr': {'class': 'col-sm-12', 'accept':'image/*'} }) }} 
+                                        </span>
+                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {{ form_widget(formDatoAcademico.libreta3) }} 
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-lilac form-control btn-xs border">6to.</button>
+                            {{form_widget(formDatoAcademico.gestion4)}}
+                            {% if inscripciones.grado4.estado == false %}
+                                <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                    <div class="fileinput-preview thumbnail col-md-12" style="height: 300px;" data-trigger="fileinput" >                                    
+                                    </div>
+                                    <div>
+                                        <span class="btn btn-info btn-file">
+                                            <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                            <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                            {{ form_widget(formDatoAcademico.libreta4, { 'attr': {'class': 'col-sm-12', 'accept':'image/*'} }) }} 
+                                        </span>
+                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {{ form_widget(formDatoAcademico.libreta4) }} 
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12" id="formFooter">
+                            {{ form_widget(formDatoAcademico.guardar,{'id':'formBtnEstudianteGuardar', 'attr':{'class':'btn btn-primary col-md-12' } } ) }}
+                        </div>
+                    </div>
+                </div>
+            {{form_end(formDatoAcademico)}}
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function(){ 
+              
+            
+    
+            $("#formBtnEstudianteGuardar").click(function () {
+    
+                var botonSubmit = $(this);
+    
+                if($('#form_ci').val() === "" && $('#form_pasaporte').val() === ""){
+                    alert("Debe ingresar la cédula de identidad o pasaporte del bachiller");
+                    $('#form_ci').focus();
+                    return false;
+                }
+    
+                if($('#form_pais').val() === "" || $('#form_pais').val() === 0 || $('#form_pais').val() === "0"){
+                    alert("Debe ingresar el pais de nacimiento del bachiller");
+                    $('#form_pais').focus();
+                    return false;
+                }
+    
+                if($('#form_fnacimiento').val() === ""){
+                    alert("Debe ingresar la fecha de nacimiento del bachiller");
+                    $('#form_fnacimiento').focus();
+                    return false;
+                }
+    
+                if($('#form_pais').val() === "1" || $('#form_pais').val() === 1){
+                    if($('#form_departamento').children('option').length == 0 || $('#form_departamento').val() === ""){
+                        alert("Debe ingresar el departamento de nacimiento del bachiller");
+                        $('#form_departamento').focus();
+                        return false;
+                    }
+                    if($('#form_provincia').children('option').length == 0 || $('#form_provincia').val() === ""){
+                        alert("Debe ingresar la provincia de nacimiento del bachiller");
+                        $('#form_provincia').focus();
+                        return false;
+                    }
+                    if($('#form_localidad').val() === ""){
+                        alert("Debe ingresar el localidad de nacimiento del bachiller");
+                        $('#form_localidad').focus();
+                        return false;
+                    }
+                }
+    
+                if($('#form_institucionEducativa').is(':disabled') == false){
+                    if($('#form_institucionEducativa').val() === ""){
+                        alert("Debe ingresar la institución educativa");
+                        return false;
+                    }
+                }
+                
+                if($('#form_institucionEducativaName').val() === ""){
+                    alert("Debe ingresar una institución educativa válida");
+                    return false;
+                }
+    
+                if($('#form_libreta1').val() === ""){
+                    alert("Debe ingresar la libreta escolar del 3er año de escolaridad");
+                    return false;
+                }
+    
+                if($('#form_libreta2').val() === ""){
+                    alert("Debe ingresar la libreta escolar del 4to año de escolaridad");
+                    return false;
+                }
+    
+                if($('#form_libreta3').val() === ""){
+                    alert("Debe ingresar la libreta escolar del 5to año de escolaridad");
+                    return false;
+                }
+                
+                if($('#form_libreta4').val() === ""){
+                    alert("Debe ingresar la libreta escolar del 6to año de escolaridad");
+                    return false;
+                }
+    
+                $(this).hide();   
+    
+                var form = $('#formEstudianteDatoPersonal, #formEstudianteDatoAcademico').serialize();            
+                //$(".fileinput-preview").empty();
+                var content = $("#formContent").html();
+                //var formFooter = $("#formFooter").html();
+    
+                var form1 = $('#formEstudianteDatoPersonal').serializeArray();
+                //var formData1 = new FormData(form1);
+                var form2 = $('#formEstudianteDatoAcademico')[0];
+                var formData2 = new FormData(form2);
+                //var formData = $.extend(true,formData2, formData1);
+                var formData = formData2;
+                
+                $.ajax({
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    url: Routing.generate('tramite_convalidacion_diploma_humanistico_estudiante_guarda'),
+                    beforeSend: function () {
+                        $("#message").empty();        
+                        $("#message").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#message").empty();
+                        if (data.estado){
+                            $("#message").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg+'</div>');
+                        } else {
+                            botonSubmit.show();   
+                            $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg+'</div>');
+                        }
+                        $("#formContent").empty();
+                    },
+                    error: function(error){
+                        botonSubmit.show(); 
+                        $("#message").empty(); 
+                        $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+                    },
+                });
+    
+                return false;
+            });
+    
+            $("#form_institucionEducativa").focusout(function () {
+                if ($('#form_institucionEducativa').val().length > 7) {
+                    ie = $('#form_institucionEducativa').val();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('tramite_convalidacion_diploma_humanistico_findIE', {'id': ie}),
+                        beforeSend: function () {
+                            $("#form_institucionEducativaName").val('');
+                        },
+                        success: function (data) {
+                            $("#form_institucionEducativaName").val(data.nombre);
+                        }
+                    });
+                } else {
+                    $("#form_institucionEducativaName").val('');                    
+                }
+            });
+    
+            var prevValue;
+            $(".btnGestion").bind('focus', function(e) {
+                prevValue = $(this).val();
+            }).bind('change', function (e) {
+                var nombre = $(this).attr('id');
+                var numero = nombre.substr(nombre.length-1,nombre.length);
+                if(nombre == 'form_gestion1'){
+                    if ($('#form_gestion1').val() >= $('#form_gestion2').val()){
+                        alert("la gestión del 3er. año de escolaridad no puede ser igual o mayor al 4to. año de escolaridad");
+                        $(this).val(prevValue);
+                        return false;
+                    }
+                }
+    
+                if(nombre == 'form_gestion2'){
+                    if ($('#form_gestion2').val() <= $('#form_gestion1').val()){
+                        alert("la gestión del 4to. año de escolaridad no puede ser igual o menor al 3er. año de escolaridad");
+                        $(this).val(prevValue);
+                        return false;
+                    }
+                    if ($('#form_gestion2').val() >= $('#form_gestion3').val()){
+                        alert("la gestión del 4to. año de escolaridad no puede ser igual o mayor al 5to. año de escolaridad");
+                        $(this).val(prevValue);
+                        return false;
+                    }
+                }
+    
+                if(nombre == 'form_gestion3'){
+                    if ($('#form_gestion3').val() <= $('#form_gestion2').val()){
+                        alert("la gestión del 5to. año de escolaridad no puede ser igual o menor al 4to. año de escolaridad");
+                        $(this).val(prevValue);
+                        return false;
+                    }
+                    if ($('#form_gestion3').val() >= $('#form_gestion4').val()){
+                        alert("la gestión del 5to. año de escolaridad no puede ser igual o mayor al 6to. año de escolaridad");
+                        $(this).val(prevValue);
+                        return false;
+                    }
+                }
+    
+                if(nombre == 'form_gestion4'){
+                    if ($('#form_gestion4').val() <= $('#form_gestion3').val()){
+                        alert("la gestión del 6to. año de escolaridad no puede ser igual o menor al 5to. año de escolaridad");
+                        $(this).val(prevValue);
+                        return false;
+                    }
+                }
+    
+                return true;
+    
+            });
+    
+            $("#form_documento").on('change', function () {
+                var fileNombre = this.files[0].name;
+                var ext = fileNombre.split('.').pop();
+                switch(ext){
+                    case 'jpg': break;
+                    case 'jpeg': break;
+                    case 'png': break;
+                    default:
+                        alert("El archivo debe se una imagen en formato (jpg, jpeg, png)");
+                        this.value="";
+                }
+            });
+        });
+    </script>
+{% endif %}

@@ -1,0 +1,306 @@
+{# {% extends 'layoutReporte.html.twig' %} #}
+{% extends 'layoutHerramienta.html.twig' %}
+{% block fechaReporte %}
+    {% if fechaEstadistica is defined  %}
+        {{ fechaEstadistica }}
+    {% endif %}
+{% endblock %}
+{% block contentoption %}
+    {% set ingresa = 0 %}
+    {% set ingresaAdmin = 0 %}
+    {% for item in app.session.get('roluser') %} 
+        {% if item.id == 8 or item.id == 11 or item.id == 32 or item.id == 33 or item.id == 39 %} 
+             {% set ingresa = 1 %}
+             {% if item.id == 8 or item.id == 39 %} 
+                {% set ingresaAdmin = 1 %}
+             {% endif %} 
+        {% endif %} 
+    {% endfor %} 
+    <!-- Start page header -->
+    <div id="tour-6" class="header-content">
+        <h2><i class="fa fa-th-large"></i>Unidad Educativa<span>UNIDADES EDUCATIVAS QUE NO CUENTAN CON CLUBES DE LECTURA</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('cdlseguimiento')}}">Seguimiento</a>
+                    <i class="fa fa-angle-right">></i>
+                </li>
+                <li><a href="#">UEs sin clubes de lectura</a></li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+        {% if infoEntidad is defined  %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- Start widget newsletter -->
+                    <div class="panel text-center rounded shadow">
+                        <div class="panel-body bg-lilac rounded">
+                            <!--<div class="inner-all">-->
+                                <h5 class="text-uc"><b>{{infoEntidad.nombre}}</b></h5>
+                            <!--</div>-->
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                    <!--/ End widget newsletter -->
+                </div>
+            </div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-content">
+                        {% for type, flashMessage in app.session.flashbag.all() %}
+                            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                    {{ flashMessage.message }}
+                                {% else %}
+                                    {{ type }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>        
+            </div>
+        {% endif %}
+        <div class="row">
+            {% if infoSubEntidad is defined %}
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
+                            </div>  
+                            <div class="pull-right">
+                                {% if ingresaAdmin == 1 %}
+                                    <button id="tour-13" onclick="document.forms['formEstadisticaRegularPdfTemp'].submit();" title="Descargar en formato PDF" class="btn btn-primary">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </button>
+                                {% endif %} 
+                                <button id="tour-13" onclick="document.forms['formEstadisticaPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formEstadisticaXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>                            
+                            </div>     
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>                    
+                    <div id="tour-8" class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Unidades Educativas {% if infoSubEntidad is defined and link and infoEntidad.rolactual != 10 %} por {{infoSubEntidad[0]['nombrearea']}}{% endif %}</h3>
+                            </div>   
+                            <div class="pull-right"> 
+                            </div>                          
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body"> 
+                            {% if infoSubEntidad is defined %}
+                                <span class="text-primary pull-right"><b>{{(infoSubEntidad[0]['total_general'])|number_format(0, ',', '.')}}</b></span><span class="text-primary"><b>Total</b></span>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    </div>
+                                </div><!-- /.progress -->   
+                            {% endif %}       
+                            {% set contadorColor = 0 %}      
+                            {% for data in infoSubEntidad %}
+                                {% set cantidad = data.cantidad %}  
+                                {% set total = data['total_general'] %} 
+                                {% set porcentaje = (cantidad*100)/(total)%} 
+                                {% set id = data.codigo %}
+                                {% set nombre = data.nombre %} 
+                                {% set rol = data.rolusuario %}  
+                                {% if link %}                            
+                                    <form name="form" role="form" action="{{ path('cdl_seguimiento_sin_cdl') }}" method="POST"> 
+                                        <input type="hidden" name="codigo" value="{{id}}" />
+                                        <input type="hidden" name="rol" value="{{rol}}" />
+                                        <button type="submit" id="submit{{id}}" style="display:none;"></button>
+                                        <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
+                                             <span class="pull-right" style="width:50px; text-align:right"><b>{{cantidad|number_format(0, ',', '.')}}</b></span><span class="">{{nombre}}</span>
+                                        </a>    
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%">
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    </form>
+                                {% else %} 
+                                    <a class="text-inverse" style="text-decoration:none;">
+                                        <span class="pull-right" style="width:50px; text-align:right"><b></b></span><span class="">{{nombre}}</span>
+                                    </a>    
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%">
+                                            
+                                        </div>
+                                    </div><!-- /.progress -->
+                                {% endif %}
+                            {% endfor %}
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>  
+
+                <form name="formEstadisticaXls" id="formEstadisticaXls" role="form" action="{{ path('cdl_seguimiento_uessincdl_descarga') }}" method="POST">  
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" name="tipo" value="xls" />   
+                </form>   
+
+                <form name="formEstadisticaPdf" id="formEstadisticaPdf" role="form" action="{{ path('cdl_seguimiento_uessincdl_descarga') }}" method="POST">  
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" name="tipo" value="pdf" />  
+                </form>                   
+            {% else %}
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
+                            </div>  
+                            <div class="pull-right">
+                            </div>     
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>                    
+                    <div id="tour-8" class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-tasks'></i> Unidad Educativa</h3>
+                            </div>   
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body"> 
+                            <a class="text-inverse" style="text-decoration:none;">
+                                <span class="pull-right" style="width:50px; text-align:right"><b></b></span><span class="">{{infoEntidad.nombre}}</span>
+                            </a>    
+                            <div class="progress progress-xs">
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                </div>
+                            </div><!-- /.progress -->
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>  
+            {% endif %}
+            <div id="tour-7" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">     
+                 {% if infoSubEntidad is defined %}
+                        <div class="row">                   
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-default shadow">
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">    
+                                        <div id="chartContainerDependencia" style="height: 300px;">
+                                         </div> 
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">                   
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-default shadow">
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">    
+                                        <div id="chartContainerArea" style="height: 300px;"> </div> 
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if infoEstadistica is defined %}
+                        {% include 'SieAppWebBundle:Reporte:DirectorioDetalleRegular.html.twig' with {'entityUnidadEducativa': infoEstadistica} %}
+                    {% endif %}
+                {% endif %}
+            </div>        
+        </div>
+        <div class="row">
+            <div class="alert alert-info">
+                <span class="alert-icon"><i class="fa fa-info"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="pull-left notification-sender"><span><a>Unidad Educativa Fiscal o Estatal: </a></span> Instituciones financiadas y administradas por el Estado. Por tanto, son gratuitas. </li>
+                        <li class="pull-right notification-time"></li>
+                        
+                        <li class="pull-left notification-sender"><span><a>Unidad Educativa de Convenio: </a></span> Instituciones financiadas por privados y el Estado, pero administradas por privados. Por lo tanto, no son necesariamente gratuitas. </li>
+                        <li class="pull-right notification-time"></li>
+                        
+                        <li class="pull-left notification-sender"><span><a>Unidad Educativa Privada: </a></span> Instituciones financiadas y administradas por privados. Por tanto, no son de carácter gratuito.&emsp; </li>
+                        <li class="pull-right notification-time"></li>
+                        
+                    </ul>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <!--/ END ADDITIONAL ELEMENT -->
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() {
+            Highcharts.setOptions({
+                lang: {
+                    decimalPoint: ',',
+                    thousandsSep: '.'
+                }
+            });
+            
+            {% autoescape %}
+                {% if mensaje is defined %}
+                    {{ mensaje|raw }}   
+                {% endif %} 
+            {% endautoescape %}            
+
+            {% autoescape %}
+                {% if datoGraficoDependencia is defined %}
+                    {{ datoGraficoDependencia|raw }}   
+                {% endif %} 
+            {% endautoescape %}
+
+            {% autoescape %}
+                {% if datoGraficoArea is defined %}
+                    {{ datoGraficoArea|raw }}   
+                {% endif %} 
+            {% endautoescape %}
+
+            $(function () {
+                chartContainerDependenciaLoad(); 
+                chartContainerAreaLoad(); 
+            });  
+
+            function seeGraphic (infoTipo,infoCodigo,infoRol) {
+                $("#modal-page").modal(
+                    {
+                        show: true,
+                        backdrop: 'static',
+                        keyboard: false
+                    }
+                ); 
+                if(infoTipo == 2){
+                    $("#modal-page-header").empty().append("<i class='fa fa-circle-o'></i>");    
+                    chartContainerInstitucionNivelLoad(); 
+                }
+                if(infoTipo == 5){
+                    $("#modal-page-header").empty().append("<i class='fa fa-bar-chart'></i>");  
+                    chartContainerInstitucionDependenciaLoad(); 
+                }        
+            };
+        });
+    </script>
+{% endblock %}
+
+

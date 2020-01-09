@@ -1,14 +1,20 @@
             <div class="row">
-                <row>
+                <div class="col-md-12">
                     {% if validado == 0 %}                   
                         {% for flashMessage in app.session.flashbag.get('validacionerror') %}
                             <div class="alert alert-danger alert-dismissible" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <strong>¡Proceso detenido!</strong> {{ flashMessage }}
+                                <strong>¡Proceso detenido!</strong> {{ flashMessage|raw }}
                             </div>
                         {% endfor %}
                     {% endif %}
-                </row>
+                    {% for flashMessage in app.session.flashbag.get('autoselcorr') %}
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ flashMessage|raw }}
+                        </div>
+                    {% endfor %}
+                </div>
                 <row>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <div class="portlet portlet-blue">

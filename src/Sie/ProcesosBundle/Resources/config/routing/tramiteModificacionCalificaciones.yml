@@ -1,0 +1,54 @@
+tramite_modificacion_calificaciones_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:index }
+
+tramite_modificacion_calificaciones_buscar_estudiante:
+    path:     /buscarEstudiante
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_modificacion_calificaciones_buscar_calificaciones:
+    path:     /buscarCalificaciones
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:buscarCalificaciones }
+    options:
+        expose: true
+
+tramite_modificacion_calificaciones_formulario_save:
+    path:     /formulariosave
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioSave }
+    options:
+        expose: true
+
+tramite_modificacion_calificaciones_formulario_imprimir:
+    path:     /formularioImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioImprimir }
+
+
+tramite_modificacion_calificaciones_formulario_vista_imprimir_libreta:
+    path:     /formularioVistaImprimirLibreta
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaImprimirLibreta }
+
+tramite_modificacion_calificaciones_formulario_vista_imprimir_finalizar:
+    path:     /formularioVistaImprimirFinalizar/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaImprimirFinalizar }
+
+# DISTRITO
+
+tramite_modificacion_calificaciones_recepcion_verifica_distrito:
+    path:     /recepcionaVerificaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:recepcionVerificaDistrito }
+
+tramite_modificacion_calificaciones_deriva_distrito:
+    path:     /derivaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDistrito }
+
+# DEPARTAMENTO
+
+tramite_modificacion_calificaciones_recepcion_verifica_departamento:
+    path:     /recepcionaVerificaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:recepcionVerificaDepartamento }
+
+tramite_modificacion_calificaciones_deriva_departamento:
+    path:     /derivaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDepartamento }

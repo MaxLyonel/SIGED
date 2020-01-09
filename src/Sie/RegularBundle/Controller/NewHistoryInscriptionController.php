@@ -43,7 +43,7 @@ class NewHistoryInscriptionController extends Controller {
         if ($request->get('form')) {
             //get the form to send
             $form = $request->get('form');
-            $rude = trim($form['codigoRudeHistory']);
+            $rude = trim(strtoupper($form['codigoRudeHistory']));
             //get the result of search
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
             //verificamos si existe el estudiante
@@ -85,7 +85,8 @@ class NewHistoryInscriptionController extends Controller {
                     'dataInscriptionA' => $dataInscriptionA,
                     'dataInscriptionE' => $dataInscriptionE,
                     'dataInscriptionP' => $dataInscriptionP,
-                    'sw' => $sw
+                    'sw' => $sw,
+                    'visible' => true
         ));
     }
 

@@ -1,0 +1,79 @@
+RegisterPersonStudent_index:
+    path:     /
+    defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:index }
+
+RegisterPersonStudent_busqueda_nivel:
+    path:    /sie/busquedaNivel
+    defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:busquedaNivel }
+    options:
+         expose: true
+
+RegisterPersonStudent_busqueda_genero:
+    path:    /sie/busquedaGenero
+    defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:busquedaGenero }
+    options:
+         expose: true
+
+RegisterPersonStudent_busqueda_grado_disciplina:
+   path:    /sie/busquedaGradoDisciplina
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:busquedaGradoDisciplina }
+   options:
+        expose: true
+
+RegisterPersonStudent_busqueda_disciplina_prueba:
+    path:    /sie/busquedaDisciplinaPrueba
+    defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:busquedaDisciplinaPrueba }
+    options:
+         expose: true
+
+RegisterPersonStudent_busqueda_unidadeducativa_prueba_deportista:
+   path:    /sie/busquedaUnidadeducativaPruebaDeportista
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:busquedaUnidadeducativaPruebaDeportista }
+   options:
+        expose: true         
+
+RegisterPersonStudent_showGroupStudent:
+    path:     /{data}/showGroupStudent
+    defaults: { _controller: "SieJuegosBundle:RegisterPersonStudent:showGroupStudent" }
+
+RegisterPersonStudent_find_person:
+   path:    /sie/findPerson
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:findPerson }
+   options:
+        expose: true      
+
+RegisterPersonStudent_register_person:
+   path:    /sie/registerPerson
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:registerPerson }
+   options:
+        expose: true      
+
+RegisterPersonStudent_register_person_json:
+   path:    /sie/registerPerson/json
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:registerPersonJson }
+   options:
+        expose: true        
+
+RegisterPersonStudent_register_person_foto:
+   path:    /sie/registerPerson/foto
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:registerPersonFoto }
+   options:
+        expose: true   
+    
+RegisterPersonStudent_open_register:
+   path:    /sie/openRegister
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:openRegister }
+   options:
+        expose: true      
+
+RegisterPersonStudent_show_couch:
+   path:    /sie/showCouch
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:showCouch }
+   options:
+        expose: true      
+
+RegisterPersonStudent_remove_couch:
+   path:    /sie/removeCouch
+   defaults: { _controller: SieJuegosBundle:RegisterPersonStudent:removeCouch }
+   options:
+        expose: true      

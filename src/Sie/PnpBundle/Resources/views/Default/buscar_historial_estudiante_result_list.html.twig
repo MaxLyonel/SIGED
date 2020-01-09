@@ -87,8 +87,8 @@
                                     <th class="text-center"><small>Grado</small></th>
                                     <th class="text-center"><small>Paralelo</small></th>
                                     <th class="text-center"><small>Estado Matricula</small></th>
-                                    <th class="text-center"><small>Bloque</small></th>
-                                    <th class="text-center"><small>Parte</small></th>
+                                    <th class="text-center"><small>Ciclo</small></th>
+                                    <th class="text-center"><small>Grado</small></th>
                                     <th class="text-center"><small>RUP-4</small></th>
                                 </tr>
                             </thead>
@@ -102,10 +102,10 @@
                                         <td data-title="Paterno"><small>{{data.grado|e}}</small></td>
                                         <td data-title="Materno"><small>{{data.paralelo|e}}</small></td>
                                         <td data-title="Est. Matricula" class="text-center"><small>{{data.estadoMatricula}}</small></td>
-                                        <td><small>{{data.bloque}}</small></td>
-                                        <td><small>{{data.parte}}</small></td>
+                                        <td><small>{% if data.bloque == 1 %}Bloque 1 {% elseif data.bloque == 2 %}Bloque 2 {% elseif data.bloque == 34 %}Ap. Avanzados {% elseif data.bloque == 35 %}Ap. Elementales {% else %}{{data.bloque}}{% endif %}</small></td>
+                                        <td><small>{% if data.parte == 1 %}Parte 1{% elseif data.parte == 2 %}Parte 2{% elseif data.parte == 14 or data.parte == 16 %}Semestre 1{% elseif data.parte == 15 or data.parte == 17 %}Semestre 2{% else %}data.parte{% endif %}</small></td>
                                         {% if data.sie == "80480300" or data.sie == "80730794" or data.sie == "80980569" or data.sie == "81230297" or data.sie == "81480201" or data.sie == "81730264" or data.sie == "81981501" or data.sie == "82230130" or data.sie == "82480050" %}
-                                            <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': data.institucioneducativa_curso_id~data.bloque~data.parte,'esactivo':0}) }}" >&nbsp;</a></td>
+                                            <td><a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': data.id_enc~"|"~data.bloque~"|"~data.parte}) }}" title="Impimir Consolidado"></a></td>
 
                                         {% else %}
                                             <td>No PNP</td>

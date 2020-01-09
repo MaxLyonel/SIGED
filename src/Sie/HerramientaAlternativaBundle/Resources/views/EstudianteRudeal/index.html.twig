@@ -78,10 +78,45 @@
         border-color: red !important;
     }
 
+    .tituloNombre{
+        background:#70AC16;
+        color:#FFFFFF;
+        padding: 5px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.1em;
+    }
     
+    .cortina{
+        background: #5E96C2;
+        position: absolute;
+        z-index: 1;
+        opacity: 0.3;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 25%;
+        color: #000000;
+        display: none;
+    }
+
+    .validar:invalid {
+        height: 0px !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        display: flex !important;
+    }
+
+    .validar:invalid[multiple] {
+        margin-top: 15px !important;
+    }
 </style>
 <div class="modal-dialog" style="width: 1000px">
     <div class="modal-content">
+        <div class="cortina" id="cortina">
+            <img src="{{asset('img/loading.gif')}}" alt=""><br>
+            Guardando...
+        </div>
         <div class="panel panel-tab panel-tab-double">
             <div class="panel-heading no-padding">
                 <div style="height:50px; background:#70AC16; color:#FFFFFF; margin-top:-10px;">
@@ -94,7 +129,9 @@
                 </div>
             </div>
             <div class="panel-body no-padding" id="modal-body">
-
+                <div class="tituloNombre">
+                    <label> Rudeal___</label> {{ estudiante.codigoRude}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label>Estudiante___</label> {{ estudiante.nombre }} {{estudiante.paterno}} {{estudiante.materno}}
+                </div>
                 <div id="basic-wizard-vertical">
                     <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
                         <!-- Start tabs heading -->
@@ -129,7 +166,7 @@
                                 </li>
                                 <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
                                     <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
-                                        <i class="fa fa-check-circle"></i>
+                                        <i class="fa fa-pencil"></i>
                                         <div>
                                             <span class="text-strong">ASPECTOS</span>
                                             <span><small>SOCIALES</small></span>
@@ -138,10 +175,19 @@
                                 </li>
                                 <li {% if rude.registroFinalizado < 4 %} class="disabled" {% endif %}>
                                     <a id="paso5" href="#tab5" {% if rude.registroFinalizado >= 4 %} data-toggle="tab" {% endif %} aria-expanded="false">
-                                        <i class="fa fa-print"></i>
+                                        <i class="fa fa-check"></i>
                                         <div>
                                             <span class="text-strong">FINALIZAR</span>
-                                            <span><small>IMPRIMIR</small></span>
+                                            <span><small>LUGAR DE REGISTRO</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li {% if rude.registroFinalizado < 5 %} class="disabled" {% endif %}>
+                                    <a id="paso6" href="#tab6" {% if rude.registroFinalizado >= 5 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                        <i class="fa fa-print"></i>
+                                        <div>
+                                            <span class="text-strong">IMPRIMIR</span>
+                                            <span><small>FORMULARIO</small></span>
                                         </div>
                                     </a>
                                 </li>
@@ -157,6 +203,7 @@
                                 </h4>
                                 
                                 <form id="formEstudiante" onsubmit="saveFormEstudiante(); return false;" method="post">
+                                    <input type="hidden" id="sie" value="{{sie}}">
                                     {{ form_widget(formEstudiante.rudeId) }}
                                     {{ form_widget(formEstudiante.estudianteId) }}
                                     {{ form_widget(formEstudiante.diversaId) }}
@@ -168,7 +215,7 @@
                                         <div class="col-md-7 col-sm-7">
                                             <p>Carnet:</p>
                                             <fieldset style="border:1px solid #CCCCCC; padding:7px;">
-                                                {% if estudiante.carnetIdentidad == "" %}
+                                                {# {% if estudiante.carnetIdentidad == "" %}
                                                     <div class="row">
                                                         <div class="col-md-5">
                                                             <p>Número</p>
@@ -183,7 +230,8 @@
                                                             {{ form_widget(formEstudiante.expedido, {'attr':{'class':'form-control'} }) }}
                                                         </div>
                                                     </div>
-                                                {% else %}
+                                                {% else %} #}
+                                                {% if estudiante.carnetIdentidad != "" %}
                                                     <div class="row">
                                                         <div class="col-md-5">
                                                             <p>Número</p>
@@ -195,10 +243,23 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <p>Expedido</p>
-                                                            {{ estudiante.expedido.departamento }}
+                                                            {% if estudiante.carnetIdentidad != "" and ((estudiante.expedido is not null and estudiante.expedido.id == 0) or estudiante.expedido == '' or estudiante.expedido == null) %}
+                                                                {{ form_widget(formEstudiante.expedido, {'attr':{'class':'form-control'} }) }}
+                                                            {% else %}
+                                                                {% if estudiante.carnetIdentidad != "" %}
+                                                                    {{ estudiante.expedido.sigla }}                                                                    
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            No registrado
                                                         </div>
                                                     </div>
                                                 {% endif %}
+                                                {# {% endif %} #}
                                             </fieldset>
                                         </div>
                                         <div class="col-md-5 col-sm-5">
@@ -276,7 +337,7 @@
                                     <div class="panel-footer no-bg">
                                         <ul class="pager wizard no-margin">
                                             <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            <li class="next"><button class="btn-wizard" type="submit" id="btnEstudiante">Guardar y continuar</button></li>
                                         </ul>
                                     </div>
                                 </form>
@@ -295,7 +356,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div id="inmigrante" {% if rude.localidadLugarTipo.id == 0 %} style = "display:block" {% else %} style = "display:none" {% endif %}>
+                                            <div id="inmigrante" {% if rude.localidadLugarTipo != null and rude.localidadLugarTipo.id == 0 %} style = "display:block" {% else %} style = "display:none" {% endif %}>
                                                 <div class="form-group row">
                                                     <label class="col-md-4 col-sm-4">País</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -310,7 +371,7 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        <div id="inmigranteNo" {% if sie != 80730796 or (sie == 80730796 and rude.localidadLugarTipo.id != 0) %} style = "display:block" {% else %} style = "display:none" {% endif %}>
+                                        <div id="inmigranteNo" {% if sie != 80730796 or (sie == 80730796 and (rude.localidadLugarTipo == null or rude.localidadLugarTipo.id != 0)) %} style = "display:block" {% else %} style = "display:none" {% endif %}>
                                             <div class="form-group row">
                                                 <label class="col-md-4 col-sm-4">Departamento</label>
                                                 <div class="col-md-8 col-sm-8">
@@ -390,7 +451,7 @@
                                     <div class="panel-footer no-bg">
                                         <ul class="pager wizard no-margin">
                                             <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            <li class="next"><button class="btn-wizard" type="submit" id="btnDireccion">Guardar y continuar</button></li>
                                         </ul>
                                     </div>
                                 </form>
@@ -485,7 +546,7 @@
                                     <div class="panel-footer no-bg">
                                         <ul class="pager wizard no-margin">
                                             <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            <li class="next"><button class="btn-wizard" type="submit" id="btnDiscapacidad">Guardar y continuar</button></li>
                                         </ul>
                                     </div>
 
@@ -503,7 +564,7 @@
                                         <label class="col-md-12">5.1.1. ¿Qué idiomas habla la o el estudiante/participante?</label>
                                         <div class="col-md-4 col-sm-4">
                                             <small>a) Más frecuente (*)</small>
-                                            {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                            {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper validar'} }) }}
                                         </div>
                                         <div class="col-md-4 col-sm-4">
                                             <small>b) Medianamente frecuente</small>
@@ -547,6 +608,7 @@
                                             {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                         </div>
                                     </div>
+
                                     <div class="row form-group">
                                         <label class="col-md-6">5.3.2 Grupo sanguineo del estudiante/participante</label>
                                         <div class="col-md-6 col-sm-6">
@@ -561,13 +623,13 @@
                                     <div class="row form-group">
                                         <label class="col-md-6">5.4.1 La o el estudiante/participante tiene acceso a: (Puede seleccionar varias opciones)</label>
                                         <div class="col-md-6 col-sm-6">
-                                            {{ form_widget(formSocioeconomico.medioComunicacion, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.medioComunicacion, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <label class="col-md-6">5.4.2 ¿Qué medio de transporte utiliza frecuentemente la o el estudiante/participante para trasladarse al Centro de Educación Alternativa? (Puede seleccionar varias opciones)</label>
                                         <div class="col-md-6 col-sm-6">
-                                            {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -601,7 +663,7 @@
                                     <div class="row form-group">
                                         <label class="col-md-6">6.4 Interrupción de estudios</label>
                                         <div class="col-md-6 col-sm-6">
-                                            {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                             {{ form_widget(formSocioeconomico.abandonoOtro, {'attr':{'class':'form-control jupper','placeholder':'Especificar...','autocomplete':'off'} }) }}
                                         </div>
                                     </div>                                    
@@ -611,52 +673,59 @@
                                     <div class="panel-footer no-bg">
                                         <ul class="pager wizard no-margin">
                                             <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            <li class="next"><button class="btn-wizard" type="submit" id="btnSocioeconomico">Guardar y continuar</button></li>
                                         </ul>
                                     </div>
                                 </form>
                             </div>
                             <div class="tab-pane fade inner-all" id="tab5">
                                 <h4 class="page-header">VII. FINALIZAR REGISTRO RUDEAL</h4>
-                                <div class="ml-10">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <form id="formLugar" onsubmit="saveFormLugar(); return false;" method="post">
-                                                <div class="form-group row">
-                                                    <label class="col-md-6">Lugar de registro</label>
-                                                    <div class="col-md-6 col-sm-6">
-                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper','readonly':'readonly'} }) }}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-md-6">Fecha de registro</label>
-                                                    <div class="col-md-6 col-sm-6">
-                                                        {{ form_widget(formLugar.fechaRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="panel-footer no-bg">
-                                                    <ul class="pager wizard no-margin">
-                                                        <li class="next"><button class="btn-wizard" type="submit">Guardar y finalizar</button></li>
-                                                    </ul>
-                                                </div>
-                                                {{ form_widget(formLugar) }}
-                                            </form>
-                                        </div>
-                                        <div id="btnImprimir" class="col-md-4" {% if rude.registroFinalizado < 5 %} style="display:none" {% endif %}>
-                                            <div class="block-print">
-                                                <p>Imprimir Formulario RUDEAL</p>
-                                                <a class="btn btn-info" style="padding:20px" href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId':inscripcion.id, 'rude': inscripcion.estudiante.codigoRude} )}}">
-                                                    <i class="fa fa-print" style="font-size:40px" ></i>
-                                                </a>
-                                            </div>
+                                
+                                <form id="formLugar" onsubmit="saveFormLugar(); return false;" method="post">
+                                    <div class="form-group row">
+                                        <label class="col-md-6">Lugar de registro</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-6">Fecha de registro</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formLugar.fechaRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    {{ form_widget(formLugar) }}
+                                    
                                     <div class="panel-footer no-bg">
                                         <ul class="pager wizard no-margin">
-                                            <li class="next"><button class="btn-wizard" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit" id="btnLugar">Guardar y continuar</button></li>
                                         </ul>
                                     </div>
+                                    
+                                </form>
+                                
+                            </div>
+
+                            <div class="tab-pane fade inner-all" id="tab6">
+                                <h4 class="page-header">VIII. IMPRIMIR FORMULARIO</h4>
+                                
+                                <div class="block-print">
+                                    <div class="alert alert-success" id="msgFinalizado" style="display:none">
+                                        <i class="fa fa-check"></i> <strong>Registro finalizado correctamente.</strong>
+                                    </div>
+                                    <p>Imprimir Formulario RUDEAL</p>
+                                    <a class="btn btn-info" style="padding:20px" href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId':inscripcion.id, 'rude': inscripcion.estudiante.codigoRude} )}}">
+                                        <i class="fa fa-print" style="font-size:40px" ></i>
+                                    </a>
+                                </div>
+                                
+                                <div class="panel-footer no-bg">
+                                    <ul class="pager wizard no-margin">
+                                        <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                        <li class="next"><button class="btn-wizard" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+                                    </ul>
                                 </div>
                             </div>
                             
@@ -763,7 +832,10 @@
             $('#form_complemento').removeAttr('required');
             $('#form_expedido').removeAttr('required');
         }else{
-            $('#form_expedido').attr('required','required');
+            var sie = $('#sie').val();
+            if (sie != '80730796') {
+                $('#form_expedido').attr('required','required');
+            }
         }
     }
 
@@ -889,9 +961,11 @@
             $('#form_nacionOriginariaTipo').val('');
             $('#form_nacionOriginariaTipo').removeAttr('required');
             $('#form_nacionOriginariaTipo').prop('disabled', true).trigger("chosen:updated");
+            $('#form_nacionOriginariaTipo').removeClass('validar');
         }else{
             $('#form_nacionOriginariaTipo').attr('required','required');
             $('#form_nacionOriginariaTipo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_nacionOriginariaTipo').addClass('validar');
         }
     }
 
@@ -907,11 +981,13 @@
             $('#form_actividades').val('');
             $('#form_actividades').removeAttr('required');
             $('#form_actividades').prop('disabled', true).trigger("chosen:updated");
+            $('#form_actividades').removeClass('validar');
         }else{
             $('#form_actividades').attr('required','required');
             $('#form_actividades').prop('disabled', false).trigger("chosen:updated");
+            $('#form_actividades').addClass('validar');
         }
-        validarOtraActividad();
+        validarOtraActividad(); 
     }
 
     $('.radioOcupacion').on('change', function(){
@@ -943,8 +1019,10 @@
         if($('#form_seguroSalud_0').is(':checked')){
             $('#form_acudioCentro').val('');
             $('#form_acudioCentro').attr('disabled','disabled');
+            $('#form_acudioCentro').removeAttr('required');
         }else{
             $('#form_acudioCentro').removeAttr('disabled');
+            $('#form_acudioCentro').attr('required','required');
         }
     }
 
@@ -1102,9 +1180,13 @@
             type: 'post',
             data: data,
             beforeSend: function(){
-                console.log('enviando')
+                console.log('enviando');
+                $('#btnEstudiante').attr('disabled','disabled');
+                $('#cortina').css('display','block');
             },
             success: function(data){
+                $('#btnEstudiante').removeAttr('disabled');
+                $('#cortina').css('display','none');
                 $('#paso2').parent('li').removeClass('disabled');
                 $('#paso2').attr('data-toggle','tab');
                 $('#paso2').click();
@@ -1242,9 +1324,13 @@
             type: 'post',
             data: data,
             beforeSend: function(){
-                console.log('enviando')
+                console.log('enviando');
+                $('#btnDireccion').attr('disabled','disabled');
+                $('#cortina').css('display','block');
             },
             success: function(data){
+                $('#btnDireccion').removeAttr('disabled');
+                $('#cortina').css('display','none');
                 $('#paso3').parent('li').removeClass('disabled');
                 $('#paso3').attr('data-toggle','tab');
                 $('#paso3').click();
@@ -1365,8 +1451,12 @@
             data: data,
             beforeSend: function(){
                 console.log('enviando');
+                $('#btnDiscapacidad').attr('disabled','disabled');
+                $('#cortina').css('display','block');
             },
             success: function(data){
+                $('#btnDiscapacidad').removeAttr('disabled');
+                $('#cortina').css('display','none');
                 $('#paso4').parent('li').removeClass('disabled');
                 $('#paso4').attr('data-toggle','tab');
                 $('#paso4').click();
@@ -1395,7 +1485,6 @@
     // });
 
     function saveFormSocioeconomicos(){
-
         var data = $('#formSocioeconomicos').serialize();
         $.ajax({
             url: Routing.generate('estudiante_rudeal_save_formSocioeconomicos'),
@@ -1403,8 +1492,12 @@
             data: data,
             beforeSend: function(){
                 console.log('enviando');
+                $('#btnSocioeconomico').attr('disabled','disabled');
+                $('#cortina').css('display','block');
             },
             success: function(data){
+                $('#btnSocioeconomico').removeAttr('disabled');
+                $('#cortina').css('display','none');
                 $('#paso5').parent('li').removeClass('disabled');
                 $('#paso5').attr('data-toggle','tab');
                 $('#paso5').click();
@@ -1441,11 +1534,19 @@
             type: 'post',
             data: data,
             beforeSend: function(){
-                console.log('enviando')
+                console.log('enviando');
+                $('#btnLugar').attr('disabled','disabled');
+                $('#cortina').css('display','block');
             },
             success: function(data){
-                
-                $('#btnImprimir').css('display','block');
+                $('#btnLugar').removeAttr('disabled');
+                $('#cortina').css('display','none');
+                // $('#btnImprimir').css('display','block');
+                $('#msgFinalizado').css('display','block');
+
+                $('#paso6').parent('li').removeClass('disabled');
+                $('#paso6').attr('data-toggle','tab');
+                $('#paso6').click();
                 
             },
             error: function(){

@@ -1,0 +1,93 @@
+Sie\AppWebBundle\Entity\EstudianteTrabajoRemuneracion:
+    type: entity
+    table: estudiante_trabajo_remuneracion
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estudianteInscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        sie:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        nivel:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        grado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        paralelo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        turno:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        gestion:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        ocupacion:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        ocupacionOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: ocupacion_otro
+        remuneracion:
+            type: boolean
+            nullable: true
+            comment: ''
+        especificacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        traslado:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,3 @@
+newrequestbth_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:NewRequestBth:index }

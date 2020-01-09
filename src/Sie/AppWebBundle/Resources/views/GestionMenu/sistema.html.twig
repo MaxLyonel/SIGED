@@ -1,0 +1,194 @@
+{% extends 'layoutGestmenu.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-th animated flip"></i><strong>Sistemas de Información </strong> </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="#">Lista de Sistemas
+
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+        <div id="mensajes">
+            {% if app.session.flashBag.has('exito') %}
+                <div class="alert alert-success">
+                    {% for msg in app.session.flashBag.get('exito') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if app.session.flashBag.has('error') %}
+                <div class="alert alert-danger">
+                    {% for msg in app.session.flashBag.get('error') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+
+ <div class="body-content  animated fadeIn">
+    <div class="row">
+        <div class="container">
+            <h2></h2>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h5><strong>Listas de Sistemas de Información</strong></h5>
+                </div>
+                <div class="panel-body">
+                    <div class="pull-right">
+                        <button class="btn btn-info" onclick="nuevoSistema()" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table"><i class="fa fa-plus"></i>  Nuevo Sistema</button>
+                    </div>
+                    <br>
+                    <div id="listasistemas" class="body-content  animated fadeIn">
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-bordered table-hover cf dataTable table-primary ">
+                                <thead>
+                                <tr>
+                                    <th style="min-width: 10px"><strong>Nro.</strong></th>
+                                    <th><strong>Sistemas Desarrollados</strong></th>
+                                    <th><strong>Abreviatura</strong></th>
+                                    <th><strong>Bundle</strong></th>
+                                    <th><strong>Url</strong></th>
+                                    <th><strong>Observaciones</strong></th>
+                                    <th><strong>Actions</strong></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for sistema in sistema %}
+                                    <tr>
+                                        <td class="text-center">{{ loop.index }}</td>
+                                        <td>{{ sistema.sistema }}</td>
+                                        <td>{{ sistema.abreviatura }}</td>
+                                        <td>{{ sistema.bundle }}</td>
+                                        <td>{{ sistema.url }}</td>
+                                        <td>{{ sistema.obs }}</td>
+
+                                        <td>
+                                            <button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-danger btn-xs"  onclick="eliminarSistema({{ sistema.id }});" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div>
+
+
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+
+<script>
+    function nuevoSistema() {
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_administra_sistema_nuevo') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+    }
+    function  updatesistema(idsistema) {
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_administra_sistema_editar') }}",
+            data: ({idsistema: idsistema}),
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+
+    }
+    function eliminarSistema(idsistema){
+
+        swal({
+            title: "¿Está Segura/o de eliminar el Sistema?",
+            text: "El Sistema seleccionado será eliminado Permanentemente",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+        })
+            .then(function(willDelete)  {
+            if (willDelete) {
+                var imagen = '{{ asset("img/loading96.gif") }}';
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('gestionmenu_administra_sistema_delete') }}",
+                    data: ({idSistema: idsistema}),
+                    beforeSend: function () {
+                        swal({
+                            title: "Eliminando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                        $('#listasistemas').empty();
+                        $('#listasistemas').append(data);
+
+                    },
+                    error: function () {
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(1000);
+                        });
+                    }
+                });
+
+            }
+         });
+    }
+
+
+</script>
+{% endblock %}

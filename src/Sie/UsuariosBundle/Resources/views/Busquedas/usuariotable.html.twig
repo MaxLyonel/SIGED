@@ -48,8 +48,14 @@
                                         <span class="label label-default">Desactivado</span>
                                     {% endif %}        
                                 </td>
-                                <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>   
                                 <td>
+                                    {{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}
+                                    {% if is_granted('ROLE_TECSN_SIG') or is_granted('ROLE_TECSD_SIG')  %}
+                                        <a class="btn btn-xs btn-default" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> <i class="fa fa-fw fa-edit"></i> Editar</a>
+                                    {% endif %}
+                                </td>   
+                                <td>
+                                    
                                     {% set roles_depu = persona.roles|replace({'"':'','{':'','}':''}) %}
                                     {% set rolesarray = roles_depu|split(',') %}   
 
@@ -63,29 +69,28 @@
                                     {% set rolesarray_cob = roles_depu_cob|split(',') %}
 
                                     {% set roles_sub_sis = persona.subsistema|replace({'{':'','}':''}) %}
-                                    {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','"':''}) %}
-
+                                    {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','",*,"':'|*|','",*':'|*','"':'',}) %}
+                                    {# {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','"':''}) %} #}
+                                    
                                     {#
                                     {% set roles_sub_sis = persona.subsistema|replace({',"':'|','",':'|',',':'|'}) %}
                                     {% set roles_sub_sis = roles_sub_sis|replace({'"':''}) %}#}
                                     {% set rolesarray_sub_sis = roles_sub_sis|split('|') %}    
-
+                             
                                     {% for i in 0..rolesarray|length-1 %}
-                                            {% if rolesarray_est[i] == 'false'%}
-                                                <div class="panel panel-default">
-                                            {% else %}
-                                                <div class="panel panel-success">
-                                            {% endif %}
-                                                    <div class="panel-heading">
-                                                        <h3 class="panel-title text-center"><b>{{rolesarray[i]}}</b> - {{rolesarray_cob[i]}}</h3>
-                                                    </div>
-                                                    <div class="panel-body no-padding">
-                                                        <span class="pull-left text-capitalize">{{rolesarray_jur[i]}}</span>
-                                                        <span class="pull-right text-strong">{{rolesarray_sub_sis[i]}}</span>                                                        
-                                                    </div>
-                                                </div>
-                                            
-
+                                        {% if rolesarray_est[i] == 'false'%}
+                                            <div class="panel panel-default">
+                                        {% else %}
+                                            <div class="panel panel-success">
+                                        {% endif %}
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title text-center"><b>{{rolesarray[i]}}</b> - {{rolesarray_cob[i]}}</h3>
+                                        </div>
+                                        <div class="panel-body no-padding">
+                                            <span class="pull-left text-capitalize">{{rolesarray_jur[i]}}</span>
+                                            <span class="pull-right text-strong">{{rolesarray_sub_sis[i]}}</span>                                                        
+                                        </div>
+                                        </div>
                                     {% endfor %}                                                
                                 </td>                                                     
                             </tr>

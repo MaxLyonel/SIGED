@@ -1,14 +1,14 @@
-{% extends 'layoutProcesos.html.twig' %}
+{% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Recepción Distrito</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="dashboard.html">Trámite</a>
+                    <a href="{{path('wf_tramite_index',{'tipo':2})}}">Trámite</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -16,148 +16,259 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <!--/ End page header -->
-    
     <div class="body-content animated fadeIn">
         <div class="row">
-            <div class="col-12">
-                <div class="panel rounded shadow">
-                    <div class="panel-heading">
-                        {% if app.session.flashBag.has('exito') %}
-                            <div class="alert alert-success">
-                                {% for msg in app.session.flashBag.get('exito') %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {{ msg }}
-                                {% endfor %}
+            <div class="col-md-12">
+                <div class="panel">
+                        <div class="row">
+                            <div class="col-md-12">                    
+                                {% if app.session.flashBag.has('exito') %}
+                                    <div class="alert alert-success">
+                                        {% for msg in app.session.flashBag.get('exito') %}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            {{ msg }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if app.session.flashBag.has('error') %}
+                                    <div class="alert alert-danger">
+                                        {% for msg in app.session.flashBag.get('error') %}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            {{ msg }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">{{tarea}}</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="panel-group">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="pull-left">
+                                                        <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div id="collapse1" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        {% include 'SieProcesosBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+			                        </div><!-- /.panel-body -->
+                                </div><!-- /.panel-primary -->
                             </div>
-                        {% endif %}
-                        {% if app.session.flashBag.has('error') %}
-                            <div class="alert alert-danger">
-                                {% for msg in app.session.flashBag.get('error') %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {{ msg }}
-                                {% endfor %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">                    
+                                {{ form_start(form,{ 'attr': {'role': 'form','onsubmit':'return validacion()'}}) }}
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3"><strong>REQUISITOS PRESENTADOS:</strong></div>
+                                                <div class="col-md-9">
+                                                {% for r in form.requisitos %}
+                                                    <div class="ckbox ckbox-primary">
+                                                        {{ form_widget(r) }}
+                                                        {{ form_label(r) }}
+                                                    </div>
+                                                {% endfor %}   
+                                                </div>
+                                            </div>
+                                            <div class="form-group  col-md-12">
+                                                <div class="col-md-3"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                                <div class="col-md-9">
+                                                    {% for a in form.varevaluacion1 %}
+                                                        <div class="col-md-3 rdio rdio-primary circle">
+                                                            {{ form_widget(a) }}
+                                                            {{ form_label(a) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+    			                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel-primary -->
                             </div>
-                        {% endif %}    
-                        <div class="pull-left">
-                            <h3 class="panel-title">RECEPCIÓN DISTRITAL</h3>
                         </div>
-                        <div class="pull-right">
-                            <a href="{{ path('tramite_rue_recepcion_distrito_nuevo') }}" class="btn btn-primary">
-                                <i class="fa fa-plus"></i> Nuevo
-                            </a>
+                        <div class="row" style="display:none" id="informe">
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title" id="titulo">DATOS DEL INFORME</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group  col-md-12" id="obs" style="display:none">
+                                                <div class="col-md-3"><strong>FINALIZAR TRÁMITE:</strong></div>
+                                                <div class="col-md-9">
+                                                    {% for b in form.varevaluacion2 %}
+                                                        <div class="col-md-3 rdio rdio-primary circle">
+                                                            {{ form_widget(b) }}
+                                                            {{ form_label(b) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-3">
+	        			        				    {{ form_label(form.informedistrito) }}
+                                                </div>   
+			        			        		<div class="col-md-9">
+                                                    {{ form_widget(form.informedistrito) }}
+					        		            </div>
+                                            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-3">
+								                    {{ form_label(form.fechainformedistrito) }}
+                                                </div>
+                                                <div class="col-md-9">
+	    							                {{ form_widget(form.fechainformedistrito) }}
+                                                </div>
+			    				            </div>
+                                            <div class="form-group col-md-12 inf">
+                                                <div class="col-md-3">
+    					    			            {{ form_label(form.adjuntoinforme) }}
+                                                </div>
+                                                <div class="col-md-9">
+	        						    	        {{ form_widget(form.adjuntoinforme) }}
+                                                </div>
+            		        			    </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3">
+    					    			            {{ form_label(form.observacion) }}
+                                                </div>
+                                                <div class="col-md-9">
+	        						    	        {{ form_widget(form.observacion) }}
+                                                </div>
+            		        			    </div>
+                                        </div>                                  
+                                    </div><!-- /.panel- body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
                         </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="table-responsive col-md-12">
-                            <table class="table table-bordered table-striped table-primary" id="recepDep">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center border-right" WIDTH="50">No. Tramite</th>
-                                        <th>Unidad Educativa</th>
-                                        <th>Tipo de Trámite</th>
-                                        <th>Fecha de Trámite</th>
-                                        <th>Observación</th>
-                                        <th>Usuario Recepción</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center border-right">No. Tramite</th>
-                                        <th>Unidad Educativa</th>
-                                        <th>Tipo de Trámite</th>
-                                        <th>Fecha de Trámite</th>
-                                        <th>Observación</th>
-                                        <th>Usuario Recepción</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                {% for tramite in tramites %}
-                                    <tr>
-                                        <td>{{ tramite.id }}</a></td>
-                                        <td>{{ tramite.institucioneducativa }}</td>
-                                        <td>{{ tramite.tramite_tipo }}</td>
-                                        <td>{{ tramite.fecha_registro }}</a></td>
-                                        <td>{{ tramite.obs }}</a></td>
-                                        <td>{{ tramite.nombre }}</td>
-                                        <td>{{ tramite.estado }}</td>
-                                        <td>
-                                            <a href="#" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-			        </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <div class="panel-footer">
+                    <div class="form-group col-md-12">
+                        {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                        <a href="{{path('wf_tramite_index',{'tipo':2})}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+					</div>
+                    <div class="clearfix"></div>
                 </div>
+                 {{ form_end(form) }}
             </div>
         </div>
-
     </div>
 {% endblock %}
  {% block javascripts %}
     {{ parent() }} 
     <script>
-        $('#form_buscar').click(function(){
-            var formData = {idrue: $('#form_idrue').val()};
-            $.ajax({
-                type: 'GET',
-                url: "{{path('tramite_rue_buscar_rue')}}",
-                data: formData,
-                success: function (data) {
-                    $('#form_institucioneducativa').val(data.ie);
-                    $("#form_dependencia").val(data.dep);
-                    $("#form_tipoeducacion").val(data.tipo);
-                    $("#form_estadoinstitucioneducativa").val(data.estado);
-                    $("#form_departamento").val(data.departamento);
-                    $("#form_distrito").val(data.distrito);
-                },
-
-            });
-
-        });
+        
         $( document ).ready(function() {
-            cargatablas();
+            $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                format:'dd-mm-yyyy',
+                titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                weekStart: 0
+            };
+            $('.date').datepicker({
+                orientation: "auto left",
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true,
+                language: 'es'
+            });
         });
-        var cargatablas = function (identif){
-            // Setup - add a text input to each footer cell
-            $('#recepDep tfoot th').each( function () {
-                var title = $(this).text();
-                if(title.trim() === "" || title === "Acciones"){
-                    $(this).html('');
-                } else {
-                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
-                }
-            } );
-            // DataTable
-            var table = $('#recepDep').DataTable( {
-                    "order": [[ 0, "asc" ]],
-                    "columnDefs": [
-                        { "orderable": false, "targets": [0] }
-                    ],
-                }
-            );
-            // Apply the search
-            table.columns().every( function () {
-                var that = this;
-                $( 'input', this.footer() ).on( 'keyup change', function () {
-                    if ( that.search() !== this.value ) {
-                        that
-                            .search( this.value )
-                            .draw();
-                    }
-                } );
-            } );
-        };    
-    </script>
+        //$("#form_fechainformesubdireccion").datepicker();
+        $('#form_varevaluacion1_0').click(function(){
+            //alert('entra');
+            if ($("#form_varevaluacion1_0").is(':checked')){
+                $('#informe').show();
+                $('#obs').hide();
+                $('.inf').show();
+                $('#titulo').text('DATOS DEL INFORME');
+                $('#form_observacion').attr('required',false);
+                $("#form_varevaluacion2_0").attr('required',false);
+                $("#form_varevaluacion2_1").attr('required',false);
+                $("#form_informedistrito").attr('required',true);
+                $("#form_fechainformedistrito").attr('required',true);
+                $("#form_adjuntoinforme").attr('required',true);
+                limpiarInforme();
+                limpiarObs();               
+            }
+        });
+
+        $('#form_varevaluacion1_1').click(function(){
+            if ($("#form_varevaluacion1_1").is(':checked')){
+                $('#informe').show();
+                $('#obs').show();
+                $('.inf').hide();
+                $('#titulo').text('DATOS DE LA OBSERVACIÓN');
+                $('#form_observacion').attr('required',false);
+                $("#form_varevaluacion2_0").attr('required',true);
+                $("#form_varevaluacion2_1").attr('required',true);
+                $("#form_informedistrito").attr('required',false);
+                $("#form_fechainformedistrito").attr('required',false);
+                $("#form_adjuntoinforme").attr('required',false);
+                limpiarInforme();
+                limpiarObs();
+            }
+        });
+        
+        $('#form_varevaluacion2_0').click(function(){
+            //alert('entra');
+            if ($("#form_varevaluacion2_0").is(':checked')){
+                $('.inf').show();
+                $('#form_observacion').attr('required',false);
+                $("#form_informedistrito").attr('required',true);
+                $("#form_fechainformedistrito").attr('required',true);
+                $("#form_adjuntoinforme").attr('required',true);
+                limpiarInforme();
+            }
+        });
+
+        $('#form_varevaluacion2_1').click(function(){
+            if ($("#form_varevaluacion2_1").is(':checked')){
+                $('.inf').hide();
+                $('#form_observacion').attr('required',true);
+                $("#form_informedistrito").attr('required',false);
+                $("#form_fechainformedistrito").attr('required',false);
+                $("#form_adjuntoinforme").attr('required',false);
+               limpiarInforme();
+            }
+        });
+
+        function limpiarInforme(){
+            $('#form_observacion').val('');
+            $("#form_informedistrito").val('');
+            $("#form_fechainformedistrito").val('');
+            $("#form_adjuntoinforme").val('');
+        }
+        function limpiarObs(){
+            $("#form_varevaluacion2_0").prop('checked',false);
+            $("#form_varevaluacion2_1").prop('checked',false);
+        }
+
+       
+    </script>   
     {% endblock %}

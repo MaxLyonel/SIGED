@@ -8,19 +8,19 @@
 {% endif %}
 <div class="panel panel-success">
     <div class="panel-heading">
-{% if flujotipo == 5 %}
+{% if flujotipo in [5,6,7] %}
     <div><h4>UNIDAD EDUCATIVA: <span>{{nombre}}</span></h4></div>
 {% endif %}
-{% if flujotipo == 14 %}
+{% if flujotipo == 5 %}
     <div><h4>INSTITUTO TÉCNICO TECNOLÓGICO: {{nombre}}</h4></div>
 {% endif %}
-{% if flujotipo in [6,7] %}
+{% if flujotipo in [66,27] %}
     <div><h4>ESTUDIANTE: {{nombre}}</h4></div>
 {% endif %}
- {% if (flujotipo in [5,14,6,7] and nombre != null) %} 
+ {% if (flujotipo in [5,6,7] and nombre != null) %} 
     </div>
     <div class="panel-body">
-<div style= "display:none" >
+<div style= "display:block" >
 <textarea id="code" style="width: 100%;" rows="11">
 
 st=>start: Inicio|past
@@ -37,12 +37,12 @@ e=>end: Fin|past
         {{ f.fecha_registro }}
         {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}}
     {% else %}
-        {% if sw == 0 %}
+        {#{% if sw == 0 %}#}
             {{f.id}}=>operation: {{f.proceso_tipo}}
             {{ f.fecha_registro }}|{{estado}}
-            {% set tarea = f.id %}
-            {% set sw = 1 %}
-        {% else %}
+            {#{% set tarea = f.id %}
+            {% set sw = 1 %}#}
+        {#{% else %}
             {% if tarea ==  f.id %}
                 {% set fecha = fecha ~ " " ~ f.fecha_registro ~ " " %}
                 {{f.id}}=>operation: {{f.proceso_tipo}}
@@ -54,7 +54,7 @@ e=>end: Fin|past
                 {{ fecha }}|{{estado}}
                 {% set tarea = f.id %}
             {% endif %}
-        {% endif %}
+        {% endif %}#}
     {% endif %}
     {% if f.es_evaluacion =="1" %}
         c{{f.id}}=>condition: {{f.variable_evaluacion}}?|past
@@ -64,6 +64,9 @@ e=>end: Fin|past
 {% set sw = 0 %}
 {% for f in flujo %}
     {% if f.es_evaluacion =="1" %}
+        {% if f.tarea_ant_id == null %}
+            st->{{f.id}}
+        {% endif %}
         {% if sw == 0 %}
             {{f.id}}->c{{f.id}}
             {% set sw = 1 %}
@@ -71,7 +74,11 @@ e=>end: Fin|past
         {% if f.condicion == "SI" %}
             c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
         {% else %}
-            c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+            {% if f.condicion_tarea_siguiente == null %}
+                c{{f.id}}(no)->e
+            {% else %}
+                c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+            {% endif %}
         {% endif %}
     {% else %}
         {% set sw = 0 %}

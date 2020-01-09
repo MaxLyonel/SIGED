@@ -18,7 +18,9 @@
           <th class="text-center">Paralelo</th>
           <th class="text-center">Turno</th>
           <th class="text-center">Estado Matrícula</th>
-          <th class="text-center">Acciones</th>
+          {% if visible is defined and visible == true %}
+            <th class="text-center">Acciones</th>
+          {% endif %}
         </tr>
       </thead>
 
@@ -35,10 +37,12 @@
             <td>{{data.paralelo_raep}} </td>
             <td>{{data.turno_raep}} </td>
             <td>{{data.estadomatricula_p}}</td>
-            <td class="text-center">
-              {#<a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
-              Calificaciones
-            </td>
+            {% if visible is defined and visible == true %}
+              <td class="text-center">
+                {#<a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
+                Calificaciones
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>

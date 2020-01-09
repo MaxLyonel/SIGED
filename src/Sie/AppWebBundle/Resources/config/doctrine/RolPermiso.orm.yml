@@ -2,10 +2,7 @@ Sie\AppWebBundle\Entity\RolPermiso:
     type: entity
     table: rol_permiso
     indexes:
-        fk_rolpermiso_permiso1_fk:
-            columns:
-                - permiso_id
-        fk_rolpermiso_rol1_fk:
+        IDX_BB62E219EF3F27EB:
             columns:
                 - rol_tipo_id
     id:
@@ -17,6 +14,13 @@ Sie\AppWebBundle\Entity\RolPermiso:
             id: true
             generator:
                 strategy: SEQUENCE
+    fields:
+        permisoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: permiso_id
     manyToOne:
         rolTipo:
             targetEntity: RolTipo
@@ -25,15 +29,6 @@ Sie\AppWebBundle\Entity\RolPermiso:
             inversedBy: null
             joinColumns:
                 rol_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        permiso:
-            targetEntity: Permiso
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                permiso_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

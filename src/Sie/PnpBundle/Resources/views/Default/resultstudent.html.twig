@@ -40,7 +40,7 @@
                     <div id="idHistory"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn rounded btn-default" data-dismiss="modal">Cerrar</button>
 
                 </div>
             </div>
@@ -89,7 +89,7 @@
                                     {% for entity in entities %}
                                         <tr>
                                             <td data-title="No.">{{loop.index}}</td>
-                                            <td data-title="Rude"><a href="#" class="btn btn-link" onclick="openHistoryInsc({{entity.id}})">{{ entity.codigoRude }}</a></td>
+                                            <td data-title="Rude"><a href="#" class="btn rounded btn-link" onclick="openHistoryInsc({{entity.id}})">{{ entity.codigoRude }}</a></td>
                                             <td data-title="CI">{{ entity.carnetIdentidad }}
                                             {% if entity.complemento != '' %}-{{entity.complemento}}{% endif %}</td>
                                             <td data-title="Paterno">{{ entity.paterno }}</td>
@@ -98,7 +98,7 @@
                                             <td data-title="F. Nac.">{{ entity.fechaNacimiento |date('d-m-Y') }}</td>
                                             <td data-title="Opción">
                                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                                <a href="#" class="btn btn-link" onclick="openHistoryInsc({{entity.id}})">Historial</a>
+                                                <a href="#" class="btn rounded btn-link" onclick="openHistoryInsc({{entity.id}})">Historial</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -119,7 +119,7 @@
             $('#historyInscriptions').modal('show');
             $.ajax({
                 type: 'get',
-                url: Routing.generate('sie_pnp_buscar_historial_estudiante_result_list', {'idStudent': idStudent}),
+                url: Routing.generate('sie_pnp_buscar_historial_estudiante_result_list_por_nombre', {'idStudent': idStudent}),
                 beforeSend: function () {
                     $("#idHistory").empty();
                     $("#idHistory").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');

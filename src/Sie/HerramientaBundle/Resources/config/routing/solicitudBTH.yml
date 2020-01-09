@@ -1,33 +1,74 @@
 solicitud_bth_index:
     path:     /
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:index }
+# solicitud_bth_nuevasolicitud:
+#     path:     bthnuevasolicitud/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nuevasolicitud }
+# solicitud_bth_enviosolicitud:
+#     path:     bthenviosolicitud/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
+#     methods:  POST
+solicitud_bth_imprimeDirector:
+    path:     bhtimprimeFormulario/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:imprimirDirector}
+# Ya no se usan
+# solicitud_bth_formulario:
+#     path:     bhtFormulario/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioDirector}
+# solicitud_bth_lista_especialidades:
+#     path:     bhtEspecialidades/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:ListaEspecialidades}
+# solicitud_bth_distrital_index:
+#     path:     bthsolicitud/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDis }
+# solicitud_bth_formularioDis:
+#     path:     bthformularioBTHDis/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioBTHDis }
+
+# solicitud_bth_solicitudBTHDis:
+#     path:     bthsolicitudBTHDis/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDis }
+# solicitud_bth_enviosolicitud_Dep:
+#     path:     bthenviosolicitudDep/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitudDep }
+solicitud_bth_departamental_index:
+    path:     bthsolicitudDepartamental/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDep }
+
+# solicitud_bth_solicitudBTHDep:
+#     path:     bthsolicitudBTHDep/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDep }
+# solicitud_bth_guarda_Dep:
+#     path:     bthguardasolicitudDepartamental/
+#     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitudDepartamental }
+solicitud_bth_departamental_finaliza:
+    path:     bthsolicitudDepartamentalfinalizatramite/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:finalizatramiteBTHDep }
+
+#Rutas para el nuevo
 solicitud_bth_nuevasolicitud:
-    path:     bthnuevasolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nuevasolicitud }
+    path:     nueva/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nueva }
 solicitud_bth_enviosolicitud:
-    path:     bthenviosolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
-solicitud_bth_distrital_index:
-    path:     bthsolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDis }
+    path:     guarda/nuevo/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardaNuevo }
+    methods:  POST
+#Distrital
 solicitud_bth_solicitudBTHDis:
-    path:     bthsolicitudBTHDis/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDis }
+    path:     distrital/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioDistrital }
+solicitud_bth_enviosolicitud_Dep:
+    path:     guarda/distrital/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardaDistrital }
+#Departamental
+solicitud_bth_solicitudBTHDep:
+    path:     departamental/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:formularioDepartamental }
+solicitud_bth_guarda_Dep:
+    path:     guarda/departamental/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardaDepartamental }
 
 
-
-
-
-solicitud_ritt_inicio:
-    path:     /RITTinicio/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:InicioRITTDep }
-
-solicitud_ritt_solicitudRITT:
-    path:     /RITTsolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitudRITT }
-solicitud_ritt_enviosolicitudRITT:
-    path:     rittenviosolicitud/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitudRitt }
 
 
 

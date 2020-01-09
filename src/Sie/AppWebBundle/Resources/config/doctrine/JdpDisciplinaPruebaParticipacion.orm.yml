@@ -1,0 +1,51 @@
+Sie\AppWebBundle\Entity\JdpDisciplinaPruebaParticipacion:
+    type: entity
+    table: jdp_disciplina_prueba_participacion
+    indexes:
+        IDX_88FB8DD59E035F3C:
+            columns:
+                - disciplina_tipo_id
+        IDX_88FB8DD5DDBBC9ED:
+            columns:
+                - prueba_participacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        disciplinaTipo:
+            targetEntity: JdpDisciplinaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                disciplina_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        pruebaParticipacionTipo:
+            targetEntity: JdpPruebaParticipacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_participacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

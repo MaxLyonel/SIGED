@@ -1,0 +1,69 @@
+{% if dataPerson %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-4">
+
+            <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all">
+                        <ul class="list-unstyled">
+                            {#
+                            <li class="text-center">
+                                <img data-no-retina="" class="img-circle img-bordered-primary" src="{{asset('img/photo.png')}}" alt="krlos">
+                            </li>
+                            #}
+                            
+                            <li>
+                                <div class="btn-group-vertical btn-block">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Carnet</th>
+                                                <th>Complemento</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{dataPerson.carnet}}</td>
+                                                <td>{{dataPerson.complemento}}</td>
+                                                <td>{{dataPerson.paterno}}</td>
+                                                <td>{{dataPerson.materno}}</td>
+                                                <td>{{dataPerson.nombre}}</td>
+                                            </tr> 
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                            <li><br></li>
+                            <li>
+                                {{form_start(form,{'attr':{'id':'idFormPersonToRegister'}})}}
+                                {{form_end(form)}}   
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- /.panel -->
+        </div>
+    </div>
+
+    <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                   
+                </div><!-- /.table-responsive -->
+            </div>
+        </div>
+{% else %}
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noCouch') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{ flashMessage }}</strong> 
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,365 @@
+{# {% extends 'layoutHerramienta.html.twig' %} #}
+{% extends app.session.get('layout') %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Trámites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-body">
+                    <div class="row compose-mail-wrapper">
+                        <div class="col-sm-2">
+                            <div class="panel">
+                                <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
+                                    <li {% if tipo == 1 %}class="active"{% endif %}>
+                                        <a href="javascript:void(0);" onclick="nuevotramite()"><i class="fa fa-inbox"></i> Nuevo Trámite</a>
+                                    </li>
+                                    <li {% if tipo == 2 %} class="active"{% endif %}>    
+                                        <a href="javascript:void(0);" onclick="recibidos()"><i class="fa fa-envelope-o"></i> Recibidos</a>
+                                    </li>
+                                    <li {% if tipo == 3 %} class="active"{% endif %}>
+                                        <a href="javascript:void(0);" onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="concluidos()"><i class="fa fa-file-text-o"></i> Concluidos</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="seguimiento()"> <i class="fa fa-file-text-o"></i> Seguimiento</a>
+                                    </li>
+                                    {% if app.session.get('roluser') in [8,41] %}
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="reactivadosBth()"> <i class="fa fa-file-text-o"></i> Reactivados BTH</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>    
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="panel rounded shadow panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title" id="titulo">{{titulo}}</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="contenido">
+                                        {% include 'SieProcesosBundle:WfTramite:contenido.html.twig' with { 'entities':entities,'titulo':titulo,'tipo':tipo } %}
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                        </div>
+                    </div>
+                </div><!-- /.panel-body -->
+                <!--/ End panel content -->
+            </div>
+        </div><!-- /.row -->
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->
+    <div class="modal fade" id="modalObs" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Observación:</h5>
+                </div>
+                <div class="modal-body">
+                    <p id = "obs"></p>  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $( document ).ready(function() {
+            if({{tipo}} == 2 || {{tipo}} == 3){
+                cargatablas();
+                readmore();
+            }
+            $(".tooltips").tooltip();
+            
+            
+        });
+        function readmore(){
+            var showChar = 30;  // How many characters are shown by default
+            var ellipsestext = "...";
+            var moretext = "Ver más >";
+
+            $('.more').each(function() {
+                var content = $(this).html();
+                if(content.length > showChar) {
+                    var c = content.substr(0, showChar);
+                    var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent">&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#modalObs" onclick="verMas(\'' + content + '\')">' + moretext + '</a></span>';
+                    $(this).html(html);
+                }
+            });
+        }
+        function verMas(observacion){
+            $('#obs').text(observacion);
+        }
+
+        $(function() {
+            // elementos de la lista
+            var menues = $(".nav li"); 
+              // manejador de click sobre todos los elementos
+            menues.click(function() {
+                // eliminamos active de todos los elementos
+                menues.removeClass("active");
+                // activamos el elemento clicado.
+                $(this).addClass("active");
+            });
+        });
+        
+        $(function(){
+            $(".validar").keydown(function(event){
+                //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+        
+        function nuevotramite(){
+            formData = {tipo: 1};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    $('#titulo').text('Nuevo trámite');
+                    $(".tooltips").tooltip();
+                },
+            });
+        }
+
+        function recibidos(){
+            formData = {tipo: 2};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#titulo').text('Trámites recibidos');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    cargatablas(2);
+                    $(".tooltips").tooltip();
+                    readmore();
+                },
+            });
+        }
+
+        function enviados(){
+            formData = {tipo: 3};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#titulo').text('Trámites enviados');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    cargatablas(3);
+                    $(".tooltips").tooltip();
+                    readmore();
+                },
+            });
+        }
+
+        function concluidos(){
+            formData = {tipo: 4};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#titulo').text('Trámites concluidos');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    cargatablas(4);
+                    $(".tooltips").tooltip();
+                },
+            });
+        }
+        function seguimiento(){
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_seguimiento')}}",
+                beforeSend: function () {
+                    $('#titulo').text('Seguimiento');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                },
+            });
+        }
+
+        function reactivadosBth(){
+            formData = {tipo: 5};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#titulo').text('Trámites Reactivados para BTH');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    cargatablas();
+                    readmore();
+                    $(".tooltips").tooltip();
+                },
+            });
+        }
+
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#table tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            if(identif == 3){
+                var table = $('#table').DataTable( {
+                    "columnDefs": [
+                            { "type": "date", "targets": [10] }
+                        ],
+                    "order": [[ 10, "desc" ]],
+                    }
+                );             
+            }else if(identif == 2){
+                var table = $('#table').DataTable( {
+                    "columnDefs": [
+                            { "type": "date", "targets": [8] }
+                        ],
+                    "order": [[ 8, "asc" ]],
+                    }
+                );             
+            }else if(identif == 4){
+                var table = $('#table').DataTable( {
+                    "columnDefs": [
+                            { "type": "date", "targets": [6] }
+                        ],
+                    "order": [[ 6, "desc" ]],
+                    }
+                );             
+            }else{
+                var table = $('#table').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [8,7,6,5] }
+                        ],
+                    }
+                );
+            }
+            
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+        function detalle(id,flujo){
+            formData = {id: id,flujo:flujo};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('wf_tramite_recibido_detalle')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
+        }
+
+        function derivar(id,flujo){
+            formData = {id: id,flujo:flujo};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('wf_tramite_recibido_derivar')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
+        }
+        function validar(){
+           if (confirm('Esta seguro de recibir el trámite?')){
+               //$('#btn_recibir').attr('disabled',true);
+               //return true;
+           }else{
+               return false;
+           }
+           
+        }
+
+    </script>
+{% endblock %}

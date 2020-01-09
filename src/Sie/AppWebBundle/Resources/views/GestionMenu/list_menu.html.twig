@@ -1,0 +1,49 @@
+{% for menu_arbol in menu_arboles if menu_arbol.menu_nivel_tipo_id==1 %}
+    <li class="submenu">
+        <a href="#">
+            <span class="icon"><i class="fa {{ menu_arbol.icono }}"></i></span>
+            <span class="text">{{ menu_arbol.detalle_menu }} </span>
+            <span class="arrow"></span>
+        </a>
+        <ul>
+            {% for menu_arbol2 in menu_arboles if (menu_arbol2.menu_nivel_tipo_id==2 and menu_arbol2.menu_tipo_id==menu_arbol.id) %}
+                {% if menu_arbol2.ruta=="#" %}
+                    <li class="submenu">
+                        <a href="#">
+                            <span class="text">{{ menu_arbol2.detalle_menu }}</span>
+                            <span class="arrow"></span>
+                            </a>
+                        <ul>
+                            {% for menu_arbol3 in menu_arboles if (menu_arbol3.menu_nivel_tipo_id==3 and menu_arbol2.menu_tipo_id==menu_arbol.id) %}
+                                {% if menu_arbol3.ruta=="#" %}
+                                    <li>
+                                        <span><a href="#">{{ menu_arbol3.detalle_menu }} </a></span>
+                                        <span class="arrow"></span>
+                                    </li>
+                                {% else %}
+                                    <li><a href="{{ path(menu_arbol3.ruta) }}"> {{ menu_arbol3.detalle_menu }} </a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ path(menu_arbol2.ruta) }}">{{ menu_arbol2.detalle_menu }} </a>
+                        <ul>
+
+                            {% for menu_arbol3 in menu_arboles if (menu_arbol3.menu_nivel_tipo_id==3 and menu_arbol2.menu_tipo_id==menu_arbol.id) %}
+                                {% if menu_arbol3.ruta=="#" %}
+                                    <li><a href="#">{{ menu_arbol3.detalle_menu }} </a></li>
+                                {% else %}
+                                    <li><a href="{{ path(menu_arbol3.ruta) }}">{{ menu_arbol3.detalle_menu }} </a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+{% endfor %}

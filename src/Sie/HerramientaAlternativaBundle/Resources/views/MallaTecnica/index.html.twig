@@ -11,26 +11,26 @@
                     <i class="glyphicon glyphicon-leaf"></i>
                     <a href="{{path('principal_web')}}">Bienvenida/o</a>
                     <i class="fa fa-angle-right"></i>
-                </li> 
+                </li>
                 <li>
                     <i class="fa fa-th-large"></i>
                     <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menú Principal</a>
                     <i class="fa fa-angle-right"></i>
-                </li> 
+                </li>
                 <li>
                     <i class="fa fa-language"></i>
                     Malla Técnica
                     <i class="fa fa-angle-right"></i>
-                </li>                
+                </li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
-    {% if exist == 1 %}  
+    {% if((exist == 1) or (newexist == 1))  %}
         <div class="body-content animated fadeIn">
             <div class="row">
-                <div id= "mengestioncurso" class="col-md-12">                    
-                      
-                </div>                
+                <div id= "mengestioncurso" class="col-md-12">
+
+                </div>
             </div>
             <div class="row">
 
@@ -38,97 +38,149 @@
                 <div class="col-md-4">
 
 
-                    <div class="tab">
-                        <button class="tablinks" onclick="openCity(event, 'uno')" >Carga Horaria Antigua</button>
-                        <button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>
 
-                    </div>
+                    {% if (app.session.get('ie_gestion') <= '2018') %}
+                        <div class="tab">
+                            <button class="tablinks" onclick="openCity(event, 'uno')"id="defaultOpen" >Carga Horaria Antigua</button>
+                            {#<button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>#}
+                        </div>
 
-                    <div id="uno" class="tabcontent " >
- <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
-                        <small>
-                            <div class="tree well">
+                        <div id="uno" class="tabcontent " >
+                            <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
+                            <small>
+                                <div class="tree well">
 
-                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
-                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
-                                            <i class="fa fa-outdent"></i> Nueva Acreditación
-                                        </button>
-                                    {% endif %}
-                                    <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>
-                                </div>
-                                {% for turno_superiorKey, dataturno_superior in aInfoUnidadEductiva %}
-                                    <ul>
-                                        <li>
-                                            <span><i class="icon-folder-open"></i>{{ turno_superiorKey }}</span>
-                                            <ul>
-                                                {% for facultad_areaKey, datafacultad_area in dataturno_superior %}
-                                                    <li>
-                                                        <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span>
-                                                        <ul>
-                                                            {% for especialidadKey, dataespecialidad in datafacultad_area %}
-                                                                <li>
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
+                                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                            <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
+                                                <i class="fa fa-outdent"></i> Nueva Acreditación
+                                            </button>
+                                        {% endif %}
+                                        <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>
+                                    </div>
+                                    {% for turno_superiorKey, dataturno_superior in aInfoUnidadEductiva %}
+                                        <ul>
+                                            <li>
+                                                <span><i class="icon-folder-open"></i>{{ turno_superiorKey }}</span>
+                                                <ul>
+                                                    {% for facultad_areaKey, datafacultad_area in dataturno_superior %}
+                                                        <li>
+                                                            <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span>
+                                                            <ul>
+                                                                {% for especialidadKey, dataespecialidad in datafacultad_area %}
+                                                                    <li>
                                                                 <span><i class="icon-minus-sign"></i>{{ especialidadKey }}
                                                                     <button type="button" class="btn btn-circle btn-warning btn-stroke"  onclick="getModulos('{{ dataespecialidad.infoMallTec }}');">
                                                                         <i class="glyphicon glyphicon-list-alt"></i>
                                                                     </button>
                                                                 </span>
-                                                                </li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                {% endfor %}
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
 
-                            </div>
-                        </small>
+                                </div>
+                            </small>
 
-                    </div>
+                        </div>
 
-                    <div id="dos" class="tabcontent">
+                    {% else %}
+                        <div class="tab">
+                            <button class="tablinks" onclick="openCity(event, 'uno')" >Carga Horaria Antigua</button>
+                            <button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>
+                        </div>
+
+                        <div id="uno" class="tabcontent " >
+                            <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
+                            <small>
+                                <div class="tree well">
+
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
+                                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                            <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
+                                                <i class="fa fa-outdent"></i> Nueva Acreditación
+                                            </button>
+                                        {% endif %}
+                                        <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>
+                                    </div>
+                                    {% for turno_superiorKey, dataturno_superior in aInfoUnidadEductiva %}
+                                        <ul>
+                                            <li>
+                                                <span><i class="icon-folder-open"></i>{{ turno_superiorKey }}</span>
+                                                <ul>
+                                                    {% for facultad_areaKey, datafacultad_area in dataturno_superior %}
+                                                        <li>
+                                                            <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span>
+                                                            <ul>
+                                                                {% for especialidadKey, dataespecialidad in datafacultad_area %}
+                                                                    <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ especialidadKey }}
+                                                                    <button type="button" class="btn btn-circle btn-warning btn-stroke"  onclick="getModulos('{{ dataespecialidad.infoMallTec }}');">
+                                                                        <i class="glyphicon glyphicon-list-alt"></i>
+                                                                    </button>
+                                                                </span>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
+
+                                </div>
+                            </small>
+
+                        </div>
+                        <div id="dos" class="tabcontent">
 
 
-                        <small>
+                            <small>
                              <pre>De acuerdo a la R.M. 001/2019 Art. 28. Aplica en el Nivel de Técnico Básico a:
 - Nuevos Estudiantes - Gestión 2019
 - Estudiantes inscritos en el Segundo Semestre de la gestión 2018 con al menos 500 horas.
                             </pre>
-                            <div class="tree well">
+                                <div class="tree well">
 
-                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
-                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">
-                                            <i class="fa fa-outdent"></i> Nueva Acreditación
-                                        </button>
-                                    {% endif %}
-                                    {#<a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>#}
-                                </div>
-                                {% for facultad_areaKey, datafacultad_area in newaInfoUnidadEductiva %}
-                                    <ul>
-                                        <li>
-                                            <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span>
-                                            <ul>
-                                                {% for especialidadKey, dataespecialidad in datafacultad_area %}
-                                                    <li>
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
+                                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                            <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">
+                                                <i class="fa fa-outdent"></i> Nueva Acreditación
+                                            </button>
+                                        {% endif %}
+                                        {#<a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>#}
+                                    </div>
+                                    {% for facultad_areaKey, datafacultad_area in newaInfoUnidadEductiva %}
+                                        <ul>
+                                            <li>
+                                                <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span>
+                                                <ul>
+                                                    {% for especialidadKey, dataespecialidad in datafacultad_area %}
+                                                        <li>
                                                       <span><i class="icon-minus-sign"></i>{{ especialidadKey }}
-                                                        <ul>
+                                                          <ul>
                                                             <button type="button" class="btn btn-circle btn-warning btn-stroke"  onclick="getModulosMalla('{{ dataespecialidad.infoMallTec }}');">
                                                                         <i class="glyphicon glyphicon-list-alt"></i>
                                                            </button>
                                                         </ul>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                {% endfor %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
 
-                            </div>
-                        </small>
-                    </div>
+                                </div>
+                            </small>
+                        </div>
+                    {% endif%}
+
 
 
 
@@ -141,20 +193,20 @@
             </div>
         </div>
     {% else %}
-        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
+        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
             <div class="body-content animated fadeIn">
                 <div class="row">
                     <div  class="col-md-12">
-                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">
+                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacionv();">
                             <i class="fa fa-outdent"></i> Nueva Acreditación
                         </button>
-                    </div>                
+                    </div>
                 </div>
-            </div> 
-        {% endif%}    
-    {% endif%}      
-    
-    
+            </div>
+        {% endif%}
+    {% endif%}
+
+
     <!-- Start body content -->
     <!--/ End body content -->
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
@@ -255,7 +307,7 @@
                 }
             });
         };
-        
+
         // New curso show
         var nuevaAcreditacion = function () {
             $.ajax({
@@ -300,6 +352,28 @@
                 }
             });
         };
+
+        function nuevaMallaAcreditacionv() {
+             $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_malla_nueva_acreditacion') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
     </script>
 {%endblock%}
 

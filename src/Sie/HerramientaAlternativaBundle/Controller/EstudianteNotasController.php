@@ -285,6 +285,14 @@ class EstudianteNotasController extends Controller {
             }
         }
 
+        /**
+         * [$tieneEstadoGeneral = determina si se calculara el estado general]
+         */
+        $estadosGenerales = null;
+        if($gestion == 2019){
+            $estadosGenerales = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(4,5,22,3,6)));
+        }
+
         $em->getConnection()->commit();
         return array(
                     'tipo'=>$tipo,
@@ -302,7 +310,9 @@ class EstudianteNotasController extends Controller {
                     'area'=>$aInfoUeducativa['ueducativaInfo']['nivel'],
                     'acreditacion'=>$aInfoUeducativa['ueducativaInfo']['grado'],
                     'paralelo'=>$aInfoUeducativa['ueducativaInfo']['paralelo'],
-                    'turno'=>$aInfoUeducativa['ueducativaInfo']['turno']
+                    'turno'=>$aInfoUeducativa['ueducativaInfo']['turno'],
+                    'estadosGenerales'=>$estadosGenerales,
+                    'inscripcion'=>$inscripcion
                 );
     }
 
@@ -378,6 +388,7 @@ class EstudianteNotasController extends Controller {
         // datos estudiante
         $aInfoStudent = json_decode($infoStudent,true);
         $idInscripcion = $aInfoStudent['eInsId'];
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
         // DAtos de las notas cuantitativas
         $idEstudianteNota = $request->get('idEstudianteNota');
@@ -385,6 +396,8 @@ class EstudianteNotasController extends Controller {
         $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
         $notas = $request->get('notas');
         $idEstados = $request->get('idEstados');
+
+        $estadoGeneral = $request->get('estadoGeneral');
         /*
         dump($idEstudianteNota);
         dump($idNotaTipo);
@@ -470,6 +483,69 @@ class EstudianteNotasController extends Controller {
                     }
                 }
             }
+
+            // REGISTRO DEL ESTADO GENERAL SI CORRESPONDE
+            // ESTADOS:
+            // 5 = PROMOVIDO
+            // 22 = POSTERGADO
+            // 3 = RETIRADO
+            // 6 = NO INCORPORADO
+
+            if ($estadoGeneral != "") {
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+                $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estadoGeneral));
+                $em->flush();
+            }
+        }
+
+        // ACTUALIZAR ESTADO DE MATRICULA
+        $materias = $em->createQueryBuilder('')
+                    ->select('count(ea)')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion', $idInscripcion)
+                    ->getQuery()
+                    ->getSingleResult();
+
+        $notas = $em->createQueryBuilder('')
+                    ->select('en')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','with','ea.estudianteInscripcion = ei.id')
+                    ->innerJoin('SieAppWebBundle:EstudianteNota','en','with','en.estudianteAsignatura = ea.id')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion', $idInscripcion)
+                    ->getQuery()
+                    ->getResult();
+
+        if($materias[1] == count($notas)){
+          $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
+          $contadorCeros = 0;
+          $contadorReprobados = 0;
+          $contadorAprobados = 0;
+          foreach ($notas as $n) {
+            if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; } // PORTERGADO
+            if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; } // PORTERGADO
+            if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; } // APROBADO
+          }  
+
+          if($contadorCeros == count($notas)){
+            $nuevoEstado = 6; //NO INCORPORADO
+          }else{
+            if($contadorAprobados == count($notas)){
+              $nuevoEstado = 5; // PROMOVIDO
+            }else{
+              if ($contadorCeros > 0) {
+                $nuevoEstado = 3; // RETIRADO
+              }else{
+                $nuevoEstado = 22; // POSTERGADO
+              }
+            }
+          }
+
+          $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+          // $em->persist($inscripcion);
+          $em->flush();
         }
         die;
         return 1;

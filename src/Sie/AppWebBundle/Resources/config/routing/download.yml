@@ -1,3 +1,13 @@
+download_tramite_modificacion_calificaciones:
+    path: /tramiteModificacionCalificaciones/{idTramite}
+    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificaciones }
+
+donwload_nnats:
+    path: /nnats/{gestion}/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:nnats }
+    options:
+        expose: true
+
 download_ddjjone_web:
     path:    /ddjjone/{rude}/{gestion}/{sie}
     defaults: { _controller: SieAppWebBundle:Download:ddjjone }
@@ -10,9 +20,17 @@ donwload_listStudentPerCourse:
     path: /listStudentPerCourse/{ue}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
     defaults: { _controller: SieAppWebBundle:Download:listStudentPerCourse }
 
+donwload_listStudentPerCourseSeg:
+    path: /listStudentPerCourseSeg/{ue}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerCourseSeg }
+
 donwload_listStudentPerUe:
     path: /listStudentPerUe/{ue}/{gestion}
     defaults: { _controller: SieAppWebBundle:Download:listStudentPerUe }
+
+donwload_listStudentPerUeSeg:
+    path: /listStudentPerUeSeg/{ue}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerUeSeg }
 
 donwload_listStudentPerUeUnAcredited:
     path: /listStudentPerUe/{sie}
@@ -65,6 +83,10 @@ download_ue_reportes_distrito:
 donwload_boletinPromoPerUe:
     path: /boletinPromoPerUe/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
     defaults: { _controller: SieAppWebBundle:Download:boletinPromoPerUe }
+
+donwload_boletinPromoPerUeNewVersion:
+    path: /boletinPromoPerUe/{version}/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
+    defaults: { _controller: SieAppWebBundle:Download:boletinPromoPerUeNewVersion }    
 
 donwload_listMaestrosPerUe:
     path: /listMaestrosPerUe/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
@@ -135,3 +157,23 @@ download_archs_olimpiadas_robotica_txt:
 donwload_listainscritosestudiantesolim:
     path: /listainscritosestudiantesolim/{codges}/{coddis}
     defaults: { _controller: SieAppWebBundle:Download:listainscritosestudiantesolim }
+
+donwload_studentHistModification:
+    path:     /downstudentHistModification/{id}/{studentId}
+    defaults: { _controller: SieAppWebBundle:Download:downstudentHistModification }
+
+donwload_studentBthEspecialidades:
+    path:     /downstudentEspecialidades/{ue}/{gestion}/{gradoId}
+    defaults: { _controller: SieAppWebBundle:Download:bthEspecialidades }
+
+donwload_studentBthEspecialidadesEliminadas:
+    path:     /downstudentEspecialidadesEliminadas/{ue}/{gestion}/{gradoId}
+    defaults: { _controller: SieAppWebBundle:Download:bthEspecialidadesEliminadas }
+
+donwload_boletinNivelacionTTGBth:
+    path:     /boletinNivelacionTTGBth/{iecId}/{codue}
+    defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTGBth }
+
+donwload_boletinNivelacionTTEBth:
+    path:     /boletinNivelacionTTEBth/{iecId}/{codue}
+    defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTEBth }    

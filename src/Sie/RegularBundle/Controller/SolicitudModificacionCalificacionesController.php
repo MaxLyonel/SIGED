@@ -17,6 +17,9 @@ use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Sie\AppWebBundle\Entity\EstudianteNotaSolicitud;
 use Sie\AppWebBundle\Entity\EstudianteNotaSolicitudDetalle;
 
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
+
 /**
  * EstudianteInscripcion controller.
  *
@@ -301,13 +304,20 @@ class SolicitudModificacionCalificacionesController extends Controller {
                     ->setParameter('rude',$form['codigoRude'])
                     ->setParameter('idInstitucion',$form['idInstitucion'])
                     ->setParameter('gestion',$form['gestion'])
-                    ->setParameter('idMatricula',array(4,5,11,55,26))
+                    ->setParameter('idMatricula',array(4,5,11,55,26,28))
                     ->getResult();
 
                 if(!$inscripcion){
                     $this->get('session')->getFlashBag()->add('noSearch', 'El estudiante no cuenta con inscripcion en la unidad educativa y la gestion seleccionada');
                     return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
+
+                // Validamos si la inscripcion corresponde a la unidad educativa que realiza la solicitud
+                if ($request->getSession()->get('ie_id') != $form['idInstitucion'] and $request->getSession()->get('roluser') != 8) {
+                    $this->get('session')->getFlashBag()->add('noSearch', 'No tiene tuicion sobre la inscripción del estudiante');
+                    return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
+                }
+
                 $idInscripcion = $inscripcion[0]['id'];
                 $this->session->set('idInscripcion', $idInscripcion);
                 $this->session->set('idEstudiante', $estudiante->getId());
@@ -337,9 +347,16 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 }
             }
 
-            //VAlidamos que la gestion sea del 2010 para arriba
-            if($gestion < 2008 or $gestion > 2018){
-                $this->get('session')->getFlashBag()->add('noSearch', 'Solo se pueden hacer modificacion de calificaciones entre las gestiones 2008 a 2018!');
+            // Validamos que no tenga diploma impreso
+            $tieneDiploma = $this->get('funciones')->validarTieneDiploma($idInscripcion);
+            if($tieneDiploma){
+                $this->get('session')->getFlashBag()->add('noSearch', 'No puede realizar la solicitud porque el estudiante, ya tiene diploma de bachiller impreso.');
+                return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
+            }
+
+            //Validamos que la gestion sea del 2010 para arriba
+            if($gestion < 2008 or $gestion > 2019){
+                $this->get('session')->getFlashBag()->add('noSearch', 'Solo se pueden hacer modificacion de calificaciones entre las gestiones 2008 a 2019!');
                 return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
             }
 
@@ -356,6 +373,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         ->getResult();
 
             $nivel = $curso[0]['idNivel'];
+            $grado = $curso[0]['idGrado'];
             /**
              * Obtenemos la cantidad de notas
              */
@@ -369,18 +387,21 @@ class SolicitudModificacionCalificacionesController extends Controller {
                             $cantidad_notas = 3;
                             $valor_inicial = 6;
                             $valor_final = 8;
+                            $operativo = 8;
                             break;
                 case 2013:  switch($curso[0]['idGrado']){
                                 case 1: $tipo_nota = 'Bimestre';
                                         $cantidad_notas = 4;
                                         $valor_inicial = 1;
                                         $valor_final = 4;
+                                        $operativo = 4;
                                         break;
                                 default:
                                         $tipo_nota = 'Trimestre';
                                         $cantidad_notas = 3;
                                         $valor_inicial = 6;
                                         $valor_final = 8;
+                                        $operativo = 8;
                                         break;
 
                             }
@@ -388,21 +409,37 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 case 2014:
                 case 2015:
                 case 2016:
-                case 2017:  
-                case 2018:  
+                case 2017:
+                case 2018:
+                case 2019:
                             if ($gestion == $this->session->get('currentyear')) {
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
                                 $valor_inicial = 1;
+                                // OBTENEMOS CONSOLIDADO (ACTUAL -1) DE LA UNIDAD EDUCATIVA
                                 $valor_final = $this->get('funciones')->obtenerOperativo($idInstitucion,$gestion) - 1;
+                                $operativo = $valor_final;
                                 if ($valor_final < 0) {
                                     $valor_final = 0;
+                                    $operativo = 0;
+                                }
+                                // VERIFICAMOS SI SE ESTA EN OPERATIVO CONSOLIDADO 3ER BIMESTRE
+                                // Y SE TIENE EL OPERATIVO SEXTO SECUNDARIA CONSOLIDADO
+                                // PARA QUE LOS ESTUDIANTES DE SEXTO PUEDAN REALIZAR LA SOLICITUD
+                                // DE 4TO BIMESTRE
+                                if ($operativo == 3 and $nivel == 13 and $grado == 6) {
+                                    $sextoCerrado = $this->get('funciones')->verificarSextoSecundariaCerrado($idInstitucion, $gestion);
+                                    if ($sextoCerrado) {
+                                        $operativo++;
+                                        $valor_final = $operativo;
+                                    }
                                 }
                             }else{
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
                                 $valor_inicial = 1;
                                 $valor_final = 4;
+                                $operativo = 4;
                             }
                             break;
             }
@@ -437,8 +474,13 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
             $arrayAsignaturasEstudiante = array();
 
+            // dump(count($asignaturas));
+            // dump(count($asignaturasCurso));
+            // dump($asignaturasCurso);
+            // die;
+            // dump($idInscripcion);die;
 
-            if(count($asignaturas) != count($asignaturasCurso)){
+            if((count($asignaturas) != count($asignaturasCurso) and $gestion < 2019) or ((count($asignaturas) != count($asignaturasCurso)) and $gestion >= 2019 and $nivel != 13) or ((count($asignaturas) != count($asignaturasCurso)) and (count($asignaturasCurso) - count($asignaturas)) > 1 and $gestion >= 2019 and $nivel == 13)) {
                 foreach ($asignaturas as $a) {
                     $arrayAsignaturasEstudiante[] = $a['id'];
                 }
@@ -448,10 +490,9 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 // Registramos las areas del estudiante
                 foreach ($asignaturasCurso as $ac) {
                     // Preguntamos si la materia del curso ya la tiene el estudiante
-                    if(!in_array($ac['id'], $arrayAsignaturasEstudiante)){
+                    // y si se trata de la materia tecnica general y especilizada
+                    if(!in_array($ac['id'], $arrayAsignaturasEstudiante) and $ac['id'] != 1038 and $ac['id'] != 1039){
                         // Reiniciar el primary key de las tabla estudiante_asignatura
-                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
-                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         $newAsignatura = new EstudianteAsignatura();
                         $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
                         $newAsignatura->setFechaRegistro(new \DateTime('now'));
@@ -461,10 +502,11 @@ class SolicitudModificacionCalificacionesController extends Controller {
                         
                         $em->flush();
 
-                        //dump($newAsignatura);die;
+                        // dump($newAsignatura);
                     }//die('adsf');
 
                 }
+                // die;
                 goto vuelta;
 
             }else if(count($asignaturasCurso) == 0){
@@ -493,43 +535,47 @@ class SolicitudModificacionCalificacionesController extends Controller {
                     case 'Bimestre':
                         $cont2 = 0;
                         // Notas de 1er a cuarto Bimestre
-                        for($i=$valor_inicial;$i<=$valor_final;$i++){
-                            $cont2 = 0;
-                            $existe = 'no';
-                            foreach ($asignaturasNotas as $an) {
-                                if($nivel != 11){
-                                    $valorNota = $an['notaCuantitativa'];
-                                }else{
-                                    $valorNota = $an['notaCualitativa'];
+                        if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 11)) {
+
+                            for($i=$valor_inicial;$i<=$valor_final;$i++){
+                                $cont2 = 0;
+                                $existe = 'no';
+                                foreach ($asignaturasNotas as $an) {
+                                    if($nivel != 11){
+                                        $valorNota = $an['notaCuantitativa'];
+                                    }else{
+                                        $valorNota = $an['notaCualitativa'];
+                                    }
+                                    if($i == $an['idNotaTipo']){
+                                        $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$i,
+                                                                'idEstudianteNota'=>$an['idNota'],
+                                                                'bimestre'=>$an['notaTipo'],
+                                                                'nota'=>$valorNota,
+                                                                'idNotaTipo'=>$i,
+                                                                'idFila'=>$an['id'].''.$i,
+                                                                'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                                            );
+                                        $existe = 'si';
+                                        $cont2++;
+                                    }
+
                                 }
-                                if($i == $an['idNotaTipo']){
+                                if($existe == 'no'){
                                     $notasArray[$cont]['notas'][] =   array(
-                                                            'id'=>$cont."-".$i,
-                                                            'idEstudianteNota'=>$an['idNota'],
-                                                            'bimestre'=>$an['notaTipo'],
-                                                            'nota'=>$valorNota,
-                                                            'idNotaTipo'=>$i,
-                                                            'idFila'=>$an['id'].''.$i,
-                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
-                                                        );
-                                    $existe = 'si';
+                                                                'id'=>$cont."-".$i,
+                                                                'idEstudianteNota'=>'ninguno',
+                                                                'bimestre'=>$this->literal($i)['titulo'],
+                                                                'nota'=>'',
+                                                                'idNotaTipo'=>$i,
+                                                                'idFila'=>$a['id'].''.$i,
+                                                                'idEstudianteAsignatura'=>$a['idEstudianteAsignatura']
+                                                            );
                                     $cont2++;
                                 }
-
-                            }
-                            if($existe == 'no'){
-                                $notasArray[$cont]['notas'][] =   array(
-                                                            'id'=>$cont."-".$i,
-                                                            'idEstudianteNota'=>'ninguno',
-                                                            'bimestre'=>$this->literal($i)['titulo'],
-                                                            'nota'=>'',
-                                                            'idNotaTipo'=>$i,
-                                                            'idFila'=>$a['id'].''.$i,
-                                                            'idEstudianteAsignatura'=>$a['idEstudianteAsignatura']
-                                                        );
-                                $cont2++;
                             }
                         }
+
                         if($nivel != 11){
                             // Para el promedio
                             foreach ($asignaturasNotas as $an) {
@@ -736,6 +782,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $idInscripcionEstudiante = $idInscripcion;
 
             if(!$notasArray){
+                $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('noSearch', 'El estudiante no cuenta con áreas, debe realizar la adicion de areas y calificaciones.');
                 return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
             }
@@ -744,6 +791,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
             // Verificamos si el mismo estudiante tiene una solicitud pendiente
             $solicitudPendiente = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitud')->findOneBy(array('estudianteInscripcionId'=>$idInscripcionEstudiante,'estado'=>1,'tipo'=>1));
             if($solicitudPendiente){
+                $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('sendError', 'Ya hay una solicitud pendiente (S-'.$solicitudPendiente->getId().') para el estudiante, debe esperar a que se responda la solicitud anterior');
                 return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
             }
@@ -759,10 +807,13 @@ class SolicitudModificacionCalificacionesController extends Controller {
             * Recorremos el array generado de las notas y recuperamos los titulos de las notas, para la tabla
             */
             $titulos_notas = array();
-            $titulos = $notasArray[0]['notas'];
+            if (isset($notasArray[0]['notas'])) {
+                
+                $titulos = $notasArray[0]['notas'];
 
-            for($i=0;$i<count($titulos);$i++){
-                $titulos_notas[] = array('titulo'=>$titulos[$i]['bimestre']);
+                for($i=0;$i<count($titulos);$i++){
+                    $titulos_notas[] = array('titulo'=>$titulos[$i]['bimestre']);
+                }
             }
             //dump($notasArray);
             //print_r($titulos_notas);die;
@@ -777,55 +828,146 @@ class SolicitudModificacionCalificacionesController extends Controller {
             if($nivel != 11 and $nivel != 1 and $nivel != 403){
                 // Para niveles primaria y secundaria
                 $cualitativas = array();
-                for($i=$valor_inicial;$i<=$valor_final;$i++){
-                    $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>$i,'estudianteInscripcion'=>$idInscripcion));
-                    if($notaCualitativa){
-                        $cualitativas[] = array('id'=>'cuant-'.$i,'idEstudianteNota'=>$notaCualitativa->getId(),'idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),'idFila'=>$idInscripcion.''.$i,'notaTipo'=>$i);
-                    }else{
-                        $notaTipos = $em->createQueryBuilder()
-                                        ->select('nt.notaTipo')
-                                        ->from('SieAppWebBundle:NotaTipo','nt')
-                                        ->where('nt.id = :id')
-                                        ->setParameter('id',$i)
-                                        ->getQuery()
-                                        ->getSingleResult();
+                // Validamos que las valoraciones cualitativas solo se aplican hasta la gestion 2018
+                // en la gestion 2019 no se aplican
+                if ($gestion < 2019) {
+                    for($i=$valor_inicial;$i<=$valor_final;$i++){
+                        $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>$i,'estudianteInscripcion'=>$idInscripcion));
+                        if($notaCualitativa){
+                            $cualitativas[] = array('id'=>'cuant-'.$i,'idEstudianteNota'=>$notaCualitativa->getId(),'idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),'idFila'=>$idInscripcion.''.$i,'notaTipo'=>$i);
+                        }else{
+                            $notaTipos = $em->createQueryBuilder()
+                                            ->select('nt.notaTipo')
+                                            ->from('SieAppWebBundle:NotaTipo','nt')
+                                            ->where('nt.id = :id')
+                                            ->setParameter('id',$i)
+                                            ->getQuery()
+                                            ->getSingleResult();
 
-                        $notaTipos = $notaTipos['notaTipo'];
-                        $cualitativas[] = array('id'=>'cuant-'.$i,'idEstudianteNota'=>'ninguno','idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$idInscripcion.''.$i,'notaTipo'=>$i);
+                            $notaTipos = $notaTipos['notaTipo'];
+                            $cualitativas[] = array('id'=>'cuant-'.$i,'idEstudianteNota'=>'ninguno','idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$idInscripcion.''.$i,'notaTipo'=>$i);
+                        }
+                    }
+                }else{
+                    if ($gestion == 2019 and $nivel == 12) {
+                        $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>5,'estudianteInscripcion'=>$idInscripcion));
+                        if($notaCualitativa){
+                            $cualitativas[] = array(
+                                'id'=>'cuant-5',
+                                'idEstudianteNota'=>$notaCualitativa->getId(),
+                                'idEstudianteInscripcion'=>$idInscripcion,
+                                'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),
+                                'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),
+                                'notaCuantitativa'=>$notaCualitativa->getNotaCuantitativa(),
+                                'idFila'=>$idInscripcion.'5',
+                                'notaTipo'=>5
+                            );
+                        }else{
+                            $notaTipos = $em->createQueryBuilder()
+                                            ->select('nt.notaTipo')
+                                            ->from('SieAppWebBundle:NotaTipo','nt')
+                                            ->where('nt.id = :id')
+                                            ->setParameter('id',5)
+                                            ->getQuery()
+                                            ->getSingleResult();
+
+                            $notaTipos = $notaTipos['notaTipo'];
+                            $cualitativas[] = array(
+                                'id'=>'cuant-5',
+                                'idEstudianteNota'=>'ninguno',
+                                'idEstudianteInscripcion'=>$idInscripcion,
+                                'bimestre'=>$notaTipos,
+                                'notaCualitativa'=>'',
+                                'notaCuantitativa'=>'',
+                                'idFila'=>$idInscripcion.'5',
+                                'notaTipo'=>5
+                            );
+                        }
                     }
                 }
             }else{
                 $cualitativas = array();
 
-                $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>18,'estudianteInscripcion'=>$idInscripcion));
-                if($notaCualitativa){
-                    if($notaCualitativa->getNotaCualitativa() == ""){
-                        $em->remove($notaCualitativa);
-                        $em->flush();
+                if ($gestion >= 2019) {
+
+                    $arrayCualitativas = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
+
+                    for ($i=$valor_inicial; $i <=$valor_final; $i++) { 
+                        $existe = false;
+                        foreach ($arrayCualitativas as $c) {
+                            if($c->getNotaTipo()->getId() == $i){
+                                $cualitativas[] = array('id'=>'cuant-'.$i,
+                                                        'idEstudianteNota'=>$c->getId(),
+                                                        'idEstudianteInscripcion'=>$idInscripcion,
+                                                        'bimestre'=>$c->getNotaTipo()->getNotaTipo(),
+                                                        'notaCualitativa'=>$c->getNotaCualitativa(),
+                                                        'idFila'=>$idInscripcion.$i,
+                                                        'notaTipo'=>$i
+                                                    );
+                                $existe = true;
+                            }
+                        }
+                        if($existe == false){
+                            $cualitativas[] = array('id'=>'cuant-'.$i,
+                                                    'idEstudianteNota'=>'ninguno',
+                                                    'idEstudianteInscripcion'=>$idInscripcion,
+                                                    'bimestre'=>$this->literal($i)['titulo'],
+                                                    'notaCualitativa'=>'',
+                                                    'idFila'=>$idInscripcion.$i,
+                                                    'notaTipo'=>$i
+                                                );
+                            $existe = true;
+                        }
+                    }
+                }
+
+                if ($operativo >= 4) {
+                    $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>18,'estudianteInscripcion'=>$idInscripcion));
+                    if($notaCualitativa){
+                        if($notaCualitativa->getNotaCualitativa() == ""){
+                            $em->remove($notaCualitativa);
+                            $em->flush();
+                            $notaTipos = $em->createQueryBuilder()
+                                        ->select('nt.notaTipo')
+                                        ->from('SieAppWebBundle:NotaTipo','nt')
+                                        ->where('nt.id = :id')
+                                        ->setParameter('id',18)
+                                        ->getQuery()
+                                        ->getSingleResult();
+
+                            $notaTipos = $notaTipos['notaTipo'];
+                            $cualitativas[] = array(
+                                'id'=>'cuant-18',
+                                'idEstudianteNota'=>'ninguno',
+                                'idEstudianteInscripcion'=>$idInscripcion,
+                                'bimestre'=>$notaTipos,
+                                'notaCualitativa'=>'',
+                                'idFila'=>$idInscripcion.'18',
+                                'notaTipo'=>18
+                            );
+                        }else{
+                            $cualitativas[] = array(
+                                'id'=>'cuant-18',
+                                'idEstudianteNota'=>$notaCualitativa->getId(),
+                                'idEstudianteInscripcion'=>$idInscripcion,
+                                'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),
+                                'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),
+                                'idFila'=>$idInscripcion.'18',
+                                'notaTipo'=>18
+                            );
+                        }
+                    }else{
                         $notaTipos = $em->createQueryBuilder()
-                                    ->select('nt.notaTipo')
-                                    ->from('SieAppWebBundle:NotaTipo','nt')
-                                    ->where('nt.id = :id')
-                                    ->setParameter('id',18)
-                                    ->getQuery()
-                                    ->getSingleResult();
+                                        ->select('nt.notaTipo')
+                                        ->from('SieAppWebBundle:NotaTipo','nt')
+                                        ->where('nt.id = :id')
+                                        ->setParameter('id',18)
+                                        ->getQuery()
+                                        ->getSingleResult();
 
                         $notaTipos = $notaTipos['notaTipo'];
                         $cualitativas[] = array('id'=>'cuant-18','idEstudianteNota'=>'ninguno','idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$idInscripcion.'18','notaTipo'=>18);
-                    }else{
-                        $cualitativas[] = array('id'=>'cuant-18','idEstudianteNota'=>$notaCualitativa->getId(),'idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),'idFila'=>$idInscripcion.'18','notaTipo'=>18);
                     }
-                }else{
-                    $notaTipos = $em->createQueryBuilder()
-                                    ->select('nt.notaTipo')
-                                    ->from('SieAppWebBundle:NotaTipo','nt')
-                                    ->where('nt.id = :id')
-                                    ->setParameter('id',18)
-                                    ->getQuery()
-                                    ->getSingleResult();
-
-                    $notaTipos = $notaTipos['notaTipo'];
-                    $cualitativas[] = array('id'=>'cuant-18','idEstudianteNota'=>'ninguno','idEstudianteInscripcion'=>$idInscripcion,'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$idInscripcion.'18','notaTipo'=>18);
                 }
 
             }
@@ -835,12 +977,15 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $nombreUsuario = $usuario->getPersona()->getPaterno()." ".$usuario->getPersona()->getMaterno()." ".$usuario->getPersona()->getNombre();
 
             $em->getConnection()->commit();
+
             return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:new.html.twig', array(
                         'asignaturas' => $notasArray, 'gestion' => $gestion, 'estudiante'=>$estudiante,
                         'titulos_notas' =>$titulos_notas, 'curso'=>$institucionCurso,
                         'cualitativas'=>$cualitativas,
                         'idEstudianteInscripcion'=>$idInscripcionEstudiante,
-                        'nombreUsuario'=>$nombreUsuario
+                        'nombreUsuario'=>$nombreUsuario,
+                        'nivel'=>$idNivel,
+                        'operativo'=>$operativo
             ));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -862,7 +1007,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
      */
     public function formSearch($gestion){
         $gestiones = array();
-        for($i=2008;$i<=$gestion;$i++){
+        for($i=2019;$i>=2008;$i--){
             $gestiones[$i] = $i;
         }
 
@@ -872,7 +1017,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 ->setAction($this->generateUrl('solicitudModificacionCalificaciones_search'))
                 ->add('codigoRude','text',array('label'=>'Código Rude','data'=>'','attr'=>array('class'=>'form-control jnumbersletters','placeholder'=>'Código Rude','pattern'=>'[0-9A-Z]{11,20}','autocomplete'=>'off','maxlength'=>'20')))
                 ->add('idInstitucion','text',array('label'=>'Sie','data'=>'','attr'=>array('class'=>'form-control jnumbers','placeholder'=>'Sie Unidad Educativa' ,'pattern'=>'[0-9]{6,8}','autocomplete'=>'off','maxlength'=>'8')))
-                ->add('gestion','choice',array('label'=>'Gestión','choices'=>$gestiones,'attr'=>array('class'=>'form-control')))
+                ->add('gestion','choice',array('label'=>'Gestión','choices'=>$gestiones,'data'=>'','attr'=>array('class'=>'form-control')))
                 ->add('buscar','submit',array('attr'=>array('class'=>'btn btn-primary')))
                 ->getForm();
         }else{
@@ -1122,6 +1267,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try{
+
             $solicitud = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitud')->find($request->get('idSolicitud'));
 
             $inscripcion = $em->createQueryBuilder()
@@ -1137,51 +1283,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                 ->getResult();
 
             $idInscripcion = $solicitud->getEstudianteInscripcionId();
-
-            $sie = $solicitud->getInstitucioneducativaId();
-            $gestion = $solicitud->getGestionTipoId();
-            $nivel = $inscripcion[0]['nivel'];
-            $grado = $inscripcion[0]['grado'];
-
-            $gestionActual = $this->session->get('currentyear');
-
-            if($gestion == $gestionActual){
-                // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
-                $operativoLog = $em->createQueryBuilder()
-                                    ->select('ieol')
-                                    ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
-                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaOperativoLogTipo','ieolt','with','ieol.institucioneducativaOperativoLogTipo = ieolt.id')
-                                    ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','ieol.institucioneducativa = ie.id')
-                                    ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','ieol.gestionTipoId = gt.id')
-                                    ->where('ie.id = :sie')
-                                    ->andWhere('gt.id = :gestion')
-                                    ->andWhere('ieolt.id in (1,2)')
-                                    ->setParameter('sie', $sie)
-                                    ->setParameter('gestion', $gestion)
-                                    ->orderBy('ieol.id','desc')
-                                    ->setMaxResults(1)
-                                    ->getQuery()
-                                    ->getResult()[0];
-                if($operativoLog){
-                    $accion = $operativoLog->getInstitucioneducativaOperativoLogTipo()->getId();
-                    if($accion == 1){
-                        $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
-                        return $this->redirectToRoute('solicitudModificacionCalificaciones');
-                    }
-                    // VERIFICAMOS SI SE SUBIO EL ARCHIVO id = 2
-                    if($accion == 2){
-                        $operativo = $operativoLog->getPeriodoTipo()->getId();
-                        $operativoActual = $this->get('funciones')->obtenerOperativo($sie, $gestion);
-                        if( in_array($this->session->get('roluser'), array(7,8,10))) {
-                            $operativoActual = $operativoActual + 1;
-                        }
-                        if($operativoActual < $operativo){
-                            $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
-                            return $this->redirectToRoute('solicitudModificacionCalificaciones');
-                        }
-                    }
-                }
-            }
+            $estadoMatriculaActual = $inscripcion[0]['estadoMatricula'];
 
             $idSolicitud = $request->get('idSolicitud');
             // Verificamos si la solicitud sigue en estado 1, para aprobralo 2 o rechazarlo 3
@@ -1193,6 +1295,80 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
                 $nuevoEstado = $request->get('state');
                 if($nuevoEstado == 'approved'){
+
+                    // OBTENEMOS EL NUEVO ESTADO DE MATRICULA QUE TENDRA CON LAS MODIFICACIONES
+                    $nuevoEstadoMatricula = $this->calcularNuevoEstadoMatriculaConSolicitud($request->get('idSolicitud'));
+
+                    // SI EL NUEVO ESTADO ES PROMOVIDO VERIFICAMOS
+                    if ($nuevoEstadoMatricula == 5){
+                        // dump('nuevo estado promovido');
+                        // VERIFICAMOS SI SE TIENE OTRA INSCRIPCION DEL MISMO GRADO Y NIVEL APROBADO O EFECTIVO
+                        // RETURN TRUE OR FALSE
+                        $inscripcionSimilarAprobada = $this->get('funciones')->existeInscripcionSimilarAprobado($idInscripcion);
+                        if ($inscripcionSimilarAprobada) {
+                            // dump('tiene inscripcion similar');
+                            $this->get('session')->getFlashBag()->add('error', 'La solicitud no puede ser aprobada porque el estudiante ya cuenta con una inscripcion del mismo nivel y grado con un estado de matrícula Promovido o Efectivo.');
+                            return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                        }
+                    }
+
+                    $sie = $solicitud->getInstitucioneducativaId();
+                    $gestion = $solicitud->getGestionTipoId();
+                    $nivel = $inscripcion[0]['nivel'];
+                    $grado = $inscripcion[0]['grado'];
+
+                    $gestionActual = $this->session->get('currentyear');
+
+                    if($gestion == $gestionActual){
+                        // VERIFICAMOS SI LA UE ES
+                        // 1 PLENA
+                        // 2 TECNICA TECNOLOGICA
+                        // 3 MODULAR
+                        // 5 HUMANISTICA
+                        // 7 TRANSFORMACION BTH
+                        // PARA NO CONSIDERAR ESTA VALIDACION YA QUE NO DESCARGAN ARCHIVOS
+                        $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
+                        if (!in_array($tipoUE['id'], [1,2,3,5,7]) and $tipoUE['academico'] == false) {
+
+                            // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
+                            $operativoLog = $em->createQueryBuilder()
+                                                ->select('ieol')
+                                                ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
+                                                ->innerJoin('SieAppWebBundle:InstitucioneducativaOperativoLogTipo','ieolt','with','ieol.institucioneducativaOperativoLogTipo = ieolt.id')
+                                                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','ieol.institucioneducativa = ie.id')
+                                                ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','ieol.gestionTipoId = gt.id')
+                                                ->where('ie.id = :sie')
+                                                ->andWhere('gt.id = :gestion')
+                                                ->andWhere('ieolt.id in (1,2)')
+                                                ->setParameter('sie', $sie)
+                                                ->setParameter('gestion', $gestion)
+                                                ->orderBy('ieol.id','desc')
+                                                ->setMaxResults(1)
+                                                ->getQuery()
+                                                ->getResult()[0];
+
+                            if($operativoLog){
+                                $accion = $operativoLog->getInstitucioneducativaOperativoLogTipo()->getId();
+                                if($accion == 1){
+                                    $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
+                                    return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                                }
+                                // VERIFICAMOS SI SE SUBIO EL ARCHIVO id = 2
+                                if($accion == 2){
+                                    $operativo = $operativoLog->getPeriodoTipo()->getId();
+                                    $operativoActual = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+                                    if( in_array($this->session->get('roluser'), array(7,8,10))) {
+                                        $operativoActual = $operativoActual + 1;
+                                    }
+                                    if($operativoActual < $operativo){
+                                        $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
+                                        return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     // Reiniciar el primary key de las tablas estudiante_nota y estudiante_nota_cualitativa
                     $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');");
                     $query->execute();
@@ -1246,9 +1422,9 @@ class SolicitudModificacionCalificacionesController extends Controller {
                             case 'cualitativa_primaria_secundaria':
                             case 'cualitativa_inicial':
                                     if($ds->getEstudianteNotaId() != null){
-                                        $this->get('notas')->modificarNotaCualitativa($ds->getEstudianteNotaId(), $ds->getNotaCualitativaNew());
+                                        $this->get('notas')->modificarNotaCualitativa($ds->getEstudianteNotaId(), $ds->getNotaCualitativaNew(),0);
                                     }else{
-                                        $this->get('notas')->registrarNotaCualitativa($ds->getNotaTipoId(),$solicitud->getEstudianteInscripcionId(),$ds->getNotaCualitativaNew());
+                                        $this->get('notas')->registrarNotaCualitativa($ds->getNotaTipoId(),$solicitud->getEstudianteInscripcionId(),$ds->getNotaCualitativaNew(),0);
                                     }
                         }
                     }
@@ -1269,16 +1445,149 @@ class SolicitudModificacionCalificacionesController extends Controller {
                     $this->get('session')->getFlashBag()->add('approved', 'La solicitud fue aprobada');
                     return $this->redirect($this->generateUrl('solicitudModificacionCalificaciones'));
                 }else{
-                    $em->getConnection()->commit();
                     $solicitud->setEstado(3);
                     $solicitud->setRespuesta($request->get('observacion'));
                     $em->flush();
+
+                    $em->getConnection()->commit();
+
                     $this->get('session')->getFlashBag()->add('rejected', 'La solicitud fue rechazada');
                     return $this->redirect($this->generateUrl('solicitudModificacionCalificaciones'));
                 }
             }
         }catch(Exception $ex){
             $em->getConnection()->rollback();
+        }
+    }
+
+    /**
+     * [calcularNuevoEstadoMatriculaConSolicitud description]
+     * @param  integer          $idSolicitud [id de la solicitud para ver el detalle y calcular el nuevo estado]
+     * @return nuevoEstado      [nuevo estado calculado]
+     */
+    private function calcularNuevoEstadoMatriculaConSolicitud($idSolicitud){
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $solicitud = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitud')->find($idSolicitud);
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($solicitud->getEstudianteInscripcionId());
+            $idInscripcion = $inscripcion->getId();
+            $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            
+            // OOBTENEMOS EL TIPO DE NOTA BIMESTRE O TRIMESTRE
+            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+            $array = [];
+            $arrayPromedios = [];
+            $cont = 0;
+            $asignaturas = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$idInscripcion));
+            $notas = [];
+            if ($tipo == 'Bimestre') {
+                /*----------  NOTAS BIMESTRALES  ----------*/
+                $notas = array(1,2,3,4);
+                $notaMinima = 51;
+            }
+            if ($tipo == 'Trimestre') {
+                /*----------  NOTAS TRIMESTRALES  ----------*/
+                $notas = array(30,27,31,28,32,29,10);
+                $notaMinima = 36;
+            }
+            // RECORREMOS LAS ASIGNATURAS Y VERIFICAMOS LAS CALIFICACIONES
+            foreach ($asignaturas as $a) {
+                $suma = 0;
+                $array[$cont] = array('id'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId(),'asignatura'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getAsignatura());                
+                // GENERAMOS UN ARRAY CON LAS CALIFICACIONES
+                foreach ($notas as $n) {
+                    $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>$n));
+                    if ($nota) {
+                        $notaSolicitud = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitudDetalle')->findOneBy(array(
+                            'estudianteNotaSolicitud'=>$idSolicitud,
+                            'estudianteNotaId'=>$nota->getId(),
+                            'valoracionTipo'=>'cuantitativa'
+                        ));
+                        if (!$notaSolicitud) {
+                            $notaSolicitud = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitudDetalle')->findOneBy(array(
+                                'estudianteNotaSolicitud'=>$idSolicitud,
+                                'estudianteAsignaturaId'=>$a->getId(),
+                                'notaTipoId'=>$n,
+                                'valoracionTipo'=>'cuantitativa'
+                            ));
+                        }
+                    }else{
+                        $notaSolicitud = $em->getRepository('SieAppWebBundle:EstudianteNotaSolicitudDetalle')->findOneBy(array(
+                            'estudianteNotaSolicitud'=>$idSolicitud,
+                            'estudianteAsignaturaId'=>$a->getId(),
+                            'notaTipoId'=>$n,
+                            'valoracionTipo'=>'cuantitativa'
+                        ));
+                    }
+
+                    if ($notaSolicitud) {
+                        $array[$cont][$n] = $notaSolicitud->getNotaCuantitativaNew();
+                    }else{
+                        if ($nota) {
+                            $array[$cont][$n] = $nota->getNotaCuantitativa();
+                        }else{
+                            $array[$cont][$n] = 0;
+                        }
+                    }
+                }
+
+                // GENERAMOS EL ARRAY DE PROMEDIOS BIMESTRALES
+                if ($tipo == 'Bimestre') {
+                    if ($array[$cont]['1'] != 0 and $array[$cont]['2'] != 0 and $array[$cont]['3'] != 0 and $array[$cont]['4'] != 0) {
+                        $suma = $array[$cont]['1'] + $array[$cont]['2'] + $array[$cont]['3'] + $array[$cont]['4'];
+                        $promedio = round($suma/4);
+                        if ($gestion != 2018 or ($gestion == 2018 and $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() != 1052 and $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() != 1053)) {
+                                $arrayPromedios[] = $promedio;
+                        }
+                    }
+                }
+
+                // GENERAMOS EL ARRAY DE PROMEDIOS TRIMESTRALES
+                if ($tipo == 'Trimestre') {
+                    $prompt = 0;
+                    $promst = 0;
+                    $promtt = 0;
+                    $promAnual = 0;
+                    $promFinal = 0;
+
+                    $prompt = $array[$cont]['30'] + $array[$cont]['27'];
+                    $promst = $array[$cont]['31'] + $array[$cont]['28'];
+                    $promtt = $array[$cont]['32'] + $array[$cont]['29'];
+
+                    $promAnual = round(($prompt + $promst + $promtt) / 3);
+                    if ($promAnual < 36 and $array[$cont]['10'] != 0) {
+                        $promFinal = $promAnual + $array[$cont]['10'];
+                        $arrayPromedios[] = $promFinal;
+                    }else{
+                        $arrayPromedios[] = $promAnual;
+                    }
+                }
+
+                $cont++;
+            }
+
+            // VERIFICAMOS LOS PROMEDIOS
+            $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
+            if ((count($asignaturas) == count($arrayPromedios)) or ($gestion == 2018 and (count($asignaturas) == count($arrayPromedios) - 2))) {
+                $nuevoEstado = 5; // APROBADO
+                $contadorReprobados = 0;
+                foreach ($arrayPromedios as $ap) {
+                    if ($ap < $notaMinima) {
+                        $contadorReprobados++;
+                    }
+                }
+                if ($contadorReprobados > 0) {
+                    $nuevoEstado == 11; // REPROBADO
+                }
+            }
+
+            return $nuevoEstado;
+
+        } catch (Exception $e) {
+            
         }
     }
 }

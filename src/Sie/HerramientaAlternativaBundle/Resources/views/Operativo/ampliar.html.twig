@@ -52,8 +52,10 @@
                                         <th class="text-center" style="min-width:5px">No.</th>
                                         <th>Operativo</th>
                                         <th>Departamento</th>
+                                        <th>Cod. Distrito</th>
                                         <th>Distrito</th>
                                         <th>Gestión</th>
+                                        <th>Fecha Actual</th>
                                         <th>Fecha inicio</th>
                                         <th>Fecha fin</th>                                                
                                         <th>Usuario Registro</th>     
@@ -67,8 +69,10 @@
                                         <th class="text-center" style="min-width:5px">No.</th>
                                         <th>Operativo</th>
                                         <th>Departamento</th>
+                                        <th>Cod. Distrito</th>
                                         <th>Distrito</th>
                                         <th>Gestión</th>
+                                        <th>Fecha Actual</th>
                                         <th>Fecha inicio</th>
                                         <th>Fecha fin</th>                                                
                                         <th>Usuario Registro</th>
@@ -83,11 +87,13 @@
                                             <td class="text-center" style="min-width:5px">{{ loop.index }}</td>
                                             <td>{{ entity.operativoTipo.operativo }}</td>
                                             <td>{{ entity.distritoTipo.departamentoTipo.departamento }}</td>
+                                            <td>{{ entity.distritoTipo.id }}</td>
                                             <td>{{ entity.distritoTipo.distrito }}</td>
                                             <td>{{ entity.gestionTipo.id }}</td>
+                                            <td>{{ "now"|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaInicio.date|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaFin.date|date('d-m-Y') }}</td>
-                                            <td>{{ entity.usuarioRegistro.persona.nombre }}</td>
+                                            <td>{{ entity.usuarioRegistro.persona.nombre }} {{ entity.usuarioRegistro.persona.paterno }} {{ entity.usuarioRegistro.persona.materno }}</td>
                                             <td class="text-center" style="min-width:5px">{{ nro[entity.id] }}</td>
                                             <td class="text-center" style="min-width:3px">
                                                 <a class="btn btn-success btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Ceas del operativo" onclick="verCeas({{entity.id}})">

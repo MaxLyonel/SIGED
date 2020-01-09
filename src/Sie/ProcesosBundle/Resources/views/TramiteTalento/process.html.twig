@@ -1,0 +1,252 @@
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutEspecialSie.html.twig' %} #}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_index', {'tipo':1}) }}">Bandeja</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Informe</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Informe Psicopedagógico</h3>
+                            </div>
+                            {#<div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
+                            </div>#}
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="rude">Código RUDE</label>
+                                    <input type="text" class="form-control" id="rude" name="rude" value="{{ rude }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estudiante">Nombre del Estudiante</label>
+                                    <input type="text" class="form-control" id="estudiante" name="estudiante" value="{{ estudiante }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <p><b class="text-danger">Nota:</b> Ingrese los datos requeridos en base al Informe Psicopedagógico.</p>
+                        <div class="row">
+                            <form id="modifica" autocomplete="off">
+                                <div class="col-md-6 col-sm-6">
+                                    <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
+                                    <div class="form-group">
+                                        <label for="es_talento">¿Es Talento Extraordinario?</label>
+                                        <select type="text" class="form-control" id="es_talento" name="es_talento" disabled required>
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            <option value="SI">Si</option>
+                                            <option value="NO">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tipo_talento">Tipo de Talento Extraordinario</label>
+                                        <select type="text" class="form-control" id="tipo_talento" name="tipo_talento" disabled required>
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            <option value="general">General</option>
+                                            <option value="especifica">Especifica</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="acelera">¿Puede Acelerar?</label>
+                                        <select class="form-control" id="acelera" name="acelera" disabled required>
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            <option value="true">Si</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="nro_informe">Nro. de Informe Psicopedagógico</label>
+                                        <input type="text" class="form-control" id="nro_informe" name="nro_informe" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="informe">Informe Psicopedagógico</label>
+                                        <input type="file" class="form-control myfiles" id="informe" name="informe" accept=".pdf" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <button type="button" class="btn btn-danger" onclick="cancelForm()">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalNotificacion" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notificación</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="mensaje"></div>
+                    {# <h5>¿Está seguro(a) de posponer el adjuntado del Informe Psicopedagógico?</h5>
+                    <div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div> #}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_aceptar" class="btn btn-primary" onclick="redirect()">Aceptar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalProcess" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Alerta</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <div id="carga"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="actualiza" onclick="updateTramite()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() {
+            $("#carga").html('<h5>¿Está seguro(a) de guardar la información ingresada y remiter a la Dirección Distrital?</h5>');
+            $('.myfiles').change(function() {
+                if(this.files[0].size > 2057157) {
+                    $(this).val('');
+                    $("#btn_aceptar").hide();
+                    $("#mensaje").html('<h5>El archivo no debe superar el peso permitido de <b>2MB</b></h5>');
+                    $("#modalNotificacion").modal('show');
+                }
+            });
+            $("#es_talento").prop("disabled", false);
+        });
+        $('.noedit').keydown(function() {
+            return false;
+        });
+        $("#es_talento").on('change', function () {
+            if ($(this).val() == 'SI') {
+                $("#tipo_talento").prop("disabled", false);
+            } else {
+                $("#tipo_talento").prop("disabled", true);
+                $("#acelera").prop("disabled", true);
+                $("#tipo_talento").val('');
+                $("#acelera").val('');
+            }
+        });
+        $("#tipo_talento").on('change', function () {
+            if ($(this).val() == 'general') {
+                $("#acelera").prop("disabled", false);
+                $("#acelera").val('');
+            } else {
+                $("#acelera").prop("disabled", true);
+                $("#acelera").val('false');
+            }
+        });
+
+        function clearInput() {
+            $("#es_talento").val('');
+            $("#tipo_talento").val('');
+            $("#acelera").val('');
+            $("#nro_informe").val('');
+            $("#informe").val('');
+        }
+
+        $("#modifica").submit(function (event) {
+            event.preventDefault();
+            $("#carga").html('<h5>¿Está seguro(a) de guardar la información ingresada y remiter a la Dirección Distrital?</h5>');
+            $("#tramite_st").val(0);
+            $("#actualiza").attr('disabled', false);
+            $("#modalProcess").modal('show');
+        });
+
+        function updateTramite() {
+            $("#actualiza").attr('disabled', true);
+            var fd = new FormData();
+            fd.append('tramite_id', $("#tramite_id").val());
+            fd.append('es_talento', $("#es_talento").val());
+            fd.append('tipo_talento', $("#tipo_talento").val());
+            fd.append('acelera', $("#acelera").val());
+            fd.append('nro_informe', $("#nro_informe").val());
+            var docinforme = document.getElementById('informe');
+            fd.append('informe', docinforme.files[0]);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_update'),
+                data: fd,
+                mimeType:"multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData:false,
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#carga").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    if (data.estado == 200) {
+                        clearInput();
+                        $("#actualiza").hide();
+                        $("#tramite_st").val(1);
+                        message('info', data.msg);
+                    } else {
+                        message('warning', data.msg);
+                        $("#actualiza").attr('disabled', true);
+                    }
+                },
+                error: function (error) {
+                    $("#actualiza").attr('disabled', false);
+                }
+            });
+        }
+
+        function closeModal() {
+            $("#modalProcess").modal('hide');
+            if ($("#tramite_st").val()==1) {
+                location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+            }
+        }
+
+        function message(tipo, msg) {
+            $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">'+ msg +' </div>');
+        }
+
+        function cancelForm() {
+            $("#mensaje").html('<h5>¿Está seguro(a) de posponer el adjuntado del Informe Psicopedagógico?</h5><div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div>');
+            $("#btn_aceptar").show();
+            $("#modalNotificacion").modal('show');
+        }
+
+        function redirect() {
+            location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+        }
+    </script>
+{% endblock %}
+
+

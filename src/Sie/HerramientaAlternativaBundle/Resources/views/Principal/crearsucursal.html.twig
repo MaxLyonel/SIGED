@@ -21,7 +21,7 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel rounded shadow panel-danger">
+                <div class="panel rounded shadow panel-success">
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Habilitar Sucursal</h3>
@@ -33,6 +33,10 @@
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="row">
+                            <div class="alert alert-info alert-dismissible" role="info">
+                                <button type="button" class="close" data-dismiss="info" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-info'></i></strong> Para la habilitación de una nueva sucursal, debe considerar que: la sucursal será registrada para la gestión actual en el CEA y Periodo seleccionado.
+                            </div>
                             {% for flashMessage in app.session.flashbag.get('errorMsg') %}
                                         <div class="alert alert-danger alert-dismissible" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

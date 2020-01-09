@@ -53,7 +53,6 @@ class ProcesoTipoController extends Controller
         $entity = new ProcesoTipo();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('proceso_tipo');")->execute();
@@ -61,6 +60,8 @@ class ProcesoTipoController extends Controller
             $query->execute();
             $tarea = $query->fetchAll();
             if(!$tarea){
+                $entity->setProcesoTipo(strtoupper($form->getData()->getProcesoTipo()));
+                $entity->setObs(mb_strtoupper($form->getData()->getObs(),'UTF-8'));
                 $em->persist($entity);
                 $em->flush();
                 $mensaje = 'La tarea ' . $entity->getProcesoTipo() . ' se registró con éxito';
@@ -199,6 +200,11 @@ class ProcesoTipoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            //dump($request);die;
+            $form = $request->get('sie_appwebbundle_procesotipo');
+            $entity->setProcesoTipo(mb_strtoupper($form['procesoTipo'],'UTF-8'));
+            $entity->setObs(strtoupper($form['obs']));
+            //dump($entity);die;
             $em->flush();
 
             $mensaje = 'La tarea se modificó con éxito';

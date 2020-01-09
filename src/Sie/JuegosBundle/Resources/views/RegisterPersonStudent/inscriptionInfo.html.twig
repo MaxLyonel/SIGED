@@ -1,0 +1,288 @@
+
+{#
+
+{% for data  in arrInscriptionInfo.participantes %}
+{{dump(data.participante)}}
+{{dump(data.entrenador)}}
+{% endfor %}
+
+
+	#}
+ 
+<div class="row">
+		<div class="col-md-12">
+			{% if arrNewTeam | length > 0 %}
+		          {% for keyOne, info in arrNewTeam %}
+
+		          			{% if keyOne != 0%}
+
+		          				<div class="panel panel-info shadow">
+		                            <div class="panel-heading">
+		                                <div class="pull-left">
+		                                    <h3 class="panel-title">Equipo{{keyOne}} </h3>
+		                                </div>
+		                                <div class="pull-right">
+		                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+		                                </div>
+		                                <div class="clearfix"></div>
+		                            </div><!-- /.panel-heading -->
+		                            <div class="panel-body no-padding">
+		                                <ul class="list-group no-margin">
+		                                    {% for kk,groupInfo in info %}
+		                                    	{% for group in groupInfo %}
+		                                        <li class="list-group-item">
+		                                        		{{group}}
+		                                    	</li>
+		                                    	{% endfor %}
+		                                    {% endfor %}
+		                                    <li class="list-group-item">
+		                                    	<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="openRegisterCouch('{{info.option|base64_encode}}');" >
+							                      <i class="fa fa-edit"></i>Registro Entrenador
+							                  </button>
+		                                    		
+		                                    	<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="showRegisterCouch('{{info.option|base64_encode}}','{{mainData|base64_encode}}');" >
+							                      <i class="fa fa-user"></i>Ver Entrenador
+							                  </button>
+		                                    		
+		                                    </li>
+		                                </ul>
+		                            </div><!-- /.panel-body -->
+		                        </div>
+		          				
+								
+							
+							{% else %}
+							<div class="table-responsive" style="margin-top: -1px;">
+							 <table class="table table-striped table-primary">
+					            <thead>
+					            <tr>
+					                <th class="text-center border-right" style="width: 1%;">No.</th>
+					                <th>Participante</th>
+					                <th>Opcion</th>
+					                
+					                <!-- <th>Entrenador</th> -->
+					                
+					            </tr>
+					            </thead>
+					            <tbody>
+							
+								{% for keyTwo,data in info %}
+										<tr>
+											<td>{{loop.index}} </td>
+										<td>
+											{{data.student}}
+										</td>
+										<td>
+							                  <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="openRegisterCouch('{{data.option|base64_encode}}');" >
+							                      <i class="fa fa-edit"></i>Registro Entrenador
+							                  </button>
+							                  
+							                  <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="showRegisterCouch('{{data.option|base64_encode}}','{{mainData}}');" >
+							                      <i class="fa fa-user"></i>Ver Entrenador
+							                  </button>
+							                  
+										</td>
+										</tr>
+
+								{% endfor %}
+
+								 </tbody>
+					        </table>
+					        </div>
+							{% endif %}
+					
+					{% endfor %}
+		            	
+		     {% else %}       
+		     	 	<div class="alert alert-warning">
+	                    <strong>no existen participantes registrados...</strong> 
+	               </div>
+		     {% endif %}
+		    
+	</div>
+</div>
+
+
+{#
+
+<div class="row">
+
+
+
+
+		<div class="col-md-6">
+		    <div class="panel panel-info 000shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Registrar Entrenador</h3>
+                    </div>
+                    
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+		        <div class="panel-body no-padding">
+		            {{form_start(form,{'attr':{'id':'formLookForPersonId' }} )}}
+
+
+		            <div class="panel rounded shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"></h3>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body no-padding">
+
+                            
+                                <div class="form-body">
+                                   
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                            	{{form_widget(form.carnet)}}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{form_widget(form.complemento)}}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            	{{form_widget(form.comisionTipo)}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                
+                                </div><!-- /.form-body -->
+                                <div class="form-footer">
+                                    <div class="pull-right">
+                                        <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                        {{form_widget(form.find)}}                                        
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.form-footer -->
+                            
+
+                        </div><!-- /.panel-body -->
+                    </div>
+
+
+		            {{form_end(form)}}
+					
+					<div id="idPersonData">
+						
+					</div>
+
+
+
+		        </div><!-- /.panel-body -->
+		    </div>
+		</div>
+
+
+
+		<div class="col-md-6">
+
+
+			<div id="registerPersonId"> 
+
+				<div class="panel panel-info shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Entrenador(es) Registrados</h3>
+                    </div>
+                    
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+		        <div class="panel-body no-padding">
+
+
+		        		<div class="table-responsive" style="margin-top: -1px;">
+			                <table class="table table-striped table-primary">
+			                    <thead>
+			                    <tr>
+			                        <th class="text-center border-right" style="width: 1%;">No.</th>
+			                        <th>Carnet</th>
+			                        <th>Complemento</th>
+			                        <th>Paterno</th>
+			                        <th>Materno</th>
+			                        <th>Nombre</th>
+			                        <!-- <th>Entrenador</th> -->
+			                        
+			                    </tr>
+			                    </thead>
+			                    <tbody>
+			                    	
+			                    {% for couch  in couchs %}
+			                        <tr>
+			                            <td class="text-center border-right">{{loop.index}}</td>
+			                            <td><span>{{couch.carnet}}</span></td>
+			                            <td><span>{{couch.complemento}}</span></td>
+			                            <td><span>{{couch.paterno}}</span></td>
+			                            <td><span>{{couch.materno}}</span></td>
+			                            <td><span>{{couch.nombre}}</span></td>
+			                        </tr>
+			                    {% endfor %}
+			                    
+			                    </tbody>
+			                </table>
+			            </div>
+			      
+		        </div><!-- /.panel-body -->
+		    </div>
+
+
+
+			</div>
+
+
+		    <div class="panel panel-info shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Deportista(s) Registrados</h3>
+                    </div>
+                    
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+		        <div class="panel-body no-padding">
+
+
+		        		<div class="table-responsive" style="margin-top: -1px;">
+			                <table class="table table-striped table-primary">
+			                    <thead>
+			                    <tr>
+			                        <th class="text-center border-right" style="width: 1%;">No.</th>
+			                        <th>Participante</th>
+			                        <!-- <th>Entrenador</th> -->
+			                        
+			                    </tr>
+			                    </thead>
+			                    <tbody>
+			                    {% for data  in arrInscriptionInfo.participantes %}
+			                        <tr>
+			                            <td class="text-center border-right">{{loop.index}}</td>
+			                            <td>
+
+			                                <span>{{data.participante}}</span>
+			                            </td>
+			                             <td>{{data.entrenador}}</td>
+			                            
+			                           
+			                        </tr>
+			                    {% endfor %}
+			                    </tbody>
+			                </table>
+			            </div>
+			            
+
+
+		        </div><!-- /.panel-body -->
+		    </div>
+		</div>
+
+	
+	</div>
+
+
+#}

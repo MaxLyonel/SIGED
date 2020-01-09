@@ -1,293 +1,141 @@
-{% if notas %}
-    <h5 class="text-info">Notas</h5>
-    <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
-    {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 or inscripcion.institucioneducativaCurso.nivelTipo.id == 1 %}
-        {% if gestion <= 2013 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>Primer Trimestre</th>
-                    <th>Segundo Trimestre</th>
-                    <th>Tercer Trimestre</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
+{% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+    {% if gestion > 2018 %}
+        {% if cualitativo %}
+            <h5 class="text-info">Notas</h5> 
+            <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+                <thead class="cf">
                     <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-justify">{{notas.t1_cual}}</td>
-                        <td class="text-justify">{{notas.t2_cual}}</td>
-                        <td class="text-justify">{{notas.t3_cual}}</td>
+                        <th>Asignatura</th>
+                        {% for cabeceras in cabeceras %}
+                            <th>{{cabeceras.notaAbrev}}</th>
+                        {% endfor %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        {% elseif gestion > 2013 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>Primer Bimestre</th>
-                    <th>Segundo Bimestre</th>
-                    <th>Tercer Bimestre</th>
-                    <th>Cuarto Bimestre</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
+                </thead>
+                <tbody>                    
                     <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-justify">{{notas.b1_cual}}</td>
-                        <td class="text-justify">{{notas.b2_cual}}</td>
-                        <td class="text-justify">{{notas.b3_cual}}</td>
-                        <td class="text-justify">{{notas.b4_cual}}</td>
+                        <td>
+                            <table class="table table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+                                {% for asig in asignaturasInicial %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{asig.institucioneducativaCursoOferta.asignaturaTipo.asignatura}}</strong>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                        {% for cuali in cualitativo %}
+                            {% if cuali.notaTipo.id != 18 %}
+                                <td>{{cuali.notaCualitativa}}</td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
-                {% endfor %}
-            </tbody>
+                </tbody>
+            </table>
         {% endif %}
-    {% elseif inscripcion.institucioneducativaCurso.nivelTipo.id == 2 %}
-        <thead class="cf">
-            <tr>
-                <th>Asignatura</th>
-                <th>P.T.</th>
-                <th>S.T.</th>
-                <th>T.T.</th>
-                <th>P.A.</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for notas in notas %}
+    {% else %}
+        <h5 class="text-info">Notas</h5> 
+        <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+            <thead class="cf">
                 <tr>
-                    <td><strong>{{notas.asignatura}}</strong></td>
-                    <td class="text-center">{{notas.t1_cuant}}</td>
-                    <td class="text-center">{{notas.t2_cuant}}</td>
-                    <td class="text-center">{{notas.t3_cuant}}</td>
-                    <td class="text-center"><strong>{{notas.pa_cuant}}</strong></td>
+                    <th>Asignatura</th>
+                    {% for cabeceras in cabeceras %}
+                        <th>{{cabeceras.notaAbrev}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for notas in notas %}
+                    <tr>
+                        <td><strong>{{notas.asignatura}}</strong></td>
+                        {% for indices in indices %}
+                            <td>{{notas[indices]}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if cualitativo %}
+            {% set cont = 0 %}
+            {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                <h5 class="text-primary">Informe final:</h5>
+            {% else %}
+                <h5 class="text-info">Valoración cualitativa</h5>
+            {% endif  %}
+            <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
+            {% for cuali in cualitativo %}
+                {% set cont = cont + 1 %}
+                <tr>
+                    <td>
+                        {% if inscripcion.institucioneducativaCurso.nivelTipo.id != 11 %}
+                            <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                        {% endif %}
+                        {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                            {% if cuali.notaTipo.id == 18 %}
+                                {{cuali.notaCualitativa}}
+                            {% endif %}
+                        {% else %}
+                            {{cuali.notaCualitativa}}
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    {% elseif inscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
-        {% if gestion <= 2012 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>P.T.</th>
-                    <th>S.T.</th>
-                    <th>T.T.</th>
-                    <th>P.A.</th>
-                    <th>P.T.Cualitatativo</th>
-                    <th>S.T.Cualitatativo</th>
-                    <th>T.T.Cualitatativo</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
-                    <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-center">{{notas.t1_cuant}}</td>
-                        <td class="text-center">{{notas.t2_cuant}}</td>
-                        <td class="text-center">{{notas.t3_cuant}}</td>
-                        <td class="text-center"><strong>{{notas.pa_cuant}}</strong></td>
-                        <td class="text-justify">{{notas.t1_cual}}</td>
-                        <td class="text-justify">{{notas.t2_cual}}</td>
-                        <td class="text-justify">{{notas.t3_cual}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        {% elseif gestion == 2013 %}
-            {% if inscripcion.institucioneducativaCurso.gradoTipo.id != 1 %}
-                <thead class="cf">
-                    <tr>
-                        <th>Asignatura</th>
-                        <th>P.T.</th>
-                        <th>S.T.</th>
-                        <th>T.T.</th>
-                        <th>P.A.</th>
-                        <th>R.F.</th>
-                        <th>P.F.</th>
-                        <th>P.T.Cualitatativo</th>
-                        <th>S.T.Cualitatativo</th>
-                        <th>T.T.Cualitatativo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for notas in notas %}
-                        <tr>
-                            <td><strong>{{notas.asignatura}}</strong></td>
-                            <td class="text-center">{{notas.t1_cuant}}</td>
-                            <td class="text-center">{{notas.t2_cuant}}</td>
-                            <td class="text-center">{{notas.t3_cuant}}</td>
-                            <td class="text-center"><strong>{{notas.pa_cuant}}</strong></td>
-                            <td class="text-center">{{notas.rf_cuant}}</td>
-                            <td class="text-center"><strong>{{notas.pf_cuant}}</strong></td>
-                            <td class="text-justify">{{notas.t1_cual}}</td>
-                            <td class="text-justify">{{notas.t2_cual}}</td>
-                            <td class="text-justify">{{notas.t3_cual}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% else %}
-                <thead class="cf">
-                    <tr>
-                        <th>Asignatura</th>
-                        <th>Primer Bimestre</th>
-                        <th>Segundo Bimestre</th>
-                        <th>Tercer Bimestre</th>
-                        <th>Cuarto Bimestre</th>
-                        <th>Promedio</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for notas in notas %}
-                        <tr>
-                            <td><strong>{{notas.asignatura}}</strong></td>
-                            <td class="text-center">{{notas.b1_cuant}}</td>
-                            <td class="text-center">{{notas.b2_cuant}}</td>
-                            <td class="text-center">{{notas.b3_cuant}}</td>
-                            <td class="text-center">{{notas.b4_cuant}}</td>
-                            <td class="text-center"><strong>{{notas.p_cuant}}</strong></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% endif %}
-        {% elseif gestion > 2013 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>Primer Bimestre</th>
-                    <th>Segundo Bimestre</th>
-                    <th>Tercer Bimestre</th>
-                    <th>Cuarto Bimestre</th>
-                    <th>Promedio</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
-                    <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-center">{% if notas.b1_cuant is defined %}{{notas.b1_cuant}}{% else %}-{% endif %}</td>
-                        <td class="text-center">{% if notas.b2_cuant is defined %}{{notas.b2_cuant}}{% else %}-{% endif %}</td>
-                        <td class="text-center">{% if notas.b3_cuant is defined %}{{notas.b3_cuant}}{% else %}-{% endif %}</td>
-                        <td class="text-center">{% if notas.b4_cuant is defined %}{{notas.b4_cuant}}{% else %}-{% endif %}</td>
-                        <td class="text-center">{% if notas.p_cuant is defined %}<strong>{{notas.p_cuant}}</strong>{% else %}-{% endif %}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        {% endif %}
-    {% elseif inscripcion.institucioneducativaCurso.nivelTipo.id == 3 %}
-        {% if gestion <= 2008 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>P.A.</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
-                    <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-center"><strong>{{notas.pa_cuant}}</strong></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        {% elseif gestion > 2008 and gestion < 2013 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>P.T.</th>
-                    <th>S.T.</th>
-                    <th>T.T.</th>
-                    <th>P.A.</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
-                    <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-center">{{notas.t1_cuant}}</td>
-                        <td class="text-center">{{notas.t2_cuant}}</td>
-                        <td class="text-center">{{notas.t3_cuant}}</td>
-                        <td class="text-center"><strong>{{notas.pa_cuant}}</strong></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        {% endif %}
-    {% elseif inscripcion.institucioneducativaCurso.nivelTipo.id == 13 %}
-        {% if gestion <= 2013 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>P.T.</th>
-                    <th>S.T.</th>
-                    <th>T.T.</th>
-                    <th>P.A.</th>
-                    <th>P.T.D.</th>
-                    <th>S.T.D.</th>
-                    <th>T.T.D.</th>
-                    <th>P.T.P.C.</th>
-                    <th>S.T.P.C.</th>
-                    <th>T.T.P.C.</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
-                    <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        <td class="text-center">{{notas.t1_cuant}}</td>
-                        <td class="text-center">{{notas.t2_cuant}}</td>
-                        <td class="text-center">{{notas.t3_cuant}}</td>
-                        <td class="text-center"><strong>{{notas.pa_cuant}}</strong></td>
-                        <td class="text-center">{{notas.pt_dps_cuant}}</td>
-                        <td class="text-center">{{notas.st_dps_cuant}}</td>
-                        <td class="text-center">{{notas.tt_dps_cuant}}</td>
-                        <td class="text-center">{{notas.pt_pc_cuant}}</td>
-                        <td class="text-center">{{notas.st_pc_cuant}}</td>
-                        <td class="text-center">{{notas.tt_pc_cuant}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        {% elseif gestion > 2013 %}
-            <thead class="cf">
-                <tr>
-                    <th>Asignatura</th>
-                    <th>Primer Bimestre</th>
-                    <th>Segundo Bimestre</th>
-                    <th>Tercer Bimestre</th>
-                    <th>Cuarto Bimestre</th>
-                    <th>Promedio</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for notas in notas %}
-                    <tr>
-                        <td><strong>{{notas.asignatura}}</strong></td>
-                        {% if notas.b1_cuant is defined %}<td class="text-center">{{notas.b1_cuant}}</td>{% endif %}
-                        {% if notas.b2_cuant is defined %}<td class="text-center">{{notas.b2_cuant}}</td>{% endif %}
-                        {% if notas.b3_cuant is defined %}<td class="text-center">{{notas.b3_cuant}}</td>{% endif %}
-                        {% if notas.b4_cuant is defined %}<td class="text-center">{{notas.b4_cuant}}</td>{% endif %}
-                        {% if notas.p_cuant is defined %}<td class="text-center"><strong>{{notas.p_cuant}}</strong></td>{% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
+            </table>
         {% endif %}
     {% endif %}
-    </table>
 {% else %}
-    <div class="alert alert-info">
-        <strong>¡Información!</strong> No se encontraron calificaciones para la presente gestión.
-    </div>
-{% endif %}
-
-{% if cualitativo %}
-    {% set cont = 0 %}
-    <h5 class="text-info">Valoración cualitativa</h5>
-    <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
-    {% for cuali in cualitativo %}
-        {% set cont = cont + 1 %}
-        <tr>
-            <td>
-                <h6 class="text-primary">Bimestre {{cont}}:</h6>
-                {{cuali.notaCualitativa}}
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
+    {% if notas %}
+        <h5 class="text-info">Notas</h5> 
+        <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+            <thead class="cf">
+                <tr>
+                    <th>Asignatura</th>
+                    {% for cabeceras in cabeceras %}
+                        <th>{{cabeceras.notaAbrev}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for notas in notas %}
+                    <tr>
+                        <td><strong>{{notas.asignatura}}</strong></td>
+                        {% for indices in indices %}
+                            <td>{{notas[indices]}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            <strong>¡Información!</strong> No se encontraron calificaciones para la presente gestión.
+        </div>
+    {% endif %}
+    {% if cualitativo %}
+        {% set cont = 0 %}
+        {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+            <h5 class="text-primary">Informe final:</h5>
+        {% else %}
+            <h5 class="text-info">Valoración cualitativa</h5>
+        {% endif  %}
+        <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
+        {% for cuali in cualitativo %}
+            {% set cont = cont + 1 %}
+            <tr>
+                <td>
+                    {% if inscripcion.institucioneducativaCurso.nivelTipo.id != 11 %}
+                        <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                    {% endif %}
+                    {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                        {% if cuali.notaTipo.id == 18 %}
+                            {{cuali.notaCualitativa}}
+                        {% endif %}
+                    {% else %}
+                        {{cuali.notaCualitativa}}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
 {% endif %}

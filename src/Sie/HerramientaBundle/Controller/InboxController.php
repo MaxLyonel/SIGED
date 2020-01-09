@@ -18,7 +18,11 @@ use Sie\AppWebBundle\Entity\RegistroConsolidacion;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
+
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
 
 /**
  * EstudianteInscripcion controller.
@@ -221,39 +225,54 @@ class InboxController extends Controller {
         // $this->session->set('ue_noturna', (array_search("$this->unidadEducativa",$this->arrUeNocturnas,true)!=false)?true:false);
         //get type of UE
         $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$this->unidadEducativa,'gestion'=>$gestionOpeUnidadEducativa));
-
         if($objValidateUePlena){
           //switch to the kind of UE
           switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
             case 1:
+            case 7:
               # plena
               $this->session->set('ue_plena', true);
+              $this->session->set('acceso_total', true);
+              $arrGradoTipoBth = false;
+              if($objValidateUePlena->getGradoTipo()->getId()>=6){
+                $arrGradoTipoBth = array(5,6);
+              }else{
+                $gradoTipoBth = $objValidateUePlena->getGradoTipo()->getId()==5?$arrGradoTipoBth = array(5):false;
+              }
+              $this->session->set('gradoTipoBth', $arrGradoTipoBth);
               break;
             case 2:
                 # tec teg
-              $this->session->set('ue_tecteg', true);
+                $this->session->set('ue_tecteg', true);
+                $this->session->set('acceso_total', true);
                 break;
             case 3:
                 # tec teg
-              $this->session->set('ue_modular', true);
+                $this->session->set('ue_modular', true);
+                $this->session->set('acceso_total', true);
                 break;
             case 4:
                 # tec teg
-              $this->session->set('ue_caldiff', true);
+                $this->session->set('ue_caldiff', true);
+                $this->session->set('acceso_total', true);
                 break;
             case 5:
                 # tec teg
-              $this->session->set('ue_humanistica_web', true);
+                $this->session->set('ue_humanistica_web', true);
+                $this->session->set('acceso_total', true);
                 break;
             default:
-              # code...
-              break;
+                $this->session->set('ue_humanistica', true);
+                $this->session->set('acceso_total', false);
+                break;
           }
 
         }else{
           // $this->session->set('ue_tecteg', (array_search("$this->unidadEducativa",$this->arrUeTecTeg,true)!=false)?true:false);
-          $this->session->set('ue_plena', ($objValidateUePlena)?true:false);
+          //$this->session->set('ue_plena', ($objValidateUePlena)?true:false);
           // dump($this->session->get('ue_humanistica'));die;
+          $this->session->set('ue_humanistica', true);
+          $this->session->set('acceso_total', false);
         }
         //look for Humanistica UE
         $objRegularUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
@@ -262,14 +281,14 @@ class InboxController extends Controller {
         ));
         // dump($this->unidadEducativa);die;
 
-        if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
-        || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
-        || ((int)$this->unidadEducativa <= 80730824
-         && (int)$this->unidadEducativa >=80730002 )
+        // if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
+        // || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
+        // || ((int)$this->unidadEducativa <= 80730824
+        //  && (int)$this->unidadEducativa >=80730002 )
 
-        ) ){
-            $this->session->set('ue_humanistica', true);
-        }
+        // ) or $this->unidadEducativa == 71700024 ){
+            
+        // }
 
 
         // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
@@ -301,11 +320,10 @@ class InboxController extends Controller {
             ->setParameter('proceso', 11)
             ->orderBy('t.gestionId')
             ->getQuery();
-
+            
         $entities = $query->getResult();
-        if(sizeof($entities)>0){
-          $this->session->set('ue_sol_regularizar',true);
-        }
+
+        $this->session->set('ue_sol_regularizar',false);
 
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
@@ -368,6 +386,7 @@ class InboxController extends Controller {
       $btnForm  = ($this->operativoUe <= 5 )?'submit':'button';
       switch ($objTypeOfUEId) {
         case 1:
+        case 7:
           # code...
           $label = 'U.E. Plena';
           $btnClass = 'btn btn-primary text-center btn-block';
@@ -545,34 +564,69 @@ class InboxController extends Controller {
 
         ));
 
+        $repository = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $repository->createQueryBuilder('t')
+            ->select('td')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'WITH', 'td.tramite = t.id')
+            ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'WITH', 'td.flujoProceso = fp.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 't.institucioneducativa = ie.id')
+            ->where('ie.id = :idInstitucion')
+            ->andWhere('fp.id = :flujoP')
+            ->andWhere('fp.proceso = :proceso')
+            ->andWhere('t.gestionId = :gestion')
+            ->setParameter('idInstitucion', $this->unidadEducativa)
+            ->setParameter('flujoP', 13)
+            ->setParameter('proceso', 11)
+            ->setParameter('gestion', $data['gestion'])
+            ->orderBy('t.gestionId')
+            ->getQuery();
+            
+        $tramites = $query->getResult();
+
+        if(sizeof($tramites)>0){
+          $this->session->set('ue_sol_regularizar',true);
+        } else {
+          $this->session->set('ue_sol_regularizar',false);
+        }
+
        if($objValidateUePlena){
          //switch to the kind of UE
          switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
            case 1:
+           case 7:
              # plena
              $this->session->set('ue_plena', true);
+             $this->session->set('acceso_total', true);
              break;
            case 2:
                # tec teg
              $this->session->set('ue_tecteg', true);
+             $this->session->set('acceso_total', true);
                break;
            case 3:
                # tec teg
              $this->session->set('ue_modular', true);
+             $this->session->set('acceso_total', true);
                break;
            case 4:
                # tec teg
              $this->session->set('ue_caldiff', true);
+             $this->session->set('acceso_total', true);
                break;
            case 5:
                # tec teg
              $this->session->set('ue_humanistica_web', true);
+             $this->session->set('acceso_total', true);
                break;
            default:
-             # code...
+              $this->session->set('ue_humanistica', true);
+             $this->session->set('acceso_total', false);
              break;
          }
 
+       }else{
+          $this->session->set('ue_humanistica', true);
+          $this->session->set('acceso_total', false);
        }
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -583,7 +637,7 @@ class InboxController extends Controller {
         $dataInfo = array('id' => $data['id'], 'gestion' => $data['gestion'], 'ieducativa' => $ieducativa);
 
         //get and set the operativo
-        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($data['id'],$data['gestion']);
+        $operativo = $this->get('funciones')->obtenerOperativo($data['id'],$data['gestion']);
         $this->session->set('lastOperativo', $operativo);
 
         //verificar - crear registro en InstitucioneducativaHumanisticoTecnico
@@ -1014,45 +1068,85 @@ class InboxController extends Controller {
       
       //get values send
       $form = $request->get('form');
+
       //get the file to generate the new file
       $dir = '/archivos/descargas/';
       // conver json values to array
       $arrData = json_decode($form['data'],true);
-      $cabecera = 'R';
-      //before to donwload file remove the old
-      $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
-      system('rm -fr ' . $dir .$fileRude.'.sie' );      
-      system('rm -fr ' . $dir .$fileRude.'.igm' );
       
-      //to generate the file execute de function
-      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
-      $query->execute();
+      // $objOperativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
+      //   'institucioneducativa' => $arrData['id'],
+      //   'gestionTipoId' => $arrData['gestion'],
+      //   'institucioneducativaOperativoLogTipo' => 5,
+      // ));
 
-      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+      // if($objOperativoLog){
+
+      //     $message = "No se puede proceder por que el archivo ya fue descargado";
+      //       $this->addFlash('notidonwloadrude', $message);
+      //       $sw = false;
+      //       $dataDownload = array(
+      //         'sw' => $sw
+      //       );  
+
+      // }else{
+
+          $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $arrData['id'],
+            'gestion' => $arrData['gestion'],
+          ));
+          // dump($objOperativo);
+          // dump($arrData);
+          
+          $cabecera = 'R';
+          //before to donwload file remove the old
+          $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+          system('rm -fr ' . $dir .$fileRude.'.sie' );      
+          system('rm -fr ' . $dir .$fileRude.'.igm' );
+
+          if($objOperativo /*&&  $objOperativo->getBim1()*/){
+            $sw = true;
+            //to generate the file execute de function
+            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
+            $query->execute();
+
+            $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+            
+
+            //decode base64
+            $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+
+            system('rm -fr ' . $dir . $newGenerateFile.'.sie');
+            exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+
+            //name the file
+           exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
+           exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
+           $dataDownload = array(
+              'file' => $newGenerateFile . '.igm ',
+              'datadownload' => $form['data'],
+              'sw' => $sw
+            );
+          }else{
+            $message = "Problemas al descargar el archio, el archivo no presetan Inicio de Gestión";
+            $this->addFlash('notidonwloadrude', $message);
+            $sw = false;
+            $dataDownload = array(
+              'sw' => $sw
+            );
+          }   
+          
+      // }   
+
       
-
-      //decode base64
-      $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
-
-      system('rm -fr ' . $dir . $newGenerateFile.'.sie');
-      exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
-
-      //name the file
-     exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
-     exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
-     
-     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', array(
-        'file' => $newGenerateFile . '.igm ',
-        'datadownload' => $form['data'],
-
-     ));
-
+     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', $dataDownload );
     }
 
     public function downloadAction(Request $request, $file,$datadownload) {
       // dump($datadownload);die;
       $form = json_decode($datadownload,true);
       $form['operativoTipo']=5;
+      
       // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
       $objOperativoLog = $this->get('funciones')->saveOperativoLog($form);
         //get path of the file
@@ -1061,6 +1155,8 @@ class InboxController extends Controller {
         //remove space on the post values
         $file = preg_replace('/\s+/', '', $file);
         $file = str_replace('%20', '', $file);
+        // save the log operativo
+        
         //create response to donwload the file
         $response = new Response();
         //then send the headers to foce download the zip file
@@ -1075,7 +1171,6 @@ class InboxController extends Controller {
         return $response;
     }
 
-
-
+     
 
 }

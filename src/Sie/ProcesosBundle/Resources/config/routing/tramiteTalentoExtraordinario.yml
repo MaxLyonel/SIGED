@@ -1,0 +1,55 @@
+talento_extraordinario_new:
+    path:     /nuevo
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:new }
+
+talento_extraordinario_search:
+    path:     /buscar
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:searchStudent }
+    options:
+        expose: true
+
+talento_extraordinario_search_tool:
+    path:     /busca/estudiante
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:searchStudentTool }
+    options:
+        expose: true
+
+talento_extraordinario_save:
+    path:     /guardar
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:save }
+    options:
+        expose: true
+
+talento_extraordinario_save_tool:
+    path:     /guarda/solicitud
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:saveTool } #SieHerramientaBundle:TramiteTalento:save 
+    options:
+        expose: true
+
+talento_extraordinario_upreport:
+    path:     /informe
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:upreport }
+
+talento_extraordinario_update:
+    path:     /actualiza
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:update }
+    options:
+        expose: true
+
+talento_extraordinario_check:
+    path:     /verifica
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:check }
+
+talento_extraordinario_confirm:
+    path:     /confirma
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:confirm }
+    options:
+        expose: true
+
+talento_extraordinario_new_comprobante:
+    path:     /reporte/solicitud
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:rptSolicitud }
+
+talento_extraordinario_check_comprobante:
+    path:     /reporte/informe
+    defaults: { _controller: SieProcesosBundle:TramiteTalentoExtraordinario:rptInforme }

@@ -268,6 +268,11 @@ class FindSieController extends Controller {
           $label = 'Acceso Unidad Educativa Tec. Tegnológica';
           $btnClass = 'btn btn-success';
           break;
+        case $this->session->get('ue_humanistica'):
+          # code...
+          $label = 'Acceso Unidad Regular';
+          $btnClass = 'btn btn-lilac';
+          break;
         default:
           # code...
           $label = 'Acceso Unidad Educativa Plena';

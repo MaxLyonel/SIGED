@@ -1,0 +1,81 @@
+Sie\AppWebBundle\Entity\EstudianteHistorialModificacion:
+    type: entity
+    table: estudiante_historial_modificacion
+    indexes:
+        IDX_8B4CDE4159590C39:
+            columns:
+                - estudiante_id
+        IDX_8B4CDE41DB38439E:
+            columns:
+                - usuario_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        datoAnterior:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: dato_anterior
+        resolucion:
+            type: string
+            nullable: false
+            length: 75
+            fixed: false
+            comment: ''
+        fechaResolucion:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_resolucion
+        justificacion:
+            type: string
+            nullable: false
+            length: 250
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        urlDocumento:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+            column: url_documento
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

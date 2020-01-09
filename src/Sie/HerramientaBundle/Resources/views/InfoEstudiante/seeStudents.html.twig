@@ -1,99 +1,130 @@
-
+<style type="text/css">
+    .btn-menu{
+        border: 1px solid #FFFFFF;
+        color: #FFFFFF;
+        border-radius: 50%;
+    }
+    .btn-menu:hover{
+        color: #FFFFFF;
+        /* border: 2px; */
+        box-shadow: 0px 2px 3px #90E6EA;
+    }
+</style>
 {% if exist == true %}
     <small>
-      <div class="row">
-          <div class="col-md-12">
-              {% for flashMessage in app.session.flashbag.get('noinscription') %}
-                  <div class="alert alert-warning alert-dismissible" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                  </div>
-              {% endfor %}
-
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-12">
-              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
-                  <div class="alert alert-success alert-dismissible" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                  </div>
-              {% endfor %}
-
-          </div>
-      </div>
         <div class="row">
-          <div class="col-md-4">
-                <a class="btn btn-block btn-facebook" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
-                  <i class="fa fa-download" ></i> Listado de Estudiantes del Curso 
-                </a>
-          </div>
-          {#
-          {% if operativo >= 5 %}
-            <div class="col-md-4">
-
-                  <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
-                    <i class="fa fa-download" ></i> Boletín Centralizador
-                  </a>
-            </div>
-          {% endif %}
-          #}
-          <div class="col-md-4">
-            {# if gestion == 2017 %}
-              <button type="button" class="btn btn-inverse btn-stroke" disabled="disabled">
-                  <i class="fa fa-user"></i> Inscrip. con Rude
-              </button>
-            { else #}
-              {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
-                  {% if app.session.get('lastOperativo') == 5%}
-                  {% else %}
-
-                    {% if gestion < app.session.get('currentyear') %}
-                      
-                        <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
-                            <i class="fa fa-user"></i> Inscrip. con Rude
-                        </button>
-                      
-                    {% endif %}
-                    {# 
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
-                        <i class="fa fa-check"></i> Finalizar Registro de Horas
-                    </button> #}
-                  {% endif %}
-              {% endif %}
-            {# endif #}
-
-          </div>
-          <!--div class="col-md-3" >
-            {% if app.session.get('ue_modular') and nivel >= 13 %}
-            {% else %}
-            <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
-              <i class="fa fa-user-plus"></i> Inscrip. sin Rude
-            </button>
-            {% endif %}
-          </div-->
-      </div>
-    <br />
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="no-more-tables">
-                    <div class="row">
-
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                     </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 
+        <div class="header-content">
+
+            {# TITULO DEL CURSO #}
+
+            <h4><i class="glyphicon glyphicon-list-alt"></i> &nbsp; <b> {{gradoname}} - {{paraleloname}} </b> <span> </span></h4>
+            <div class="breadcrumb-wrapper hidden-xs">
+                <span class="label"> Nivel:</span>
+                <ol class="breadcrumb">
+                    <li>
+                        {{nivelname}}
+                    </li>
+                </ol>
+            </div><!-- /.breadcrumb-wrapper -->
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h5>Lista de inscritos</h5>
+                </div>
+                <div class="pull-right">
+
+                    <span style="font-size:1.2em">Opciones del curso:</span>
+                    <a class="btn btn-menu tooltips" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
+                        <i class="fa fa-download" style="color:#FFFFFF"></i>
+                    </a>
+                    {% if app.session.get('acceso_total') and gestion >= 2015 and nivel == 13 %}
+
+                        {% if grado == 1 or grado == 2 or grado == 3 or grado == 4  %}
+                            <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTGBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTG">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a>
+                        {% endif %}
+                        {% if grado == 5 or grado == 6  %}
+                            <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTEBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTE">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {#
+                    {% if operativo >= 5 %}
+                      <div class="col-md-4">
+                            <a class="btn btn-menu" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Boletín centralizador">
+                              <i class="fa fa-download" ></i>
+                            </a>
+                      </div>
+                    {% endif %}
+                    #}
+                    
+                    {% if gestion == 2018 and nivel != 11 %}
+                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro Trabajo del estudiante">
+                            <button type="button" class="btn btn-menu" data-toggle="modal" data-target=".bs-example-modal-table" onclick="registerJobStudent('{{infoUe}}');" >
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+
+                    {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_humanistica_web') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
+                        {% if app.session.get('lastOperativo') == 5 %}
+                        {% else %}
+
+                          {% if gestion < app.session.get('currentyear') %}
+                            
+                                <button type="button" class="btn btn-menu" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción con RUDE" onclick="doInscriptionsRude('{{infoUe}}');" >
+                                    <i class="fa fa-user"></i>
+                                </button>
+                            
+                          {% endif %}
+                          {# 
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
+                              <i class="fa fa-check"></i> Finalizar Registro de Horas
+                          </button> #}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div id="no-more-tables">
                     <table class="table table-bordered table-hover cf">
-                        <tr>
-
-                        <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
-                        <td align="center" class="warning" colspan="4">Estudiantes Inscritos</br>
-                            {{gradoname}} - {{paraleloname}}
-                        </td>
-                        <td>Opciones</td>
-                        <!--td>
-                            <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
-                        </td-->
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>CÓDIGO RUDE</th>
+                                <th>ESTUDIANTE</th>
+                                <th>ESTADO DE MATRÍCULA</th>
+                                <th>OPCIONES</th>
+                                <!--td>
+                                    <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
+                                </td-->
+                            </tr>
+                        </thead>
                         {#init the array info student #}
                         {% set objInfoStudent = [] %}
                         {% for data in objStudents %}
@@ -135,203 +166,174 @@
                             {# set the array student info and convert on json string #}
                             {# set objInfoStudent = objInfoStudent|merge(data) #}
                             {# set jsnInfoStudent = objInfoStudent|json_encode() #}
-                            <tr >
+                            <tr>
                                 <td>{{loop.index}}</td>
-                                <td  align="">{{data.codigoRude}}</td>
-                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
-                                <td  align="">
-
-                                  {% if
-                                    ( app.session.get('ue_plena') ) or
-                                    ( app.session.get('ue_modular') ) or
-                                    ( app.session.get('ue_caldiff') ) or
-                                    ( app.session.get('ue_humanistica_web') ) or
-                                    ( app.session.get('ue_sol_regularizar') ) or
-                                    ( app.session.get('ue_tecteg') )
-                                  %}
-
-                                          {# if app.session.get('currentyear') == 2017 }
-                                             {{data.estadomatricula}}
-                                          { else #}
-
-                                              {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
-                                                {{data.estadomatricula}}
-                                                {% else %}
-                                                  {% if data.estadomatriculaId == 4 %}
-                                                  <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                  {% else %}
-                                                   <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
-                                                  {% endif %}
-                                                     {{data.estadomatricula}}
-                                                   </button>
-                                              {% endif %}
-
-
+                                <td>{{data.codigoRude}}</td>
+                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+                                <td>
+                                    {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
+                                        {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
+                                            {{data.estadomatricula}}
+                                        {% else %}
+                                            {% if data.estadomatriculaId == 4 %}
+                                                <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                            {% else %}
+                                                <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
+                                            {% endif %}
+                                            {{data.estadomatricula}}
+                                            </button>
+                                        {% endif %}
                                     {% else %}
-                                        <button type="button" class="btn btn-default" >
-                                             {{data.estadomatricula}}
-                                        </button>
+                                        {{data.estadomatricula}}
                                     {% endif %}
-                                  {# endif #}
-
                                 </td>
-                                <td  align="">
-                                  {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
-                                      <button type="button" class="btn btn-circle btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rude('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                          <i class="fa fa-user"></i>
-                                      </button>
-                                  </div>
-                                  <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
-                                      <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                          <i class="fa fa-user"></i>
-                                      </button>
-                                  </div> #}
-
-                                  {% set styleButton = 'info' %}
-                                      {% if data.registroFinalizado %}
-                                        {% set styleButton = 'success' %}
-                                      {% else %}
-                                        {% set styleButton = 'info' %}
-                                      {% endif %}
-                                    {% if  data.esvalidoPlena %}
+                                <td>
+                                    {# AREAS ESTUDIANTE #}
+                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
+                                            <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                                <i class="fa fa-bars"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {# RUDE #}
+                                    {% if gestion >= 2018 and data.estadomatriculaId in [4,5] and false %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                                <i class="fa fa-user"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {# REPORTE NAATS SOLO PARA GESTION 2018 Y NIVELES DE PRIMARIA Y SECUNDARIA #}
+                                    {% if gestion == 2018 and nivel != 11 and data.estadomatriculaId in [4,5,11,55] %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Trabajo del estudiante">
+                                            <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="trabajo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {# REPORTE CUT #}
+                                    {% if (sextoCerrado == true or operativo >= 4) and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and data.estadomatriculaId in [4,5,55] %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
                                             <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                               <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
                                             </a>
                                         </div>
-                                    {% endif %}  
+                                    {% endif %}
 
-                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
+                                    {# REGISTRO DE NOTAS #}
+                                    {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4) %}
+                                        {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [5,11,55] and operativo <= 4) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
+                                            {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
+                                            {% if gestion >= 2019 and nivel == 13 and grado >= 5 %}
+
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                        <i class="fa fa-list"></i>
+                                                    </button>
+                                                </div>
+                                            {% else %}
+                                                {# PARA TODAS LAS DEMAS GESTIONES #}
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                        <i class="fa fa-list"></i>
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {# IMPRESION DE LIBRETA #}
+                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir or app.session.get('roluser') == 8 %}
+                                        {% if (gestion == app.session.get('currentyear')) or (gestion < app.session.get('currentyear') and data.estadomatriculaId != 4) %}
                                             <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                               <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                             </a>
+                                        {% endif %}
                                     {% endif %}
                                       
-                                    {# if  app.session.get('ue_humanistica') #}
-                                    {% if
-                                      ( app.session.get('ue_plena') ) or
-                                      ( app.session.get('ue_modular') ) or
-                                      ( app.session.get('ue_caldiff') ) or
-                                      ( app.session.get('ue_humanistica_web') ) or
-                                      ( app.session.get('ue_sol_regularizar') ) or
-                                      ( app.session.get('ue_tecteg') )
-                                    %}
-                                      
-                                      {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' %}
-                                          {% if
-                                            ( app.session.get('ue_humanistica') ) or
-                                            (app.session.get('ue_plena')  and app.session.get('ue_humanistica') ) or
-                                            (app.session.get('ue_tecteg') and app.session.get('ue_humanistica') ) or
-                                            (app.session.get('ue_humanistica_web') and app.session.get('ue_humanistica') ) or
-                                            (app.session.get('ue_modular') and app.session.get('ue_humanistica') or false )
-                                          %}
-
-                                             {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
-                                                <button type="button" class="btn btn-circle btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rude('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                                    <i class="fa fa-user"></i>
-                                                </button>
-                                            </div> #}
-                                          {% endif %}
-
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                            <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}');" >
-                                                <i class="fa fa-list"></i>
-                                            </button>
-                                        </div>
-                                      {% endif %}
-
-                                    {% if app.session.get('lastOperativo') == 5%}
-                                      <div class="btn-group tooltips" >
-                                      </div>
-                                    {% else %}
-
-                                      {# commented to BJP by krlos
-                                      {% if  app.session.get('removeInscriptionAllowed')  or app.session.get('ie_id') == '81981478' %}
+                                    {# ELIMINAR INSCRIPCION #}
+                                    {# commented to BJP by krlos
+                                    {% if  app.session.get('removeInscriptionAllowed')  or app.session.get('ie_id') == '81981478' %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                             <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionAca('{{infoUe}}','{{jsnInfoStudent}}');" >
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </div>
-                                      {% endif %} 
-                                      #}
+                                    {% endif %} 
+                                    #}
 
-                                    {% endif %}
 
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" data-placement="top" title data-original-title="Imprimir Libreta">
 
-                                      
 
-                                    </div>
                                     {% if false %}
-                                      {# if UePlenasAddSpeciality #}
-                                      {% if true %}
-                                        {% if  app.session.get('ue_tecteg') %}
-                                          {% if (grado == '6' or grado == '5' ) and nivel == 13  %}
-                                            {% if data.estadomatriculaId ==4 or data.estadomatriculaId ==5 or data.estadomatriculaId ==55 %}
-                                              <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidad">
-                                                  <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="registerEspecialidad('{{infoUe}}','{{jsnInfoStudent}}');" >
-                                                      <i class="fa fa-user"></i>
-                                                  </button>
-                                              </div>
+                                        {# if UePlenasAddSpeciality #}
+                                        {% if true %}
+                                            {% if  app.session.get('ue_tecteg') %}
+                                                {% if (grado == '6' or grado == '5' ) and nivel == 13  %}
+                                                    {% if data.estadomatriculaId ==4 or data.estadomatriculaId ==5 or data.estadomatriculaId ==55 %}
+                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro de Especialidad">
+                                                            <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="registerEspecialidad('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                                                  <i class="fa fa-user"></i>
+                                                            </button>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
                                             {% endif %}
-                                          {% endif %}
                                         {% endif %}
-                                      {% endif %}
-                                      {% if  (app.session.get('ue_plena') or app.session.get('ue_tecteg') ) and (data.estadomatriculaId == 4 or data.estadomatriculaId == 55 or data.estadomatriculaId == 5 ) %}
 
-                                      {% if conespecialidad == true  %}
-                                        {% if grado == '6' and nivel == 13  %}
-                                          {% if esvalidoPlena == false and gestion >= 2017 %}
-                                            {% if app.session.get('ue_plena') %}
-                                              {% if horasPlena > 1000 %}
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Actualizar el Total de la Carga Horaria">
-                                                  <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getCargaHorariaPlena('{{infoUe}}','{{jsnInfoStudent}}');" >
-                                                      <i class="fa fa-clock-o"></i>
-                                                  </button>
-                                                </div>
-                                              {% else %}
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registrar el Total de la Carga Horaria">
-                                                  <button type="button" class="btn btn-circle btn-info " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getCargaHorariaPlena('{{infoUe}}','{{jsnInfoStudent}}');" >
-                                                      <i class="fa fa-clock-o"></i>
-                                                  </button>
-                                                </div>
-                                              {% endif %}
-                                          {% endif %}
+                                        {% if  (app.session.get('ue_plena') or app.session.get('ue_tecteg') ) and (data.estadomatriculaId == 4 or data.estadomatriculaId == 55 or data.estadomatriculaId == 5 ) %}
 
-                                          {% endif %}
-                                          {% if horasPlena > 1000 and esvalidoPlena == true and gestion >= 2017  %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="DDJJ Especialidad">
-                                              <a class="btn btn-circle btn-success" href="{{path('download_ddjj_speciality', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                                <i class="fa fa-clone"></i>
-                                              </a>
-                                            </div>
-                                          {% endif %}
+                                            {% if conespecialidad == true  %}
+                                                {% if grado == '6' and nivel == 13  %}
+                                                    {% if esvalidoPlena == false and gestion >= 2017 %}
+                                                        {% if app.session.get('ue_plena') %}
+                                                            {% if horasPlena > 1000 %}
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Actualizar el Total de la Carga Horaria">
+                                                                    <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getCargaHorariaPlena('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </button>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registrar el Total de la Carga Horaria">
+                                                                    <button type="button" class="btn btn-circle btn-info " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getCargaHorariaPlena('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </button>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {% if horasPlena > 1000 and esvalidoPlena == true and gestion >= 2017  %}
+                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="DDJJ Especialidad">
+                                                            <a class="btn btn-circle btn-success" href="{{path('download_ddjj_speciality', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                                                <i class="fa fa-clone"></i>
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
                                         {% endif %}
-                                      {% endif %}
-                                    {% endif %}
-                                  {% endif %}
-                                  {% else %}<!-- here is the else to UE HUMANISTICA -->
-                                    {% if  app.session.get('ue_humanistica') %}
-                                      {% if data.estadomatriculaId == 4 or false %}
-                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
-                                            <button type="button" class="btn btn-circle btn-{{styleButton}} " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                                <i class="fa fa-user"></i>
-                                            </button>
-                                        </div> #}
-                                       {% endif %}
-                                    {% endif %}
-                                  {% endif %}<!-- here is the end to UE HUMANISTICA -->
-                                   </td>
-                                  </td>
+                                    {% else %}<!-- here is the else to UE HUMANISTICA -->
+                                        {% if  app.session.get('ue_humanistica') %}
+                                            {% if data.estadomatriculaId == 4 or false %}
+                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                                    <button type="button" class="btn btn-circle btn-{{styleButton}} " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                                        <i class="fa fa-user"></i>
+                                                    </button>
+                                                </div> #}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}<!-- here is the end to UE HUMANISTICA -->
                                 </td>
-
+                                {# <td></td> #}
                             </tr>
-                        {%endfor%}
-
+                        {% endfor %}
                     </table>
-
-                </div>
-                <!-- /.portlet -->
+                </div>  
             </div>
         </div>
     </small>
@@ -352,7 +354,7 @@
 {% endif %}
 
 <script>
-    var getNotas = function (infoUe, infoStudent) {
+    var getNotas = function (infoUe, infoStudent, idInscripcion) {
         $.ajax({
             type: 'post',
             data: ({infoUe: infoUe, infoStudent: infoStudent}),
@@ -363,6 +365,7 @@
             success: function (data) {
                 $('#modal').empty();
                 $('#modal').append(data);
+                $('#modal').modal('show');
             },
             statusCode: {
                 500: function () {
@@ -374,6 +377,35 @@
             }
         });
     };
+
+    var validarEspecialidad = function(infoUe, infoStudent,idInscripcion){
+        $.ajax({
+            type: 'post',
+            data: ({idInscripcion: idInscripcion, infoUe: infoUe, infoStudent: infoStudent }),
+            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_especilidad_verificar') }}",
+            beforeSend: function () {
+                
+            },
+            success: function (data) {
+
+                if(typeof data === 'object'){
+                    getNotas(data.infoUe, data.infoStudent, data.idInscripcion);
+                }else{
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('#modal').modal('show');
+                }
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
 
     var getCargaHorariaPlena = function (infoUe, infoStudent) {
         $.ajax({
@@ -496,6 +528,70 @@
             beforeSend: function () {
                 $('#modal').empty();
                 $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var trabajo = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('estudiante_trabaja_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">DATOS DE TRABAJO DEL ESTUDIANTE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+     var registerJobStudent = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('estudianteTrabajaNuevo_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">BUSQUEDA ESTUDIANTE Y REGISTRO TRABAJO</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
             },
             success: function (data) {
                 $('#modal').empty();
@@ -646,6 +742,38 @@
       } else {
         return false;
       }
+    };
+
+    var areasEstudiante = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#E14031; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:15px 0px 0px 10px; text-align:left">Adición y Eliminación de Áreas / Estudiante</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
     };
 
 </script>

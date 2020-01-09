@@ -78,4 +78,8 @@ bach_exc_alt_rep_dis:
 bach_exc_alt_rep_dist_search:
     path:     /repdis-search
     defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:resultSearchDistRep" }
-    methods:  POST    
+    methods:  POST
+
+bach_exc_alt_validar_estudiante_segip:
+    path:     /validarEstudianteIbdSegip
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:validarEstudianteIbdSegip" }

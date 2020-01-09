@@ -18,10 +18,9 @@ class Persona {
 
     public function buscarPersona($carnet, $complemento, $extranjero) {
 
-        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
-
-        /***NUEVO TOKEN A LA FECHA 16/6/2017*/
+        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
+        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
         
 
         $client = new Client([
@@ -41,8 +40,8 @@ class Persona {
 	}
 
     public function BuscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento) {
-        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
+        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -61,8 +60,8 @@ class Persona {
 	}
 
     public function registrarPersona($carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
-        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
+        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -81,8 +80,8 @@ class Persona {
     }
 
     public function actualizarPersona($id, $carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
-        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
+        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -103,6 +102,7 @@ class Persona {
     public function BuscarPersonaPorCarnetComplemento($form) {
         $carnet = $form['carnet'];
         $complemento = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : 0;
+        
         $repository = $this->em->getRepository('SieAppWebBundle:Persona');
 
         if($complemento == '0'){
@@ -141,6 +141,49 @@ class Persona {
         }
 
         return($p);
-	}
+    }
+
+    public function BuscarPersonaPorCarnetComplementoSie($form) {
+        $carnet = $form['carnet'];
+        $complemento = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : 0;
+        
+        $repository = $this->em->getRepository('SieAppWebBundle:Persona');
+
+        if($complemento == '0'){
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.carnet = :carnet')
+                ->setParameter('carnet', $carnet)
+                ->getQuery();
+        }
+        else{
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento')
+                ->setParameter('carnet', $carnet)
+                ->setParameter('complemento', $complemento)
+                ->getQuery();
+        }
+        $personas = $query->getResult();
+
+        $p = null;
+
+        if ($personas) {
+            if(is_array($personas)) {
+                $p = array(
+                    'personaId'=>$personas[0]->getId(),
+                    'personaCarnet'=>$personas[0]->getCarnet(),
+                    'personaComplemento'=>$personas[0]->getComplemento(),
+                    'personaPaterno'=>$personas[0]->getPaterno(),
+                    'personaMaterno'=>$personas[0]->getMaterno(),
+                    'personaNombre'=>$personas[0]->getNombre(),
+                    'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
+                    'personaSegipId'=>$personas[0]->getSegipId(),
+                );
+            }
+        }
+
+        return($p);
+    }
 
 }

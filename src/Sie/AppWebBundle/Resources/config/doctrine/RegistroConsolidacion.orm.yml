@@ -1,7 +1,7 @@
 Sie\AppWebBundle\Entity\RegistroConsolidacion:
     type: entity
     table: registro_consolidacion
-    repositoryClass: Sie\AppWebBundle\Entity\RegistroConsolidacionRepository
+    repositoryClass: Sie\AppWebBundle\Entity\RegistroConsolidacionRepository    
     id:
         tipo:
             type: integer
@@ -51,7 +51,7 @@ Sie\AppWebBundle\Entity\RegistroConsolidacion:
         descripcionError:
             type: string
             nullable: true
-            length: 150
+            length: 250
             fixed: false
             comment: ''
             column: descripcion_error
@@ -113,4 +113,14 @@ Sie\AppWebBundle\Entity\RegistroConsolidacion:
             unsigned: false
             comment: ''
             column: institucioneducativa_tipo_id
+        rude:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        boletin:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
     lifecycleCallbacks: {  }

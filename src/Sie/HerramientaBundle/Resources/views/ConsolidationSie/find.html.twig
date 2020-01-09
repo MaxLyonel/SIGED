@@ -1,4 +1,4 @@
-{% extends 'layoutRegular.html.twig' %}
+{% extends 'layoutHerramienta.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -13,24 +13,24 @@
 
 {% block contentoption %} 
 
+ <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-upload animated flip"></i> Subir Archivo emp  <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Subir Archivo emp - Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1><i class="fa fa-upload animated flip"></i> Subir Archivo emp
-                    <small></small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('consolidation_sie_web') }}">Buscar</a>
-                    </li>
-
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-
-    <div class="row">
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+  <div class="body-content animated fadeIn">
+      <div class="row">
 
         <div class="col-md-12">
 
@@ -50,9 +50,7 @@
         </div>
     </div>
 
-    <!-- /.row -->
-
-    <div class="row">
+      <div class="row">
         <div class="col-xs-12 col-lg-12">
             <div class="panel panel-icon panel-primary">
                 <div class="panel-heading">
@@ -89,5 +87,13 @@
 
         </div>
     </div>
+
+  </div>
+
+    
+
+    <!-- /.row -->
+
+  
 
 {% endblock %}
