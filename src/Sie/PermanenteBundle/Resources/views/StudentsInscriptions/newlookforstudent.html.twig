@@ -316,7 +316,7 @@
                           </div>
                           <div class="col-sm-4">
                             <label for="Nombre(s)">Nombre(s)</label></br>
-                              ${dataStudent.nombres}
+                              ${dataStudent.nombre}
                           </div>
                         </div>
                         <div class="row">
@@ -494,7 +494,7 @@ var app = new Vue({
         this.historyPer = false; 
 
         if(this.cival.length == 0){
-          this.message = 'debe introducir un carnet';
+          this.message = 'debe introducir Carnet de Identidad';
           this.buscando = false;
           return;
         }
