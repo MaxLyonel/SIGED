@@ -48,8 +48,8 @@ class StudentsInscriptionsController extends Controller {
         }
         return $this->createFormBuilder()
                         ->setAction($this->generateUrl('students_inscriptions_find'))
-                        ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                        ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => $aGestion, 'attr' => array('class' => 'form-control')))
+                        ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase', 'onkeyup'=>'getYearOfUe(this.value)')))
+                        ->add('gestion', 'choice', array('label' => 'Gestión',  'attr' => array('class' => 'form-control')))
                         ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
                         ->getForm();
     }
@@ -121,5 +121,30 @@ class StudentsInscriptionsController extends Controller {
                     'dataInfo' => $aData
         ));
     }
+
+    // get the year of UE by sie
+    public function getYearOfUeAction(Request $request){
+        // get the send values
+        $sie = $request->get('sie');
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // get all year of ue        
+        $query = $em->getConnection()->prepare('
+                SELECT DISTINCT gestion_tipo_id
+                FROM institucioneducativa_curso
+                WHERE institucioneducativa_id = '. $sie .'
+                order by gestion_tipo_id
+                ');
+        $query->execute();
+        $arryearsOfUe = $query->fetchAll();
+        $arryearsofue = array();
+        foreach ($arryearsOfUe as $yearofue) {
+            $arryearsofue[$yearofue['gestion_tipo_id']] = $yearofue['gestion_tipo_id'];
+        }
+        $response = new JsonResponse();
+        return $response->setData(array('arryearsofue' => $arryearsofue));
+
+    }
+
 
 }
