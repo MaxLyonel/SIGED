@@ -293,7 +293,7 @@ class EstudianteNotasPrimariaController extends Controller {
             }
         }
 
-        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4));
+        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4,6));
 
         $em->getConnection()->commit();
         return array(
@@ -547,9 +547,9 @@ class EstudianteNotasPrimariaController extends Controller {
           $contadorReprobados = 0;
           $contadorAprobados = 0;
           foreach ($notas as $n) {
-            if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; } // PORTERGADO
-            if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; } // PORTERGADO
-            if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; } // APROBADO
+            if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; }
+            if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; }
+            if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; }
           }  
 
           if($contadorCeros == count($notas)){
