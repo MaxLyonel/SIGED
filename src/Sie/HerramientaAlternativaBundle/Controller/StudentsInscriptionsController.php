@@ -582,7 +582,7 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         'fecha_nacimiento'=>$fecNac
       );
-      dump($request);die;
+      // dump($request);die;
       // get info segip
       $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       // check if the data person is true
@@ -655,6 +655,10 @@ class StudentsInscriptionsController extends Controller {
               //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
               $studentInscription->setCodUeProcedenciaId(0);
               $em->persist($studentInscription);
+
+              // set all the courses modules to the student
+              $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
+              $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
 
 
               $em->flush();
@@ -852,6 +856,11 @@ class StudentsInscriptionsController extends Controller {
                   $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
                   $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
                 }
+
+
+                // set all the courses modules to the student
+                $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
+                $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
 
                 $em->flush();
 
