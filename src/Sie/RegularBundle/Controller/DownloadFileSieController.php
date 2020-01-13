@@ -44,7 +44,7 @@ class DownloadFileSieController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:index2.html.twig', array(
                     'form' => $this->craeteformsearchsie()->createView()
         ));
     }
@@ -876,8 +876,14 @@ class DownloadFileSieController extends Controller {
     }
 
 
-    public function getgestionAction($sie) {
+    public function getgestionAction(Request $request) {
+        // create ini var
         $em = $this->getDoctrine()->getManager();
+        $response = new JsonResponse();
+        // get the send values
+        $sie = $request->get('codsie');
+
+
 
         //get status of UE
         $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
@@ -888,10 +894,10 @@ class DownloadFileSieController extends Controller {
         //  if ($objSie) {
         if ($objStatusUe->getEstadoInstitucionTipo()->getId()==10) {
             foreach ($objSie as $gsie) {
-                $aGestion[$gsie->getGestion()] = $gsie->getGestion();
+                $aGestion[] = array('id'=>$gsie->getGestion(),'gestion'=>$gsie->getGestion());
             }
             //this is for current year
-            $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
+            // $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
         }else{
           switch ($objStatusUe->getEstadoInstitucionTipo()->getId()) {
             case 19:
@@ -900,17 +906,17 @@ class DownloadFileSieController extends Controller {
             case 49:
             case 99:
               # code...
-              $aGestion['close'] = 'Unidad Educativa Cerrada';
+              $aGestion[] =array('id'=>0,'gestion'=>'Unidad Educativa Cerrada') ;
               break;
             case 11:
             case 31:
             case 41:
               # code...
-              $aGestion['close'] = 'Unidad Educativa Eliminada';
+              $aGestion[] =array('id'=>0,'gestion'=>'Unidad Educativa Eliminada');
               break;
             case 0:
               # code...
-              $aGestion['close'] = 'Unidad Educativa No Reportada';
+              $aGestion[] =array('id'=>0,'gestion'=>'Unidad Educativa No Reportada');
               break;
 
             default:
@@ -919,83 +925,57 @@ class DownloadFileSieController extends Controller {
           }
         }
 
-//        $dateyear = $this->session->get('currentyear');
-//        //BUILD THE YEARS TO SELECTED DATA
-//        $aGestion = array();
-//        for ($i = 1; $i <= 3; $i ++) {
-//            $aGestion[$dateyear] = $dateyear;
-//            $dateyear = $dateyear - 1;
-//        }
         //rsort($aGestion);
-        $response = new JsonResponse();
-        return $response->setData(array('gestion' => $aGestion));
+        $response->setStatusCode(200);
+        $response->setData(array(
+          'arrgestion' => $aGestion
+        ));
+        return $response;
     }
 
-    public function getbimestreAction($sie, $gestion) {
-        $em = $this->getDoctrine()->getManager();
-        $operativo = $this->get('funciones')->obtenerOperativoDown($sie, $gestion);
-        $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getBimestreBySieAndGestion($sie, $gestion);
-        //define the return data values
-        // dump($gestion);
-        // dump($operativo);
-        $aBimestre = array();
-        $aBimestres = array('IG', '1er', '2do', '3ro', '4to');
-        // dump($this->session->get('roluser'));die;
-        //if the user is UE decrement the operativo var
-//         if( in_array($this->session->get('roluser'), array(9))){
-//           // if($operativo == 4){
-//           // //do nothing
-//           // }else{
-//             $operativo = $operativo - 1;
-//           // }
-//         }
-// dump($operativo);
-// die;
-        //new way to download the sie file througth the consolidation data on DB
-        if($operativo == 5){//if 4 everything is done
-          $aBimestre[-1]='Consolidado';
-        }else{
-          if($operativo >= 0){//mt 0 return plas 1
-            $aBimestre[$operativo]=$aBimestres[$operativo];
-            // $aBimestre[$operativo]=$aBimestres[0];
-          }else{ //lt 0 return the same
-            // $aBimestre[$operativo]=$aBimestres[$operativo];
-            $aBimestre[$operativo]=$aBimestres[0];
-          }
+    public function getbimestreAction(Request $request) {
+      
+      
+      $response = new JsonResponse();
+      $em = $this->getDoctrine()->getManager();
+      //get the send values
+      $sie = $request->get('codsie');
+      $gestion = $request->get('yearSelected');
+      $operativo = $this->get('funciones')->obtenerOperativoDown($sie, $gestion);
 
+      $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getBimestreBySieAndGestion($sie, $gestion);
+      //define the return data values
+      // dump($gestion);
+      // dump($operativo);
+      $aBimestre = array();
+      $aBimestres = array(
+                          '0'=> array('id'=>0, 'operativo'=>'IG'),
+                          '1'=> array('id'=>1, 'operativo'=>'1er'),
+                          '2'=> array('id'=>2, 'operativo'=>'2do'),
+                          '3'=> array('id'=>3, 'operativo'=>'3ro'),
+                          '4'=> array('id'=>4, 'operativo'=>'4to'),
+                        );
+     dump($aBimestre);die;
+      //new way to download the sie file througth the consolidation data on DB
+      if($operativo == 5){//if 4 everything is done
+        $aBimestre[]= array('-1' => 'Consolidado');
+      }else{
+        if($operativo >= 0){//mt 0 return plas 1
+          $aBimestre[]= array($operativo =>  $aBimestres[$operativo] );
+          // $aBimestre[$operativo]=$aBimestres[0];
+        }else{ //lt 0 return the same
+          // $aBimestre[$operativo]=$aBimestres[$operativo];
+          $aBimestre[]= array($operativo =>  $aBimestres[0] );
+          // $aBimestre[$operativo]=$aBimestres[0];
         }
 
-        $aBimestre = ($this->session->get('roluser') != 8) ? ($aBimestre) ? $aBimestre : array() : $aBimestres;
-        //$aBimestre = ($aBimestre) ? array('1' => '1er', '2' => '2do', '3' => '3ro') : array();
-        $response = new JsonResponse();
-        return $response->setData(array('bimestre' => $aBimestre));
-        // dump($objSie);die;
-        /*this is for the user CBBA
-        $lugarOneCBBA = $em->getRepository('SieAppWebBundle:LugarTipo')->find($this->session->get('roluserlugarid'));
-        $lugarTwoCBBA = $em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarOneCBBA->getLugarTipo());
-        $swCbba = false;
-        if($lugarTwoCBBA->getCodigo()==3){
-          $swCbba = true;
-        }
-        end CBBA*/
+      }
 
-
-        // if ($objSie) {
-        //   $aBimestre[0] = $aBimestres[0];
-        //     foreach ($objSie as $gsie) {
-        //         //print_r($gsie);
-        //         (!($gsie->getBim1())) ? $aBimestre[1] = $aBimestres[1] : '';
-        //         (!($gsie->getBim2())) ? $aBimestre[2] = $aBimestres[2] : '';
-        //         (!($gsie->getBim3())) ? $aBimestre[3] = $aBimestres[3] : '';
-        //         (!($gsie->getBim4())) ? $aBimestre[4] = $aBimestres[4] : '';
-        //       /*  comment by krlos, cos only donwload the 1bim
-        //         (($gsie->getBim3())) ? $aBimestre[3] = $aBimestres[3] : '';
-        //         (($gsie->getBim4())) ? $aBimestre[4] = $aBimestres[4] : '';*/
-        //     }
-        // } else {
-        //     $aBimestre[0] = $aBimestres[0];
-        // }
-        // dump($operativo);die;
+      $aBimestre = ($this->session->get('roluser') != 8) ? ($aBimestre) ? $aBimestre : array() : $aBimestres;
+      
+      //$aBimestre = ($aBimestre) ? array('1' => '1er', '2' => '2do', '3' => '3ro') : array();
+      $response->setStatusCode(200);
+      return $response->setData(array('bimestre' => $aBimestre));
 
 
     }
