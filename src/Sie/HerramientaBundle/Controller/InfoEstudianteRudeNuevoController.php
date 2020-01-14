@@ -1781,7 +1781,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             );
 
             // $respuesta = $this->get('sie_app_web.segip')->verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNacimiento, 'prod', 'academico');
-            $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'dev', 'academico');
+            $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'prod', 'academico');
 
             // dump($persona);
             // die;
@@ -1795,7 +1795,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             //     dump('existe');
             // }
 
-            if($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] !== "null"){
+            if(isset($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']) && $persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] !== "null"){
                 // dump($persona);die;
                 // $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'dev', 'academico');
                 // $persona = 
@@ -1872,13 +1872,16 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $expedido = $form['expedido'];
         }
 
+        // VERIFICAMOS SI EL ESTUDIANTE TIENE // PADRE // MADRE // O TUTOR
         if($tiene == 1){
 
-            // Verificamos si la persona es nueva
+            // VERIFICAMOS SI LA PERSONA ES NUEVA SIN CARNET
+            // O ES NUEVO PERO VALIDADO POR EL SEGIP
             if($form['idPersona'] == 'nuevo' or $form['idPersona'] == 'segip'){
                 // PREGUNTAMOS SI EL CARNET NO ESTA VACIO
+                // ENTONCES EL DATO VIENE DEL SERVICIO SEGIP
                 if($form['carnet'] != ""){
-                    // BUSCAMOS LA PERSONA
+                    // BUSCAMOS LA PERSONA EN LA BASE DE DATOS
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                         'carnet'=>$form['carnet'],
                         'complemento'=>mb_strtoupper($form['complemento'],'utf-8'),
@@ -1888,8 +1891,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
                     ));
 
+                    // VERIFICAMOS SI EL REGISTRO NO EXISTE EN LA BASE DE DATOS
                     if (!$persona) {
-                        // VERIFICAMOS SI EXISTE LA PERSONA REGISTRADA PERO SIN COMPLEMENTO
+                        // BUSCAMOS NUEVAMENTE A LA PERSONA SIN COMPLEMENTO EN LA BASE DE DATOS
                         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                             'carnet'=>$form['carnet'],
                             'paterno'=>mb_strtoupper($form['paterno'],'utf-8'),
@@ -1898,14 +1902,24 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
                         ));
 
+                        // SI EXISTE LA PERSONA ENTONCES LE AGREGAMOS EL COMPLEMENTO
                         if ($persona) {
                             $persona->setComplemento(mb_strtoupper($form['complemento'],'utf-8'));
-                            // $persona->setComplemento();
+                        }else{
+                            $persona = null;
                         }
 
+                    }else{
+                        // SI EL REGISTRO EXISTE EN LA BASE DE DATOS
+                        // VERIFICAMOS SI ESTA VALIDADO POR EL SEGIP, SI NO ESTA VALIDADO LO VALIDAMOS
+                        if($persona->getSegipId() != 1){
+                            $persona->setSegipId(1);
+                        }
                     }
 
                 }else{
+                    // SI EL DATO VIENE SIN CARNET
+                    // BUSCAMOS PERSONA POR SUS DATOS PERSONALES EN LA BASE DE DATOS
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                         'paterno'=>mb_strtoupper($form['paterno'],'utf-8'),
                         'materno'=>mb_strtoupper($form['materno'],'utf-8'),
@@ -1913,8 +1927,14 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
                     ));
                     
+                    // VERIFICAMOS SI EXISTE LA PERSONA
                     if($persona){
+                        // BUSCAMOS EL TEXTO SC "SIN CARNET" EN EL CAMPO CARNET
                         $pos = strpos($persona->getCarnet(), 'SC');
+                        // SI NO SE ENCUENTRA EL TEXTO
+                        // LA PERSONA ENCONTRADA CUENTA CON CARNET
+                        // ENTONCES DECLARAMOS LA VARABLE PERSONA COMO NULL PARA HACER EL REGISTRO
+                        // DE LA PERSONA SIN CARNET
                         if($pos === false){
                             $persona == null;
                         }
@@ -1923,11 +1943,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     }
                 }
 
-                // var_dump($persona);die;
-
                 // VERIFICAMOS SI LA PERSONA EXISTE
                 if($persona){
-                    // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS SU FECHA DE NACIMIENTO
+                    // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS:
+                    // FECHA DE NACIMIENTO
+                    // CELULAR
+                    // EXPEDIDO
                     $persona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
                     $persona->setCelular($form['celular']);
                     $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedido));
@@ -1936,22 +1957,36 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $idPersona = $persona->getId();
 
                 }else{
-                    // preguntamos si el carnet no esta vacio
+                    // SI LA PERSONA NO EXISTE
+                    // PREGUNTAMOS SI EL CARNET NO ESTA VACIO PARA BUSCAR LAS COINCIDENCIAS DE CARNET EN LA BASE DE DATOS
                     if($form['carnet'] != ""){
-                        // VERIFICAMOS SI EL CARNET YA ESTA OCUPADO
+                        // BUSCAMOS SI EL NUMERO DE CARNET Y COMPLEMENTO ESTA REGISTRADO CON OTRA PERSONA
                         $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                             'carnet'=>$form['carnet'],
                             'complemento'=>mb_strtoupper($form['complemento'],'utf-8')
                         ));
 
+                        // VERIFICAMOS SI EXISTE OTRA PERSONA CON EL MISMO CARNET Y COMPLEMENTO
+                        // SI ENCUENTA ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
                         if($personaAnterior){
-                            // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
-                            // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
-                            $personaAnterior->setCarnet($persona->getCarnet().'±');
-                            $em->flush();
+                            // VERIFICAMOS SI EL REGISTRO ENCONTRADO NO ESTA VALIDADO POR EL SEGIP
+                            // PARA ACTUALIZAR SU NUERO DE CARNET Y AGREGARLE EL CARACTER ESPECIAL (±)
+                            if ($personaAnterior->getSegipId() != 1) {
+                                $personaAnterior->setCarnet($persona->getCarnet().'±');
+                                $em->flush();
+                            }else{
+                                // SI EL CARNET ESTA OCUPADO POR OTRA PERSONA Y TAMBIEN VALIDADO POR EL SEGIP
+                                // NO REALIZAMOS EL REGISTRO Y MANDAMOS UN ERROR DE CARNET DUPLICADO
+                                $response = new JsonResponse();
+                                return $response->setData([
+                                    'status'=>500,
+                                    'msg'=>'Carnet duplicado. No se pudo realizar el registro, verifique la información con el segip'
+                                ]);
+                            }
                         }
-                    }else{ 
-                        // generamos un carnet ficticio
+                    }else{
+                        // LISTAMOS LOS REGISTROS SIN CARNET Y
+                        // GENERAMOS UN CARNET FICTICIO PARA EL NUEVO REGISTRO
                         $personasSinCarnet = $em->createQueryBuilder()
                                             ->select('p')
                                             ->from('SieAppWebBundle:Persona','p')
@@ -1963,7 +1998,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         $form['carnet'] = 'SC'. (count($personasSinCarnet) + 1);
                     }
                     
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
+                    // REGISTRAMOS LOS DATOS DE LA PERSONA
                     $nuevaPersona = new Persona();
                     $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
                     $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
@@ -1983,7 +2018,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         $nuevaPersona->setSegipId(0);
                     }
                     $nuevaPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedido));
-
                     $em->persist($nuevaPersona);
                     $em->flush();
 
@@ -1992,10 +2026,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 
             }else{
 
-                // Modificamos los datos de la persona
+                /*----------  SI LA PERSONA EXISTE EN LA BASE DIRECTAMENTE  ----------*/
+
+                // MODIFICAMOS LOS DATOS DE LA PERSONA
                 $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idPersona']);
                 if($actualizarPersona){
-                    // Actualizmos los datos de la persona
+                    // ACTUALIZAMOS LOS DATOS DE LA PERSONA
                     $actualizarPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedido));
                     $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
                     $actualizarPersona->setCorreo($form['correo']);
@@ -2035,10 +2071,11 @@ class InfoEstudianteRudeNuevoController extends Controller {
             //     }
             //     $idApoderadoInscripcion = $actualizarApoderado->getId();
             // }
-            // 
-            // Verficamos si el registro de apoderado es nuevo
+
+
+
+            // VERFICAMOS SI EL REGISTRO DE APODERADO ES NUEVO LO REGISTRAMOS
             if($form['id'] == 'nuevo'){
-                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('apoderado_inscripcion');")->execute();
                 $nuevoApoderado = new ApoderadoInscripcion();
                 $nuevoApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($form['apoderadoTipo']));
                 $nuevoApoderado->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($idPersona));
@@ -2048,7 +2085,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
                 $idApoderadoInscripcion = $nuevoApoderado->getId();
             }else{
-
+                // ACTUALIZAMOS EL DATO DE INSCRIPCION DEL APODERADO
                 $actualizarApoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($form['id']);
                 if($actualizarApoderado){
                     $actualizarApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($form['apoderadoTipo']));
@@ -2058,7 +2095,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $idApoderadoInscripcion = $actualizarApoderado->getId();
             }
 
-            // Verificamos si el registro de datos de apoderado es nuevo
+            // VERIFICAMOS SI EL REGISTRO DE DATOS DE APODERADO ES NUEVO
 
             if($form['idDatos'] == 'nuevo'){
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('apoderado_inscripcion_datos');")->execute();
@@ -2075,6 +2112,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
                 $idApoderadoInscripcionDatos = $nuevoApoderadoDatos->getId();
             }else{
+                // ACTUALIZAMOS EL REGISTRO DE DATOS DEL APODERADO
                 $actualizarApoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->find($form['idDatos']);
                 if($actualizarApoderadoDatos){
                     $actualizarApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idiomaMaterno']));
@@ -2090,6 +2128,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
             }
 
         }else{
+
+            // SI SE INDICA QUE EL ESTUDIANTE NO TIENE ASIGNADO EL APODERADO
+            // SE ELIMINA EL REGISTRO DE APODERADO 
             
             // $apod = $em->getRepository('SieAppWebBundle:RudeApoderadoInscripcion')->findBy(array('estudianteInscripcion'=>$form['idInscripcion'],'apoderadoTipo'=>$parentesco));
             $apod = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion'=>$form['idInscripcion'],'apoderadoTipo'=>$parentesco));
@@ -2111,10 +2152,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $idPersona = 'nuevo';
         }
 
-
+        // AGREGAMOS LA VALIDACION EN EL UTIMO PASO DE ASIGNAR TUTOR
+        // PARA QUE SE VALIDE QUE SE REGISTREN LOS DATOS DEL PADRE, MADRE O TUTOR
+        // SEGUN LO QUE SE INDICO EN EL APARTADO - CON QUIEN VIVE
 
         if($tipo == 'tutor'){
-            // APODERADOS QUE TIENE ACTUALMENTE REGSITRADOS EL ESTUDIANTE
+            // APODERADOS QUE TIENE ACTUALMENTE REGISTRADOS EL ESTUDIANTE
             $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
                 'estudianteInscripcion'=>$form['idInscripcion']
             ));
@@ -2125,12 +2168,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
 
             $catalogo = $this->obtenerCatalogo($rude, 'apoderado_tipo');
-            dump($catalogo);
             $variable = (in_array(3, $this->obtenerCatalogo($rude, 'apoderado_tipo')))?true:false;
-            dump($variable);
-            // dump($tiposApoderados);die;
 
-            // Validacion con quien vive
+            // VALIDACION CON QUIEN VIVE EL ESTUDIANTE
             $status = 200;
             if($rude->getViveHabitualmenteTipo() != null){
                 switch ($rude->getViveHabitualmenteTipo()->getId()) {
@@ -2179,15 +2219,14 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     'msg'=>$msg
                 ]);
             }else{
-                // Registro paso 4
+                // HACEMOS EL REGISTRO PASO 4 
+                // Y HABILITAMOS EL SIGUINTE PASO
                 if($rude->getRegistroFinalizado() < 4){
                     $rude->setRegistroFinalizado(4);
                     $em->flush();
                 }
             }
         }
-
-
 
         $response = new JsonResponse();
         return $response->setData([

@@ -342,18 +342,21 @@ function saveFormPadre(){
         },
         success: function(data){
 
-            $('#p_id').val(data.id);
-            $('#p_idDatos').val(data.idDatos);
-            $('#p_idPersona').val(data.idPersona);
+            if (data.status == 200) {
+                $('#p_id').val(data.id);
+                $('#p_idDatos').val(data.idDatos);
+                $('#p_idPersona').val(data.idPersona);
 
-            // Pasar a la siguiente pagina
-            // if(recargar){
-            //     $('#paso5').parent('li').removeClass('disabled');
-            //     $('#paso5').attr('data-toggle','tab');
-            //     $('#paso5').click();
-            // }
-
-            $('#tabMadre').click();
+                $('#tabMadre').click();
+                // Pasar a la siguiente pagina
+                // if(recargar){
+                //     $('#paso5').parent('li').removeClass('disabled');
+                //     $('#paso5').attr('data-toggle','tab');
+                //     $('#paso5').click();
+                // }
+            }else{
+                alert(data.msg);
+            }
         },
         error: function(){
 
