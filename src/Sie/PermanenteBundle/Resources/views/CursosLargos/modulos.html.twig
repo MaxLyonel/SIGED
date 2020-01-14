@@ -37,7 +37,12 @@
                                         </div>
                                 </td>
                                 <td>
-                                    <button onclick="deleteAreaMaestro({{lstmod.idieco}},'{{infoUe}}',new String('{{lstmod.modulo}}'),{{lstmod.idsmp}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times">Eliminar</i></button>
+                                     {% if (lstmod.idiecom != '') %}
+                                                <button onclick="deleteAreaMaestro({{lstmod.idieco}},'{{infoUe}}',new String('{{lstmod.modulo}}'),{{lstmod.idsmp}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times">Eliminar</i></button>
+                                            {% else %}
+                                                
+                                            {% endif %}
+                                    
                                 </td>
                             </tr>
                         {% endfor %}
