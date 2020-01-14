@@ -2503,7 +2503,7 @@ class CursosLargosController extends Controller {
 
     public function removeStudentsCLAction(Request $request) {
               // dump($request);die;
-        $infoUe = array();//$request->get('infoUe');
+        $infoUe =$request->get('infoUe');
         $aInfoUeducativa = array();//unserialize($infoUe);
         $dataUe=array();//(unserialize($infoUe));
 
