@@ -1699,6 +1699,76 @@ class CursoPermanenteController extends Controller
 
     }
 
+    public function deleteEspecialidadAction(Request $request)
+    {
+         
+        $idesp = $request->get('idesp');
+       // dump($idesp);die;
+        try{
+            $em = $this->getDoctrine()->getManager();
+         //   $em->getConnection()->beginTransaction();
+            $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('id' =>$idesp));
+            $especialidadNivel = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findBy(array('superiorEspecialidadTipo' =>$idesp));
+            
+            if (count($especialidadTipo) > 0){
+                    $em->getConnection()->beginTransaction();
+                foreach($especialidadNivel as $nivel)
+                {
+                        $em->remove($nivel);
+                        $em->flush();
+                }
+
+                $em->remove($especialidadTipo);
+                $em->flush();
+                //dump($especialidadNivel);die;
+                $em->getConnection()->commit();
+                $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron eliminados correctamente.');
+            }
+           
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+            $especialidades = $db->prepare($query);
+            $params = array();
+            $especialidades->execute($params);
+            $esp = $especialidades->fetchAll();
+
+            if (count($esp) > 0){
+                $existesp = true;
+            }
+            else {
+                $existesp = false;
+            }
+            // dump($esp);die;
+            return $this->render('SiePermanenteBundle:CursoPermanente:listEspecialidades.html.twig', array(
+                'especialidades' => $esp,
+                'cantesp'=>count($esp),
+                'existeesp'=>$existesp,
+                'mensaje' => 'Especialidad Eliminada'
+
+            ));
+
+        }
+        catch(Exception $ex)
+        {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron Eliminados.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_especialidades'));
+        }
+
+    }
 
 
 
