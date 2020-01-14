@@ -419,10 +419,13 @@ class CursosLargosController extends Controller {
       //  dump($request);die;
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-     //   dump($aInfoUeducativa);die;
+       // dump($aInfoUeducativa);die;
         $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
         $idesp = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['cursolargoid'];
         $idnivel = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['acreditacionid'];
+        $espNombre = $aInfoUeducativa['ueducativaInfo']['cursolargo'];
+        $nivEsp= $aInfoUeducativa['ueducativaInfo']['acreditacion'];
+        $paralelo = $aInfoUeducativa['ueducativaInfo']['paralelo'];
       //  dump($idcurso);die;
         try {
             $this->session = $request->getSession();
@@ -446,14 +449,21 @@ class CursosLargosController extends Controller {
             $cursosCortos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findAll();
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
             $institucioncurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idcurso);
-            $institucioncursocorto = $em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$idcurso));
+           $institucioncursocorto = $em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$idcurso));
+           // $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('id' =>$idesp));
+           // $espNombre =$especialidadTipo->getEspecialidad();
             $deptoid=$institucioncursocorto->getLugarTipoDepartamento()->getId();
             $provid=$institucioncursocorto->getLugarTipoProvincia()->getId();
             $munid=$institucioncursocorto->getLugarTipoMunicipio()->getId();
             $lugar=$institucioncursocorto->getLugarDetalle();
             $pobdetalle=$institucioncursocorto->getPoblacionDetalle();
             $idpob=$institucioncursocorto->getPoblacionTipo()->getId();
-            //dump($idpob);die;
+            $pobNombre = $em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->findOneBy(array('id'=>$idpob));
+            if($pobNombre){
+                    $pobNombre=$pobNombre->getPoblacion();
+            }else{
+                    $pobNombre='';
+            }
             $organizacion = $em->getRepository('SieAppWebBundle:PermanenteOrganizacionTipo')->findAll();
           //  $pobdetalle
             $arraypob= array();
@@ -466,7 +476,7 @@ class CursosLargosController extends Controller {
             $query->bindValue(':pobla', $idpob);
             $query->execute();
             $idorg= $query->fetch();
-            //   dump($idorg);die;
+            //dump($idorg);die;
             $query = $em->getConnection()->prepare('select * from permanente_poblacion_tipo
                         where organizacion_tipo_id=:pobla
             ');
@@ -635,20 +645,23 @@ class CursosLargosController extends Controller {
                 ->add('nivel', 'hidden', array('data' => 231))
                 ->add('ciclo', 'hidden', array('data' => 0))
                 ->add('grado', 'hidden', array('data' => 99))
-                ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                //->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
                // ->add('paralelo', 'hidden', array('data' => 1))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('sucursal', 'hidden', array('data' => $sucursal))
                 ->add('institucion', 'hidden', array('data' => $institucion))
                 ->add('periodo', 'hidden', array('data' => $periodo))
                 ->add('turno', 'choice', array( 'required' => true, 'choices' => $turnoArray, 'data' => $institucioncurso->getTurnoTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('horas', 'text', array( 'required' => true, 'data' => $institucioncurso->getDuracionhoras(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
+                ->add('horas', 'text', array( 'required' => true, 'data' => $institucioncurso->getDuracionhoras(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','readonly' => true)))
                 ->add('fechaInicio', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaInicio()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
                 ->add('fechaFin', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaFin()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'data' => $institucioncursocorto->getSubareaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('especialidad', 'choice', array( 'required' => true, 'choices' => $espUEArray, 'data' => $idesp,'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarNiveles(this.value)')))
-                ->add('nivel', 'choice', array( 'required' => true, 'choices' => $nivelArray,'data' => $idnivel , 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'mostrarHoras(this.value)')))
+               // ->add('especialidad', 'choice', array( 'required' => true, 'choices' => $espUEArray, 'data' => $idesp,'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','readonly' => true, 'onchange' => 'listarNiveles(this.value)')))
+               // ->add('nivel', 'choice', array( 'required' => true, 'choices' => $nivelArray,'data' => $idnivel , 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','readonly' => true, 'onchange' => 'mostrarHoras(this.value)')))
+                ->add('nivel', 'text', array( 'required' => true, 'data' => $nivEsp, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','readonly' => true)))
+                ->add('especialidad', 'text', array( 'required' => true, 'data' => $espNombre, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','readonly' => true)))
+                ->add('paralelo', 'text', array( 'required' => true, 'data' => $paralelo, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','readonly' => true)))
                 //->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'data' => $institucioncursocorto->getAreatematicaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionesArray, 'data' => $institucioncursocorto->getPoblacionTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
                 //    ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionesArray, 'data' => $idpob , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
@@ -691,10 +704,10 @@ class CursosLargosController extends Controller {
         try {
             $form = $request->get('form');
             $institucioncurso ->getInstitucioneducativa($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['idCursosCortos'])));
-            $institucioncurso ->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(230));
+            $institucioncurso ->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(231));
             $institucioncurso ->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find(0));
             $institucioncurso ->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(99));
-            $institucioncurso ->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find(1));
+            //$institucioncurso ->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find(1));
             $institucioncurso ->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
             $institucioncurso ->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find($this->session->get('ie_subcea')));
             $institucioncurso ->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
@@ -711,7 +724,7 @@ class CursosLargosController extends Controller {
             $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));
             $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => $form['programa'])));
             //$institucioncursocorto  ->setAreatematicaTipo($em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->findOneBy(array('id' => $form['areatematica'])));
-            $institucioncursocorto  ->setCursocortoTipo($em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findOneBy(array('id' => $form['cursosCortos'])));
+           // $institucioncursocorto  ->setCursocortoTipo($em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findOneBy(array('id' => $form['cursosCortos'])));
             $institucioncursocorto  ->setPoblacionTipo($em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->findOneBy(array('id' => $form['poblacion'])));
             $institucioncursocorto  ->setLugarTipoDepartamento($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['departamento'])));
             $institucioncursocorto  ->setLugarTipoProvincia($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'])));
@@ -722,13 +735,13 @@ class CursosLargosController extends Controller {
             $em->flush();
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
-            return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
+            return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
         }
         catch  (Exception $ex)
         {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
-            return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
+            return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
         }
 
     }
@@ -2164,6 +2177,7 @@ class CursosLargosController extends Controller {
 
         $exist = true;
         $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+   
         //  dump ($dataUe);die;
         $objStudents = array();
 
@@ -2180,48 +2194,49 @@ class CursosLargosController extends Controller {
         $query->execute();
         $objStudents= $query->fetchAll();
 
-        //  dump($objStudents);die;
+      
 
         $query = $em->getConnection()->prepare('
             select a.id as iecid, a.periodo_tipo_id, a.grado_tipo_id, a.gestion_tipo_id, a.nivel_tipo_id, a.turno_tipo_id,tt.turno,a.fecha_inicio,a.fecha_fin,a.duracionhoras,
-                            b.esabierto, b.lugar_tipo_departamento_id as deptoid,depto.lugar as departamento,  b.lugar_tipo_provincia_id as provid,prov.lugar as provincia,  b.lugar_tipo_municipio_id as munid,mun.lugar as municipio, b.lugar_detalle as comunidad,b.poblacion_detalle,
-                            c.areatematica, d.poblacion,e.programa, f.sub_area, g.cursocorto,
-                            h.id as codofermaes,h.horasmes, 
-                            i.maestro_inscripcion_id,
-                            k.paterno,k.materno,k.nombre,
-                            m.id as cursolargoid,m.sub_area_tipo_id,m.programa_tipo_id, m.areatematica_tipo_id,m.cursocorto_tipo_id,
-                                                    sip.id as superid,
-                                                    sia.id as siaid,
-                                                    sae.id as saeid,
-                                                    sat.acreditacion,
-                                                    sespt.especialidad,
-                                                    sfat.facultad_area as areaprograma
-                        FROM
-                            institucioneducativa_curso a 
-                                left JOIN permanente_institucioneducativa_cursocorto b on a.id= b.institucioneducativa_curso_id
-                                    left join permanente_area_tematica_tipo c on b.areatematica_tipo_id =c.id
-                                        left join permanente_poblacion_tipo d on b.poblacion_tipo_id = d.id
-                                                left join permanente_programa_tipo e on b.programa_tipo_id=e.id
-                                                    left join permanente_sub_area_tipo f on b.sub_area_tipo_id= f.id
-                                                        left join permanente_cursocorto_tipo g on cursocorto_tipo_id = g.id
-                                                            left join institucioneducativa_curso_oferta h on  a.id = h.insitucioneducativa_curso_id	
-                                                                left join institucioneducativa_curso_oferta_maestro i on h.id = i.institucioneducativa_curso_oferta_id
-                                                                    left join maestro_inscripcion j on i.maestro_inscripcion_id = j.id
-                                                                            left join persona k on j.persona_id =k.id
-                                                                                left join permanente_institucioneducativa_cursocorto m on m.institucioneducativa_curso_id = a.id
-                                                                                                                            inner join superior_institucioneducativa_periodo sip on a.superior_institucioneducativa_periodo_id = sip.id
-                                                                                                                                    inner join lugar_tipo depto on depto.id= b.lugar_tipo_departamento_id  
-                                                                                                                                        inner join lugar_tipo prov on prov.id = b.lugar_tipo_provincia_id
-                                                                                                                                            inner join lugar_tipo mun on mun.id = b.lugar_tipo_municipio_id
-                                                                                                                                    inner join turno_tipo tt on tt.id= a.turno_tipo_id
-                                                                                                                                            inner join superior_periodo_tipo spt on spt.id  = sip.superior_periodo_tipo_id
-                                                                                                                                                inner join superior_institucioneducativa_acreditacion sia on sia.id = sip.superior_institucioneducativa_acreditacion_id
-                                                                                                                                                    inner join institucioneducativa ie on ie.id =sia.institucioneducativa_id
-                                                                                                                                                        inner join superior_acreditacion_especialidad sae on sae.id = sia.acreditacion_especialidad_id
-                                                                                                                                                            inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
-                                                                                                                                                                inner join superior_especialidad_tipo sespt on sespt.id = sae.superior_especialidad_tipo_id
-                                                                                                                                                                    inner join superior_facultad_area_tipo sfat on sfat.id = sespt.superior_facultad_area_tipo_id
-                        where  a.nivel_tipo_id= 231 and a.id=:curso
+            b.esabierto, b.lugar_tipo_departamento_id as deptoid,depto.lugar as departamento,  b.lugar_tipo_provincia_id as provid,prov.lugar as provincia,  b.lugar_tipo_municipio_id as munid,mun.lugar as municipio, b.lugar_detalle as comunidad,b.poblacion_detalle,
+            c.areatematica, d.poblacion,pot.organizacion,e.programa, f.sub_area, g.cursocorto,
+            h.id as codofermaes,h.horasmes, 
+            i.maestro_inscripcion_id,
+            k.paterno,k.materno,k.nombre,
+            m.id as cursolargoid,m.sub_area_tipo_id,m.programa_tipo_id, m.areatematica_tipo_id,m.cursocorto_tipo_id,
+            sip.id as superid,
+            sia.id as siaid,
+            sae.id as saeid,
+            sat.acreditacion,
+            sespt.especialidad,
+            sfat.facultad_area as areaprograma
+            FROM
+            institucioneducativa_curso a 
+            left JOIN permanente_institucioneducativa_cursocorto b on a.id= b.institucioneducativa_curso_id
+            left join permanente_area_tematica_tipo c on b.areatematica_tipo_id =c.id
+            left join permanente_poblacion_tipo d on b.poblacion_tipo_id = d.id
+            left join permanente_organizacion_tipo pot on pot.id = d.organizacion_tipo_id
+            left join permanente_programa_tipo e on b.programa_tipo_id=e.id
+            left join permanente_sub_area_tipo f on b.sub_area_tipo_id= f.id
+            left join permanente_cursocorto_tipo g on cursocorto_tipo_id = g.id
+            left join institucioneducativa_curso_oferta h on  a.id = h.insitucioneducativa_curso_id	
+            left join institucioneducativa_curso_oferta_maestro i on h.id = i.institucioneducativa_curso_oferta_id
+            left join maestro_inscripcion j on i.maestro_inscripcion_id = j.id
+            left join persona k on j.persona_id =k.id
+            left join permanente_institucioneducativa_cursocorto m on m.institucioneducativa_curso_id = a.id
+            inner join superior_institucioneducativa_periodo sip on a.superior_institucioneducativa_periodo_id = sip.id
+            inner join lugar_tipo depto on depto.id= b.lugar_tipo_departamento_id  
+            inner join lugar_tipo prov on prov.id = b.lugar_tipo_provincia_id
+            inner join lugar_tipo mun on mun.id = b.lugar_tipo_municipio_id
+            inner join turno_tipo tt on tt.id= a.turno_tipo_id
+            inner join superior_periodo_tipo spt on spt.id  = sip.superior_periodo_tipo_id
+            inner join superior_institucioneducativa_acreditacion sia on sia.id = sip.superior_institucioneducativa_acreditacion_id
+            inner join institucioneducativa ie on ie.id =sia.institucioneducativa_id
+            inner join superior_acreditacion_especialidad sae on sae.id = sia.acreditacion_especialidad_id
+            inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
+            inner join superior_especialidad_tipo sespt on sespt.id = sae.superior_especialidad_tipo_id
+            inner join superior_facultad_area_tipo sfat on sfat.id = sespt.superior_facultad_area_tipo_id
+            where  a.nivel_tipo_id= 231 and a.id=:curso
                 ');
         $query->bindValue(':curso', $idcurso);
         $query->execute();
