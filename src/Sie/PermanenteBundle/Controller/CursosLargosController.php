@@ -80,7 +80,7 @@ class CursosLargosController extends Controller {
                     'ueducativaInfoId' => array('subareaid' => $uEducativa['subareaid'],'programaid' => $uEducativa['programaid'], 'cursolargoid' => $uEducativa['cursolargoid'], 'acreditacionid' => $uEducativa['acreditacionid'], 'iecid' => $uEducativa['iecid'], 'paraleloId' => $uEducativa['paraleloid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
-                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto']);
+                $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);
 
             }
          //   dump($aInfoUnidadEductiva);die;
@@ -2291,16 +2291,15 @@ class CursosLargosController extends Controller {
 
     public function mostrarInscripcionAction(Request $request) {
         //
-
         $em = $this->getDoctrine()->getManager();
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+        $aInfoUeducativa = array();// unserialize($infoUe);
+        $dataUe=array();//(unserialize($infoUe));
        // dump ($aInfoUeducativa);die;
         $exist = true;
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
-          //dump ($idcurso);die;
+        $idcurso= $request->get('infoUe');// $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+          // dump ($idcurso);die;
         $objStudents = array();
 
         $query = $em->getConnection()->prepare('
@@ -2362,6 +2361,7 @@ class CursosLargosController extends Controller {
 	        ');
         $query->bindValue(':curso', $idcurso);
         $query->execute();
+
         $cursosLargos= $query->fetchAll();
         //  dump($cursosLargos);die;
 
@@ -2517,10 +2517,10 @@ class CursosLargosController extends Controller {
     }
 
     public function removeStudentsCLAction(Request $request) {
-            //   dump($request);die;
-        $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+              // dump($request);die;
+        $infoUe =$request->get('infoUe');
+        $aInfoUeducativa = array();//unserialize($infoUe);
+        $dataUe=array();//(unserialize($infoUe));
 
         $idinscripcion = $request->get('idestins');
         $idcurso = $request->get('idcurso');
@@ -2530,8 +2530,10 @@ class CursosLargosController extends Controller {
         $em->getConnection()->beginTransaction();
 
         try {
+            // dump($idinscripcion);
             $socioeconomico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneBy(array('estudianteInscripcion' => $idinscripcion));
-
+// dump($socioeconomico);
+// die;
             if($socioeconomico)
             {
                 $idiomas = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socioeconomico->getId() ));
