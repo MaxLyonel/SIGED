@@ -121,7 +121,7 @@ class DownloadRudeFileController extends Controller{
            exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
            $dataDownload = array(
               'file' => $newGenerateFile . '.igm ',
-              'datadownload' => json_encode(array('id'=>$form['sie'],'gestion'=>$form['gestion'])),
+              'datadownload' => json_encode(array('id'=>$form['sie'],'gestion'=>$arrData['gestion'])),
               'sw' => $sw
             );
           }else{

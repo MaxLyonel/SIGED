@@ -44,11 +44,33 @@ class DeleteInscriptionQaController extends Controller {
         $institucioneducativa = $form['institucioneducativa'];
         $studentOne = $this->getHistoryStudent($rudeOne,$gestion,$institucioneducativa);
         $studentTwo = $this->getHistoryStudent($rudeTwo,$gestion,$institucioneducativa);
+        $existError = false;
+        if(sizeof($studentOne)>0 && sizeof($studentTwo)>0){
+          $existError = true;
+        }else{
+
+          $studentOne = (sizeof($studentOne)>0)?$studentOne:array('0'=>'nothing');
+          $studentTwo = (sizeof($studentTwo)>0)?$studentTwo:array('0'=>'nothing');
+
+          $existError = false;
+          $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');
+          $query->bindValue(':tipo', '2');
+          $query->bindValue(':rude', $form['llave']);
+          $query->bindValue(':param', '');
+          $query->bindValue(':gestion', $gestion);
+          $query->execute();
+
+          $message = 'Inconsistencia corregida ';
+          $this->addFlash('successqak', $message);
+        }
+
+
         //send the values to the twig
         return $this->render('SieRegularBundle:DeleteInscriptionQa:index.html.twig', array(
           'studentOne' => $studentOne[0],
           'studentTwo' => $studentTwo[0],
-          'idDetalle'  => $form['idDetalle']
+          'idDetalle'  => $form['idDetalle'],
+          'existError'  => $existError
         ));
     }
     /*
