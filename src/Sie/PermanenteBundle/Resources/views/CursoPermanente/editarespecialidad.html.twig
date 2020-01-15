@@ -55,14 +55,14 @@
 </div>
 <script>
 
-    var guardarEspecialidadP= function () {
+    var updateEspecialidad= function () {
 //        var menu = $('#form_nombre').val();
        var formData = $('#formEspecialidad').serialize();
       $('#modal').modal('hide');
 
         $.ajax({
             type: 'post',
-            url: "{{ path('herramienta_per_create_especialidad_nuevo') }}",
+            url: "{{ path('herramienta_per_update_especialidad_edit') }}",
             data:formData,
             beforeSend: function () {
 //                swal({

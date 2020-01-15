@@ -40,8 +40,7 @@
     {#</head>#}
 
 
-
-
+    {#{{form_start(form,{'attr':{'id':'formCursoLargo','class':'form-horizontal form-group'} })}}#}
 
 {% if exist == true %}
 
@@ -116,13 +115,28 @@
       <div class="panel-sub-heading inner-all">
           <div class="pull-left">
               <ul class="list-inline no-margin">
+                  {%  if ( (cursolargo[0].esabierto) ==true) %}
                   <li class="hidden-xs">
-                      <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Editar Curso</a>
+                      {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">#}
+                          {#<button  class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">#}
+                              {#<i class="fa fa-cube"></i>#}
+                          {#</button>#}
+                      {#</div>#}
+                      {#<button class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bs-example-modal-table"  onclick="editarCursoLargo();"><i class="fa fa-pencil"></i> Editar Curso</button>#}
+                      <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                          <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCursoLargo('{{ infoUe}} ');">
+                              <i class="fa fa-list"></i> Editar
+                          </button>
+                      </div>
                   </li>
                   <li>
-                      <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Eliminar Curso</a>
+                      <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar de Cursos">
+                          <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="deletecursoLargo('{{ infoUe}} ');">
+                              <i class="fa fa-list"></i> Eliminar
+                          </button>
+                      </div>
                   </li>
-
+                    {% endif %}
               </ul>
           </div>
           <div class="clearfix"></div>
@@ -153,16 +167,16 @@
                       </td>
                       <td></td>
                   </tr>
-                  <tr>
-                      <td></td>
-                      <td>
-                          <span class="pull-left text-capitalize">Area Tematica:</span>
-                      </td>
-                      <td>
-                          <span class="pull-none text-strong">{{ cursolargo[0].areatematica}}</span>
-                      </td>
-                      <td></td>
-                  </tr>
+                  {#<tr>#}
+                      {#<td></td>#}
+                      {#<td>#}
+                          {#<span class="pull-left text-capitalize">Area Tematica:</span>#}
+                      {#</td>#}
+                      {#<td>#}
+                          {#<span class="pull-none text-strong">{{ cursolargo[0].areatematica}}</span>#}
+                      {#</td>#}
+                      {#<td></td>#}
+                  {#</tr>#}
                   <tr>
                       <td></td>
                       <td>
@@ -226,6 +240,16 @@
                   <tr>
                       <td></td>
                       <td>
+                          <span class="pull-left text-capitalize">Organización:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].organizacion}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
                           <span class="pull-left text-capitalize">Población:</span>
                       </td>
                       <td>
@@ -234,13 +258,13 @@
                       <td></td>
                   </tr>
                   <tr> <td></td>
-                      <td>
+                      {# <td>
                           <span class="pull-left text-capitalize">Detalle Población:</span>
                       </td>
                       <td>
                           <span class="pull-none text-strong">{{ cursolargo[0].poblacion_detalle}}</span>
                       </td>
-                      <td></td>
+                      <td></td> #}
                   </tr>
                   </tbody>
               </table>
@@ -322,6 +346,7 @@
 </small>
 {% else %}
 {% endif %}
+    {#{{ form_end(form) }}#}
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
@@ -590,13 +615,13 @@
       });
     };
 
-    var deletecurso = function(infoUe){
-        if(confirm('¡¡Advertencia!! Esta por eliminar el curso. ¿Esta seguro de continuar?')){
+    var deletecursoLargo = function(infoUe){
+        if(confirm('¡¡Advertencia!! Esta por eliminar el especialidad. ¿Esta seguro de continuar?')){
 
             $.ajax({
          type: 'post',
          data: ({infoUe: infoUe }),
-         url: "{{ path('herramienta_per_cursocorto_delete') }}",
+         url: "{{ path('herramienta_per_cursos_largos_delete') }}",
                 beforeSend: function () {
                     $('#mengestioncurso').empty();
                     $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
@@ -604,12 +629,12 @@
                 success: function (data) {
                     $('#mengestioncurso').empty();
                     $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                    window.location.href =  Routing.generate('herramienta_per_cursos_largos_index');
                 },
                 error: function(data){
                     $('#mengestioncurso').empty();
                     $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
-                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                    window.location.href =  Routing.generate('herramienta_per_cursos_largos_index');
                 }
             });
         }
@@ -645,7 +670,35 @@
             return false;
         }
     };
+    var editarCursoLargo = function (infoUe) {
+       // var formData = $('#formCursoLargo').serialize();
+         $('#modal').modal('hide');
 
+        $.ajax({
+            type: 'post',
+            data: ({infoUe:infoUe}),
+            url: "{{ path('herramienta_per_cursos_largos_edit') }}",
+
+            beforeSend: function () {
+                $('#modal').empty();
+
+            },
+            success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                //   $('#modal').modal('show');
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
 
 function getSelectedValue()
 {

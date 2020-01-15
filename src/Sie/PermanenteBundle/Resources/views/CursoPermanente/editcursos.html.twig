@@ -1,69 +1,71 @@
+<div class="modal-dialog modal-md">
+	<div class="modal-content">
 
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
+		{{ form_start(form) }}
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<div class="pull-left">
+					<h3 class="panel-title">Edición de curso</h3>
+				</div>
 
-        {{ form_start(form) }}
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <div class="pull-left">
-                    <h3 class="panel-title">Edición de curso</h3>
-                </div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="form-body col-lg-12 col-md-12">
+						<label>
+							Nombre del Curso</label>
+						{{ form_widget(form.idc) }}
+						<strong>{{form_widget(form.curso)}}</strong>
+						{#<button type="button" class="btn btn-danger" onclick="asignarCursoCorto()">Guardar</button>#}
+					{# 	<strong>{{form_widget(form.guardarb)}}</strong>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+							<i class="fa fa-ban" aria-hidden="true"></i>
+							Cerrar</button> #}
 
-                <div class="clearfix"></div>
+					</div>
+
+				</div>
+			</div>
+               <div class="modal-footer">
+            <div class="form-footer">
+                <div class="col-sm-offset-5">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>
+                    <td colspan="2" class="text-right">{{ form_widget(form.guardarb) }}</div></td>
+
+                </button>
             </div>
-            <div class="panel-body">
-        <div class="row">
-            <div class="form-body col-lg-4 col-md-6">
-                <label> Nombre del Curso</label>
-                {{ form_widget(form.idc) }}
-                <strong>{{form_widget(form.curso)}}</strong>
-                {#<button type="button" class="btn btn-danger" onclick="asignarCursoCorto()">Guardar</button>#}
-                <strong>{{form_widget(form.guardarb)}}</strong>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+		</div>
 
-            </div>
-
-        </div>
-            </div>
-        </div>
-
-{{ form_end(form) }}
-    </div>
+		{{ form_end(form) }}
+	</div>
 </div>
 <script>
 
-    var asignarCursoCorto = function(){
-        var nuevoCurso = $('#form_curso').val();
-        if(nuevoCurso == ''){
-            alert('Campo requerido, Ingrese el Nombre del curso');
-            return false;
-        }
-        var formData = $('#formCursos').serialize();
-        $.ajax({
-            type: 'post',
-            data: formData,
-            url: "{{ path('herramienta_per_add_curso_nuevo') }}",
-            beforeSend: function () {
+	var asignarCursoCorto = function () {
+var nuevoCurso = $('#form_curso').val();
+if (nuevoCurso == '') {
+alert('Campo requerido, Ingrese el Nombre del curso');
+return false;
+}
+var formData = $('#formCursos').serialize();
+$.ajax({
+type: 'post',
+data: formData,
+url: "{{ path('herramienta_per_add_curso_nuevo') }}",
+beforeSend: function () {},
+success: function (data) {
+$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
+if (data.reinicio == true) {
+window.location.href = Routing.generate('herramienta_permanente_admin');
+}
+//
 
-            },
-            success: function (data) {
-                $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                if(data.reinicio == true)
-                {
-                    window.location.href =  Routing.generate('herramienta_permanente_admin');
-                }
-                //
-
-            },
-            statusCode: {
-                500: function () {
-
-                },
-                404: function () {
-
-                }
-            }
-        });
-    };
-
+},
+statusCode: {
+500: function () {},
+404: function () {}
+}
+});
+};
 </script>

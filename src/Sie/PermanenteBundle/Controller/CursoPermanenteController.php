@@ -1167,6 +1167,7 @@ class CursoPermanenteController extends Controller
     {
               //  dump($request);die;
         $form = $request->get('form');
+        $em = $this->getDoctrine()->getManager();
       //  dump($form);
         if (isset($form['tecbas'])){
             $tecbas = 1;
@@ -1184,17 +1185,22 @@ class CursoPermanenteController extends Controller
             $tecmed = 0;
         }
         $especialidad = strtoupper($form['especialidad']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
+       // dump($request);die;
+         $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('especialidad' =>$especialidad));
+      //   dump($especialidadTipo);die;
 
         try{
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_especialidad_tipo');")->execute();
-            $especialidadTipo = new SuperiorEspecialidadTipo();
-            $especialidadTipo ->setCodigo(50);
-            $especialidadTipo ->setEspecialidad($especialidad);
-            $especialidadTipo ->setSuperiorFacultadAreaTipo($em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->find(40));
-            $em->persist($especialidadTipo);
-            $em->flush($especialidadTipo);
+            if(!$especialidadTipo){
+               // dump('no existe');die;
+                 $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_especialidad_tipo');")->execute();
+                $especialidadTipo = new SuperiorEspecialidadTipo();
+                $especialidadTipo ->setCodigo(50);
+                $especialidadTipo ->setEspecialidad($especialidad);
+                $especialidadTipo ->setSuperiorFacultadAreaTipo($em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->find(40));
+                $em->persist($especialidadTipo);
+                $em->flush($especialidadTipo);
 
            //dump($especialidadTipo);die;
             if($tecbas==1)
@@ -1225,9 +1231,14 @@ class CursoPermanenteController extends Controller
                 $em->persist($acreditacionEspecialidad);
                 $em->flush($acreditacionEspecialidad);
             }
-
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
+            
+            } else{
+                // dump('existe');die;
+                 $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados, la especialidad ya existe.');
+                 
+            }
             $db = $em->getConnection();
             $query = " 	select ---sae.id, 
                       sest.id, sest.especialidad,
@@ -1261,22 +1272,14 @@ class CursoPermanenteController extends Controller
 
             ));
 
-
-//            return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
-
         }
         catch(Exception $ex)
         {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
-            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_especialidades'));
         }
-//dump($especialidad);die;
-        // return $this->render('SiePermanenteBundle:CursoPermanente:nuevaespecialidad.html.twig', array(
 
-           // 'form' => $form->createView()
-
-     //   ));
     }
 
     public function showEspecialidadEditAction(Request $request)
@@ -1699,6 +1702,76 @@ class CursoPermanenteController extends Controller
 
     }
 
+    public function deleteEspecialidadAction(Request $request)
+    {
+         
+        $idesp = $request->get('idesp');
+       // dump($idesp);die;
+        try{
+            $em = $this->getDoctrine()->getManager();
+         //   $em->getConnection()->beginTransaction();
+            $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('id' =>$idesp));
+            $especialidadNivel = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findBy(array('superiorEspecialidadTipo' =>$idesp));
+            
+            if (count($especialidadTipo) > 0){
+                    $em->getConnection()->beginTransaction();
+                foreach($especialidadNivel as $nivel)
+                {
+                        $em->remove($nivel);
+                        $em->flush();
+                }
+
+                $em->remove($especialidadTipo);
+                $em->flush();
+                //dump($especialidadNivel);die;
+                $em->getConnection()->commit();
+                $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron eliminados correctamente.');
+            }
+           
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+            $especialidades = $db->prepare($query);
+            $params = array();
+            $especialidades->execute($params);
+            $esp = $especialidades->fetchAll();
+
+            if (count($esp) > 0){
+                $existesp = true;
+            }
+            else {
+                $existesp = false;
+            }
+            // dump($esp);die;
+            return $this->render('SiePermanenteBundle:CursoPermanente:listEspecialidades.html.twig', array(
+                'especialidades' => $esp,
+                'cantesp'=>count($esp),
+                'existeesp'=>$existesp,
+                'mensaje' => 'Especialidad Eliminada'
+
+            ));
+
+        }
+        catch(Exception $ex)
+        {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron Eliminados.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_especialidades'));
+        }
+
+    }
 
 
 
