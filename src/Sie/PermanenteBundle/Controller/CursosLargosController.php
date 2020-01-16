@@ -3067,20 +3067,98 @@ class CursosLargosController extends Controller {
             }
     }
 
+
+
+    private function getCourseInfo($idcurso){
+
+        $em = $this->getDoctrine()->getManager();
+
+        // $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $sie= $this->session->get('ie_id');
+        $gestion=$this->session->get('ie_gestion');
+        $suc=$this->session->get('ie_subcea');
+        $periodo=$this->session->get('ie_per_cod');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $querya = $em->getConnection()->prepare('select h.id as iecid, psat.id as subareaid,psat.sub_area as subarea,ppt.id as programaid,ppt.programa,
+        --a.id as programaid, a.facultad_area as programa,
+        d.id as acreditacionid, d.acreditacion as acreditacion,b.id as cursolargoid,b.especialidad as cursolargo,pt.id as paraleloId, pt.paralelo, picc.esabierto
+        from superior_facultad_area_tipo a
+        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+        inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id
+        inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id
+        inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
+        inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id
+        inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id = g.id
+        inner join superior_turno_tipo q on h.turno_tipo_id = q.id
+        inner join permanente_institucioneducativa_cursocorto picc on picc.institucioneducativa_curso_id = h.id
+        inner join permanente_programa_tipo ppt on ppt.id =picc.programa_tipo_id
+        inner join permanente_sub_area_tipo psat on psat.id = picc.sub_area_tipo_id
+        inner join paralelo_tipo pt on pt.id=h.paralelo_tipo_id
+        where f.gestion_tipo_id=:gestion and f.institucioneducativa_id=:sie and h.id =:idcurso
+        and f.sucursal_tipo_id=:suc --and f.periodo_tipo_id=1
+        and a.id =40  and  h.nivel_tipo_id =231
+        ');
+        //$querya->bindValue(':nivel', 231);
+        $querya->bindValue(':sie', $sie);
+        $querya->bindValue(':gestion', $gestion);
+        $querya->bindValue(':suc', $suc);
+        $querya->bindValue(':idcurso', $idcurso);
+         //    $querya->bindValue(':periodo', $periodo);
+        $querya->execute();
+
+        $objUeducativa= $querya->fetchAll();
+        // dump($objUeducativa);die;
+        $exist = true;
+        $aInfoUnidadEductiva = array();
+        $sinfoUeducativa = array();
+        if (sizeof($objUeducativa)>0) {
+             $objUeducativa =  $objUeducativa[0];
+
+                $sinfoUeducativa = (array(
+                    'ueducativaInfo' => array('subarea' => $objUeducativa['subarea'],'programa' => $objUeducativa['programa'], 'cursolargo' => $objUeducativa['cursolargo'], 'acreditacion' => $objUeducativa['acreditacion'], 'paralelo' => $objUeducativa['paralelo'],
+                    'ueducativaInfoId' => array('subareaid' => $objUeducativa['subareaid'],'programaid' => $objUeducativa['programaid'], 'cursolargoid' => $objUeducativa['cursolargoid'], 'acreditacionid' => $objUeducativa['acreditacionid'], 'iecid' => $objUeducativa['iecid'], 'paraleloId' => $objUeducativa['paraleloid'],'esabierto'=> $objUeducativa['esabierto'])
+                )));
+
+                // $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);
+
+         //   dump($aInfoUnidadEductiva);die;
+        } else {
+            $message = 'No existe información del Centro de Educación  para la gestión seleccionada.';
+            $this->addFlash('warninresult', $message);
+            $exist = false;
+        }
+
+        return $sinfoUeducativa;
+
+    }
+
+
+
+
     public function showNotasCLAction (request $request){
-      //    dump($request);die;
+         // dump($request);die;
 
         $em = $this->getDoctrine()->getManager();
 
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
 
-        $aInfoUeducativa = unserialize($infoUe);
+        $aInfoUeducativa = array();//unserialize($infoUe);
         $aInfoStudent = json_decode($infoStudent, TRUE);
+
+        $aInfoUeducativa = $this->getCourseInfo($infoUe);
+        // dump($aInfoUeducativa);
+        // die;
         $aInfoUeducativaCurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId'];
-        $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $idcurso = $request->get('infoUe');// $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
         // dump($aInfoUeducativa);die;
-        $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid']);
+        $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idcurso);
         $ieducativaId = $iec->getInstitucioneducativa()->getId();
         $gestion = $iec->getGestionTipo()->getId();
 
