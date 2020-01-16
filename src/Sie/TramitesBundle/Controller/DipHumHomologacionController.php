@@ -492,7 +492,7 @@ class DipHumHomologacionController extends Controller {
                 select * from estudiante as e
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                where e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int and ei.estadomatricula_tipo_id in (4,5,55)    
+                where e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int and ei.estadomatricula_tipo_id in (4,5,55,11)    
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':complemento', $complemento);
