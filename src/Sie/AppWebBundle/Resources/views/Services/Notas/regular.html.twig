@@ -162,6 +162,7 @@
                         {% if a.notas is defined and a.notas|length > 0 %}
                         {% for n in a.notas %}
                             {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                            {# {% if ((notas.estadoMatricula in notas.estadosPermitidos) and vista != 0) or ((notas.estadoMatricula in [55]) and notas.gestion == 2019 and notas.operativo == 4 and notas.nivel == 13 and n.nota == '') %} #}
                                 {% if (n.idNotaTipo != 5 and ((notas.nivel in [1,11,403] and n.nota == "") or (notas.nivel not in [1,11,403] and n.nota == 0))) or (vista == 2 and n.idNotaTipo != 5) or (n.idNotaTipo != 5 and n.idNotaTipo == notas.operativo ) %} {# and notas.gestion == notas.gestionActual #}
                                     <td data-title="{{n.idNotaTipo}} Bimestre">
                                         <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
@@ -190,7 +191,7 @@
                                 {% if notas.nivel in [1,11,403] %}
                                     <textarea id="{{n.id}}" class="jnumbersletters" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" disabled="disabled">{{n.nota}}</textarea>
                                 {% else %}
-                                    <input id="{{n.id}}" type="text" size="2" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
+                                    <input id="{{n.id}}" type="text" size="2" class="form-control input-sm {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
                                 {% endif %}
                                 </td>
                             {% endif %}
