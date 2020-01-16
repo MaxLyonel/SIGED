@@ -4,6 +4,12 @@
     <!-- Start page header -->
       {% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
     <!--/ End page header -->
+    <style type="text/css">
+        .dropdown-header{
+            background: #3f729b !important;
+            color: #EEEEEE;
+        }
+    </style>
 
     <div class="body-content animated fadeIn">
 
@@ -35,7 +41,44 @@
                                     <h5>Cursos</h5>
                                 </div>
                                 <div class="pull-right">
-                                    Opciones:
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-instagram dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            Opciones &nbsp; <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right">
+                                            
+                                            <div class="dropdown-header">Reportes</div>
+
+                                            {% if app.session.get('acceso_total') and arrLevelandGrado.gestion >= 2019 %}
+                                                <li><a href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Modificadas</a></li>
+                                                <li><a href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Eliminadas</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}">Listado de estudiantes</a></li>
+                                            <li><a href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}">Reporte NNATS</a></li>
+                                            
+                                            <li class="divider"></li>
+                                            <div class="dropdown-header">Operativos</div>
+
+                                            {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
+                                                {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}
+                                                    {# <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
+                                                    <i class="fa fa-group" ></i>
+                                                    </button> #}
+                                                    <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">Cerrar Operativo Sexto de Secundaria</a></li>
+                                                {% else %}
+                                                    <li><a href="javascript:void();">Cerrar Operativo Sexto de Secundaria</a></li>
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
+                                                <li><a href="javascript:cerrarOperativo({{odataUedu.id}},{{gestion}});">Cerrar Operativo Mod. Especialidades</a></li>
+                                            {% endif %}
+                                            
+                                            {% if arrLevelandGrado.gestion == 2019 and app.session.get('ue_plena') and app.session.get('ue_modular')%}
+                                                <li><a href="javascript:cerrarRude()">Cerrar Operativo RUDE</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    {# Opciones:
                                     {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
                                         {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}
                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
@@ -45,9 +88,9 @@
                                             <button type="button" disabled class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo'>
                                             <i class="fa fa-group" ></i>
                                             </button>
-                                        {% endif %}    
+                                        {% endif %}
                                     {% endif %}
-                                     {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
+                                    {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
                                     <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Mod. Especialidades" id='btnCerraoperativo' onclick="cerrarOperativo({{odataUedu.id}},{{gestion}});">
                                     <i class="fa fa-group" ></i>
                                     </button>
@@ -57,7 +100,7 @@
                                         <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
                                     {% endif %}
                                     <a class="btn btn-twitter btn-sm" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Listado de estudiantes"><i class="fa fa-download"></i></a>
-                                    <a class="btn btn-info btn-sm" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Reporte NNATS"><i class="fa fa-download"></i></a>
+                                    <a class="btn btn-info btn-sm" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Reporte NNATS"><i class="fa fa-download"></i></a> #}
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
