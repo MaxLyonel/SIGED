@@ -132,9 +132,26 @@
     .panel-footer{
         margin-top: 10px;
     }
+    .cortina{
+        background: #7BB5D1;
+        position: absolute;
+        z-index: 1;
+        opacity: 0.4;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 25%;
+        color: #000000;
+        display: none;
+        cursor: no-drop;
+    }
 </style>
 <div class="modal-dialog" style="width: 1000px">
     <div class="modal-content">
+        <div class="cortina" id="cortina">
+            <img src="{{asset('img/loading.gif')}}" alt=""><br>
+            Guardando...
+        </div>
         <div class="panel panel-tab panel-tab-double">
             <div class="panel-heading no-padding">
                 <div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;">
@@ -1843,14 +1860,16 @@
                 data: data,
                 beforeSend: function(){
                     console.log('enviando')
+                    $('#cortina').css('display','block');
                 },
                 success: function(data){
+                    $('#cortina').css('display','none');
                     $('#paso2').parent('li').removeClass('disabled');
                     $('#paso2').attr('data-toggle','tab');
                     $('#paso2').click();
                 },
                 error: function(){
-                    console.log('error');
+                    $('#cortina').css('display','none');
                 }
             });
         // }else{
@@ -1921,15 +1940,16 @@
             type: 'post',
             data: data,
             beforeSend: function(){
-                console.log('enviando')
+                $('#cortina').css('display','block');
             },
             success: function(data){
+                $('#cortina').css('display','none');
                 $('#paso3').parent('li').removeClass('disabled');
                 $('#paso3').attr('data-toggle','tab');
                 $('#paso3').click();
             },
             error: function(){
-
+                $('#cortina').css('display','none');
             }
         });
     }
@@ -2072,16 +2092,17 @@
             type: 'post',
             data: data,
             beforeSend: function(){
-                console.log('enviando');
+                $('#cortina').css('display','block');
             },
             success: function(data){
+                $('#cortina').css('display','none');
                 $('#paso4').parent('li').removeClass('disabled');
                 $('#paso4').attr('data-toggle','tab');
                 $('#paso4').click();
                 $('#tabPadre').click();
             },
             error: function(){
-
+                $('#cortina').css('display','none');
             }
         });
     }
@@ -2112,14 +2133,16 @@
             type: 'post',
             data: data,
             beforeSend: function(){
+                $('#cortina').css('display','block');
                 $('#btnImprimir').fadeOut('slow');
             },
             success: function(data){
+                $('#cortina').css('display','none');
                 $('#btnImprimir').fadeIn('slow');
                 $('#btnImprimir').fadeIn('slow');
             },
             error: function(){
-
+                $('#cortina').css('display','none');
             }
         });
     }
