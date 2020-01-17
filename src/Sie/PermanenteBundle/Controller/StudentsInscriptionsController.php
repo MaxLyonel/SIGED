@@ -405,7 +405,7 @@ class StudentsInscriptionsController extends Controller {
         $arrStudent = array(
           'paterno'     =>$objStudent->getPaterno(),
           'materno'     =>$objStudent->getMaterno(),
-          'nombres'     =>$objStudent->getNombre(),
+          'nombre'     =>$objStudent->getNombre(),
           'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
           'carnet'      =>$objStudent->getCarnetIdentidad(),
           'genero'      =>$objStudent->getGeneroTipo()->getGenero(),
@@ -434,7 +434,7 @@ class StudentsInscriptionsController extends Controller {
           $arrStudent = array(
             'paterno'     =>$objStudent->getPaterno(),
             'materno'     =>$objStudent->getMaterno(),
-            'nombres'     =>$objStudent->getNombre(),
+            'nombre'     =>$objStudent->getNombre(),
             'fecNac'      =>$objStudent->getFechaNacimiento()->format('d-m-Y'),
             'carnet'      =>$objStudent->getCarnet(),
             'complemento' =>$objStudent->getComplemento(),
@@ -570,7 +570,7 @@ class StudentsInscriptionsController extends Controller {
       $localidad = $request->get('localidad');
       $paterno = $request->get('paterno');
       $materno = $request->get('materno');
-      $nombre = $request->get('nombres');
+      $nombre = $request->get('nombre');
       $fecNac = $request->get('fecNac');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');

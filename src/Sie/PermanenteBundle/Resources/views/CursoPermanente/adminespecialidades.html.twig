@@ -18,6 +18,29 @@
     <br>
 
     <div class='container'>
+        
+
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('newOk') %}
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('newError') %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         <div class="panel panel-danger" id="panelesp">
 
             <div class="panel-heading">
@@ -38,9 +61,9 @@
                             <tr>
                                 <th class="text-center border-right">N°</th>
                                 <th class="text-center border-right">Especialidad</th>
-                                <th class="text-center border-right">Tecnico Basico</th>
-                                <th class="text-center border-right">Tecnico Auxiliar</th>
-                                <th class="text-center border-right">Tecnico Medio</th>
+                                <th class="text-center border-right">Técnico Básico</th>
+                                <th class="text-center border-right">Técnico Auxiliar</th>
+                                <th class="text-center border-right">Técnico Medio</th>
                                 <th class="text-center border-right">Operaciones </th>
 
 
@@ -50,9 +73,9 @@
                         <tr>
                             <th class="text-center border-right">N°</th>
                             <th class="text-center border-right">Especialidad</th>
-                            <th class="text-center border-right">Tecnico Basico</th>
-                            <th class="text-center border-right">Tecnico Auxiliar</th>
-                            <th class="text-center border-right">Tecnico Medio</th>
+                            <th class="text-center border-right">Técnico Básico</th>
+                            <th class="text-center border-right">Técnico Auxiliar</th>
+                            <th class="text-center border-right">Técnico Medio</th>
                             <th class="text-center border-right">Operaciones </th>
                         </tr>
                         </tfoot>
@@ -87,7 +110,7 @@
                                         {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                         {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
                                         <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarEspecialidad({{ especialidades.id }},{{ especialidades.tecnicobasico }},{{ especialidades.tecnicoauxiliar }},{{ especialidades.tecnicomedio }});"><i class="fa fa-pencil"></i></a>
-                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarEspecialidad({{ especialidades.id }}));"><i class="fa fa-times"></i></button>
+                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarEspecialidad({{ especialidades.id }});"><i class="fa fa-times"></i></button>
 
                                     </td>
                                 </tr>
@@ -168,11 +191,14 @@
                 url: "{{ path('herramienta_per_show_especialidad_nuevo') }}",
                 beforeSend: function () {
                     $('#modal').empty();
+                    $("#mengestioncurso").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
+                     $("#mengestioncurso").empty();
                     $('#modal').empty();
                     $('#modal').modal('show');
                     $('#modal').append(data);
+                     //$("#mengestioncurso").append(data);
 
                 },
 
@@ -209,19 +235,20 @@
             });
         };
 
-        var eliminarrEspecialidad= function (idesp,tecbas,tecaux,tecmed) {
+        var eliminarEspecialidad= function (idesp) {
+           // alert(idesp);
             $.ajax({
                 type: 'post',
-                url: "{{ path('herramienta_per_show_especialidad_edit') }}",
-                data: ({idesp:idesp,tecbas:tecbas,tecaux:tecaux, tecmed: tecmed}),
+                url: "{{ path('herramienta_per_especialidad_acreditacion_delete') }}",
+                data: ({idesp:idesp}),
                 beforeSend: function () {
                     $('#modal').empty();
+                    $("#mengestioncurso").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                 },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').modal('show');
-                    $('#modal').append(data);
-
+                success: function (data) {console.log(data);
+                   // $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                   // $("#mengestioncurso").empty();
+                     window.location.href =  Routing.generate('herramienta_permanente_admin_especialidades');
                 },
 
                 statusCode: {

@@ -85,7 +85,7 @@
 
                           <div class="col-md-6">
                               <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptionsCL('{{infoUe}}');" >
-                                  <i class="fa fa-user"></i> Inscrip. con Rudeal
+                                  <i class="fa fa-user"></i> Inscripci&oacute;n con CI
                               </button>
                           </div>
 
@@ -264,7 +264,7 @@
                                     <th>Módulo</th>
                                     <th>Horas</th>
                                     <th>Facilitador</th>
-                                    <th>Otros</th>
+                                    {# <th>Otros</th> #}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -274,11 +274,11 @@
                                         <td >{{ lstmod.modulo }}</td>
                                         <td >{{ lstmod.horas_modulo }}</td>
                                         <td >{{ lstmod.nombre }}</td>
-                                        <td>
+                                        {# <td>
                                             {% if ((lstmod.nombre == '6') or (lstmod.nombre == null)) %}
                                                 RS
                                             {% endif %}
-                                        </td>
+                                        </td> #}
 
                                     </tr>
                                 {% endfor %}

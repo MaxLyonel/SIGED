@@ -316,7 +316,7 @@
                           </div>
                           <div class="col-sm-4">
                             <label for="Nombre(s)">Nombre(s)</label></br>
-                              ${dataStudent.nombres}
+                              ${dataStudent.nombre}
                           </div>
                         </div>
                         <div class="row">
@@ -374,7 +374,7 @@
                               </div>
                               <div class="col-sm-2">
                               <label for="fechanac">Fec. Nacimiento</label>
-                                  <input type="text" class="form-control" placeholder="Fec. Nacimiento" v-model="newStudent.fecNac">
+                                  <input type="text" id="form_fecNac" name="form[fecNac]" class="form-control" placeholder="" v-model="newStudent.fecNac">
                               </div>
                               <div class="col-sm-3">
                               <label for="genero">Genero</label>
@@ -447,7 +447,11 @@
   </div>
 </div><!-- /.modal-dialog -->
 
-<script>
+
+<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
+<script type="text/javascript">
+
+
 
 
 var app = new Vue({
@@ -494,7 +498,7 @@ var app = new Vue({
         this.historyPer = false; 
 
         if(this.cival.length == 0){
-          this.message = 'debe introducir un carnet';
+          this.message = 'debe introducir Carnet de Identidad';
           this.buscando = false;
           return;
         }
@@ -820,5 +824,7 @@ var showListStudent = function(iecId, infoUe){
     });
 
 };
+
+$("#form_fecNac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
 </script>
 

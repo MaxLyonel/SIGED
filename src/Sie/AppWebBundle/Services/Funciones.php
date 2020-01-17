@@ -1265,11 +1265,50 @@ class Funciones {
         return $tiempo;
     }
 
-    public function getTheCurrentYear($fechanacimiento, $fechaLimit){
-        $dias = explode("-", $fechanacimiento, 3);
-        $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
-        $edad = (int)((time()-$dias)/31556926 );
-        return $edad;        
+    public function getTheCurrentYear($dob, $fechaLimit){
+
+        $today = $fechaLimit;
+        $dob_a = explode("-", $dob);
+        $today_a = explode("-", $today);
+        $dob_d = $dob_a[0];$dob_m = $dob_a[1];$dob_y = $dob_a[2];
+        $today_d = $today_a[0];$today_m = $today_a[1];$today_y = $today_a[2];
+        $years = $today_y - $dob_y;
+        $months = $today_m - $dob_m;
+        if ($today_m.$today_d < $dob_m.$dob_d) 
+        {
+            $years--;
+            $months = 12 + $today_m - $dob_m;
+        }
+
+        if ($today_d < $dob_d) 
+        {
+            $months--;
+        }
+
+        $firstMonths=array(1,3,5,7,8,10,12);
+        $secondMonths=array(4,6,9,11);
+        $thirdMonths=array(2);
+
+        if($today_m - $dob_m == 1) 
+        {
+            if(in_array($dob_m, $firstMonths)) 
+            {
+                array_push($firstMonths, 0);
+            }
+            elseif(in_array($dob_m, $secondMonths)) 
+            {
+                array_push($secondMonths, 0);
+            }elseif(in_array($dob_m, $thirdMonths)) 
+            {
+                array_push($thirdMonths, 0);
+            }
+        }
+        $arrAge = array('age'=>$years, 'months'=>$months);
+        return $arrAge;
+        // $dias = explode("-", $fechanacimiento, 3);
+        // $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+        // $edad = (int)((time()-$dias)/31556926 );
+        // return $edad;        
         // list($dia,$mes,$anno) = explode("-",$fechanacimiento);
         // list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
 
@@ -1511,7 +1550,7 @@ class Funciones {
      * Service to check the users tuicion
      * @param  [array] $codrude    [codigoRude, userId, gestion]
      */
-    public function getInscriptionToValidateTuicion($form){
+    public function getInscriptionToValidateTuicion($form, $gestion, $calidad){
         //look for the current inscription on 4.5.11 matricula id
         $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
@@ -1519,11 +1558,15 @@ class Funciones {
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->where('e.codigoRude = :id')
-                ->andwhere('ei.estadomatriculaTipo IN (:mat)')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->setParameter('id', $form['codigoRude'])
-                ->setParameter('mat', array(4, 5, 11, 61, 62, 63))
-                ->setParameter('gestion', $this->session->get('currentyear'))
+                ->andWhere('ei.estadomatriculaTipo IN (:mat)')
+                ->andWhere('iec.gestionTipo = :gestion');
+        if($calidad) {
+            $query = $query->andWhere('iec.nivelTipo <> 13')
+                ->andWhere('iec.gradoTipo <> 6');
+        }
+        $query = $query->setParameter('id', $form['codigoRude'])
+                ->setParameter('mat', array(4, 5, 11, 28, 61, 62, 63))
+                ->setParameter('gestion', $gestion)
                 ->orderBy('ei.fechaInscripcion', 'DESC')
                 ->getQuery();
         

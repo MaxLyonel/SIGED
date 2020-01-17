@@ -19,9 +19,9 @@
                  <table class="table table-bordered table-striped table-danger">
                     <thead>
                         <tr>
-                            <th class="text-center border-right">Tecnico Basico</th>
-                            <th class="text-center border-right">Tecnico Auxiliar</th>
-                            <th class="text-center border-right">Tecnico Medio</th>
+                            <th class="text-center border-right">Técnico Básico</th>
+                            <th class="text-center border-right">Técnico Auxiliar</th>
+                            <th class="text-center border-right">Técnico Medio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,16 +56,25 @@
 <script>
 
     var guardarEspecialidadP= function () {
+         especialidad = $('#form_especialidad').val();
+            
+            if (especialidad.length <= 0) {
+                alert('Necesita introducir una Especialidad');
+                return false;
+            }
+       if ($('#form_tecbas').prop('checked')== false ) {
+            alert("Debe Seleccionar al menos el nivel de Tecnico Basico para la acreditación correspondiente");
+            return false;
+        }
+         if ($('#form_tecmed').prop('checked')== true ) {
+              if ($('#form_tecaux').prop('checked')== false ) {
+            alert("No puede seleccionar un nivel de Técnico Medio para la especialidad sin antes haber seleccionado el nivel de Técnico Básico y Técnico auxiliar");
+            return false;
+            }
+        
+        }
 
-//        if ($('#form_tecmed').prop('checked')== false ) {
-//            alert("Checkbox no seleccionado");
-//            return false;
-//        }else
-//        {
-////            console.log("Checkbox no seleccionado");
-////            return false;
-//        }
-//        var menu = $('#form_nombre').val();
+
        var formData = $('#formEspecialidad').serialize();
       $('#modal').modal('hide');
 

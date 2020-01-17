@@ -1339,14 +1339,14 @@ class CursosCortosController extends Controller {
 
     public function closeInscriptionAction(Request $request) {
 
-        //  dump($request);die;
+         // dump($request);die;
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+        $aInfoUeducativa = array();//unserialize($infoUe);
+        $dataUe=array();//(unserialize($infoUe));
         $exist=true;
         try {
 
-            $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+            $idcurso = $request->get('infoUe');
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $em->getConnection()->commit();
@@ -1585,9 +1585,9 @@ class CursosCortosController extends Controller {
 
         //get the send values
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
+        $aInfoUeducativa = array();// unserialize($infoUe);
 //          dump($aInfoUeducativa['ueducativaInfoId']['nivelId']);die;
-        $iecid = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $iecid = $request->get('infoUe');// $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
         //dump($iecid);die;
         //$iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecid);
         $em->getConnection()->beginTransaction();

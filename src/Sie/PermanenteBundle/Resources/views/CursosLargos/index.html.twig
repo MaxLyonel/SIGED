@@ -111,12 +111,12 @@
                                                                                             <ul>
                                                                                                 {% for paraleloKey, dataParalelo in dataIecid %}
                                                                                                     <li>
-                                                                                                    <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
+                                                                                                   {#  <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span> #}
 
                                                                                                     {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
                                                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
                                                                                                             <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                                <i class="fa fa-info"></i>
+                                                                                                                {{ paraleloKey }}
                                                                                                             </button>
                                                                                                         </div>
                                                                                                     {% endif %}
@@ -127,7 +127,7 @@
                                                                                                             {#{{ iecidKey }}#}
                                                                                                         </button>
                                                                                                     </div>
-                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones1">
                                                                                                             <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
                                                                                                                 <i class="fa fa-group"></i>
                                                                                                             </button>
@@ -219,7 +219,7 @@
                                                                                                 {#</button>#}
                                                                                             {#</div>#}
                                                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.infoUe }}');">
+                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
                                                                                                     <i class="fa fa-group"></i>
                                                                                                 </button>
                                                                                             </div>
@@ -310,7 +310,7 @@
                                                                                             </button>
                                                                                         </div>
                                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                            <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.infoUe }}');">
+                                                                                            <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
                                                                                                 <i class="fa fa-group"></i>
                                                                                             </button>
                                                                                         </div>
@@ -330,7 +330,7 @@
                                                                                             {#</button>#}
                                                                                             {#</div>#}
                                                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataIdcurso.infoUe }}');">
+                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataIdcurso.iecId }}');">
                                                                                                     <i class="fa fa-group"></i>
                                                                                                 </button>
                                                                                             </div>
