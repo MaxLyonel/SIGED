@@ -332,9 +332,11 @@ function saveFormMadre(){
         data: data,
         beforeSend: function(){
             console.log('enviando')
+            $('#cortina').css('display','block');
             m_limpiarBuscador();
         },
         success: function(data){
+            $('#cortina').css('display','none');
 
             if (data.status == 200) {
 
@@ -354,7 +356,7 @@ function saveFormMadre(){
             }
         },
         error: function(){
-
+            $('#cortina').css('display','none');
         }
     });
 }
