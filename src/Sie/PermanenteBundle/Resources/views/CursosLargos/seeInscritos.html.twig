@@ -227,9 +227,8 @@
                                                           <ul class="dropdown-menu" role="menu">
                                                               <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
                                                               <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
-                                                              <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealCL('{{infoUe}}', '{{jsnInfoStudent}}');">Rudeal</a> </li>
+                                                              <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeal('{{objStudents.idestins}}');">Rudeal</a> </li>
                                                               <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
-
                                                               {#<li class="divider"></li>#}
                                                               {#<li><a href="#">Separated link</a></li>#}
                                                           </ul>
@@ -364,7 +363,7 @@
                                                               <ul class="dropdown-menu" role="menu">
                                                                   <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
                                                                   <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
-                                                                  <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealCL('{{infoUe}}', '{{jsnInfoStudent}}');">Rudeal</a> </li>
+                                                                  <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeal('{{objStudents.idestins}}');">Rudeal</a> </li>
                                                                   <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
 
                                                                   {#<li class="divider"></li>#}
@@ -494,6 +493,31 @@
             success: function (data) {
                 $('#modal').empty();
                 $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var rudeal = function (infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoStudent: infoStudent}),
+            url: "{{ path('perm_estudiante_rudeal_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#modal').modal('show');
             },
             statusCode: {
                 500: function () {
