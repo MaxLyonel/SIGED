@@ -933,6 +933,18 @@ class DownloadFileSieController extends Controller {
         return $response;
     }
 
+    private function validateThePrevOperativo($data){
+      $swcompleteOperativo = true;
+      $operativo = $this->get('funciones')->obtenerOperativoDown($data['sie'], $data['gestion']);
+        if($operativo == 5){//if 4 everything is done
+          $swcompleteOperativo = true;
+        }else{
+          $swcompleteOperativo = false;
+        }
+
+        return $swcompleteOperativo;
+    }    
+
     public function getbimestreAction(Request $request) {
       
       
@@ -955,27 +967,64 @@ class DownloadFileSieController extends Controller {
                           '3'=> array('id'=>3, 'operativo'=>'3ro'),
                           '4'=> array('id'=>4, 'operativo'=>'4to'),
                         );
-     dump($aBimestre);die;
+     // dump($aBimestres);
+     // dump($operativo);
+     // die;
+
+      $swcompleteOperativo = true;
+      $message = '';
+      $status = '';
+      $sw = true;
+      if($this->session->get('currentyear') == $gestion - 1){
+        $swcompleteOperativo = $this->validateThePrevOperativo(array('sie'=>$sie, 'gestion'=>$gestion-1));
+      }
+      //validate if the ue has all the opeClosed the prev year
+      if($swcompleteOperativo){
       //new way to download the sie file througth the consolidation data on DB
-      if($operativo == 5){//if 4 everything is done
-        $aBimestre[]= array('-1' => 'Consolidado');
-      }else{
-        if($operativo >= 0){//mt 0 return plas 1
-          $aBimestre[]= array($operativo =>  $aBimestres[$operativo] );
-          // $aBimestre[$operativo]=$aBimestres[0];
-        }else{ //lt 0 return the same
-          // $aBimestre[$operativo]=$aBimestres[$operativo];
-          $aBimestre[]= array($operativo =>  $aBimestres[0] );
-          // $aBimestre[$operativo]=$aBimestres[0];
+        if($operativo == 5){//if 4 everything is done
+          // $aBimestre[-1]='Consolidado';
+          $message = 'Informacion consolidada';
+          $status = 'error';
+          $sw = false;
+        }else{
+          if($operativo >= 0){//mt 0 return plas 1
+            $aBimestre[$operativo]=$aBimestres[$operativo];
+            $status = 'success';
+            $sw = true;
+            // $aBimestre[$operativo]=$aBimestres[0];
+          }else{ //lt 0 return the same
+            // $aBimestre[$operativo]=$aBimestres[$operativo];
+            $aBimestre[$operativo]=$aBimestres[0];
+          }
+
         }
+      }else{
+        // $prevyear = $gestion-1;
+        // $aBimestre[-1]='Consolidacion de operativos incompleta en gestion '.$prevyear;
+        $message = 'Consolidacion de operativos incompleta en gestion '.$prevyear;
+        $status = 'error';
+        $sw = false;
 
       }
 
+
       $aBimestre = ($this->session->get('roluser') != 8) ? ($aBimestre) ? $aBimestre : array() : $aBimestres;
       
-      //$aBimestre = ($aBimestre) ? array('1' => '1er', '2' => '2do', '3' => '3ro') : array();
+      // //$aBimestre = ($aBimestre) ? array('1' => '1er', '2' => '2do', '3' => '3ro') : array();
+      // $response->setStatusCode(200);
+      // return $response->setData(array('bimestre' => $aBimestre));
+      $arrResult = array(
+          'status'=>'error',
+          'message'=>$message,
+          'swerror'=>$sw,
+          'bimestre' => $aBimestre
+      );
+
+      dump($arrResult);die;
+
       $response->setStatusCode(200);
-      return $response->setData(array('bimestre' => $aBimestre));
+      $response->setData();
+      return $response; 
 
 
     }
