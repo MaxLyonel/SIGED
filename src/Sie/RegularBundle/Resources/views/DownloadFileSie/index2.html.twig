@@ -205,6 +205,8 @@
                     this.message = false;
                     this.swmessage = false;
                     this.swquality = false;
+                    this.downloadingfile = true;
+                    this.swdownloadfile = false;                         
 
                     axios.get(Routing.generate('download_file_sie_getbimestre', {codsie: this.codsie, yearSelected: this.yearSelected}))
                     .then(response => {
@@ -216,6 +218,7 @@
                             this.swquality = response.data.swquality;
                             this.DBoperativos = response.data.bimestre;
                             this.DBobservationQA = response.data.arrObservationQA;
+                            this.downloadingfile = false;
                             console.log(this.swerror)
                         }
                         if (response.status == 202) {

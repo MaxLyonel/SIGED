@@ -263,7 +263,7 @@ class DownloadFileSieController extends Controller {
                                           $em->getConnection()->commit();
                                           //echo "done";
                                           $formImplode = implode(';', $form);                                      
-                                          $urlreport =  $this->generateUrl('download_file_sie_download', array('file'=>$newGenerateFile.'igm','datadownload'=>($formImplode)));
+                                          $urlreport =  $this->generateUrl('download_file_sie_download', array('file'=>$newGenerateFile.'.igm','datadownload'=>($formImplode)));
                                           $swdownloadfile = true;
                                           // return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
                                           //             'uEducativa' => $objUe[0],
@@ -493,8 +493,14 @@ class DownloadFileSieController extends Controller {
     }
 
     public function downloadAction(Request $request, $file,$datadownload) {
-      // dump($datadownload);die;
-      $form = json_decode($datadownload,true);
+      $file = $request->get('file');
+      $datadownload = $request->get('datadownload');
+      $arratadownload = explode(';', $datadownload);
+      $form = array(
+        'sie'=>$arratadownload[0],
+        'gestion'=>$arratadownload[1],
+        'bimestre'=>$arratadownload[2],
+      );
       $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
         //get path of the file
         //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
