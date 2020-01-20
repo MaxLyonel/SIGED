@@ -99,10 +99,15 @@
 
                         <div v-if="swmessage == false" class="row">
                             <div v-if="message" class="col-md-12">
-                                <p class="text-white bg-dark"> ${message}</p>
-                                <ul v-if="swquality" class="col-md-12">
-                                    <li v-for="item in DBobservationQA" :value="item.id">${ item.observation}</li>
-                                </ul>
+                            <p class="text-white bg-dark"> </p>
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <strong><i class='fa fa-linux'></i></strong> ${message}
+                                </div>
+                                <small>
+                                    <ul v-if="swquality" class="col-md-12">
+                                        <li v-for="item in DBobservationQA" :value="item.id">${ item.observation}</li>
+                                    </ul>
+                                </small>
                             </div>
                         </div>
 
@@ -112,7 +117,7 @@
                         <div v-if="swdownloadfile" class="row">                
                             <div class="col-md-8 col-md-offset-4" >
                                 <a class="btn btn-success" v-bind:href="urlreport">
-                                        <i class="fa fa-download"> DESCARGAR ARCHIVO ${codsie}-${nameSie}</i>
+                                        <i class="fa fa-download"> DESCARGAR ARCHIVO ${codsieId}-${nameSie}</i>
                                 </a></br>
                             </div>
                         </div>                                                
@@ -161,6 +166,7 @@
                 downloadingfile:false, 
                 nameSie:'',               
                 codsie:'',
+                codsieId:'',
                 typeMessage:'',
                 yearSelected:'',
                 operativoSelected:'',
@@ -235,6 +241,8 @@
             generateFile(){
                 this.swdownloadfile = false;             
                 this.downloadingfile = true;             
+                this.swmessage = true;
+                this.message = false;
 
                 axios.get(Routing.generate('download_file_sie_build', {codsie: this.codsie, yearSelected: this.yearSelected, operativoSelected: this.operativoSelected}))
                 .then(response => {
@@ -243,8 +251,10 @@
                         this.swdownloadfile = response.data.swdownloadfile;
                         this.urlreport = response.data.urlreport;                       
                         this.downloadingfile = false;
-                        this.codsie = response.data.institucioneducativaId;
+                        this.codsieId = response.data.institucioneducativaId;
                         this.nameSie = response.data.institucioneducativaName;
+                        this.message = response.data.message;
+                        this.swmessage = response.data.swdownload;
                     }
                     if (response.status == 202) {
                     }
