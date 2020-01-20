@@ -332,24 +332,31 @@ function saveFormMadre(){
         data: data,
         beforeSend: function(){
             console.log('enviando')
+            $('#cortina').css('display','block');
             m_limpiarBuscador();
         },
         success: function(data){
+            $('#cortina').css('display','none');
 
-            $('#m_id').val(data.id);
-            $('#m_idDatos').val(data.idDatos);
-            $('#m_idPersona').val(data.idPersona);
+            if (data.status == 200) {
 
-            // Pasar a la siguiente pagina
-            // if(recargar){
-            //     $('#paso5').parent('li').removeClass('disabled');
-            //     $('#paso5').attr('data-toggle','tab');
-            //     $('#paso5').click();
-            // }
-            $('#tabTutor').click();
+                $('#m_id').val(data.id);
+                $('#m_idDatos').val(data.idDatos);
+                $('#m_idPersona').val(data.idPersona);
+
+                // Pasar a la siguiente pagina
+                // if(recargar){
+                //     $('#paso5').parent('li').removeClass('disabled');
+                //     $('#paso5').attr('data-toggle','tab');
+                //     $('#paso5').click();
+                // }
+                $('#tabTutor').click();
+            }else{
+                alert(data.msg);
+            }
         },
         error: function(){
-
+            $('#cortina').css('display','none');
         }
     });
 }

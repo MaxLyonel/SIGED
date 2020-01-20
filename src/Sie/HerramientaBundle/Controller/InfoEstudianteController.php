@@ -1330,7 +1330,7 @@ class InfoEstudianteController extends Controller {
     ));
       }
 
-      public function cerrarRudeAction(Request $request){
+    public function cerrarRudeAction(Request $request){
         //get the values
         $sie = $request->get('sie');
         $gestion = $request->get('gestion');
@@ -1405,7 +1405,7 @@ class InfoEstudianteController extends Controller {
         }
         die('...');
 
-      }
+    }
 
 
     public function cerrarSextoGradoAction(Request $request){

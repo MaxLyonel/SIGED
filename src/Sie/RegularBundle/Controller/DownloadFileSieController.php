@@ -784,7 +784,7 @@ class DownloadFileSieController extends Controller {
           if(sizeof($arrObservationQA)>0){
             $swquality = true;
           }
-
+          
         }
 
         if(!$swquality){

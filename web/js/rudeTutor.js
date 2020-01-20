@@ -336,9 +336,11 @@ function saveFormTutor(){
         data: data,
         beforeSend: function(){
             console.log('enviando')
+            $('#cortina').css('display','block');
             t_limpiarBuscador();
         },
         success: function(data){
+            $('#cortina').css('display','none');
 
             if(data.status == 200){
                 $('#t_id').val(data.id);
@@ -354,7 +356,7 @@ function saveFormTutor(){
             
         },
         error: function(){
-
+            $('#cortina').css('display','none');
         }
     });
 }
