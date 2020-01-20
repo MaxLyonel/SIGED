@@ -1421,8 +1421,9 @@ class CursosLargosController extends Controller {
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
 
-        $aInfoUeducativa = unserialize($infoUe);
+        $aInfoUeducativa = array();//unserialize($infoUe);
         $aInfoStudent = json_decode($infoStudent, TRUE);
+        $aInfoUeducativa = $this->getCourseInfo($infoUe);
         $aInfoUeducativaCurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId'];
         $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
         // dump($aInfoUeducativa);die;
@@ -2680,10 +2681,11 @@ class CursosLargosController extends Controller {
 
         $infoUe = $request->get('infoUe');
 
-        $aInfoUeducativa = unserialize($infoUe);
+        $aInfoUeducativa = array();//unserialize($infoUe);
       //  dump($aInfoUeducativa);die;
-        $dataUe=(unserialize($infoUe));
-        $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $dataUe=array();//(unserialize($infoUe));
+        $idcurso = $request->get('infoUe');
+        $aInfoUeducativa = $this->getCourseInfo($infoUe);
         $acreditacionid = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['acreditacionid'];
         //dump($acreditacionid);die;
         $exist=true;

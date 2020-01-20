@@ -78,8 +78,7 @@ class ReportesController extends Controller {
     public function reportParticipantesAction(Request $request){
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $idcurso=trim($request->get('infoUe')) ;// $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
@@ -154,8 +153,8 @@ class ReportesController extends Controller {
 
     public function reportCertParticipantesAction(Request $request){
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = array();// unserialize($infoUe);
-        $idcurso= $request->get('infoUe'); //$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $aInfoUeducativa = array();
+        $idcurso= $idcurso=trim($request->get('infoUe'));
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
@@ -324,5 +323,4 @@ class ReportesController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-
 }
