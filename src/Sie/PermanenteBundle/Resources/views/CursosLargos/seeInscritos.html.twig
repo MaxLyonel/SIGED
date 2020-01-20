@@ -148,7 +148,7 @@
       </div>
       <div class="panel-body no-padding">
 
-              <ul class="nav nav-tabs" id="myTab">
+              {# <ul class="nav nav-tabs" id="myTab">
                   <li><a data-toggle="tab" href="#sectionA">Individual</a></li>
                   <li><a data-toggle="tab" href="#sectionB">Grupal</a></li>
               </ul>
@@ -173,7 +173,7 @@
                                                   <th>Paterno</th>
                                                   <th>Materno</th>
                                                   <th>Nombre(s)</th>
-                                                  {#<th>Genero</th>#}
+                                                  {#<th>Genero</th>
                                                   <th>Fecha de Nacimiento</th>
                                                   <th>Estado</th>
                                                   {% if  cursolargo[0].esabierto ==true %}
@@ -203,7 +203,7 @@
 
                                                   {# set the array student info and convert on json string #}
                                                   {# set objInfoStudent = objInfoStudent|merge(data) #}
-                                                  {# set jsnInfoStudent = objInfoStudent #}
+                                                  {# set jsnInfoStudent = objInfoStudent 
                                                   {% set jsnInfoStudent = items|json_encode() %}
                                                   <tr>
 
@@ -213,13 +213,13 @@
                                                       <td data-title="Paterno">{{ objStudents.paterno }}</td>
                                                       <td data-title="Materno">{{ objStudents.materno }}</td>
                                                       <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
-                                                      {#<td data-title="Formación">{{ objStudents.genero }}</td>#}
+                                                      {#<td data-title="Formación">{{ objStudents.genero }}</td>
                                                       <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
                                                       <td data-title="Estado">{{ objStudents.estadomatricula }}</td>
                                                       {% if  cursolargo[0].esabierto ==true %}
                                                       <td>
                                                           <div class="btn-group">
-                                                          {#<button type="button" class="btn btn-danger">Action</button>#}
+                                                          {#<button type="button" class="btn btn-danger">Action</button>
                                                           <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
                                                               <span class="caret"></span>
                                                               <span class="sr-only">Toggle Dropdown</span>
@@ -230,7 +230,7 @@
                                                               <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeal('{{objStudents.idestins}}');">Rudeal</a> </li>
                                                               <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
                                                               {#<li class="divider"></li>#}
-                                                              {#<li><a href="#">Separated link</a></li>#}
+                                                              {#<li><a href="#">Separated link</a></li>
                                                           </ul>
                                                           </div>
                                                       </td>
@@ -252,10 +252,10 @@
                       </div>
 
                       <p>. </p>
-                  </div>
+                  </div> #}
 
-                  <div id="sectionB" class="tab-pane fade">
-                      <h3>Asignación de Modulos en lote</h3>
+                  <div id="sectionB">
+                      <h3>Asignación de Modulos</h3>
                         {% if lstmod is not empty %}
                             <table class="table table-striped">
                                 <thead>

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Sie\PermanenteBundle\Controller\CursosLargosController;
 
 /**
  * EstudianteInscripcion controller.
@@ -102,8 +103,11 @@ class ReportesController extends Controller {
     public function reportParticipantesCLAction(Request $request){
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+         $idcurso= $idcurso=trim($request->get('infoUe'));
+        //dump($infoUe);die;
+         //$aInfoUeducativa = $this->getCourseInfo($infoUe);
+        //dump($aInfoUeducativa);die;
+       // $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];//
    //     dump($idcurso);die;
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
@@ -128,9 +132,11 @@ class ReportesController extends Controller {
     public function reportCentralizadorCLAction(Request $request){
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
-        //     dump($idcurso);die;
+         $idcurso= $idcurso=trim($request->get('infoUe'));
+       // $aInfoUeducativa = $this->getCourseInfo($infoUe);
+      //  dump($aInfoUeducativa);die;
+       // $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+             //dump($idcurso);die;
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');

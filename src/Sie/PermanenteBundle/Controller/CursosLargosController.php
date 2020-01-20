@@ -2419,11 +2419,11 @@ class CursosLargosController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+       // $aInfoUeducativa = unserialize($infoUe);
+     //   $dataUe=(unserialize($infoUe));
         $exist = true;
-        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
-      //  dump ($idcurso);die;
+        $idcurso= $infoUe;
+      // dump ($idcurso);die;
         $objStudents = array();
 
         $query = $em->getConnection()->prepare('
@@ -2511,7 +2511,7 @@ class CursosLargosController extends Controller {
             'cursolargo'=>$cursoLargo,
             'existins' => $existins,
             'infoUe' => $infoUe,
-            'dataUe' => $dataUe,
+           // 'dataUe' => $dataUe,
             'totalInscritos'=>count($objStudents)
 
         ));
@@ -3228,10 +3228,10 @@ class CursosLargosController extends Controller {
         $idnota= $form['esnotaid'];
         $nota= $form['nota'];
         $userId = $this->session->get('userId');
-        $aInfoUeducativa = unserialize($infoUe);
-        $aInfoUeducativaCurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId'];
-        $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
-        $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid']);
+        $aInfoUeducativa =  $infoUe;
+        //$aInfoUeducativaCurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId'];
+        $idcurso = $infoUe;
+        $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idcurso);
         $ieducativaId = $iec->getInstitucioneducativa()->getId();
         $gestion = $iec->getGestionTipo()->getId();
 
@@ -3327,8 +3327,11 @@ class CursosLargosController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $infoUe = $request->get('infoUe');
-        $aInfoUeducativa = unserialize($infoUe);
-        $dataUe=(unserialize($infoUe));
+       
+        //$aInfoUeducativa = unserialize($infoUe);
+        $aInfoUeducativa = $this->getCourseInfo($infoUe);
+        // dump($aInfoUeducativa);die;
+       // $dataUe=(unserialize($infoUe));
 
         $date = date('Y/m/d' );
         $date2 = date("Y-m-d",strtotime($date));
@@ -3482,7 +3485,7 @@ class CursosLargosController extends Controller {
             'cursolargo'=>$cursosLargos,
             'existins' => $existins,
             'infoUe' => $infoUe,
-            'dataUe' => $dataUe,
+           // 'dataUe' => $dataUe,
             'totalInscritos'=>count($objStudents)
 
         ));
