@@ -84,6 +84,22 @@
             <div class="body-content animated fadeIn">
                 <div class="row">
                     <div class="col-12">
+                        {% if app.session.flashBag.has('exito') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('exito') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if app.session.flashBag.has('error') %}
+                            <div class="alert alert-danger">
+                                {% for msg in app.session.flashBag.get('error') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <div class="panel" style="max-width:1050px;margin-left:auto;margin-right:auto;">
                            {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validacion();'}}) }}
                                 <div class="row">
@@ -125,7 +141,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="contenido">
+                                <div id="footer">
                                     <div class="panel-footer">
                                         <div class="form-group col-md-3">
                                             <a href="{{path('login')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
@@ -256,13 +272,22 @@
                         if (data.msg){
                             $("#contenido").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
                             $('#form_sie').val('');
+                            $("#footer").css("display", "block");
                         }else{
                             $("#contenido").append(data);
+                            $("#footer").css("display", "none");
                         }
                     },
                 });
             }
         }
+
+        $('#form_sie').on('input', function(e){
+            if($('#form_sie').val().length<8){
+                $('#contenido').empty();
+                $("#footer").css("display", "block");
+            }
+        });
 
         $(function(){
             $(".validar").keydown(function(event){

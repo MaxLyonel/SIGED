@@ -73,3 +73,7 @@ tramite_rue_buscar_siereapertura:
     path:     /buscar/siereapertura
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarSieReapertura" }
 
+tramite_rue_validarnombredistrito:
+    path:     /validar/nombre/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:validarNombreDistrito" }
+

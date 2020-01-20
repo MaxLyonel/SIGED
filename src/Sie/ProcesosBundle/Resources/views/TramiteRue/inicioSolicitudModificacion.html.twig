@@ -206,7 +206,7 @@
                                                         <strong>DEPARTAMENTO:</strong>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                                        {{ lugarTipo2012 ? lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper : '' }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -214,7 +214,7 @@
                                                         <strong>PROVINCIA:</strong>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
+                                                        {{ lugarTipo2012 ? lugarTipo2012.lugarTipo.lugarTipo.lugar|upper : '' }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -222,7 +222,7 @@
                                                         <strong>MUNICIPIO:</strong>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ lugarTipo2012.lugartipo.lugar|upper }}
+                                                        {{ lugarTipo2012 ? lugarTipo2012.lugartipo.lugar|upper : '' }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -230,7 +230,7 @@
                                                         <strong>COMUNIDAD:</strong>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ lugarTipo2012.lugar|upper }}
+                                                        {{ lugarTipo2012 ? lugarTipo2012.lugar|upper : '' }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -483,7 +483,7 @@
         }
 
         function siecomparte(sie){
-            var formData = {sie: sie};
+            var formData = {sie: sie,le:'{{institucioneducativa.leJuridiccionGeografica.id}}',iddistrito:'{{institucioneducativa.leJuridiccionGeografica.distritoTipo.id}}'};
             if(sie.length >= 8){
                 $.ajax({
                     type: 'GET',
@@ -514,34 +514,34 @@
                 $('#org').empty();
                 $('#dependencia').empty();
                 $('#form_lejurisdiccion').val('');
-                buscarEdificioEscolar('');
+                buscarEdificioEscolar('-1');
             }
         }
 
         function buscarEdificioEscolar(idLe) {
             if(idLe.length >= 8 && idLe != '{{institucioneducativa.leJuridicciongeografica.id}}' ){
-                var formData = {idLe:idLe,lugarTipoIdDistrito:'{{institucioneducativa.leJuridicciongeografica.lugarTipoIdDistrito}}'};
+                var formData = {idLe:idLe,iddistrito:'{{institucioneducativa.leJuridicciongeografica.distritoTipo.id}}'};
                 $.ajax({
                     type: 'get',
                     url: "{{path('tramite_rue_buscar_edificio')}}",
                     data: formData,
                     beforeSend: function () {
-                        $("#form_departamento2012").empty();
+                        //$("#form_departamento2012").empty();
                         $("#form_provincia2012").empty();
                         $("#form_municipio2012").empty();
                         $("#form_comunidad2012").empty();
-                        $("#form_departamento2001").empty();
+                        //$("#form_departamento2001").empty();
                         $("#form_provincia2001").empty();
                         $("#form_municipio2001").empty();
                         $("#form_canton2001").empty();
                         $("#form_localidad2001").empty();
                         $("#form_zona").empty();
                         $("#form_direccion").empty();
-                        $("#form_departamento2012").append('<option value="">Buscando...</option>');
+                        //$("#form_departamento2012").append('<option value="">Buscando...</option>');
                         $("#form_provincia2012").append('<option value="">Buscando...</option>');
                         $("#form_municipio2012").append('<option value="">Buscando...</option>');
                         $("#form_comunidad2012").append('<option value="">Buscando...</option>');
-                        $("#form_departamento2001").append('<option value="">Buscando...</option>');
+                        //$("#form_departamento2001").append('<option value="">Buscando...</option>');
                         $("#form_provincia2001").append('<option value="">Buscando...</option>');
                         $("#form_municipio2001").append('<option value="">Buscando...</option>');
                         $("#form_canton2001").append('<option value="">Buscando...</option>');
@@ -554,25 +554,25 @@
                         //console.log(data);
                         if(data.msg){
                             $("#form_lejurisdiccion").val('');
-                            $("#form_departamento2012").empty();
-                            $("#form_departamento2012").append('<option value="">Seleccione...</option>');
+                            //$("#form_departamento2012").empty();
+                            //$("#form_departamento2012").append('<option value="">Seleccione...</option>');
                             $("#form_provincia2012").empty();
                             $("#form_municipio2012").empty();
                             $("#form_comunidad2012").empty();
-                            $("#form_departamento2001").empty();
-                            $("#form_departamento2001").append('<option value="">Seleccione...</option>');
+                            //$("#form_departamento2001").empty();
+                            //$("#form_departamento2001").append('<option value="">Seleccione...</option>');
                             $("#form_provincia2001").empty();
                             $("#form_municipio2001").empty();
                             $("#form_canton2001").empty();
                             $("#form_localidad2001").empty();
                             $("#form_zona").val('');
                             $("#form_direccion").val('');
-                            $.each(data.lugar.c2012.dep.lista, function (i, value) {
+                            /*$.each(data.lugar.c2012.dep.lista, function (i, value) {
                                 $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
                             });
                             $.each(data.lugar.c2001.dep.lista, function (i, value) {
                                 $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
-                            });
+                            });*/
                             $('#form_departamento2012').removeAttr( 'style' );
                             $("#form_provincia2012").removeAttr( 'style' );
                             $("#form_municipio2012").removeAttr( 'style' );
@@ -586,9 +586,9 @@
                             $('#form_direccion').removeAttr( 'style' );
                             $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
                         }else{
-                            $.each(data.lugar.c2012.dep.lista, function (i, value) {
+                            /*$.each(data.lugar.c2012.dep.lista, function (i, value) {
                                 $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
-                            });
+                            });*/
                             $.each(data.lugar.c2012.prov.lista, function (i, value) {
                                 $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
                             });
@@ -598,9 +598,9 @@
                             $.each(data.lugar.c2012.comu.lista, function (i, value) {
                                 $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
                             });
-                            $.each(data.lugar.c2001.dep.lista, function (i, value) {
+                            /*$.each(data.lugar.c2001.dep.lista, function (i, value) {
                                 $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
-                            });
+                            });*/
                             $.each(data.lugar.c2001.prov.lista, function (i, value) {
                                 $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
                             });
@@ -639,6 +639,12 @@
                     }   
                 });
             }else{
+                $('#ie').empty();
+                $('#org').empty();
+                $('#dependencia').empty();
+                if($('#ie').html() == '' && idLe != '-1'){
+                    $('#form_siecomparte').val('');
+                }
                 $("#form_departamento2012").val('');
                 $('#form_departamento2012 option[value=""]').text("Seleccione departamento");
                 $("#form_provincia2012").empty();
@@ -672,7 +678,27 @@
         }
 
         function provincia(d,censo) {
+            if(censo == 2001 && $('#form_departamento2012').val()!=''){
+                if($('#form_departamento2001 option:selected').text() != $('#form_departamento2012 option:selected').text()){
+                    alert('El departamento del Censo 2001 no puede ser diferente del departamento del Censo 2012');
+                    $('#form_departamento2001').val('');
+                    return false;
+                }
+            }
+
+            if(censo == 2012 && $('#form_departamento2001').val()!=''){
+                if($('#form_departamento2001 option:selected').text() != $('#form_departamento2012 option:selected').text()){
+                    alert('El departamento del Censo 2012 no puede ser diferente del departamento del Censo 2001');
+                    $('#form_departamento2012').val('');
+                    return false;
+                }
+            }
+
             $("#form_lejurisdiccion").val('');
+            $("#form_siecomparte").val('');
+            $('#ie').empty();
+            $('#org').empty();
+            $('#dependencia').empty();
             $.ajax({
                 type: 'get',
                 url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
@@ -870,8 +896,11 @@
         });
         
         function buscarTramite(id,tipo){
-            //alert(id);
+            //alert($('#tabla tr').length);
             if(id){
+                if(($('#tabla tr').length - 1)==0){
+                    $('#form_tr').val('');
+                }
                 if(id == 39){ //fusion
                     idtramite = 34; //ampliacion de nivel
                     tipo = 'fusion'
@@ -895,7 +924,7 @@
                     alert('Ya seleccionó '+tramitetipo);
                     return false;
                 }
-                if ( idtramite == 34 ) {
+                if ( idtramite == 34) {
                     if(JSON.parse($('#nivel').val()).length == 3){
                         alert('La Unidad Educativa ya cuenta con los tres nivel, por lo que no corresponde una Ampliación de Nivel.');
                         return false;
@@ -938,7 +967,7 @@
                         tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-danger" data-placement="top" title="Eliminar trámite" onclick="borrarFila('+idtramite+')"><i class="glyphicon glyphicon-minus"></i></button>'+
                             '</td></tr>';
                         $('#tabla').append(tr);
-                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:2147483647 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
                         if ($('#form_tr').val() == "" && id != 39 && id != 40) {
                             trArray = [Number(idtramite)];
                             $('#form_tr').val(JSON.stringify(trArray));
@@ -948,7 +977,7 @@
                             if(tipo == 'fusion'){
                                 buscarTramite(43,tipo);
                             }else{//desglose
-                                $('#apertura').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_apertura" data-backdrop="false" style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                                $('#apertura').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_apertura" ></div>');
                                 buscarTramite(54,tipo);
                             }
                         }else if($('#form_tr').val() != "" && (id == 39 || id == 40)){
@@ -991,7 +1020,7 @@
 
         function validarnombredistrito(nombre){
             var ie = ('{{institucioneducativa.institucioneducativa}}').trim();
-            nombre = nombre.trim();
+            nombre = nombre.toUpperCase().trim();
             if ( nombre != '') {
                 if(nombre.toUpperCase() == ie.toUpperCase()){
                     alert('No puede ingresar el mismo nombre para la unidda educativa.');
@@ -1019,6 +1048,10 @@
 
         function requisitos(id){
             //alert(id);
+            if ( $("#modal_requisitos_"+ id).length ) {
+                return false;
+            }
+
             if(id != 54){
                 var formData = {id: id,ie:'{{institucioneducativa.id}}'};
             }else{
@@ -1028,10 +1061,8 @@
                     return false;
                 }
                 var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:1};
-            }
-            if ( $("#modal_requisitos_"+ id).length ) {
-                return false;
-            }
+            }            
+            
             $.ajax({
                 type: 'GET',
                 url: "{{path('tramite_rue_busca_requisitos')}}",
@@ -1560,7 +1591,6 @@
                     });
                     $('[data-toggle="tooltip"]').tooltip();
                     initMap();
-                
                 },
             });
         }

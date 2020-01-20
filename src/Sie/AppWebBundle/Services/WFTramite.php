@@ -3,6 +3,7 @@
 namespace Sie\AppWebBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\LogTransaccion;
@@ -320,6 +321,13 @@ class WFTramite {
      */
     public function eliminarTramiteNuevo($idtramite)
     {
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+
         $this->em->getConnection()->beginTransaction();
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
@@ -342,6 +350,14 @@ class WFTramite {
     */
     public function eliminarTramiteRecibido($idtramite)
     {   
+        //$this->em->clear();
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+        
         $this->em->getConnection()->beginTransaction();
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
@@ -349,14 +365,15 @@ class WFTramite {
             $tramite->setTramite($tramiteDetalle->getTramiteDetalle()->getId());
             $this->em->remove($tramiteDetalle);
             $this->em->flush();
-            //dump($tramite);die;
+            
             $this->em->getConnection()->commit();
-            //dump($tramite,$mensaje);die;
+            
             return true;
             
         } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
-            return false;
+            //return false;
+            return $ex->getMessage();
         }
         
     }
@@ -366,8 +383,16 @@ class WFTramite {
     */
     public function eliminarTramiteEnviado($idtramite,$idusuario)
     {
-                
+        //dump($this->em);die;
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+        //$this->em->clear();
         $this->em->getConnection()->beginTransaction();
+        //dump($this->em);die;
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
             $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
@@ -399,12 +424,13 @@ class WFTramite {
             $tramiteDetalle->setFechaEnvio(null);
             $tramiteDetalle->setTramiteEstado($this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(3));
             $this->em->flush();       
-
+            
             $this->em->getConnection()->commit();
             return true;
+           
         } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
-            return false;
+            return $ex->getMessage();
         }
         
     }
@@ -487,8 +513,9 @@ class WFTramite {
                 if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
                     $query = $this->em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
-                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2019 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     //dump($uDestinatario);die;
@@ -645,11 +672,13 @@ class WFTramite {
         }
 
         if($flujoproceso->getRolTipo()->getId() == 9 ){ //director
+            $gestionActual = 2019;//(new \DateTime())->format('Y');
             $uRemitente = $this->em->getRepository('SieAppWebBundle:MaestroInscripcion')->createQueryBuilder('mi')
                         ->select('u')
                         ->innerJoin('SieAppWebBundle:Usuario','u','with','mi.persona = u.persona')
                         ->where('mi.institucioneducativa = '. $institucioneducativa->getId())
-                        ->andWhere('mi.gestionTipo = '. (new \DateTime())->format('Y'))   
+                        //->andWhere('mi.gestionTipo = '. (new \DateTime())->format('Y'))   
+                        ->andWhere('mi.gestionTipo = '. $gestionActual)
                         ->andWhere("mi.cargoTipo in (1,12)")
                         ->andWhere("mi.esVigenteAdministrativo=true")
                         ->andWhere("u.esactivo=true")

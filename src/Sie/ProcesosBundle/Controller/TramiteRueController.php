@@ -135,7 +135,7 @@ class TramiteRueController extends Controller
                     ->setParameter('tipo',$this->tramiteTipoArray)
                     ->orderBy('tr.tramiteTipo','ASC');},
                 'property'=>'tramiteTipo','empty_value' => 'Seleccione tipo de trámite'))
-            ->add('tr', 'text')
+            ->add('tr', 'hidden')
             ->add('observacion','textarea',array('label'=>'JUSTIFICACIÓN:','required'=>true,'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
             ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
             ->getForm();
@@ -148,8 +148,10 @@ class TramiteRueController extends Controller
         $ie = $request->get('ie');
 
         $em = $this->getDoctrine()->getManager();
-        $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
         $tramiteTipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($id);
+        $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
+        $this->iddep2001 = $ie->getLeJuridiccionGeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+        $lugar2012 = $ie->getLeJuridiccionGeografica()->getLugarTipoIdLocalidad2012()?$em->getRepository('SieAppWebBundle:LugarTipo')->find($ie->getLeJuridiccionGeografica()->getLugarTipoIdLocalidad2012()):'';
         //dump($tramiteTipo);die;
         $form = $this->createFormBuilder();
         switch ($id){
@@ -258,14 +260,23 @@ class TramiteRueController extends Controller
                 break;
             case 41://cambio de infraestructura
                 $form = $form
-                    ->add('lejurisdiccion', 'text', array('label' => 'Código Edificio Educativo:','required'=>false,'attr' => array('class' => 'form-control validar','maxlength'=>8)))
-                    ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>true,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
-                        return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
+                    ->add('lejurisdiccion', 'text', array('label' => 'Código Edificio Educativo:','required'=>false,'attr' => array('class' => 'form-control validar','maxlength'=>8)));
+                if($lugar2012){
+                    $this->iddep2012 = $lugar2012->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+                    $form=$form
+                        ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                            return $lt->createQueryBuilder('lt')->where('lt.id = :id')->setParameter('id',$this->iddep2012);},'property'=>'lugar','empty_value'=>'Seleccione departamento'));
+                }else{
+                    $form=$form
+                        ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                            return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->andWhere('lt.id<>79355')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'));
+                }
+                $form=$form      
                     ->add('provincia2012', 'choice', array('label' => 'Provincia:','required'=>true,'attr' => array('class' => 'form-control')))
                     ->add('municipio2012', 'choice', array('label' => 'Municipio:','required'=>true, 'attr' => array('class' => 'form-control')))
                     ->add('comunidad2012', 'choice', array('label' => 'Comunidad:','required'=>true, 'attr' => array('class' => 'form-control')))
-                    ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>true,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
-                        return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 1')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
+                    ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                        return $lt->createQueryBuilder('lt')->where('lt.id = :id')->setParameter('id',$this->iddep2001);},'property'=>'lugar','empty_value'=>'Seleccione departamento'))
                     ->add('provincia2001', 'choice', array('label' => 'Provincia:','required'=>true,'attr' => array('class' => 'form-control')))
                     ->add('municipio2001', 'choice', array('label' => 'Municipio:','required'=>true, 'attr' => array('class' => 'form-control')))
                     ->add('canton2001', 'choice', array('label' => 'Cantón:','required'=>true, 'attr' => array('class' => 'form-control')))
@@ -406,7 +417,7 @@ class TramiteRueController extends Controller
                         ->add('i_esalquiler_dependencia', 'choice', array('label' => 'Infraestructura arrendada:','required'=>false,'empty_value'=>false,'multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
                         ->add('i_contrato_dependencia', 'file', array('label' => 'Adjuntar Copia notariada de contrato de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_dependencia', 'file', array('label' => 'Adjuntar convenio vigente de prestación de servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
-                        ->add('i_area_dependencia', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
+                        ->add('i_area_dependencia', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))
                         ->add('i_certificacion_gam', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_certificacionde_convenio', 'file', array('label' => 'Adjuntar Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_administracion', 'checkbox', array('label' => 'Convenio de administración de infraestructura firmado entre el Gobierno Autónomo Municipal correspondiente y la Institución prestadora del servicio (si corresponde):','required'  => false))
@@ -479,7 +490,7 @@ class TramiteRueController extends Controller
                 $form = $form
                     ->add('i_resolucion_jur', 'file', array('label' => 'Adjuntar Resolucion Administrativa de Autorización de apertura y funcionamiento emitida por la DDE (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar resolución",'accept'=>"application/pdf,.img,.jpg")))
                     ->add('i_certificacion_jur', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuyo cambio de jurisdicción administrativa es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")))
-                    ->add('i_area_jur', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
+                    ->add('i_area_jur', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))
                     ->add('i_certificadorue_jur', 'checkbox', array('label' => 'Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).','required'  => false))
                     ->add('ii_planos_jur', 'checkbox', array('label' => '2.1 Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal para infraestructura','required'  => false))
                     ->add('ii_inventario_jur', 'checkbox', array('label' => 'Inventario del mobiliario y equipamento de la unidad educativa de acuerdo a norma.','required'  => false))
@@ -506,7 +517,7 @@ class TramiteRueController extends Controller
                 $requisitos = array('legal'=>true,'infra'=>true,'admi'=>false);
                 $form = $form
                     ->add('i_solicitud_infra', 'file', array('label' => 'Adjuntar Solicitud de Cambio de Infraestructura (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
-                    ->add('i_area_infra', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))
+                    ->add('i_area_infra', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))
                     ->add('i_certificacion_infra', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
                 if($ie->getDependenciaTipo()->getId() == 2){
                     $form = $form
@@ -605,7 +616,7 @@ class TramiteRueController extends Controller
                 if( $dependencia == 1 or $dependencia == 2){
                     $form = $form
                         ->add('i_certificacion_apertura', 'checkbox', array('label' => 'Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.','required'  => false))
-                        ->add('i_area_apertura', 'choice', array('label' => 'Área geográfica:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('RURAL'=>'RURAL','URBANA'=>'URBANA')))    
+                        ->add('i_area_apertura', 'choice', array('label' => 'Área geográfica:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))    
                         ->add('i_compromiso_apertura', 'checkbox', array('label' => 'Compromiso Municipal de dotación y mantenimiento de infraestructura y equipamiento para la unidad educativa a crearse (en caso de unidades educativas fiscales y de convenio).','required'  => false));
                 }
                 if($dependencia == 3){
@@ -686,9 +697,10 @@ class TramiteRueController extends Controller
     {
         $id= $request->get('id');
         $desglose= $request->get('desglose');
-        //dump($request->get('desglose'),$id);die;
+        $ie= $request->get('ie');
+        //dump($ie);die;
         $em = $this->getDoctrine()->getManager();   
-        $form = $this->createInicioNuevoForm($desglose);
+        $form = $this->createInicioNuevoForm($desglose,$ie);
         $data = array(
             'form' => $form->createView(),
             'id' => $id,
@@ -703,7 +715,7 @@ class TramiteRueController extends Controller
         
     }
 
-    public function createInicioNuevoForm($desglose)
+    public function createInicioNuevoForm($desglose,$ie)
     {
         $em = $this->getDoctrine()->getManager();   
         /* $constitucion = array(1=>'Asociaciones o Fundaciones sin fines de lucro - ONG',
@@ -712,26 +724,51 @@ class TramiteRueController extends Controller
           47  4=>'Unipersonal',
           48  5=>'Cooperativa',
           49  6=>'De Convenio (suscrito entre estados)'); */
+        
         $form = $this->createFormBuilder();
+        
         if($desglose == 0){
             $form=$form
-            ->setAction($this->generateUrl('tramite_rue_apertura_guardar'))
-            ->add('distrito', 'choice', array('label' => 'Distrito Educativo','required'=>false,'attr' => array('class' => 'form-control')))
-            ->add('guardar','submit',array('label'=>'Enviar formulario'));
+                ->setAction($this->generateUrl('tramite_rue_apertura_guardar'))
+                ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                    return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->andWhere('lt.id<>79355')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
+                ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                    return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 1')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
+                ->add('distrito', 'choice', array('label' => 'Distrito Educativo','required'=>false,'attr' => array('class' => 'form-control')))
+                ->add('guardar','submit',array('label'=>'Enviar formulario'));
+        }else{
+            $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
+            $this->iddep2001 = $ie->getLeJuridiccionGeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+            $this->iddis = $ie->getLeJuridiccionGeografica()->getDistritoTipo()->getId();
+            $lugar2012 = $ie->getLeJuridiccionGeografica()->getLugarTipoIdLocalidad2012()?$em->getRepository('SieAppWebBundle:LugarTipo')->find($ie->getLeJuridiccionGeografica()->getLugarTipoIdLocalidad2012()):'';
+            
+            $form=$form
+                ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                    return $lt->createQueryBuilder('lt')->where('lt.id = :id')->setParameter('id',$this->iddep2001);},'property'=>'lugar','empty_value'=>'Seleccione departamento'))
+                ->add('distrito','entity',array('label'=>'Distrito:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $lt){
+                    return $lt->createQueryBuilder('lt')->where('lt.id = :id')->setParameter('id',$this->iddis);},'property'=>'distrito','empty_value'=>false));
+                if($lugar2012){
+                    $this->iddep2012 = $lugar2012->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+                    $form=$form
+                        ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                            return $lt->createQueryBuilder('lt')->where('lt.id = :id')->setParameter('id',$this->iddep2012);},'property'=>'lugar','empty_value'=>'Seleccione departamento'));
+                }else{
+                    $form=$form
+                        ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
+                            return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->andWhere('lt.id<>79355')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'));
+                }
+            
         }
+
         $form=$form
             ->add('institucioneducativa','text',array('label'=>'Nombre de la Unidad Educativa:','required'=>false,'attr' => array('class' => 'form-control dato54','oninput'=>'validarnombre(this.value,0)','style' => 'text-transform:uppercase')))
             ->add('fechafundacion','text',array('label'=>'Fecha de Fundación:','required'=>false,'attr' => array('class' => 'form-control date dato54')))
             ->add('telefono', 'text', array('label' => 'Telefono de Referencia:','required'=>false,'attr' => array('class' => 'form-control validar dato54')))
             ->add('director','text',array('label'=>'Datos del Director/Encargado/Propietario:','required'=>false,'attr' => array('class' => 'form-control dato54','style' => 'text-transform:uppercase')))
             ->add('lejurisdiccion', 'text', array('label' => 'Código Edificio Educativo:','required'=>false,'attr' => array('class' => 'form-control validar dato54','maxlength'=>8)))
-            ->add('departamento2012','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
-                return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 8')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
             ->add('provincia2012', 'choice', array('label' => 'Provincia:','required'=>false,'attr' => array('class' => 'form-control dato54')))
             ->add('municipio2012', 'choice', array('label' => 'Municipio:','required'=>false, 'attr' => array('class' => 'form-control dato54')))
             ->add('comunidad2012', 'choice', array('label' => 'Comunidad:','required'=>false, 'attr' => array('class' => 'form-control dato54')))
-            ->add('departamento2001','entity',array('label'=>'Departamento:','required'=>false,'attr' => array('class' => 'form-control dato54'),'class'=>'SieAppWebBundle:LugarTipo','query_builder'=>function(EntityRepository $lt){
-                return $lt->createQueryBuilder('lt')->where('lt.lugarNivel = 1')->andWhere('lt.paisTipoId=1')->orderBy('lt.id','ASC');},'property'=>'lugar','empty_value' => 'Seleccione departamento'))
             ->add('provincia2001', 'choice', array('label' => 'Provincia:','required'=>false,'attr' => array('class' => 'form-control dato54')))
             ->add('municipio2001', 'choice', array('label' => 'Municipio:','required'=>false, 'attr' => array('class' => 'form-control dato54')))
             ->add('canton2001', 'choice', array('label' => 'Cantón:','required'=>false, 'attr' => array('class' => 'form-control dato54')))
@@ -818,7 +855,7 @@ class TramiteRueController extends Controller
         /**
          * datos propios de la solicitud del formulario rue
          */
-        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1
+        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.fecha_fundacion,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1
                 FROM institucioneducativa ie
                 left join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
                 join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
@@ -845,10 +882,10 @@ class TramiteRueController extends Controller
                 join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
                 join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
                 join lugar_tipo lt4 on lt4.id=lt3.lugar_tipo_id
-                join lugar_tipo lt5 on lt5.id=le.lugar_tipo_id_localidad2012
-                join lugar_tipo lt6 on lt6.id=lt5.lugar_tipo_id
-                join lugar_tipo lt7 on lt7.id=lt6.lugar_tipo_id
-                join lugar_tipo lt8 on lt8.id=lt7.lugar_tipo_id
+                left join lugar_tipo lt5 on lt5.id=le.lugar_tipo_id_localidad2012
+                left join lugar_tipo lt6 on lt6.id=lt5.lugar_tipo_id
+                left join lugar_tipo lt7 on lt7.id=lt6.lugar_tipo_id
+                left join lugar_tipo lt8 on lt8.id=lt7.lugar_tipo_id
                 WHERE le.id='. $institucioneducativa[0]['le_juridicciongeografica_id']);
                 $query->execute();
         $le = $query->fetchAll();
@@ -877,6 +914,7 @@ class TramiteRueController extends Controller
         foreach ($tramites as $tramite){
             switch($tramite['id']){
                 case 34://Ampliacion de Nivel
+                    //dump($form);die;
                     $nt = $form['nivelampliar'];
                     foreach($ieNivelAutorizado as $n){
                         $nt[] = $n['id'];
@@ -1068,8 +1106,8 @@ class TramiteRueController extends Controller
                     }
                     $datos[$tramite['tramite_tipo']]['zona']=trim(mb_strtoupper($form['zona'],'utf-8'));
                     $datos[$tramite['tramite_tipo']]['direccion']=trim(mb_strtoupper($form['direccion'],'utf-8'));
-                    $datos[$tramite['tramite_tipo']]['iddistrito']=$form['distrito'];
-                    $datos[$tramite['tramite_tipo']]['distrito']=$em->getRepository('SieAppWebBundle:DistritoTipo')->find($form['distrito'])->getDistrito();
+                    $datos[$tramite['tramite_tipo']]['iddistrito']=$le[0]['distrito_tipo_id'];
+                    $datos[$tramite['tramite_tipo']]['distrito']=$le[0]['distrito'];
                     $datos[$tramite['tramite_tipo']]['iddepartamento2001']=$form['departamento2001'];
                     $datos[$tramite['tramite_tipo']]['departamento2001']=$em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento2001'])->getLugar();
                     $datos[$tramite['tramite_tipo']]['idprovincia2001']=$form['provincia2001'];
@@ -1231,13 +1269,48 @@ class TramiteRueController extends Controller
         $id_td = $request->get('id_td');
         //dump($idtramite,$id_td);die;
         $em = $this->getDoctrine()->getManager();
-        //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
-        $file = 'rue_iniciosolicitudModificacion_v2_pvc.rptdesign';    
+        
+        $query = $em->getConnection()->prepare("select *
+            from json_to_recordset((select wf.datos::json->>'tramites'
+            from wf_solicitud_tramite wf
+            join tramite_detalle td on wf.tramite_detalle_id=td.id
+            join flujo_proceso fp on fp.id=td.flujo_proceso_id
+            where td.tramite_id=". $idtramite ."
+            and fp.orden=1
+            and wf.es_valido = true)::json)
+            as x(id int, tramite_tipo text)
+            where id=40");
+
+        $query->execute();
+        $tramiteTipo = $query->fetchAll();
+        
+        //dump($tramiteTipo);die;
+        if($tramiteTipo){
+            $file = 'rue_iniciosolicitudDesglose_v2_pvc.rptdesign';
+        }else{
+            $file = 'rue_iniciosolicitudModificacion_v1_pvc.rptdesign';
+        }
+        //dump($file);die;
+        $query1 = $em->getConnection()->prepare("select 
+        'NRO._TRAMITE:_'||cast(td.tramite_id as varchar)||'__'||
+        'CODIGO_RUE:_'||cast(wf.datos::json->'institucioneducativa'->>'id' as varchar)||'__'||
+        'EDIFICIO_EDUCATIVO:_'||cast(wf.datos::json->'institucioneducativa'->>'le_juridicciongeografica_id' as varchar) AS qr
+        from wf_solicitud_tramite wf
+        join tramite_detalle td on wf.tramite_detalle_id=td.id
+        join flujo_proceso fp on fp.id=td.flujo_proceso_id
+        where td.tramite_id=". $idtramite ."
+        and fp.orden=1
+        and wf.es_valido = true");
+        
+        $query1->execute();
+        $qr = $query1->fetchAll();
+        //dump($qr);die;
+        $lk = $qr[0]['qr'];
         $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //dump($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&lk='. $lk .'&&__format=pdf&');die;
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&lk='. $lk .'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -1846,10 +1919,10 @@ class TramiteRueController extends Controller
                                     foreach($tareasDatos[0]['datos']['institucioneducativaNivel'] as $n){
                                         $arr[] = $n['id'];
                                     }
+                                    $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar'];
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
                                     $em->flush();
-                                    $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar'];
                                     //adiciona niveles nuevos
                                     foreach($nuevoNivel as $n){
                                         if(!in_array($n['id'],$arr)){
@@ -1863,6 +1936,7 @@ class TramiteRueController extends Controller
                                     $em->flush();
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($tareasDatos[0]['datos']['institucioneducativaNivel']),json_encode($tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar']),$form['observacion'],$usuario);
                                 }elseif($t['id'] == 35){#reduccion de nivel
+                                    $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir'];
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
                                     $em->flush();
@@ -1874,7 +1948,6 @@ class TramiteRueController extends Controller
                                         }
                                         $em->flush();
                                     }
-                                    $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir'];
                                     //adiciona niveles nuevos
                                     foreach($nuevoNivel as $n){
                                         //dump($n);die;
@@ -1897,10 +1970,10 @@ class TramiteRueController extends Controller
                                     if($tareasDatos[0]['datos'][$t['tramite_tipo']]['dependencia']['id'] == 2){ //convenio
                                         $convenio = $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['conveniotipo']['id']);
                                         $institucioneducativa->setConvenioTipo($convenio);
-                                        $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['area_dependencia']);
+                                        $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_dependencia']);
                                         $vNuevo['conveniotipo'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['conveniotipo'];
                                         $vAnterior['area_municipio'] = $tareasDatos[0]['datos']['institucioneducativa']['area_municipio'];
-                                        $vNuevo['area_municipio'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['area_dependencia'];
+                                        $vNuevo['area_municipio'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_dependencia1'];
                                     }else{ //fiscal
                                         $institucioneducativa->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById(0));
                                         $vAnterior['conveniotipo']['id'] = $tareasDatos[0]['datos']['institucioneducativa']['convenio_tipo_id'];
@@ -1923,11 +1996,14 @@ class TramiteRueController extends Controller
                                     $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($iddistrito);
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_jur']);
                                     $jurisdicciongeografica = $institucioneducativa->getLeJuridiccionGeografica();
                                     $jurisdicciongeografica->setLugarTipoIdDistrito($lugarIdDistrito);
                                     $jurisdicciongeografica->setDistritoTipo($distritoTipo);
                                     $jurisdicciongeografica->setFechaModificacion(new \DateTime('now'));
                                     $em->flush();
+                                    $vAnterior['area_municipio'] = $tareasDatos[0]['datos']['institucioneducativa']['area_municipio'];
+                                    $vNuevo['area_municipio'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_jur'];
                                     $vAnterior['distrito']['id'] = $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'];
                                     $vAnterior['distrito']['distrito'] = $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito'];
                                     $vNuevo['nuevo_distrito'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_distrito'];
@@ -1945,13 +2021,15 @@ class TramiteRueController extends Controller
                                 }elseif($t['id'] == 41){#cambio de infraestructura
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_infra']);
                                     if(isset($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion'])){
                                         $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion']));
                                     }else{
                                         $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($this->obtieneCodigoLe($tareasDatos[0]['datos'][$t['tramite_tipo']],$tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'],$usuario)));
                                     }
                                     $em->flush();
-
+                                    $vAnterior['area_municipio'] = $tareasDatos[0]['datos']['institucioneducativa']['area_municipio'];
+                                    $vNuevo['area_municipio'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_infra'];
                                     $vAnterior = array('jurisdiccion_geografica_id'=>$tareasDatos[0]['datos']['jurisdiccion_geografica']['id']);
                                     $vNuevo = array('jurisdiccion_geografica_id'=>$institucioneducativa->getLeJuridicciongeografica()->getId());
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
@@ -2015,15 +2093,19 @@ class TramiteRueController extends Controller
                                     $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($datosSolicitud['dependencia']['id']));
                                     if($datosSolicitud['dependencia']['id'] == 2){
                                         $convenio = $datosSolicitud['conveniotipo']['id'];
+                                        $areaMunicipio = $datosSolicitud['i_area_apertura'];
                                     }elseif($datosSolicitud['dependencia']['id'] == 3){
                                         $convenio = $datosSolicitud['constitucion']['id'];
+                                        $areaMunicipio = null;
                                     }else{
                                         $convenio = 0;
+                                        $areaMunicipio = $datosSolicitud['i_area_apertura'];
                                     }
                                     $entity->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($convenio));
                                     $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(10));
                                     $entity->setInstitucioneducativaTipo($ieducativatipo);
                                     $entity->setObsRue($observacion);
+                                    $entity->setAreaMunicipio($areaMunicipio);
                                     $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codLe));    
                                     $entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
                                     $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
@@ -2054,13 +2136,15 @@ class TramiteRueController extends Controller
                             }
                             $em->getConnection()->commit();
                         }catch (\Exception $ex) {
-                            $em->getConnection()->rollback();
-                            $b = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$usuario);
-                            $a = $this->get('wftramite')->eliminarTramiteRecibido($idtramite);
-                            $b = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$usuario);
-                            //dump($ex->getMessage());die;
                             $mensaje['msg'] ='¡Ocurrio un error al registrar los datos, vuelva a intentar!</br> '.$ex->getMessage();
                             $mensaje['tipo'] = 'error';
+                            $em->getConnection()->rollback();
+                            //dump($em);
+                            $b = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$usuario);
+                            $a = $this->get('wftramite')->eliminarTramiteRecibido($idtramite);
+                            $c = $this->get('wftramite')->eliminarTramiteEnviado($idtramite,$usuario);
+                            //dump($b.'-b',$a.'-a',$c.'-c');die;
+                            //dump($ex->getMessage().'---bd');
                         }
                     }else{
                         $a = $this->get('wftramite')->eliminarTramiteRecibido($idtramite);
@@ -2373,78 +2457,6 @@ class TramiteRueController extends Controller
         return $lugar;
     }
 
-    /* public function obtieneLoalizacion($iddep,$idprov,$idmun,$idcan,$idloc)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $ltd = $em->getRepository('SieAppWebBundle:LugarTipo')->find($iddep);
-        $lt4 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel'=>1,'paisTipoId'=>1));
-        $lt3 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel'=>2,'lugarTipo'=>$iddep));
-        $lt2 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel'=>3,'lugarTipo'=>$idprov));
-        $lt1 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel'=>4,'lugarTipo'=>$idmun));
-        $lt = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel'=>5,'lugarTipo'=>$idcan));
-        $dt = $em->getRepository('SieAppWebBundle:DistritoTipo')->findBy(array('departamentoTipo'=>$ltd->getCodigo()));
-        $dep = $em->getRepository('SieAppWebBundle:DependenciaTipo')->createQueryBuilder('dt')
-                ->select('dt')
-                ->where('dt.id in (:id)')
-                ->setParameter('id',array(1,2))
-                ->orderBy('dt.dependencia','ASC')
-                ->getQuery()
-                ->getResult();
-        $tie = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->createQueryBuilder('t')
-                ->select('t')
-                ->where('t.id not in (:id)')
-                ->setParameter('id',array(0,3,7,8,9,10))
-                ->orderBy('t.descripcion','ASC')
-                ->getQuery()
-                ->getResult();
-        //dump($institucioneducativa);die;
-        $depa =array();
-        foreach($lt4 as $p){
-            $depa[$p->getId()]= $p->getLugar();
-        }
-        $prov =array();
-        foreach($lt3 as $p){
-            $prov[$p->getId()]= $p->getLugar();
-        }
-        $mun =array();
-        foreach($lt2 as $p){
-            $mun[$p->getId()]= $p->getLugar();
-        }
-        $can =array();
-        foreach($lt1 as $p){
-            $can[$p->getId()]= $p->getLugar();
-        }
-        $loc =array();
-        foreach($lt as $p){
-            $loc[$p->getId()]= $p->getLugar();
-        }
-        $dis =array();
-        //dump($dis);die;
-        foreach($dt as $d){
-            $dis[$d->getId()]= $d->getDistrito();
-        }
-        $deptipo=array();
-        foreach($dep as $p){
-            $deptipo[$p->getId()]= $p->getDependencia();
-        }
-        $tipoie =array();
-        //dump($dis);die;
-        foreach($tie as $t){
-            $tipoie[$t->getId()]= $t->getDescripcion();
-        }
-        $data['dep'] = $depa;
-        $data['prov'] = $prov;
-        $data['mun'] = $mun;
-        $data['can'] = $can;
-        $data['loc'] = $loc;
-        $data['distrito'] = $dis;
-        $data['dependencia'] = $deptipo;
-        $data['tipoeducacion'] = $tipoie;
-        return $data;
-        
-    } */
-    
     public function obtieneCodigoLe($le,$iddistrito,$id_usuario){
         try {
             //dump($le);die;
@@ -2526,18 +2538,41 @@ class TramiteRueController extends Controller
         //dump($request);die;
         
         $idlugarusuario = $this->session->get('roluserlugarid');
-        //dump($idlugarusuario);die;
         $sie=$request->get('sie');
+        $iddistrito = $request->get('iddistrito');
+        $le = $request->get('le');
+        //dump($sie,$iddistrito,$le);die;
         $em = $this->getDoctrine()->getManager();
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$sie,'estadoinstitucionTipo'=>10,'institucioneducativaAcreditacionTipo'=>1));
+        
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
+                ->select('ie.id,ie.institucioneducativa,ot.orgcurricula,d.dependencia,dt.distrito','le.id as codigole ')
+                ->innerJoin('SieAppWebBundle:DependenciaTipo', 'd', 'with', 'd.id = ie.dependenciaTipo')
+                ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'le', 'with', 'le.id = ie.leJuridicciongeografica')
+                ->innerJoin('SieAppWebBundle:DistritoTipo', 'dt', 'with', 'dt.id = le.distritoTipo')
+                ->innerJoin('SieAppWebBundle:OrgcurricularTipo', 'ot', 'with', 'ot.id = ie.orgcurricularTipo')
+                ->where("ie.id='".$sie."'")
+                ->andWhere("ie.estadoinstitucionTipo=10")
+                ->andWhere("ie.institucioneducativaAcreditacionTipo=1");
+
+        if($iddistrito){
+            $institucioneducativa = $institucioneducativa
+                ->andWhere("le.distritoTipo=".$iddistrito)
+                ->andWhere("le.id<>".$le);
+        }
+
+        $institucioneducativa = $institucioneducativa
+            ->getQuery()
+            ->getResult();
+
         //dump($institucioneducativa);die;
         $response = new JsonResponse();
         if($institucioneducativa){
             $ie = array('id'=>$sie,
-                        'institucioneducativa'=>$institucioneducativa->getInstitucioneducativa(),
-                        'subsistema'=>$institucioneducativa->getOrgcurricularTipo()->getOrgcurricula(),
-                        'dependencia'=>$institucioneducativa->getDependenciaTipo()->getDependencia(),
-                        'codigole'=>$institucioneducativa->getLeJuridicciongeografica()->getId());
+                        'institucioneducativa'=>$institucioneducativa[0]['institucioneducativa'],
+                        'subsistema'=>$institucioneducativa[0]['orgcurricula'],
+                        'dependencia'=>$institucioneducativa[0]['dependencia'],
+                        'codigole'=>$institucioneducativa[0]['codigole']
+                    );
             //dump($ie);die;
             $response->setData($ie);
         }else{
@@ -2738,31 +2773,30 @@ class TramiteRueController extends Controller
     public function buscaredificioAction(Request $request)
     {
         $idLe = $request->get('idLe');
+        $iddistrito = $request->get('iddistrito');
 
         $em = $this->getDoctrine()->getManager();
-        if($idLe){
-            $edificio = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->find($idLe);
-        }else{
-            $edificio = "";
-        }
-                
         //dump($edificio);die;
-        $response = new JsonResponse();
-        $departamento2012 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 8, 'paisTipoId' =>1));
-        $departamento2001 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1, 'paisTipoId' =>1));
         $lugarArray = array();
-    	foreach($departamento2012 as $d){
-            if($d->getLugar() != "NO EXISTE EN CNPV 2001"){
+        $response = new JsonResponse();
+        if($iddistrito){
+            $edificio = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneBy(array('id'=>$idLe,'distritoTipo'=>$iddistrito));
+            
+        }else{
+            $edificio = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->find($idLe);
+            /* $departamento2012 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 8, 'paisTipoId' =>1));
+            $departamento2001 = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1, 'paisTipoId' =>1));
+
+            foreach($departamento2012 as $d){
                 $dep[$d->getid()] = $d->getlugar();
             }
-        }
-        $lugarArray['c2012']['dep']['lista']=$dep;
-        foreach($departamento2001 as $d){
-            if($d->getLugar() != "NO EXISTE EN CNPV 2001"){
+            $lugarArray['c2012']['dep']['lista']=$dep;
+            foreach($departamento2001 as $d){
                 $dep1[$d->getid()] = $d->getlugar();
             }
-        }
-        $lugarArray['c2001']['dep']['lista']=$dep1;
+            $lugarArray['c2001']['dep']['lista']=$dep1; */
+            
+        }      
         
         if ($edificio){
             $lugarArray['zona'] = $edificio->getZona();
@@ -2790,30 +2824,22 @@ class TramiteRueController extends Controller
 
             $provincia = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $edificio->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId()));
     	    foreach($provincia as $p){
-                if($p->getLugar() != "NO EXISTE EN CNPV 2001"){
-                    $lugarArray['c2001']['prov']['lista'][$p->getid()] = $p->getlugar();
-                }
+                $lugarArray['c2001']['prov']['lista'][$p->getid()] = $p->getlugar();
             }
             
             $municipio = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 3, 'lugarTipo' => $edificio->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId()));
         	foreach($municipio as $m){
-                if($m->getLugar() != "NO EXISTE EN CNPV 2001"){
-                    $lugarArray['c2001']['mun']['lista'][$m->getid()] = $m->getlugar();
-                }
+                $lugarArray['c2001']['mun']['lista'][$m->getid()] = $m->getlugar();
             }
             
             $canton = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' =>4, 'lugarTipo' => $edificio->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId()));
     	    foreach($canton as $c){
-                if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
-                    $lugarArray['c2001']['can']['lista'][$c->getid()] = $c->getlugar();
-                }
+                $lugarArray['c2001']['can']['lista'][$c->getid()] = $c->getlugar();
             }
             
             $localidad = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' =>5, 'lugarTipo' => $edificio->getLugarTipoLocalidad()->getLugarTipo()->getId()));
     	    foreach($localidad as $l){
-                if($l->getLugar() != "NO EXISTE EN CNPV 2001"){
-                    $lugarArray['c2001']['loc']['lista'][$l->getid()] = $l->getlugar();
-                }
+                $lugarArray['c2001']['loc']['lista'][$l->getid()] = $l->getlugar();
             }
 
             if($edificio->getLugarTipoIdLocalidad2012()){
@@ -2826,23 +2852,17 @@ class TramiteRueController extends Controller
                 
                 $provincia = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 9, 'lugarTipo' => $comunidad->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId()));
                 foreach($provincia as $p){
-                    if($p->getLugar() != "NO EXISTE EN CNPV 2001"){
-                        $lugarArray['c2012']['prov']['lista'][$p->getid()] = $p->getlugar();
-                    }
+                    $lugarArray['c2012']['prov']['lista'][$p->getid()] = $p->getlugar();
                 }
                 
                 $municipio = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 10, 'lugarTipo' => $comunidad->getLugarTipo()->getLugarTipo()->getId()));
                 foreach($municipio as $m){
-                    if($m->getLugar() != "NO EXISTE EN CNPV 2001"){
-                        $lugarArray['c2012']['mun']['lista'][$m->getid()] = $m->getlugar();
-                    }
+                    $lugarArray['c2012']['mun']['lista'][$m->getid()] = $m->getlugar();
                 }
                 
                 $comunidad = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' =>11, 'lugarTipo' => $comunidad->getLugarTipo()->getId()));
                 foreach($comunidad as $c){
-                    if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
-                        $lugarArray['c2012']['comu']['lista'][$c->getid()] = $c->getlugar();
-                    }
+                    $lugarArray['c2012']['comu']['lista'][$c->getid()] = $c->getlugar();
                 }
             }
             return $response->setData(array(
@@ -2872,9 +2892,10 @@ class TramiteRueController extends Controller
         $prov = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idDepartamento));
     	$provincia = array();
     	foreach($prov as $p){
-            if($p->getLugar() != "NO EXISTE EN CNPV 2001"){
+            $provincia[$p->getid()] = $p->getlugar();
+            /* if($p->getLugar() != "NO EXISTE EN CNPV 2001"){
                 $provincia[$p->getid()] = $p->getlugar();
-            }
+            } */
         }
         
         /* *
@@ -2909,9 +2930,10 @@ class TramiteRueController extends Controller
         $mun = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idProvincia));
     	$municipio = array();
     	foreach($mun as $m){
-            if($m->getLugar() != "NO EXISTE EN CNPV 2001"){
+            $municipio[$m->getid()] = $m->getlugar();
+            /* if($m->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $municipio[$m->getid()] = $m->getlugar();
-            }
+            } */
     	}
     	$response = new JsonResponse();
     	return $response->setData(array('municipio' => $municipio));
@@ -2926,9 +2948,10 @@ class TramiteRueController extends Controller
     	$com = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idMunicipio));
     	$canton = array();
     	foreach($com as $c){
-            if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
+            $comunidad[$c->getid()] = $c->getlugar();
+            /* if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $comunidad[$c->getid()] = $c->getlugar();
-            }
+            } */
     	}
     	$response = new JsonResponse();
     	return $response->setData(array('comunidad' => $comunidad));
@@ -2943,9 +2966,10 @@ class TramiteRueController extends Controller
     	$can = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idMunicipio));
     	$canton = array();
     	foreach($can as $c){
-            if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
+            $canton[$c->getid()] = $c->getlugar();
+            /* if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $canton[$c->getid()] = $c->getlugar();
-            }
+            } */
     	}
     	$response = new JsonResponse();
     	return $response->setData(array('canton' => $canton));
@@ -2959,9 +2983,10 @@ class TramiteRueController extends Controller
     	$loc = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idCanton));
     	$localidad = array();
     	foreach($loc as $l) {
-            if($l->getLugar() != "NO EXISTE EN CNPV 2001"){
+            $localidad[$l->getid()] = $l->getlugar();
+            /* if($l->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $localidad[$l->getid()] = $l->getlugar();
-            }
+            } */
     	}
     	$response = new JsonResponse();
     	return $response->setData(array('localidad' => $localidad));
@@ -3250,6 +3275,7 @@ class TramiteRueController extends Controller
         $this->session = $request->getSession();
         $form = $request->get('form');
         $files = $request->files->get('form');
+
         //dump($form,$files);die;
         $tramites = array(54);
         //dump($tramites,$form);die;
@@ -3280,19 +3306,29 @@ class TramiteRueController extends Controller
             $solicitudTramite->setCodigo($codigo);
             $em->flush();
             $em->getConnection()->commit();
-            $request->getSession()
-                ->getFlashBag()
-                ->add('exito', 'exito');
+           
             $idsolicitud = $solicitudTramite->getId();
+            //dump($idsolicitud);
+            $query1 = $em->getConnection()->prepare("select 
+            'CODIGO_SOLICITUD:_'||cast(codigo as varchar)||'__'||
+            'UNIDAD_EDUCATIVA:_'||replace(wf.datos::json->'Apertura de Unidad Educativa'->>'institucioneducativa',' ','_')||'__'||
+            'DISTRITO_EDUCATIVO:_'||replace(wf.datos::json->'Apertura de Unidad Educativa'->>'distrito',' ','_')||'__'||
+            'DEPENDENCIA:_'||cast(wf.datos::json->'Apertura de Unidad Educativa'->'dependencia'->>'dependencia' as varchar) as qr
+            from solicitud_tramite wf
+            where id=".$idsolicitud);
+    
+            $query1->execute();
+            $qr = $query1->fetchAll();
+            //dump($qr);die;
+            $lk = $qr[0]['qr'];
             //dump($idtramite,$id_td);die;
-            //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-            $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
             $file = 'rue_iniciosolicitudApertura_v1_pvc.rptdesign';    
-            $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
+            $arch = 'FORMULARIO_'.$idsolicitud.'_' . date('YmdHis') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&'));
+            //dump($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&');die;
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -3479,10 +3515,21 @@ class TramiteRueController extends Controller
     {
         $sie = $request->get('sie');
         $em = $this->getDoctrine()->getManager();
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$sie,'estadoinstitucionTipo'=>19,'institucioneducativaTipo'=>1));
+
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
+            ->select('ie')
+            ->where('ie.id = :id')
+            ->andWhere('ie.estadoinstitucionTipo = 19')
+            ->andWhere('ie.institucioneducativaTipo = 1')
+            ->andWhere("ie.nroResolucion <>'' ")
+            ->andWhere("ie.obsRue not like '%definitiv%'")
+            ->andWhere("ie.obsRue not like '%DEFINITIV%'")
+            ->setParameter('id',$sie)
+            ->getQuery()
+            ->getResult();
         //dump($institucioneducativa);die;
         if($institucioneducativa){
-            $lugar_tipo2012 = $em->getRepository('SieAppWebBundle:LugarTipo')->find($institucioneducativa->getLeJuridicciongeografica()->getLugarTipoIdLocalidad2012());
+            $lugar_tipo2012 = $institucioneducativa[0]->getLeJuridicciongeografica()->getLugarTipoIdLocalidad2012()?$em->getRepository('SieAppWebBundle:LugarTipo')->find($institucioneducativa[0]->getLeJuridicciongeografica()->getLugarTipoIdLocalidad2012()):null;
             $institucioneducativaNivel = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa'=>$sie));
             $tramite_tipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find(44);
             $form = $this->createFormBuilder()
@@ -3491,7 +3538,7 @@ class TramiteRueController extends Controller
                 ->getForm();
             $data = array(
                 'form'=>$form->createView(),
-                'institucioneducativa'=>$institucioneducativa,
+                'institucioneducativa'=>$institucioneducativa[0],
                 'ieNivel'=>$institucioneducativaNivel,
                 'lugarTipo2012'=>$lugar_tipo2012,
                 'tramite_tipo'=>$tramite_tipo,
@@ -3520,7 +3567,7 @@ class TramiteRueController extends Controller
         /**
          * datos propios de la solicitud del formulario rue
          */
-        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio
+        $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.fecha_fundacion,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio
                 FROM institucioneducativa ie
                 join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
                 join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
@@ -3545,10 +3592,10 @@ class TramiteRueController extends Controller
                 join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
                 join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
                 join lugar_tipo lt4 on lt4.id=lt3.lugar_tipo_id
-                join lugar_tipo lt5 on lt5.id=le.lugar_tipo_id_localidad2012
-                join lugar_tipo lt6 on lt6.id=lt5.lugar_tipo_id
-                join lugar_tipo lt7 on lt7.id=lt6.lugar_tipo_id
-                join lugar_tipo lt8 on lt8.id=lt7.lugar_tipo_id
+                left join lugar_tipo lt5 on lt5.id=le.lugar_tipo_id_localidad2012
+                left join lugar_tipo lt6 on lt6.id=lt5.lugar_tipo_id
+                left join lugar_tipo lt7 on lt7.id=lt6.lugar_tipo_id
+                left join lugar_tipo lt8 on lt8.id=lt7.lugar_tipo_id
                 WHERE le.id='. $institucioneducativa[0]['le_juridicciongeografica_id']);
                 $query->execute();
         $le = $query->fetchAll();
@@ -3570,9 +3617,10 @@ class TramiteRueController extends Controller
         $gestion = $this->session->get('currentyear');
         $ruta = '/../web/uploads/archivos/flujos/'.$form['sie'].'/rue/'.$gestion.'/';
         $datos[$tramites[0]['tramite_tipo']]['i_solicitud_reapertura']=$this->upload($files['i_solicitud_reapertura'],$ruta);    
-        $datos[$tramites[0]['tramite_tipo']]['estadoinstitucion_id']=19;
+        $datos[$tramites[0]['tramite_tipo']]['estadoinstitucion_id']=10;
         $datos[$tramites[0]['tramite_tipo']]['estadoinstitucion']='Abierta';
         //dump($datos);die;
+
         $em->getConnection()->beginTransaction();
         try{
             $solicitudTramite = new Solicitudtramite();
@@ -3585,17 +3633,29 @@ class TramiteRueController extends Controller
             $codigo = date('Ymd') . str_pad($solicitudTramite->getId(), 4, "0", STR_PAD_LEFT);
             $solicitudTramite->setCodigo($codigo);
             $em->flush();
-            $em->getConnection()->commit();
-            //dump($idtramite,$id_td);die;
+            //dump($solicitudTramite);die;
             //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
             $idsolicitud = $solicitudTramite->getId();
-            $lk="http://libreta.minedu.gob.bo/lib/CpCoDJWtDtmnC3SnC30mEJ8mC3SnC3XyCJ0tCJ0mCp1yCZ0nDNmnCtmsV35yE7mm";
+            $em->getConnection()->commit();
+
+            $query1 = $em->getConnection()->prepare("select 
+                'CODIGO_SOLICITUD:_'||cast(codigo as varchar)||'__'||
+                'CODIGO_RUE:_'||cast(wf.datos::json->'institucioneducativa'->>'id' as varchar)||'__'||
+                'EDIFICIO_EDUCATIVO:_'||cast(wf.datos::json->'institucioneducativa'->>'le_juridicciongeografica_id' as varchar) as qr
+                from solicitud_tramite wf
+                where id=". $idsolicitud);
+        
+            $query1->execute();
+            $qr = $query1->fetchAll();
+            //dump($qr);die;
+            $lk = $qr[0]['qr'];
             $file = 'rue_iniciosolicitudReapertura_v1_pvc.rptdesign';    
-            $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
+            $arch = 'FORMULARIO_'.$idsolicitud.'_' . date('YmdHis') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&'));
+            //dump($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&');die;
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -3605,8 +3665,9 @@ class TramiteRueController extends Controller
             $em->getConnection()->rollback();            
             $request->getSession()
                 ->getFlashBag()
-                ->add('error', 'error');
+                ->add('error', 'error '. $ex);
             return $this->redirectToRoute('tramite_rue_reapertura');
         }
+
     }
 }

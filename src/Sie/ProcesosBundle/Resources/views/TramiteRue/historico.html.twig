@@ -1302,7 +1302,7 @@
                                                                             </td>
                                                                         {% elseif t.id == 42 or t.id == 43 %} {# cierre temporal #}
                                                                             <td>
-                                                                                {% if fus == 1 %}
+                                                                                {% if tipo == 'fusion' %}
                                                                                     <strong>Unidad Educativa a Cerrar Definitivamente (Por Fusión)</strong></br>
                                                                                     Código SIE: {{d.datos['Fusion'].siefusion.id}}</br>
                                                                                     Unidad Educativa: {{d.datos['Fusion'].siefusion.institucioneducativa}}

@@ -48,7 +48,7 @@
                                     <strong>FECHA DE FUNDACIÓN:</strong>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ institucioneducativa.fechaResolucion|date('d-m-Y') }}
+                                    {{ institucioneducativa.fechaFundacion ? institucioneducativa.fechaFundacion|date('d-m-Y') : '' }}
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
@@ -118,7 +118,7 @@
                                 <strong>DEPARTAMENTO:</strong>
                             </div>
                             <div class="col-md-6">
-                                {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                                {{ lugarTipo2012 ? lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper : '' }}
                             </div>
                         </div>
                         <div class="form-group col-md-12">
@@ -126,7 +126,7 @@
                                 <strong>PROVINCIA:</strong>
                             </div>
                             <div class="col-md-6">
-                                {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
+                                {{ lugarTipo2012 ? lugarTipo2012.lugarTipo.lugarTipo.lugar|upper : '' }}
                             </div>
                         </div>
                         <div class="form-group col-md-12">
@@ -134,7 +134,7 @@
                                 <strong>MUNICIPIO:</strong>
                             </div>
                             <div class="col-md-6">
-                                {{ lugarTipo2012.lugartipo.lugar|upper }}
+                                {{ lugarTipo2012 ? lugarTipo2012.lugartipo.lugar|upper : '' }}
                             </div>
                         </div>
                         <div class="form-group col-md-12">
@@ -142,7 +142,7 @@
                                 <strong>COMUNIDAD:</strong>
                             </div>
                             <div class="col-md-6">
-                                {{ lugarTipo2012.lugar|upper }}
+                                {{ lugarTipo2012 ? lugarTipo2012.lugar|upper : '' }}
                             </div>
                         </div>
                         <div class="form-group col-md-12">
@@ -166,17 +166,13 @@
                                 <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
                             </div>
                             <div class="col-md-6">
-                                {# {% for a in form.area %}
-                                    <div class="col-md-6 rdio rdio-primary circle">
-                                        {{ form_widget(a) }}
-                                        {{ form_label(a) }}
-                                    </div>
-                                {% endfor %} #}
-                                {# {% if institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.area2001 == 'U' %}
+                                {% if institucioneducativa.areaMunicipio == 'U' %}
                                     URBANO
-                                {% else %}
+                                {% elseif institucioneducativa.areaMunicipio == 'R'  %}
                                     RURAL
-                                {% endif %} #}
+                                {% else %}
+                                    NO DEFINIDO
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -264,7 +260,7 @@
                                     <th>Tipo de trámite</th> 
                                     <th>Dato antiguo</th>
                                     <th>Dato nuevo</th>
-                                    <th>Ver Requisitos</th>
+                                    <th>Requisitos</th>
                                 </tr>
                                 <tr>
                                     <td>{{tramite_tipo.tramiteTipo}}</td>
@@ -277,7 +273,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{tramite_tipo.id}}" data-placement="top" title="Ver Requisitos Presentados" onclick="requisitos({{tramite_tipo.id}})"><i class="glyphicon glyphicon-plus"></i></button>
+                                        <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{tramite_tipo.id}}" data-placement="top" title="Registrar los requisitos del trámite" onclick="requisitos({{tramite_tipo.id}})"><i class="glyphicon glyphicon-plus"></i></button>
                                     </td>
                                 </tr>
                             </table>
@@ -317,7 +313,7 @@
 </div>
 <div class="panel-footer">
     <div class="form-group col-md-12">
-        {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+        {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary','onclick':'disabled = true;this.form.submit()'} }) }}
         <a href="{{path('login')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
     </div>
     <div class="clearfix"></div>
