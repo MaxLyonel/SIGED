@@ -135,11 +135,11 @@
         <div class="col-md-3">
 
             {#IMPRESION CERTIFICADOS#}
-            {#<a href="{{path('permanente_reporte_cert_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Certificados</a>#}
+            <a href="{{path('permanente_reporte_cert_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Certificados</a>
 
-            {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
-            {##}
-            {#</button>#}
+         {#    <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" > #}
+            
+            </button>
         </div>
         {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
 
@@ -299,9 +299,9 @@
                                                               <i class="fa fa-times"></i>
                                                           </button>
 
-                                                          <button class="btn btn-warning btn-xs" onclick="rudeal('{{ objStudents.idestins }}')">
+                                                          {# <button class="btn btn-warning btn-xs" onclick="rudeal('{{ objStudents.idestins }}')">
                                                             <i class="fa fa-list"></i>
-                                                          </button>
+                                                          </button> #}
 
 
                                                       </td>
