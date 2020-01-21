@@ -7,7 +7,7 @@
                             <th>Módulo</th>
                             <th>Horas</th>
                             <th>Facilitador</th>
-                            <th>Otros</th>
+                      {#       <th>Otros</th> #}
                             <th>Nota</th>
                             <th> Estado </th>
 
@@ -20,12 +20,12 @@
                                 <td >{{ lstmod.modulo }}</td>
                                 <td >{{ lstmod.horas_modulo }}</td>
                                 <td >{{ lstmod.nombre }}</td>
-                                <td>
+                                {# <td>
                                     {% if ((lstmod.nombre == '') or (lstmod.nombre == null)) %}
                                 RS
 
                                     {% endif %}
-                                </td>
+                                </td> #}
                                 <td>
                                     {% if (lstmod.esnotaid != '')  %}
                                         SI

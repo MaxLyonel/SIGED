@@ -77,55 +77,62 @@
         {% endfor %}
 
       <div class="panel-sub-heading inner-all">
-          <div class="pull-left">
-              <ul class="list-inline no-margin">
-                  <li class="hidden-xs">
-
+          <div >
+              {# <ul class="list-inline no-margin"> #}
+               {#    <li class="hidden-xs"> #}
+                     
                       {% if  cursolargo[0].esabierto ==true %}
+ 
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptionsCL('{{infoUe}}');" >
+                                            <i class="fa fa-user"></i> Inscripci&oacute;n con CI
+                                        </button>
+                                    </div>
 
-                          <div class="col-md-6">
-                              <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptionsCL('{{infoUe}}');" >
-                                  <i class="fa fa-user"></i> Inscripci&oacute;n con CI
-                              </button>
-                          </div>
-
-
-                          <div class="col-md-3">
-
-                              <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
-
-                          </div>
+                                    <div class="col-sm-4">
+                                        <button type="button" class="btn btn-inverse btn-stroke"  data-dismiss="modal" onclick="saveModuloLote('{{ infoUe }}');" > 
+                                            <i class="fa fa-edit"></i>Asignar modulos
+                                         </button>
+                                    
+                                    </div>
+                                    <div class="col-sm-4">
+                                           <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+                                    </div>
+                                </div>
 
                       {% else %}
+                        <div class="row">
+                                <div class="col-sm-4">
 
-                          <div class="col-md-4">
+                                    <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
 
-                              <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+                                </div>
 
-                          </div>
+                                <div class="col-sm-4">
 
-                          <div class="col-md-4">
+                                    <a href="{{path('permanente_reporte_centralizador_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Centralizador</a>
 
-                              <a href="{{path('permanente_reporte_centralizador_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Centralizador</a>
+                                </div>
 
-                          </div>
+                                {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
 
-                          {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
-
-                              <div class="col-md-3">
-                                  <button type="button" class="btn btn-danger btn-stroke" onclick="opencursoCL('{{infoUe}}');" >
-                                      <i class="fa fa-check"></i> Habilitar Curso
-                                  </button>
-                              </div>
-                          {% endif %}
+                                    <div class="col-sm-4">
+                                        <button type="button" class="btn btn-danger btn-stroke" onclick="opencursoCL('{{infoUe}}');" >
+                                            <i class="fa fa-check"></i> Habilitar Curso
+                                        </button>
+                                    </div>
+                                {% endif %}
+                        </div>
+                         
                       {% endif %}
 
 
 
 
-                  </li>
+                  {# </li> #}
 
-              </ul>
+         {#      </ul> #}
           </div>
           <div class="clearfix"></div>
       </div>
@@ -255,8 +262,8 @@
                   </div> #}
 
                   <div id="sectionB">
-                      <h3>Asignación de Modulos</h3>
-                        {% if lstmod is not empty %}
+                     {#  <h3>Asignación de Modulos </h3> #}
+                     {#    {% if lstmod is not empty %}
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
@@ -264,7 +271,7 @@
                                     <th>Módulo</th>
                                     <th>Horas</th>
                                     <th>Facilitador</th>
-                                    {# <th>Otros</th> #}
+                                    <th>Otros</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -274,11 +281,11 @@
                                         <td >{{ lstmod.modulo }}</td>
                                         <td >{{ lstmod.horas_modulo }}</td>
                                         <td >{{ lstmod.nombre }}</td>
-                                        {# <td>
+                                         <td>
                                             {% if ((lstmod.nombre == '6') or (lstmod.nombre == null)) %}
                                                 RS
                                             {% endif %}
-                                        </td> #}
+                                        </td> 
 
                                     </tr>
                                 {% endfor %}
@@ -286,13 +293,8 @@
                             </table>
                             {% else %}
                             No hay Modulos en este Curso
-                      {% endif %}
-                      {% if  cursolargo[0].esabierto ==true %}
-                      <div align="right">
-                          <button type="button" class="btn btn-success"  data-dismiss="modal" onclick="saveModuloLote('{{ infoUe }}');" > Asignar modulos</button>
-                          </button>
-                      </div>
-                      {% endif %}
+                      {% endif %} #}
+                    
                       <h3>Lista de Participantes</h3>
                       <div class="row">
                           <div class="col-lg-12">
