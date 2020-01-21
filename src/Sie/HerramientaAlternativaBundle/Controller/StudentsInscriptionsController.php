@@ -872,11 +872,11 @@ class StudentsInscriptionsController extends Controller {
 
 
               }else{
-                $arrIdCourse = array(1511=>'Elementales',1512=>'Avanzados',1521=>'Aplicados',1522=>'Complementarios',1523=>'Especializados');
+                $arrIdCourse = array('TEC'=>' en el mismo nivel - Técnica',1511=>'Elementales',1512=>'Avanzados',1521=>'Aplicados',1522=>'Complementarios',1523=>'Especializados');
 
                 $status = 'error';
                 $code = 400;
-                $message = "Estudiante ya cuenta con una inscripcion en el curso ".$arrIdCourse[$objCurrentInscription];
+                $message = "Estudiante ya cuenta con una inscripcion en el curso ".$objCurrentInscription;
                 $swcreatestudent = false;   
 
               }
@@ -917,28 +917,45 @@ class StudentsInscriptionsController extends Controller {
 
       // get the nivel,ciclo, grado todo the validation
       $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPerIecid($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'), $iecId);
-
+      // get info course
       $objUeducativa = $objUeducativa[0];
+      // look for students inscription to validate on Primaria && secundaria && tec
+      $arrstudentInscription = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getStudentCourseAlterPerStudentId($studentId, $this->session->get('ie_gestion'));
       // if the level is primaria or seccundaria to the validation
      if($objUeducativa['nivelId']==15){
-       // look for students inscription to validate on Primaria && secundaria
-       $arrstudentInscription = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getStudentCourseAlterPerStudentId($studentId, $this->session->get('ie_gestion'));
-
        reset($arrstudentInscription);
-       
-
+       $sw = true;
        while ( $sw && ($inscription = current($arrstudentInscription))) {
          # code to validate the inscription
          $idCourse = $inscription['nivelId'].$inscription['cicloId'].$inscription['gradoId'];
          
          if(in_array($idCourse, $arrIdCourse)){
           $sw=false;
-          $codCourse = $idCourse;
+          // $codCourse = $idCourse;
+          $codCourse = $objUeducativa['ciclo'].'-'.$objUeducativa['grado'];
          }
         
         next($arrstudentInscription);
        }
+     }else{
+
+      reset($arrstudentInscription);
+      $sw = true;
+       while ( $sw && ($inscription = current($arrstudentInscription))) {
+       
+         # code to validate the inscription
+          $idCourseStudent = $inscription['nivelId'].$inscription['cicloId'].$inscription['gradoId'];
+          $idCurrentCourse = $objUeducativa['nivelId'].$objUeducativa['cicloId'].$objUeducativa['gradoId'];
+          
+          if($idCourseStudent == $idCurrentCourse){
+            $sw=false;
+            $codCourse = $objUeducativa['ciclo'].' '.$objUeducativa['grado'];
+          }
+        next($arrstudentInscription);
+       }
+
      }
+     // die;
     return $codCourse;
 
     }
