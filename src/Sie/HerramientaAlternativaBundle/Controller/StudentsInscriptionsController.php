@@ -809,7 +809,7 @@ class StudentsInscriptionsController extends Controller {
       // get the send values 
       $iecId = $request->get('iecId');
       $studentId = $request->get('studentId');
-      $casespecial = $request->get('casespecial');
+      $casespecial = ($request->get('casespecial')=='false')?false:true;;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
       $fecNac = $request->get('fecNac');
@@ -863,7 +863,8 @@ class StudentsInscriptionsController extends Controller {
                 $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
 
                 $em->flush();
-
+                //do the commit in DB
+                $em->getConnection()->commit();
                 $status = 'success';
                 $code = 200;
                 $message = "Estudiante registrado existosamente!!!";
