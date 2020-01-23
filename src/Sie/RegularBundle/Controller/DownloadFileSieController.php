@@ -128,7 +128,7 @@ class DownloadFileSieController extends Controller {
                         $swquality = true;
                       }
                       // if the UE doesnt have observations
-                      if($swquality){    
+                      if(!$swquality){    
 
                         //validation consolidaction info ue
                               /***********************************\
