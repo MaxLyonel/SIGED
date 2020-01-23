@@ -52,8 +52,7 @@ class SolicitudBTHController extends Controller {
         $gestion = $request->getSession()->get('currentyear');
         $flujotipo = 0;
         $documento = '';
-        $tipo_tramite = 27;// mejorar los Id de tipoTramite
-        
+        $tipo_tramite = 27;// mejorar los Id de tipoTramite        
         $gestion_sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('inss')
             ->select('max(inss.gestionTipo)')
             ->where('inss.institucioneducativa = :institucion_id')
@@ -61,8 +60,9 @@ class SolicitudBTHController extends Controller {
             ->getQuery()
             ->getSingleResult();
         $gestion_sucursal = ($gestion_sucursal)?$gestion_sucursal:'';
-
-        $objGrados = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->createQueryBuilder('iec')
+        //SE COMENTO LA QUEY PARA OBTENER GRADOS YA QUE EN LA GESTION 2020 SOLO INICIAN SOLICITUDES 
+        // UE NUEVASSS
+        /* $objGrados = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->createQueryBuilder('iec')
             ->select('(iec.gradoTipo)')
             ->where('iec.institucioneducativa = :sie')
             ->andWhere('iec.nivelTipo = :idnivel')
@@ -75,12 +75,12 @@ class SolicitudBTHController extends Controller {
             ->distinct()
             ->orderBy('iec.gradoTipo', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getResult(); */
         $grados = array();
-        foreach ($objGrados as $data) {
+       /*  foreach ($objGrados as $data) {
             $grados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
-        }
-
+        } */
+        $grados[3]=3;
         // Especialidades para Nuevo o Ratificación
         $especialidad_anterior = $especialidad_vigente = array();
         $especialidades = $em->getConnection()->prepare("SELECT eth.id, eth.especialidad
@@ -309,8 +309,7 @@ class SolicitudBTHController extends Controller {
             ->setParameter('esvigente',true)
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult();
-   
+            ->getOneOrNullResult();           
         $especialidadarray = array();
         foreach ($datos[2]['select_especialidad'] as $value) {
             $especialidad = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->findOneById($value);
@@ -349,8 +348,9 @@ class SolicitudBTHController extends Controller {
             }
             $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid').'/bth/'; */
             $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
+            //dump($destination_path);die;
             if (!file_exists($destination_path)) {
-                mkdir($destination_path, 0777);
+                mkdir($destination_path, 0777,true);
             }
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
@@ -442,6 +442,7 @@ class SolicitudBTHController extends Controller {
         $informe = $datos[0]['informe'];
         $institucion_id = $datos[1]['institucionid'];
         $gestion = $request->getSession()->get('currentyear');
+        //$gestion = 2019;
         // dump($datos);die;
         if (!empty($datos[4]['grado'])){
            $documento= ($datos[5])?$datos[5]:'';
@@ -490,7 +491,7 @@ class SolicitudBTHController extends Controller {
         ));
     }
 
-    public function guardaDepartamentalAction(Request $request){
+    public function guardaDepartamentalAction(Request $request){     
         $documento = $request->files->get('docpdf');
         if(!empty($documento)) {
             $root_bth_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid');
@@ -702,13 +703,13 @@ class SolicitudBTHController extends Controller {
             return array($infoUe, $localizacion);
     }
 
-    public function verificatramite($id_Institucion, $gestion, $flujotipo) {
+    public function verificatramite($id_Institucion, $gestion, $flujotipo) {// dump($id_Institucion, $gestion, $flujotipo);die;
         // Verifica si la UE inicio tramite de BHT
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT COUNT(tr.id) AS  cantidad_tramite_bth FROM tramite tr  
             WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
-            AND tr.tramite_tipo <> 31
-            AND tr.gestion_id = $gestion");//verificar la gestion para solicutudes posteriores
+            AND tr.tramite_tipo <> 31");
+            //AND tr.gestion_id = $gestion"); en caso de verificar si INICIO EL TRAMITE EN UNA GESTION DETERMINADA
         $query->execute();
         $tramite_ue = $query->fetch(); //dump($tramite_ue);die;
         $tramite_iniciado=$tramite_ue['cantidad_tramite_bth'];
@@ -735,15 +736,15 @@ class SolicitudBTHController extends Controller {
             // }else{
             //     $tramite_iniciado=0;
             // }
-            // validacion para Ue habilitadas
-            $ue = array(61450016,
+            // =====================================validacion para Ue habilitadas
+            /* $ue = array(61450016,
                 70910012,
                 72220051,
                 82220042,
                 80720022,
                 80540114);
             if (in_array($id_Institucion, $ue)){
-                $ue_valida = 1; //dump($id_Institucion);die;
+                $ue_valida = 1; 
             }else{
                 $ue_valida = 0;
             }
@@ -752,8 +753,15 @@ class SolicitudBTHController extends Controller {
                 $tramite_iniciado=1;
             }else{
                 $tramite_iniciado=0;
+            } */
+            //===============finalizacion validacion de UEs habilitadas
+            if ($cantidad_estudiantes==0 or $director_valido==0 ){
+                $tramite_iniciado=1;
+            }else{
+                $tramite_iniciado=0;
             }
-            
+            //solo prueba 2020
+            $tramite_iniciado=0;
             return $tramite_iniciado;
         }else{
             return $tramite_iniciado;
