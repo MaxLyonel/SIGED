@@ -3322,7 +3322,7 @@ class TramiteRueController extends Controller
             //dump($qr);die;
             $lk = $qr[0]['qr'];
             //dump($idtramite,$id_td);die;
-            $file = 'rue_iniciosolicitudApertura_v1_pvc.rptdesign';    
+            $file = 'rue_iniciosolicitudApertura_v2_pvc.rptdesign';    
             $arch = 'FORMULARIO_'.$idsolicitud.'_' . date('YmdHis') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');

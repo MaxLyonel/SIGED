@@ -562,7 +562,7 @@
                                             </div><!-- /.panel-body -->
                                             <div class="panel-footer">
                                                 <div class="form-group col-md-12">
-                                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary','onclick':'disabled = true;this.form.submit()'} }) }}
+                                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
                                                     <a href="{{path('login')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
                                                 </div>
                                                 <div class="clearfix"></div>
@@ -1138,6 +1138,7 @@
                 },
             }); 
         });
+
         function validarnombredistrito(nombre){
             if ( nombre != '') {
                 return false;
@@ -1160,6 +1161,10 @@
             });
         }        
 
+        $('#form_dependencia').change(function(){
+            $('#modal_54').empty();
+        });
+
         function requisitos(id){
             //alert(id);            
             if($('#form_dependencia').length == 0 || $('#form_dependencia').val() == ''){
@@ -1167,7 +1172,8 @@
                 $('#modal_'+id).modal('toggle');
                 return false;
             }
-            if ( $("#modal_requisitos_"+ id).length ) {
+            if ( $("#modal_requisitos_"+ id).length > 0 ) {
+
                 return false;
             }
             var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:$('#form_constitucion').val()};
@@ -1637,8 +1643,9 @@
         }
 
         function validar(){
-            //alert($('#tabla tr').length);
-            if($('#form_institucioneducativa').val()==''){
+            if(!confirm("Verifique los datos del formulario antes de enviar.")){
+               return false;
+            }else if($('#form_institucioneducativa').val()==''){
                 alert('En el punto DATOS GENERALES, debe ingresar el nombre de la nueva Unidad Educativa.');
                 return false;
             }else if($('#form_fechafundacion').val()==''){
@@ -1732,6 +1739,7 @@
                 alert('Debe validar los requisitos de la nueva Unidad Educativa');
                 return false;
             }else{
+                $('#form_guardar').prop('disabled',true);
                 return true;
             }
         }

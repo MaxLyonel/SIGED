@@ -20,9 +20,9 @@ function initMap() {
 
     map = L.map('map', {
         center: [latitud, longitud],
-        zoom: 6,
+        zoom: 13,
         minZoom: 3,
-        layers: [openstreet,satelital]
+        layers: [openstreet]
     });
 
     var baseMaps = {
@@ -62,7 +62,7 @@ function initMap2(lt,lg,div) {
         center: [lt, lg],
         zoom: 6,
         minZoom: 3,
-        layers: [openstreet,satelital]
+        layers: [openstreet]
     });
 
     var baseMaps = {
