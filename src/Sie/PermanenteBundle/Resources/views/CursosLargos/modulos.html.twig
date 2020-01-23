@@ -15,7 +15,7 @@
                                 <th>Módulo</th>
                                 <th>Horas</th>
                                 <th>Facilitador</th>
-                                <th>Opciones</th>
+                            {#     <th>Opciones</th> #}
                             </tr>
                         </thead>
                         <tbody>
@@ -25,7 +25,8 @@
                                 <td >{{ lstmod.modulo }}</td>
                                 <td >{{ lstmod.horas }}</td>
                                 <td >
-                                        <button class="btn" onclick="addpopCL('{{lstmod.idieco}}', '{{ infoUe }}')">
+                                
+                                        <button  title="Asignar Facilitador" class="btn" onclick="addpopCL('{{lstmod.idieco}}', '{{ infoUe }}')">
                                             {% if (lstmod.idiecom != '') %}
                                                 <i class="fa fa-users" style="color:#009500;"></i>
                                             {% else %}
@@ -36,14 +37,14 @@
                                         <div id="{{lstmod.idieco}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
                                         </div>
                                 </td>
-                                <td>
+                             {#    <td>
                                      {% if (lstmod.idiecom != '') %}
                                                 <button onclick="deleteAreaMaestro({{lstmod.idieco}},'{{infoUe}}',new String('{{lstmod.modulo}}'),{{lstmod.idsmp}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times">Eliminar</i></button>
                                             {% else %}
                                                 
                                             {% endif %}
                                     
-                                </td>
+                                </td> #}
                             </tr>
                         {% endfor %}
                         </tbody>

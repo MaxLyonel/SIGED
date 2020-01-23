@@ -5,7 +5,7 @@
             <th>Módulo</th>
             <th>Horas</th>
             <th>Facilitador</th>
-            <th>Otros</th>
+        {#     <th>Otros</th> #}
             <th> Notas </th>
             <th></th>
 
@@ -18,12 +18,12 @@
                 <td >{{ lstmod.modulo }}</td>
                 <td >{{ lstmod.horas_modulo }}</td>
                 <td >{{ lstmod.nombre }}</td>
-                <td>
+                {# <td>
                     {% if ((lstmod.nombre == '') or (lstmod.nombre == null)) %}
                         RS
 
                     {% endif %}
-                </td>
+                </td> #}
                 <td>
                     {#<form action="{{path('permanente_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">#}
                     {#<input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">#}

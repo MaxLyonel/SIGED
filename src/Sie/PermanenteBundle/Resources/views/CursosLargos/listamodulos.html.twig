@@ -27,7 +27,7 @@
             <th>Módulo</th>
             <th>Horas</th>
             <th>Facilitador</th>
-            <th>Otros</th>
+      {#       <th>Otros</th> #}
             <th>  </th>
 
         </tr>
@@ -39,14 +39,7 @@
                 <td >{{ lstmod.modulo }}</td>
                 <td >{{ lstmod.horas_modulo }}</td>
                 <td >{{ lstmod.nombre }}</td>
-                <td>
-                    {% if ((lstmod.nombre == '0') or (lstmod.nombre == null)) %}
-                        {#<input type="rs" name="rs" id="rs" value="1">#}
-                        RS
-                    {% else %}
-                        {#<input type="rs" name="rs" id="rs" value="0">#}
-                    {% endif %}
-                </td>
+            
 
                 <td>
 
