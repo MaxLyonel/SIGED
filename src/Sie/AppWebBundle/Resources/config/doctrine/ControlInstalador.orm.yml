@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\ControlInstalador:
+    type: entity
+    table: control_instalador
+    indexes:
+        IDX_22A5CF39179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        instalador:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        path:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
