@@ -437,7 +437,7 @@ class ControlCalidadController extends Controller {
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
         switch ($vregla->getId()) {
-            case 1://EDAD
+            case 1://MATERIAS SIN MAESTROS
                 $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_mate_sin_maestros (:tipo, :bim, :ieco, :gestion)');
                 $query->bindValue(':tipo', '2');
                 $query->bindValue(':bim', '');
@@ -463,6 +463,19 @@ class ControlCalidadController extends Controller {
                 $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_genero (:tipo, :rude, :sie, :gestion)');
                 $query->bindValue(':tipo', '2');
                 $query->bindValue(':rude', $form['llave']);
+                $query->bindValue(':sie', $form['institucionEducativa']);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
+            case 4://NOTAS 4TO BIMESTRE
+                $estudiante_inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['llave']);
+                $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_inscripcion->getEstudiante());
+
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_insc_estado (:tipo, :rude, :sie, :gestion)');
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':rude', $estudiante->getCodigoRude());
                 $query->bindValue(':sie', $form['institucionEducativa']);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->execute();
