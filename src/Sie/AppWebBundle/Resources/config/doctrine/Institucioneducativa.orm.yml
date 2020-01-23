@@ -1,6 +1,7 @@
 Sie\AppWebBundle\Entity\Institucioneducativa:
     type: entity
     table: institucioneducativa
+    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaRepository
     indexes:
         fk_institucioneducativa_institu:
             columns:
