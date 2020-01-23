@@ -1,0 +1,33 @@
+<p class="text-danger">(*) Campos requeridos</p>
+{{form_start(form_verificar, {'attr': {'id': 'formVerify', 'onsubmit': 'verificarPersona(); return false;'}})}}
+    <div class="form-group">
+        <label>{{form_label(form_verificar.carnet)}} (*):</label>
+        {{form_widget(form_verificar.carnet, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el número de C.I.', 'value': data.carnet, 'readonly': true}})}}
+    </div>
+    <div class="form-group">
+        <label>{{form_label(form_verificar.complemento)}} (opcional):</label>
+        {{form_widget(form_verificar.complemento, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el complemento', 'value': data.complemento, 'readonly': data.complemento ? true : false }})}}
+    </div>
+    <div class="form-group">
+        <label>{{form_label(form_verificar.primer_apellido)}} (*):</label>
+        {{form_widget(form_verificar.primer_apellido, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido paterno'}})}}
+    </div>
+    <div class="form-group">
+        <label>{{form_label(form_verificar.segundo_apellido)}} (*):</label>
+        {{form_widget(form_verificar.segundo_apellido, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido materno'}})}}
+    </div>
+    <div class="form-group">
+        <label>{{form_label(form_verificar.nombre)}} (*):</label>
+        {{form_widget(form_verificar.nombre, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el nombre', 'required': true}})}}
+    </div>
+    <div class="form-group">
+        <label>{{form_label(form_verificar.fecha_nacimiento)}} (*):</label>
+        {{form_widget(form_verificar.fecha_nacimiento, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)', 'required': true}})}}
+    </div>
+    <input type="hidden" id="sie_verificar_persona_segip_entorno" name="sie_verificar_persona_segip[entorno]" value="prod">
+    <input type="hidden" id="sie_verificar_persona_segip_institucion" name="sie_verificar_persona_segip[institucion]" value="{{institucion}}">
+    <input type="hidden" id="sie_verificar_persona_segip_gestion" name="sie_verificar_persona_segip[gestion]" value="{{gestion}}">
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-eye"></i> Verificar</button>
+    </div>
+{{form_end(form_verificar)}}
