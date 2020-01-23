@@ -30,8 +30,8 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             unsigned: false
             comment: ''
             id: true
-            generator:
-                strategy: SEQUENCE
+            # generator:
+            #     strategy: SEQUENCE
     fields:
         institucioneducativa:
             type: string
