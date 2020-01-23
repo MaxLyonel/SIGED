@@ -454,4 +454,172 @@ class Institucioneducativa {
     {
         return $this->institucioneducativaAcreditacionTipo;
     }
+    /**
+     * @var string
+     */
+    private $obsRue2;
+
+    /**
+     * @var string
+     */
+    private $desUeAntes2;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var string
+     */
+    private $areaMunicipio;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaFundacion;
+
+
+    /**
+     * Set obsRue2
+     *
+     * @param string $obsRue2
+     * @return Institucioneducativa
+     */
+    public function setObsRue2($obsRue2)
+    {
+        $this->obsRue2 = $obsRue2;
+    
+        return $this;
+    }
+
+    /**
+     * Get obsRue2
+     *
+     * @return string 
+     */
+    public function getObsRue2()
+    {
+        return $this->obsRue2;
+    }
+
+    /**
+     * Set desUeAntes2
+     *
+     * @param string $desUeAntes2
+     * @return Institucioneducativa
+     */
+    public function setDesUeAntes2($desUeAntes2)
+    {
+        $this->desUeAntes2 = $desUeAntes2;
+    
+        return $this;
+    }
+
+    /**
+     * Get desUeAntes2
+     *
+     * @return string 
+     */
+    public function getDesUeAntes2()
+    {
+        return $this->desUeAntes2;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return Institucioneducativa
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return Institucioneducativa
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set areaMunicipio
+     *
+     * @param string $areaMunicipio
+     * @return Institucioneducativa
+     */
+    public function setAreaMunicipio($areaMunicipio)
+    {
+        $this->areaMunicipio = $areaMunicipio;
+    
+        return $this;
+    }
+
+    /**
+     * Get areaMunicipio
+     *
+     * @return string 
+     */
+    public function getAreaMunicipio()
+    {
+        return $this->areaMunicipio;
+    }
+
+    /**
+     * Set fechaFundacion
+     *
+     * @param \DateTime $fechaFundacion
+     * @return Institucioneducativa
+     */
+    public function setFechaFundacion($fechaFundacion)
+    {
+        $this->fechaFundacion = $fechaFundacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaFundacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaFundacion()
+    {
+        return $this->fechaFundacion;
+    }
 }

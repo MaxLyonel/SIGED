@@ -220,12 +220,7 @@
                                                     
                                                     {#IMPRIMIR FORMULARIO RUDE AL SEGUN EL CASO#}
                                                     {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) 
-                                                            or ((app.session.get('ie_gestion') == '2017') and (app.session.get('ie_per_cod') == '2'))
-                                                            or ((app.session.get('ie_gestion') == '2017') and (app.session.get('ie_per_cod') == '3'))
-                                                            or ((app.session.get('ie_gestion') == '2018') and (app.session.get('ie_per_cod') == '2'))
-                                                            or ((app.session.get('ie_gestion') == '2018') and (app.session.get('ie_per_cod') == '3'))
-                                                            or ((app.session.get('ie_gestion') == '2019') and (app.session.get('ie_per_cod') == '2'))
-                                                            or ((app.session.get('ie_gestion') == '2019') and (app.session.get('ie_per_cod') == '3'))
+                                                            or ((app.session.get('ie_gestion') >= '2017') and (app.session.get('ie_per_cod') in ['2','3']))
                                                             ) %}
                                                             {% if (app.session.get('ie_per_estado') == '0') %}
                                                                 <li>
