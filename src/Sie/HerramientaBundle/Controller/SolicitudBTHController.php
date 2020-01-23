@@ -496,11 +496,11 @@ class SolicitudBTHController extends Controller {
         if(!empty($documento)) {
             $root_bth_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid');
             if (!file_exists($root_bth_path)) {
-                mkdir($root_bth_path, 0775);
+                mkdir($root_bth_path, 0775, true);
             }
             $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';           
             if (!file_exists($destination_path)) {
-                mkdir($destination_path, 0775);
+                mkdir($destination_path, 0775, true);
             }
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
