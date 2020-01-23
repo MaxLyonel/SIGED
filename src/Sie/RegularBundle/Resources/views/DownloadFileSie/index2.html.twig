@@ -70,13 +70,14 @@
                             <div class="col-md-4">
                                 <label for=""><label for="form_gestion" class="required">Gestión</label></label>
                                 <select id="form_gestion" name="form[gestion]" class="form-control" @click="getBimestre()" v-model="yearSelected">
-                                {# <option value="">Seleccionar...</option> #}
+                                <option value="">Seleccionar...</option>
                                 <option v-for="item in DByears"  :value="item.id">${ item.gestion }</option>       
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label for=""><label for="form_bimestre" class="required">Bimestre</label></label>
                                 <select id="form_bimestre" name="form[bimestre]" class="form-control" empty_data="Seleccionar..." v-model="operativoSelected">
+                                    <option value="">Seleccionar...</option>
                                     <option v-for="item in DBoperativos" :value="item.id">${ item.operativo}</option>
                                 </select>
                             </div>
