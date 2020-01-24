@@ -1,13 +1,10 @@
-Sie\AppWebBundle\Entity\EstudianteInscripcionDocumento:
+Sie\AppWebBundle\Entity\ControlInstalador:
     type: entity
-    table: estudiante_inscripcion_documento
+    table: control_instalador
     indexes:
-        IDX_F9C098357C9FBE9A:
+        IDX_22A5CF39179FF95:
             columns:
-                - documento_tipo_id
-        IDX_F9C09835A1104027:
-            columns:
-                - estudiante_inscripcion_id
+                - gestion_tipo_id
     id:
         id:
             type: integer
@@ -18,36 +15,30 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionDocumento:
             generator:
                 strategy: SEQUENCE
     fields:
-        observacion:
+        instalador:
             type: string
             nullable: true
             length: 255
             fixed: false
             comment: ''
-        rutaImagen:
+        path:
             type: string
             nullable: true
             length: 255
             fixed: false
             comment: ''
-            column: ruta_imagen
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
     manyToOne:
-        documentoTipo:
-            targetEntity: DocumentoTipo
+        gestionTipo:
+            targetEntity: GestionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                documento_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        estudianteInscripcion:
-            targetEntity: EstudianteInscripcion
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                estudiante_inscripcion_id:
+                gestion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

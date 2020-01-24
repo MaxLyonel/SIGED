@@ -81,9 +81,8 @@ class DownloadRudeFileController extends Controller{
 	      // $arrData = json_decode($form['data'],true);
 	      // $jsonData = $form['data'];
        //    $arrData = json_decode($jsonData,true);
-
           $arrData['id'] = $form['sie'];
-          $arrData['gestion'] = $form['gestion'];
+          $arrData['gestion'] = $form['gestion']-1;
 	      //to generate the file execute de function
 	     //  $cabecera = 'R';
       //     //get the file to generate the new file
@@ -122,7 +121,7 @@ class DownloadRudeFileController extends Controller{
            exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
            $dataDownload = array(
               'file' => $newGenerateFile . '.igm ',
-              'datadownload' => json_encode(array('id'=>$form['sie'],'gestion'=>$form['gestion'])),
+              'datadownload' => json_encode(array('id'=>$form['sie'],'gestion'=>$arrData['gestion'])),
               'sw' => $sw
             );
           }else{

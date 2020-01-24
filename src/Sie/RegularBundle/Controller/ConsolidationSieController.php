@@ -2,6 +2,7 @@
 
 namespace Sie\RegularBundle\Controller;
 
+use Sie\AppWebBundle\Entity\ControlInstalador;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;
@@ -344,11 +345,13 @@ class ConsolidationSieController extends Controller {
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
-                $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5,7'));
-                if($objAllowUE){
-                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
-                  system('rm -fr ' . $dirtmp);
-                  return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                if($aFileInfoSie[6]!=0){
+                    $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5,7'));
+                    if($objAllowUE){
+                      $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
+                      system('rm -fr ' . $dirtmp);
+                      return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                    }
                 }
 
                 //validation up old file ... only by tec distrito, depto
@@ -370,13 +373,45 @@ class ConsolidationSieController extends Controller {
 
                 //validate the correct sie send with the correct version in current year
                 if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')))) == 0) {
+
                     if (
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED7'))) === 0    
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.3.0'))) === 0
+                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED9'))) === 0    
                     ){
 
                     }else{
-                      if(
+
+                        if (
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9'))) === 0
+                                and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED7'))) === 0    
+                        ){
+
+                        }else{
+                          if(
+                            (
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0 || 
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.2'))) === 0 
+                            )
+                                and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED8'))) === 0
+                          ){
+
+                          }else{
+                            if(
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.7.1'))) === 0
+                                and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED6'))) === 0
+                            ){
+
+                            }else{
+                              $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
+                              system('rm -fr ' . $dirtmp);
+                              return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                            }
+                          }
+                        }
+                    }
+    
+                }else{
+                     if(
                         (
                           (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0 || 
                           (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.2'))) === 0 
@@ -385,34 +420,19 @@ class ConsolidationSieController extends Controller {
                       ){
 
                       }else{
-                        if(
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.7.1'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED6'))) === 0
-                        ){
+                          if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')-1))) == 0) {
+                            if (
+                                  (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
+                                    and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
+                            ){
 
-                        }else{
-                          $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
-                          system('rm -fr ' . $dirtmp);
-                          return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                        }
+                            }else{
+                              $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
+                              system('rm -fr ' . $dirtmp);
+                              return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                            }
+                          }
                       }
-                    }
-
-
-                    
-                }else{
-                  if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')-1))) == 0) {
-                    if (
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
-                    ){
-
-                    }else{
-                      $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
-                      system('rm -fr ' . $dirtmp);
-                      return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                    }
-                  }
                }
                 //die;
                 //validate the correct sie send with the content of file
@@ -929,6 +949,177 @@ class ConsolidationSieController extends Controller {
         $return = array("responseCode" => 200, "formulario" => $img);
         $return = json_encode($return); //jscon encode the array
         return new Response($return, 200, array('Content-Type' => 'application/json')); //make sure it has the correct content type
+    }
+
+      public function controlInstallerAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+       // dump($request);die;
+        // $instalador = $em->getRepository('SieAppWebBundle:ControlInstalador')->findAll();
+         $em->getConnection()->commit();
+            
+            $query = $em->getConnection()->prepare('select * from control_instalador ci order by 1 desc ');
+            $query->execute();
+            $instalador= $query->fetchAll();
+       
+       // dump($instalador);die;
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('consolidation_sie_control_installer_upload'))
+            //       ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
+            /* ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control'))) */
+            //   ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
+            ->add('crear', 'submit', array('label' => 'Generar Reportes', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+        
+
+        return $this->render($this->session->get('pathSystem') . ':ConsolidationSie:uploadInstaller.html.twig', array(
+            'form' => $form->createView(),
+            'instalador'=>$instalador
+        ));
+    }
+     public function uploadInstallerAction(Request $request) {
+   
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $nombre = $request->get('namefile');
+       
+        $gestion = $this->session->get('currentyear');
+
+        if ($request->getMethod() == 'POST') {
+
+                try {
+                //echo "<pre>";
+                //get the form file
+                $oFile = $request->files->get('siefile');
+             // dump($oFile);die;
+                //get the name of file upload
+                $originalName = $oFile->getClientOriginalName();
+                 // dump($nombre);die;
+                //get the extension
+                $aName = explode('.', $originalName);
+                $fileType = $aName[sizeof($aName) - 1];
+               
+                //validate the allows extensions
+                $aValidTypes = array('exe');
+
+                if (!in_array(strtolower($fileType), $aValidTypes)) {
+                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir No tiene la extension correcta');
+                    return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));
+                }
+
+                //validate the files weight
+                if (!( 10001 < $oFile->getSize()) && !($oFile->getSize() < 2000000000)) {
+                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir no tiene el tamaño correcto');
+                    return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));
+                }
+
+
+                // //make the temp dir name
+                $dirtmp = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+
+                if (is_readable($this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/')) {
+                    
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intentar subir el instalador');
+                    return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));   
+                }
+                //check if the file exist to create the same
+                if (!file_exists($dirtmp)) {
+                    mkdir($dirtmp, 0770);
+                }else{
+                  system('rm -fr ' . $dirtmp.'/*');
+                }
+
+                $instalador=$em->getRepository('SieAppWebBundle:ControlInstalador')->findOneBy(array('instalador'=>$nombre));
+                $gestionInstaller=$em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('gestion'=>$gestion));
+                //$gestionInstaller=$gestionInstaller->getId();
+               // dump($gestionInstaller);die;
+
+               
+                if($instalador)
+                {
+                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir ya fue cargado al repositorio'); 
+                }else {
+
+                    $file = $oFile->move($dirtmp, $nombre);
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('control_instalador');")->execute();
+                    $controlInstaller = new ControlInstalador();
+                    $controlInstaller -> setInstalador($nombre);
+                    $controlInstaller -> setPath($dirtmp);
+                    $controlInstaller -> setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestionInstaller));
+                    $controlInstaller -> setActivo(false);
+                    $em->persist($controlInstaller);
+                    //dump($controlInstaller);die;
+                    $em->flush($controlInstaller);
+                   // dump($controlInstaller);die;
+                }
+
+        
+                $em->getConnection()->commit();
+                
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            }
+            //everything good so need to remove the tmp file
+            // system('rm -fr ' . $dirtmp);
+            $session->getFlashBag()->add('successcons', 'Archivo cargado correctamente');
+            return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));
+        } else {
+            $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente');
+            return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));
+        }
+    
+    }
+
+    public function activateInstallerAction(Request $request){
+
+            $em = $this->getDoctrine()->getManager();
+            $id = $request->get('id');
+           // dump($form);die;
+        $instalador = $em->getRepository('SieAppWebBundle:ControlInstalador')->findOneBy(array('id' => $id));
+        
+        $activo = !($instalador->getActivo());
+       // dump($activo);die;
+        //realiza el update de 2 tablas (InstitucioneducativaCurso,PermanenteInstitucioneducativaCursocorto)
+        $em->getConnection()->beginTransaction();
+        try {
+            
+            $instalador ->setActivo($activo);
+            $em->persist($instalador);
+            $em->flush();
+            $em->getConnection()->commit();
+
+          
+
+            $query = $em->getConnection()->prepare('select * from control_instalador ci order by 1 desc ');
+            $query->execute();
+            $instalador= $query->fetchAll();
+       
+
+          
+           // $session->getFlashBag()->add('successcons', 'Cambio de estado del Instalador realizado con exito');
+             return $this->render('SieRegularBundle:ConsolidationSie:listInstaller.html.twig',array(
+           
+            'instalador'=>$instalador
+            ));
+        }
+        catch  (Exception $ex)
+        {
+            $em->getConnection()->rollback();
+          //  $this->get('session')->getFlashBag()->add('warningcons', 'El cambio de estado no fue realizado.');
+            return $this->render('SieRegularBundle:ConsolidationSie:listInstaller.html.twig');
+        }
+    
+
+
+            
+          
+      
     }
 
 }

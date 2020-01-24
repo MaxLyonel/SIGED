@@ -83,6 +83,7 @@ class Notas{
 
             // Cantidad de notas faltantes
             $cantidadFaltantes = 0;
+            $cantidadRegistrados = 0;
 
             $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
 
@@ -176,6 +177,7 @@ class Notas{
                             $existe = 'no';
                             foreach ($asignaturasNotas as $an) {
                                 if($tn[$i] == $an['idNotaTipo']){
+                                    $cantidadRegistrados++;
                                     $notasArray[$cont]['notas'][] =   array(
                                                             'id'=>$cont."-".$tn[$i],
                                                             'idEstudianteNota'=>$an['idNota'],
@@ -214,6 +216,7 @@ class Notas{
                             $existe = 'no';
                             foreach ($asignaturasNotas as $an) {
                                 if($tn[$i] == $an['idNotaTipo']){
+                                    $cantidadRegistrados++;
                                     $notasArray[$cont]['notas'][] =   array(
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>$an['idNota'],
@@ -423,23 +426,32 @@ class Notas{
                                         ->getQuery()
                                         ->getResult();
 
+                                        // dump($asignaturasNotas);
+                                        // dump($inicio);
+                                        // dump($fin);
+                                        // die;
+
                     // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
                     if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
                         for($i=$inicio;$i<=$fin;$i++){
                             $existe = 'no';
                             foreach ($asignaturasNotas as $an) {
-                                if($nivel != 11 and $nivel != 1 and $nivel != 403){
-                                    $valorNota = $an['notaCuantitativa'];
-                                    if($valorNota == 0){
-                                        $cantidadFaltantes++;
-                                    }
-                                }else{
-                                    $valorNota = $an['notaCualitativa'];
-                                    if($valorNota == ""){
-                                        $cantidadFaltantes++;
-                                    }
-                                }
                                 if($i == $an['idNotaTipo']){
+                                    if($nivel != 11 and $nivel != 1 and $nivel != 403){
+                                        $valorNota = $an['notaCuantitativa'];
+                                        if($valorNota == 0 or $valorNota == "0"){
+                                            $cantidadFaltantes++;
+                                        }else{
+                                            $cantidadRegistrados++;
+                                        }
+                                    }else{
+                                        $valorNota = $an['notaCualitativa'];
+                                        if($valorNota == ""){
+                                            $cantidadFaltantes++;
+                                        }else{
+                                            $cantidadRegistrados++;
+                                        }
+                                    }
                                     $notasArray[$cont]['notas'][] =   array(
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>$an['idNota'],
@@ -569,6 +581,8 @@ class Notas{
                                 $existe = true;
                                 if($c->getNotaCualitativa() == ""){
                                     $cantidadFaltantes++;
+                                }else{
+                                    $cantidadRegistrados++;
                                 }
                             }
                         }
@@ -607,12 +621,12 @@ class Notas{
                                                         );
                             $existe = true;
                             if($c->getNotaCualitativa() == ""){
-                                $cantidadFaltantes++;
+                                // $cantidadFaltantes++;
                             }
                         }
                     }
                     if($existe == false and $operativo >= 4){
-                        $cantidadFaltantes++;
+                        // $cantidadFaltantes++;
                         $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
                                                      'idNotaTipo'=>18,
@@ -700,12 +714,12 @@ class Notas{
                                                         );
                             $existe = true;
                             if($c->getNotaCualitativa() == ""){
-                                $cantidadFaltantes++;
+                                // $cantidadFaltantes++;
                             }
                         }
                     }
                     if($existe == false){
-                        $cantidadFaltantes++;
+                        // $cantidadFaltantes++;
                         $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
                                                      'idNotaTipo'=>5,
@@ -735,6 +749,7 @@ class Notas{
                 'grado'=>$grado,
                 'tipoNota'=>$tipo,
                 'estadosPermitidos'=>$estadosPermitidos,
+                'cantidadRegistrados'=>$cantidadRegistrados,
                 'cantidadFaltantes'=>$cantidadFaltantes,
                 'tipoSubsistema'=>$tipoSubsistema,
                 'titulosNotas'=>$titulos_notas

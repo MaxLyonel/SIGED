@@ -88,55 +88,103 @@ class RegularizacionDobleInscripcionController extends Controller {
                                 ->innerJoin('SieAppWebBundle:EstadomatriculaTipo','emt','with','ei.estadomatriculaTipo = emt.id')
                                 ->where('e.codigoRude = :rude')
                                 ->andWhere('gt.id = :gestion')
+                                ->andWhere('ie.institucioneducativaTipo = 1')
                                 ->orderBy('ei.fechaInscripcion','ASC')
                                 ->setParameter('rude',$rude)
                                 ->setParameter('gestion',$gestion)
                                 ->getQuery()
                                 ->getResult();
 
-            // $arrayInscripciones = array();
-            $arrayInscripciones1 = array();
-            foreach ($ins as $i) {
-                // $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($i['id']);
-                // $arrayInscripciones[] = $arrayNotas;
-                $operativo = $this->get('funciones')->obtenerOperativo($i['sie'], $i['gestion']);
+            $arrayEstados = [];
+            $estadosFinales = [5,26,37,55,56,57,58,11,28];
+            $tieneEstadoFinal = false;
+            $arrayInscripciones = array();
 
+            foreach ($ins as $i) {
+
+                $operativo = $this->get('funciones')->obtenerOperativo($i['sie'], $i['gestion']);
                 $inscripcionActual = $this->get('notas')->regular($i['id'], $operativo);
 
                 $inscripcionActual['estudiante'] = $i['nombre'].' '.$i['paterno'].' '.$i['materno'];
                 $inscripcionActual['codigoRude'] = $i['codigoRude'];
                 $inscripcionActual['sie'] = $i['sie'];
                 $inscripcionActual['institucioneducativa'] = $i['institucioneducativa'];
-                $inscripcionActual['nivel'] = $i['nivel'];
+                $inscripcionActual['nivelname'] = $i['nivel'];
                 $inscripcionActual['nivelId'] = $i['nivelId'];
-                $inscripcionActual['grado'] = $i['grado'];
-                $inscripcionActual['paralelo'] = $i['paralelo'];
+                $inscripcionActual['gradoname'] = $i['grado'];
+                $inscripcionActual['paraleloname'] = $i['paralelo'];
                 $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
-                $inscripcionActual['estadomatricula'] = $i['estadomatricula'];
+                $inscripcionActual['estadomatriculaname'] = $i['estadomatricula'];
+                $inscripcionActual['cantidadTotal'] = count($inscripcionActual['cuantitativas'])*$inscripcionActual['operativo'];
 
-                // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
-                if ($inscripcionActual['operativo'] >= 1 and $inscripcionActual['cantidadFaltantes'] == 0) {
-                  $estadosdisp = [9]; // RETIRO TRASLADO
-                }else{
-                  $estadosdisp = [6]; // NO INCORPORADO
+                $arrayInscripciones[] = $inscripcionActual;
+                $arrayEstados[] = $i['estadomatriculaId'];
+
+                // VERIFICAMOS SI ALGUNA DE LAS INSCRIPCIONES YA CUENTA CON ESTADO FINAL
+                if (in_array($i['estadomatriculaId'], $estadosFinales)) {
+                    $tieneEstadoFinal = true;
                 }
+            }
+            
+            $cont = 0;
+            foreach ($arrayInscripciones as $ai) {
+
+                // VERIFICAMOS SI EL ESTADO DE LA INSCRIPCION NO ES UN ESTADO FINAL
+                // PARA CALCULAR LOS OTRSO POSIBLES ESTADOS A MODIFICAR
+                if (!in_array($ai['estadomatriculaId'], $estadosFinales)) {
+
+                    // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
+                    if ($ai['cantidadRegistrados'] > 0 and $ai['cantidadRegistrados'] < $ai['cantidadTotal']) {
+
+                        if ($tieneEstadoFinal) {
+                            $estadosdisp = [9]; // RETIRO TRASLADO
+                        }else{
+                            // VERIFICAMOS SI LA INSCRIPCION ACTUAL TIENE MAS CALIFICACIONES QUE LAS DEMAS
+                            $mayor = false;
+                            for ($i = 0; $i < count($arrayInscripciones); $i++) { 
+                                if ( $ai['cantidadRegistrados'] > $arrayInscripciones[$i]['cantidadRegistrados']) {
+                                    $mayor = true;
+                                }else{
+                                    if ($ai['idInscripcion'] != $arrayInscripciones[$i]['idInscripcion']) {
+                                        $mayor = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // SI LA INSCRIPCION TIENE MAS CALIFICACIONES QUE LAS DEMAS
+                            // ENTONCES PUEDE CAMBIAR AL ESTADO FINAL RETIRADO ABANDONO
+                            if ($mayor) {
+                                $estadosdisp = [10]; // RETIRO ABANDONO
+                            }else{
+                                $estadosdisp = [9]; // RETIRO TRASLADO
+                            }
+                        }
+
+                    }else{
+                        // SI NO TIENE CALIFICACIONES SOLO PUEDE CAMBIAR A NO INCORPORADO
+                        $estadosdisp = [6]; // NO INCORPORADO
+                    }
+                }else{
+                    $estadosdisp = [$ai['estadomatriculaId']]; //  AGREGAMOS EL MISMO ESTADO DE MATRICULA
+                }
+                
 
                 $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$estadosdisp));
                 foreach ($estados as $e) {
-                  $inscripcionActual['estadosCambiar'][] = array('id'=>$e->getId(), 'estadomatricula'=>$e->getEstadomatricula());
+                    $arrayInscripciones[$cont]['estadosCambiar'][] = array('id'=>$e->getId(), 'estadomatricula'=>$e->getEstadomatricula());
                 }
-
-                $arrayInscripciones1[] = $inscripcionActual;
+                
+                $cont++;
             }
 
-            // dump($arrayInscripciones);
-            // dump($arrayInscripciones1);
-            // die;
+
+            // dump($arrayInscripciones);die;
 
             // $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(6,9)));
 
             return $this->render('SieRegularBundle:RegularizacionDobleInscripcion:result.html.twig',array(
-              'arrayInscripciones'=>$arrayInscripciones1,
+              'arrayInscripciones'=>$arrayInscripciones,
               // 'estados'=>$estados,
               'gestion'=>$gestion
             ));
@@ -151,14 +199,14 @@ class RegularizacionDobleInscripcionController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
 
-            $defaultController = new DefaultCont();
-            $defaultController->setContainer($this->container);
+            // $defaultController = new DefaultCont();
+            // $defaultController->setContainer($this->container);
 
             // $idEstudianteNota = $request->get('idEstudianteNota');
             // $nota = $request->get('nota');
-            $nivel = $request->get('nivel');
+            $nivel = $request->get('arrNivel');
             $rude = $request->get('rude');
-            $idInscripcion = $request->get('idInscripcion');
+            $idInscripcion = $request->get('arrIdInscripcion');
             // for($i=0; $i<count($idInscripcion); $i++){
             //     if(isset($idEstudianteNota[$i])){
             //         $op = $idEstudianteNota[$i];
@@ -276,12 +324,12 @@ class RegularizacionDobleInscripcionController extends Controller {
             // }
 
             //set new ESTADOS
-            $response =$this->validateEstadoStudent($request);
+            $response = $this->validateEstadoStudent($request);
 
             $em->getConnection()->commit();
             //verifcatiokn
             
-            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[0]);
 
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_estados(:option::VARCHAR,:rude::VARCHAR,:gestion::VARCHAR)');
             $query->bindValue(':option', 2);
@@ -318,15 +366,20 @@ class RegularizacionDobleInscripcionController extends Controller {
 
       private function validateEstadoStudent($request){
       // Create DB conexxion
+      // dump($request);die;
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the current states
       $arrEstudianteEstado = $request->get('estadoMatriculaActual');
-      $arrIdInscripcion = $request->get('idInscripcion');
+      $arrIdInscripcion = $request->get('arrIdInscripcion');
       // $arridEstudianteAsignatura = $request->get('idEstudianteAsignatura');
       $arrEstadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
       $error = 'done';
       $error1 = '';
+
+      // dump($arrEstudianteEstado);
+      // dump($arrEstadoMatriculaNuevo);
+      // die;
       try {
 
         //validate the students stado

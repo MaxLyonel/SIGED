@@ -437,6 +437,16 @@ class ControlCalidadController extends Controller {
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
         switch ($vregla->getId()) {
+            case 1://MATERIAS SIN MAESTROS
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_mate_sin_maestros (:tipo, :bim, :ieco, :gestion)');
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':bim', '');
+                $query->bindValue(':ieco', $form['llave']);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
             case 2://EDAD
                 $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_edad (:tipo, :rude, :sie, :gestion, :lim1, :lim2)');
                 $query->bindValue(':tipo', '2');
@@ -453,6 +463,19 @@ class ControlCalidadController extends Controller {
                 $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_genero (:tipo, :rude, :sie, :gestion)');
                 $query->bindValue(':tipo', '2');
                 $query->bindValue(':rude', $form['llave']);
+                $query->bindValue(':sie', $form['institucionEducativa']);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
+            case 4://NOTAS 4TO BIMESTRE
+                $estudiante_inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['llave']);
+                $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_inscripcion->getEstudiante());
+
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_insc_estado (:tipo, :rude, :sie, :gestion)');
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':rude', $estudiante->getCodigoRude());
                 $query->bindValue(':sie', $form['institucionEducativa']);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->execute();
@@ -493,6 +516,16 @@ class ControlCalidadController extends Controller {
                 $query->bindValue(':tipo', '2');
                 $query->bindValue(':rude', $form['llave']);
                 $query->bindValue(':param', '');
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
+            case 14://DOBLE INSCRIPCIÓN
+                $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_maes_sin_materia (:tipo, :mi_id, :sie, :gestion)");
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':mi_id', $form['llave']);
+                $query->bindValue(':sie', $form['institucionEducativa']);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->execute();
                 $resultado = $query->fetchAll();
