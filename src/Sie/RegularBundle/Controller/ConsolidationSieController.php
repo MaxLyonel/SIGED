@@ -986,7 +986,10 @@ class ConsolidationSieController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $nombre = $request->get('namefile');
-       
+        $detalle= $request->get('detail');
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime();
+        //dump($fechaActual);die;
         $gestion = $this->session->get('currentyear');
 
         if ($request->getMethod() == 'POST') {
@@ -1050,6 +1053,8 @@ class ConsolidationSieController extends Controller {
                     $controlInstaller = new ControlInstalador();
                     $controlInstaller -> setInstalador($nombre);
                     $controlInstaller -> setPath($dirtmp);
+                    $controlInstaller -> setDetalle($detalle);
+                    $controlInstaller -> setCreatedAt($fechaActual);
                     $controlInstaller -> setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestionInstaller));
                     $controlInstaller -> setActivo(false);
                     $em->persist($controlInstaller);
