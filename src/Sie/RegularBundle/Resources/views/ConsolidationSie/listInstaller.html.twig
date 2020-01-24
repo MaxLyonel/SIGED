@@ -1,0 +1,34 @@
+<div class="col-md-10 col-md-offset-1">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                                <tr>
+                                                    <th>N°</th>
+                                                    <th>Gestión</th>
+                                                    <th>Instalador</th>
+                                                    <th>Opciones</th>
+                                                </tr>
+
+
+                                        </thead>
+                                        <tbody>
+                                        {% for instalador in instalador %}
+                                            <tr>
+                                                <td data-title="N°">{{ loop.index }}</td>
+                                                {#<td data-title="Carnet">{{ cursocorto.sub_area }}</td>#}
+                                                <td data-title="gestion">{{ instalador.gestion_tipo_id }}</td>
+                                                <td data-title="instalador">{{ instalador.instalador }}</td>
+                                                 <td data-title="Opciones">
+                                                    {% if (instalador.activo == 'true') %}
+                                                    <button type="button" class="btn btn-success"   onclick="activarInstalador({{instalador.id}})">Habilitado</button>
+                                                    
+                                                {% else %}
+                                                    <button type="button" class="btn btn-danger"   onclick="activarInstalador({{instalador.id}})">No Habilitado</button>
+                                                {% endif %}
+                                                </td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    
+                                    </table>
+                                </div>

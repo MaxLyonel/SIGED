@@ -831,21 +831,26 @@ class DownloadFileSieController extends Controller {
 	 */
     public function installDownloadAction(Request $request) {
 
+        $em = $this->getDoctrine()->getManager();
         //get path of the file
-        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v1292.exe';
-
-        //create response to donwload the file
+        $id = $request->get('id');
+        //dump($form);die;
+        $instalador=$em->getRepository('SieAppWebBundle:ControlInstalador')->findOneBy(array('id'=>$id));
+        $nombre=$instalador->getInstalador();
+        $path=$instalador->getPath();
+        //dump($nombre);die;
+      //  $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+     //   $file = 'instalador_SIGED_SIE_v1292.exe'
         $response = new Response();
         //then send the headers to foce download the zip file
         $response->headers->set('Content-Type', 'application/exe');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
-        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $nombre));
+        $response->setContent(file_get_contents($path. $nombre) );
         $response->headers->set('Pragma', "no-cache");
         $response->headers->set('Expires', "0");
         $response->headers->set('Content-Transfer-Encoding', "binary");
         $response->sendHeaders();
-        $response->setContent(readfile($dir . $file));
+        $response->setContent(readfile($path . $nombre));
         return $response;
     }
 

@@ -13,4 +13,16 @@ consolidation_sie_checkit_web:
     
 consolidation_sie_find:
     path:    /find
-    defaults: { _controller: SieRegularBundle:ConsolidationSie:find }         
+    defaults: { _controller: SieRegularBundle:ConsolidationSie:find }
+
+consolidation_sie_control_installer:
+    path:    /controlInstaller
+    defaults: { _controller: SieRegularBundle:ConsolidationSie:controlInstaller }
+
+consolidation_sie_control_installer_upload:
+    path:    /controlInstaller/upload
+    defaults: { _controller: SieRegularBundle:ConsolidationSie:uploadInstaller }
+
+consolidation_sie_control_installer_activate:
+    path:    /controlInstaller/activate
+    defaults: { _controller: SieRegularBundle:ConsolidationSie:activateInstaller }
