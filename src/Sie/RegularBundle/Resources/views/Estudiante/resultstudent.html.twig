@@ -4,8 +4,8 @@
     <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
     <style>
         .higherWider {
-            width: 800px;
-            margin-top:100px;
+            width: 1024px;
+            margin-top:50px;
         }
     </style>
 {% endblock %}
@@ -22,7 +22,6 @@
                 </ol>
             </div>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -30,7 +29,7 @@
             {% for flashMessage in app.session.flashbag().get('successstudent') %}
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Bien!</strong> {{ flashMessage }}
+                    <strong><i class="fa fa-fw fa-check-circle"></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
         </div>
@@ -51,11 +50,8 @@
                 </div>
                 <div id="pinfoestudiante" class="panel-collapse collapse in">
                     <div class="portlet-body">
-
                         <div id="no-more-tables">
-
                             <table id="myTable" class="table table-bordered table-hover cf dataTable">
-
                                 <thead class="">
                                     <tr class="">
                                         <th>No.</th>
@@ -67,15 +63,13 @@
                                         <th>Nombres(s)</th>
                                         <th>Fecha Nacimiento</th>
                                         <th>Opción</th>
-
-
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for entity in entities %}
                                         <tr>
                                             <td data-title="No.">{{loop.index}}</td>
-                                            <td data-title="Rude"><a href="#" class="btn btn-link" onclick="openHistoryInsc({{entity.id}})">{{ entity.codigoRude }}</a></td>
+                                            <td data-title="Rude"><strong>{{ entity.codigoRude }}</strong></td>
                                             <td data-title="CI">{{ entity.carnetIdentidad }} </td>
                                             <td data-title="Complemento" class="text-center"> {{entity.complemento}}</td>
                                             <td data-title="Paterno">{{ entity.paterno }}</td>
@@ -90,9 +84,7 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -105,19 +97,15 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="flexModalLabel">Historial de Inscripción</h4>
-
                 </div>
                 <div class="modal-body">
                     <div id="idHistory"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
 
     <div class="row">
@@ -127,11 +115,10 @@
     </div>
 {% endblock %}
 
-{%block javascripts %}
+{% block javascripts %}
     {{parent()}}
     <script>
         var openHistoryInsc = function (idStudent) {
-
             $('#historyInscriptions').modal('show');
             $.ajax({
                 type: 'get',
@@ -153,9 +140,7 @@
                     }
                 }
             });
-        }
-
+        };
     </script>
-
-{% endblock%}
+{% endblock %}
 
