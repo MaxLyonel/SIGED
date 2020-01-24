@@ -481,6 +481,7 @@ class CursosController extends Controller {
 
 
     public function inscriptionAction(Request $request) {
+
         // create the conexion to DB
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -503,32 +504,10 @@ class CursosController extends Controller {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
             $query->execute();
 
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_alternativa');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Acceso');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Habla');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Ocupacion');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Transporte');");
-            // $query->execute();
-
             while ($valStudents = current($dataStudents)) {
+                // dump(isset($valStudents['student']));
+                // dump($valStudents);
               if(isset($valStudents['student'])){
-
-                    
-                
-                $altersocio = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByEstudianteInscripcion($valStudents['eInsId']);
-                
-                if (count($altersocio) == 1){
-                    $altsocioaux = clone $altersocio[0];
-
-                    
 
                     $studentInscription = new EstudianteInscripcion();
                     $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
@@ -545,46 +524,6 @@ class CursosController extends Controller {
                     $studentInscription->setCodUeProcedenciaId(0);
                     $em->persist($studentInscription);
                     $em->flush();
-
-                    $altsocioaux->setEstudianteInscripcion($studentInscription);
-                    $em->persist($altsocioaux);
-                    $em->flush();
-
-                    // $altersocioAccesso = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltAcceso')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-                    // $altersocioHabla = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-                    // $altersocioOcupacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacion')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-                    // $altersocioTransporte = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporte')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-
-                    
-                    // if($altersocioAccesso){
-                    //     $altersocioAccessoAux = clone $altersocioAccesso[0];
-                    //     $altersocioAccessoAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altsocioaux);
-                    //     $em->flush();
-                    // }
-                    
-                    // if($altersocioHabla){
-                    //     $altersocioHablaAux = clone $altersocioHabla[0];
-                    //     $altersocioHablaAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altersocioHablaAux);
-                    //     $em->flush();
-                    // }
-
-                    // if($altersocioOcupacion){
-                    //     $altersocioOcupacionAux = clone $altersocioOcupacion[0];
-                    //     $altersocioOcupacionAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altersocioOcupacionAux);
-                    //     $em->flush();
-                    // }
-                    // if($altersocioTransporte){
-                    //     $altersocioTransporteAux = clone $altersocioTransporte[0];
-                    //     $altersocioTransporteAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altersocioTransporteAux);
-                    //     $em->flush();
-                    // }
-                    //add the areas to the student
-                    //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objNextCurso->getId(), $dataInscription['gestion']);
-                }
               }
               next($dataStudents);
             }
@@ -606,7 +545,8 @@ class CursosController extends Controller {
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe'=> $arraInfoUe['ueducativaInfo'],
                         'totalInscritos'=>count($objStudents),
-                        'primariaNuevo' => $primariaNuevo
+                        'primariaNuevo' => $primariaNuevo,
+                        'iecId'  => $iecId[0]['id']
             ));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -627,7 +567,8 @@ class CursosController extends Controller {
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe'=> $arraInfoUe['ueducativaInfo'],
                         'totalInscritos'=>count($objStudents),
-                        'primariaNuevo' => $primariaNuevo
+                        'primariaNuevo' => $primariaNuevo,
+                        'iecId'  => $iecId[0]['id']
             ));
         }
     }
