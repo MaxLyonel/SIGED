@@ -336,16 +336,20 @@ class StudentsInscriptionsController extends Controller {
       $response = new JsonResponse();
       // get the send values
       $ci = $request->get('ci');
-      $complemento = $request->get('complemento');
+      $complemento = strtoupper($request->get('complemento'));
       $iecId = $request->get('iecId');
       
       // here is to find the studnen by CI  on table estudiante/persona
       // first look for student on ESTUDIANTE table 
       // set array conditions
       $arrayCondition['carnetIdentidad'] = $ci;
+      
       if($complemento){
         $arrayCondition['complemento'] = $complemento;
-      }    
+      }else{
+        $arrayCondition['complemento'] = "";
+      }
+
       // find the student by arrayCondition
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
       // set result in the process to find
@@ -816,10 +820,16 @@ class StudentsInscriptionsController extends Controller {
       
       // set parameter to validate inscription
       $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>($casespecial=='false')?false:true, 'iecId' => $iecId, 'studentId'=>$studentId) ;
+      $arrdataStudent = array(
+        'paterno'=>$request->get('paterno'),
+        'materno'=>$request->get('materno'),
+        'nombre'=>$request->get('nombre'),
+      );
+      $swdoubleRude = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
 
      // get the studnets age
       $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
-
+dump($request);die;
       // create db conexion
       if(!($swyearStudent)){
           try {
