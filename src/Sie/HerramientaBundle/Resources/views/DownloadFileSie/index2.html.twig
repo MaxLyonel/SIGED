@@ -1,0 +1,254 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %} 
+
+ <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i> Descargar Archivo SIE  <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home animated flip"></i>
+                    <a href="dashboard.html">Descargar Archivo SIE - Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- <div class="row">
+        <div class="col-md-12">
+            <strong>
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                <strong><i class='fa fa-file'></i></strong> Generación de Archivo SIE.<br>
+                </div>  
+            </strong>
+            
+        </div>
+    </div> -->
+
+    <!-- /.row -->
+<div class="body-content animated fadeIn">    
+    <div id="app">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <div class="panel-body">
+                        <form name="form" method="post" action="/app_dev.php/sie/downloadFileSie/sie/buildfile/" data-toggle="validator" role="form" class="form" novalidate="true">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for=""><label for="form_sie" class="required">SIE</label></label>
+                                    <input type="text" id="form_sie" name="form[sie]" required="required" class="form-control" pattern="[0-9\sñÑ]{6,8}" maxlength="8" autocomplete="off" style="text-transform:uppercase" @keyup="searchYears" v-model="codsie">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for=""><label for="form_gestion" class="required">Gestión</label></label>
+                                    <select id="form_gestion" name="form[gestion]" class="form-control" @click="getBimestre()" v-model="yearSelected">
+                                    {# <option value="">Seleccionar...</option> #}
+                                    <option v-for="item in DByears"  :value="item.id">${ item.gestion }</option>       
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for=""><label for="form_bimestre" class="required">Bimestre</label></label>
+                                    <select id="form_bimestre" name="form[bimestre]" class="form-control" empty_data="Seleccionar..." v-model="operativoSelected">
+                                        <option v-for="item in DBoperativos" :value="item.id">${ item.operativo}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </br>
+
+                            <div v-if="swerror" class="row">
+                                <div class="col-md-3">
+                                    <button type="button" id="form_search" name="form[search]" class="btn btn-primary" @click="generateFile()">Generar</button>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row"  >
+                                <div class="col-md-12"> -->
+                                    <div v-if="downloadingfile" class="text-center">
+                                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                                    </div>
+                                <!-- </div>
+                            </div>                         -->
+
+                            <div v-if="swmessage == false" class="row">
+                                <div v-if="message" class="col-md-12">
+                                <p class="text-white bg-dark"> </p>
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
+                                        <strong><i class='fa fa-linux'></i></strong> ${message}
+                                    </div>
+                                    <small>
+                                        <ul v-if="swquality" class="col-md-12">
+                                            <li v-for="item in DBobservationQA" :value="item.id">${ item.observation}</li>
+                                        </ul>
+                                    </small>
+                                </div>
+                            </div>
+
+
+
+
+                            <div v-if="swdownloadfile" class="row">                
+                                <div class="col-md-8 col-md-offset-4" >
+                                    <a class="btn btn-success" v-bind:href="urlreport">
+                                            <i class="fa fa-download"> DESCARGAR ARCHIVO ${codsieId}-${nameSie}</i>
+                                    </a></br>
+                                </div>
+                            </div>                                                
+
+                        </form>
+
+
+
+                    </div>
+                       
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="geneFile"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>
+    var app = new Vue({
+        delimiters:['${','}'],
+        el: '#app',
+        data(){
+            return {
+                swsearch:false,
+                swyear:false,
+                swbimestre:false,
+                swerror:false,
+                swmessage:false,
+                swquality:false,
+                message:false,
+                urlreport:false,
+                swdownloadfile:false,                
+                downloadingfile:false, 
+                nameSie:'',               
+                codsie:'',
+                codsieId:'',
+                typeMessage:'',
+                yearSelected:'',
+                operativoSelected:'',
+                DByears:{},
+                DBoperativos:{},
+                DBobservationQA:{}
+            }
+        },
+        methods:{
+            searchYears(){
+                this.swyear = false;
+                this.swmessage = false;
+                this.message = false;
+                if(this.codsie.length>7){
+                    	axios.get(Routing.generate('download_file_sie_getgestion', {codsie: this.codsie}))
+						.then(response => {
+							this.swsearch = false;
+							if (response.status == 200) {
+                                this.DByears = response.data.arrgestion;
+                                this.swyear = response.data.swyear;
+                                this.swmessage = response.data.swyear;
+                                this.message = response.data.message;
+                                
+							}
+							if (response.status == 202) {
+							}
+						})
+						.catch(error => {
+							this.swsearch = false
+						});
+                }else{
+                    this.DByears = {};
+                    this.DBoperativos = {};
+                    this.swerror = false;
+                }             
+            },
+            getBimestre(){
+                console.log(this.yearSelected);
+                if(this.yearSelected>0){
+                    
+                    this.swerror = false;
+                    this.message = false;
+                    this.swmessage = false;
+                    this.swquality = false;
+                    this.downloadingfile = true;
+                    this.swdownloadfile = false;                         
+
+                    axios.get(Routing.generate('download_file_sie_getbimestre', {codsie: this.codsie, yearSelected: this.yearSelected}))
+                    .then(response => {
+                        this.swsearch = false;
+                        if (response.status == 200) {
+                            this.swerror = response.data.swerror;                            
+                            this.message = response.data.message;
+                            this.swmessage = response.data.swerror;
+                            this.swquality = response.data.swquality;
+                            this.DBoperativos = response.data.bimestre;
+                            this.DBobservationQA = response.data.arrObservationQA;
+                            this.downloadingfile = false;
+                            console.log(this.swerror)
+                        }
+                        if (response.status == 202) {
+                        }
+                    })
+                    .catch(error => {
+                        this.swsearch = false
+                    });
+
+                }
+                
+
+            },
+            generateFile(){
+                this.swdownloadfile = false;             
+                this.downloadingfile = true;             
+                this.swmessage = true;
+                this.message = false;
+
+                axios.get(Routing.generate('download_file_sie_build', {codsie: this.codsie, yearSelected: this.yearSelected, operativoSelected: this.operativoSelected}))
+                .then(response => {
+                    this.swsearch = false;
+                    if (response.status == 200) {
+                        this.swdownloadfile = response.data.swdownloadfile;
+                        this.urlreport = response.data.urlreport;                       
+                        this.downloadingfile = false;
+                        this.codsieId = response.data.institucioneducativaId;
+                        this.nameSie = response.data.institucioneducativaName;
+                        this.message = response.data.message;
+                        this.swmessage = response.data.swdownload;
+                    }
+                    if (response.status == 202) {
+                    }
+                })
+                .catch(error => {
+                    this.swsearch = false
+                });
+
+            },
+
+        }
+    });
+
+
+    </script>
+{%endblock%}
+

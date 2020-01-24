@@ -21,7 +21,7 @@
     <!--/ End page header -->
     <div class="body-content animated fadeIn">
         
-        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Personal Administrativo', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Personas encontradas'} %}
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Personal Docente', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Personas encontradas'} %}
 
         <div class="row">
             <div class="col-lg-12">
@@ -49,15 +49,15 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ persona.personaCarnet }}</td>
-                                                <td>{{ persona.personaComplemento }}</td>
-                                                <td>{{ persona.personaPaterno }}</td>
-                                                <td>{{ persona.personaMaterno }}</td>
-                                                <td>{{ persona.personaNombre }}</td>
-                                                <td>{{ persona.personaFechaNac|date('d-m-Y') }}</td>
+                                                <td><span class="label label-success">Nuevo</span> {{ persona.carnet }}</td>
+                                                <td>{{ persona.complemento }}</td>
+                                                <td>{{ persona.paterno }}</td>
+                                                <td>{{ persona.materno }}</td>
+                                                <td>{{ persona.nombre }}</td>
+                                                <td>{{ persona.fechaNacimiento|date('d-m-Y') }}</td>
                                                 <td>
-                                                    <form action="{{path('herramienta_info_personal_adm_new')}}" method="post" style="display:inline-block">
-                                                        <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.personaId}}">
+                                                    <form action="{{path('herramienta_info_maestro_new')}}" method="post" style="display:inline-block">
+                                                        <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.id}}">
                                                         <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
                                                         <input type="hidden" name="form[gestion]" id="form_gestion" value="{{gestion}}">
                                                         <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Registrar</button>
@@ -72,55 +72,10 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     No se encontraron Personas registradas con el número de carnet y complemento ingresados. Debe registrar a la persona (la información será validada por SEGIP).
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4 col-md-offset-2">
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h4>Formulario de registro</h4>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <div id="formVerificar">
-                                                <div class="panel-body">
-                                                    {% include 'SieHerramientaBundle:InfoPersonalAdm:formulario_persona.html.twig' with { 'data': data, 'form_verificar': form_verificar, 'institucion': institucion.id, 'gestion': gestion} %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4" id="resultado"></div>
-                                </div>
                             {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div> 
-{% endblock %}
-{% block javascripts %}
-	{{parent()}}
-	<script>
-        function verificarPersona(){
-            var formData = $('#formVerify').serialize();
-            $.ajax({
-                type: 'post',
-                url: Routing.generate('herramienta_info_personal_adm_segip_verificar_persona'),
-                data: formData,
-                beforeSend: function () {
-                    $("#alerta1").hide();
-                    $("#resultado").empty();
-                    $("#resultado").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading.gif')}}'></div>");
-                },
-                success: function (data) {
-                    $("#resultado").empty();
-                    $("#resultado").append(data);
-                },
-                error: function(data){
-                    $("#resultado").empty();
-                    $("#img-loading").css('display','none');
-                    $("#resultado").append("<div class='alert alert-danger'>Ocurrió un error interno.</div>");
-                }
-            });
-        }
-	</script>
 {% endblock %}

@@ -277,7 +277,7 @@ class InfoPersonalAdmMigrarController extends Controller {
         $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
         
         foreach ($maestrosArray as $key => $maestro_inscripcion) {
-            //Registrar maestro_inscriocion gestión actual
+            //Registrar maestro_inscripcion gestión actual
             $persona_verificar = $em->getRepository('SieAppWebBundle:Persona')->findOneById($key);
             $q = $em->createQuery('select a from SieAppWebBundle:MaestroInscripcion a where a.persona = :persona and a.gestionTipo = :gestion and a.cargoTipo <> :cargo and a.institucioneducativa = :sie')
                 ->setParameter('persona', $persona_verificar->getId())
