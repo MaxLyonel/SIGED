@@ -36,12 +36,11 @@ class EstudianteNotasPrimariaController extends Controller {
     }
 
     public function indexAction(Request $request){
-
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
         $data = $this->getNotas($infoUe, $infoStudent);
         //dump($this->session->get('ie_per_estado'));
-        //die;º
+        //die;
         return $this->render('SieHerramientaAlternativaBundle:EstudianteNotasPrimaria:notasSemestreActual.html.twig',$data);
     }
 
@@ -440,9 +439,6 @@ class EstudianteNotasPrimariaController extends Controller {
                 }
             }
 
-            // Reiniciamos el id seq de la tabla estudainte nota
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
-
             // Registro y/o modificacion de notas
             for($i=0;$i<count($idEstudianteNota);$i++) {
 
@@ -455,6 +451,7 @@ class EstudianteNotasPrimariaController extends Controller {
                     $estAsignatura->setEstudianteasignaturaEstado($em->getRepository('SieAppWebBundle:EstudianteasignaturaEstado')->find($nuevoEstado));
                     $em->flush($estAsignatura);
                 }else{
+                    // PARA GESTIONES PASADAS A 2016  
                     if($idNotaTipo[$i] == 22 or $idNotaTipo[$i] == 26){
                         $estAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]);
                         if($notas[$i]==0){ $nuevoEstado = 3; } // RETIRADO
@@ -490,11 +487,7 @@ class EstudianteNotasPrimariaController extends Controller {
             }
         }
 
-        // REGISTRO DE NOTAS CUALITATIVAS
-        // Reiniciamos el id seq de la tabla estudainte nota
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');")->execute();
-
-        // Registro y/o modificacion de notas
+        // REGISTRO Y/O MODIFICACION DE NOTAS
         for($i=0;$i<count($idEstudianteNotaCualitativa);$i++) {
 
             if($idEstudianteNotaCualitativa[$i] == 'nuevo'){

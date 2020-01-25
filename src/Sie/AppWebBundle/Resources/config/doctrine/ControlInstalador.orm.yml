@@ -31,6 +31,22 @@ Sie\AppWebBundle\Entity\ControlInstalador:
             type: boolean
             nullable: true
             comment: ''
+        detalle:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        createdAt:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: created_at
+        updatedAt:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: updated_at
     manyToOne:
         gestionTipo:
             targetEntity: GestionTipo
