@@ -174,7 +174,7 @@
                                     <form action="{{path('history_new_inscription_index')}}" method="post" class="navbar-form">
                                         <div class="form-group has-feedback">
                                             <input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">
-                                            {#<input type="text" class="form-control typeahead rounded" name="form[Inputrude]" id="form_Inputrude" placeholder="¡Busqueda de rude en el presente periodo!">#}
+                                            <input type="hidden" id="form_tipo" class="form-control" name="form[tipo]" value="0">                                            
                                             <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
                                         </div>
                                     </form>
