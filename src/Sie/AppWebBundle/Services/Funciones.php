@@ -1764,4 +1764,26 @@ class Funciones {
 
         return $sextoCerrado;
     }
+
+    public function lookforRudesbyDataStudent($data){
+
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('e')
+                ->where('e.paterno = :paterno')
+                ->andwhere('e.materno = :materno')
+                ->andwhere('e.nombre = :nombre')
+                ->setParameter('paterno', $data['paterno'])
+                ->setParameter('materno', $data['materno'])
+                ->setParameter('nombre', $data['nombre'])
+                // ->orderBy('iec.gestionTipo', 'ASC')
+                // ->addorderBy('ei.fechaInscripcion', 'ASC')
+                ->getQuery();
+        
+            $resultQuery =  $query->getResult();
+            dump($resultQuery);
+            die;
+            return $resultQuery;
+        
+    }
 }
