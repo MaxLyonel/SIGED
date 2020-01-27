@@ -91,7 +91,7 @@
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
-                        <div class="panel-body panel-primary">
+                        <div class="panel-body panel-teal">
                             <div class="pull-right">
                                 {% if maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false)) %}
                                     <a href="{{path('herramienta_especial_info_maestro_find')}}" class="btn btn-teal btn-md" style="display:inline-block" id="nuevoA" name="nuevoA"><i class="fa fa-user"></i> Nueva/o Maestra/o</a>
@@ -126,7 +126,7 @@
                             {% endif %}
                             {% if maestro is not empty %}
                                 <div id="no-more-tables">
-                                    <table class="table table-bordered table-primary">
+                                    <table class="table table-bordered table-default">
                                         <thead>
                                             <tr>
                                                 <th>No.</th>

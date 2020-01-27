@@ -13,4 +13,4 @@ consolidation_sie_checkit_web:
     
 consolidation_sie_find:
     path:    /find
-    defaults: { _controller: SieRegularBundle:ConsolidationSie:find }         
+    defaults: { _controller: SieRegularBundle:ConsolidationSie:find }
