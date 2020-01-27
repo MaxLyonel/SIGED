@@ -25,7 +25,7 @@
       </div>
         <div class="row">
           {#<div class="col-md-4">
-                <a class="btn btn-block btn-facebook" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
+                <a class="btn btn-block btn-primary" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
                   <i class="fa fa-download"></i> Listado de Estudiantes del Curso
                 </a>
           </div>
@@ -58,14 +58,14 @@
 
                     </div>
 
-                    <table class="table table-bordered table-hover cf">
+                    <table class="table table-teal table-bordered table-hover cf">
                         <tr>
 
                         <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
-                        <td align="center" class="warning" colspan="3">Estudiantes Inscritos</br>
+                        <td class="bg-teal text-center" colspan="3">Estudiantes Inscritos<br />
                             {{gradoname}} - {{paraleloname}}
                         </td>
-                        <td>Opciones</td>
+                        <td class="bg-default text-center">Opciones</td>
 
                         </tr>
                         {#init the array info student #}
@@ -93,18 +93,18 @@
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
 
-                                <td>
+                                <td class="text-center">
                                     {# {% if 1==1 %} #}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                        <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
+                                        <button type="button" class="btn btn-circle btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
                                             <i class="fa fa-list"></i>
                                         </button>
                                     </div>
                                     {% endif %}
                                     {% if onlyview == false and gestion == app.session.get('currentyear') %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
-                                        <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
+                                        <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>

@@ -1300,7 +1300,7 @@ body.page-footer-fixed #page-content .footer-content {
 }
 
 .navbar-info {
-  background-color: #8A0808;
+  background-color: #9FC2CC;
   color: #FFFFFF;
 }
 .navbar-info:before {
@@ -1365,14 +1365,14 @@ body.page-footer-fixed #page-content .footer-content {
   color: #FFFFFF;
 }
 .navbar-info .navbar-form input {
-  border: 1px solid #8A0808 !important;
+  border: 1px solid #9FC2CC !important;
 }
 .navbar-info .navbar-form input:focus, .navbar-info .navbar-form input:active {
-  border: 1px solid #8A0808 !important;
+  border: 1px solid #9FC2CC !important;
 }
 .navbar-info .navbar-form .form-group .btn {
-  background-color: #8A0808;
-  border: 1px solid #8A0808;
+  background-color: #9FC2CC;
+  border: 1px solid #9FC2CC;
 }
 
 .navbar-warning {
@@ -2700,7 +2700,7 @@ body.page-footer-fixed #page-content .footer-content {
   bottom: 6px;
 }
 .sidebar-info > .sidebar-menu > li.sidebar-category {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-info > .sidebar-menu > li > a:hover .text, .sidebar-info > .sidebar-menu > li > a:hover .icon > i {
   color: #FFFFFF;
@@ -2709,14 +2709,14 @@ body.page-footer-fixed #page-content .footer-content {
   color: #ffffff;
 }
 .sidebar-info > .sidebar-menu > li > a > .count {
-  background-color: #8A0808;
+  background-color: #9FC2CC;
   color: #FFFFFF;
 }
 .sidebar-info > .sidebar-menu > li > a > span {
   color: #FFFFFF;
 }
 .sidebar-info > .sidebar-menu > li.active {
-  background-color: #8A0808 !important;
+  background-color: #9FC2CC !important;
 }
 .sidebar-info > .sidebar-menu > li.active > a > .icon {
   text-shadow: none !important;
@@ -2731,13 +2731,13 @@ body.page-footer-fixed #page-content .footer-content {
   background-color: #36c6e3;
 }
 .sidebar-info > .sidebar-menu > li > ul > li:after {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-info > .sidebar-menu > li > ul > li a {
   color: #FFFFFF;
 }
 .sidebar-info > .sidebar-menu > li > ul > li a:before {
-  color: #b40404 !important;
+  color: #557A80 !important;
 }
 .sidebar-info > .sidebar-menu > li > ul > li a:hover:before {
   color: #FFFFFF !important;
@@ -2746,7 +2746,7 @@ body.page-footer-fixed #page-content .footer-content {
   color: #FFFFFF;
 }
 .sidebar-info > .sidebar-menu > li > ul > li.active a:before {
-  color: #8A0808;
+  color: #9FC2CC;
 }
 .sidebar-info > .sidebar-menu > li > ul > li ul {
   background-color: #56cfe7;
@@ -2755,13 +2755,13 @@ body.page-footer-fixed #page-content .footer-content {
   color: #FFFFFF !important;
 }
 .sidebar-info > .sidebar-menu li.sidebar-category {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-info > .sidebar-content {
-  border-bottom: 2px solid #8A0808;
+  border-bottom: 2px solid #9FC2CC;
 }
 .sidebar-info > .sidebar-content img, .sidebar-info > .sidebar-content .online {
-  border: 2px solid #8A0808 !important;
+  border: 2px solid #9FC2CC !important;
 }
 .sidebar-info > .sidebar-content .media-heading span {
   color: #FFFFFF;
@@ -2773,7 +2773,7 @@ body.page-footer-fixed #page-content .footer-content {
   background-color: #72a53b !important;
 }
 .sidebar-info > .sidebar-footer {
-  background-color: #b40404;
+  background-color: #557A80;
 }
 .sidebar-info > .sidebar-footer a {
   color: #FFFFFF;
@@ -2785,14 +2785,14 @@ body.page-footer-fixed #page-content .footer-content {
   background-color: #90e0ef !important;
 }
 .sidebar-info.sidebar-box .sidebar-menu > li > a > .icon:after, .sidebar-info.sidebar-rounded .sidebar-menu > li > a > .icon:after, .sidebar-info.sidebar-circle .sidebar-menu > li > a > .icon:after {
-  border: 1px solid #b40404;
+  border: 1px solid #557A80;
 }
 .sidebar-info.sidebar-box .sidebar-menu > li > a > .icon i, .sidebar-info.sidebar-rounded .sidebar-menu > li > a > .icon i, .sidebar-info.sidebar-circle .sidebar-menu > li > a > .icon i {
-  border: 2px solid #b40404;
-  background-color: #8A0808;
+  border: 2px solid #557A80;
+  background-color: #9FC2CC;
 }
 .sidebar-info.sidebar-box .sidebar-menu > li > ul:after, .sidebar-info.sidebar-rounded .sidebar-menu > li > ul:after, .sidebar-info.sidebar-circle .sidebar-menu > li > ul:after {
-  border-left: 2px solid #8A0808 !important;
+  border-left: 2px solid #9FC2CC !important;
 }
 .sidebar-info.sidebar-box .sidebar-menu > li > ul > li:after, .sidebar-info.sidebar-rounded .sidebar-menu > li > ul > li:after, .sidebar-info.sidebar-circle .sidebar-menu > li > ul > li:after {
   z-index: 1;
@@ -2807,9 +2807,9 @@ body.page-footer-fixed #page-content .footer-content {
   -webkit-transition: all 0.5s ease-in-out;
   -webkit-transition-delay: 0s;
   transition: all 0.5s ease-in-out 0s;
-  -moz-box-shadow: 0 0 0 2px #8A0808;
-  -webkit-box-shadow: 0 0 0 2px #8A0808;
-  box-shadow: 0 0 0 2px #8A0808;
+  -moz-box-shadow: 0 0 0 2px #9FC2CC;
+  -webkit-box-shadow: 0 0 0 2px #9FC2CC;
+  box-shadow: 0 0 0 2px #9FC2CC;
 }
 .sidebar-info.sidebar-box .sidebar-menu > li > ul > li a:before, .sidebar-info.sidebar-rounded .sidebar-menu > li > ul > li a:before, .sidebar-info.sidebar-circle .sidebar-menu > li > ul > li a:before {
   content: "\2014\00a0";
@@ -2820,19 +2820,19 @@ body.page-footer-fixed #page-content .footer-content {
 #sidebar-left .sidebar-ale
 */
 .sidebar-ale {
-  background-color: #8a0808 !important;
+  background-color: #9FC2CC !important;
 }
 .sidebar-ale:after {
-  background-color: #8a0808 !important;
+  background-color: #9FC2CC !important;
 }
 .sidebar-ale > .sidebar-menu > li:hover {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li:hover.submenu > ul > li:hover a {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li:hover.submenu > ul > li > ul {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li:first-child > a > .icon:after {
   top: -1px;
@@ -2841,7 +2841,7 @@ body.page-footer-fixed #page-content .footer-content {
   bottom: 6px;
 }
 .sidebar-ale > .sidebar-menu > li.sidebar-category {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li > a:hover .text, .sidebar-ale > .sidebar-menu > li > a:hover .icon > i {
   color: #FFFFFF;
@@ -2850,14 +2850,14 @@ body.page-footer-fixed #page-content .footer-content {
   color: #ffffff;
 }
 .sidebar-ale > .sidebar-menu > li > a > .count {
-  background-color: #b40404;
+  background-color: #557A80;
   color: #FFFFFF;
 }
 .sidebar-ale > .sidebar-menu > li > a > span {
   color: #FFFFFF;
 }
 .sidebar-ale > .sidebar-menu > li.active {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li.active > a > .icon {
   text-shadow: none !important;
@@ -2869,16 +2869,16 @@ body.page-footer-fixed #page-content .footer-content {
   color: #FFFFFF;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li {
-  background-color: #b40404;
+  background-color: #557A80;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li:after {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li a {
   color: #FFFFFF;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li a:before {
-  color: #b40404 !important;
+  color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li a:hover:before {
   color: #FFFFFF !important;
@@ -2887,22 +2887,22 @@ body.page-footer-fixed #page-content .footer-content {
   color: #FFFFFF;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li.active a:before {
-  color: #b40404;
+  color: #557A80;
 }
 .sidebar-ale > .sidebar-menu > li > ul > li ul {
-  background-color: #b40404;
+  background-color: #557A80;
 }
 .sidebar-ale > .sidebar-menu li {
   color: #FFFFFF !important;
 }
 .sidebar-ale > .sidebar-menu li.sidebar-category {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-content {
-  border-bottom: 2px solid #8A0808;
+  border-bottom: 2px solid #9FC2CC;
 }
 .sidebar-ale > .sidebar-content img, .sidebar-ale > .sidebar-content .online {
-  border: 2px solid #b40404 !important;
+  border: 2px solid #557A80 !important;
 }
 .sidebar-ale > .sidebar-content .media-heading span {
   color: #FFFFFF;
@@ -2911,10 +2911,10 @@ body.page-footer-fixed #page-content .footer-content {
   color: #FFFFFF;
 }
 .sidebar-ale > .sidebar-content .online {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale > .sidebar-footer {
-  background-color: #b40404;
+  background-color: #557A80;
 }
 .sidebar-ale > .sidebar-footer a {
   color: #FFFFFF;
@@ -2923,17 +2923,17 @@ body.page-footer-fixed #page-content .footer-content {
   background-color: #82dced !important;
 }
 .sidebar-ale.sidebar-box .sidebar-menu > li.active > a > .icon i, .sidebar-ale.sidebar-rounded .sidebar-menu > li.active > a > .icon i, .sidebar-ale.sidebar-circle .sidebar-menu > li.active > a > .icon i {
-  background-color: #b40404 !important;
+  background-color: #557A80 !important;
 }
 .sidebar-ale.sidebar-box .sidebar-menu > li > a > .icon:after, .sidebar-ale.sidebar-rounded .sidebar-menu > li > a > .icon:after, .sidebar-ale.sidebar-circle .sidebar-menu > li > a > .icon:after {
-  border: 1px solid #b40404;
+  border: 1px solid #557A80;
 }
 .sidebar-ale.sidebar-box .sidebar-menu > li > a > .icon i, .sidebar-ale.sidebar-rounded .sidebar-menu > li > a > .icon i, .sidebar-ale.sidebar-circle .sidebar-menu > li > a > .icon i {
-  border: 2px solid #b40404;
-  background-color: #8A0808;
+  border: 2px solid #557A80;
+  background-color: #9FC2CC;
 }
 .sidebar-ale.sidebar-box .sidebar-menu > li > ul:after, .sidebar-ale.sidebar-rounded .sidebar-menu > li > ul:after, .sidebar-ale.sidebar-circle .sidebar-menu > li > ul:after {
-  border-left: 2px solid #8A0808 !important;
+  border-left: 2px solid #9FC2CC !important;
 }
 .sidebar-ale.sidebar-box .sidebar-menu > li > ul > li:after, .sidebar-ale.sidebar-rounded .sidebar-menu > li > ul > li:after, .sidebar-ale.sidebar-circle .sidebar-menu > li > ul > li:after {
   z-index: 1;
@@ -2948,9 +2948,9 @@ body.page-footer-fixed #page-content .footer-content {
   -webkit-transition: all 0.5s ease-in-out;
   -webkit-transition-delay: 0s;
   transition: all 0.5s ease-in-out 0s;
-  -moz-box-shadow: 0 0 0 2px #8A0808;
-  -webkit-box-shadow: 0 0 0 2px #8A0808;
-  box-shadow: 0 0 0 2px #8A0808;
+  -moz-box-shadow: 0 0 0 2px #9FC2CC;
+  -webkit-box-shadow: 0 0 0 2px #9FC2CC;
+  box-shadow: 0 0 0 2px #9FC2CC;
 }
 .sidebar-ale.sidebar-box .sidebar-menu > li > ul > li a:before, .sidebar-ale.sidebar-rounded .sidebar-menu > li > ul > li a:before, .sidebar-ale.sidebar-circle .sidebar-menu > li > ul > li a:before {
   content: "\2014\00a0";
