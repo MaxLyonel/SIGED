@@ -1767,23 +1767,21 @@ class Funciones {
 
     public function lookforRudesbyDataStudent($data){
 
-        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
-        $query = $entity->createQueryBuilder('e')
-                ->select('e')
-                ->where('e.paterno = :paterno')
-                ->andwhere('e.materno = :materno')
-                ->andwhere('e.nombre = :nombre')
-                ->setParameter('paterno', $data['paterno'])
-                ->setParameter('materno', $data['materno'])
-                ->setParameter('nombre', $data['nombre'])
-                // ->orderBy('iec.gestionTipo', 'ASC')
-                // ->addorderBy('ei.fechaInscripcion', 'ASC')
-                ->getQuery();
         
-            $resultQuery =  $query->getResult();
-            dump($resultQuery);
-            die;
-            return $resultQuery;
+        $query = $this->em->createQueryBuilder('e')
+                ->select('e')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->where('e.paterno like :paterno')
+                ->andWhere('upper(e.materno) like :materno')
+                ->andWhere('upper(e.nombre) like :nombre')
+                ->setParameter('paterno', '%' . mb_strtoupper($data['paterno'], 'utf8') . '%')
+                ->setParameter('materno', '%' . mb_strtoupper($data['materno'], 'utf8') . '%')
+                ->setParameter('nombre', '%' . mb_strtoupper($data['nombre'], 'utf8') . '%')
+                ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;
         
     }
 }

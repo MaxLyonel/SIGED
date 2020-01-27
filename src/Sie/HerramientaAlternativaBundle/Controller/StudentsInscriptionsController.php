@@ -564,17 +564,17 @@ class StudentsInscriptionsController extends Controller {
       $lugarNacTipoId = $request->get('lugarNacTipoId');
       $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
       $localidad = $request->get('localidad');
-      $paterno = $request->get('paterno');
-      $materno = $request->get('materno');
-      $nombre = $request->get('nombre');
+      $paterno = mb_strtoupper($request->get('paterno'), 'utf-8');
+      $materno = mb_strtoupper($request->get('materno'), 'utf-8');
+      $nombre = mb_strtoupper($request->get('nombre'), 'utf-8');
       $fecNac = $request->get('fecNac');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');
-      $complemento = $request->get('complementoval');
+      $complemento = mb_strtoupper($request->get('complementoval'), 'utf-8');
       $iecId = $request->get('iecId');
       $expedidoId = $request->get('expedidoId');
 
-      $casespecial = $request->get('casespecial');
+      $casespecial = ($request->get('casespecial')=='false')?false:true;;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
 
@@ -586,14 +586,14 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         'fecha_nacimiento'=>$fecNac
       );
-      // dump($request);die;
+      
       // get info segip
       $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       // check if the data person is true
       if($answerSegip){
 
         // set parameter to validate inscription
-        $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>($casespecial=='false')?false:true, 'iecId' => $iecId) ;
+        $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
         // get the studnets age
         $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
 
@@ -813,29 +813,30 @@ class StudentsInscriptionsController extends Controller {
       // get the send values 
       $iecId = $request->get('iecId');
       $studentId = $request->get('studentId');
-      $casespecial = ($request->get('casespecial')=='false')?false:true;;
+      $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
       $fecNac = $request->get('fecNac');
-      
+      $arrRudesStudent = array();
       // set parameter to validate inscription
-      $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>($casespecial=='false')?false:true, 'iecId' => $iecId, 'studentId'=>$studentId) ;
-      $arrdataStudent = array(
+      $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial, 'iecId' => $iecId, 'studentId'=>$studentId) ;
+      
+     // get the studnets age
+      $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
+
+      // create db conexion
+      if(!($swyearStudent)){
+        // set data to validate STUDENTS RUDE
+        $arrdataStudent = array(
         'paterno'=>$request->get('paterno'),
         'materno'=>$request->get('materno'),
         'nombre'=>$request->get('nombre'),
-      );
-      $swdoubleRude = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
-
-     // get the studnets age
-      $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
-dump($request);die;
-      // create db conexion
-      if(!($swyearStudent)){
+        );
+        
+        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
+        
+        if(sizeof( $objRudesStudent)==1){
           try {
-
-
-
             // get info about the students inscriptions
             $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId); 
             // check if the student has an inscription on this course
@@ -895,7 +896,28 @@ dump($request);die;
             echo 'error in save the data inscription';
             $em->getConnection()->rollback();
             
+          }          
+
+        }else{
+
+          foreach ($objRudesStudent as $value) {
+            $arrRudesStudent[]=array(
+                                  'ci'=>$value->getCarnetIdentidad(),
+                                  'complemento'=>$value->getComplemento(),
+                                  'codigorude'=>$value->getCodigoRude(),
+                                  'paterno'=>$value->getPaterno(),
+                                  'materno'=>$value->getMaterno(),
+                                  'nombre'=>$value->getNombre(),
+                                  'fnac'=>$value->getFechaNacimiento()->format('d-m-Y'),
+                                  );
           }
+
+          $status = 'error';
+          $code = 400;
+          $message = "Estudiante Observado, tiene mas de un Código RUDE";
+          $swcreatestudent = false;  
+
+        }
 
       }else{
           $status = 'error';
@@ -908,7 +930,8 @@ dump($request);die;
         'status'          => $status,
         'code'            => $code,
         'message'         => $message,
-        'swcreatestudent' => $swcreatestudent,      
+        'swcreatestudent' => $swcreatestudent,    
+        'arrRudesStudent' => $arrRudesStudent,    
       );
       
       $response->setStatusCode(200);
@@ -971,6 +994,7 @@ dump($request);die;
     }
 
     private function validateYearsStudent($arrStudent){
+      
       // create db conexion
       $em = $this->getDoctrine()->getManager();
       $validateYear = false;
