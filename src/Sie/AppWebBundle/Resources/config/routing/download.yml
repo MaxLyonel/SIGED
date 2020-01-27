@@ -1,3 +1,7 @@
+download_estudiantes_nivelacion:
+    path: /listEstudiantesNivelacion/{sie}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listadoEstudiantesNivelacion }
+
 download_tramite_modificacion_calificaciones:
     path: /tramiteModificacionCalificaciones/{idTramite}
     defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificaciones }

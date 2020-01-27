@@ -1338,5 +1338,17 @@ class DownloadController extends Controller {
 
     }    
 
+    public function listadoEstudiantesNivelacionAction(Request $request, $sie, $gestion){
 
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_est_nivelacion_' . $sie . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinCentralizadorNivelacionBTH_TTE_v1_ma.rptdesign&codue=' . $sie . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }    
 }
