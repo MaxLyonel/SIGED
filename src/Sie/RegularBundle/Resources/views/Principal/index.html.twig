@@ -298,12 +298,12 @@
                             {% for instalador in instalador %}
                             {%if (loop.index ==1)%}
                                    <div>
-                                        <p><a href="{{ path('download_file_install_download',{'id':instalador.id} )}}" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i>Descargar {{instalador.detalle}}</a></p>
+                                        <p><a href="{{ path('data_transfer_installer_download',{'id':instalador.id} )}}" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i>Descargar {{instalador.detalle}}</a></p>
                                     </div>
                                    
                              {% else %}
                                      <div>
-                                        <p><a href="{{ path('download_file_install_download',{'id':instalador.id} )}}" targer="_blank" class="btn btn-block btn-danger"><i class="fa fa-download fa-fw"></i>Descargar {{instalador.detalle}}</a></p>
+                                        <p><a href="{{ path('data_transfer_installer_download',{'id':instalador.id} )}}" targer="_blank" class="btn btn-block btn-danger"><i class="fa fa-download fa-fw"></i>Descargar {{instalador.detalle}}</a></p>
                                     </div>
                             {% endif %}
                                
