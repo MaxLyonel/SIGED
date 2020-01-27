@@ -433,7 +433,6 @@
                             {% else %}
                                 <img src="{{asset('img/photo.png')}}" class="img-circle" alt="IMG" height="150" width="150">
                             {% endif %}
-                            <i class="online"></i>
                         </a>
                         <div class="media-body">
                             <h4 class="media-heading">Hola, <span>{{app.session.get('name')}}</span></h4>
@@ -545,7 +544,7 @@
 
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -555,7 +554,7 @@
                                 <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
-                        </li>
+                        </li> #}
                     {% endif %}
                     {% if (app.session.get('roluser') == 20) %} {#NACIONAL INVITADO#}
                         <li class="submenu">
@@ -623,7 +622,7 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -633,7 +632,7 @@
                                 <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
-                        </li>
+                        </li> #}
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -698,7 +697,7 @@
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -711,7 +710,7 @@
                                 <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
 
                             </ul>
-                        </li>
+                        </li> #}
                     {% endif %}
                     {% if app.session.get('roluser') == 2 %}{#MAESTRO#}
                         <li class="submenu">
