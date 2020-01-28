@@ -1,18 +1,14 @@
-
 <div class="row">
     <div class="col-lg-12">
-        <div class="portlet portlet-blue">
-            <div class="portlet-heading">
-                <div class="portlet-title">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">
                     <h4>Información Estudiante</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
                 </div>
                 <div class="clearfix"></div>
             </div>
             <div id="pinfoestudiante" class="panel-collapse collapse in">
-                <div class="portlet-body">
+                <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -48,59 +44,17 @@
 
 <div class="row">
     <div class="col-lg-12">
-
-        <div class="portlet portlet-default">
-            <div class="portlet-heading">
-                <div class="portlet-title">
-                    <h4>Historial de Inscripciones</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-
-            <div id="omitidos" class="panel-collapse collapse in">
-                <div class="portlet-body">
-
-
-
-                    <div id="no-more-tables">
-                        <table class="table table-bordered table-hover cf">
-                            <thead class="cf">
-                                <tr class="info">
-                                    <th class="text-center"><small>Gestión</small></th>
-                                    <th class="text-center"><small>SIE</small></th>
-                                    <th class="text-center"><small>Unidad Educativa</small></th>
-                                    <th class="text-center"><small>Nivel</small></th>
-                                    <th class="text-center"><small>Grado-Semestre (alt)</small></th>
-                                    <th class="text-center"><small>Paralelo</small></th>
-                                    <th class="text-center"><small>Turno</small></th>
-                                    <th class="text-center"><small>Estado Matricula</small></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for data in dataInscription %}
-                                    <tr>
-                                        <td data-title="Rude"><small>{{data.gestion_tipo_id}}</small></td>   
-                                        <td data-title="Rude"><small>{{data.eid}}</small></td>
-                                        <td data-title="Rude"><small>{{data.institucioneducativa_titulo}}</small></td>
-                                        <td data-title="Nombre"><small>{{ data.nivel|e }} </small></td>
-                                        <td data-title="Paterno"><small>{{data.grado|e}}</small></td>
-                                        <td data-title="Materno"><small>{{data.paralelo|e}}</small></td>
-                                        <td data-title="CI"><small>{{data.turno}} </small></td>
-                                        <td data-title="Est. Matricula" class="text-center"><small>{{data.em}}</small></td>
-                                    </tr>
-                                {%endfor%}
-                            </tbody>
-                        </table>
-                    </div>
-
-
-                </div>
-            </div>
-
-        </div>
+        {% if dataInscriptionR %}
+            {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR, 'visible': visible} %}
+        {% endif %}
+        {% if dataInscriptionA %}
+            {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA, 'visible': visible} %}
+        {% endif %}
+        {% if dataInscriptionE %}
+            {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE, 'visible': visible} %}
+        {% endif %}
+        {% if dataInscriptionP %}
+            {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP, 'visible': visible} %}
+        {% endif %}
     </div>
 </div>
-

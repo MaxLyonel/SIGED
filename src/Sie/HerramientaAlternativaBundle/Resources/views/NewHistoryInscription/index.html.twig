@@ -3,7 +3,7 @@
     {{parent()}}
     <style>
         .higherWider {
-            width:800px;
+            width:1024px;
             margin-top:100px;
         }
     </style>
@@ -29,91 +29,112 @@
     </div><!-- /.header-content -->
     <!--/ End page header -->
 
-    <div class="body-content animated fadeIn">
-        <div class="container-fluid">
-            <div class="row">
-
-                <div class="col-md-12">
-                    {% for flashMessage in app.session.flashbag.get('notihistory') %}
-                        <div class="alert alert-danger alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong>¡Advertencia!</strong> {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-                    {% for flashMessage in app.session.flashbag.get('goodhistory') %}
-                        <div class="alert alert-success alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong>Bien!</strong> {{ flashMessage }}
-                        </div>
-                    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notihistory') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class="fa fa-fw fa-warning"></i></strong> {{ flashMessage }}
                 </div>
-            </div>
-                
-            <div class="row">
-                <div class="col-xs-12 col-lg-12">
-                    <div class="panel panel-icon panel-teal">
-                        <div class="panel-heading">
-                            <i class="fa fa-search"></i> Inserte RUDE para ver su historial
-                        </div>
-                        <div class="panel-body">
-
-                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
-                            <div class="form-group">
-                                <label for="form_codigoRudeHistory" class="col-sm-2 control-label">
-                                    {{form_label(form.codigoRudeHistory)}}
-                                </label>
-                                <div class="col-sm-10">
-                                    {{ form_widget(form.codigoRudeHistory) }}
-                                    <div class="help-block with-errors"></div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
-
-                                    {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
-                                </div>
-                            </div>
-                            {{form_end(form)}}
-                        </div>
-                    </div>
-
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodhistory') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class="fa fa-fw fa-check-circle"></i></strong> {{ flashMessage }}
                 </div>
-            </div>
-                
-            <!--start of result of search history  -->
-            {% if sw  %}
-                {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:info_estudiante.html.twig' with {'datastudent': datastudent} %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-teal">
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="tabs-accordions.html#buscar1">BÚSQUEDA POR CÓDIGO RUDE</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#buscar2">BÚSQUEDA POR CARNET DE IDENTIDAD</a></li>
+                </ul>
+    
+                <div id="myTabContent" class="tab-content">
+                    <div id="buscar1" class="tab-pane fade in active">
+                        <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
-                                <div class="panel-title">
-                                    <h4>Historial de Inscripciones</h4>
-                                </div>
-                                <div class="clearfix"></div>
+                                <i class="fa fa-search"></i> Búsqueda por Código RUDE
                             </div>
                             <div class="panel-body">
-                                {% if dataInscriptionA %}
-                                    {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA} %}
-                                {% endif %}
-                                {% if dataInscriptionR %}
-                                    {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR} %}
-                                {% endif %}
-                                {% if dataInscriptionE %}
-                                    {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
-                                {% endif %}
-                                {% if dataInscriptionP %}
-                                    {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP} %}
-                                {% endif %}
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{form_label(form.codigoRudeHistory)}}
+                                            {{form_widget(form.codigoRudeHistory)}}
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <input id="form_tipo" name="form[tipo]" type="hidden" value="0">
+                                        <div class="col-md-12">{{form_widget(form.buscar0)}}</div>
+                                    </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="buscar2" class="tab-pane fade">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Búsqueda por Carnet de Identidad
+                            </div>
+                            <div class="panel-body">
+                                {{form_start(form1, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{form_label(form1.carnetIdentidad)}}
+                                        {{form_widget(form1.carnetIdentidad)}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form_label(form1.complemento)}}
+                                        {{form_widget(form1.complemento)}}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <input id="form_tipo" name="form[tipo]" type="hidden" value="1">
+                                    <div class="col-md-12">{{form_widget(form1.buscar1)}}</div>
+                                </div>
+                                {{form_end(form1)}}
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endif %}
-            <!-- en of the result of search history -->
+            </div>
         </div>
+        {% if sw  %}
+            {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:info_estudiante.html.twig' with {'datastudent': datastudent} %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-teal">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <h4>Historial de Inscripciones</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            {% if dataInscriptionA %}
+                                {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA} %}
+                            {% endif %}
+                            {% if dataInscriptionR %}
+                                {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR} %}
+                            {% endif %}
+                            {% if dataInscriptionE %}
+                                {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
+                            {% endif %}
+                            {% if dataInscriptionP %}
+                                {% include 'SieHerramientaAlternativaBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP} %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
     
     <div class="modal modal-flex fade" id="modalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">

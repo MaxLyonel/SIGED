@@ -2,6 +2,7 @@
 
 namespace Sie\RegularBundle\Controller;
 
+use Sie\AppWebBundle\Entity\ControlInstalador;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;

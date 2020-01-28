@@ -1,0 +1,220 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <link href="{{asset('filefile/css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('filefile/css/bootstrap-fileupload.css')}}" rel="stylesheet">
+{% endblock %}
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-upload animated flip"></i> Subir Instalador
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-exchange"></i> Información</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningcons') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successcons') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+        <div class="row">
+
+
+        <div class="col-xs-12 col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-home fa-fw"></i> Información del Instalador</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <!-- Button Dropdown -->
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="input-append">
+                                            <form class="form" method ="POST"  enctype="multipart/form-data" action="{{path('data_transfer_installer_upload')}}">
+
+                                                <table class="table table-bordered table-hover cf" border=''>
+                                                    <tr>
+                                                        <td rowspan='1' align='center'>
+                                                            <h4 class='text-blue'> Seleccione Archivo:</h4>
+                                                        </td>
+
+                                                        <td class='info'>
+                                                        <p class='text-green'>Nombre del Instalador</p>
+                                                         <input type="text" name="namefile" required="required"/>
+
+                                                           <br>
+                                                         <p class='text-green'>Detalle</p>
+                                                         <input type="text" name="detail" required="required"/>
+
+                                                           <br>
+                                                          
+                                                          
+                                                            <i class='fa fa-upload'></i> <div class="uneditable-input span6">
+                                                                <i class="icon-file fileupload-exists"></i> 
+                                                                <span class="fileupload-preview"></span>
+                                                            </div>
+                                                            <span class="btn btn-file">
+                                                                <span class="fileupload-new text-danger" style="background-color:lightwhite;font-size: 130%; color: #cc0033"> Subir Instalador</span>
+                                                                <span class="fileupload-exists text-danger">Cambiar</span>
+                                                                <input type="file" name="siefile" required="required"/>
+                                                            </span> 
+                                                         {#   <input type="hidden" name="sie" value="{{sie}}"/> #}
+                                                            <button class="btn btn-primary fileupload-exists" type="submit">Subir</button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="tabla" class="row">
+                                 <div class="col-md-10 col-md-offset-1">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                                <tr>
+                                                    <th>N°</th>
+                                                    <th>Gestión</th>
+                                                    <th>Instalador</th>
+                                                    <th>Detalle</th>
+                                                    <th>Opciones</th>
+                                                </tr>
+
+
+                                        </thead>
+                                        <tbody>
+                                        {% for instalador in instalador %}
+                                            <tr>
+                                                <td data-title="N°">{{ loop.index }}</td>
+                                                {#<td data-title="Carnet">{{ cursocorto.sub_area }}</td>#}
+                                                <td data-title="gestion">{{ instalador.gestion_tipo_id }}</td>
+                                                <td data-title="instalador">{{ instalador.instalador }}</td>
+                                                <td data-title="instalador">{{ instalador.detalle }}</td>
+                                                <td data-title="Opciones">
+                                                {% if (instalador.activo == 'true') %}
+                                                    <button type="button" class="btn btn-success"   onclick="activarInstalador({{instalador.id}})">Habilitado</button>
+                                                    
+                                                {% else %}
+                                                    <button type="button" class="btn btn-danger"   onclick="activarInstalador({{instalador.id}})">No Habilitado</button>
+                                                {% endif %}
+                                                    
+                                                </td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('filefile/js/bootstrap-fileupload.js')}}"></script>
+    <script src="{{asset('filefile/js/bootstrap-fileupload.min.js')}}"></script>
+    <script>
+
+        $('#form_up').click(function () {
+            if ($('#form_upfile').val() == '') {
+                alert('Debe seleccionar un archivo...');
+                return false;
+            }
+            //alert($('#form_upfile').val());return false;
+            $.ajax({
+               // url: "{{ path('consolidation_checkit_web') }}",
+               // type: "POST",
+              //  data: {"data": 'krlos'},
+              //  success: function (data) {
+               //     $('#resultloading').html(data.formulario);
+              //  },
+             //   error: function (XMLHttpRequest, textStatus, errorThrown)
+              //  {
+              //      alert('Error: ' + errorThrown);
+             //   }
+            });
+
+        });
+        var activarInstalador= function (id) {
+       
+        $.ajax({
+            type: 'post',
+            url: "{{ path('data_transfer_installer_activate') }}",
+            data:{id:id},
+            beforeSend: function () {
+
+                $("#tabla").empty();
+                $("#tabla").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#tabla').empty();
+                $('#tabla').html(data);
+
+            },
+            complete: function () {
+//                swal.stopLoading();
+//                swal.close();
+//                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+//                    $(".alert").slideUp(1000);
+//                });
+            }
+
+
+        });
+    };
+    </script>
+
+
+{% endblock %}

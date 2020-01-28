@@ -132,6 +132,13 @@ class PrincipalController extends Controller {
         $nacional = $this->ceasstdcierreNalAction();
 
         dump($departamental);dump($nacional);die;*/
+        
+        $em->getConnection()->beginTransaction();
+        $em->getConnection()->commit();
+            
+            $query = $em->getConnection()->prepare('select * from control_instalador ci  where ci.activo = true order by 1 desc ');
+            $query->execute();
+            $instalador= $query->fetchAll();
 
         $departamental = array();
         $nacional = array();
@@ -161,6 +168,7 @@ class PrincipalController extends Controller {
           'entitiesdpto' => $departamental,
           'form' => $this->searchForm()->createView(),
           'rie' => $this->obtieneDatosPrincipal(), //Datos para la pantalla principal de RIE
+          'instalador'=>$instalador,
           //'objObservactionSie' => $objObservactionSie
           'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
         ));

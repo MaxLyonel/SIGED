@@ -21,7 +21,13 @@ class NotasMaestroController extends Controller {
         $this->session = new Session();
     }
 
+    /**
+     * Lista de gestiones en las que trabajo el docente
+     * @param  Request $request [description]
+     * @return array           array de gestiones del docente
+     */
     public function seleccionarGestionAction(Request $request){
+
         $em = $this->getDoctrine()->getManager();
         $gestiones = $em->createQueryBuilder()
                 ->select('distinct(gt)')
@@ -43,6 +49,11 @@ class NotasMaestroController extends Controller {
         return $this->render('SieHerramientaAlternativaBundle:NotasMaestro:seleccionarGestion.html.twig',array('gestiones'=>$arrayGestiones));
     }
 
+    /**
+     * Obtenemos las materias y las ues donde el docente imparte clases en una determinada gestion
+     * @param  Request $request gestion
+     * @return array           lista de asignaturas
+     */
     public function indexAction(Request $request) {
         $gestion = $request->get('gestion');
         $em = $this->getDoctrine()->getManager();
@@ -90,12 +101,13 @@ class NotasMaestroController extends Controller {
                                     sat.acreditacion,
                                     sespt.especialidad,
                                     st.id as sucursal,
-                                    spt.periodoSuperior,
+                                    pet.periodo,
                                     ies.id as idSucursal
                             ')
                             ->from('SieAppWebBundle:Persona','p')
                             ->innerJoin('SieAppWebBundle:MaestroInscripcion','mi','with','mi.persona = p.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal','ies','with','mi.institucioneducativaSucursal = ies.id')
+                            ->innerJoin('SieAppWebBundle:PeriodoTipo','pet','with','ies.periodoTipoId = pet.id')
                             ->innerJoin('SieAppWebBundle:SucursalTipo','st','with','ies.sucursalTipo = st.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro','iecom','with','iecom.maestroInscripcion = mi.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','with','iecom.institucioneducativaCursoOferta = ieco.id')
@@ -113,13 +125,13 @@ class NotasMaestroController extends Controller {
                             ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo','sat','with','sae.superiorAcreditacionTipo = sat.id')
                             ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo','sespt','with','sae.superiorEspecialidadTipo = sespt.id')
                             ->innerJoin('SieAppWebBundle:SuperiorTurnoTipo','stt','with','siea.superiorTurnoTipo = stt.id')
-                            ->innerJoin('SieAppWebBundle:SuperiorPeriodoTipo','spt','with','siep.superiorPeriodoTipo = spt.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite','iest','with','iest.institucioneducativaSucursal = ies.id')
                             ->where('p.id = :idPersona')
                             ->andWhere('gt.id = :idGestion')
                             ->andWhere('iest.tramiteEstado not in (:estados)')
                             ->andWhere('ie.id in (:sies)')
-                            ->orderBy('sat.id','ASC')
+                            ->orderBy('pet.id','ASC')
+                            ->addOrderBy('sat.id','ASC')
                             ->addOrderBy('sespt.id','ASC')
                             ->setParameter('idPersona',$this->session->get('personaId'))
                             ->setParameter('idGestion',$gestion)
@@ -348,19 +360,18 @@ class NotasMaestroController extends Controller {
 
             if(count($notas)>0){
                 for($i=0;$i<count($notas);$i++){
-                    // Acualizamos el estado de la asignatura
-                    if($notas[$i] == 0){ $nuevoEstado = 3; }
-                    if($notas[$i] >= 1 and $notas[$i] <= 50){ $nuevoEstado = 25; }
-                    if($notas[$i] >= 51 and $notas[$i] <= 100){ $nuevoEstado = 5; }                    
+                    // ACUALIZAMOS EL ESTADO DE LA ASIGNATURA
+                    if($notas[$i] == 0){ $nuevoEstado = 3; } // RETIRADO
+                    if($notas[$i] >= 1 and $notas[$i] <= 50){ $nuevoEstado = 25; } // POSTERGADO
+                    if($notas[$i] >= 51 and $notas[$i] <= 100){ $nuevoEstado = 5; } // PROMOVIDO       
 
 
                     $estAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idAsignatura[$i]);
                     $estAsignatura->setEstudianteasignaturaEstado($em->getRepository('SieAppWebBundle:EstudianteasignaturaEstado')->find($nuevoEstado));
                     $em->flush($estAsignatura);
 
-                    // Nuevo Registro
+                    // NUEVO REGISTRO
                     if($idNota[$i] == 'nuevo'){
-                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                         $newNota = new EstudianteNota();
                         $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                         $newNota->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idAsignatura[$i]));
@@ -374,7 +385,7 @@ class NotasMaestroController extends Controller {
                         $em->persist($newNota);
                         $em->flush();
                     }else{
-                        // Modificar Registro
+                        // MODIFICAR REGISTRO
                         $notaUpdate = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($idNota[$i]);
                         if($notaUpdate){
                             $notaUpdate->setNotaCuantitativa($notas[$i]);
@@ -419,6 +430,7 @@ class NotasMaestroController extends Controller {
                     }
                 }
             }
+
             // VERIFICAR SI ES PRIMARIA Y SI EL ESTUDIANTE TIENE LAS 5 NOTAS PARA CALCULAR EL PROMEDIO
             if(count($idInscripcion) > 0){
                 $idCurso = $em->createQueryBuilder()
@@ -430,8 +442,11 @@ class NotasMaestroController extends Controller {
                             ->getQuery()
                             ->getResult()[0];
 
-                $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso['id']);
-                if($primariaNuevo){
+                
+                // ACTUALIZAMOS LOS ESTADOS DE MATRICULA DE TODOS LOS ESTUDIANTES INSCRITOS
+                
+                // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso['id']);
+                // if($primariaNuevo){
                     for ($i=0; $i < count($idInscripcion); $i++) {
 
                         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[$i]);
@@ -467,22 +482,25 @@ class NotasMaestroController extends Controller {
                             }  
 
                             if($contadorCeros == count($notas)){
-                                $nuevoEstado = 3;
+                                $nuevoEstado = 6; //NO INCORPORADO
                             }else{
                                 if($contadorAprobados == count($notas)){
-                                  $nuevoEstado = 5;
+                                    $nuevoEstado = 5; // PROMOVIDO
                                 }else{
-                                  $nuevoEstado = 22;
+                                    if ($contadorCeros > 0) {
+                                        $nuevoEstado = 3; // RETIRADO
+                                    }else{
+                                        $nuevoEstado = 22; // POSTERGADO
+                                    }
                                 }
                             }
 
                             $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
-                            // $em->persist($inscripcion);
                             $em->flush();
 
                         }
                     }
-                }
+                // }
             }
             
 
