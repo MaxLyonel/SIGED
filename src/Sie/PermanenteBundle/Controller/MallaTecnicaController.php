@@ -106,7 +106,10 @@ class MallaTecnicaController extends Controller {
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']." 
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']."
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					
 
     ";
 //        print_r($query);
@@ -129,7 +132,11 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']." ) dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']." 
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true
+                    ) dat
 group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip
     ";
 //        print_r($query);
@@ -161,6 +168,8 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
 					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']." 
+	                and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
 )as nivel
 left join (
 select idsae,idacr
@@ -175,7 +184,11 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']." ) dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$aInfoUeducativa['ueducativaInfoId']['especialidad_id']." 
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true
+                    ) dat
 group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 )as v on v.idacr = nivel.idacreditacion
     ";
@@ -670,7 +683,8 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
 					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$form['idesp']."
-
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
     ";
 //        print_r($query);
 //        die;
@@ -690,7 +704,10 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp'].") dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']."
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true) dat
 group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip
     ";
 //        print_r($query);
@@ -712,6 +729,8 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
 					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$form['idesp']." 
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
 )as nivel
 left join (
 select idsae,idacr
@@ -726,7 +745,10 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$form['idesp']." ) dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$form['idesp']."
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true) dat
 group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 )as v on v.idacr = nivel.idacreditacion
     ";
@@ -909,7 +931,10 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp'].") dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']."
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true) dat
 group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip
     ";
 //        print_r($query);
@@ -930,7 +955,9 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']." 
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']."
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."' 
 )as nivel
 left join (
 select idsae,idacr
@@ -945,7 +972,10 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']." ) dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']." 
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true) dat
 group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 )as v on v.idacr = nivel.idacreditacion
     ";
@@ -1020,7 +1050,11 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$idesp.") dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$idesp."
+                     and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true
+                    ) dat
 group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip
     ";
 //        print_r($query);
@@ -1042,6 +1076,9 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 							--	inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 							--		inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
 					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$idesp."
+                    and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+)as nivel
 )as nivel
 left join (
 select idsae,idacr
@@ -1056,7 +1093,10 @@ from superior_acreditacion_especialidad sae
 							inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
 								left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
 									left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
-					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$idesp.") dat
+					where sat.id in (1,20,32) and sfat.id=40 and sest.id=".$idesp."
+                     and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and smt.esvigente =true) dat
 group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 )as v on v.idacr = nivel.idacreditacion
     ";
