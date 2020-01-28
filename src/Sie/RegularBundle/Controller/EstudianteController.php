@@ -46,7 +46,7 @@ class EstudianteController extends Controller {
             ->setAction($this->generateUrl('student_result'))
             ->add('paterno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
             ->add('materno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
-            ->add('nombre', 'text', array('required' => true, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+            ->add('nombre', 'text', array('required' => false, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
             ->add('buscar0', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
         return $form;
