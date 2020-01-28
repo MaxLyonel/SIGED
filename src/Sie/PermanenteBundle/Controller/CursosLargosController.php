@@ -2532,6 +2532,7 @@ class CursosLargosController extends Controller {
 
         try {
             // dump($idinscripcion);
+            //cambiar para el nevio rude
             $socioeconomico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneBy(array('estudianteInscripcion' => $idinscripcion));
 // dump($socioeconomico);
 // die;
@@ -2682,10 +2683,11 @@ class CursosLargosController extends Controller {
         $infoUe = $request->get('infoUe');
 
         $aInfoUeducativa = array();//unserialize($infoUe);
-      //  dump($aInfoUeducativa);die;
+       // dump($request);die;
         $dataUe=array();//(unserialize($infoUe));
         $idcurso = $request->get('infoUe');
         $aInfoUeducativa = $this->getCourseInfo($infoUe);
+           //dump($aInfoUeducativa);die;
         $acreditacionid = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['acreditacionid'];
         //dump($acreditacionid);die;
         $exist=true;
@@ -2739,7 +2741,7 @@ class CursosLargosController extends Controller {
             $querya->execute();
 
             $cursoLargo= $querya->fetchAll();
-            // dump($objStudents);die;
+             //dump($objStudents);die;
 
 
             if (count($objStudents) > 0){
@@ -2816,6 +2818,7 @@ class CursosLargosController extends Controller {
                         $em->flush();
                     }else{
                         if($aprueba && $apbhoras){
+                           
                             $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $value['idestins']));
                             $estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(76));
                             //dump($estudianteInscripcion);die;
