@@ -360,7 +360,7 @@ class RegistroInstitucionEducativaController extends Controller {
     		$entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
     		$entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
             $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
-            $entity->setFechaCreacion(new \DateTime('now'));
+            $entity->setFechaRegistro(new \DateTime('now'));
             
     		$em->persist($entity);
     		$em->flush();
@@ -817,6 +817,7 @@ class RegistroInstitucionEducativaController extends Controller {
                 $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucionTipo']));
                 $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
                 $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
+                $entity->setFechaModificacion(new \DateTime('now'));
                 $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
 
                 $em->persist($entity);

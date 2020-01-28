@@ -36,12 +36,11 @@ class EstudianteNotasPrimariaController extends Controller {
     }
 
     public function indexAction(Request $request){
-
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
         $data = $this->getNotas($infoUe, $infoStudent);
         //dump($this->session->get('ie_per_estado'));
-        //die;º
+        //die;
         return $this->render('SieHerramientaAlternativaBundle:EstudianteNotasPrimaria:notasSemestreActual.html.twig',$data);
     }
 
@@ -293,7 +292,7 @@ class EstudianteNotasPrimariaController extends Controller {
             }
         }
 
-        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4));
+        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4,6));
 
         $em->getConnection()->commit();
         return array(
@@ -440,9 +439,6 @@ class EstudianteNotasPrimariaController extends Controller {
                 }
             }
 
-            // Reiniciamos el id seq de la tabla estudainte nota
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
-
             // Registro y/o modificacion de notas
             for($i=0;$i<count($idEstudianteNota);$i++) {
 
@@ -455,6 +451,7 @@ class EstudianteNotasPrimariaController extends Controller {
                     $estAsignatura->setEstudianteasignaturaEstado($em->getRepository('SieAppWebBundle:EstudianteasignaturaEstado')->find($nuevoEstado));
                     $em->flush($estAsignatura);
                 }else{
+                    // PARA GESTIONES PASADAS A 2016  
                     if($idNotaTipo[$i] == 22 or $idNotaTipo[$i] == 26){
                         $estAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]);
                         if($notas[$i]==0){ $nuevoEstado = 3; } // RETIRADO
@@ -490,11 +487,7 @@ class EstudianteNotasPrimariaController extends Controller {
             }
         }
 
-        // REGISTRO DE NOTAS CUALITATIVAS
-        // Reiniciamos el id seq de la tabla estudainte nota
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');")->execute();
-
-        // Registro y/o modificacion de notas
+        // REGISTRO Y/O MODIFICACION DE NOTAS
         for($i=0;$i<count($idEstudianteNotaCualitativa);$i++) {
 
             if($idEstudianteNotaCualitativa[$i] == 'nuevo'){
@@ -547,9 +540,9 @@ class EstudianteNotasPrimariaController extends Controller {
           $contadorReprobados = 0;
           $contadorAprobados = 0;
           foreach ($notas as $n) {
-            if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; } // PORTERGADO
-            if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; } // PORTERGADO
-            if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; } // APROBADO
+            if($n->getNotaCuantitativa() == 0){ $contadorCeros+=1; }
+            if($n->getNotaCuantitativa()>=1 and $n->getNotaCuantitativa()<=50){ $contadorReprobados+=1; }
+            if($n->getNotaCuantitativa()>=51 and $n->getNotaCuantitativa()<=100){  $contadorAprobados+=1; }
           }  
 
           if($contadorCeros == count($notas)){

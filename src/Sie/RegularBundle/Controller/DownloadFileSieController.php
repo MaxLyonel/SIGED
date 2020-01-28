@@ -44,7 +44,7 @@ class DownloadFileSieController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:index2.html.twig', array(
                     'form' => $this->craeteformsearchsie()->createView()
         ));
     }
@@ -84,566 +84,259 @@ class DownloadFileSieController extends Controller {
      */
     public function buildAction(Request $request) {
 
-        $form['sie'] = $request->get('sie');
-        $form['gestion'] = $request->get('gestion');
-        $form['bimestre'] = $request->get('bimestre');
+        $form['sie'] = $request->get('codsie');
+        $form['gestion'] = $request->get('yearSelected');
+        $form['bimestre'] = $request->get('operativoSelected');
 
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
-        try {
-          // validation UE QA
-          $query = $em->getConnection()->prepare('select * from sp_verificar_duplicados_ue(:gestion, :sie)');
-          $query->bindValue(':gestion', $form['gestion']);
-          $query->bindValue(':sie', $form['sie']);
-          $query->execute();
-          $inconsistenciaReviewQa = $query->fetchAll();
+        // set ini data
+        $message = '';
+        $status = '';
+        $sw = false;
+        $arrObservationQA = array();
+        $arrValidacionPersonal = array();
+        $swquality = false;
+        $urlreport = false;
+        $swdownloadfile = false;
+        $institucioneducativaId = false;
+        $institucioneducativaName = false;
+        $response = new JsonResponse();
+
+        // get the UE info
+        $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+        if($objUe){
+          // validate if the UE is REGULAR
+            if($objUe[0]['tipoUe'] == 1){
+
+              // validation UE QA
+                /***********************************\
+                * *
+                * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
+                * send array => sie, gestion, reglas *
+                * return type of UE *
+                * *
+                \************************************/
+              $form['reglasUE'] = '1,2,3,5,7';
+              $objAllowUE = $this->getObservationAllowUE($form);
+              if (!$objAllowUE) {
+                $form['reglas'] = '1,2,3,10,12,13,16,27,48';
+                      $arrObservationQA =  $this->getAllObservationUE($form);
+                      // check if ue has observations
+                      if(sizeof($arrObservationQA)>0){
+                        $swquality = true;
+                      }
+                      // if the UE doesnt have observations
+                      if(!$swquality){    
+
+                        //validation consolidaction info ue
+                              /***********************************\
+                              * *
+                              * Validacion personal Administrativo de las Unidades Educativas
+                              * send array => sie, gestion, reglas *
+                              * return type of UE *
+                              * *
+                              \************************************/
+                              $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
+                                'institucioneducativa' => $form['sie'],
+                                'gestionTipo' => $form['gestion'],
+                                'notaTipo' => $form['bimestre']
+                              ));
+                              // dump($objOperativoValidacionPersonal);die;
+                              $arrValidacionPersonal = array();
+                              if($objOperativoValidacionPersonal>0){
+                                foreach ($objOperativoValidacionPersonal as $key => $value) {
+                                  # code...
+                                  if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
+                                    $arrValidacionPersonal[] = $value->getRolTipo()->getId();
+                                }
+                              }
+                              //validation docente Administrativo director
+                              if(!(sizeof($arrValidacionPersonal)<2)){
+                                  // process to do the donwload
+                                  try {
+
+                                    // $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+                                    
+                                      //get the content of directory
+                                      $aDirectoryContent = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
+
+                                    // end valiation IG
+                                    //set the ctrol menu with true
+                                    // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
+
+                                    // if($form['gestion'] == $this->session->get('currentyear') && $form['bimestre']==0){
+
+                                    //     $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=>$form['sie'],'gestion'=>$form['gestion']-1));
 
 
-          
-          $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+                                    //     //get the status UE
+                                    //     $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
+                                    //     //get consolidation info UE
+                                    //     $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getGestionBySie($form['sie']);
+                                    //     $objSieNew = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                                    //       'unidadEducativa' => $form['sie'] ,
+                                    //       'gestion' => $form['gestion']-1
+                                    //     ));
+                                        
+                                    //     //validation of new UE
+                                    //     if($objStatusUe->getEstadoInstitucionTipo()->getId()==10 && $objSie){
+                                    //       if($objSieNew && $operativo < 5){
+                                    //         //$errorValidation = array();
+                                    //         $objObservados = array();
+                                    //         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+                                    //         return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
+                                    //                     'uEducativa' => $errorValidation,
+                                    //                     'objUe' => $objUe[0],
+                                    //                     'swvalidation' => '1',
+                                    //                     'flagValidation' => '0',
+                                    //                     'swObservados' => '0',
+                                    //                     'ueModular' => '0',
+                                    //                     'swinconsistencia'  => '0',
+                                    //                     'observaciones' => $objObservados,
+                                    //                     'validationRegistroConsolidado' => '1',
+                                    //                     'validationPersonal' => '0',
+                                    //                     'sistemaRegular' => '0'
+                                    //         ));
+                                    //       }
+                                    //     }
+                                    // }
 
+                                      //if (!(in_array($form['sie'] . '-' . $form['gestion'] . '-' . date('m-d') . '_' . $form['bimestre'] . 'B.igm', scandir($aDirectoryContent, 1)))) {
+                                      // if (1) {
+                                          //generate to file with thwe sql process
+                                          $operativo = $form['bimestre'] + 1;
+                                          // switch ($form['gestion']) {
+                                          //     case $this->session->get('currentyear'):
+                                          if($form['gestion'] == 2019 && $operativo == 5){
+                                            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_sin_6to('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                                          }else{              
+                                            switch ($operativo) {
+                                              case '1':
+                                                # code...
+                                                $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                                                break;
+                                              case '2':
+                                              case '3':
+                                              case '4':
+                                              case '5':
+                                                  $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                                                break;
+                                              default:
+                                                # code...
+                                                break;
+                                            }
+                                          }
 
-            /***********************************\
-          * *
-          * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
-          * send array => sie, gestion, reglas *
-          * return type of UE *
-          * *
-          \************************************/
-          $form['reglasUE'] = '1,2,3,5,7';
-          $objAllowUE = $this->getObservationAllowUE($form);
+                                          $query->execute();
+                                          //$em->getConnection()->commit();
+                                          $em->flush();
+                                          $em->clear();
+                                          //die('krlos');60900064
+                                          $pathDoc = '/archivos/descargas/';
+                                          $outputdata = system('base64 '.$pathDoc.''.$form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie  >> ' . $pathDoc . 'e' . $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie');
 
-          if ($objAllowUE) {
-            $objObservados = array();
-            $errorValidation = array('ueobservation'=>false);
-            $objObservados = array();
-            
-            $swCtrlMenu = false;
-            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
-            $em->getConnection()->commit();
+                                          //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
+                                          $newGenerateFile = $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B';
+                                          $dir = '/archivos/descargas/';
 
-            // set the ctrol menu with false
-              //get ue data
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa'        => $errorValidation,
-                          'objUe'             => $objUe[0],
-                          'objinconsistencia' => $objAllowUE[0],
-                          'form'              => '',
-                          'swvalidation'      => '1',
-                          'swinconsistencia'  => '0',
-                          'flagValidation'    => '0',
-                          'swObservados'      => '',
-                          'ueModular'         => '1',
-                          'validationPersonal' => '0',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
-              ));
-          }
-          
+                                          //exec('/usr/local/bin/zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir . 'e' . $newGenerateFile . '.sie');
+                                          exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir . 'e' . $newGenerateFile . '.sie');
+                                          exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
 
-          /***********************************\
-          * *
-          * Validacion tipo de Unidad Educativa
-          * send codigo sie *
-          * return type of UE *
-          * *
-          \************************************/
-          if($objUe[0]['tipoUe']!=1){
-            $objObservados = array();
-            $errorValidation = array('ueobservation'=>false);
-            $objObservados = array();
-            return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                        'uEducativa' => $errorValidation,
-                        'objUe' => $objUe[0],
-                        'swvalidation' => '1',
-                        'flagValidation' => '0',
-                        'swObservados' => '0',
-                        'ueModular' => '0',
-                        'swinconsistencia'  => '0',
-                        'observaciones' => $objObservados,
-                        'validationPersonal' => '0',
-                        'validationRegistroConsolidado' => '0',
-                        'sistemaRegular' => '1'
+                                          //ssh2_sftp_unlink($sftp, '/bajada_local/' . $server_file);
+                                          //ssh2_sftp_unlink($sftp, '/bajada_local/' . $newGenerateFile . '.sie');
+                                          $server_file = 'e' . $newGenerateFile . '.sie';
+                                          system('rm -fr ' . $pathDoc . $server_file);
+                                          system('rm -fr ' . $pathDoc . $newGenerateFile.'.sie');
+                          //                ftp_close($conn);
+                                      // } else {
+                                      //     $newGenerateFile = $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B';
+                                      // }
+                                          // dump($objUe);die;
+                                          $institucioneducativaId = $objUe[0]['ueId'];
+                                          $institucioneducativaName = $objUe[0]['institucioneducativa'];
+                                          //save in donwload File Control
+                                          $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($form);
+                                          $objDonwloadFileControl = $this->saveInControlDownload($form);
+                                          $em->getConnection()->commit();
+                                          //echo "done";
+                                          $formImplode = implode(';', $form);                                      
+                                          $urlreport =  $this->generateUrl('download_file_sie_download', array('file'=>$newGenerateFile.'.igm','datadownload'=>($formImplode)));
+                                          $swdownloadfile = true;
+                                          // return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
+                                          //             'uEducativa' => $objUe[0],
+                                          //             'file' => $newGenerateFile . '.igm',
+                                          //             'form' => $this->createFormToBuild($form['sie'], $form['gestion'], $form['bimestre'])->createView(),
+                                          //             'swvalidation' => '0',
+                                          //             'flagValidation' => '0',
+                                          //             'swinconsistencia'  => '0',
+                                          //             'datadownload' => json_encode($form)
+                                          // ));
 
+                                  } catch (Exception $exc) {
+                                      echo $exc->getTraceAsString();
+                                      $em->getConnection()->rollback();
+                                      $em->close();
+                                      throw $e;
+                                  }
 
-            ));
-          }
-          //  valiation IG off
-          $errorValidation = $this->validateDownload($form);
-          //add validation for bim
-          $inconsistencia = array();
-          $swCtrlMenu = true;
+                               
+                              }else{
+                                $message = 'Unidad Educativa debe registrar al personal Administrativo';
+                                $status = 'error';
+                                $sw = false;
+                                $typeMessage = 'danger';
+                              }
 
-           //first validations calidad
-          /***********************************\
-          * *
-          * Validacion CONTROL DE CALIDAD
-          * send array => sie, gestion, reglas *
-          * return observations UE *
-          * *
-          \************************************/
-          $form['reglas'] = '1,2,3,10,12,13,16,27,48';
-      
-          $objObsQA = $this->get('funciones')->appValidationQuality($form);
-          if ($objObsQA) {
-            
-            $swCtrlMenu = false;
-            // set the ctrol menu with false
-            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
-            $em->getConnection()->commit();
-              //get ue data
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa'        => $errorValidation,
-                          'objUe'             => $objUe[0],
-                          'objinconsistencia' => $objObsQA,
-                          'form'              => '',
-                          'swvalidation'      => '1',
-                          'swinconsistencia'  => '0',
-                          'flagValidation'    => '0',
-                          'swObservados'      => '1',
-                          'ueModular'         => '0',
-                          'validationPersonal' => '0',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
-              ));
-          }
+                      }else{
+                        $message = 'Unidad Educativa presenta observaciones de Calidad';
+                        $status = 'error';
+                        $sw = false;
+                        $typeMessage = 'danger';
+                      }                                          
 
+                     
 
-          $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-          if($form['bimestre']>=1 && $form['gestion'] == $this->session->get('currentyear')){
-          //the rule to donwload file with validations
-          // $form['reglas'] = '1,2,3,10,12,13,16,27';
+              }else{
 
-          //first validations calidad
-          /***********************************\
-          * *
-          * Validacion CONTROL DE CALIDAD
-          * send array => sie, gestion, reglas *
-          * return observations UE *
-          * *
-          \************************************/
-          $objObsQA = $this->get('funciones')->appValidationQuality($form);
-          if ($objObsQA) {
-            
-            $swCtrlMenu = false;
-            // set the ctrol menu with false
-            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
-            $em->getConnection()->commit();
-              //get ue data
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa'        => $errorValidation,
-                          'objUe'             => $objUe[0],
-                          'objinconsistencia' => $objObsQA,
-                          'form'              => '',
-                          'swvalidation'      => '1',
-                          'swinconsistencia'  => '0',
-                          'flagValidation'    => '0',
-                          'swObservados'      => '1',
-                          'ueModular'         => '0',
-                          'validationPersonal' => '0',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
-              ));
-          }
-          //second type of UE
-        
+                $message = 'Unidad Educativa tiene que trabajar por la web';
+                $status = 'error';
+                $sw = false;
+                $typeMessage = 'danger';
 
-          // validation UE data
-          /***********************************\
-          * *
-          * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
-          * send array => sie, gestion, reglas *
-          * return type of UE *
-            * *
-          \************************************/
-          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
-          $query->bindValue(':gestion', $form['gestion']);
-          $query->bindValue(':sie', $form['sie']);
-          $query->bindValue(':periodo', $form['bimestre']-1);
-          $query->execute();
-          $inconsistencia = $query->fetchAll();
-          // dump($inconsistencia);die;
-          //this is to validate the files download
-          //get info if the UE is plena
-          // $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-          // $errorValidation = $this->validateDownload($form);
-          if ($inconsistencia) {
-
-            $swCtrlMenu = false;
-            // set the ctrol menu with false
-            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
-            $em->getConnection()->commit();
-
-              //get ue data
-              $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa'        => $errorValidation,
-                          'objUe'             => $objUe[0],
-                          'objinconsistencia' => $inconsistencia,
-                          'form'              => '',
-                          'swvalidation'      => '1',
-                          'swinconsistencia'  => '1',
-                          'flagValidation'    => '0',
-                          'swObservados'      => '0',
-                          'ueModular'         => '0',
-                          'validationPersonal' => '0',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
-              ));
-          }
-
-            //executa the validation function on db
-            // $query = $em->getConnection()->prepare("select * from sp_valida_calidad_curso_oferta_obs1('" . $form['sie'] . "','" . $form['gestion'] ."');");
-            // $query->execute();
-            // //get the validation info
-            // $arrValidationPrecess = $this->getValidationProcess($form);
-
-            /* this is commented cos this is used on 1er bim
-            if ($arrValidationPrecess) {
-                //go to the validation process page
-                $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-                return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                            'arrValidationPrecess' => $arrValidationPrecess,
-                            'objUe' => $objUe[0],
-                            'form' => '',
-                            'flagValidation' => '1'
-                ));
-            }*/
-            //
-            //this is to validate the files download
-            //get info if the UE is plena
-            // $errorValidation = $this->validateDownload($form);
-            // if ($errorValidation['ueplena'] || $errorValidation['ueobservation']) {
-            //     //get ue data
-            //     $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-            //     return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-            //                 'uEducativa' => $errorValidation,
-            //                 'objUe' => $objUe[0],
-            //                 'form' => '',
-            //                 'swvalidation' => '1',
-            //                 'flagValidation' => '0',
-            //                 'swObservados' => '0',
-            //                 'swinconsistencia'  => '0',
-            //                 'ueModular' => '0',
-            //                 'validationPersonal' => '0',
-            //                 'validationRegistroConsolidado' => '0',
-            //                 'sistemaRegular' => '0'
-            //     ));
-            // }
-
-            //fill modular data
-            // $sieModular = array(
-            //   '1'=>'82190066','82190032','82190082','82190056','82220075','82220110',
-            //   '82220216','82220066','80390012','60390025','80440013','80440031',
-            //   '80870039','80870078','80870069','80870043','70590010','80590021',
-            //   '80590037','80590029','72460009','72460008','72460023','72460014',
-            //   '81870039','81870028','81870041','81870037','81960030','61840025',
-            //   '81870026','81870056','61710061','61710080','61710074','61710033',
-            //   '81960054','82220075'
-            // );
-            // //validation ue modular
-            // if (in_array($form['sie'], $sieModular)) {
-            //   //get ue data
-            //   $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-            //   return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-            //               'uEducativa' => $errorValidation,
-            //               'objUe' => $objUe[0],
-            //               'swvalidation' => '1',
-            //               'flagValidation' => '0',
-            //               'swObservados' => '0',
-            //               'ueModular' => '1',
-            //               'swinconsistencia'  => '0',
-            //               'validationPersonal' => '0',
-            //               'validationRegistroConsolidado' => '0',
-            //               'sistemaRegular' => '0'
-            //   ));
-            // }
-            //validacion if the UE is observacion
-            // $objObservados = $em->getRepository('SieAppWebBundle:UesObservadas')->findBy(array(
-            //   'institucioneducativaId'=>$form['sie']
-            // ));
-            //
-            // if (sizeof($objObservados)>0){
-            //   //get ue data
-            //   $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-            //   return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-            //               'uEducativa' => $errorValidation,
-            //               'objUe' => $objUe[0],
-            //               'swvalidation' => '1',
-            //               'flagValidation' => '0',
-            //               'swObservados' => '1',
-            //               'ueModular' => '0',
-            //               'swinconsistencia'  => '0',
-            //               'observaciones' => $objObservados,
-            //               'validationPersonal' => '0',
-            //               'validationRegistroConsolidado' => '0',
-            //               'sistemaRegular' => '0'
-            //   ));
-            // }
-            //get the content of directory
-            $aDirectoryContent = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
-
-            //validation consolidaction info ue
-            /***********************************\
-            * *
-            * Validacion personal Administrativo de las Unidades Educativas
-            * send array => sie, gestion, reglas *
-            * return type of UE *
-            * *
-            \************************************/
-            $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
-              'institucioneducativa' => $form['sie'],
-              'gestionTipo' => $form['gestion'],
-              'notaTipo' => $form['bimestre']
-            ));
-            $arrValidacionPersonal = array();
-            if($objOperativoValidacionPersonal>0){
-              foreach ($objOperativoValidacionPersonal as $key => $value) {
-                # code...
-                if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
-                  $arrValidacionPersonal[] = $value->getRolTipo()->getId();
               }
-            }
-            //validation docente Administrativo director
-            if(sizeof($arrValidacionPersonal)<2){
-              //$errorValidation = array();
-              $objObservados = array();
-              $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa' => $errorValidation,
-                          'objUe' => $objUe[0],
-                          'swvalidation' => '1',
-                          'flagValidation' => '0',
-                          'swObservados' => '0',
-                          'ueModular' => '0',
-                          'swinconsistencia'  => '0',
-                          'observaciones' => $objObservados,
-                          'validationPersonal' => '1',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
 
-              ));
-            }
-          }else {
-            //validation consolidaction info ue
-            /***********************************\
-            * *
-            * Validacion personal Administrativo de las Unidades Educativas
-            * send array => sie, gestion, reglas *
-            * return type of UE *
-            * *
-            \************************************/
-            $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
-              'institucioneducativa' => $form['sie'],
-              'gestionTipo' => $form['gestion'],
-              'notaTipo' => $form['bimestre']
-            ));
-            $arrValidacionPersonal = array();
-            if($objOperativoValidacionPersonal>0){
-              foreach ($objOperativoValidacionPersonal as $key => $value) {
-                # code...
-                if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
-                  $arrValidacionPersonal[] = $value->getRolTipo()->getId();
-              }
-            }
-            //validation docente Administrativo director
-            if(sizeof($arrValidacionPersonal)<2){
-              //$errorValidation = array();
-              $objObservados = array();
-              $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                          'uEducativa' => $errorValidation,
-                          'objUe' => $objUe[0],
-                          'swvalidation' => '1',
-                          'flagValidation' => '0',
-                          'swObservados' => '0',
-                          'ueModular' => '0',
-                          'swinconsistencia'  => '0',
-                          'observaciones' => $objObservados,
-                          'validationPersonal' => '1',
-                          'validationRegistroConsolidado' => '0',
-                          'sistemaRegular' => '0'
+            }else{
 
-              ));
+              $message = 'Unidad Educativa no es regular';
+              $status = 'error';
+              $sw = false;
+              $typeMessage = 'danger';
+
             }
+          }else{
+              $message = 'No existe Unidad Educativa ';
+              $status = 'error';
+              $sw = false;
+              $typeMessage = 'danger';
+
           }
 
-          // end valiation IG
-          //set the ctrol menu with true
-          // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
+      $arrResult = array(
+          'status'=>'error',
+          'message'=>$message,
+          'swdownload'=>$sw,
+          'urlreport'=>$urlreport,
+          'swdownloadfile'=>$swdownloadfile,
+          'institucioneducativaId'=>$institucioneducativaId,
+          'institucioneducativaName'=>$institucioneducativaName,
+      );
+      $response->setStatusCode(200);
+      $response->setData($arrResult);
+      return $response;           
 
-          if($form['gestion'] == $this->session->get('currentyear') && $form['bimestre']==0){
-
-              $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=>$form['sie'],'gestion'=>$form['gestion']-1));
-
-
-              //get the status UE
-              $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
-              //get consolidation info UE
-              $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getGestionBySie($form['sie']);
-              $objSieNew = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-                'unidadEducativa' => $form['sie'] ,
-                'gestion' => $form['gestion']-1
-              ));
-              
-              //validation of new UE
-              if($objStatusUe->getEstadoInstitucionTipo()->getId()==10 && $objSie){
-                if($objSieNew && $operativo < 5){
-                  //$errorValidation = array();
-                  $objObservados = array();
-                  $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-                  return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                              'uEducativa' => $errorValidation,
-                              'objUe' => $objUe[0],
-                              'swvalidation' => '1',
-                              'flagValidation' => '0',
-                              'swObservados' => '0',
-                              'ueModular' => '0',
-                              'swinconsistencia'  => '0',
-                              'observaciones' => $objObservados,
-                              'validationRegistroConsolidado' => '1',
-                              'validationPersonal' => '0',
-                              'sistemaRegular' => '0'
-                  ));
-                }
-              }
-          }
-
-            //if (!(in_array($form['sie'] . '-' . $form['gestion'] . '-' . date('m-d') . '_' . $form['bimestre'] . 'B.igm', scandir($aDirectoryContent, 1)))) {
-            if (1) {
-                //generate to file with thwe sql process
-                $operativo = $form['bimestre'] + 1;
-                // switch ($form['gestion']) {
-                //     case $this->session->get('currentyear'):
-                if($form['gestion'] == 2019 && $operativo == 5){
-                  $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_sin_6to('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                }else{              
-                  switch ($operativo) {
-                    case '1':
-                      # code...
-                      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                      break;
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                      break;
-                    default:
-                      # code...
-                      break;
-                  }
-                }
-
-                //         break;
-                //     case '2015':
-                //         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                //         break;
-                //
-                //     default:
-                //         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                //         break;
-                // }
-
-                $query->execute();
-                //$em->getConnection()->commit();
-                $em->flush();
-                $em->clear();
-                //die('krlos');60900064
-		$pathDoc = '/archivos/descargas/';
-		//$outputdata = system('cat '.$pathDoc. ,$retval);
-		//  system('/usr/local/bin/base64 -d ' . $dirtmp . '/' . $nameFileUnZip . ' >>  ' . $dirtmp . '/' . $nameFileUnZip . '.txt',$output);
-		//$outPutData = system('/usr/local/bin/base64
-
-                //$outputdata = system('/usr/local/bin/base64 '.$pathDoc.''.$form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie  >> ' . $pathDoc . 'e' . $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie');
-                $outputdata = system('base64 '.$pathDoc.''.$form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie  >> ' . $pathDoc . 'e' . $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie');
-
-		/*
-                //todo the connexion to the server
-                $connection = ssh2_connect('172.20.0.103', 22);
-                ssh2_auth_password($connection, 'root', 'ASDFqwe12.103');
-                $sftp = ssh2_sftp($connection);
-                //get the path server
-                $path = '../bajada_local/';
-                //ssh2_exec($connection, 'iconv -f UTF-8  -t ISO-8859-1 ' . $path . $form['sie'] . '-' . $form['gestion'] . '-' . date('m-d') . '_' . $form['bimestre'] . 'B.sie  >> ' . $path . 'ee' . $form['sie'] . '-' . $form['gestion'] . '-' . date('m-d') . '_' . $form['bimestre'] . 'B.sie');
-                ssh2_exec($connection, 'base64  ' . $path . '' . $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie  >> ' . $path . 'e' . $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B.sie');
-                //ssh2_exec($connection, 'cp ' . $path . '' . $form['sie'] . '-' . $form['gestion'] . '-' . date('m-d') . '_' . $form['bimestre'] . 'B.sie   ' . $path . 'e' . $form['sie'] . '-' . $form['gestion'] . '-' . date('m-d') . '_' . $form['bimestre'] . 'B.sie');
-                /////////////////////////////////
-                $server = "172.20.0.103"; //address of ftp server (leave out ftp://)
-                $ftp_user_name = "regulardb"; // Username
-                $ftp_user_pass = "regular2015v4azx-"; // Password
-
-                $mode = "FTP_BINARY";
-                $conn = ftp_connect($server, 21);
-
-                $login = ftp_login($conn, $ftp_user_name, $ftp_user_pass);
-
-                if (!$conn || !$login) {
-                    die("Connection attempt failed!");
-                }
-                // try to download $server_file and save to $local_file
-                $newGenerateFile = $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B';
-                $local_file = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/' . 'e' . $newGenerateFile . '.sie';
-                $server_file = 'e' . $newGenerateFile . '.sie';
-
-                if (ftp_get($conn, $local_file, $server_file, FTP_BINARY)) {
-                    //echo "generado correctamente to $local_file\n";
-                } else {
-                    echo "There was a problem\n :(";
-                }
-		*/
-
-                //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
-		$newGenerateFile = $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B';
-		$dir = '/archivos/descargas/';
-
-                /*
-                  //GET THE FILE
-                  $file = $dir . 'e' . $newGenerateFile . '.sie';
-                  $fch = fopen($file, "a+");
-                  $fileContent = $file = file_get_contents($file, true);
-                  //$texto = utf8_decode($fileContent);
-                  //$Result = base64_encode($fileContent);
-                  fwrite($fch, $fileContent); // Grabas
-                  fclose($fch);
-                 */
-
-                //exec('/usr/local/bin/zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir . 'e' . $newGenerateFile . '.sie');
-                exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir . 'e' . $newGenerateFile . '.sie');
-                exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
-
-                //ssh2_sftp_unlink($sftp, '/bajada_local/' . $server_file);
-                //ssh2_sftp_unlink($sftp, '/bajada_local/' . $newGenerateFile . '.sie');
-		$server_file = 'e' . $newGenerateFile . '.sie';
-                system('rm -fr ' . $pathDoc . $server_file);
-                system('rm -fr ' . $pathDoc . $newGenerateFile.'.sie');
-//                ftp_close($conn);
-            } else {
-                $newGenerateFile = $form['sie'] . '-' . date('Y-m-d') . '_' . $form['bimestre'] . 'B';
-            }
-            //save in donwload File Control
-            $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($form);
-            $objDonwloadFileControl = $this->saveInControlDownload($form);
-            $em->getConnection()->commit();
-            //echo "done";
-            $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-
-            return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                        'uEducativa' => $objUe[0],
-                        'file' => $newGenerateFile . '.igm',
-                        'form' => $this->createFormToBuild($form['sie'], $form['gestion'], $form['bimestre'])->createView(),
-                        'swvalidation' => '0',
-                        'flagValidation' => '0',
-                        'swinconsistencia'  => '0',
-                        'datadownload' => json_encode($form)
-            ));
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-            $em->getConnection()->rollback();
-            $em->close();
-            throw $e;
-        }
     }
     private function setCtrlOpeMenuInfo($data,$switch){
 
@@ -800,8 +493,14 @@ class DownloadFileSieController extends Controller {
     }
 
     public function downloadAction(Request $request, $file,$datadownload) {
-      // dump($datadownload);die;
-      $form = json_decode($datadownload,true);
+      $file = $request->get('file');
+      $datadownload = $request->get('datadownload');
+      $arratadownload = explode(';', $datadownload);
+      $form = array(
+        'sie'=>$arratadownload[0],
+        'gestion'=>$arratadownload[1],
+        'bimestre'=>$arratadownload[2],
+      );
       $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
         //get path of the file
         //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
@@ -831,21 +530,26 @@ class DownloadFileSieController extends Controller {
 	 */
     public function installDownloadAction(Request $request) {
 
+        $em = $this->getDoctrine()->getManager();
         //get path of the file
-        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v1292.exe';
-
-        //create response to donwload the file
+        $id = $request->get('id');
+        //dump($form);die;
+        $instalador=$em->getRepository('SieAppWebBundle:ControlInstalador')->findOneBy(array('id'=>$id));
+        $nombre=$instalador->getInstalador();
+        $path=$instalador->getPath();
+        //dump($nombre);die;
+      //  $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+     //   $file = 'instalador_SIGED_SIE_v1292.exe'
         $response = new Response();
         //then send the headers to foce download the zip file
         $response->headers->set('Content-Type', 'application/exe');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
-        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $nombre));
+        $response->setContent(file_get_contents($path. $nombre) );
         $response->headers->set('Pragma', "no-cache");
         $response->headers->set('Expires', "0");
         $response->headers->set('Content-Transfer-Encoding', "binary");
         $response->sendHeaders();
-        $response->setContent(readfile($dir . $file));
+        $response->setContent(readfile($path . $nombre));
         return $response;
     }
 
@@ -876,126 +580,285 @@ class DownloadFileSieController extends Controller {
     }
 
 
-    public function getgestionAction($sie) {
+    public function getgestionAction(Request $request) {
+        // create ini var
         $em = $this->getDoctrine()->getManager();
+        $response = new JsonResponse();
+        // get the send values
+        $sie = $request->get('codsie');
 
-        //get status of UE
-        $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
-        // dump($objStatusUe->getEstadoInstitucionTipo()->getId());die;
-        $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getGestionBySie($sie);
 
         $aGestion = array();
-        //  if ($objSie) {
-        if ($objStatusUe->getEstadoInstitucionTipo()->getId()==10) {
-            foreach ($objSie as $gsie) {
-                $aGestion[$gsie->getGestion()] = $gsie->getGestion();
-            }
-            //this is for current year
-            $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
-        }else{
-          switch ($objStatusUe->getEstadoInstitucionTipo()->getId()) {
-            case 19:
-            case 29:
-            case 39:
-            case 49:
-            case 99:
-              # code...
-              $aGestion['close'] = 'Unidad Educativa Cerrada';
-              break;
-            case 11:
-            case 31:
-            case 41:
-              # code...
-              $aGestion['close'] = 'Unidad Educativa Eliminada';
-              break;
-            case 0:
-              # code...
-              $aGestion['close'] = 'Unidad Educativa No Reportada';
-              break;
+        $message = false;
+        $status = '';
+        $sw = true;
+        //get status of UE
+        $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
+        // dump($objStatusUe->getInstitucioneducativaTipo()->getId());die;
+        if($objStatusUe){
 
-            default:
-              # code...
-              break;
+          if($objStatusUe->getInstitucioneducativaTipo()->getId() == 1){
+
+            // dump($objStatusUe->getEstadoInstitucionTipo()->getId());die;
+            $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getGestionBySie($sie);
+
+            
+            //  if ($objSie) {
+            if ($objStatusUe->getEstadoInstitucionTipo()->getId()==10) {
+                foreach ($objSie as $gsie) {
+                    $aGestion[] = array('id'=>$gsie->getGestion(),'gestion'=>$gsie->getGestion());
+                }
+                //this is for current year
+                $aGestion[] =array('id'=>$this->session->get('currentyear'),'gestion'=>$this->session->get('currentyear'));
+                $status = 'success';
+                $sw = true;
+            }else{
+              switch ($objStatusUe->getEstadoInstitucionTipo()->getId()) {
+                case 19:
+                case 29:
+                case 39:
+                case 49:
+                case 99:
+                  # code...
+                  // $aGestion[] =array('id'=>0,'gestion'=>'Unidad Educativa Cerrada') ;
+                  $message = 'Unidad Educativa Cerrada';
+                  $status = 'error';
+                  $sw = false;
+                  break;
+                case 11:
+                case 31:
+                case 41:
+                  # code...
+                  // $aGestion[] =array('id'=>0,'gestion'=>'Unidad Educativa Eliminada');
+                  $message = 'Unidad Educativa Eliminada';
+                  $status = 'error';
+                  $sw = false;              
+                  break;
+                case 0:
+                  # code...
+                  // $aGestion[] =array('id'=>0,'gestion'=>'Unidad Educativa No Reportada');
+                  $message = 'Unidad Educativa No Reportada';
+                  $status = 'error';
+                  $sw = false;            
+                  break;
+
+                default:
+                  # code...
+                  break;
+              }
+            }
+          }else{
+            $message = 'Unidad Educativa No pertence a Educacion Regular';
+            $status = 'error';
+            $sw = false;  
           }
+        
+        }else{
+          $message = 'Unidad Educativa No Existe';
+          $status = 'error';
+          $sw = false;            
+
         }
 
-//        $dateyear = $this->session->get('currentyear');
-//        //BUILD THE YEARS TO SELECTED DATA
-//        $aGestion = array();
-//        for ($i = 1; $i <= 3; $i ++) {
-//            $aGestion[$dateyear] = $dateyear;
-//            $dateyear = $dateyear - 1;
-//        }
+
+      $arrResult = array(
+        'status'=>'error',
+        'message'=>$message,
+        'swyear'=>$sw,
+        'arrgestion' => $aGestion
+      );
+      $response->setStatusCode(200);
+      $response->setData($arrResult);
+      return $response; 
+
+
+
+
         //rsort($aGestion);
-        $response = new JsonResponse();
-        return $response->setData(array('gestion' => $aGestion));
+        // $response->setStatusCode(200);
+        // $response->setData(array(
+        //   'arrgestion' => $aGestion
+        // ));
+        // return $response;
     }
 
-    public function getbimestreAction($sie, $gestion) {
-        $em = $this->getDoctrine()->getManager();
-        $operativo = $this->get('funciones')->obtenerOperativoDown($sie, $gestion);
-        $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getBimestreBySieAndGestion($sie, $gestion);
-        //define the return data values
-        // dump($gestion);
-        // dump($operativo);
-        $aBimestre = array();
-        $aBimestres = array('IG', '1er', '2do', '3ro', '4to');
-        // dump($this->session->get('roluser'));die;
-        //if the user is UE decrement the operativo var
-//         if( in_array($this->session->get('roluser'), array(9))){
-//           // if($operativo == 4){
-//           // //do nothing
-//           // }else{
-//             $operativo = $operativo - 1;
-//           // }
-//         }
-// dump($operativo);
-// die;
-        //new way to download the sie file througth the consolidation data on DB
+    private function validateThePrevOperativo($data){
+      $swcompleteOperativo = true;
+      $operativo = $this->get('funciones')->obtenerOperativoDown($data['sie'], $data['gestion']);
         if($operativo == 5){//if 4 everything is done
-          $aBimestre[-1]='Consolidado';
+          $swcompleteOperativo = true;
         }else{
-          if($operativo >= 0){//mt 0 return plas 1
-            $aBimestre[$operativo]=$aBimestres[$operativo];
-            // $aBimestre[$operativo]=$aBimestres[0];
-          }else{ //lt 0 return the same
-            // $aBimestre[$operativo]=$aBimestres[$operativo];
-            $aBimestre[$operativo]=$aBimestres[0];
+          $swcompleteOperativo = false;
+        }
+
+        return $swcompleteOperativo;
+    }    
+
+    private function getAllObservationUE($dataVal){
+      
+      // create db conexion
+      $em = $this->getDoctrine()->getManager();
+      $arrObservationQA = array();
+          $objObsQA = $this->get('funciones')->appValidationQuality($dataVal);
+          if($objObsQA){
+            foreach ($objObsQA as $key => $value) {
+              # code...
+              $arrObservationQA[] = array('id'=>$value['id'],'observation'=>$value['obs']);
+            }
           }
+          /***********************************\
+          * *
+          * Validacion Unidades Educativas: Inconsistencias
+          * send array => sie, gestion, reglas *
+          * return type of UE *
+          * *
+          \************************************/
+          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+          $query->bindValue(':gestion', $dataVal['gestion']);
+          $query->bindValue(':sie', $dataVal['sie']);
+          $query->bindValue(':periodo', $dataVal['bimestre']);
+          $query->execute();
+          $objInconsistencia = $query->fetchAll();
+          if($objInconsistencia){
+            foreach ($objInconsistencia as $key => $value) {
+              # code...
+              $arrObservationQA[] = array('id'=>$value['institucioneducativa'],'observation'=>$value['observacion']);
+            }
+          }
+          return $arrObservationQA;
+    }
 
+    public function getbimestreAction(Request $request) {
+      
+      
+      $response = new JsonResponse();
+      $em = $this->getDoctrine()->getManager();
+      //get the send values
+      $sie = $request->get('codsie');
+      $gestion = $request->get('yearSelected');
+      $operativo = $this->get('funciones')->obtenerOperativoDown($sie, $gestion);
+
+      $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getBimestreBySieAndGestion($sie, $gestion);
+      //define the return data values
+      // dump($gestion);
+      // dump($operativo);
+      $aBimestre = array();
+      $aBimestres = array(
+                          '0'=> array('id'=>0, 'operativo'=>'IG'),
+                          '1'=> array('id'=>1, 'operativo'=>'1er'),
+                          '2'=> array('id'=>2, 'operativo'=>'2do'),
+                          '3'=> array('id'=>3, 'operativo'=>'3ro'),
+                          '4'=> array('id'=>4, 'operativo'=>'4to'),
+                        );
+     // dump($aBimestres);
+     // dump($operativo);
+     // die;
+
+      $swcompleteOperativo = true;
+      $message = false;
+      $status = '';
+      $typeMessage = 'success';
+      $sw = true;
+      $arrObservationQA = array();
+      $swquality = false;
+
+      // validate the type of UE - MODULAR, plena
+      $dataVal['reglasUE'] = '1,2,3,5,7';
+      $dataVal['sie'] = $sie;
+      $dataVal['gestion'] = $gestion;
+      $objAllowUE = $this->getObservationAllowUE($dataVal);
+
+      if(!$objAllowUE){
+
+        if($this->session->get('currentyear')  == $gestion ){
+
+          $gestionVal = $gestion-1;
+
+          $swcompleteOperativo = $this->validateThePrevOperativo(array('sie'=>$sie, 'gestion'=>$gestionVal));
+          
+
+          //need to validate the QA actions
+          // validte the QA actions
+          $dataVal['reglas'] = '1,2,3,10,12,13,16,27,48';
+          $dataVal['gestion'] = $gestionVal;
+          $dataVal['bimestre'] = 4;
+
+          $arrObservationQA =  $this->getAllObservationUE($dataVal);
+
+          // $arrObservationQA['observaciones_incosistencia'] = (sizeof($objInconsistencia)>0)?$objInconsistencia:array();
+          if(sizeof($arrObservationQA)>0){
+            $swquality = true;
+          }
+          
         }
 
-        $aBimestre = ($this->session->get('roluser') != 8) ? ($aBimestre) ? $aBimestre : array() : $aBimestres;
-        //$aBimestre = ($aBimestre) ? array('1' => '1er', '2' => '2do', '3' => '3ro') : array();
-        $response = new JsonResponse();
-        return $response->setData(array('bimestre' => $aBimestre));
-        // dump($objSie);die;
-        /*this is for the user CBBA
-        $lugarOneCBBA = $em->getRepository('SieAppWebBundle:LugarTipo')->find($this->session->get('roluserlugarid'));
-        $lugarTwoCBBA = $em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarOneCBBA->getLugarTipo());
-        $swCbba = false;
-        if($lugarTwoCBBA->getCodigo()==3){
-          $swCbba = true;
+        if(!$swquality){
+          
+          //validate if the ue has all the opeClosed the prev year
+          if($swcompleteOperativo){
+          //new way to download the sie file througth the consolidation data on DB
+            if($operativo == 5){//if 4 everything is done
+              // $aBimestre[-1]='Consolidado';
+              $message = 'Informacion consolidada';
+              $status = 'error';
+              $sw = false;
+              $typeMessage = 'success';
+            }else{
+              if($operativo >= 0){//mt 0 return plas 1
+                $aBimestre[$operativo]=$aBimestres[$operativo];
+                $status = 'success';
+                $sw = true;
+                // $aBimestre[$operativo]=$aBimestres[0];
+              }else{ //lt 0 return the same
+                // $aBimestre[$operativo]=$aBimestres[$operativo];
+                $status = 'success';
+                $sw = true;
+                $aBimestre[$operativo]=$aBimestres[0];
+                $typeMessage = 'success';
+              }
+
+            }
+          }else{
+            $prevyear =  $gestion -1;
+            // dump($swcompleteOperativo);
+            // $prevyear = $gestion-1;
+            // $aBimestre[-1]='Consolidacion de operativos incompleta en gestion '.$prevyear;
+            $message = 'Descarga no habilitad... Consolidacion de operativos incompleta en gestion '.$prevyear;
+            $status = 'error';
+            $sw = false;
+            $typeMessage = 'danger';
+          }
+          $aBimestre = ($this->session->get('roluser') != 8) ? ($aBimestre) ? $aBimestre : array() : $aBimestres;
+        }else{
+          $message = 'Unidad Educativa presenta observaciones de Calidad';
+          $status = 'error';
+          $sw = false;
+          $typeMessage = 'danger';
         }
-        end CBBA*/
 
+    }else{
+      $message = 'Unidad Educativa Tiene que trabajar por la web ';
+      $status = 'error';
+      $sw = false;
+      $typeMessage = 'danger';
+    }
 
-        // if ($objSie) {
-        //   $aBimestre[0] = $aBimestres[0];
-        //     foreach ($objSie as $gsie) {
-        //         //print_r($gsie);
-        //         (!($gsie->getBim1())) ? $aBimestre[1] = $aBimestres[1] : '';
-        //         (!($gsie->getBim2())) ? $aBimestre[2] = $aBimestres[2] : '';
-        //         (!($gsie->getBim3())) ? $aBimestre[3] = $aBimestres[3] : '';
-        //         (!($gsie->getBim4())) ? $aBimestre[4] = $aBimestres[4] : '';
-        //       /*  comment by krlos, cos only donwload the 1bim
-        //         (($gsie->getBim3())) ? $aBimestre[3] = $aBimestres[3] : '';
-        //         (($gsie->getBim4())) ? $aBimestre[4] = $aBimestres[4] : '';*/
-        //     }
-        // } else {
-        //     $aBimestre[0] = $aBimestres[0];
-        // }
-        // dump($operativo);die;
+      
+      // //$aBimestre = ($aBimestre) ? array('1' => '1er', '2' => '2do', '3' => '3ro') : array();
+      // $response->setStatusCode(200);
+      // return $response->setData(array('bimestre' => $aBimestre));
+      $arrResult = array(
+          'status'=>'error',
+          'message'=>$message,
+          'swerror'=>$sw,
+          'bimestre' => $aBimestre,
+          'typeMessage' => $typeMessage,
+          'arrObservationQA' => $arrObservationQA,
+          'swquality' => $swquality,
+      );
+      $response->setStatusCode(200);
+      $response->setData($arrResult);
+      return $response; 
 
 
     }

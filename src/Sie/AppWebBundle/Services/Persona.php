@@ -108,7 +108,7 @@ class Persona {
         if($complemento == '0'){
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->where('p.carnet = :carnet AND p.segipId >= :valor')
+                ->where('p.carnet = :carnet AND p.segipId > :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('valor', 0)
                 ->getQuery();
@@ -116,7 +116,7 @@ class Persona {
         else{
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId >= :valor')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId > :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('complemento', $complemento)
                 ->setParameter('valor', 0)
