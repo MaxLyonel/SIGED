@@ -578,7 +578,7 @@ class StudentsInscriptionsController extends Controller {
       $casespecial = ($request->get('casespecial')=='false')?false:true;;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
-      $arrRudesStudent = array();
+      $arrRudesStudent = false;
       // set data to validate with segip function
       $arrParametros = array(
         'complemento'=>$complemento,
@@ -697,7 +697,7 @@ class StudentsInscriptionsController extends Controller {
 
         }else{
 
-
+          $arrRudesStudent = array();
           foreach ($objRudesStudent as $value) {
             $arrRudesStudent[]=array(
                                   'ci'=>$value->getCarnetIdentidad(),
@@ -849,7 +849,7 @@ class StudentsInscriptionsController extends Controller {
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
       $fecNac = $request->get('fecNac');
-      $arrRudesStudent = array();
+      $arrRudesStudent = false;
       // set parameter to validate inscription
       $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial, 'iecId' => $iecId, 'studentId'=>$studentId) ;
       
@@ -931,7 +931,7 @@ class StudentsInscriptionsController extends Controller {
           }          
 
         }else{
-
+          $arrRudesStudent = array();
           foreach ($objRudesStudent as $value) {
             $arrRudesStudent[]=array(
                                   'ci'=>$value->getCarnetIdentidad(),

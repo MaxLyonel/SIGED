@@ -167,7 +167,7 @@
                               </div>
                               <div class="col-sm-2">
                               <label for="fechanac">Fec. Nacimiento</label>
-                                  <input type="text" class="form-control" placeholder="Fec. Nacimiento" v-model="newStudent.fecNac">
+                                  <input type="text" class="form-control" placeholder="dd-mm-aaaa" v-model="newStudent.fecNac">
                               </div>
                               <div class="col-sm-3">
                               <label for="genero">Genero</label>
@@ -608,7 +608,7 @@ var app = new Vue({
                 this.userAllowedOnCasespecial = response.data.userAllowedOnCasespecial;
 
               }
-                console.log(this.dataStudent);
+                //console.log(this.dataStudent);
                 this.buscando = false;
             })
             .catch(e => {
@@ -826,7 +826,9 @@ var app = new Vue({
                       if(this.swcreatestudent){
                         showListStudent(this.iecId, this.infoUe);
                       }
-                      
+
+                      this.buscando = false;
+                      this.swproceso = false;                      
                     }
                     if( response.status == 202){
                         //this.respuesta = response.data;
@@ -842,9 +844,8 @@ var app = new Vue({
       console.log(this.dataStudent);*/
       //return ;
          }
-         console.log(this.message);
-        this.buscando = false;
-        this.swproceso = false;
+         //console.log(this.message);
+        
       })
     },
     studentsInscription: function(){
@@ -872,6 +873,7 @@ var app = new Vue({
       axios.post(Routing.generate('alter_inscriptionstudent_studentsInscription', this.dataStudent ))
       .then(response => {
           if (response.status == 200) {
+
             this.DBRudesStudent = response.data.arrRudesStudent;
             this.message = response.data.message;
             this.swcreatestudent = response.data.swcreatestudent;
