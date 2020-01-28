@@ -723,7 +723,7 @@ class StudentsInscriptionsController extends Controller {
 
         $status = 'error';
         $code = 400;
-        $message = "Datos introducidos no cumplen con la validacion SEGIP!!!";
+        $message = "Registro no encontrado para el número de carnet y/o complemento, paterno, materno y nombres(s) ingresados. Debe registrar a la persona adecuadamente (la información es validada por SEGIP).";
         $swcreatestudent = false;
 
       }
@@ -946,7 +946,7 @@ class StudentsInscriptionsController extends Controller {
 
           $status = 'error';
           $code = 400;
-          $message = "Estudiante Observado, tiene mas de un Código RUDE";
+          $message = "Estudiante Observado, NO INSCRITO, tiene más de un Código RUDE. Se recomienda solucionar el caso a través del Técnico Distrital";
           $swcreatestudent = false;  
 
         }
