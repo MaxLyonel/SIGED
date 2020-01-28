@@ -338,9 +338,11 @@ function saveFormPadre(){
         data: data,
         beforeSend: function(){
             console.log('enviando')
+            $('#cortina').css('display','block');
             p_limpiarBuscador();
         },
         success: function(data){
+            $('#cortina').css('display','none');
 
             if (data.status == 200) {
                 $('#p_id').val(data.id);
@@ -359,7 +361,7 @@ function saveFormPadre(){
             }
         },
         error: function(){
-
+            $('#cortina').css('display','none');
         }
     });
 }

@@ -336,16 +336,20 @@ class StudentsInscriptionsController extends Controller {
       $response = new JsonResponse();
       // get the send values
       $ci = $request->get('ci');
-      $complemento = $request->get('complemento');
+      $complemento = strtoupper($request->get('complemento'));
       $iecId = $request->get('iecId');
       
       // here is to find the studnen by CI  on table estudiante/persona
       // first look for student on ESTUDIANTE table 
       // set array conditions
       $arrayCondition['carnetIdentidad'] = $ci;
+      
       if($complemento){
         $arrayCondition['complemento'] = $complemento;
-      }    
+      }else{
+        $arrayCondition['complemento'] = "";
+      }
+
       // find the student by arrayCondition
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
       // set result in the process to find
@@ -549,7 +553,8 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
-
+// dump($request);
+// die;
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -560,20 +565,20 @@ class StudentsInscriptionsController extends Controller {
       $lugarNacTipoId = $request->get('lugarNacTipoId');
       $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
       $localidad = $request->get('localidad');
-      $paterno = $request->get('paterno');
-      $materno = $request->get('materno');
-      $nombre = $request->get('nombre');
+      $paterno = mb_strtoupper($request->get('paterno'), 'utf-8');
+      $materno = mb_strtoupper($request->get('materno'), 'utf-8');
+      $nombre = mb_strtoupper($request->get('nombre'), 'utf-8');
       $fecNac = $request->get('fecNac');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');
-      $complemento = $request->get('complementoval');
+      $complemento = mb_strtoupper($request->get('complementoval'), 'utf-8');
       $iecId = $request->get('iecId');
       $expedidoId = $request->get('expedidoId');
 
-      $casespecial = $request->get('casespecial');
+      $casespecial = ($request->get('casespecial')=='false')?false:true;;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
-
+      $arrRudesStudent = false;
       // set data to validate with segip function
       $arrParametros = array(
         'complemento'=>$complemento,
@@ -582,107 +587,137 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         'fecha_nacimiento'=>$fecNac
       );
-      // dump($request);die;
+      
       // get info segip
       $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+
       // check if the data person is true
       if($answerSegip){
 
+
+        $arrdataStudent = array(
+        'paterno'=>$paterno,
+        'materno'=>$materno,
+        'nombre'=>$nombre,
+        );
+        
+        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
+        
+        if(!($objRudesStudent)){
+
         // set parameter to validate inscription
-        $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>($casespecial=='false')?false:true, 'iecId' => $iecId) ;
+        $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
         // get the studnets age
         $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
 
-        // // create fec nac var 
-        // $newFecNac = str_replace('/', '-', $fecNac);
-        // $fecNac =  date('Y-m-d', strtotime($newFecNac));
-        // // get the students years old
-        // $yearStudent = (date('Y') - date('Y',strtotime($fecNac)));
+          // check if the students has the required
+          if(!($swyearStudent)){
 
-        // check if the students has the required
-        if(!($swyearStudent)){
-
-          // now get the Centro info 
-          try {
-           
-            
-              // create rude code to the student
+            // now get the Centro info 
+            try {
+             
               
-              $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
-              $query->bindValue(':sie', $this->session->get('ie_id'));            
-              $query->bindValue(':gestion', $this->session->get('currentyear'));
-              $query->execute();
-              $codigorude = $query->fetchAll();
-              $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
+                // create rude code to the student
+                
+                $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+                $query->bindValue(':sie', $this->session->get('ie_id'));            
+                $query->bindValue(':gestion', $this->session->get('currentyear'));
+                $query->execute();
+                $codigorude = $query->fetchAll();
+                $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
+                
+                // set the data person to the student table
+                $estudiante = new Estudiante();
+                // set the new student
+                $estudiante->setCodigoRude($codigoRude);
+                $estudiante->setCarnetIdentidad($carnet);
+                $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
+                $estudiante->setPaterno(mb_strtoupper($paterno, 'utf-8'));
+                $estudiante->setMaterno(mb_strtoupper($materno, 'utf-8'));
+                $estudiante->setNombre(mb_strtoupper($nombre, 'utf-8'));                        
+                $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
+                $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
+                $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
+                // check if the country is Bolivia
+                if ($paisId === '1'){                    
+                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
+                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
+                    $estudiante->setLocalidadNac($localidad);
+                }else{//no Bolivia
+                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+                    $estudiante->setLocalidadNac('');
+                }
+                $estudiante->setSegipId(1);
+                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
+                $em->persist($estudiante);
+
+                // set the inscription to the new student
+                $studentInscription = new EstudianteInscripcion();
+                $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
+                $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+                $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante->getId()));
+                $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
+                $studentInscription->setObservacion(1);
+                $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
+                $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
+                $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+                //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
+                $studentInscription->setCodUeProcedenciaId(0);
+                $em->persist($studentInscription);
+
+                // set all the courses modules to the student
+                $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
+                $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+
+
+                $em->flush();
+
+                // Try and commit the transaction
+                $em->getConnection()->commit();
+
+                $status = 'success';
+                $code = 200;
+                $message = "Estudiante registrado existosamente!!!";
+                $swcreatestudent = true;
+            } catch (Exception $e) {
               
-              // set the data person to the student table
-              $estudiante = new Estudiante();
-              // set the new student
-              $estudiante->setCodigoRude($codigoRude);
-              $estudiante->setCarnetIdentidad($carnet);
-              $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
-              $estudiante->setPaterno(mb_strtoupper($paterno, 'utf-8'));
-              $estudiante->setMaterno(mb_strtoupper($materno, 'utf-8'));
-              $estudiante->setNombre(mb_strtoupper($nombre, 'utf-8'));                        
-              $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
-              $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
-              $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
-              // check if the country is Bolivia
-              if ($paisId === '1'){                    
-                  $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
-                  $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
-                  $estudiante->setLocalidadNac($localidad);
-              }else{//no Bolivia
-                  $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
-                  $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
-                  $estudiante->setLocalidadNac('');
-              }
-              $estudiante->setSegipId(1);
-              $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
-              $em->persist($estudiante);
+              $em->getConnection()->rollback();
+              echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+              
+            }
+          }else{
 
-              // set the inscription to the new student
-              $studentInscription = new EstudianteInscripcion();
-              $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
-              $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
-              $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
-              $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante->getId()));
-              $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
-              $studentInscription->setObservacion(1);
-              $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
-              $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
-              $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
-              //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
-              $studentInscription->setCodUeProcedenciaId(0);
-              $em->persist($studentInscription);
+              $status = 'error';
+              $code = 400;
+              $message = "Estudiante no cumple con la edad Requerida";
+              $swcreatestudent = false;            
+            }
 
-              // set all the courses modules to the student
-              $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
-              $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
-
-
-              $em->flush();
-
-              // Try and commit the transaction
-              $em->getConnection()->commit();
-
-              $status = 'success';
-              $code = 200;
-              $message = "Estudiante registrado existosamente!!!";
-              $swcreatestudent = true;
-          } catch (Exception $e) {
-            
-            $em->getConnection()->rollback();
-            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-            
-          }
         }else{
 
-            $status = 'error';
-            $code = 400;
-            $message = "Estudiante no cumple con la edad Requerida";
-            $swcreatestudent = false;            
+          $arrRudesStudent = array();
+          foreach ($objRudesStudent as $value) {
+            $arrRudesStudent[]=array(
+                                  'ci'=>$value->getCarnetIdentidad(),
+                                  'complemento'=>$value->getComplemento(),
+                                  'codigorude'=>$value->getCodigoRude(),
+                                  'paterno'=>$value->getPaterno(),
+                                  'materno'=>$value->getMaterno(),
+                                  'nombre'=>$value->getNombre(),
+                                  'fnac'=>$value->getFechaNacimiento()->format('d-m-Y'),
+                                  );
           }
+
+          $status = 'error';
+          $code = 400;
+          $message = "Estudiante Observado, tiene mas de un Código RUDE";
+          $swcreatestudent = false;  
+
+        }
+
+
 
       }else{
 
@@ -699,6 +734,7 @@ class StudentsInscriptionsController extends Controller {
             'code'            => $code,
             'message'         => $message,
             'swcreatestudent' => $swcreatestudent,
+            'arrRudesStudent' => $arrRudesStudent,
             
       );
       
@@ -809,23 +845,30 @@ class StudentsInscriptionsController extends Controller {
       // get the send values 
       $iecId = $request->get('iecId');
       $studentId = $request->get('studentId');
-      $casespecial = ($request->get('casespecial')=='false')?false:true;;
+      $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
       $fecNac = $request->get('fecNac');
-      
+      $arrRudesStudent = false;
       // set parameter to validate inscription
-      $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>($casespecial=='false')?false:true, 'iecId' => $iecId, 'studentId'=>$studentId) ;
-
+      $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial, 'iecId' => $iecId, 'studentId'=>$studentId) ;
+      
      // get the studnets age
       $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
 
       // create db conexion
       if(!($swyearStudent)){
+        // set data to validate STUDENTS RUDE
+        $arrdataStudent = array(
+        'paterno'=>$request->get('paterno'),
+        'materno'=>$request->get('materno'),
+        'nombre'=>$request->get('nombre'),
+        );
+        
+        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
+        
+        if(sizeof($objRudesStudent)==1){
           try {
-
-
-
             // get info about the students inscriptions
             $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId); 
             // check if the student has an inscription on this course
@@ -885,7 +928,28 @@ class StudentsInscriptionsController extends Controller {
             echo 'error in save the data inscription';
             $em->getConnection()->rollback();
             
+          }          
+
+        }else{
+          $arrRudesStudent = array();
+          foreach ($objRudesStudent as $value) {
+            $arrRudesStudent[]=array(
+                                  'ci'=>$value->getCarnetIdentidad(),
+                                  'complemento'=>$value->getComplemento(),
+                                  'codigorude'=>$value->getCodigoRude(),
+                                  'paterno'=>$value->getPaterno(),
+                                  'materno'=>$value->getMaterno(),
+                                  'nombre'=>$value->getNombre(),
+                                  'fnac'=>$value->getFechaNacimiento()->format('d-m-Y'),
+                                  );
           }
+
+          $status = 'error';
+          $code = 400;
+          $message = "Estudiante Observado, tiene mas de un Código RUDE";
+          $swcreatestudent = false;  
+
+        }
 
       }else{
           $status = 'error';
@@ -898,7 +962,8 @@ class StudentsInscriptionsController extends Controller {
         'status'          => $status,
         'code'            => $code,
         'message'         => $message,
-        'swcreatestudent' => $swcreatestudent,      
+        'swcreatestudent' => $swcreatestudent,    
+        'arrRudesStudent' => $arrRudesStudent,    
       );
       
       $response->setStatusCode(200);
@@ -961,6 +1026,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     private function validateYearsStudent($arrStudent){
+      
       // create db conexion
       $em = $this->getDoctrine()->getManager();
       $validateYear = false;

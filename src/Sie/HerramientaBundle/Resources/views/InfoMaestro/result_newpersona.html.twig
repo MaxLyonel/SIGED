@@ -1,0 +1,81 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    Recibidos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Personal Docente', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Personas encontradas'} %}
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Resultado de la búsqueda</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                            {% if persona is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-striped table-primary">
+                                        <thead>
+                                            <tr>
+                                                <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Fecha Nac.</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="label label-success">Nuevo</span> {{ persona.carnet }}</td>
+                                                <td>{{ persona.complemento }}</td>
+                                                <td>{{ persona.paterno }}</td>
+                                                <td>{{ persona.materno }}</td>
+                                                <td>{{ persona.nombre }}</td>
+                                                <td>{{ persona.fechaNacimiento|date('d-m-Y') }}</td>
+                                                <td>
+                                                    <form action="{{path('herramienta_info_maestro_new')}}" method="post" style="display:inline-block">
+                                                        <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.id}}">
+                                                        <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
+                                                        <input type="hidden" name="form[gestion]" id="form_gestion" value="{{gestion}}">
+                                                        <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Registrar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-danger" role="alert" id="alerta1">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    No se encontraron Personas registradas con el número de carnet y complemento ingresados. Debe registrar a la persona (la información será validada por SEGIP).
+                                </div>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}

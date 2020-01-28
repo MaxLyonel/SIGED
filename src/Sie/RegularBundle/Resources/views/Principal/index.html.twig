@@ -294,7 +294,20 @@
                     <!-- <p>
                       <a href="http://bit.ly/2Deb20q" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i> Descargar Herramienta SIGED SIE v1.2.6</a>
                     </p> -->
-                    <p><a href="{{ path('download_file_install_download' )}}" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i> Descargar Herramienta SIGED SIE v1.2.9.2</a></p>
+                  {#   <p><a href="{{ path('download_file_install_download' )}}" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i> Descargar Herramienta SIGED SIE v1.2.9.2</a></p> #}
+                            {% for instalador in instalador %}
+                            {%if (loop.index ==1)%}
+                                   <div>
+                                        <p><a href="{{ path('data_transfer_installer_download',{'id':instalador.id} )}}" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i>Descargar {{instalador.detalle}}</a></p>
+                                    </div>
+                                   
+                             {% else %}
+                                     <div>
+                                        <p><a href="{{ path('data_transfer_installer_download',{'id':instalador.id} )}}" targer="_blank" class="btn btn-block btn-danger"><i class="fa fa-download fa-fw"></i>Descargar {{instalador.detalle}}</a></p>
+                                    </div>
+                            {% endif %}
+                               
+                            {% endfor %}
                     {# <p><a href="{{ path('download_file_install_download' )}}" targer="_blank" class="btn btn-block btn-orange"><i class="fa fa-download fa-fw"></i> Descargar Actualizador SIGED SIE v1.2.6 a SIGED SIE v1.2.8</a></p> 
                     #}
                     <div class="embed-responsive embed-responsive-16by9">

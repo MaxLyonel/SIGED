@@ -1,0 +1,15 @@
+data_transfer_installer_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:DataTransferInstaller:index }
+
+data_transfer_installer_upload:
+    path:    /upload
+    defaults: { _controller: SieRegularBundle:DataTransferInstaller:uploadInstaller }
+
+data_transfer_installer_activate:
+    path:    /activate
+    defaults: { _controller: SieRegularBundle:DataTransferInstaller:activateInstaller }
+
+data_transfer_installer_download:
+    path:     /installDownload
+    defaults: { _controller: SieRegularBundle:DataTransferInstaller:downloadInstaller }

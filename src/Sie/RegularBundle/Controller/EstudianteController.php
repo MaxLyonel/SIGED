@@ -28,7 +28,8 @@ class EstudianteController extends Controller {
     public function indexAction(Request $request) {
         // data es un array con claves 'name', 'email', y 'message'
         return $this->render($this->session->get('pathSystem') . ':Estudiante:searchstudent.html.twig', array(
-                    'form' => $this->createSearchForm()->createView(),
+            'form' => $this->createSearchForm()->createView(),
+            'form1' => $this->createSearchCIForm()->createView(),
         ));
     }
 
@@ -42,12 +43,23 @@ class EstudianteController extends Controller {
     private function createSearchForm() {
         $estudiante = new Estudiante();
         $form = $this->createFormBuilder($estudiante)
-                ->setAction($this->generateUrl('student_result'))
-                ->add('paterno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
-                ->add('materno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
-                ->add('nombre', 'text', array('required' => false, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
-                ->add('lookfor', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
-                ->getForm();
+            ->setAction($this->generateUrl('student_result'))
+            ->add('paterno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+            ->add('materno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+            ->add('nombre', 'text', array('required' => true, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,50}', 'maxlength' => 50, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+            ->add('buscar0', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
+
+    private function createSearchCIForm() {
+        $estudiante = new Estudiante();
+        $form = $this->createFormBuilder($estudiante)
+            ->setAction($this->generateUrl('student_result'))
+            ->add('carnetIdentidad', 'text', array('required' => true, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+            ->add('complemento', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zA-Z0-9]{0,2}', 'maxlength' => 2, 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+            ->add('buscar1', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
         return $form;
     }
 
@@ -58,29 +70,53 @@ class EstudianteController extends Controller {
     public function resultAction(Request $request) {
         $sesion = $request->getSession();
         $form = $request->get('form');
-
+        $tipo = intval($form['tipo']);
         $repository = $this->getDoctrine()->getRepository('SieAppWebBundle:Estudiante');
 
-        $query = $repository->createQueryBuilder('e')
-                ->where('e.paterno like :paterno')
-                ->andWhere('upper(e.materno) like :materno')
-                ->andWhere('upper(e.nombre) like :nombre')
-                ->setParameter('paterno', '%' . mb_strtoupper($form['paterno'], 'utf8') . '%')
-                ->setParameter('materno', '%' . mb_strtoupper($form['materno'], 'utf8') . '%')
-                ->setParameter('nombre', '%' . mb_strtoupper($form['nombre'], 'utf8') . '%')
-                ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
+        if($tipo == 0) {
+            $query = $repository->createQueryBuilder('e')
+            ->where('upper(e.paterno) like :paterno')
+            ->andWhere('upper(e.materno) like :materno')
+            ->andWhere('upper(e.nombre) like :nombre')
+            ->setParameter('paterno', '%' . mb_strtoupper($form['paterno'], 'utf8') . '%')
+            ->setParameter('materno', '%' . mb_strtoupper($form['materno'], 'utf8') . '%')
+            ->setParameter('nombre', '%' . mb_strtoupper($form['nombre'], 'utf8') . '%')
+            ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
+            ->getQuery();
+        } else {
+            if($form['complemento']) {
+                $query = $repository->createQueryBuilder('e')
+                ->where('e.carnetIdentidad = :carnetIdentidad')
+                ->andWhere('upper(e.complemento) = :complemento')
+                ->andWhere('e.segipId = :segipId')
+                ->setParameter('carnetIdentidad', $form['carnetIdentidad'])
+                ->setParameter('complemento', mb_strtoupper($form['complemento'], 'utf8'))
+                ->setParameter('segipId', '1')
+                ->orderBy('e.carnetIdentidad', 'ASC')
                 ->getQuery();
+            } else {
+                $query = $repository->createQueryBuilder('e')
+                ->where('e.carnetIdentidad = :carnetIdentidad')
+                ->andWhere('e.segipId = :segipId')
+                ->setParameter('carnetIdentidad', $form['carnetIdentidad'])
+                ->orderBy('e.carnetIdentidad', 'ASC')
+                ->setParameter('segipId', '1')
+                ->getQuery();
+            }
+        }
+
         $entities = $query->getResult();
+
         if (!$entities) {
-            $message = "Busqueda no encontrada...";
+            $message = "No se encontraron resultados con los parámetros de búsqueda ingresados.";
             $this->addFlash('warningstudent', $message);
             return $this->redirectToRoute('estudiante_index');
         }
 
-        $message = 'Resultado de la busqueda...';
+        $message = "La búsqueda fue satisfactoria, se encontraron los siguientes resultados.";
         $this->addFlash('successstudent', $message);
         return $this->render($this->session->get('pathSystem') . ':Estudiante:resultstudent.html.twig', array(
-                    'entities' => $entities,
+            'entities' => $entities,
         ));
     }
 
@@ -115,12 +151,12 @@ class EstudianteController extends Controller {
         }
 
         return $this->render($this->session->get('pathSystem') . ':Estudiante:resultHistory.html.twig', array(
-                    'datastudent' => $student,
-                    'dataInscriptionR' => $dataInscriptionR,
-                    'dataInscriptionA' => $dataInscriptionA,
-                    'dataInscriptionE' => $dataInscriptionE,
-                    'dataInscriptionP' => $dataInscriptionP,
-                    'visible' => false
+            'datastudent' => $student,
+            'dataInscriptionR' => $dataInscriptionR,
+            'dataInscriptionA' => $dataInscriptionA,
+            'dataInscriptionE' => $dataInscriptionE,
+            'dataInscriptionP' => $dataInscriptionP,
+            'visible' => false
         ));
     }
 
@@ -153,36 +189,36 @@ class EstudianteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneByLugarNivel(1);
         $form = $this->createFormBuilder($estudiante)
-                ->setAction($this->generateUrl('estudiante_main_create'))
-                ->add('carnetIdentidad', 'text', array('required' => true, 'pattern' => '[0-9]{4,10}'))
-                ->add('paterno', 'text', array('required' => true, 'pattern' => '[a-zA-Z\s]{2,20}'))
-                ->add('materno', 'text', array('required' => true, 'pattern' => '[a-zA-Z\s]{2,20}'))
-                ->add('nombre', 'text', array('required' => true, 'pattern' => '[a-zA-Z\s]{2,50}'))
-                ->add('oficialia', 'text', array('required' => false))
-                ->add('libro', 'text', array('required' => false))
-                ->add('partida', 'text', array('required' => false))
-                ->add('folio', 'text', array('required' => false))
-                ->add('sangreTipoId', 'entity', array('class' => 'SieAppWebBundle:SangreTipo', 'property' => 'grupoSanguineo'))
-                ->add('idiomaMaternoId', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'property' => 'idiomaMaterno'))
-                ->add('complemento', 'text', array('required' => false, 'pattern' => '[0-9]{1}[A-Z]{1}', 'max_length' => '2'))
-                ->add('fechaNacimiento', 'text', array('required' => true, 'attr' => array('placeholder' => 'dd-mm-YYYY')))
-                ->add('correo', 'text', array('required' => false))
-                ->add('localidadNac', 'text', array('required' => false))
-                ->add('celular', 'text', array('required' => false, 'pattern' => '[0-9]{6,10}'))
-                ->add('carnetCodepedis', 'text', array('required' => false))
-                ->add('carnetIbc', 'text', array('required' => false))
-                ->add('generoTipo', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'property' => 'genero'))
-                ->add('lugarNacTipo', 'entity', array('class' => 'SieAppWebBundle:LugarTipo',
-                    'query_builder' => function (EntityRepository $e) {
-                        return $e->createQueryBuilder('lt')
-                                ->where('lt.lugarNivel = :id')
-                                ->setParameter('id', '1')
-                                ->orderBy('lt.id', 'ASC')
-                        ;
-                    }, 'property' => 'lugar'))
-                ->add('estadoCivil', 'entity', array('class' => 'SieAppWebBundle:EstadoCivilTipo', 'property' => 'estadoCivil'))
-                ->add('guardar', 'submit', array('label' => 'Guardar y continuar'))
-                ->getForm();
+            ->setAction($this->generateUrl('estudiante_main_create'))
+            ->add('carnetIdentidad', 'text', array('required' => true, 'pattern' => '[0-9]{4,10}'))
+            ->add('paterno', 'text', array('required' => true, 'pattern' => '[a-zA-Z\s]{2,20}'))
+            ->add('materno', 'text', array('required' => true, 'pattern' => '[a-zA-Z\s]{2,20}'))
+            ->add('nombre', 'text', array('required' => true, 'pattern' => '[a-zA-Z\s]{2,50}'))
+            ->add('oficialia', 'text', array('required' => false))
+            ->add('libro', 'text', array('required' => false))
+            ->add('partida', 'text', array('required' => false))
+            ->add('folio', 'text', array('required' => false))
+            ->add('sangreTipoId', 'entity', array('class' => 'SieAppWebBundle:SangreTipo', 'property' => 'grupoSanguineo'))
+            ->add('idiomaMaternoId', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'property' => 'idiomaMaterno'))
+            ->add('complemento', 'text', array('required' => false, 'pattern' => '[0-9]{1}[A-Z]{1}', 'max_length' => '2'))
+            ->add('fechaNacimiento', 'text', array('required' => true, 'attr' => array('placeholder' => 'dd-mm-YYYY')))
+            ->add('correo', 'text', array('required' => false))
+            ->add('localidadNac', 'text', array('required' => false))
+            ->add('celular', 'text', array('required' => false, 'pattern' => '[0-9]{6,10}'))
+            ->add('carnetCodepedis', 'text', array('required' => false))
+            ->add('carnetIbc', 'text', array('required' => false))
+            ->add('generoTipo', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'property' => 'genero'))
+            ->add('lugarNacTipo', 'entity', array('class' => 'SieAppWebBundle:LugarTipo',
+                'query_builder' => function (EntityRepository $e) {
+                    return $e->createQueryBuilder('lt')
+                            ->where('lt.lugarNivel = :id')
+                            ->setParameter('id', '1')
+                            ->orderBy('lt.id', 'ASC')
+                    ;
+                }, 'property' => 'lugar'))
+            ->add('estadoCivil', 'entity', array('class' => 'SieAppWebBundle:EstadoCivilTipo', 'property' => 'estadoCivil'))
+            ->add('guardar', 'submit', array('label' => 'Guardar y continuar'))
+            ->getForm();
         return $form;
     }
 

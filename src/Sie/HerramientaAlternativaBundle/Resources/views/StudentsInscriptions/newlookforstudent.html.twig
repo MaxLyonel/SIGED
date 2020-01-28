@@ -167,10 +167,10 @@
                               </div>
                               <div class="col-sm-2">
                               <label for="fechanac">Fec. Nacimiento</label>
-                                  <input type="text" class="form-control" placeholder="Fec. Nacimiento" v-model="newStudent.fecNac">
+                                  <input type="text" class="form-control" placeholder="dd-mm-aaaa" v-model="newStudent.fecNac">
                               </div>
                               <div class="col-sm-3">
-                              <label for="genero">Genero</label>
+                              <label for="genero">G&eacute;nero</label>
                                 <select name="arrGenero" id="idarrGenero" v-model="newStudent.generoId" class="custom-select form-control" v-model="newStudent.genero">  
                                   <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
                                 </select>
@@ -319,165 +319,200 @@
                   </div>
                 </div> 
                 </br>
+              </div>
 
-                  <button v-on:click="showhistory()" type="button" class="btn btn-primary btn-block"><i class="fa fa-document"></i> Ver Historial</button>
-                            
-                            <div v-if="swhistory" class="text-center">
-                              <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
-                            </div>
+              <div v-if="swproceso" class="text-center">
+                <img src="{{asset('img/loading.gif')}}" alt=""> Procesando...
+              </div>
+              <div v-if="message"  class=" text-center alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i> ${message}</strong>
+              </div>
 
-                            <div v-if="historyReg">
+                <div   class="" role="">
 
-                              <h4 align="center" class="text-primary">Educación Regular</h4><hr>
-                              <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
-                              <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
-                                  <thead>
-                                    <tr role="row">
-                                     <th class="text-center">Gestión</th>
-                                     <th class="text-center">SIE</th>
-                                     <th class="text-center">Unidad Educativa</th>
-                                     <th class="text-center">Nivel</th>
-                                     <th class="text-center">Grado</th>
-                                     <th class="text-center">Paralelo</th>
-                                     <th class="text-center">Turno</th>
-                                     <th class="text-center">Estado Matrícula</th>
-                                    </tr>
-                                  </thead>
+                  <table v-if="message && DBRudesStudent" id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                    <thead>
+                      <tr role="row">
+                        <th class="text-center">RUDE</th>
+                        <th class="text-center">CI COMPLEMENTO</th>
+                        <th class="text-center">PATERNO</th>
+                        <th class="text-center">MATERNO</th>
+                        <th class="text-center">NOMBRE(S)</th>
+                        <th class="text-center">FECHA NACIMIENTO</th>
+                      </tr>
+                    </thead>
 
-                                  <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                    <tr v-for="(historyR, index) in historyReg">
-                                      <td>${historyR.gestion_tipo_id_raep}</td>
-                                      <td>${historyR.institucioneducativa_id_raep}</td>
-                                      <td>${historyR.institucioneducativa_raep}</td>
-                                      <td>${historyR.nivel_r}</td>
-                                      <td>${historyR.grado_r}</td>
-                                      <td>${historyR.paralelo_raep}</td>
-                                      <td>${historyR.turno_raep}</td>
-                                      <td class="text-center">${historyR.estadomatricula_fin_r}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                      <tr v-for="(infostudent, indexst) in DBRudesStudent">
+                        <td>${infostudent.codigorude}</td>
+                        <td>${infostudent.ci} ${infostudent.complemento }</td>
+                        <td>${infostudent.paterno}</td>
+                        <td>${infostudent.materno}</td>
+                        <td>${infostudent.nombre}</td>
+                        <td>${infostudent.fnac}</td>                        
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>              
+
+
+
+              <div v-if="swstudent">
+
+                    <button v-on:click="showhistory()" type="button" class="btn btn-primary btn-block"><i class="fa fa-document"></i> Ver Historial</button>
+                              
+                              <div v-if="swhistory" class="text-center">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
                               </div>
 
-                            </div>
+                              <div v-if="historyReg">
 
-                            <div v-if="historyAlt">
+                                <h4 align="center" class="text-primary">Educación Regular</h4><hr>
+                                <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                                <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                                    <thead>
+                                      <tr role="row">
+                                       <th class="text-center">Gestión</th>
+                                       <th class="text-center">SIE</th>
+                                       <th class="text-center">Unidad Educativa</th>
+                                       <th class="text-center">Nivel</th>
+                                       <th class="text-center">Grado</th>
+                                       <th class="text-center">Paralelo</th>
+                                       <th class="text-center">Turno</th>
+                                       <th class="text-center">Estado Matrícula</th>
+                                      </tr>
+                                    </thead>
 
-                              <h4 align="center" class="text-primary">Educación Alternativa</h4><hr>
-                              <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
-                              <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
-                                  <thead>
-                                    <tr role="row">
-                                     <th class="text-center">Gestión</th>
-                                     <th class="text-center">SIE / Subcentro</th>
-                                     <th class="text-center">Centro</th>
-                                     <th class="text-center">Periodo</th>
-                                     <th class="text-center">Acreditación</th>
-                                     <th class="text-center">Área</th>
-                                     <th class="text-center">Especialidad</th>
-                                     <th class="text-center">Paralelo</th>
-                                     <th class="text-center">Turno</th>
-                                    </tr>
-                                  </thead>
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                      <tr v-for="(historyR, index) in historyReg">
+                                        <td>${historyR.gestion_tipo_id_raep}</td>
+                                        <td>${historyR.institucioneducativa_id_raep}</td>
+                                        <td>${historyR.institucioneducativa_raep}</td>
+                                        <td>${historyR.nivel_r}</td>
+                                        <td>${historyR.grado_r}</td>
+                                        <td>${historyR.paralelo_raep}</td>
+                                        <td>${historyR.turno_raep}</td>
+                                        <td class="text-center">${historyR.estadomatricula_fin_r}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
 
-                                  <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                    <tr v-for="(historyA, index) in historyAlt">
-                                      <td>${historyA.gestion_tipo_id_raep}</td>
-                                      <td>${historyA.institucioneducativa_id_raep} - ${historyA.sucursal_tipo_id_a}</td>
-                                      <td>${historyA.institucioneducativa_raep}</td>
-                                      <td>${historyA.periodo_raep}</td>
-                                      <td>${historyA.acreditacion_a}</td>
-                                      <td>${historyA.facultad_area_a}</td>
-                                      <td>${historyA.especialidad_a}</td>
-                                      <td>${historyA.paralelo_raep}</td>
-                                      <td>${historyA.turno_raep}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
                               </div>
 
-                            </div>                            
+                              <div v-if="historyAlt">
 
-                            <div v-if="historyEsp">
+                                <h4 align="center" class="text-primary">Educación Alternativa</h4><hr>
+                                <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                                <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                                    <thead>
+                                      <tr role="row">
+                                       <th class="text-center">Gestión</th>
+                                       <th class="text-center">SIE / Subcentro</th>
+                                       <th class="text-center">Centro</th>
+                                       <th class="text-center">Periodo</th>
+                                       <th class="text-center">Acreditación</th>
+                                       <th class="text-center">Área</th>
+                                       <th class="text-center">Especialidad</th>
+                                       <th class="text-center">Paralelo</th>
+                                       <th class="text-center">Turno</th>
+                                      </tr>
+                                    </thead>
 
-                              <h4 align="center" class="text-primary">Educación Especial</h4><hr>
-                              <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
-                              <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
-                                  <thead>
-                                    <tr role="row">
-                                     <th class="text-center">Gestion</th>
-                                     <th class="text-center">SIE</th>
-                                     <th class="text-center">Centro</th>
-                                     <th class="text-center">Área</th>
-                                     <th class="text-center">Nivel</th>
-                                     <th class="text-center">Grado</th>
-                                     <th class="text-center">Paralelo</th>
-                                     <th class="text-center">Turno</th>
-                                     <th class="text-center">Técnico</th>
-                                    </tr>
-                                  </thead>
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                      <tr v-for="(historyA, index) in historyAlt">
+                                        <td>${historyA.gestion_tipo_id_raep}</td>
+                                        <td>${historyA.institucioneducativa_id_raep} - ${historyA.sucursal_tipo_id_a}</td>
+                                        <td>${historyA.institucioneducativa_raep}</td>
+                                        <td>${historyA.periodo_raep}</td>
+                                        <td>${historyA.acreditacion_a}</td>
+                                        <td>${historyA.facultad_area_a}</td>
+                                        <td>${historyA.especialidad_a}</td>
+                                        <td>${historyA.paralelo_raep}</td>
+                                        <td>${historyA.turno_raep}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
 
-                                  <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                    <tr v-for="(historyE, index) in historyEsp">
-                                      <td>${historyE.gestion_tipo_id_raep}</td>
-                                      <td>${historyE.institucioneducativa_id_raep}</td>
-                                      <td>${historyE.institucioneducativa_raep}</td>
-                                      <td>${historyE.area_especial_e}</td>
-                                      <td>${historyE.nivel_e}</td>
-                                      <td>${historyE.grado_e}</td>
-                                      <td>${historyE.paralelo_raep}</td>
-                                      <td>${historyE.turno_raep}</td>
-                                      <td>${historyE.tecnica_e}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                              </div>                            
+
+                              <div v-if="historyEsp">
+
+                                <h4 align="center" class="text-primary">Educación Especial</h4><hr>
+                                <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                                <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                                    <thead>
+                                      <tr role="row">
+                                       <th class="text-center">Gestion</th>
+                                       <th class="text-center">SIE</th>
+                                       <th class="text-center">Centro</th>
+                                       <th class="text-center">Área</th>
+                                       <th class="text-center">Nivel</th>
+                                       <th class="text-center">Grado</th>
+                                       <th class="text-center">Paralelo</th>
+                                       <th class="text-center">Turno</th>
+                                       <th class="text-center">Técnico</th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                      <tr v-for="(historyE, index) in historyEsp">
+                                        <td>${historyE.gestion_tipo_id_raep}</td>
+                                        <td>${historyE.institucioneducativa_id_raep}</td>
+                                        <td>${historyE.institucioneducativa_raep}</td>
+                                        <td>${historyE.area_especial_e}</td>
+                                        <td>${historyE.nivel_e}</td>
+                                        <td>${historyE.grado_e}</td>
+                                        <td>${historyE.paralelo_raep}</td>
+                                        <td>${historyE.turno_raep}</td>
+                                        <td>${historyE.tecnica_e}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+
                               </div>
 
-                            </div>
+                              <div v-if="historyPer">
 
-                            <div v-if="historyPer">
+                                <h4 align="center" class="text-primary">Programa Nacional de Post-alfabetización</h4><hr>
+                                <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                                <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                                    <thead>
+                                      <tr role="row">
+                                        <th class="text-center">Gestión</th>
+                                        <th class="text-center">Lugar</th>
+                                        <th class="text-center">Plan</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Fecha Inicio</th>
+                                        <th class="text-center">Fecha Fin</th>
+                                        <th class="text-center">Id Curso</th>
+                                        <th class="text-center">Estado Matrícula</th>
+                                        <th class="text-center">Acciones</th>
+                                      </tr>
+                                    </thead>
 
-                              <h4 align="center" class="text-primary">Programa Nacional de Post-alfabetiselect * from persona limit 10zación</h4><hr>
-                              <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
-                              <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
-                                  <thead>
-                                    <tr role="row">
-                                      <th class="text-center">Gestión</th>
-                                      <th class="text-center">Lugar</th>
-                                      <th class="text-center">Plan</th>
-                                      <th class="text-center">Grado</th>
-                                      <th class="text-center">Fecha Inicio</th>
-                                      <th class="text-center">Fecha Fin</th>
-                                      <th class="text-center">Id Curso</th>
-                                      <th class="text-center">Estado Matrícula</th>
-                                      <th class="text-center">Acciones</th>
-                                    </tr>
-                                  </thead>
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                      <tr v-for="(historyP, index) in historyPer">
+                                        <td>${historyP.gestion}</td>
+                                        <td>${historyP.institucioneducativa}</td>
+                                        <td>${historyP.partp}</td>
+                                        <td>${historyP.bloquep}</td>
+                                        <td></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
 
-                                  <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                    <tr v-for="(historyP, index) in historyPer">
-                                      <td>${historyP.gestion}</td>
-                                      <td>${historyP.institucioneducativa}</td>
-                                      <td>${historyP.partp}</td>
-                                      <td>${historyP.bloquep}</td>
-                                      <td></td>
-                                    </tr>
-                                  </tbody>
-                                </table>
                               </div>
-
-                            </div>
 
               </div>
               </br>
 
-                <div v-if="swproceso" class="text-center">
-                  <img src="{{asset('img/loading.gif')}}" alt=""> Procesando...
-                </div>
-                <div v-if="message"  class=" text-center alert alert-warning alert-dismissible" role="alert">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <strong><i class='fa fa-linux'></i> ${message}</strong>
-                </div>                
+                           
                 
 
               
@@ -522,6 +557,7 @@ var app = new Vue({
         DBDepto:{},
         DBProvincia:{},
         DBExcepcional:{},
+        DBRudesStudent:{},
         historyReg:{},
         historyAlt:{},
         historyEsp:{},
@@ -543,6 +579,7 @@ var app = new Vue({
         this.historyAlt = false;
         this.historyEsp = false;
         this.historyPer = false; 
+        this.DBRudesStudent = false; 
 
         if(this.cival.length == 0){
           this.message = 'debe introducir un carnet';
@@ -571,7 +608,7 @@ var app = new Vue({
                 this.userAllowedOnCasespecial = response.data.userAllowedOnCasespecial;
 
               }
-                console.log(this.dataStudent);
+                //console.log(this.dataStudent);
                 this.buscando = false;
             })
             .catch(e => {
@@ -677,7 +714,8 @@ var app = new Vue({
     },
     validateandregisterNewStudent: function(newperson){
       this.swproceso = true;
-
+      this.DBRudesStudent = false;
+      this.message = false;
       /*this.dataStudent.expedidoId2 = 0;*/
       if(newperson){
           this.dataStudent.paisId = this.newStudent.paisId;
@@ -781,13 +819,16 @@ var app = new Vue({
                 axios.post(Routing.generate('alter_inscriptionstudent_checkDataStudent', this.dataStudent ))
                 .then(response => {
                     if (response.status == 200) {
+                      this.DBRudesStudent = response.data.arrRudesStudent;
                       this.message = response.data.message;
                       this.swcreatestudent = response.data.swcreatestudent;
                       this.swproceso = false;
                       if(this.swcreatestudent){
                         showListStudent(this.iecId, this.infoUe);
                       }
-                      
+
+                      this.buscando = false;
+                      this.swproceso = false;                      
                     }
                     if( response.status == 202){
                         //this.respuesta = response.data;
@@ -803,15 +844,20 @@ var app = new Vue({
       console.log(this.dataStudent);*/
       //return ;
          }
-         console.log(this.message);
-        this.buscando = false;
-        this.swproceso = false;
+         //console.log(this.message);
+        
       })
     },
     studentsInscription: function(){
-    
     this.dataStudent.iecId = this.iecId;
     this.swproceso = true;
+    this.DBRudesStudent = false;
+    this.message = false;    
+    this.historyReg = false;    
+    this.historyPer = false;    
+    this.historyEsp = false;    
+    this.historyAlt = false;    
+
           Swal.fire({
             title: '¿Realizar incripción?',
             text: "El estudiante será inscrito en el curso seleccionado",
@@ -827,11 +873,16 @@ var app = new Vue({
       axios.post(Routing.generate('alter_inscriptionstudent_studentsInscription', this.dataStudent ))
       .then(response => {
           if (response.status == 200) {
+
+            this.DBRudesStudent = response.data.arrRudesStudent;
             this.message = response.data.message;
             this.swcreatestudent = response.data.swcreatestudent;
             if(this.swcreatestudent){
               showListStudent(this.iecId, this.infoUe);
             }
+
+            this.buscando = false;
+            this.swproceso = false;
             
           }
           if( response.status == 202){
@@ -845,8 +896,7 @@ var app = new Vue({
           this.buscando = false;
       });
       }
-      this.buscando = false;
-      this.swproceso = false;
+      
     })
       
     },

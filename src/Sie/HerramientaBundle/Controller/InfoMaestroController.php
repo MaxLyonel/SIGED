@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\MaestroInscripcion;
 use Sie\AppWebBundle\Entity\MaestroInscripcionIdioma;
-use GuzzleHttp\Client;
+use Sie\AppWebBundle\Entity\Persona;
+use Sie\AppWebBundle\Form\VerificarPersonaSegipType;
+use Sie\AppWebBundle\Form\PersonaDatosType;
 
 /**
  * EstudianteInscripcion controller.
@@ -297,11 +299,181 @@ class InfoMaestroController extends Controller {
         $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
         
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
+        $data = [
+            'carnet' => $form['carnet'],
+            'complemento' => $form['complemento'],
+        ];
+
+        $formVerificarPersona = $this->createForm(new VerificarPersonaSegipType(), 
+            null,
+            array(
+                'action' => $this->generateUrl('herramienta_info_maestro_segip_verificar_persona'), 
+                'method' => 'POST'
+            )
+        );
 
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:result.html.twig', array(
-                    'persona' => $persona,
-                    'institucion' => $institucion,
-                    'gestion' => $request->getSession()->get('idGestion')
+            'data' => $data,
+            'persona' => $persona,
+            'institucion' => $institucion,
+            'gestion' => $request->getSession()->get('idGestion'),
+            'form_verificar' => $formVerificarPersona->createView(),
+        ));
+    }
+
+    public function verificarPersonaAction(Request $request){
+        
+        $form = $request->get('sie_verificar_persona_segip');
+
+        $data = [
+            'carnet' => $form['carnet'],
+            'complemento' => $form['complemento'],
+            'primer_apellido' => $form['primer_apellido'],
+            'segundo_apellido' => $form['segundo_apellido'],
+            'nombre' => $form['nombre'],
+            'fecha_nacimiento' => $form['fecha_nacimiento']
+        ];
+
+        $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
+        $persona = array();
+
+        if($resultado) {
+            $persona = [
+                'carnet' => $form['carnet'],
+                'complemento' => $form['complemento'] ? $form['complemento'] : '0',
+                'primer_apellido' => $form['primer_apellido'],
+                'segundo_apellido' => $form['segundo_apellido'],
+                'nombre' => $form['nombre'],
+                'fecha_nacimiento' => $form['fecha_nacimiento']
+            ];
+        }
+
+        $formPersonaDatos = $this->createForm(new PersonaDatosType(), 
+            null,
+            array(
+                'action' => $this->generateUrl('herramienta_info_maestro_persona_datos'), 
+                'method' => 'POST'
+            )
+        );
+
+        return $this->render($this->session->get('pathSystem') . ':InfoMaestro:formulario_persona_new.html.twig',array(
+            'form_datos' => $formPersonaDatos->createView(),
+            'resultado'=>$resultado,
+            'persona' => serialize($persona),
+            'institucion' => $form['institucion'],
+            'gestion' => $form['gestion'],
+        ));
+    }
+
+    public function registrarPersonaAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('sie_persona_datos');
+        $persona = unserialize($form['persona']);
+        $persona_validada = null;
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
+        $gestion = $form['gestion'];
+
+        //Verificar si la persona ya fue registrada
+        $repository = $em->getRepository('SieAppWebBundle:Persona');
+        if($persona['complemento'] == '0'){
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.carnet = :carnet AND p.segipId = :valor')
+                ->setParameter('carnet', $persona['carnet'])
+                ->setParameter('valor', 1)
+                ->getQuery();
+        }
+        else{
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
+                ->setParameter('carnet', $persona['carnet'])
+                ->setParameter('complemento', $persona['complemento'])
+                ->setParameter('valor', 1)
+                ->getQuery();
+        }
+        $personas = $query->getResult();
+
+        if($personas) {
+            $persona_validada = $personas[0];
+        } else {
+            //Buscar personas asociadas al nro de carnet y complemento con segip_id=0 y actualizar
+            $repository = $em->getRepository('SieAppWebBundle:Persona');
+            if($persona['complemento'] == '0'){
+                $query = $repository->createQueryBuilder('p')
+                    ->select('p')
+                    ->where('p.carnet = :carnet AND p.segipId = :valor')
+                    ->setParameter('carnet', $persona['carnet'])
+                    ->setParameter('valor', 0)
+                    ->getQuery();
+            }
+            else{
+                $query = $repository->createQueryBuilder('p')
+                    ->select('p')
+                    ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
+                    ->setParameter('carnet', $persona['carnet'])
+                    ->setParameter('complemento', $persona['complemento'])
+                    ->setParameter('valor', 0)
+                    ->getQuery();
+            }
+            $personas = $query->getResult();
+
+            //Buscar usuarios asociados con username = persona-complemento y actualizar
+            $repository = $em->getRepository('SieAppWebBundle:Usuario');
+            
+            $query = $repository->createQueryBuilder('u')
+                ->select('u')
+                ->where('u.persona in (:personas)')
+                ->setParameter('personas', $personas)
+                ->getQuery();
+
+            $usuarios = $query->getResult();
+
+            //Actualizar CI, complemento y username
+            foreach ($personas as $key => $value) {
+                $value->setCarnet($value->getCarnet().'±');
+                $em->persist($value);
+                $em->flush();
+            }
+
+            foreach ($usuarios as $key => $value) {
+                $value->setUsername($value->getUsername().'±');
+                $em->persist($value);
+                $em->flush();
+            }
+
+            if($persona['complemento'] == '0') {
+                $persona['complemento'] = '';
+            }
+            $newPersona = new Persona();
+            $newPersona->setCarnet($persona['carnet']);
+            $newPersona->setComplemento(mb_strtoupper($persona['complemento'], 'utf-8'));
+            $newPersona->setPaterno(mb_strtoupper($persona['primer_apellido'], 'utf-8'));
+            $newPersona->setMaterno(mb_strtoupper($persona['segundo_apellido'], 'utf-8'));
+            $newPersona->setNombre(mb_strtoupper($persona['nombre'], 'utf-8'));
+            $newPersona->setFechaNacimiento(new \DateTime($persona['fecha_nacimiento']));
+            $newPersona->setCelular($form['celular']);
+            $newPersona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+            $newPersona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+            $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
+            $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+            $newPersona->setSegipId(1);
+            $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+            $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+            $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
+            $newPersona->setRda('0');
+            $newPersona->setEsvigente('t');
+            $newPersona->setActivo('t');
+
+            $em->persist($newPersona);
+            $em->flush();
+            $persona_validada = $newPersona;
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':InfoMaestro:result_newpersona.html.twig',array(
+            'persona'=>$persona_validada,
+            'institucion' => $institucion,
+            'gestion' => $gestion
         ));
     }
 
