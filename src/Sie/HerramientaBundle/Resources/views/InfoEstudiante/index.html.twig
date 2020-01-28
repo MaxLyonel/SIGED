@@ -56,6 +56,11 @@
                                             <li><a href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}">Listado de estudiantes</a></li>
                                             <li><a href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}">Reporte NNATS</a></li>
                                             
+                                            {% if app.session.get('acceso_total') and app.session.get('ue_plena') %}
+                                                <li><a href="{{ path('download_estudiantes_nivelacion', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTE</a></li>
+                                                <li><a href="{{ path('download_estudiantes_nivelacionttg', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTG</a></li>
+                                            {% endif %}
+                                            
                                             <li class="divider"></li>
                                             <div class="dropdown-header">Operativos</div>
 

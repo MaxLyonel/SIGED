@@ -315,20 +315,19 @@
                     success: function (data) {
                         $("#message").empty();
                         if (data.estado){
+                            $("#formContent").empty();
                             $("#message").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg+'</div>');
                         } else {
                             botonSubmit.show();   
                             $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg+'</div>');
                         }
-                        $("#formContent").empty();
                     },
                     error: function(error){
                         botonSubmit.show(); 
                         $("#message").empty(); 
                         $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
                     },
-                });
-    
+                });    
                 return false;
             });
     
