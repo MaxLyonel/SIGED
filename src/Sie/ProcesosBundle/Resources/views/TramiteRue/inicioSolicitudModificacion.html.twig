@@ -967,7 +967,7 @@
                         tr = tr+'<td align="center"><button type="button" class="btn btn-xs btn-danger" data-placement="top" title="Eliminar trámite" onclick="borrarFila('+idtramite+')"><i class="glyphicon glyphicon-minus"></i></button>'+
                             '</td></tr>';
                         $('#tabla').append(tr);
-                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:2147483647 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:2147483646 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
                         if ($('#form_tr').val() == "" && id != 39 && id != 40) {
                             trArray = [Number(idtramite)];
                             $('#form_tr').val(JSON.stringify(trArray));
@@ -977,7 +977,7 @@
                             if(tipo == 'fusion'){
                                 buscarTramite(43,tipo);
                             }else{//desglose
-                                $('#apertura').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_apertura" ></div>');
+                                $('#apertura').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_apertura" data-backdrop="false" style="z-index:2147483647 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
                                 buscarTramite(54,tipo);
                             }
                         }else if($('#form_tr').val() != "" && (id == 39 || id == 40)){
