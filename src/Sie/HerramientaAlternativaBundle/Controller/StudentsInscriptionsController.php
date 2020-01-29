@@ -471,16 +471,31 @@ class StudentsInscriptionsController extends Controller {
                 'ueducativaInfoId' => array('nivelId' => $objUeducativa['nivelId'], 'cicloId' => $objUeducativa['cicloId'], 'gradoId' => $objUeducativa['gradoId'], 'turnoId' => $objUeducativa['turnoId'], 'paraleloId' => $objUeducativa['paraleloId'], 'iecId' => $objUeducativa['iecId'], 'setCodigo'=>$objUeducativa['setCodigo'], 'satCodigo'=>$objUeducativa['satCodigo'],'sfatCodigo'=>$objUeducativa['sfatCodigo'],'setId'=>$objUeducativa['setId'],'periodoId'=>$objUeducativa['periodoId'],)
             ));
       // added validation to show the inscription menor option
-      $showCaseSpecialOption = ($sinfoUeducativa['ueducativaInfoId']['nivelId'] ==15 && $sinfoUeducativa['ueducativaInfoId']['cicloId']==2)?true:false;
+      $showCaseSpecialOption = ($sinfoUeducativa['ueducativaInfoId']['nivelId'] ==15 && ($sinfoUeducativa['ueducativaInfoId']['cicloId']==2 || $sinfoUeducativa['ueducativaInfoId']['cicloId']==1))?true:false;
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
+
       // get all data about EstudianteInscripcionAlternativaExcepcionalTipo
-      $objExcepcional = $em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->findAll();
+      // $objExcepcional = $em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->findAll();
+      $arridsexcepcional = array();
+      if( $sinfoUeducativa['ueducativaInfoId']['nivelId'] ==15 && $sinfoUeducativa['ueducativaInfoId']['cicloId']==1 ){
+        $arridsexcepcional = array(6);
+      }
+      if( $sinfoUeducativa['ueducativaInfoId']['nivelId'] ==15 && $sinfoUeducativa['ueducativaInfoId']['cicloId']==2 ){
+        $arridsexcepcional = array(1,2,3,4,5);
+      }
+      $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo');
+      $query = $entity->createQueryBuilder('eiaet')
+              ->select('eiaet')
+              ->where('eiaet.id  IN (:idsexcepcional) ')
+              ->setParameter('idsexcepcional', $arridsexcepcional )
+              ->getQuery();
+      $objExcepcional = $query->getResult();
+
       $arrExcepcional = array();
       foreach ($objExcepcional as $value) {
         $arrExcepcional[] = array('id'=>$value->getId(), 'description' => $value->getDescripcion());
-        
       }
 
       $arrResponse = array(
