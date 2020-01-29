@@ -39,11 +39,15 @@ class StudentsInscriptionsController extends Controller {
     public function indexAction(Request $request){
         //get the send values
         $infoUe = $request->get('infoUe');
+        $etapaespecialidad = $request->get('etapaespecialidad');
+        $paralelo = $request->get('paralelo');
 
         return $this->render('SieHerramientaAlternativaBundle:StudentsInscriptions:newlookforstudent.html.twig', array(
           // 'form'=>$this->findStudentForm($infoUe)->createView()
           'iecId' => $request->get('iecId'),
-          'infoUe'=> $infoUe
+          'infoUe'=> $infoUe,
+          'etapaespecialidad'=> $etapaespecialidad,
+          'paralelo'=> $paralelo,
         ));
     }
     /**

@@ -88,7 +88,7 @@
                 </div>
             {# endif #}
             <div class="col-md-3">
-                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}});" >
+                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                     <i class="fa fa-user"></i> Inscripción con CI
                 </button>
             </div>
@@ -473,10 +473,10 @@
 
     };
 
-    var doInscriptions = function(data, iecId){
+    var doInscriptions = function(data, iecId, etapaespecialidad, paralelo){
      $.ajax({
          type: 'post',
-         data: ({infoUe: data, iecId: iecId }),
+         data: ({infoUe: data, iecId: iecId, etapaespecialidad: etapaespecialidad, paralelo: paralelo  }),
          url: "{{ path('alter_inscriptionstudent_index') }}",
          beforeSend: function () {
              $('#modal').empty();
