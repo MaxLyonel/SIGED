@@ -114,7 +114,7 @@ class EstudianteInformacionController extends Controller {
                     ->andWhere('i.estadomatriculaTipo IN (:estados)')
                     ->setParameter('estudiante', $student)
                     ->setParameter('gestion', $gestion)
-                    ->setParameter('estados', array(4,5,11,55))
+                    ->setParameter('estados', array(4,5,11,28,55))
                     ->orderBy('i.id')
                     ->setMaxResults(1)
                     ->getQuery();
@@ -153,7 +153,7 @@ class EstudianteInformacionController extends Controller {
 
                 $institucion = $query->getOneOrNullResult();
 
-                $socioeconomico = $em->getRepository('SieAppWebBundle:SocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $inscription['insId'], 'gestionTipo' => $gestion));
+                $socioeconomico = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion' => $inscription['insId']));
 
                 return $this->render('SieAppWebBundle:EstudianteInformacion:result.html.twig', array(
                             'student' => $student,
@@ -217,15 +217,41 @@ class EstudianteInformacionController extends Controller {
 
     public function historyAction(Request $request, $idStudent) {
         $em = $this->getDoctrine()->getManager();
+        $dataInscriptionR = array();
+        $dataInscriptionA = array();
+        $dataInscriptionE = array();
+        $dataInscriptionP = array();
 
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-        $objInscriptions = $em->getRepository('SieAppWebBundle:Estudiante')->getHistoryInscription($idStudent);
+        
+        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $student->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+        $query->execute();
+        $dataInscription = $query->fetchAll();
 
+        foreach ($dataInscription as $key => $inscription) {
+            switch ($inscription['institucioneducativa_tipo_id_raep']) {
+              case '1':
+                $dataInscriptionR[$key] = $inscription;
+                break;
+              case '2':
+                $dataInscriptionA[$key] = $inscription;
+                break;
+              case '4':
+                $dataInscriptionE[$key] = $inscription;
+                break;
+              case '5':
+                $dataInscriptionP[$key] = $inscription;
+                break;
+            }
+        }
 
         return $this->render('SieAppWebBundle:EstudianteInformacion:resultHistory.html.twig', array(
-                    'datastudent' => $student,
-                    'dataInscription' => $objInscriptions,
+            'datastudent' => $student,
+            'dataInscriptionR' => $dataInscriptionR,
+            'dataInscriptionA' => $dataInscriptionA,
+            'dataInscriptionE' => $dataInscriptionE,
+            'dataInscriptionP' => $dataInscriptionP,
+            'visible' => false
         ));
     }
-
 }
