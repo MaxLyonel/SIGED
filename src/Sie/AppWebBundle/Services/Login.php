@@ -24,8 +24,8 @@ class Login {
      * verificamos si tiene roles activos
      */
 	public function verificarRolesActivos($id, $key) {                
-        $gestion = '2019';
-        $semestre = '2';
+        $gestion = '2020';
+        $semestre = '1';
 
         $db = $this->em->getConnection();
         //******************
