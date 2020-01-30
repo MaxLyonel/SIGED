@@ -68,13 +68,13 @@ class DataTransferInstallerController extends Controller {
                 //validate the files extension .exe
                 if (!in_array(strtolower($fileType), $aValidTypes)) {
                     $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir No tiene la extension correcta');
-                    return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));
+                    return $this->redirect($this->generateUrl('data_transfer_installer_index'));
                 }
 
                 //validate the files weight
                 if (!( 10001 < $oFile->getSize()) && !($oFile->getSize() < 2000000000)) {
                     $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir no tiene el tamaño correcto');
-                    return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));
+                    return $this->redirect($this->generateUrl('data_transfer_installer_index'));
                 }
 
                 // make the temp dir name
@@ -83,7 +83,7 @@ class DataTransferInstallerController extends Controller {
                 if (is_readable($this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/')) {
                 }else{
                     $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intentar subir el instalador');
-                    return $this->redirect($this->generateUrl('consolidation_sie_control_installer'));   
+                    return $this->redirect($this->generateUrl('data_transfer_installer_index'));   
                 }
                 $instalador=$em->getRepository('SieAppWebBundle:ControlInstalador')->findOneBy(array('instalador'=>$nombre));
                 $gestionInstaller=$em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('gestion'=>$gestion));
