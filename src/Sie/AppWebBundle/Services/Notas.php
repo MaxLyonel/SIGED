@@ -2452,7 +2452,7 @@ die;/*
                                             'idEstudianteNotaCualitativa'=>'nuevo',
                                             'idNotaTipo'=>$etapasArray[$i]['idNotaTipo'],
                                             'notaCualitativa'=>'',
-                                            'notaTipo'=>$this->literal($etapasArray[$i]['idNotaTipo']).' '.$tipoNota
+                                            'notaTipo'=>$this->literal($etapasArray[$i]['idNotaTipo'])['titulo'].' '.$tipoNota
                                         );
                 }
             }
