@@ -605,9 +605,9 @@ class DownloadFileSieController extends Controller {
             
             //  if ($objSie) {
             if ($objStatusUe->getEstadoInstitucionTipo()->getId()==10) {
-                foreach ($objSie as $gsie) {
-                    $aGestion[] = array('id'=>$gsie->getGestion(),'gestion'=>$gsie->getGestion());
-                }
+                // foreach ($objSie as $gsie) {
+                //     $aGestion[] = array('id'=>$gsie->getGestion(),'gestion'=>$gsie->getGestion());
+                // }
                 //this is for current year
                 $aGestion[] =array('id'=>$this->session->get('currentyear'),'gestion'=>$this->session->get('currentyear'));
                 $status = 'success';

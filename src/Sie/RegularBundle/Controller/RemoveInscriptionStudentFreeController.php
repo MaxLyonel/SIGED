@@ -61,7 +61,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         //set new gestion to the select year
         $aGestion = array();
         $currentYear = date('Y');
-        for ($i = 1; $i <= 1; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $aGestion[$currentYear] = $currentYear;
             $currentYear--;
         }
