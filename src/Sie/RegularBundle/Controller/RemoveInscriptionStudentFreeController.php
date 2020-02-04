@@ -61,7 +61,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         //set new gestion to the select year
         $aGestion = array();
         $currentYear = date('Y');
-        for ($i = 1; $i <= 1; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $aGestion[$currentYear] = $currentYear;
             $currentYear--;
         }
@@ -187,7 +187,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
       // $arrEstados = array('4'=>'Efectivo', '10'=>'Abandono');
       $rolesAllowed = array(7,8,10);
       if(in_array($rolUser,$rolesAllowed)){
-        $arrEstados = array('4'=>'EFECTIVO', /*'10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO',*//*'9'=>'RETIRADO TRASLADO'*/);
+        $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO',/*'9'=>'RETIRADO TRASLADO'*/);
       }else{
         // $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
         $arrEstados = array();
