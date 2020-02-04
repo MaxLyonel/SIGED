@@ -593,7 +593,7 @@ class StudentsInscriptionsController extends Controller {
       // get info segip
       $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       // check if the data person is true
-      if(!$answerSegip){
+      if($answerSegip){
         // now get the Centro info                 
           // create fec nac var 
           $newFecNac = str_replace('/', '-', $fecNac);
