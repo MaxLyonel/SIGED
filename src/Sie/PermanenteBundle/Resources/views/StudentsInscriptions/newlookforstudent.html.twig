@@ -36,8 +36,8 @@
                                         <input type="text" v-model="cival" id="form_ci" name="form[ci]" required="required" class="form-control" placeholder="Carnet Identidad" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="18" autocomplete="off" style="text-transform:uppercase">
                                         <input type="text" v-model="complementoval" id="form_complemento" name="form[complemento]" required="required" class="form-control" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="18" autocomplete="off" style="text-transform:uppercase">
                                         
-                                        <button v-on:click="lookforStudent()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> </button>
-                                        <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancel</button>
+                                        <button v-on:click="lookforStudent()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                        <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                       </div>
                                   </div>
                                 </div><!-- /.form-body -->
@@ -61,7 +61,7 @@
               <div v-if="swstudent">           
                   <div class="panel-warning">
                     <div class="panel-heading">
-                      <button v-on:click="studentsInscription()" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Inscribir </button>                      
+                      <button v-on:click="studentsInscription()" type="button" class="btn btn-primary"><i class="fa fa-book"></i> Verificar & Inscribir </button>                      
                     </div>
                     <div class="panel-body">
 
@@ -344,7 +344,7 @@
                           </div>
                         </div>
                         </br> 
-                        <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar </button>
+                        <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar & Inscribir </button>
                     </div>
                   </div>       
               </div>
@@ -424,7 +424,7 @@
                               </div>
                             </div>
                             </br>
-                            <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar </button>
+                            <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar & Inscribir</button>
                           </form>
                         </div>
                 </div> 

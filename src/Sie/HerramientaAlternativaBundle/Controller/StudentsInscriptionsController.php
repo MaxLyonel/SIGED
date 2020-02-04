@@ -347,7 +347,6 @@ class StudentsInscriptionsController extends Controller {
       // first look for student on ESTUDIANTE table 
       // set array conditions
       $arrayCondition['carnetIdentidad'] = $ci;
-      
       if($complemento){
         $arrayCondition['complemento'] = $complemento;
       }else{
@@ -400,6 +399,8 @@ class StudentsInscriptionsController extends Controller {
         $arrayCondition2['carnet'] = $ci;
         if($complemento){
           $arrayCondition2['complemento'] = $complemento;
+        }else{
+          $arrayCondition2['complemento'] = "";
         }
         $objStudent = $em->getRepository('SieAppWebBundle:Persona')->findOneBy($arrayCondition2);
         // dump($objStudent);die;
