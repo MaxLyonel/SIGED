@@ -352,6 +352,7 @@
                 alert('Debe abrir y verificar todos los archivos adjuntos de los requisitos presentados.');
                 return false;
             }else{
+                $('#form_guardar').prop('disabled',true);
                 return true;
             }
         }

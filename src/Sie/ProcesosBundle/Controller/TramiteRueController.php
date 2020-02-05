@@ -1413,7 +1413,7 @@ class TramiteRueController extends Controller
             ->add('varevaluacion1','choice',array('label'=>'¿Observar y devolver?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
             ->add('varevaluacion2','choice',array('label'=>'¿Informe Procedente?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
             ->add('informedistrito','text',array('label'=>'CITE del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase','placeholder'=>'')))
-            ->add('fechainformedistrito', 'text', array('label'=>'Fecha del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control date','placeholder'=>'')))
+            ->add('fechainformedistrito', 'text', array('label'=>'Fecha del Informe Técnico:','required'=>false,'attr' => array('class' => 'form-control date','placeholder'=>'','autocomplete'=>'off')))
             ->add('adjuntoinforme', 'file', array('label' => 'Adjuntar Informe Técnico (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")));
         if($jurisdicion == 1){
             $form = $form
@@ -1586,7 +1586,7 @@ class TramiteRueController extends Controller
             ->add('observacion','textarea',array('label'=>'Observación:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
             ->add('varevaluacion1','choice',array('label'=>'¿Observar y devolver?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
             ->add('informedistrito','text',array('label'=>'CITE del Informe Técnico:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase','placeholder'=>'')))
-            ->add('fechainformedistrito', 'text', array('label'=>'Fecha del Informe Técnico:','required'=>true,'attr' => array('class' => 'form-control date','placeholder'=>'')))
+            ->add('fechainformedistrito', 'text', array('label'=>'Fecha del Informe Técnico:','required'=>true,'attr' => array('class' => 'form-control date','placeholder'=>'','autocomplete'=>'off')))
             ->add('adjuntoinforme', 'file', array('label' => 'Adjuntar Informe Técnico (Máximo permitido 3M):','required'=>true, 'attr' => array('title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
             ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
             ->getForm();
@@ -1741,16 +1741,16 @@ class TramiteRueController extends Controller
         ->add('idrue', 'hidden', array('data' =>$idrue ))
         ->add('tramite', 'hidden', array('data' =>$tramite->getId()))
         ->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'multiple'=>false,'required'=>true,'empty_value'=>false,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
-        ->add('informesubdireccion','text',array('label'=>'CITE del Informe Subdirección Dirección:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
-        ->add('fechainformesubdireccion', 'text', array('label'=>'Fecha de Informe Subdirección:','required'=>false,'attr' => array('class' => 'form-control date')))
-        ->add('adjuntoinformesubdireccion', 'file', array('label' => 'Adjuntar Informe Subdireccioón (Máximo permitido 3M):','required'=>false, 'attr' => array('class'=>'form-control-file','title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
-        ->add('informejuridica','text',array('label'=>'CITE de Informe Legal:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
-        ->add('fechainformejuridica', 'text', array('label'=>'Fecha de Informe Legal:','required'=>false,'attr' => array('class' => 'form-control date')))
-        ->add('adjuntoinformejuridica', 'file', array('label' => 'Adjuntar Informe Legal (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
-        ->add('resolucion','text',array('label'=>'Nro. de Resolución Administrativa:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
-        ->add('fecharesolucion', 'text', array('label'=>'Fecha de Resolución Administrativa:','required'=>false,'attr' => array('class' => 'form-control date')))
+        ->add('informesubdireccion','text',array('label'=>'CITE del Informe Subdirección Dirección:','required'=>false,'attr' => array('class' => 'form-control inf','style' => 'text-transform:uppercase')))
+        ->add('fechainformesubdireccion', 'text', array('label'=>'Fecha de Informe Subdirección:','required'=>false,'attr' => array('class' => 'form-control date inf','autocomplete'=>'off')))
+        ->add('adjuntoinformesubdireccion', 'file', array('label' => 'Adjuntar Informe Subdireccioón (Máximo permitido 3M):','required'=>false, 'attr' => array('class'=>'form-control-file inf','title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
+        ->add('informejuridica','text',array('label'=>'CITE de Informe Legal:','required'=>false,'attr' => array('class' => 'form-control inf','style' => 'text-transform:uppercase')))
+        ->add('fechainformejuridica', 'text', array('label'=>'Fecha de Informe Legal:','required'=>false,'attr' => array('class' => 'form-control date inf','autocomplete'=>'off')))
+        ->add('adjuntoinformejuridica', 'file', array('label' => 'Adjuntar Informe Legal (Máximo permitido 3M):','required'=>false, 'attr' => array('class'=>'form-control-file inf','title'=>"Adjuntar Informe",'accept'=>"application/pdf,.img,.jpg")))
+        ->add('resolucion','text',array('label'=>'Nro. de Resolución Administrativa:','required'=>false,'attr' => array('class' => 'form-control resol','style' => 'text-transform:uppercase')))
+        ->add('fecharesolucion', 'text', array('label'=>'Fecha de Resolución Administrativa:','required'=>false,'attr' => array('class' => 'form-control date resol')))
         ->add('adjuntoresolucion', 'file', array('label' => 'Adjuntar Resolución Administrativa (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar Resolución",'accept'=>"application/pdf,.img,.jpg")))
-        ->add('observacion','textarea',array('label'=>'Observación:','required'=>false,'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
+        ->add('observacion','textarea',array('label'=>'Observación:','required'=>false,'attr'=>array('class'=>'form-control inf','style' => 'text-transform:uppercase')))
         ->add('guardar','submit',array('label'=>'Enviar Solicitud'))
         ->getForm();
         return $form;

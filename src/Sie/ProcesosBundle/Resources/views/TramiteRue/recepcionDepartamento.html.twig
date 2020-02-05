@@ -276,6 +276,8 @@
         });
 
         $('.varevaluacion').click(function(){
+            $('.inf').val('');
+            $('.resol').val('');
             $('#informe').show();
             if ($("#form_varevaluacion_0").is(':checked')){
                 $('#resolucion').show();
@@ -324,6 +326,7 @@
                 alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
                 return false;
             }else{
+                $('#form_guardar').prop('disabled',true);
                 return true;
             }
         }
