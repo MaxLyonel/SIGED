@@ -1,0 +1,60 @@
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>N°</th>
+            <th>Módulo</th>
+            <th>Horas</th>
+            <th>Facilitador</th>
+        {#     <th>Otros</th> #}
+            <th> Notas </th>
+            <th></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for lstmod in lstmod %}
+            <tr>
+                <td >{{ loop.index }}</td>
+                <td >{{ lstmod.modulo }}</td>
+                <td >{{ lstmod.horas_modulo }}</td>
+                <td >{{ lstmod.nombre }}</td>
+                {# <td>
+                    {% if ((lstmod.nombre == '') or (lstmod.nombre == null)) %}
+                        RS
+
+                    {% endif %}
+                </td> #}
+                <td>
+                    {#<form action="{{path('permanente_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">#}
+                    {#<input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">#}
+                    {#<input type="hidden" name="idInstitucion" value="{{institucion.id}}">#}
+                    {#<input type="hidden" name="gestion" value="{{gestion}}">#}
+                    {#<input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">#}
+                    {#<input type="hidden" name="idCargo" value="{{maestro.cargoId}}">#}
+                    {% if lstmod.nombre %}
+                        <input id="form_nota_{{lstmod.idieco}}" name="form[nota][{{lstmod.idieco}}]" type="number" min="1" max="100" maxlength="3" value="{{lstmod.esnota}}" class="form-control" onblur="rangoNotas(this)"  />
+                        {#<input type="hidden" name="idNotaTipo[]" id="{{ idieco }}" value="{{idieco}}">#}
+                        {#<button  class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Estado" onclick="elimEstMod({{ lstmod.idieco }},{{ lstmod.esaid }}));">Quitar Inscripcion</button>#}
+                    {% else %}
+                        <input id="form_nota_{{lstmod.idieco}}" name="form[nota][{{lstmod.idieco}}]" type="number" min="1" max="100" maxlength="3" value="{{lstmod.esnota}}" class="form-control" onblur="rangoNotas(this)"  />
+
+                        {#<button  class="btn btn-danger" data-toggle="tooltip" data-placement="top" data-original-title="Estado"  onclick="insEstMod({{ lstmod.idieco }},{{ idinscripcion}},{{ idcurso}});">Inscribir</button>#}
+                    {% endif %}
+                    {#</form>#}
+                </td>
+                <td>
+
+                        <form id="studentNota_{{lstmod.idieco}}" method="post">
+                            <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                            <input type="hidden" name="form[esinsid]" id="form_esinsid_{{lstmod.idieco}}" value="{{lstmod.esinsid}}">
+                            <input type="hidden" name="form[esaid]" id="form_esaid_{{lstmod.idieco}}" value="{{lstmod.esaid}}">
+                            <input type="hidden" name="form[idieco]" id="form_idieco_{{lstmod.idieco}}" value="{{lstmod.idieco}}">
+                            <input type="hidden" name="form[esnotaid]" id="form_esnotaid_{{lstmod.idieco}}" value="{{lstmod.esnotaid}}">
+                            <button type="button" class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateNota({{lstmod.idieco}});"><i class="fa fa-save"></i> </button>
+                        </form>
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>

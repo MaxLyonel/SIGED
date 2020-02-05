@@ -1265,11 +1265,50 @@ class Funciones {
         return $tiempo;
     }
 
-    public function getTheCurrentYear($fechanacimiento, $fechaLimit){
-        $dias = explode("-", $fechanacimiento, 3);
-        $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
-        $edad = (int)((time()-$dias)/31556926 );
-        return $edad;        
+    public function getTheCurrentYear($dob, $fechaLimit){
+
+        $today = $fechaLimit;
+        $dob_a = explode("-", $dob);
+        $today_a = explode("-", $today);
+        $dob_d = $dob_a[0];$dob_m = $dob_a[1];$dob_y = $dob_a[2];
+        $today_d = $today_a[0];$today_m = $today_a[1];$today_y = $today_a[2];
+        $years = $today_y - $dob_y;
+        $months = $today_m - $dob_m;
+        if ($today_m.$today_d < $dob_m.$dob_d) 
+        {
+            $years--;
+            $months = 12 + $today_m - $dob_m;
+        }
+
+        if ($today_d < $dob_d) 
+        {
+            $months--;
+        }
+
+        $firstMonths=array(1,3,5,7,8,10,12);
+        $secondMonths=array(4,6,9,11);
+        $thirdMonths=array(2);
+
+        if($today_m - $dob_m == 1) 
+        {
+            if(in_array($dob_m, $firstMonths)) 
+            {
+                array_push($firstMonths, 0);
+            }
+            elseif(in_array($dob_m, $secondMonths)) 
+            {
+                array_push($secondMonths, 0);
+            }elseif(in_array($dob_m, $thirdMonths)) 
+            {
+                array_push($thirdMonths, 0);
+            }
+        }
+        $arrAge = array('age'=>$years, 'months'=>$months);
+        return $arrAge;
+        // $dias = explode("-", $fechanacimiento, 3);
+        // $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+        // $edad = (int)((time()-$dias)/31556926 );
+        // return $edad;        
         // list($dia,$mes,$anno) = explode("-",$fechanacimiento);
         // list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
 
@@ -1724,5 +1763,25 @@ class Funciones {
         }
 
         return $sextoCerrado;
+    }
+
+    public function lookforRudesbyDataStudent($data){
+
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('e')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->where('e.paterno like :paterno')
+                ->andWhere('upper(e.materno) like :materno')
+                ->andWhere('upper(e.nombre) like :nombre')
+                ->setParameter('paterno', '%' . mb_strtoupper($data['paterno'], 'utf8') . '%')
+                ->setParameter('materno', '%' . mb_strtoupper($data['materno'], 'utf8') . '%')
+                ->setParameter('nombre', '%' . mb_strtoupper($data['nombre'], 'utf8') . '%')
+                ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;
+        
     }
 }

@@ -2800,12 +2800,12 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $subceasArray[$sc['sucursal']] = $sc['sucursal'];
             }
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE:','data'=>$ie_id,'read_only'=>true,'attr'=>array('class'=>'form-control validar')))
+                ->add('codsie','text',array('label'=>'Cod. SIE:','data'=>$ie_id,'read_only'=>true,'attr'=>array('class'=>'form-control')))
                 ->add('gestion','choice',array('label'=>'Gestión:','required'=>true,'data'=>(new \DateTime())->format('Y'),'choices'=>$gestionesArray,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
                 ->add('subcea','choice',array('label'=>'Sucursal:','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
         }else{
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE:', 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+                ->add('codsie','text',array('label'=>'Cod. SIE:', 'attr'=>array('maxlength' => '8','class'=>'form-control')))
                 ->add('gestion','choice',array('label'=>'Gestión:','required'=>true,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
                 ->add('subcea','choice',array('label'=>'Sucursal:','required'=>true,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
         }
