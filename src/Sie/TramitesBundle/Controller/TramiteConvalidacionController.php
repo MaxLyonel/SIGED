@@ -548,7 +548,7 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta1', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion1', 'button', array('label' => $form['inscripciones']['grado1']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion1', 'button', array('label' => $form['inscripciones']['grado1']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado1']['gestion'])))
                     ->add('libreta1', 'button', array('label' => $form['inscripciones']['grado1']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado1']['institucionEducativa'])));
             // $form['gestionActual'] = $form['inscripciones']['grado1']['gestion']+3;
         }        
@@ -564,7 +564,7 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta2', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion2', 'button', array('label' => $form['inscripciones']['grado2']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion2', 'button', array('label' => $form['inscripciones']['grado2']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado2']['gestion'])))
                     ->add('libreta2', 'button', array('label' => $form['inscripciones']['grado2']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado2']['institucionEducativa'])));
             // $form['gestionActual'] = $form['inscripciones']['grado2']['gestion']+2;
         }
@@ -580,7 +580,7 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta3', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion3', 'button', array('label' => $form['inscripciones']['grado3']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion3', 'button', array('label' => $form['inscripciones']['grado3']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado3']['gestion'])))
                     ->add('libreta3', 'button', array('label' => $form['inscripciones']['grado3']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado3']['institucionEducativa'])));
             // $form['gestionActual'] = $form['inscripciones']['grado3']['gestion']+1;
         }
@@ -596,7 +596,7 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta4', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion4', 'button', array('label' => $form['inscripciones']['grado4']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion4', 'button', array('label' => $form['inscripciones']['grado4']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado4']['gestion'])))
                     ->add('libreta4', 'button', array('label' => $form['inscripciones']['grado4']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado4']['institucionEducativa'])));
             // $form['gestionActual'] = $form['inscripciones']['grado4']['gestion'];
         }
