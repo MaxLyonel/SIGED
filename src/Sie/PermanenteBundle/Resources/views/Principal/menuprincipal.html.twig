@@ -21,421 +21,162 @@
     </div>
 
     {% if (app.session.get('ie_per_estado') != '-1') %}
-        {#<div class="body-content animated fadeIn">
-            <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                   
-                    <div class="panel panel-success rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-university fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramienta_ceducativa_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Centro de Educación Alternativa</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                   
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                   
-                    <div class="panel panel-danger rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-user-secret fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramientalt_info_personal_adm_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Personal Administrativo</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                    
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                    
-                    <div class="panel panel-teal rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-users fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramientalt_info_maestro_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Personal Docente</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                    
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                    
-                    <div class="panel panel-primary rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-child fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramienta_alter_cursos_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Información Estudiante</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                    
-                </div>
-            </div><!-- /.row -->
-            <div class="row">                
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                    <div class="panel panel-warning rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-language fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramienta_alter_malla_tecnica_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Malla Curricular</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                </div>
-                
-                {% if (app.session.get('roluser') == 9) %}
-                    {% if (app.session.get('ie_per_estado') != '0') %}
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <div class="panel panel-lilac rounded shadow">
-                                <div class="panel-heading text-center">
-                                    <p class="inner-all no-margin">
-                                        <i class="fa fa-times-circle-o fa-5x"></i>
-                                    </p>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body text-center">
-                                    {% if (app.session.get('ie_gestion') < '2010') %}
-                                        <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                            <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                        </form>
-                                    {% else %}
-                                        {% if (app.session.get('ie_per_estado') == '0') %}                                        
-                                            <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                                <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                            </form>
-                                        {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}
-                                            <form action="{{path('herramienta_ceducativa_cerrar_operativo')}}" onsubmit="return verificarCerrado();">
-                                                <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Cerrar Operativo</span></button>
-                                            </form>
-                                        {% endif %}
-                                    {% endif %}                                                                        
-                            </div>
-                        </div>
-                    {% else %}            
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <div class="panel panel-body rounded shadow">
-                                <div class="panel-heading text-center">
-                                    <p class="inner-all no-margin">
-                                        <i class="fa fa-check-circle-o fa-5x"></i>
-                                    </p>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body text-center">                                                           
-                                    <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                        <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                    </form>
-                                </div><!-- /.panel-body -->
-                            </div>
-                        </div>
-                    {% endif %}
-                {% else %}  
-                    <div class="col-md-3 col-sm-3 col-xs-6">
-                        <div class="panel panel-body rounded shadow">
-                            <div class="panel-heading text-center">
-                                <p class="inner-all no-margin">
-                                    <i class="fa fa-check-circle-o fa-5x"></i>
-                                </p>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body text-center">                                                           
-                                <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                    <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                </form>
-                            </div><!-- /.panel-body -->
-                        </div>
-                    </div>
-                {% endif %}    
-                </div>
-            </div>#}
-
-
 
         <div class="body-content animated fadeIn">
-        <hr>
-        <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
+            <hr>
+            <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="height: 1800px">
+                <div class="cbp-wrapper-outer">
+                    <div class="cbp-wrapper">
 
-
-            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                <div class="cbp-caption">
-                    <div class="cbp-caption-defaultWrap">
-                        <div class="headerOptions" style="height:20px; background:#77BB3A"></div>
-                        <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="...">
-                    </div>
-                    <div class="cbp-caption-activeWrap">
-                        <div class="cbp-l-caption-alignCenter">
-                            <div class="cbp-l-caption-body">
-                                <form action="{{path('herramienta_per_ceducativa_index')}}" method="post" style="display:inline-block">
-                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                </form>
-                                <br>
-                                <span style="color:#FFFFFF">Información del centro de educación permanente, datos de jurisdicción geografica, datos del director, impresión de reportes, etc.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow"><span class="text-blue">CENTRO DE EDUCACIÓN PERMANENTE</span></div>
-                <div class="cbp-l-grid-masonry-projects-desc"></div>
-            </div><br></div>
- 
-
-            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                <div class="cbp-caption">
-                    <div class="cbp-caption-defaultWrap">
-                        <div class="headerOptions" style="height:20px; background:#E63E2B"></div>
-                        <img src="{{asset('img/administrativo300Alter.jpg')}}" alt="...">
-                    </div>
-                    <div class="cbp-caption-activeWrap">
-                        <div class="cbp-l-caption-alignCenter">
-                            <div class="cbp-l-caption-body"><br>
-                                <form action="{{path('permanente_info_personal_adm_index')}}" method="post" style="display:inline-block">
-                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                </form>
-                                <br>
-                                <span style="color:#FFFFFF">Administración de personal administrativo, selección del director vigente, cargos, etc.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">PERSONAL ADMINISTRATIVO</div>
-                <div class="cbp-l-grid-masonry-projects-desc"></div>
-            </div><br></div>
-
-            
-            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                <div class="cbp-caption">
-                    <div class="cbp-caption-defaultWrap">
-                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
-                        <img src="{{asset('img/maestros300Alter.jpg')}}" alt="...">
-                    </div>
-                    <div class="cbp-caption-activeWrap">
-                        <div class="cbp-l-caption-alignCenter">
-                            <div class="cbp-l-caption-body"><br>
-                                <form action="{{path('permanente_info_maestro_index')}}" method="post" style="display:inline-block">
-                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                </form>
-                                <br>
-                                <span style="color:#FFFFFF">Administración de personal de facilitadores, selección de los facilitadores vigentes, datos de estudios, etc.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">FACILITADORES</div>
-                <div class="cbp-l-grid-masonry-projects-desc"></div>
-            </div><br></div>
-
-<!--
-            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                <div class="cbp-caption">
-                    <div class="cbp-caption-defaultWrap">
-                        <div class="headerOptions" style="height:20px; background:#00A0DC"></div>
-                        <img src="{{asset('img/estudiantes300Alter.jpg')}}" alt="...">
-                    </div>
-                    <div class="cbp-caption-activeWrap">
-                        <div class="cbp-l-caption-alignCenter">
-                            <div class="cbp-l-caption-body"><br>
-                                <form action="{{path('permanente_cursos_index')}}" method="post" style="display:inline-block">
-                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                </form>
-                                <br>
-                                <span style="color:#FFFFFF">Inscripción de alumnos, notas, toma de materias, impresión de centralizador, cursos, asignación de Maestro-Area, etc.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">INFORMACIÓN ESTUDIANTE</div>
-                <div class="cbp-l-grid-masonry-projects-desc"></div>
-            </div><br></div>
-
-
-              <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                  <div class="cbp-caption">
-                      <div class="cbp-caption-defaultWrap">
-                          <div class="headerOptions" style="height:20px; background:#e4981d"></div>
-                          <img src="{{asset('img/malla.jpg')}}" alt="...">
-                      </div>
-                      <div class="cbp-caption-activeWrap">
-                          <div class="cbp-l-caption-alignCenter">
-                              <div class="cbp-l-caption-body">
-                                 <br>
-                                    <form action="{{path('permanente_malla_tecnica_index')}}" method="post" style="display:inline-block">
-                                        <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                    </form>
-                                    <br>
-                                  <span style="color:#FFFFFF">Carreras, acreditación, modulos, cargar horaria, etc.</span>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">MALLA CURRICULAR</div>
-                  <div class="cbp-l-grid-masonry-projects-desc"></div>
-              </div><br></div>
--->
-                    <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                            <div class="cbp-caption">
-                                <div class="cbp-caption-defaultWrap">
-                                    <div class="headerOptions" style="height:20px; background:#e4981d"></div>
-                                    <img src="{{asset('img/malla.jpg')}}" alt="...">
-                                </div>
-                                <div class="cbp-caption-activeWrap">
-                                    <div class="cbp-l-caption-alignCenter">
-                                        <div class="cbp-l-caption-body">
-                                            <br>
-                                            <form action="{{path('herramienta_per_cursos_cortos_index')}}" method="post" style="display:inline-block">
-                                                <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                            </form>
-                                            <br>
-                                            <span style="color:#FFFFFF">Area de educación Permanente, Subarea de Educación para el Fortalecimiento de Organizaciones Sociales y Comunitarias .</span>
+                        <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                                <div class="cbp-caption">
+                                    <div class="cbp-caption-defaultWrap">
+                                        <div class="headerOptions" style="height:20px; background:#77BB3A"></div>
+                                        <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="...">
+                                    </div>
+                                    <div class="cbp-caption-activeWrap">
+                                        <div class="cbp-l-caption-alignCenter">
+                                            <div class="cbp-l-caption-body">
+                                                <form action="{{path('herramienta_per_ceducativa_index')}}" method="post" style="display:inline-block">
+                                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                                </form>
+                                                <br>
+                                                <span style="color:#FFFFFF">Información del Centro de Educación Permanente</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CURSOS E INSCRIPCIONES</div>
-                            <div class="cbp-l-grid-masonry-projects-desc"></div>
-                        </div><br></div>
-<!--
-                {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}       
-                    {% if (app.session.get('ie_per_estado') != '0') %}                                
-                                    {% if (app.session.get('ie_gestion') < '2010') %}
-                                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                                                <div class="cbp-caption">
-                                                        <div class="cbp-caption-defaultWrap">
-                                                            <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                                            <img src="{{asset('img/lista.jpg')}}" alt="...">
-                                                        </div>
-                                                        <div class="cbp-caption-activeWrap">
-                                                            <div class="cbp-l-caption-alignCenter">
-                                                                <div class="cbp-l-caption-body">
-                                                                    <br>
-                                                                        <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                                            <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                                                        </form>
-                                                                        <br>
-                                                                    <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
-                                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                                            </div><br></div>
-                                    {% else %}
-                                        {% if (app.session.get('ie_per_estado') == '0') %}                                        
-                                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                                                <div class="cbp-caption">
-                                                        <div class="cbp-caption-defaultWrap">
-                                                            <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                                            <img src="{{asset('img/lista.jpg')}}" alt="...">
-                                                        </div>
-                                                        <div class="cbp-caption-activeWrap">
-                                                            <div class="cbp-l-caption-alignCenter">
-                                                                <div class="cbp-l-caption-body">
-                                                                    <br>
-                                                                        <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                                            <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                                                        </form>
-                                                                        <br>
-                                                                    <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
-                                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                                            </div><br></div>
-                                        {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}
-                                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                                                <div class="cbp-caption">
-                                                    <div class="cbp-caption-defaultWrap">
-                                                        <div class="headerOptions" style="height:20px; background:#7b0cde"></div>
-                                                        <img src="{{asset('img/cerraralter.jpg')}}" alt="...">
-                                                    </div>
-                                                    <div class="cbp-caption-activeWrap">
-                                                        <div class="cbp-l-caption-alignCenter">
-                                                            <div class="cbp-l-caption-body">
-                                                                <br>
-                                                                    <form action="{{path('herramienta_ceducativa_cerrar_operativo')}}" method="post" style="display:inline-block"> 
-                                                                        <button class="btn btn-inverse btn-stroke">CERRAR OPERATIVO</button>
-                                                                    </form>
-                                                                    <br>
-                                                                <span style="color:#FFFFFF">Cierra el operativo actual, dando de esta manera por concluido la declaración de la información educativa solicitada. </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CERRAR OPERATIVO</div>
-                                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                                            </div><br></div>
-                                        {% endif %}
-                                    {% endif %}                                                                        
-                    {% else %}            
-                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                            <div class="cbp-caption">
+                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CENTRO EDUCATIVO</div>
+                                <div class="cbp-l-grid-masonry-projects-desc"></div>
+                            </div><br></div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                                <div class="cbp-caption">
                                     <div class="cbp-caption-defaultWrap">
-                                        <div class="headerOptions" style="height:20px; background:#ffffff"></div>
+                                        <div class="headerOptions" style="height:20px; background:#F69429"></div>
+                                        <img src="{{asset('img/administrativo300Alter.jpg')}}" alt="...">
+                                    </div>
+                                    <div class="cbp-caption-activeWrap">
+                                        <div class="cbp-l-caption-alignCenter">
+                                            <div class="cbp-l-caption-body">
+                                                <form action="{{path('permanente_info_personal_adm_index')}}" method="post" style="display:inline-block">
+                                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                                </form>
+                                                <br>
+                                                <span style="color:#FFFFFF">Administración de personal administrativo, selección del director vigente, cargos, etc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">PERSONAL ADMINISTRATIVO</div>
+                                <div class="cbp-l-grid-masonry-projects-desc"></div>
+                            </div><br></div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                                <div class="cbp-caption">
+                                    <div class="cbp-caption-defaultWrap">
+                                        <div class="headerOptions" style="height:20px; background:#E63E2B"></div>
+                                        <img src="{{asset('img/maestros300Alter.jpg')}}" alt="...">
+                                    </div>
+                                    <div class="cbp-caption-activeWrap">
+                                        <div class="cbp-l-caption-alignCenter">
+                                            <div class="cbp-l-caption-body">
+                                                <form action="{{path('permanente_info_maestro_index')}}" method="post" style="display:inline-block">
+                                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                                </form>
+                                                <br>
+                                                <span style="color:#FFFFFF">Administración de personal Docente/Facilitadores</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">FACILITADORES</div>
+                                <div class="cbp-l-grid-masonry-projects-desc"></div>
+                            </div><br></div>
+
+                       {#  <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                                <div class="cbp-caption">
+                                    <div class="cbp-caption-defaultWrap">
+                                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
+                                        <img src="{{asset('img/estudiantes300.jpg')}}" alt="...">
+                                    </div>
+                                    <div class="cbp-caption-activeWrap">
+                                        <div class="cbp-l-caption-alignCenter">
+                                            <div class="cbp-l-caption-body">
+                                                <form action="{{path('herramienta_per_cursos_cortos_index')}}" method="post" style="display:inline-block">
+                                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                                </form>
+                                                <br>
+                                                <span style="color:#FFFFFF">Area de educación Permanente, Subarea de Educación para el Fortalecimiento de Organizaciones Sociales y Comunitarias.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CURSOS(CORTOS)</div>
+                                <div class="cbp-l-grid-masonry-projects-desc"></div>
+                            </div><br></div> #}
+
+                       {#  <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                                <div class="cbp-caption">
+                                    <div class="cbp-caption-defaultWrap">
+                                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
                                         <img src="{{asset('img/lista.jpg')}}" alt="...">
                                     </div>
                                     <div class="cbp-caption-activeWrap">
                                         <div class="cbp-l-caption-alignCenter">
                                             <div class="cbp-l-caption-body">
+                                                <form action="{{path('herramienta_per_cursos_largos_index')}}" method="post" >
+                                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                                </form>
                                                 <br>
-                                                    <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                        <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                                    </form>
-                                                    <br>
-                                                <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
+                                                <span style="color:#FFFFFF">Area de educación Permanente, Subarea de Educación para el Fortalecimiento de Organizaciones Sociales y Comunitarias.</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
+                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CURSOS (LARGOS)</div>
                                 <div class="cbp-l-grid-masonry-projects-desc"></div>
                             </div><br></div>
-                    {% endif %}
-                {% else %}
-                      <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                      <div class="cbp-caption">
-                            <div class="cbp-caption-defaultWrap">
-                                <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                <img src="{{asset('img/lista.jpg')}}" alt="...">
-                            </div>
-                            <div class="cbp-caption-activeWrap">
-                                <div class="cbp-l-caption-alignCenter">
-                                    <div class="cbp-l-caption-body">
-                                        <br>
-                                            <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                            </form>
-                                            <br>
-                                        <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
+
+                        <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                                <div class="cbp-caption">
+                                    <div class="cbp-caption-defaultWrap">
+                                        <div class="headerOptions" style="height:20px; background:#00A0DC"></div>
+                                        <img src="{{asset('img/malla.jpg')}}" alt="...">
+                                    </div>
+                                    <div class="cbp-caption-activeWrap">
+                                        <div class="cbp-l-caption-alignCenter">
+                                            <div class="cbp-l-caption-body">
+                                                <form action="{{path('permanente_malla_tecnica_index')}}" method="post" style="display:inline-block">
+                                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                                </form>
+                                                <br>
+                                                <span style="color:#FFFFFF">Carreras, acreditación, modulos, cargar horaria, etc.</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
-                        <div class="cbp-l-grid-masonry-projects-desc"></div>
-                        </div><br></div>
-                {% endif %}
--->
+                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">MALLA CURRICULAR</div>
+                                <div class="cbp-l-grid-masonry-projects-desc"></div>
+                            </div><br></div> #}
 
-      </div>
-      </div>
-    </div>
-    {% endif %}            
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {#<div class="body-content animated fadeIn">#}
+            {#<div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">#}
+    {% endif %}
     <!--/ End body content -->
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
     <script>
     function verificarCerrado(){
-        var myText = '¡AVISO IMPORTANTE LEA CON ATENCIÓN!\nUna ves cerrado el operativo cualquier modificación\ndeberá ser a través de su técnico de distrito.\nSi no esta seguro de este mensaje presione CANCELAR.';
+        var myText = '¡AVISO IMPORTANTE LEA CON ATENCIÓN!\nUna vez cerrado el operativo cualquier modificación\ndeberá ser a través de su técnico de distrito.\nSi no esta seguro de este mensaje presione CANCELAR.';
         if(!confirm(myText)){
             return false;
         }

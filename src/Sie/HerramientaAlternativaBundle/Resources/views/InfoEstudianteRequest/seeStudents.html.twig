@@ -88,8 +88,8 @@
                 </div>
             {# endif #}
             <div class="col-md-3">
-                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
-                    <i class="fa fa-user"></i> Inscripción con Rudeal
+                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
+                    <i class="fa fa-user"></i> Inscripción con CI
                 </button>
             </div>
             <!--div class="col-md-3">
@@ -139,6 +139,7 @@
                             <tr>
                                 <td align="center" class="warning"></td>
                                 <td align="center" class="warning">Código Rudeal</td>
+                                <td align="center" class="warning">CI - Complemento</td>
                                 <td align="center" class="warning">Paterno</td>
                                 <td align="center" class="warning">Materno</td>
                                 <td align="center" class="warning">Nombres</td>
@@ -175,6 +176,11 @@
                                 <tr >
                                     <td>{{loop.index}}</td>
                                     <td  align="">{{data.codigoRude}}</td>
+                                    <td  align="">{{data.carnetIdentidad}}
+                                    {% if data.complemento %}
+                                       - {{ data.complemento}}
+                                    {% endif %}
+                                    </td>
                                     <td  align="">{{data.paterno}}</td>
                                     <td  align="">{{data.materno}}</td>
                                     <td  align="">{{data.nombre}}</td>
@@ -316,6 +322,9 @@
     </div>
 {% endif %}
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
@@ -464,10 +473,10 @@
 
     };
 
-    var doInscriptions = function(data){
+    var doInscriptions = function(data, iecId, etapaespecialidad, paralelo){
      $.ajax({
          type: 'post',
-         data: ({infoUe: data }),
+         data: ({infoUe: data, iecId: iecId, etapaespecialidad: etapaespecialidad, paralelo: paralelo  }),
          url: "{{ path('alter_inscriptionstudent_index') }}",
          beforeSend: function () {
              $('#modal').empty();

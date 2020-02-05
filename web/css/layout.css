@@ -1870,7 +1870,7 @@ body.page-footer-fixed #page-content .footer-content {
   color: #777;
 }
 .sidebar-content .media-heading span {
-  color: #d0d0d0;
+  color: #455A64;
 }
 .sidebar-content small {
   color: #777;
@@ -2181,7 +2181,7 @@ body.page-footer-fixed #page-content .footer-content {
 .sidebar-menu ul {
   margin: 0;
   padding: 0;
-  background-color: #B0BEC5;
+  background-color: #78909C;
   list-style: none;
 }
 .sidebar-menu ul li {

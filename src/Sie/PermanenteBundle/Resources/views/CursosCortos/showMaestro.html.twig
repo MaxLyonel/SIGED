@@ -6,7 +6,7 @@
         <div class="panel panel-danger" id="listMaestro">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Facilitadores</h3>
+                    <h3 class="panel-title">Asignación de Facilitadores - Horas Módulo {{horasmodulo}} </h3>
                 </div>
 
                 <div class="clearfix"></div>
@@ -264,6 +264,13 @@
                 });
             };
 
-
+   var rangosHorasCM = function(control){
+        //var horas= $('#form_municipio').value();
+        var horas= $("#form_horasmaestro").val()
+        if(control.value == ""){ control.value = 1; }
+        if(control.value < 6){ control.value = 1; }
+          if(control.value > horas){ control.value = horas; }
+       
+    }
 
     </script>

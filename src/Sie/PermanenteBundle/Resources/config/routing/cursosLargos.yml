@@ -96,7 +96,7 @@ herramienta_per_info_cursos_largos:
          expose: true
 
 herramienta_per_mostrar_modulos:
-    path:     /cursomodulos/
+    path:     /cursomodulos/asd
     defaults: { _controller: "SiePermanenteBundle:CursosLargos:showModulos"}
     options:
          expose: true
@@ -258,9 +258,27 @@ herramienta_addmodulo_curso:
     options:
          expose: true
 
+herramienta_per_add_maestro:
+    path:     /addmaestro/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:areamaestro"}
+    options:
+         expose: true
+
+herramienta_per_maestros_asignar:
+    path:     /maestrosAsignarCL/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:maestrosAsignar"}
+    options:
+         expose: true
+
 herramienta_per_delete_moduloCL:
     path:     /delmodCL/
     defaults: { _controller: "SiePermanenteBundle:CursosLargos:deleteModuloCL"}
+    options:
+         expose: true
+
+herramienta_per_delete_modulo_maestro:
+    path:     /delmodmaestro/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:deleteModuloMaestro"}
     options:
          expose: true
 
