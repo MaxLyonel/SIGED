@@ -772,7 +772,7 @@ class TramiteConvalidacionController extends Controller {
                     $verInscripcion = $this->verificaInscripcionGestionNivelGrago($newStudent['ci'],$newStudent['complemento'],$newStudent['pasaporte'],$nivel,$grado,$gestion);            
                     if ($verInscripcion){
                         $em->getConnection()->rollback();
-                        $msg  = 'El Registro del estudiante en la gestión, nivel y grado seleccionado, ya existe';
+                        $msg  = 'El Registro del estudiante en la gestión ('.$gestion.'), nivel ('.$nivel.') y grado ('.$grado.') seleccionado, ya existe';
                         return $response->setData(array('estado' => false, 'msg' => $msg));
                     }     
                     
@@ -883,6 +883,7 @@ class TramiteConvalidacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
+                and ei.estadomatricula_tipo_id in (4,5,55,9,10,11)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);
