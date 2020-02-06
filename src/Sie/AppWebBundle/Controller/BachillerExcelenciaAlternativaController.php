@@ -42,7 +42,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-12');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -85,7 +85,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-12');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -128,7 +128,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-12');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -293,7 +293,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-12');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -445,7 +445,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-12');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -876,7 +876,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-12');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
