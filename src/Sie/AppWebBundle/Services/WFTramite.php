@@ -564,7 +564,7 @@ class WFTramite {
         (select td.usuario_destinatario_id,count(*) as nro
         from tramite t
         join tramite_detalle td on cast(t.tramite as int)=td.id
-        where flujo_proceso_id=". $tarea_actual_id ." and (td.tramite_estado_id=15 or td.tramite_estado_id=4) group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
+        where (flujo_proceso_id=". $tarea_actual_id ." and td.tramite_estado_id in(15,4)) or (flujo_proceso_id=". $tarea_sig_id ." and td.tramite_estado_id =3) group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
         $query->execute();
         $usuarios = $query->fetchAll();
         //dump($usuarios);die;
