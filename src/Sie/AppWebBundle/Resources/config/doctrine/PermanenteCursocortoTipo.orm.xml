@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Sie\AppWebBundle\Entity\PermanenteCursocortoTipo" table="permanente_cursocorto_tipo">
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="cursocorto" type="string" column="cursocorto" length="120" nullable="true"/>
+    <field name="obs" type="string" column="obs" nullable="true"/>
+    <field name="habilitado" type="boolean" column="habilitado" nullable="true"/>
+  </entity>
+</doctrine-mapping>
