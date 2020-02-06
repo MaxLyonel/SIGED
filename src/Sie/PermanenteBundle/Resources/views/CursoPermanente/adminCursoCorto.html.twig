@@ -1,0 +1,265 @@
+{% extends 'layoutPermanente.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <link href="{{asset('filefile/css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('filefile/css/bootstrap-fileupload.css')}}" rel="stylesheet">
+{% endblock %}
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+        
+        <div class="header-content">
+        <h2><i class="fa fa-users animated flip"></i> Cursos <span>Administración de cursos Cortos.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <li>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                            <a href="{{path('principal_web')}}">Bienvenida</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <br>   
+
+  <div class='container'>
+        
+
+          
+        <div class="panel panel-danger" id="panelesp">
+
+            <div class="panel-heading">
+               <h4>
+                   Cursos Cortos Educación Permanente 
+               </h4>
+            </div>
+            <div class="panel-body">
+                <p>Listado de todas los cursos cortos permitidos para los centros autorizados de Educación Permanente</p>
+                <br>
+                <button class="btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-table" onclick="showNewCursoCorto();">
+												<i class="fa fa-plus"></i>
+												Nuevo Curso
+				</button>
+               {#  <button type="button" class="btn btn-danger" onclick="nuevaEspecialidad();" >Nuevo</button> #}
+                <br>
+                	<p id="menestado"></p>
+                <br>
+                  <div class="row">
+                        <div class="col-md-12">
+                            {% for flashMessage in app.session.flashbag.get('warningcons') %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('successcons') %}
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+            {% if existecurso %}
+            <div id="listacursos">
+                 <div class="table-responsive col-md-12" >
+                    <table class="table table-bordered table-striped" id="cursos" >
+                            <thead>
+                                <tr>
+                                    <th class="text-center border-right" style="width:50px; min-width: 50px;">N°</th>
+                                    <th class="text-center border-right">Curso Corto</th>
+                                    <th class="text-center border-right">Acciones</th>
+                                    <th class="text-center border-right">Estado</th>
+                                </tr>
+                            </thead>
+                           {#  <tfoot>
+                                <tr>
+                                        <th class="text-center border-right">N°</th>
+                                        <th class="text-center border-right">Curso Corto</th>
+                                        <th class="text-center border-right">Acciones</th>
+                                        <th class="text-center border-right">Estado</th>
+                                </tr>
+                            </tfoot> #}
+                            <tbody>
+                            {% for listacurso in listacurso %}
+                                <tr id="curso{{listacurso.id}}">
+                                    <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                    <td data-title="Curso" >{{ listacurso.cursocorto }}</td>
+                                    <td data-title="Acciones" class="text-center">
+                                        <button class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Cambiar Estado" onclick="cambiarEstadoCursoCorto({{ listacurso.id }});"><i class="fa fa-exchange"></i></button>
+                                        <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarCursoCorto({{ listacurso.id }});"><i class="fa fa-pencil"></i></button>
+                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarCursoCorto({{ listacurso.id }});"><i class="fa fa-times"></i></button>
+                                    </td>
+                                    <td data-title="Estado" class="text-center">
+                                        {% if (listacurso.habilitado == '1') %}
+                                        <i class="fa fa-check" style="color:#009500;">Habilitado</i>
+                                        {% elseif (listacurso.habilitado == '0') %}
+                                        <i class="fa fa-close" style="color:#dd0304;">No Habilitado</i>
+                                        {% endif %}
+                                    </td>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                    </table>
+                </div> 
+                </div>
+            {% else %}
+                <p> NO EXISTEN CURSOS CORTOS...</p>
+            {% endif %}
+            </div>
+
+        </div>
+    </div>
+    <div>
+
+    </div>
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+ 
+    <script>
+        $(document).ready(function(){
+            cargatablas();
+        });
+
+        var cargatablas = function (identif){
+
+
+            // DataTable
+            var table = $('#cursos').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                }
+            );
+
+            // Apply the search
+           
+        };
+      
+      
+    var showNewCursoCorto = function () {
+        $.ajax({
+            type: 'get',
+            url: "{{ path('herramienta_per_show_curso_nuevo') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#menestado").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $("#menestado").empty();
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('.chosen-select').chosen({allow_single_deselect: false});
+            },
+
+            statusCode: {
+                500: function () {},
+                404: function () {}
+            }
+        });
+    };
+
+    var editarCursoCorto= function (idcurso) {
+           // alert(idesp);
+            $.ajax({
+                type: 'post',
+                url: "{{ path('herramienta_per_show_curso_edit') }}",
+                data: ({idcurso:idcurso}),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').modal('show');
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+           
+        };
+
+          var eliminarCursoCorto= function (idcurso) {
+            elemento = document.getElementById('curso' + idcurso);   
+            var r = confirm("¿ Desea eliminar el curso Corto ?");
+            if (r == true) {    
+                    peticion = $.ajax({
+                    type: 'post',
+                    url: "{{ path('herramienta_per_delete_curso_nuevo') }}",
+                    data: ({idcurso:idcurso}),
+                    beforeSend: function () {
+                        $("#menestado").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        // $("#list"+ es).attr('disabled', 'true');  
+                    },
+                    success: function (data) {
+                         $('#menestado').empty();
+                        $("#menestado").prepend('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong> </strong> '+data.msg+'</div>');
+                        if(data.eliminado)
+                        {
+                            elemento.remove();
+                        }
+
+                        return true;
+                    },
+                    timeout: 5000, // sets timeout to 5 seconds
+                    statusCode: {
+                        500: function () {
+                            return false;
+                        },
+                        404: function () {
+                            return false;
+                        }
+                    }
+                });
+            } else {
+                return false;
+            }
+           // alert(idesp);
+           
+        };
+         var cambiarEstadoCursoCorto= function (idcurso) {
+           // alert(idesp);
+            $.ajax({
+                type: 'post',
+                url: "{{ path('herramienta_per_curso_corto_cambiar_estado') }}",
+                data: ({idcurso:idcurso}),
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $("#mengestioncurso").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {console.log(data);
+                   // $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    $('#listacursos').empty();
+                    $('#listacursos').html(data);
+                   //  window.location.href =  Routing.generate('herramienta_permanente_admin_curso_corto');
+                },
+
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        };
+    </script>
+
+
+{% endblock %}

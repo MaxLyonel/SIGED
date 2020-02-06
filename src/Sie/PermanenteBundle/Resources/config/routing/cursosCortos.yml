@@ -265,6 +265,18 @@ herramienta_permanente_admin:
     options:
          expose: true
 
+herramienta_permanente_admin_curso_corto:
+    path:     /admincursoscortos
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:adminCursosCortos"}
+    options:
+         expose: true
+
+herramienta_per_curso_corto_cambiar_estado:
+    path:     /cursoestado/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:cambiarEstadoCurso"}
+    options:
+         expose: true
+
 herramienta_per_info_inscriptionsCI:
     resource: "@SiePermanenteBundle/Resources/config/routing/InscriptionsCI.yml"
     prefix:   /sie/estudiante_inscriptions_per

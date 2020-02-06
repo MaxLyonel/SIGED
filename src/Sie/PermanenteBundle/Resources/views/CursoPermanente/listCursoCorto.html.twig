@@ -1,0 +1,62 @@
+   <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped"  id="cursos">
+                            <thead>
+                                <tr>
+                                    <th class="text-center border-right" style="width:50px; min-width: 50px;">N°</th>
+                                    <th class="text-center border-right">Curso Corto</th>
+                                    <th class="text-center border-right">Acciones</th>
+                                    <th class="text-center border-right">Estado</th>
+                                </tr>
+                            </thead>
+                           {#  <tfoot>
+                                <tr>
+                                        <th class="text-center border-right">N°</th>
+                                        <th class="text-center border-right">Curso Corto</th>
+                                        <th class="text-center border-right">Acciones</th>
+                                        <th class="text-center border-right">Estado</th>
+                                </tr>
+                            </tfoot> #}
+                            <tbody>
+                            {% for listacurso in listacurso %}
+                                <tr>
+                                    <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                    <td data-title="Especialidad">{{ listacurso.cursocorto }}</td>
+                                    <td data-title="Acciones" class="text-center">
+                                          <button class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Cambiar Estado" onclick="cambiarEstadoCursoCorto({{ listacurso.id }});"><i class="fa fa-exchange"></i></button>
+                                        <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarCursoCorto({{ listacurso.id }});"><i class="fa fa-pencil"></i></button>
+                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarCursoCorto({{ listacurso.id }});"><i class="fa fa-times"></i></button>
+                                    </td>
+                                    <td data-title="Estado" class="text-center">
+                                        {% if (listacurso.habilitado == '1') %}
+                                        <i class="fa fa-check" style="color:#009500;">Habilitado</i>
+                                        {% elseif (listacurso.habilitado == '0') %}
+                                        <i class="fa fa-close" style="color:#dd0304;"> No Habilitado</i>
+                                        {% endif %}
+                                    </td>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                    </table>
+                </div> 
+
+<script>
+  $(document).ready(function(){
+            cargatablas();
+        });
+
+        var cargatablas = function (identif){
+
+
+            // DataTable
+            var table = $('#cursos').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                }
+            );
+
+            // Apply the search
+           
+        };
+      
+</script>

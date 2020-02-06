@@ -167,6 +167,10 @@ class CursosCortosController extends Controller {
             $poblacion = $em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->findAll();
            // $programa = $em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findAll();
             $cursosCortos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findAll();
+  /*           $query = $em->getConnection()->prepare('select * from permanente_cursocorto_tipo where habilitado=true order by cursocorto');
+            $query->execute();
+            $cursosCortos= $query->fetchAll(); */
+            
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
             $organizacion = $em->getRepository('SieAppWebBundle:PermanenteOrganizacionTipo')->findAll();
             $subareaArray = array();
@@ -203,7 +207,10 @@ class CursosCortosController extends Controller {
             }
             $cursosCortosArray = array();
             foreach ($cursosCortos as $value) {
-                $cursosCortosArray[$value->getId()] = $value->getCursocorto();
+                if ($value->getHabilitado()==true){
+                    $cursosCortosArray[$value->getId()] = $value->getCursocorto();
+                }
+               
             }
 
             $turnoArray = array();
@@ -425,7 +432,9 @@ class CursosCortosController extends Controller {
 
             $cursosCortosArray = array();
             foreach ($cursosCortos as $value) {
-                $cursosCortosArray[$value->getId()] = $value->getCursocorto();
+                if ($value->getHabilitado()==true){
+                    $cursosCortosArray[$value->getId()] = $value->getCursocorto();
+                }
             }
             $turnoArray = array();
             foreach ($turno as $value) {
