@@ -906,7 +906,7 @@ class TramiteRueController extends Controller
         //$datos['area'] = $form['area'];
         $datos['justificacion'] = trim(mb_strtoupper($form['observacion'], 'utf-8'));
         if($form['tramite']==''){
-            $gestion = $gestionActual;
+            $gestion = $this->session->get('currentyear');//$gestionActual;
         }else{
             $gestion =$em->getRepository('SieAppWebBundle:Tramite')->find($form['tramite'])->getGestionId();
         }
@@ -1252,7 +1252,7 @@ class TramiteRueController extends Controller
             $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$form['tramite'],$datos,$ie_lugarlocalidad,$ie_lugardistrito);
             $tipo = 2;
         }
-
+        //dump($mensaje);die;
         $request->getSession()
             ->getFlashBag()
             ->add($mensaje['tipo'], $mensaje['msg']);

@@ -123,6 +123,7 @@ class WFTramite {
                     $this->em->getConnection()->rollback();
                     $mensaje['dato'] = false;
                     $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                    $mensaje['tipo'] = 'error';
                     return $mensaje;
                 }else{
                     $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
@@ -163,6 +164,7 @@ class WFTramite {
         if( !$usuario or $tramiteDetalle->getUsuarioRemitente()->getId() != $usuario->getId()){
             $mensaje['dato'] = false;
             $mensaje['msg'] = '¡Error, tramite no enviado pues el usuario remitente no corresponde.!';
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
 
@@ -279,6 +281,7 @@ class WFTramite {
         if($verifica == false){
             $mensaje['dato'] = false;
             $mensaje['msg'] = 'El usuario, no corresponde para recibir la tarea <strong>'. $flujoproceso->getProceso()->getProcesoTipo() . '</strong>.';
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
         $this->em->getConnection()->beginTransaction();
@@ -307,11 +310,13 @@ class WFTramite {
             $this->em->getConnection()->commit();
             $mensaje['dato'] = true;
             $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se recibió correctamente';
+            $mensaje['tipo'] = 'exito';
             return $mensaje;
         } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
             $mensaje['dato'] = false;
             $mensaje['msg'] = '¡Ocurrio un error al guardar el trámite!</br>'.$ex->getMessage();
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
     }

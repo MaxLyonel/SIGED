@@ -298,7 +298,8 @@
                 data: formData,
                 beforeSend: function () {
                     $('#contenido').empty();
-                    $("#contenido").append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                    $('.informe').hide();
+                    $("#contenido").append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
                 },
                 success: function (data) {
                     $('#contenido').empty();
