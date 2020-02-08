@@ -1,0 +1,30 @@
+newinscriptionInipri_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:index }
+    options:
+         expose: true
+
+newinscriptionInipri_checksegipstudent:
+    path:     /checksegipstudent
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:checksegipstudent }
+    options:
+         expose: true
+  
+newinscriptionInipri_getdepto:
+    path:     /getdepto
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:getdepto }
+    options:
+         expose: true
+  
+newinscriptionInipri_getprovincia:
+    path:     /getprovincia
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:getprovincia }
+    options:
+         expose: true
+  
+newinscriptionInipri_getInfoUe:
+    path:     /getInfoUe
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:getInfoUe }
+    options:
+         expose: true
+  

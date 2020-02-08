@@ -1,0 +1,650 @@
+
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Inscripción ini <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Recibidos</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+    <!-- /.row -->
+<div id="app">
+<div v-cloak>
+	<div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-search"></i>
+                        <div class="pull-right">
+                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
+                        </div>                                        
+                    </div>
+                    <div class="panel-body">
+                        <!-- form to search student -->
+                       
+
+                         <form role="form">
+                            <div class="row">
+                              <div class="col-sm-2">
+                              <label for="ci">Carnet de Identidad</label>
+                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
+                              </div>
+                              <div class="col-sm-2">
+                              <label for="complemento(s)">Complemento</label>
+                                  <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.complementofind">
+                              </div>
+                              <div class="col-sm-2">
+                              <label for="expedido">Expedido</label>
+                                <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
+ 								{% for entity in arrExpedido %}
+                                  <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
+								{% endfor %}
+                                </select> 
+                              </div>
+                              <div class="col-sm-2">
+                              <label for="fechanac">Fec. Nacimiento</label>
+                                  <input type="text" class="form-control" placeholder="dd-mm-aaaa" v-model="dataNewStudent.fecnacfind">
+                              </div>
+                              <div class="col-sm-3">
+                               <label for="form_caseespecial" class="required">sin ci :</label>
+                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
+                              </div>
+
+                            </div>
+                            </br>     
+                            <div class="row">
+                              <div class="col-sm-4">
+                              <label for="paterno">Paterno</label>
+                              <input type="input" class="form-control" placeholder="Paterno" v-model="dataNewStudent.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                              <div class="col-sm-4">
+                              <label for="materno">Materno</label>
+                                  <input type="input" class="form-control" placeholder="Materno" v-model="dataNewStudent.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                              <div class="col-sm-4">
+                              <label for="Nombre(s)">Nombre(s)</label>
+                                  <input type="input" class="form-control" placeholder="Nombre(s)" v-model="dataNewStudent.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                              </div>
+                            </div>
+                            </br>
+                            
+                            <div class="form-group row buscador">
+	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+	                            </div>
+                        	</div>
+
+                        	<div v-if="buscando" class="text-center">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                            </div>                
+                            <div class="alert alert-info" v-if="message != ''"> <i class="fa fa-warning"></i> ${message}</div>
+                            <div v-if="responseprocess">
+
+
+
+
+                            	<!-- data new studen  -->
+                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE</p>
+                            	<table class="table table-dark">
+								  <tbody>
+								    <tr>
+								      <th>Paterno: ${dataNewStudent.paterno | uppercase}</th>
+								      <th>Materno: ${dataNewStudent.materno | uppercase}</th>
+								      <th>Nombre(s): ${dataNewStudent.nombre | uppercase}</th>
+								    </tr>
+								    <tr>
+								      <th>CI: ${dataNewStudent.cifind}</th>
+								      <th>Complemento: ${dataNewStudent.complementofind}</th>
+								      <th>Fecha Nacimiento: ${dataNewStudent.fecnacfind}</th>
+								      
+								    </tr>
+								    
+								    
+								  </tbody>
+								</table>
+
+								</br>
+                            	<!-- end data new studen  -->
+
+
+
+
+                            	<p class="encabezado bg-primary">INFORMACIÓN ADICIONAL DEL ESTUDIANTE</p>
+
+	                            <div class="row">
+	                             <div class="col-sm-3">
+		                             <label for="genero">G&eacute;nero</label>
+		                                <select name="arrGenero" id="idarrGenero" v-model="dataNewStudent.generoId" class="custom-select form-control">  
+		                                  <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
+		                                </select>
+	                              </div>
+	                          	</div>
+
+	                            <div class="row">
+	                              <div class="col-sm-3">
+	                                <label for="pais">Pais</label>                                  
+	                                <select name="arrPais" id="idarrPais_p" v-model="dataNewStudent.paisId" class="custom-select form-control" v-on:change="setPais();">
+	                                  <option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
+	                                </select>
+	                              </div>
+	                              <div class="col-sm-3">
+	                                  <label for="depto">Departamento</label>
+	                                  <select name="arrPais" id="idarrPais_dept" v-model="dataNewStudent.lugarNacTipoId" class="custom-select form-control" v-on:change="setDepto();">  
+	                                    <option v-for="item in DBDepto"  :value="item.deptoId">${ item.depto }</option>
+	                                  </select>
+	                              </div>
+	                              <div class="col-sm-3">
+	                                  <label for="provincia">Provincia</label>
+	                                  <select name="arrPais" id="idarrPais_provi" v-model="dataNewStudent.lugarProvNacTipoId" class="custom-select form-control" >  
+	                                    <option v-for="item in DBProvincia"  :value="item.provinciaId">${ item.provincia }</option>
+	                                  </select>
+	                              </div>
+	                              <div class="col-sm-3">
+	                                  <label for="localidad">Localidad</label>
+	                                  <input type="input" class="form-control" id="localidad" placeholder="Localidad" v-model="dataNewStudent.localidad" maxlength="18" autocomplete="off" style="text-transform:uppercase">
+	                              </div>
+	                            </div>
+	                            </br>
+
+	                            <p class="encabezado bg-primary">INFORMACIÓN UNIDAD EDUCATIVA</p>
+	                            <div class="row">
+	                              <div class="col-sm-3">
+	                                  <label for="localidad">SIE</label>
+	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="dataNewStudent.sie" maxlength="8" v-on:keyup="getInfoUe();">
+	                              </div>
+	                            </div>
+	                            </br>
+
+	                            <div v-if="buscandoue" class="text-center">
+                                	<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+	                            </div>                
+	                            <div class="alert alert-info" v-if="!nombreue"> <i class="fa fa-warning"></i> ${message}</div>
+
+
+	                            <div v-if="swprocessue">
+
+	                            	<div class="row">
+		                              <div class="col-md-12">
+	                            		<p class="p-3 mb-2 bg-info text-white"> <strong>UNIDAD EDUCATIVA: ${nombreue}</strong> </p>
+			                          </div>
+			                        </div>
+
+		                            <div class="row">
+		                              <div class="col-sm-3">
+		                                <label for="pais">Nivel</label>                                  
+		                                <select name="arrPais" id="idpais" v-model="dataNewStudent.nivelId" class="custom-select form-control" v-on:change="setGrado();">
+		                                  <option v-for="item in DBLevel"  :value="item.id">${ item.level }</option>       
+		                                </select>
+		                              </div>
+		                              <div class="col-sm-3">
+		                                  <label for="depto">Grado</label>
+		                                  <select name="arrPais" id="idgrado" v-model="dataNewStudent.gradoId" class="custom-select form-control" v-on:change="setGrado();">  
+		                                    <option v-for="item in DBDepto"  :value="item.deptoId">${ item.depto }</option>
+		                                  </select>
+		                              </div>
+		                              <div class="col-sm-3">
+		                                  <label for="provincia">Paralelo</label>
+		                                  <select name="arrPais" id="idparalelo" v-model="dataNewStudent.paraleloId" class="custom-select form-control" >  
+		                                    <option v-for="item in DBProvincia"  :value="item.provinciaId">${ item.provincia }</option>
+		                                  </select>
+		                              </div>
+		                              <div class="col-sm-3">
+		                                  <label for="localidad">Turno</label>
+		                                  <input type="input" class="form-control" id="idturno" placeholder="turno" v-model="dataNewStudent.turnoId" maxlength="18" autocomplete="off" style="text-transform:uppercase">
+		                              </div>
+		                            </div>
+	                            </div>
+                            
+                        	</div>
+                                                      
+                          </form>
+
+                       
+                            
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script>
+    Vue.filter('uppercase', function (value) {
+		return value.toUpperCase()
+	})
+
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+            	dataNewStudent: {'withoutcifind':false},
+            	dataNewStudent: {},
+            	dataNewStudent: {},
+            	responseprocess:false,
+            	swprocessue:false,
+            	nombreue:true,
+            	buscando:false,
+                buscandoue:false,
+            	message:'',           	
+                DBPais: {},
+                DBDepto: {},
+                DBProvincia: {},
+                DBLevel: {},
+
+
+
+                codigoRude:'',
+                gestion:'',
+                item:'',
+                arraOptionBuscar:'',
+                rudeBuscar:'',
+                optionBuscar:'',
+                studentId:'',
+                studentHistModId:false,
+                urlreport: '',
+                
+                swOne:false,
+                swTwo:false,
+                responseSegip:'',
+                responseFormTwo:'',
+                respuesta:'',
+                dataStudentModif: {},
+                dataModifyToSend:[],
+                archivoAdjunto:'',
+                informe:'',
+                showbuttonPDF:false,
+                swCertification:false,
+
+               
+            },
+            methods: {
+                buscarEstudiante: function(){
+                    this.buscando = true;
+                    this.responseprocess = false;
+                    this.message = '';
+                    this.dataNewStudent.generoId= '';
+                    this.dataNewStudent.paisId= '';
+                	this.DBDepto= '';
+                	this.DBProvincia= '';
+                	this.dataNewStudent.localidad='';
+
+
+
+                    // if (this.dataNewStudent.cifind.length == 0) {
+                    //     this.respuesta = 'Debe ingresar un CI válido';
+                    //     this.buscando = false;
+                    //     return;
+                    // }
+
+                    // if (this.dataNewStudent.cifind.length < 5) {
+                    //     this.respuesta = 'El CI ingresado no es válido';
+                    //     this.buscando = false;
+                    //     return;
+                    // }
+
+                    axios.get(Routing.generate('newinscriptionInipri_checksegipstudent', this.dataNewStudent ))
+                    .then(response => {
+                        if (response.status == 200) {
+                        	this.responseprocess = response.data.swcreatestudent;
+                        	this.message = response.data.message;
+                        	this.DBGenero= response.data.arrGenero;
+                        	this.DBPais= response.data.arrPais;
+                        }                        
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });
+                },
+                setGenero: function(){
+                    var me = this;
+                    $.each(this.DBGenero, function (i, value) {
+                        if(me.dataStudentModif.generoTipoId == value.generoId) {
+                            me.dataStudentModif.generoTipo = value.genero;
+                        }
+                    });                    
+                },
+                setPais: function(){
+                	
+                    var me = this;
+                    
+                    /*$.each(this.DBPais, function (i, value) {
+                        if(me.dataStudentModif.paisId == value.paisId) {
+                            me.dataStudentModif.pais = value.pais;
+                            me.dataModifyToSend.push({'paisId':me.dataStudentModif.paisId})
+                        }
+                    });*/
+                    
+                    if(me.dataNewStudent.paisId == 1){
+                         axios.post(Routing.generate('newinscriptionInipri_getdepto',{ paisId:me.dataNewStudent.paisId }  ))
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.DBDepto = response.data.arrDepto;
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+                    }else{
+                        this.DBDepto = '';
+                        this.DBProvincia = '';
+                        me.dataStudentModif.lugarNacTipoId ='';
+                        me.dataStudentModif.lugarProvNacTipoId ='';
+                    }
+                    
+                },
+                setDepto: function(){
+                    var me = this;
+                  /*  $.each(this.DBDepto, function (i, value) {
+                        if(me.dataStudentModif.lugarNacTipoId == value.deptoId) {
+                            me.dataStudentModif.lugarNacTipo = value.depto;
+                        }                        
+                    });*/  
+                    
+                    if(me.dataNewStudent.paisId == 1 && me.dataNewStudent.lugarNacTipoId>0){
+                         axios.post(Routing.generate('newinscriptionInipri_getprovincia', me.dataNewStudent ))
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.DBProvincia = response.data.arrProvincia;
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+                    }else{
+                        this.DBDepto = '';
+                        this.DBProvincia = '';
+                        me.dataStudentModif.lugarNacTipoId ='';
+                        me.dataStudentModif.lugarProvNacTipoId ='';
+                    }
+
+
+
+
+
+                },
+                setProvincia: function(){
+                    var me = this;
+                    $.each(this.DBProvincia, function (i, value) {
+                        if(me.dataStudentModif.lugarProvNacTipoId == value.provinciaId) {
+                            me.dataStudentModif.lugarProvNacTipo = value.provincia;
+                            me.dataModifyToSend.push({'provinciaId':me.dataStudentModif.lugarProvNacTipoId})
+                        }
+                    });                    
+                }, 
+                getInfoUe: function(){
+
+                	if(this.dataNewStudent.sie.length >= 7){
+                		this.buscandoue = true;
+
+                		    axios.post(Routing.generate('newinscriptionInipri_getInfoUe', this.dataNewStudent ))
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.DBLevel = response.data.aniveles;
+                                    this.swprocessue = response.data.swprocessue;
+                                    this.nombreue = response.data.nombreue;
+                                    this.message = response.data.message;
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                               
+                                this.buscandoue = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                // this.buscando = false;
+                            });
+
+                	}
+                },             
+                               
+
+
+
+                getImage: function(event){
+                    var informe = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informe = '';
+                        return false;
+                    }else{
+                        var megas = (informe.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informe = '';
+                            return false;
+                        }
+                    }
+                    this.informe = event.target.files[0];
+                },                
+
+            },
+            mounted(){
+                
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    function validarFormatoFecha(campo) {
+        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+        if ((campo.match(RegExPattern)) && (campo!='')) {
+                return true;
+        } else {
+                return false;
+        }
+    }    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var lookforStudent = function () {
+            //get the values
+           var rude = $('#form_codeRude').val();
+           var selectOption = $('#form_arrOption').val();
+            
+            if (rude.length <= 0) {
+                alert("Necesita código RUDE para realizar la busqueda");
+                return false;
+            }
+            if (selectOption == '') {
+                alert("Necesita seleccionar criterio de busqueda");
+                return false;
+            }
+            
+            dataForm = $('#idFormFindStudent').serialize();
+            $.ajax({
+                type: 'post',
+                data: dataForm,
+                url: Routing.generate('specialmodificationdata_student_lookfor_student'),
+                beforeSend: function () {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+                // formdataId
+        var updateDataStudent = function(){
+            var message = '';
+            if($('#form_resoladm').val()==''){
+                message+= '- Necesita Resolucion Administrativa\n';
+            }
+            if($('#form_fecharesoladm').val()==''){
+                message+= '- Necesita Fecha Resolucion Administrativa\n';
+            }
+            if($('#form_obs').val()==''){
+                message+= '- Necesita registrar justificativo\n';
+            }            
+            if(message){
+                alert(message);
+                return false;
+            }
+            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
+              alert('Revise formato de Fecha Resolucion Administrativa (dd-mm-aaaa)');
+              return false;
+            }
+            
+            var dataForm = $('#formdataStudentId').serialize();
+            if (confirm('¿Esta seguro de realizar el cambio?')) {
+                    $.ajax({
+                        type: 'post',
+                        data: dataForm,
+                        url: Routing.generate('specialmodificationdata_student_updateDataStudent'),
+                        beforeSend: function () {
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append(data);
+                        },
+                        statusCode: {
+                            500: function () {
+
+                            },
+                            404: function () {
+
+                            }
+                        }
+                    });
+            } else {
+              return false;
+            }
+        }
+
+
+    
+
+
+        function dep(es) {
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos_st', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias_st', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }        
+
+
+
+
+
+
+
+
+    </script>
+{%endblock%}
