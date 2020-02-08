@@ -621,9 +621,10 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         );
         
-        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
+        // $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
         
-        if(!($objRudesStudent)){
+        // if(!($objRudesStudent)){
+        if(true){
 
         // set parameter to validate inscription
         $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
@@ -1246,7 +1247,7 @@ class StudentsInscriptionsController extends Controller {
           }
 
         } else{
-            if(!($yearStudent>=15)){
+            if(!($yearStudent>=16)){
               $validateYear=true;
             }
         }//end first if - validate the humanisticos
