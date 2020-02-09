@@ -692,6 +692,17 @@ class StudentsInscriptionsController extends Controller {
                 $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
                 $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
 
+                $this->get('funciones')->setLogTransaccion(
+                  $studentInscription->getId(),
+                  'estudiante_inscripcion',
+                  'C',
+                  '',
+                  '',
+                  '',
+                  'ALTERNATIVA',
+                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+              );
+
 
                 $em->flush();
 
@@ -926,6 +937,17 @@ class StudentsInscriptionsController extends Controller {
                 // set all the courses modules to the student
                 $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
                 $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+
+                $this->get('funciones')->setLogTransaccion(
+                  $studentInscription->getId(),
+                  'estudiante_inscripcion',
+                  'C',
+                  '',
+                  '',
+                  '',
+                  'ALTERNATIVA',
+                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+              );
 
                 $em->flush();
                 //do the commit in DB
