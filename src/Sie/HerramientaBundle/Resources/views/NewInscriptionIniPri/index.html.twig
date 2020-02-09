@@ -86,7 +86,7 @@
                             
                             <div class="form-group row buscador">
 	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar && Validar</button>
 	                            </div>
                         	</div>
 
@@ -187,30 +187,86 @@
 
 		                            <div class="row">
 		                              <div class="col-sm-3">
-		                                <label for="pais">Nivel</label>                                  
-		                                <select name="arrPais" id="idpais" v-model="dataNewStudent.nivelId" class="custom-select form-control" v-on:change="setGrado();">
+		                                <label for="nivel">Nivel</label>                                  
+		                                <select name="arrLevel" id="idpais" v-model="dataNewStudent.nivelId" class="custom-select form-control" v-on:change="setGrado();">
+		                                  <option value="">Seleccionar...</option>
 		                                  <option v-for="item in DBLevel"  :value="item.id">${ item.level }</option>       
 		                                </select>
 		                              </div>
 		                              <div class="col-sm-3">
 		                                  <label for="depto">Grado</label>
-		                                  <select name="arrPais" id="idgrado" v-model="dataNewStudent.gradoId" class="custom-select form-control" v-on:change="setGrado();">  
-		                                    <option v-for="item in DBDepto"  :value="item.deptoId">${ item.depto }</option>
+		                                  <select name="arrGrado" id="idgrado" v-model="dataNewStudent.gradoId" class="custom-select form-control" v-on:change="setParalelo();">  
+		                                  	<option value="">Seleccionar...</option>
+		                                    <option v-for="item in DBGrado"  :value="item.id">${ item.grado }</option>
 		                                  </select>
 		                              </div>
 		                              <div class="col-sm-3">
-		                                  <label for="provincia">Paralelo</label>
-		                                  <select name="arrPais" id="idparalelo" v-model="dataNewStudent.paraleloId" class="custom-select form-control" >  
-		                                    <option v-for="item in DBProvincia"  :value="item.provinciaId">${ item.provincia }</option>
+		                                  <label for="paralelo">Paralelo</label>
+		                                  <select name="arrParalelo" id="idparalelo" v-model="dataNewStudent.paraleloId" class="custom-select form-control"  v-on:change="setTurno();">  
+		                                  	<option value="">Seleccionar...</option>
+		                                    <option v-for="item in DBParalelo"  :value="item.id">${ item.paralelo }</option>
 		                                  </select>
 		                              </div>
 		                              <div class="col-sm-3">
-		                                  <label for="localidad">Turno</label>
-		                                  <input type="input" class="form-control" id="idturno" placeholder="turno" v-model="dataNewStudent.turnoId" maxlength="18" autocomplete="off" style="text-transform:uppercase">
-		                              </div>
+		                                  <label for="turno">Turno</label>
+		                                  <select name="arrTurno" id="idturno" v-model="dataNewStudent.turnoId" class="custom-select form-control" >  
+		                                  	<option value="">Seleccionar...</option>
+		                                    <option v-for="item in DBTurno"  :value="item.id">${ item.turno }</option>
+		                                  </select>
+		                              </div>		                             
 		                            </div>
+		                        	</br>
+
+		                            <div class="row">
+			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			                                <button v-on:click="doInscriptioninipri()" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
+			                            </div>
+		                        	</div>
+
 	                            </div>
                             
+                        	</div>
+
+                        	<div v-if="swinscription">
+
+                        		<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE</p>
+                            	<table class="table table-dark">
+								  <tbody>
+								    <tr>
+								      <th>Cod. Rude: ${DBNewStudent.rude }</th>
+								      <th>Paterno: ${DBNewStudent.paterno }</th>
+								      <th>Materno: ${DBNewStudent.materno }</th>
+								      <th>Nombre(s): ${DBNewStudent.nombre }</th>
+								    </tr>
+								 
+								    
+								    
+								  </tbody>
+								</table>
+
+								</br>
+
+								<p class="encabezado bg-primary">INFORMACIÓN DE LA INSCRIPCION</p>
+                            	<table class="table table-dark">
+								  <tbody>
+								  	  <tr>
+								      <th>SIE: ${DBNewInscription.sie }</th>
+								      <th colspan="3">Institucioneducativa: ${DBNewInscription.institucioneducativa }</th>
+								    </tr>
+								    <tr>
+								      <th>Nivel: ${DBNewInscription.nivelTipo }</th>
+								      <th>Grado: ${DBNewInscription.gradoTipo }</th>
+								      <th>Paralelo: ${DBNewInscription.paraleloTipo }</th>
+								      <th>Turno: ${DBNewInscription.turnoId }</th>
+								    </tr>
+								  
+								    
+								    
+								  </tbody>
+								</table>
+
+								</br>
+                        		
                         	</div>
                                                       
                           </form>
@@ -246,6 +302,7 @@
             	dataNewStudent: {},
             	responseprocess:false,
             	swprocessue:false,
+            	swinscription:false,
             	nombreue:true,
             	buscando:false,
                 buscandoue:false,
@@ -254,6 +311,11 @@
                 DBDepto: {},
                 DBProvincia: {},
                 DBLevel: {},
+                DBGrado:{},
+                DBParalelo:{},
+                DBTurno:{},
+                DBNewStudent:{},
+                DBNewInscription:{},
 
 
 
@@ -266,7 +328,6 @@
                 studentId:'',
                 studentHistModId:false,
                 urlreport: '',
-                
                 swOne:false,
                 swTwo:false,
                 responseSegip:'',
@@ -283,14 +344,25 @@
             },
             methods: {
                 buscarEstudiante: function(){
+
+                	// this.dataNewStudent.withoutcifind = false;
+
                     this.buscando = true;
                     this.responseprocess = false;
+                    this.swinscription = false;
                     this.message = '';
                     this.dataNewStudent.generoId= '';
                     this.dataNewStudent.paisId= '';
                 	this.DBDepto= '';
                 	this.DBProvincia= '';
                 	this.dataNewStudent.localidad='';
+                	this.dataNewStudent.sie = '';
+
+
+                	this.dataNewStudent.nivelId='';
+            		this.dataNewStudent.gradoId='';
+            		this.dataNewStudent.paraleloId='';
+            		this.dataNewStudent.turnoId='';    
 
 
 
@@ -305,7 +377,11 @@
                     //     this.buscando = false;
                     //     return;
                     // }
-
+                    
+                    if (typeof this.dataNewStudent.withoutcifind === "undefined") {
+					  this.dataNewStudent.withoutcifind = false;
+					}
+					
                     axios.get(Routing.generate('newinscriptionInipri_checksegipstudent', this.dataNewStudent ))
                     .then(response => {
                         if (response.status == 200) {
@@ -410,6 +486,13 @@
                 getInfoUe: function(){
 
                 	if(this.dataNewStudent.sie.length >= 7){
+                		
+                		this.dataNewStudent.nivelId='';
+                		this.dataNewStudent.gradoId='';
+                		this.dataNewStudent.paraleloId='';
+                		this.dataNewStudent.turnoId='';               		
+
+
                 		this.buscandoue = true;
 
                 		    axios.post(Routing.generate('newinscriptionInipri_getInfoUe', this.dataNewStudent ))
@@ -430,7 +513,91 @@
                             });
 
                 	}
-                },             
+                },
+                setGrado: function(){
+                		
+                		this.dataNewStudent.paraleloId='';
+                		this.dataNewStudent.turnoId='';
+
+            		    axios.post(Routing.generate('newinscriptionInipri_setGrado', this.dataNewStudent ))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.DBGrado = response.data.arrGrado;
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                           
+                            this.buscandoue = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            // this.buscando = false;
+                        });
+
+            	
+                },    
+                setParalelo: function(){
+
+
+                		
+                		this.dataNewStudent.turnoId='';
+
+            		    axios.post(Routing.generate('newinscriptionInipri_setParalelo', this.dataNewStudent ))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.DBParalelo = response.data.arrParalelo;
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                           
+                            this.buscandoue = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            // this.buscando = false;
+                        });
+
+            	
+                },     
+                setTurno: function(){
+
+            		    axios.post(Routing.generate('newinscriptionInipri_setTurno', this.dataNewStudent ))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.DBTurno = response.data.arrTurno;
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                           
+                            this.buscandoue = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            // this.buscando = false;
+                        });
+
+            	
+                },        
+                doInscriptioninipri: function(){
+
+            		    axios.post(Routing.generate('newinscriptionInipri_doInscriptioninipri', this.dataNewStudent ))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.DBNewStudent = response.data.arrStudent;
+                                this.DBNewInscription = response.data.arrInscription;
+								this.responseprocess=false;
+								this.swinscription=response.data.swinscription;
+								this.message=response.data.message;
+                                
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                           
+                            this.buscandoue = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            // this.buscando = false;
+                        });
+
+            	
+                },                
                                
 
 

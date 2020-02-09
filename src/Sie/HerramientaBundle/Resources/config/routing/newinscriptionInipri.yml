@@ -28,3 +28,27 @@ newinscriptionInipri_getInfoUe:
     options:
          expose: true
   
+newinscriptionInipri_setGrado:
+    path:     /setGrado
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:setGrado }
+    options:
+         expose: true
+  
+newinscriptionInipri_setParalelo:
+    path:     /setParalelo
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:setParalelo }
+    options:
+         expose: true
+  
+newinscriptionInipri_setTurno:
+    path:     /setTurno
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:setTurno }
+    options:
+         expose: true
+  
+newinscriptionInipri_doInscriptioninipri:
+    path:     /doInscriptioninipri
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:doInscriptioninipri }
+    options:
+         expose: true
+  
