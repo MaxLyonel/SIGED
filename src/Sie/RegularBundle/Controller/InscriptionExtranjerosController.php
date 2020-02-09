@@ -1200,7 +1200,20 @@ class InscriptionExtranjerosController extends Controller {
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
+        if($institucion){
+            $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestion);
+            
+            if($validacionIniConsolidation){
+                $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+            }else{
+                $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+            }
+
+
+        }else{
+             $nombreIE = ' Insitucion Educativa no existe...';
+        }
+        
         $em = $this->getDoctrine()->getManager();
         //get the Niveles
 
