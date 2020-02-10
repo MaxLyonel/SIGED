@@ -529,7 +529,7 @@ class WFTramite {
                     }else{
                         return false;
                     }
-                }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8){ // si es tecnico nacional
+                }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8 or $flujoprocesoSiguiente->getRolTipo()->getId() == 43){ // si es tecnico nacional
                     $query = $this->em->getConnection()->prepare("select * from wf_usuario_flujo_proceso ufp where ufp.esactivo is true and ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and lugar_tipo_id=1");
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
@@ -670,7 +670,7 @@ class WFTramite {
                 $lugarTipoId = $lugar_tipo_departamento;
                 break;
             case 0://nivel nacional
-                if($flujoproceso->getRolTipo()->getId() == 8){ // si es tecnico nacional
+                if($flujoproceso->getRolTipo()->getId() == 8 or $flujoproceso->getRolTipo()->getId() == 43){ // si es tecnico nacional
                     $lugarTipoId = 1;
                 }
                 break;
