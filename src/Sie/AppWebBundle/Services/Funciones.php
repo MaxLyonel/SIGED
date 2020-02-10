@@ -1081,7 +1081,7 @@ class Funciones {
                 ->where('rc.unidadEducativa = :ue')
                 ->andWhere('rc.gestion = :gestion')
                 ->setParameter('ue',$sie)
-                ->setParameter('gestion',$gestion)
+                ->setParameter('gestion',$gestion - 1)
                 ->getQuery()
                 ->getResult();
 
@@ -1094,6 +1094,25 @@ class Funciones {
         return $response;
 
     }
+
+    public function getConsolidationInitioOpe($sie,$gestion){
+
+        $repositorio = $this->em->getRepository('SieAppWebBundle:RegistroConsolidacion');
+        $regConsol = $repositorio->createQueryBuilder('rc')
+                ->where('rc.unidadEducativa = :ue')
+                ->andWhere('rc.gestion = :gestion')
+                ->setParameter('ue',$sie)
+                ->setParameter('gestion',$gestion)
+                ->getQuery()
+                ->getResult();
+
+        if(sizeof($regConsol)>0 ){
+            return false;
+        }else{
+            return true;
+        }
+
+    }    
 
 
      /**

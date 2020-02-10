@@ -47,9 +47,10 @@ class NewInscriptionIniPriController extends Controller
 	      foreach ($objExpedido as $value) {
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
-
+	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
        	return $this->render('SieHerramientaBundle:NewInscriptionIniPri:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
+       		'allowwithoutci' => $userAllowedOnwithoutCI,
                // ...
         ));
     }
