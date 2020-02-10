@@ -198,7 +198,7 @@ class EstadisticasInfraestructuraController extends Controller
 //        }
 //
 //        dump($objEspecialidadesArray);die;
-
+//dump($request);die;
         $codigo = 0;
         $nivel = 0;
 
@@ -231,11 +231,15 @@ class EstadisticasInfraestructuraController extends Controller
         $entidad = $this->buscaEntidadRol($codigo,$rol);
    //     dump($gestion);die;
         $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol,$gestion,$periodo);
-
+        if(count($subEntidades)==0)
+        {
+          $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol,$gestion-1,$periodo);
+        $gestion = $gestion-1;
+        }
     //   dump($subEntidades);die;
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area
        $entityEstadistica = $this->buscaEstadisticaInfraestructuraAreaRol($codigo,$rol,$gestion,$periodo);
-
+       
 //dump($entityEstadistica);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
             $totalgeneral=0;
@@ -277,7 +281,7 @@ class EstadisticasInfraestructuraController extends Controller
    //     $chartOtro = $this->chartResponsive($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestion,"Estudiantes","chartContainerOtro");
 //        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestion,"Estudiantes","chartContainerModalidad");
 
-//dump($chartDependencia);die;
+//dump($entityEstadistica);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
             return $this->render($this->session->get('pathSystem') . ':Reporte:estadisticaGeneralInfraestructura.html.twig', array(
                 'infoEntidad'=>$entidad,
