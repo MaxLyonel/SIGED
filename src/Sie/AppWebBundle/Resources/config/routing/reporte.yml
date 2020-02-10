@@ -147,23 +147,23 @@ estadistica_infra_ambientes_pedagogicos_pdf:
     defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPedagogicosPdf }
 
 estadistica_infra_ambientes_pedagogicos_xls:
-    path:     /informacion/infraestructura/mbientes/pedagogico/print/xls
+    path:     /informacion/infraestructura/ambientes/pedagogico/print/xls
     defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPedagogicosXls }
 
 estadistica_infra_ambientes_no_pedagogicos_pdf:
-    path:     /informacion/infraestructura/mbientes/nopedagogico/print/pdf
+    path:     /informacion/infraestructura/ambientes/nopedagogico/print/pdf
     defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesNoPedagogicosPdf }
 
 estadistica_infra_ambientes_no_pedagogicos_xls:
-    path:     /informacion/infraestructura/mbientes/nopedagogico/print/xls
+    path:     /informacion/infraestructura/ambientes/nopedagogico/print/xls
     defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesNoPedagogicosXls }
 
 estadistica_infra_ambientes_otros_pdf:
-    path:     /informacion/infraestructura/mbientes/otros/print/pdf
+    path:     /informacion/infraestructura/ambientes/otros/print/pdf
     defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesOtrosPdf }
 
 estadistica_infra_ambientes_otros_xls:
-    path:     /informacion/infraestructura/mbientes/otros/print/xls
+    path:     /informacion/infraestructura/ambientes/otros/print/xls
     defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesOtrosXls }
 
 estadistica_infra_ambientes_pedagogicos_recreativo_pdf:

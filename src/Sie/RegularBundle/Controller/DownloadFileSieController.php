@@ -683,12 +683,36 @@ class DownloadFileSieController extends Controller {
     }
 
     private function validateThePrevOperativo($data){
+      $em = $this->getDoctrine()->getManager();
       $swcompleteOperativo = true;
       $operativo = $this->get('funciones')->obtenerOperativoDown($data['sie'], $data['gestion']);
+
         if($operativo == 5){//if 4 everything is done
           $swcompleteOperativo = true;
         }else{
-          $swcompleteOperativo = false;
+          if($operativo == 0){
+            // is probably ue new creation
+            $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']);
+            $currentyear = $this->session->get('currentyear');
+
+            if(($objUE->getFechaCreacion()->format('Y') <= $currentyear && $objUE->getFechaCreacion()->format('Y') >= $currentyear - 1 ) ){              
+              if( $objUE->getFechaCreacion()->format('Y') == $currentyear ){
+                $swcompleteOperativo = true;  
+              }else{
+
+                if(($objUE->getFechaCreacion()->format('m') >= 10 ) ){
+                  $swcompleteOperativo = true;  
+                }else{
+                  $swcompleteOperativo = false;  
+                }
+
+              }             
+            }else{
+              $swcompleteOperativo = false;
+            }
+          }else{
+            $swcompleteOperativo = false;
+          }
         }
 
         return $swcompleteOperativo;
