@@ -700,7 +700,7 @@ class DownloadFileSieController extends Controller {
                 $swcompleteOperativo = true;  
               }else{
 
-                if(($objUE->getFechaCreacion()->format('m') >= 10 ) ){
+                if(($objUE->getFechaCreacion()->format('m') >= 3 ) ){
                   $swcompleteOperativo = true;  
                 }else{
                   $swcompleteOperativo = false;  
