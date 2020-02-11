@@ -456,6 +456,16 @@
                         <li><a href="{{ path('herramienta_info_maestro_tsie_index')}}">Personal Docente</a></li>
                       </ul>
                     </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Inscripciones</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
+                            </ul>
+                        </li>                    
 
 
                     {# <li class="submenu">
@@ -531,6 +541,7 @@
                             </ul>
                         </li>
                         #}
+                        
                     {% endif %}
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
