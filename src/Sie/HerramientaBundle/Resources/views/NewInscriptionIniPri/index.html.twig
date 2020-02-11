@@ -12,6 +12,18 @@
   box-shadow: 1px 1px 1px #aaaaaa;
   margin-top: 10px;
 }
+.newRude{ 
+  background: #20e5fb !important;
+  padding: 10px !important;
+  border-radius: 0 !important;
+  position: relative; 
+  display: inline-block !important;
+  box-shadow: 1px 1px 1px #aaaaaa;
+  margin-top: 10px;
+}
+.custom-date{
+	background: #FFF !important;
+}
 </style>
 
 
@@ -53,7 +65,7 @@
                          <form role="form">
                             <div class="row">
                               <div class="col-sm-2">
-                              <label for="ci">Carnet de Identidad</label>
+                              <label for="ci">(*)Carnet de Identidad</label>
                               <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
                               </div>
                               <div class="col-sm-2">
@@ -69,7 +81,12 @@
                                 </select> 
                               </div>
                               <div class="col-sm-3">
-                              	<label for="fechanac">Fec. Nacimiento (dd-mm-aaaa)</label>
+                              	
+
+
+                              	<label for="fechanac">(*)Fec. Nacimiento </label>
+                              	    <!-- <vuejs-datepicker input-class="custom-date" :bootstrap-styling="true" :format="customFormatter" v-model="dataNewStudent.fecnacfindOrig"></vuejs-datepicker>
+                              	    <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.fecnacfind" > -->
                                   <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                               </div>
 
@@ -93,7 +110,7 @@
                                   <input type="input" class="form-control" placeholder="Materno" v-model="dataNewStudent.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
                               </div>
                               <div class="col-sm-4">
-                              <label for="Nombre(s)">Nombre(s)</label>
+                              <label for="Nombre(s)">(*)Nombre(s)</label>
                                   <input type="input" class="form-control" placeholder="Nombre(s)" v-model="dataNewStudent.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase">
                               </div>
                             </div>
@@ -247,13 +264,11 @@
                             	<table class="table table-dark">
 								  <tbody>
 								    <tr>
-								      <th>Cod. Rude: ${DBNewStudent.rude }</th>
+								      <th>Cod. Rude: <label class="newRude">${DBNewStudent.rude }</label> </th>
 								      <th>Paterno: ${DBNewStudent.paterno }</th>
 								      <th>Materno: ${DBNewStudent.materno }</th>
 								      <th>Nombre(s): ${DBNewStudent.nombre }</th>
-								    </tr>
-								 
-								    
+								    </tr>			    
 								    
 								  </tbody>
 								</table>
@@ -303,9 +318,11 @@
 		// $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
 	</script>
 	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script src="https://unpkg.com/vuejs-datepicker"></script>
     <script type="text/javascript">
 // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
     
@@ -319,6 +336,10 @@
         var app = new Vue({
             delimiters: ['${', '}'],
             el: '#app',
+            components: {
+			  	vuejsDatepicker
+			  },
+
             data: {
             	dataNewStudent: {'withoutcifind':false},
             	dataNewStudent: {},
@@ -368,6 +389,9 @@
             methods: {
                 buscarEstudiante: function(){
 
+                	// this.dataNewStudent.fecnacfind = this.dataNewStudent.fecnacfindOrig;
+
+// console.log(this.dataNewStudent);return;
                 	// this.dataNewStudent.withoutcifind = false;
 
                     this.buscando = true;
@@ -648,7 +672,7 @@
 									this.responseprocess=false;
 									this.swinscription=response.data.swinscription;
 									this.message=response.data.message;
-	                                
+	                                this.dataNewStudent = {};
 	                                $('[data-toggle="tooltip"]').tooltip();
 	                            }
 	                           
@@ -667,6 +691,10 @@
                 // 	console.log(this.dataNewStudent.fecnacfind);
                 // 	return;
                 // },
+
+                customFormatter(date) {
+			      return moment(date).format('l');
+			    },
                                
 
 
