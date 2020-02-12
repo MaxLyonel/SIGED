@@ -43,10 +43,10 @@ class InscriptionExtranjerosController extends Controller {
     **/
     public function fillOptionsInscriptions(){
 
-         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', );
+         $this->arrOptionInscription = array('19' => 'Extranjero', /*'59'=>'Incial/Primaria',*/ );
 
         if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
-            $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
+            // $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
             $this->arrOptionInscription[77] = 'Post Bachillerato';
         }
     }
@@ -1200,7 +1200,20 @@ class InscriptionExtranjerosController extends Controller {
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
+        if($institucion){
+            $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestion);
+            
+            if($validacionIniConsolidation){
+                $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+            }else{
+                $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+            }
+
+
+        }else{
+             $nombreIE = ' Insitucion Educativa no existe...';
+        }
+        
         $em = $this->getDoctrine()->getManager();
         //get the Niveles
 
