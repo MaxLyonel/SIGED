@@ -340,6 +340,7 @@
                         <th class="text-center">MATERNO</th>
                         <th class="text-center">NOMBRE(S)</th>
                         <th class="text-center">FECHA NACIMIENTO</th>
+                        <th class="text-center">-</th>
                       </tr>
                     </thead>
 
@@ -351,7 +352,7 @@
                         <td>${infostudent.materno}</td>
                         <td>${infostudent.nombre}</td>
                         <td>${infostudent.fnac}</td>                        
-                        <td></td>
+                        <td><button v-on:click="studentsInscriptionbylist(infostudent.idstudent, infostudent.fnac)" type="button" class="btn btn-info"><i class="fa fa-book"></i>Inscribir</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -848,7 +849,7 @@ var app = new Vue({
         
       })
     },
-    studentsInscription: function(){
+    studentsInscription: function(){                                                                                                                                                                       
     this.dataStudent.iecId = this.iecId;
     this.swproceso = true;
     this.DBRudesStudent = false;
@@ -900,6 +901,61 @@ var app = new Vue({
     })
       
     },
+
+    studentsInscriptionbylist: function(idstudent, fnac){
+    
+    this.dataStudent.iecId = this.iecId;
+    this.swproceso = true;
+    this.DBRudesStudent = false;
+    this.message = false;    
+       
+
+          Swal.fire({
+            title: '¿Realizar incripción?',
+            text: "El estudiante será inscrito en el curso seleccionado",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar...',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+        if (result.value) {
+
+      axios.post(Routing.generate('alter_inscriptionstudent_studentsInscriptionlist', {
+        iecId: this.iecId, idstudent: idstudent,
+        casespecial:this.dataStudent.casespecial,
+        fecNac:fnac
+      } ))
+      .then(response => {
+          if (response.status == 200) {
+
+            this.DBRudesStudent = response.data.arrRudesStudent;
+            this.message = response.data.message;
+            this.swcreatestudent = response.data.swcreatestudent;
+            if(this.swcreatestudent){
+              showListStudent(this.iecId, this.infoUe);
+            }
+
+            this.buscando = false;
+            this.swproceso = false;
+            
+          }
+          if( response.status == 202){
+              //this.respuesta = response.data;
+          }
+
+          
+      })
+      .catch(e => {
+          console.log(e);
+          this.buscando = false;
+      });
+      }
+      
+    })
+      
+    },    
 
   },
    

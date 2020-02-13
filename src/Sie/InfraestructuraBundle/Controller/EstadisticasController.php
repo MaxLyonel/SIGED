@@ -48,8 +48,7 @@ class EstadisticasController extends Controller
 
 
     public function reportesGerencialesPdfAction(Request $request) {
-     
-       // dump($request);die;
+    
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
@@ -68,12 +67,12 @@ class EstadisticasController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_reporte_gerencial_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_reporte_gerencial_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -100,16 +99,16 @@ class EstadisticasController extends Controller
             $rol = 0;
             $periodo = 2;
         }
-
+        //dump($codigoArea);die;
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -117,17 +116,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -158,13 +157,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -172,17 +171,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_ambientes_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -215,13 +214,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -229,17 +228,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -270,13 +269,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -284,17 +283,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -325,13 +324,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -339,17 +338,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         $response->setStatusCode(200);
@@ -380,13 +379,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -394,17 +393,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_no_pedagogicos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         $response->setStatusCode(200);
@@ -436,13 +435,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -450,17 +449,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -491,13 +490,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -505,17 +504,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_otros_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -546,13 +545,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -560,17 +559,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -601,13 +600,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -615,17 +614,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_ambientes_pedagogicos_recreativos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -657,13 +656,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -671,17 +670,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         $response->setStatusCode(200);
@@ -712,13 +711,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -726,17 +725,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_servicios_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         $response->setStatusCode(200);
@@ -767,13 +766,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -781,17 +780,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -822,13 +821,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -836,17 +835,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_eventos_riesgos_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -876,13 +875,13 @@ class EstadisticasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -890,17 +889,17 @@ class EstadisticasController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_departamento_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=pdf&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         $response->setStatusCode(200);
@@ -930,13 +929,13 @@ public function reportesRiesgosXlsAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Infraestructura_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -944,17 +943,17 @@ public function reportesRiesgosXlsAction(Request $request) {
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_departamento_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'inf_est_riesgo_proximo_nacional_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion. '&deptoid=' . $codigoArea));
         }
 
         $response->setStatusCode(200);

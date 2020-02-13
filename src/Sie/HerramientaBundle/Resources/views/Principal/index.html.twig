@@ -62,39 +62,35 @@
                     </div>
                 </div>
             </div>
-        {% if app.session.get('ie_id') > 0 %}
-        
-            <div class="col-md-3">
-                <!-- Start input fields - basic form -->
-                <div class="panel rounded shadow">
-                    <div class="panel panel-primary shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Descarga Archivo Rude</h3>
-                            </div>
-                            <div class="pull-right">
-                                {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
-                            </div>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body">
-                        
-                            {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
-                            {{form_widget(formOperativoRude.downOperativoRude)}}
-                            {{form_end(formOperativoRude)}}
-                        
+            {% if app.session.get('ie_id') > 0 %}
+                <div class="col-md-3">
+                    <!-- Start input fields - basic form -->
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-primary shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Descarga Archivo Rude</h3>
+                                </div>
+                                <div class="pull-right">
+                                    {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
                             
-                            <div id="downoperativoId">
+                                {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
+                                {{form_widget(formOperativoRude.downOperativoRude)}}
+                                {{form_end(formOperativoRude)}}
+                            
                                 
+                                <div id="downoperativoId">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
             {% endif %}
-
-
 
             <div class="col-md-3">
                 <!-- Start input fields - basic form -->
@@ -172,6 +168,57 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+        <div class="row">
+            {% if app.session.get('ie_id') > 0 %}
+                <div class="col-md-6">
+                    <!-- Start input fields - basic form -->
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-lilac shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Observaciones de Incripciones Gestión {{app.session.get(('currentyear'))}}</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                <div class="col-md-12">
+                                    {% if observacion %}
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">#</th>
+                                                        <th>Codigo SIE</th>
+                                                        <th>Gestión</th>
+                                                        <th>Observacion</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for obs in observacion %}
+                                                    <tr>
+                                                        <td class="text-center">{{loop.index}}</td>
+                                                        <td>{{obs.institucioneducativa.id}}</td>
+                                                        <td>{{obs.gestionTipo.id}}</td>
+                                                        <td>{{obs.obs}}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        No tiene observaciones
+                                    {% endif %}
+                                </div>
+                            </div><!-- /.panel-body --> 
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

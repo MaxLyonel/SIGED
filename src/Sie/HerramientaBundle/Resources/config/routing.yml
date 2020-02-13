@@ -226,3 +226,7 @@ sie_upinfrafile:
 sie_downloadinfrafile:
      resource: "@SieHerramientaBundle/Resources/config/routing/downloadinfrafile.yml"
      prefix:   /sie/downloadinfrafile
+
+sie_newinscriptionInipri:
+     resource: "@SieHerramientaBundle/Resources/config/routing/newinscriptionInipri.yml"
+     prefix:   /sie/newinscriptionInipri

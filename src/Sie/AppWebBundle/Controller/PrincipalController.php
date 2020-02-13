@@ -152,6 +152,20 @@ class PrincipalController extends Controller {
         if (isset($sieaux)) {
             $sieaux = -1;
         }*/
+        //Lista de observados consolidacion inscripcion
+        if ($rol_usuario == 9){
+            $query = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->createQueryBuilder('eio')
+                ->where('eio.gestionTipo = :gestion')
+                ->andWhere('eio.institucioneducativa = :ie')
+                ->setParameter('gestion', $this->sesion->get('currentyear'))
+                ->setParameter('ie', $this->sesion->get('ie_id'))
+                ->getQuery();
+            
+            $observacion = $query->getResult();
+        }else{
+            $observacion = array();
+        }
+        
 
         //$objObservactionSie = $em->getRepository('SieAppWebBundle:ValidacionProceso')->getObservationPerSie(array('sie'=> $sieaux, 'gestion'=>2016));
 
@@ -171,6 +185,7 @@ class PrincipalController extends Controller {
           'instalador'=>$instalador,
           //'objObservactionSie' => $objObservactionSie
           'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
+          'observacion' => $observacion,
         ));
     }
 
