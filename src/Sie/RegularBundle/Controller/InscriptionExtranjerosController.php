@@ -374,7 +374,7 @@ class InscriptionExtranjerosController extends Controller {
             $em->flush();
 
             //add the areas to the student
-            $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestion']);
+            // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestion']);
             //to register the new rude and the user
             $UsuarioGeneracionRude = new UsuarioGeneracionRude();
             $UsuarioGeneracionRude->setUsuarioId($this->session->get('userId'));
@@ -937,7 +937,7 @@ class InscriptionExtranjerosController extends Controller {
             $em->persist($studentInscription);
             $em->flush();
             //add the areas to the student
-            $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(),$form['gestion']);
+            // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(),$form['gestion']);
             // save the file and register into DB
             switch ($aDataOption['optionInscription']) {
                 case 19:                           
