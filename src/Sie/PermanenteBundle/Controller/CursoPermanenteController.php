@@ -1781,7 +1781,13 @@ class CursoPermanenteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $em->getConnection()->commit();
-            $query = $em->getConnection()->prepare('select * from permanente_cursocorto_tipo order by cursocorto');
+            $query = $em->getConnection()->prepare('select distinct pcct.*, 
+                                                    CASE WHEN piecc.id is null THEN false
+                                                        ELSE true END
+                                                        AS existe
+                                                    from permanente_cursocorto_tipo  pcct
+                                                    left join permanente_institucioneducativa_cursocorto piecc on piecc.cursocorto_tipo_id = pcct.id
+                                                    order by cursocorto');
             $query->execute();
             $listacurso= $query->fetchAll();
         if (count($listacurso) > 0){
@@ -1816,7 +1822,13 @@ class CursoPermanenteController extends Controller
             $em->persist($cursos);
             $em->flush();
             $em->getConnection()->commit();
-            $query = $em->getConnection()->prepare('select * from permanente_cursocorto_tipo order by cursocorto');
+            $query = $em->getConnection()->prepare('select distinct pcct.*, 
+                                                    CASE WHEN piecc.id is null THEN false
+                                                        ELSE true END
+                                                        AS existe
+                                                    from permanente_cursocorto_tipo  pcct
+                                                    left join permanente_institucioneducativa_cursocorto piecc on piecc.cursocorto_tipo_id = pcct.id
+                                                    order by cursocorto');
             $query->execute();
             $listacurso= $query->fetchAll();
             if (count($listacurso) > 0){

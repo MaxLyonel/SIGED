@@ -95,7 +95,12 @@
                                     <td data-title="Acciones" class="text-center">
                                         <button class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Cambiar Estado" onclick="cambiarEstadoCursoCorto({{ listacurso.id }});"><i class="fa fa-exchange"></i></button>
                                         <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarCursoCorto({{ listacurso.id }});"><i class="fa fa-pencil"></i></button>
-                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarCursoCorto({{ listacurso.id }});"><i class="fa fa-times"></i></button>
+                                        {% if (listacurso.existe == '1') %}
+                                      
+                                        {% elseif (listacurso.existe == '0') %}
+                                         <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarCursoCorto({{ listacurso.id }});"><i class="fa fa-times"></i></button>
+                                        {% endif %}
+                                       
                                     </td>
                                     <td data-title="Estado" class="text-center">
                                         {% if (listacurso.habilitado == '1') %}
