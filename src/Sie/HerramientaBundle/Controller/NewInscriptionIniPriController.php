@@ -95,7 +95,7 @@ class NewInscriptionIniPriController extends Controller
       	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
         $yearStudent = $arrYearStudent['age'];
         // check if the student is on 5 - 8 years old
-        if($yearStudent<=8 && $yearStudent>=5){
+        if($yearStudent<=8 && $yearStudent>=4){
 
         	 // get genero data
 		     $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
@@ -121,7 +121,7 @@ class NewInscriptionIniPriController extends Controller
         }else{
         	$status = 'error';
 			$code = 400;
-			$message = "Estudiante no cumple con la edad requerida 5 a 8";
+			$message = "Estudiante no cumple con la edad requerida 4 a 8";
 			$swcreatestudent = false; 
         }
       }else{
