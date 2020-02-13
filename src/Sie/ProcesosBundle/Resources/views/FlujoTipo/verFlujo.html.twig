@@ -102,7 +102,6 @@
 </table>
 <div style= "display:none" >
 <textarea id="code" style="width: 100%;" rows="11">
-
 st=>start: Inicio|past
 e=>end: Fin|past
 {% for f in flujo %}
@@ -115,17 +114,26 @@ e=>end: Fin|past
 {% for f in flujo %}
     {% if f.es_evaluacion =="1" %}
         {#{% if sw == 0 %}#}
-        {% if f.id == 48 %}
+        {% if f.tarea_ant_id == null %}
+            st->{{f.id}}
+        {% endif %}
+        {# {% if f.id == 55 %}
             {{f.id}}(right)->c{{f.id}}
             {% set sw = 1 %}
         {% else %}
-            {{f.id}}()->c{{f.id}}
+            {{f.id}}->c{{f.id}}
             {% set sw = 1 %}
-        {% endif %}
+        {% endif %} #}
+        {{f.id}}->c{{f.id}}
         {#{% endif %}#}
         {% if f.condicion == "SI" %}
-            {% if f.id == 48 %}
+            {# {% if f.id == 55 %}
                 c{{f.id}}(yes,top)->{{f.condicion_tarea_siguiente}}
+            {% else %}
+                c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
+            {% endif %} #}
+            {% if f.condicion_tarea_siguiente == null %}
+                c{{f.id}}(yes)->e    
             {% else %}
                 c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
             {% endif %}
@@ -145,7 +153,6 @@ e=>end: Fin|past
             {% if f.tarea_sig_id == null %}
                 {{f.id}}->e
             {% else %}
-                
                 {{f.id}}->{{f.tarea_sig_id}}
             {% endif %}
         {% endif %}

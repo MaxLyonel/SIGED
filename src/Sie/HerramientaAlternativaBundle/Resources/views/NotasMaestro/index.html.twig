@@ -29,9 +29,7 @@
                         <h3 class="panel-title">Lista de materias y/o modulos impartidos en la gestión {{gestion}} </h3>
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-sm" data-action="refresh" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Refresh" data-original-title="" title=""><i class="fa fa-refresh"></i></button>
                         <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                        <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button>
                     </div>
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
@@ -58,7 +56,7 @@
                                     <td>{{a.sie}}</td>
                                     <td>{{a.institucioneducativa}}</td>
                                     <td>{{a.sucursal}}</td>
-                                    <td>{{a.periodoSuperior}}</td>
+                                    <td>{{a.periodo}}</td>
                                     <td>{{a.especialidad}}</td>
                                     <td>{{a.acreditacion}}</td>
                                     <td>{{a.modulo}}</td>
@@ -73,7 +71,7 @@
                                                 <button type="submit" class="btn btn-lilac btn-stroke btn-sm">Reg.Notas</button>
                                             </form>
                                         {% else %}
-                                            <button type="button" class="btn btn-danger btn-stroke btn-sm" data-toggle="tooltip" data-placement="top" data-original-title="¡Operativo fuera de plazo, contactese con su tecnico SIE.!" disabled>Reg.Notas</button>
+                                            <button type="button" class="btn btn-danger btn-stroke btn-sm" data-toggle="tooltip" data-placement="top" data-title="¡Operativo fuera de plazo, contactese con su tecnico SIE.!" disabled>Reg.Notas</button>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -90,4 +88,12 @@
             <!--/ End repeater -->
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() { 
+            $('[data-toggle="tooltip"]').tooltip();    
+        });
+    </script>
 {% endblock %}

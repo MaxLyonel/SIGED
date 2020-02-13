@@ -83,57 +83,59 @@
                                         <i class="fa fa-cubes"></i> Nuevo Curso
                                     </button>
                                 </div>
-                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
-                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
-                                        <i class="fa fa-list"></i> Listado de Cursos
-                                    </button>
-                                </div>
+                                {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                    {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                        {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                    {#</button>#}
+                                {#</div>#}
                             {% endif%}
 
-                            {% for programaKey, dataPrograma in aInfoUnidadEductiva %}
-                            {% if (programaKey==1) %}
+                            {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                            {% if (subareaKey==1) %}
                                     <ul>
-                                                {% for acreditacionKey, dataAcreditacion in dataPrograma %}
-                                                    <li>
-                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey
-                                                            }}</span>
+                                        {% for programaKey, dataPrograma in dataSubarea %}
+                                        <li>
+                                            <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                            <ul>
+                                        {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                                        <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
                                                         <ul>
-                                                                        {% for cursolargoKey, dataCursolargo in dataAcreditacion %}
+                                                            {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
                                                                             <li>
-                                                                                <span><i class="icon-minus-sign"></i>{{ cursolargoKey }}</span>
+                                                                                <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
                                                                                 <ul>
-                                                                                    {% for iecidKey, dataIecid in dataCursolargo %}
+                                                                                    {% for iecidKey, dataIecid in dataAcreditacion %}
                                                                                         <li>
                                                                                             <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
                                                                                             <ul>
-                                                                                                {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                                                {% for paraleloKey, dataParalelo in dataIecid %}
                                                                                                     <li>
-
-
+                                                                                                   {#  <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span> #}
 
                                                                                                     {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
-                                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataIdcurso.infoUe}} ');">
-                                                                                                                <i class="fa fa-info"></i>
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                {{ paraleloKey }}
                                                                                                             </button>
                                                                                                         </div>
                                                                                                     {% endif %}
-                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
-                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas( '{{ dataIdcurso.infoUe }}');">
-                                                                                                            <i class="fa fa-graduation-cap"></i>
-                                                                                                        </button>
-                                                                                                    </div>
-                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
-                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
-                                                                                                            <i class="fa fa-group"></i>
+
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                            <i class="fa fa-columns"></i>
                                                                                                             {#{{ iecidKey }}#}
                                                                                                         </button>
                                                                                                     </div>
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones1">
+                                                                                                            <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                                <i class="fa fa-group"></i>
+                                                                                                            </button>
+                                                                                                        </div>
 
 
 
-
-                                                                                                                                                                                   </li>
+                                                                                                    </li>
                                                                                     {% endfor %}
 
                                                                                 </ul>
@@ -146,7 +148,9 @@
                                                         </ul>
                                                     </li>
                                                 {% endfor %}
-
+                                            </ul>
+                                        </li>
+                                        {% endfor %}
                                     </ul>
                             {% endif %}
                             {% endfor %}
@@ -169,71 +173,76 @@
                                 </button>
                             </div>
 
-                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
-                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
-                                    <i class="fa fa-list"></i> Listado de Cursos
-                                </button>
-                            </div>
+                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                    {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                {#</button>#}
+                            {#</div>#}
                         {% endif%}
 
-                        {% for programaKey, dataPrograma in aInfoUnidadEductiva %}
-                            {% if (programaKey==0) %}
+                        {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                            {% if (subareaKey==0) %}
                                 <ul>
-                                    {% for acreditacionKey, dataAcreditacion in dataPrograma %}
+                                    {% for programaKey, dataPrograma in dataSubarea %}
                                         <li>
-                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey
-                                                            }}</span>
+                                            <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
                                             <ul>
-                                                {% for cursolargoKey, dataCursolargo in dataAcreditacion %}
+                                                {% for cursolargoKey, dataCursolargo in dataPrograma %}
                                                     <li>
-                                                        <span><i class="icon-minus-sign"></i>{{ cursolargoKey }}</span>
+                                                        <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
                                                         <ul>
-                                                            {% for iecidKey, dataIecid in dataCursolargo %}
+                                                            {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
                                                                 <li>
-                                                                    <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                    <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
                                                                     <ul>
-                                                                        {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                        {% for iecidKey, dataIecid in dataAcreditacion %}
                                                                             <li>
-                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+                                                                                <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                <ul>
+                                                                                    {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                    <li>
+                                                                                                    <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
 
 
-                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
-                                                                                            <button class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">
-                                                                                                <i class="fa fa-cube"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    {% endif %}
-                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
-                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">
-                                                                                            <i class="fa fa-graduation-cap"></i>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                    <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                        <i class="fa fa-info"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            {% endif %}
 
-                                                                                        <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
-                                                                                            <i class="fa fa-group"></i>
-                                                                                            {#{{ iecidKey }}#}
-                                                                                        </button>
-                                                                                    </div>
+                                                                                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
+                                                                                                {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                    {#<i class="fa fa-columns"></i>#}
+                                                                                                    {#{{ iecidKey }}#}
+                                                                                                {#</button>#}
+                                                                                            {#</div>#}
+                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                    <i class="fa fa-group"></i>
+                                                                                                </button>
+                                                                                            </div>
 
 
-                                                                                </div>
 
+
+                                                                                        </li>
+                                                                                    {% endfor %}
+
+                                                                                </ul>
                                                                             </li>
                                                                         {% endfor %}
-
                                                                     </ul>
                                                                 </li>
                                                             {% endfor %}
+
                                                         </ul>
                                                     </li>
                                                 {% endfor %}
-
                                             </ul>
                                         </li>
                                     {% endfor %}
-
                                 </ul>
                             {% endif %}
                         {% endfor %}
@@ -253,71 +262,99 @@
                                     <i class="fa fa-cubes"></i> Nuevo Curso
                                 </button>
                             </div>
-                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
-                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
-                                    <i class="fa fa-list"></i> Listado de Cursos
-                                </button>
-                            </div>
+                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                    {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                {#</button>#}
+                            {#</div>#}
                         {% endif%}
 
-                        {% for programaKey, dataPrograma in aInfoUnidadEductiva %}
+                        {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
 
                             <ul>
-                                {% for acreditacionKey, dataAcreditacion in dataPrograma %}
+                                {% for programaKey, dataPrograma in dataSubarea %}
                                     <li>
-                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey
-                                                            }}</span>
+                                        <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
                                         <ul>
-                                            {% for cursolargoKey, dataCursolargo in dataAcreditacion %}
+                                            {% for cursolargoKey, dataCursolargo in dataPrograma %}
                                                 <li>
-                                                    <span><i class="icon-minus-sign"></i>{{ cursolargoKey }}</span>
+                                                    <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
                                                     <ul>
-                                                        {% for iecidKey, dataIecid in dataCursolargo %}
+                                                        {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
                                                             <li>
-                                                                <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
                                                                 <ul>
-                                                                    {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                    {% for iecidKey, dataIecid in dataAcreditacion %}
                                                                         <li>
-                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+                                                                            <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                            <ul>
+                                                                                {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                    <li>
+                                                                                                   
 
 
-                                                                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
-                                                                                        <button class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">
-                                                                                            <i class="fa fa-cube"></i>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                {% endif %}
-                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
-                                                                                    <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">
-                                                                                        <i class="fa fa-graduation-cap"></i>
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                                        {% if (dataParalelo.esabierto) %}
 
-                                                                                    <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
-                                                                                        <i class="fa fa-group"></i>
-                                                                                        {#{{ iecidKey }}#}
-                                                                                    </button>
-                                                                                </div>
+                                                                                             {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                {{ paraleloKey }}
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                    {% endif %}
+
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                            <i class="fa fa-columns"></i>
+                                                                                                            {#{{ iecidKey }}#}
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones1">
+                                                                                                            <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                                <i class="fa fa-group"></i>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                        {% else %}
+                                                                                         <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
+                                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                    <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                        <i class="fa fa-info"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            {% endif %}
+
+                                                                                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
+                                                                                            {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                            {#<i class="fa fa-columns"></i>#}
+                                                                                            {#{{ iecidKey }}#}
+                                                                                            {#</button>#}
+                                                                                            {#</div>#}
+                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                    <i class="fa fa-group"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        {% endif %}
 
 
-                                                                            </div>
 
+                                                                                    </li>
+                                                                                {% endfor %}
+
+                                                                            </ul>
                                                                         </li>
                                                                     {% endfor %}
-
                                                                 </ul>
                                                             </li>
                                                         {% endfor %}
+
                                                     </ul>
                                                 </li>
                                             {% endfor %}
-
                                         </ul>
                                     </li>
                                 {% endfor %}
-
                             </ul>
 
                         {% endfor %}
@@ -379,6 +416,36 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+
+        $('.calendario').datepicker({
+
+            format: 'dd-mm-yyyy',
+
+            todayBtn: 'linked'
+
+        });
+
+
+
+        // DateRangePicker
+        $('#sandbox-container .input-daterange').datepicker({
+            format: 'dd-mm-yyyy',
+            todayBtn: 'linked'
+        });
+        $('#form_fechaInicio').on('change',function(){
+            if($("#form_fechaFin").val().length < 1){
+                $("#form_fechaFin").val($('#form_fechaInicio').val());
+            }
+        });
+        $('#form_fechaFin').on('change',function(){
+            //if($("#form_fechaFin").val().length >= 1){
+            //   alert('adsjkfhkasd');
+            if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+                $("#form_fechaInicio").val($('#form_fechaFin').val());
+            }
+            //}
+        });
+
         /**
          * this is to the tree menu option
          * @returns {undefined}.
@@ -408,9 +475,17 @@
                     $('#modal').empty();
                 },
                 success: function (data) {
+                   // alert('asdasdas');
                     $('#modal').empty();
                     $('#modal').append(data);
                     $('.chosen-select').chosen({allow_single_deselect: false});
+                    $('.calendario').datepicker({
+
+                        format: 'dd-mm-yyyy',
+
+                        todayBtn: 'linked'
+
+                    });
                 },
 
                 statusCode: {
@@ -491,22 +566,21 @@
                 }
             });
         };
-        var editarCurso = function (infoUe) {
+
+
+        var mostrarCurso = function (infoUe) {
 
             $.ajax({
-                type: 'post',
-                data: {infoUe: infoUe},
-                url: "{{ path('herramienta_per_cursos_cortos_edit') }}",
-
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_per_info_cursos_largos'),
                 beforeSend: function () {
-                    $('#modal').empty();
-
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                 },
                 success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                    $('.chosen-select').chosen({allow_single_deselect: false});
-                 //   $('#modal').modal('show');
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
                 },
                 statusCode: {
                     500: function () {
@@ -519,12 +593,41 @@
             });
         };
 
-        var mostrarCurso = function (infoUe) {
+        var modulosCurso = function (infoUe) {
 
+            $.ajax({
+                type: 'post',
+                data: {infoUe: infoUe},
+                url: "{{ path('herramienta_per_mostrar_modulos') }}",
+
+                beforeSend: function () {
+                    $('#modal').empty();
+
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                    //   $('#modal').modal('show');
+                },
+
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+
+        var inscripcionEstudiantes = function (infoUe) {
             $.ajax({
                 type: 'get',
                 data: ({infoUe: infoUe}),
-                url: Routing.generate('herramienta_per_info_cursos_largos'),
+                url: Routing.generate('herramienta_per_info_estudiantes_inscripciones'),
                 beforeSend: function () {
                     $("#idstudents").empty();
                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
@@ -567,6 +670,8 @@
                 }
             });
         };
+
+
 
         var getAreas = function (infoUe) {
             $.ajax({

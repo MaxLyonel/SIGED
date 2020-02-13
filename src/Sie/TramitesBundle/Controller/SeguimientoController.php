@@ -51,7 +51,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
@@ -220,7 +220,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -574,7 +574,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -718,3 +718,5 @@ class SeguimientoController extends Controller {
         }
     }
 }
+
+

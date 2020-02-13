@@ -1,0 +1,54 @@
+newinscriptionInipri_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:index }
+    options:
+         expose: true
+
+newinscriptionInipri_checksegipstudent:
+    path:     /checksegipstudent
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:checksegipstudent }
+    options:
+         expose: true
+  
+newinscriptionInipri_getdepto:
+    path:     /getdepto
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:getdepto }
+    options:
+         expose: true
+  
+newinscriptionInipri_getprovincia:
+    path:     /getprovincia
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:getprovincia }
+    options:
+         expose: true
+  
+newinscriptionInipri_getInfoUe:
+    path:     /getInfoUe
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:getInfoUe }
+    options:
+         expose: true
+  
+newinscriptionInipri_setGrado:
+    path:     /setGrado
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:setGrado }
+    options:
+         expose: true
+  
+newinscriptionInipri_setParalelo:
+    path:     /setParalelo
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:setParalelo }
+    options:
+         expose: true
+  
+newinscriptionInipri_setTurno:
+    path:     /setTurno
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:setTurno }
+    options:
+         expose: true
+  
+newinscriptionInipri_doInscriptioninipri:
+    path:     /doInscriptioninipri
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:doInscriptioninipri }
+    options:
+         expose: true
+  

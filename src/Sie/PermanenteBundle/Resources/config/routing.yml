@@ -46,3 +46,7 @@ sie_permanente_areas:
 sie_herramienta_alternativa_socioeconomico:
     resource: "@SiePermanenteBundle/Resources/config/routing/socioeconomico.yml"
     prefix:   /persie/socioeconomicoper
+
+sie_permanente_rudeal:
+    resource: "@SiePermanenteBundle/Resources/config/routing/estudianteRudeal.yml"
+    prefix:   /persie/rudeal

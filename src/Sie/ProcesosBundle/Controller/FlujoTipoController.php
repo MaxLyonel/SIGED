@@ -75,8 +75,8 @@ class FlujoTipoController extends Controller
             $query->execute();
             $proceso = $query->fetchAll();
             if(!$proceso){
-                $entity->setFlujo(strtoupper($datos['flujo']));
-                $entity->setObs(strtoupper($datos['obs']));
+                $entity->setFlujo(mb_strtoupper($datos['flujo'],'UTF-8'));
+                $entity->setObs(mb_strtoupper($datos['obs'],'UTF-8'));
                 $em->persist($entity);
                 $em->flush();
                 

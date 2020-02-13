@@ -13,13 +13,13 @@ download_file_sie_download:
     defaults: { _controller: SieRegularBundle:DownloadFileSie:download }
 
 download_file_sie_getgestion:
-    path:     /getGestion/{sie}
+    path:     /getGestion/
     defaults: { _controller: SieRegularBundle:DownloadFileSie:getgestion }
     options:
          expose: true
 
 download_file_sie_getbimestre:
-    path:     /getBimestre/{sie}/{gestion}
+    path:     /getBimestre/
     defaults: { _controller: SieRegularBundle:DownloadFileSie:getbimestre }
     options:
          expose: true

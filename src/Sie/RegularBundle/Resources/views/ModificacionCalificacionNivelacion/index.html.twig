@@ -1,0 +1,363 @@
+{% extends "layoutRegular.html.twig" %}
+{% block contentoption %}
+	<style type="text/css">
+		[v-cloak]{
+			display: none;
+		}
+		.tab-content{
+			padding: 15px;
+			background: #FFFFFF;
+			margin-top: -10px;
+			border: 1px solid #CCCCCC;
+			border-top: none;
+		}
+		.calificacion{
+			font-size: 2em;
+			padding: 15px;
+			border:  1px solid #CCCCCC;
+			margin-top: 3px;
+			display: block;
+			background: #EEEEEE;
+		}
+		.input-nota{
+			padding-top: 15px !important;
+			padding-bottom: 15px !important;
+			font-size: 2em;
+			display: block;
+			text-align: center;
+		}
+		.cortina{
+	        background: #5E96C2;
+	        position: absolute;
+	        z-index: 1;
+	        opacity: 0.3;
+	        width: 100%;
+	        height: 100%;
+	        text-align: center;
+	        padding-top: 25%;
+	        color: #000000;
+	        display: none;
+	    }
+	</style>
+	<div id="app">
+		<div v-cloak>
+			<div class="row">
+			    <div class="col-lg-12">
+			        <div class="page-title">
+			            <h1>Modificación de calificaciones para Estudiantes con Nivelación
+			                <small></small>
+			            </h1>
+			            <ol class="breadcrumb">
+			                <li><i class="fa fa-home"></i> Principal</li>
+			            </ol>
+			        </div>
+			    </div>
+			</div>
+
+			<div class="portlet portlet-blue">
+				<div class="portlet-heading">
+					<div class="portlet-title">
+					    <h4>Buscar Estudiante</h4>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="portlet-body">
+					<div class="row">
+						<div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right">
+							Código Rude:
+						</div>
+						<div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							<input v-model="rude" type="text" class="form-control" autocomplete="off">
+						</div>
+						<div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							<button type="button" class="btn btn-primary" @click="buscarNivelaciones()">Buscar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div v-if="buscando" class="alert alert-info text-center">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<strong>Buscando... </strong> <img src="{{asset('img/loading-sm.gif')}}" alt="">
+			</div>
+
+			<div v-if="buscando == false && buscado" class="portlet portlet-blue">
+				<div class="portlet-heading">
+					<div class="portlet-title">
+					    <h4>${ title }</h4>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="portlet-body">
+					
+					<div class="cortina" id="cortina">
+			            <img src="{{asset('img/loading.gif')}}" alt=""><br>
+			            Guardando...
+			        </div>
+
+					<div v-if="nivelaciones.length > 0">
+						<table class="table table-bordered table-condensed">
+							<tr>
+								<th>Código RUDE:</th><td>${estudiante.codigoRude}</td>
+								<th>Estudiante:</th><td>${estudiante.nombre} ${estudiante.paterno} ${estudiante.materno}</td>
+							</tr>
+						</table>
+						<br>
+						<ul class="nav nav-tabs">
+						  	<li role="presentation" :class="{active: tab == 1}"><a href="#">Nivelaciones</a></li>
+						  	<li role="presentation" :class="{active: tab == 2}"><a href="#">Modificar</a></li>
+						</ul>
+						<div class="tab-content">
+						
+						  	<div v-show="tab == 1">
+						  		<table class="table table-bordered table-condensed">
+						  			<thead>
+						  				<tr>
+						  					<th>Gestión</th>
+						  					<th>Curso</th>
+						  					<th>Área</th>
+						  					<th>Especialidad</th>
+						  					<th>Calificación</th>
+						  					<th>Acción</th>
+						  				</tr>
+						  			</thead>
+						  			<tbody>
+						  				<tr v-for="(niv, key) in nivelaciones" :key="key">
+						  					<td>${niv.gestion}</td>
+						  					<td>${niv.nivel} - ${niv.grado} - ${niv.paralelo}</td>
+						  					<td>${niv.area}</td>
+						  					<td>${niv.especialidad}</td>
+						  					<td>${niv.calificacion}</td>
+						  					<td>
+						  						<button type="button" class="btn btn-default" @click="modificar(niv)"><i class="fa fa-edit"></i></button>
+						  					</td>
+						  				</tr>
+						  			</tbody>
+						  		</table>
+						  	</div>
+						  	<div v-if="tab == 2 && nivelacionSeleccionada != null">
+						  		<table class="table table-bordered table-condensed">
+						  			<thead>
+						  				<tr>
+						  					<th>Gestión</th>
+						  					<th>Curso</th>
+						  					<th>Área</th>
+						  					<th>Especialidad</th>
+						  					<th>Calificación</th>
+						  				</tr>
+						  			</thead>
+						  			<tbody>
+						  				<tr>
+						  					<td>${nivelacionSeleccionada.gestion}</td>
+						  					<td>${nivelacionSeleccionada.nivel} - ${nivelacionSeleccionada.grado} - ${nivelacionSeleccionada.paralelo}</td>
+						  					<td>${nivelacionSeleccionada.area}</td>
+						  					<td>${nivelacionSeleccionada.especialidad}</td>
+						  					<td>${nivelacionSeleccionada.calificacion}</td>
+						  				</tr>
+						  			</tbody>
+						  		</table>
+						  		<br>
+						  		<div class="row">
+						  			<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+						  				<label>Calificación actual</label><br>
+										<span class="calificacion">
+											${nivelacionSeleccionada.calificacion}
+										</span>
+						  			</div>
+						  			<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+						  				<label>Nueva calificación</label>
+						  				<input v-model="nuevaCalificacion" type="text" class="input-nota" @keypress="validar" @keyup="validarCalificacion">
+						  			</div>
+						  			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						  				<label>Observación</label>
+						  				<textarea v-model="obs" name="" id="" rows="5" class="form-control"></textarea>
+						  			</div>
+						  		</div>
+						  		<div class="row">
+						  			<br>
+						  			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+						  				<button class="btn btn-default" @click="cancelar()">Cancelar</button>
+						  				<button class="btn btn-primary" @click="registrar()">${textbtn}</button>
+						  			</div>
+						  		</div>
+						  	</div>
+						</div>
+					</div>
+					<div v-else>
+		  				<div class="alert alert-warning">
+		  					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  					${msg}
+		  				</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+			delimiters: ['${', '}'],
+            el: '#app',
+			data(){
+				return {
+					title: 'Resultado',
+					rude: '4073004620071202',
+					estudiante: null,
+					nivelaciones: [],
+					nivelacionSeleccionada: null,
+					msg: 'Debe buscar un estudiante !',
+					tab: 1,
+					buscando: false,
+					buscado: false,
+					nuevaCalificacion: '',
+					obs: '',
+					textbtn: 'Guardar cambios'
+				}
+			},
+			methods: {
+				buscarNivelaciones(){
+					this.tab = 1
+					this.estudiante = null
+					this.nivelaciones = []
+					this.nivelacionSeleccionada = {}
+
+					this.buscando = true
+					this.buscado = true
+
+					axios.get(Routing.generate('modif_calif_nivelacion_buscar', {codigoRude: this.rude}))
+						.then(response => {
+
+							this.buscando = false
+
+							if (response.data.status == 'success') {
+								this.title = 'Datos'
+								this.estudiante = response.data.data.estudiante
+								this.nivelaciones = response.data.data.nivelaciones
+							}
+							if (response.data.status == 'error') {
+								this.title = 'Respuesta'
+								this.msg = response.data.msg
+							}
+						})
+						.catch(error => {
+							this.buscando = false
+						});
+				},
+				modificar(niv){
+					this.nivelacionSeleccionada = niv
+					this.tab = 2
+				},
+				cancelar(){
+					this.nivelacionSeleccionada = null
+					this.tab = 1
+					this.nuevaCalificacion = ''
+					this.obs = ''
+				},
+				validar(event){
+					var k = event.charCode || event.keyCode;
+					// return (key >= 48 && key <= 57)
+					if ((k < 48 || k > 57) //NUmeros
+					    && (k != 13) //ENTER
+					    && (k != 8) //retroceso
+					    && (k != 9) //tab
+					){
+						event.preventDefault();
+						return false;
+					}
+					return false;
+				},
+				validarCalificacion(){
+					// if (/^([0-9])*$/.test(this.nuevaCalificacion)) {
+					if (this.nuevaCalificacion != '') {
+						if (this.nuevaCalificacion < 1) { this.nuevaCalificacion = 1 }
+						if (this.nuevaCalificacion > 100) { this.nuevaCalificacion = 100 }
+					}
+					// }else{
+					// 	this.nuevaCalificacion = ''
+					// }
+				},
+				registrar(){
+
+					if (this.nuevaCalificacion != '' && this.obs != '') {
+
+						this.textbtn = 'Actualizando...'
+
+						let data = new FormData();
+						data.append('idNivelacion', this.nivelacionSeleccionada.idNivelacion);
+						data.append('idNotaCualitativa', this.nivelacionSeleccionada.idNotaCualitativa);
+						data.append('nuevaCalificacion', this.nuevaCalificacion);
+						data.append('obs', this.obs);
+
+						Swal.fire({
+			               	title: '¿Realizar modificación?',
+			               	type: 'question',
+			               	html:
+			               	    '<b>La calificación será modificada</b> ',
+			               	showCancelButton: true,
+			               	confirmButtonColor: '#3085d6',
+			               	cancelButtonColor: '#d33',
+			               	confirmButtonText: 'Si, continuar',
+			               	cancelButtonText: 'Cancelar'
+			           	}).then((result) => {
+			               	if (result.value) {
+			                 	axios.post(Routing.generate('modif_calif_nivelacion_registrar'), data)
+			                 		.then(response => {
+			                 			if (response.data.status == 'success') {
+			                 				
+			                 				this.buscarNivelaciones();
+
+			                 				this.nivelacionSeleccionada = null
+			                 				this.tab = 1
+			                 				this.nuevaCalificacion = ''
+			                 				this.obs = ''
+
+			                 				Swal.fire(
+			                 				  	'Modificado!',
+			                 				  	'La calificación fue modificada exitosamente!',
+			                 				  	'success'
+			                 				)
+
+			                 			}else{
+			                 				Swal.fire(
+			                 				  	'Modificación no realizada!',
+			                 				  	response.data.msg,
+			                 				  	'warning'
+			                 				)
+			                 			}
+
+			                 		})
+			                 		.catch(e => {
+			                 			Swal.fire(
+			                 			  	'Aviso!',
+			                 			  	'La calificación no pudo ser modificada!',
+			                 			  	'error'
+			                 			)
+			                 		});
+			               	}else{
+
+			               	}
+			           	});
+
+			           	this.textbtn = 'Guardar cambios'
+
+			        }else{
+			        	Swal.fire(
+			        	  	'Aviso!',
+			        	  	'Debe completar todos los datos!',
+			        	  	'warning'
+			        	)
+			        }
+				}
+			}
+		});
+
+	</script>
+
+{% endblock %}

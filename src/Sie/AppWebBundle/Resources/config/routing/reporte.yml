@@ -10,9 +10,21 @@ reporte_regular_informacion_general_unidad_educativa:
     path:     /informacion/general/regular/unidad/educativa
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativa }
 
+reporte_informacion_general_institutos_tecnicos:
+    path:     /informacion/general/institutos/tecnicos
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicos }
+
 reporte_regular_informacion_general_unidad_educativa_lista_print_xls:
     path:     /informacion/general/regular/unidad/educativa/lista/print/xls
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativaListaPrintXls }
+
+reporte_informacion_general_ritt_lista_print_xls:
+    path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintXls }
+
+reporte_informacion_general_ritt_lista_print_pdf:
+    path:     /informacion/general/institutos/tecnicos/tecnologicos/lista/print/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralInstitutosTecnicosListaPrintPdf }
 
 reporte_regular_informacion_general_chart:
     path:     /informacion/general/regular/chart
@@ -94,6 +106,18 @@ reporte_adultos_index:
     path:     /adultos
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex }
 
+reporte_superior_directorio_itts:
+    path:     /directorio/itts/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioItts }
+
+reporte_superior_directorio_itts_busqueda:
+    path:     /directorio/itts/busqueda/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsBusquedaSuperior }
+
+reporte_superior_directorio_itts_detalle:
+    path:     /directorio/itts/detalle/superior
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioIttsDetalleSuperior }
+
 reporte_diversa_index:
     path:     /diversa
     defaults: { _controller: SieHerramientaAlternativaBundle:EstadisticasDiversa:diversaIndex }
@@ -101,3 +125,75 @@ reporte_diversa_index:
 reporte_permanente_index:
     path:     /permanente
     defaults: { _controller: SiePermanenteBundle:EstadisticasPermanente:permanenteIndex }
+
+reporte_infraestructura_index:
+    path:     /infraestructura
+    defaults: { _controller: SieAppWebBundle:EstadisticasInfraestructura:infraestructuraIndex }
+
+estadistica_gerenciales_pdf:
+    path:     /informacion/infraestructura/gerencial/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesGerencialesPdf }  
+
+estadistica_infra_ambientes_pdf:
+    path:     /informacion/infraestructura/ambientes/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPdf }
+
+estadistica_infra_ambientes_xls:
+    path:     /informacion/infraestructura/ambientes/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesXls }
+
+estadistica_infra_ambientes_pedagogicos_pdf:
+    path:     /informacion/infraestructura/ambientes/pedagogico/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPedagogicosPdf }
+
+estadistica_infra_ambientes_pedagogicos_xls:
+    path:     /informacion/infraestructura/ambientes/pedagogico/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPedagogicosXls }
+
+estadistica_infra_ambientes_no_pedagogicos_pdf:
+    path:     /informacion/infraestructura/ambientes/nopedagogico/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesNoPedagogicosPdf }
+
+estadistica_infra_ambientes_no_pedagogicos_xls:
+    path:     /informacion/infraestructura/ambientes/nopedagogico/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesNoPedagogicosXls }
+
+estadistica_infra_ambientes_otros_pdf:
+    path:     /informacion/infraestructura/ambientes/otros/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesOtrosPdf }
+
+estadistica_infra_ambientes_otros_xls:
+    path:     /informacion/infraestructura/ambientes/otros/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesOtrosXls }
+
+estadistica_infra_ambientes_pedagogicos_recreativo_pdf:
+    path:     /informacion/infraestructura/ambientes/pedagogico/recreativo/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPedagogicosRecreativosPdf }
+
+estadistica_infra_ambientes_pedagogicos_recreativo_xls:
+    path:     /informacion/infraestructura/ambientes/pedagogico/recreativo/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesAmbientesPedagogicosRecreativosXls }
+
+estadistica_infra_servicios_pdf:
+    path:     /informacion/infraestructura/servicios/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesServiciosPdf }
+
+estadistica_infra_servicios_xls:
+    path:     /informacion/infraestructura/servicios/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesServiciosXls }
+
+estadistica_infra_eventos_pdf:
+    path:     /informacion/infraestructura/eventos/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesEventosPdf }
+
+estadistica_infra_eventos_xls:
+    path:     /informacion/infraestructura/eventos/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesEventosXls }
+
+estadistica_infra_riesgos_pdf:
+    path:     /informacion/infraestructura/riesgos/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesRiesgosPdf }
+
+estadistica_infra_riesgos_xls:
+    path:     /informacion/infraestructura/riesgos/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesRiesgosXls }

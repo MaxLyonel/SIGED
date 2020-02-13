@@ -37,3 +37,7 @@ sie_infra_equipamiento:
 sie_infra_infraestructurah1datosgenerales:
     resource: "@SieInfraestructuraBundle/Resources/config/routing/infraestructurah1datosgenerales.yml"
     prefix:   /sie/infraestructurah1datosgenerales
+
+sie_infra_estadistica:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/estadistica.yml"
+    prefix:   /sie/estadistica

@@ -147,9 +147,9 @@ sie_herramienta_solicitud_bth:
 #    resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
 #    prefix:   /sie/tramite
 
-sie_herramienta_tramite_rue:
-    resource: "@SieHerramientaBundle/Resources/config/routing/tramiterue.yml"
-    prefix:   /tramiterue
+# sie_herramienta_tramite_rue:
+#     resource: "@SieHerramientaBundle/Resources/config/routing/tramiterue.yml"
+#     prefix:   /tramiterue
 
 sie_herramienta_consultas:
     resource: "@SieHerramientaBundle/Resources/config/routing/consultas.yml"
@@ -207,6 +207,26 @@ sie_herramienta_registro_estudiante:
      resource: "@SieHerramientaBundle/Resources/config/routing/regstudent.yml"
      prefix:   /sie/regstudent
 
+sie_herramienta_cdl_seguimiento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/cdlseguimiento.yml"
+    prefix:   /sie/cdlseguimiento
+
 sie_herramienta_anular_bth:
      resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
      prefix:   /sie/anularbth
+
+sie_newrequestbth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/newrequestbth.yml"
+     prefix:   /sie/newrequestbth
+
+sie_upinfrafile:
+     resource: "@SieHerramientaBundle/Resources/config/routing/upinfrafile.yml"
+     prefix:   /sie/upinfrafile
+
+sie_downloadinfrafile:
+     resource: "@SieHerramientaBundle/Resources/config/routing/downloadinfrafile.yml"
+     prefix:   /sie/downloadinfrafile
+
+sie_newinscriptionInipri:
+     resource: "@SieHerramientaBundle/Resources/config/routing/newinscriptionInipri.yml"
+     prefix:   /sie/newinscriptionInipri

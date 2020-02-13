@@ -203,6 +203,7 @@
                                 </h4>
                                 
                                 <form id="formEstudiante" onsubmit="saveFormEstudiante(); return false;" method="post">
+                                    <input type="hidden" id="sie" value="{{sie}}">
                                     {{ form_widget(formEstudiante.rudeId) }}
                                     {{ form_widget(formEstudiante.estudianteId) }}
                                     {{ form_widget(formEstudiante.diversaId) }}
@@ -831,7 +832,10 @@
             $('#form_complemento').removeAttr('required');
             $('#form_expedido').removeAttr('required');
         }else{
-            $('#form_expedido').attr('required','required');
+            var sie = $('#sie').val();
+            if (sie != '80730796') {
+                $('#form_expedido').attr('required','required');
+            }
         }
     }
 

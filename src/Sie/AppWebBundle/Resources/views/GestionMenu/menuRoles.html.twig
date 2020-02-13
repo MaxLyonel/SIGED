@@ -1,0 +1,332 @@
+
+<div id="no-more-tables">
+    <table id="myTable" class="table table-bordered table-hover cf dataTable">
+        <thead class="">
+        <tr class="">
+            <th>No.</th>
+            <th>Rol</th>
+
+            <th>Permisos</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>opcion</th>
+
+        </tr>
+        </thead>
+           <tbody>
+             {% for roles in roles %}
+                 <tr>
+                   <td data-title="No.">{{ loop.index }}</td>
+                   <td data-title="Detalle">{{ roles.rol }}</td>
+
+                   <td>
+                       <input type="checkbox" name="create" value="c"> Crear</input><br>
+                       <input type="checkbox" name="read" value="l"> Leer</input><br>
+                       <input type="checkbox" name="update" value="a"> Actua</input><br>
+                       <input type="checkbox" name="delete" value="e"> Eliminar</input><br>
+                   </td>
+                    <td class="form-control calendario">
+                         <input type="datetime" id="fecha_inicio">
+                    </td>
+                    <td>
+                        <input type="datetime" id="fecha_fin">
+                    </td>
+                    <td><button class="btn btn-info" id="boton" onclick="asignar(document.getElementById('create').value)" > Asignar </button></td>
+                 </tr>
+             {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+   /* $(document).ready(function()
+    {
+        $("#boton").click(function () {
+            alert($('input:checkbox[name=colorfavorito]:checked').val());
+            //$("#formulario").submit();
+        });
+    });
+*/
+    /* $(document).ready(function() {
+       $('#boton').click(function(){
+           var selected = '';
+           $('input[type=checkbox]').each(function(){
+               if (this.checked) {
+                   selected += $(this).val()+', ';
+               }
+           });
+
+           if (selected != '')
+               alert('Has seleccionado: '+selected);
+           else
+               alert('Debes seleccionar al menos una opción.');
+
+           return false;
+       });
+   });*/
+
+
+
+
+   function asignar(create){
+        alert(create);
+
+      /* $(document).ready(function() {
+           var x = document.getElementById("create").value;
+           var y = document.getElementById("read").value;
+           var z = document.getElementById("update").value;
+           var w = document.getElementById("delete").value;
+           var w1 = document.getElementById("colorfavorito").value;
+
+           alert($('input:checkbox[name=colorfavorito]:checked').val());
+       });*/
+
+
+        /*   if ($('input:checkbox[name=create]:checked').checked){
+              alert("si");
+           }
+           else
+           {alert("no");}*/
+
+           /*var create=($('input:checkbox[name=create]:checked').val());
+           alert(create);
+           alert($('input:checkbox[name=read]:checked').val());
+           alert($('input:checkbox[name=update]:checked').val());
+           alert($('input:checkbox[name=delete]:checked').val());
+*/
+
+
+
+      // alert (y);
+       //alert (z);
+       //alert (w);
+       //
+       // alert (w1);
+
+
+          /* $('#create input[type=checkbox]').each(function(){
+                   if (this.checked) {
+                       alert($(this).val())
+                      // selected += $(this).val()+', ';
+                   }
+               });
+
+               if (selected != '')
+                   alert('Has seleccionado: '+selected);
+               else
+                   alert('Debes seleccionar al menos una opción.');
+
+               return false;
+
+       });*/
+
+
+      /*  $.ajax({
+            type: 'post',
+            url: "{#{{ path('gestion_menu_nuevo') }}#}",
+            //data: formData,
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+
+                /!* $('#menus').empty();
+                 $('#menus').append(data);*!/
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });*/
+    }
+
+
+
+
+
+
+
+
+    $('.calendario').datepicker({
+
+        format: 'dd-mm-yyyy',
+
+        todayBtn: 'linked'
+
+    });
+
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+        //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+{#    {% extends app.session.get('layout') %}
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-exchange"></i> Lista de Roles Asociados al Sistema: <strong>{{ nom_sis }}</strong>
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('sie_gestion_menu_principal')}}"> Gestión de Menús </a></li>
+                    <li class="active"> Resultado</li>
+                </ol>
+            </div>
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+   {% for siste in sis  %}
+    <div class="col-lg-6 col-sm-12">
+        <div class="circle-tile">
+            <div class="circle-tile-heading dark-blue">
+                    <i class="fa fa-users fa-fw fa-3x"></i>
+            </div>
+            <div class="circle-tile-content dark-blue">
+                <div class="circle-tile-description text-faded">
+                    {{ siste.rol }}
+                </div>
+                <a href="{{ path('gestionmenu_list', { 'id': siste.id, 'nom_sis': nom_sis,'id_sis':id_sis }) }}" class="circle-tile-footer">Ver más <i class="fa fa-chevron-circle-right"></i></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}#}
+
+
+   {# <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('correcto') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('incorrecto') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- begin DASHBOARD CIRCLE TILES -->
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div class="circle-tile">
+                <a href="index.html#">
+                    <div class="circle-tile-heading dark-blue">
+                        <i class="fa fa-users fa-fw fa-3x"></i>
+                    </div>
+                </a>
+                <div class="circle-tile-content dark-blue">
+                    <div class="circle-tile-description text-faded">
+                        Téc. SIE Nacional
+                    </div>
+                    <div class="circle-tile-number text-faded">
+                        8
+                    </div>
+                    <a href="{{ path('gestionmenu_list', { 'id': 8 }) }}" class="circle-tile-footer">Ver más <i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12">
+            <div class="circle-tile">
+                <a href="index.html#">
+                    <div class="circle-tile-heading green">
+                        <i class="fa fa-money fa-fw fa-3x"></i>
+                    </div>
+                </a>
+                <div class="circle-tile-content green">
+                    <div class="circle-tile-description text-faded">
+                        Téc. SIE Departamental
+                    </div>
+                    <div class="circle-tile-number text-faded">
+                        7
+                    </div>
+                    <a href="{{ path('gestionmenu_list', { 'id': 7 }) }}" class="circle-tile-footer">Ver más <i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div class="circle-tile">
+                <a href="index.html#">
+                    <div class="circle-tile-heading orange">
+                        <i class="fa fa-bell fa-fw fa-3x"></i>
+                    </div>
+                </a>
+                <div class="circle-tile-content orange">
+                    <div class="circle-tile-description text-faded">
+                        Téc. SIE Distrital
+                    </div>
+                    <div class="circle-tile-number text-faded">
+                        10
+                    </div>
+                    <a href="{{ path('gestionmenu_list', { 'id': 10 }) }}" class="circle-tile-footer">Ver más <i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12">
+            <div class="circle-tile">
+                <a href="index.html#">
+                    <div class="circle-tile-heading blue">
+                        <i class="fa fa-tasks fa-fw fa-3x"></i>
+                    </div>
+                </a>
+                <div class="circle-tile-content blue">
+                    <div class="circle-tile-description text-faded">
+                        Director/a de Unidad Educativa
+                    </div>
+                    <div class="circle-tile-number text-faded">
+                        9
+                    </div>
+                    <a href="{{ path('gestionmenu_list', { 'id': 9 }) }}" class="circle-tile-footer">Ver más <i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end DASHBOARD CIRCLE TILES -->
+#}
+
+

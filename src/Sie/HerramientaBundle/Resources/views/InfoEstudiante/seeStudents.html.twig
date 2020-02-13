@@ -59,6 +59,19 @@
                     <a class="btn btn-menu tooltips" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                         <i class="fa fa-download" style="color:#FFFFFF"></i>
                     </a>
+                    {% if app.session.get('acceso_total') and gestion >= 2015 and nivel == 13 %}
+
+                        {# {% if grado == 1 or grado == 2 or grado == 3 or grado == 4  %}
+                            <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTGBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTG">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a>
+                        {% endif %}
+                        {% if grado == 5 or grado == 6  %}
+                            <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTEBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTE">
+                                <i class="fa fa-download" style="color:#FFFFFF"></i>
+                            </a>
+                        {% endif %} #}
+                    {% endif %}
                     {#
                     {% if operativo >= 5 %}
                       <div class="col-md-4">
@@ -158,7 +171,7 @@
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
                                 <td>
-                                    {% if app.session.get('acceso_total') %}
+                                    {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
                                         {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
                                             {{data.estadomatricula}}
                                         {% else %}
@@ -176,7 +189,7 @@
                                 </td>
                                 <td>
                                     {# AREAS ESTUDIANTE #}
-                                    {% if gestion >= 2019 and data.estadomatriculaId in [4] and nivel == 13 and grado >= 3 %}
+                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
                                             <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
                                                 <i class="fa fa-bars"></i>
@@ -185,7 +198,7 @@
                                     {% endif %}
                                     
                                     {# RUDE #}
-                                    {% if gestion >= 2018 and data.estadomatriculaId in [4,5] and false %}
+                                    {% if gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and (app.session.get('ue_plena') or app.session.get('ue_modular')) %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
@@ -203,7 +216,7 @@
                                     {% endif %}
                                     
                                     {# REPORTE CUT #}
-                                    {% if mostrarSextoCerrado == false and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and operativo == 4 and data.estadomatriculaId in [4,5] %}
+                                    {% if (sextoCerrado == true or operativo >= 4) and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and data.estadomatriculaId in [4,5,55] %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
                                             <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                               <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
@@ -212,8 +225,8 @@
                                     {% endif %}
 
                                     {# REGISTRO DE NOTAS #}
-                                    {% if app.session.get('acceso_total') or app.session.get('roluser') == 8 %}
-                                        {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear')) %}
+                                    {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4) %}
+                                        {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [5,11,55] and operativo <= 4) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
                                             {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
                                             {% if gestion >= 2019 and nivel == 13 and grado >= 5 %}
 

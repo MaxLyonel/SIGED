@@ -68,7 +68,28 @@
                                 </table>
                             </div>
                         {% else %}
-                            No hay Personas Registradas con el número de carnet y complemento ingresados
+                            <div class="alert alert-danger" role="alert" id="alerta1">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                No se encontraron Personas registradas con el número de carnet y complemento ingresados. Debe registrar a la persona (la información será validada por SEGIP).
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-2">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="panel-title">
+                                                <h4>Formulario de registro</h4>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div id="formVerificar">
+                                            <div class="panel-body">
+                                                {% include 'SieHerramientaBundle:InfoMaestro:formulario_persona.html.twig' with { 'data': data, 'form_verificar': form_verificar, 'institucion': institucion.id, 'gestion': gestion} %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" id="resultado"></div>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -77,8 +98,29 @@
     </div> 
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }}
-    <script>
-    </script>
+	{{parent()}}
+	<script>
+        function verificarPersona(){
+            var formData = $('#formVerify').serialize();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_info_maestro_segip_verificar_persona'),
+                data: formData,
+                beforeSend: function () {
+                    $("#alerta1").hide();
+                    $("#resultado").empty();
+                    $("#resultado").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#resultado").empty();
+                    $("#resultado").append(data);
+                },
+                error: function(data){
+                    $("#resultado").empty();
+                    $("#img-loading").css('display','none');
+                    $("#resultado").append("<div class='alert alert-danger'>Ocurrió un error interno.</div>");
+                }
+            });
+        }
+	</script>
 {% endblock %}
-

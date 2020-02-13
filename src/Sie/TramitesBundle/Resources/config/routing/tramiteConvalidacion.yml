@@ -1,0 +1,39 @@
+tramite_convalidacion_diploma_humanistico_index:
+    path:    /diploma/humanistico/index
+    defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:dipHumIndex }
+
+tramite_convalidacion_diploma_humanistico_estudiante_busca:
+    path:    /diploma/humanistico/estudiante/busca
+    defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:dipHumEstudianteBusca }
+    options:
+        expose: true   
+
+tramite_convalidacion_diploma_humanistico_estudiante_nuevo:
+    path:    /diploma/humanistico/estudiante/nuevo
+    defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:dipHumEstudianteNuevo }
+    options:
+        expose: true   
+
+tramite_convalidacion_diploma_humanistico_estudiante_guarda:
+    path:    /diploma/humanistico/estudiante/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:dipHumEstudianteGuarda }
+    options:
+        expose: true   
+
+tramite_convalidacion_diploma_humanistico_gestion_cambia:
+     path:    /diploma/humanistico/gestion/cambia
+     defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:dipHumGestionCambia }
+     options:
+         expose: true
+
+tramite_convalidacion_diploma_humanistico_estudiante_seleccionado:
+    path:    /diploma/humanistico/estudiante/seleccionado
+    defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:dipHumEstudianteSeleccionado }
+    options:
+        expose: true 
+   
+tramite_convalidacion_diploma_humanistico_findIE:
+     path:    /diploma/humanistico/findIE/{id}
+     defaults: { _controller: SieTramitesBundle:TramiteConvalidacion:findIE }
+     options:
+         expose: true   

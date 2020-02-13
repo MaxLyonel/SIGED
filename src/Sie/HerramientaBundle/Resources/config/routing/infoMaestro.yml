@@ -106,3 +106,13 @@ herramienta_info_maestro_mlistarmenu:
     defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:listarmenu" }
     options:
          expose: true
+
+herramienta_info_maestro_segip_verificar_persona:
+    path:     /verificarPersonaM
+    defaults: { _controller: "SieHerramientaBundle:InfoMaestro:verificarPersona" }
+    options:
+        expose: true
+
+herramienta_info_maestro_persona_datos:
+    path:     /registrarPersonaM
+    defaults: { _controller: "SieHerramientaBundle:InfoMaestro:registrarPersona" }

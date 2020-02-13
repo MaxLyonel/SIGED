@@ -1,0 +1,13 @@
+upinfrafile_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:UpInfraFile:index }
+
+upinfrafile_lookfor_data:
+    path:     /lookforData
+    defaults: { _controller: SieHerramientaBundle:UpInfraFile:lookforData }
+
+upinfrafile_upinfrafile:
+    path:     /upinfrafile
+    defaults: { _controller: SieHerramientaBundle:UpInfraFile:upinfrafile }
+    options:
+        expose: true

@@ -19,39 +19,24 @@
                                     <label> Subarea</label>
                                     <strong>{{form_widget(form.subarea)}}</strong>
                                 </div>
+                                  <div class="form-group col-lg-4 col-md-6">
+                                    <label> Curso</label>
+                                    <strong>{{form_widget(form.cursosCortos)}}</strong>
+                                </div>
                                 <div class="form-group col-lg-4 col-md-6">
+                                    <label> Turno</label>
+                                    <strong>{{form_widget(form.turno)}}</strong>
+                                </div>
+                              {#   <div class="form-group col-lg-4 col-md-6">
                                     <label> Programa</label>
                                     <strong>{{form_widget(form.programa)}}</strong>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-6">
                                     <label> Área Temática </label>
                                     <strong>{{form_widget(form.areatematica)}}</strong>
-                                </div>
+                                </div> #}
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-4 col-md-6">
-                                    <label> Curso</label>
-                                    {#<a class="btn" onclick="addpop(5)"><i class="fa fa-plus-square text-lilac"></i></a>#}
-                                    {#<div class="arrow-before" style="display:none; margin-left:10px;" id="before5"></div>#}
-                                    {#<div class="arrow-after" style="display:none;margin-left:10px;" id="after5"></div>#}
-                                    {#<div id="5" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros"></div>#}
-
-                                    <strong>{{form_widget(form.cursosCortos)}}</strong>
-                                    {#<select id="combocurso" class="chosen-select col-lg-10">#}
-                                        {#<option value="">Seleccionar...</option>#}
-                                        {#{% for at in cursos %}#}
-                                            {#<option value="{{at.id}}">{{at.cursocorto}}</option>#}
-                                        {#{% endfor %}#}
-                                    {#</select>#}
-
-                                </div>
-                                <div class="form-group col-lg-4 col-md-6">
-                                    <label> Turno</label>
-                                    <strong>{{form_widget(form.turno)}}</strong>
-                                </div>
-
-
-                            </div>
+                           
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-6">
                                     <label> Organizacion</label>
@@ -241,9 +226,13 @@
 
     }
     var rangosHorasCC = function(control){
-        if(control.value == ""){ control.value = 0; }
-        if(control.value < 0){ control.value = 0; }
-        if(control.value > 100){ control.value = 100; }
+        if(control.value == ""){ control.value = 6; }
+        if(control.value < 6){ control.value = 6; }
+        if($('#form_cursosCortos').val() == 706){
+            if(control.value > 120){ control.value = 120; }
+        } else {
+            if(control.value > 100){ control.value = 100; }
+        }
     }
 
 </script>

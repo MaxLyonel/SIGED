@@ -1,0 +1,682 @@
+{% extends app.session.get('layout') %}
+{# {% extends 'layoutHerramienta.html.twig' %} #}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Aceleración Educativa <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('wf_tramite_index', {'tipo':2})}}">Trámites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Supletoria</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Acta Supletoria</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form id="form_supletorio" autocomplete="off">
+                            <h4>Datos del estudiante</h4>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="rude">Código RUDE</label>
+                                        <input type="text" class="form-control noedit" id="rude" name="rude" value="{{ rude }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre del Estudiante</label>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" value="{{ estudiante }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!-- <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label for="grado_cantidad">Cantidad Grados a Acelerar</label>
+                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" value="{{ grado_cantidad }}" disabled>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_acelerar"><b>Grados que va Acelerar</b></label><br>
+                                        {# <input type="text" class="form-control numeric" id="grado_acelerar" name="grado_acelerar" value="{{ grado_acelerar }}" disabled> #}
+                                        <span>{{ grado_acelerar }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="grado_inscripcion"><b>Inscrito en la Gestión Actual</b></label><br>
+                                        {# <input type="text" class="form-control numeric" id="grado_inscripcion" name="grado_inscripcion" value="{{ grado_inscripcion }}" disabled> #}
+                                        <span>{{ grado_inscripcion }}</span>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="informe">Informe Psicopedagógico</label>
+                                        <input type="hidden" class="form-control" id="informe" name="informe" value="{{ informe }}">
+                                        <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/talento/'~ informe )}}" target="_blank">Documento adjunto</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
+                                        <input type="hidden" class="form-control" id="solicitud_tutor" name="solicitud_tutor" value="{{ solicitud_tutor }}">
+                                        <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ solicitud_tutor )}}" target="_blank">Documento adjunto</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="informe_comision">Informe Complementario</label>
+                                        <input type="hidden" class="form-control" id="informe_comision" name="informe_comision" value="{{ informe_comision }}">
+                                        {% if informe_comision|length > 0 %}
+                                        <a class="form-control text-primary" href="{{asset('uploads/archivos/flujos/tramite/aceleracion/'~ informe_comision )}}" target="_blank">Documento adjunto</a>
+                                        {% else %}
+                                        <a class="form-control text-danger" role="button">Sin documento</a>
+                                        {% endif %}
+                                    </div>
+                                </div> -->
+                            </div>
+                            <hr>
+                            <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
+                            <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
+                            <input type="hidden" id="notificar" name="notificar" value="{{ notificar }}">
+                            <input type="hidden" id="devolucion" name="devolucion" value="{{ devolucion }}">
+                            <p class="float-left"><b class="text-danger">Nota:</b> Registre las calificaciones de las áreas de  saberes y conocimientos que corresponda, el cual se  constituirá en el Acta Supletoria, documento oficial que deberá ser firmada por las autoridades respectivas.</p>
+                            <h4>{% if actas|length == 1 %}Acta Supletoria por Grado {% else %} Actas Supletorias por Grado {% endif %}</h4>
+                            <div class="row" id="tbl_cumano">
+                                {% for acta in actas %}
+                                <input type="hidden" id="iec_id{{loop.index}}" value="{{ acta.curso.iec_id }}">
+                                <input type="hidden" id="sel_nivel{{loop.index}}" value="{{ acta.curso.nivel_id }}">
+                                <input type="hidden" id="sel_grado{{loop.index}}" value="{{ acta.curso.grado_id }}">
+                                <input type="hidden" id="sel_paralelo{{loop.index}}" value="{{ acta.curso.paralelo_id }}">
+                                <input type="hidden" id="sel_turno{{loop.index}}" value="{{ acta.curso.turno_id }}">
+                                <input type="hidden" id="sel_sie{{loop.index}}" value="{{ acta.curso.codigo_sie }}">
+                                <div class="col-md-6">
+                                    {% if loop.index == 1 %}
+                                    <table class="table table-bordered">
+                                        <tbody class="text-muted">
+                                            <tr>
+                                                <td style="padding: 10px 8px; border: none" width="40%"><b>SIE&nbsp;&nbsp;&nbsp;</b> {{ acta.curso.codigo_sie }}</td>
+                                                <td style="padding: 10px 8px; border: none" width="60%">{{ acta.curso.nombre_sie }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%"><b>Nivel</b></td>
+                                                <td style="padding: 2px 8px; border: none" width="60%">{{ acta.curso.nivel }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Grado</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.grado }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Paralelo</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.paralelo }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Turno</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.turno }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 8px 5px 8px; border: none" colspan="2">
+                                                    <span id="estado"><b class="text-primary">&nbsp;</b></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered tbl_aceleracion" id="tbl_aceleracion{{loop.index}}">
+                                        <thead>
+                                            <tr class="sinfo">
+                                                <th class="text-center"><b>No.</b></th>
+                                                <th class="text-center"><b>Áreas</b></th>
+                                                <th class="text-center"><b>Nota Promedio</b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if acta.materiasnotas|length > 0 %}
+                                            {% for currentmateria in acta.materiasnotas %}
+                                                <tr>
+                                                    <td>{{loop.index}}</td>
+                                                    <td><span>{{currentmateria.asignatura}}</span></td>
+                                                    <td>
+                                                        <input type="number" class="form-control number-only" maxlength="3" min="51" max="100" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" onkeyup="validate(event)" required>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="3"><span class="text-danger">Verifique la Existencia del Curso</span></td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                    {% else %}
+                                    <!-- <table class="table table-bordered">
+                                        <tbody class="text-muted">
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon" style="background-color: #fafafa">SIE</div>
+                                                        <input type="text" class="form-control" id="sel_sie{{loop.index}}" value="{{ acta.curso.codigo_sie }}" onkeyUp="institucionEducativa({{loop.index}})">
+                                                        <div class="input-group-addon" onclick="institucionEducativa({{loop.index}})" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 2px 8px; border: none">
+                                                    <span id="txt_institucioneducativa{{loop.index}}">{{ acta.curso.nombre_sie }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%"><b>Nivel</b></td>
+                                                <td style="padding: 2px 8px; border: none">
+                                                    <span id="txt_nivel{{loop.index}}">{{ acta.curso.nivel }}</span>
+                                                    <input type="hidden" id="sel_nivel{{loop.index}}" value="{{ acta.curso.nivel_id }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%"><b>Grado</b></td>
+                                                <td style="padding: 2px 8px; border: none">
+                                                    <span id="txt_grado{{loop.index}}">{{ acta.curso.grado }}</span>
+                                                    <input type="hidden" id="sel_grado{{loop.index}}" value="{{ acta.curso.grado_id }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%">
+                                                    <div class="form-groups">
+                                                        <label for="sel_paralelo{{loop.index}}"><b>Paralelo</b></label>
+                                                        <select class="form-control input-sm" id="sel_paralelo{{loop.index}}" onchange="cargarCurso({{loop.index}})" required>
+                                                            <option value="" disabled>Seleccionar...</option>
+                                                            {% for itemp in acta.curso.paralelos %}
+                                                                {% if itemp.paraleloTipo == acta.curso.paralelo_id %}
+                                                                <option value="{{ itemp.paraleloTipo }}" selected>{{ itemp.paralelo }}</option>
+                                                                {% else %}
+                                                                <option value="{{ itemp.paraleloTipo }}">{{ itemp.paralelo }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 2px 8px; border: none">
+                                                    <div class="form-groups">
+                                                        <label for="sel_turno{{loop.index}}"><b>Turno</b></label>
+                                                        <select class="form-control input-sm" id="sel_turno{{loop.index}}" onchange="cargarCurso({{loop.index}})" required>
+                                                            <option value="" disabled>Seleccionar...</option>
+                                                            {% for itemt in acta.curso.turnos %}
+                                                                {% if itemt.turnoTipo == acta.curso.turno_id %}
+                                                                <option value="{{ itemt.turnoTipo }}" selected>{{ itemt.turno }}</option>
+                                                                {% else %}
+                                                                <option value="{{ itemt.turnoTipo }}">{{ itemt.turno }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" colspan="2">
+                                                    {% if acta.curso.iec_id == 0 %}
+                                                    <span id="estado{{loop.index}}"><b class="text-danger">No disponible</b></span>
+                                                    {% else %}
+                                                    <span id="estado{{loop.index}}"><b class="text-primary">Disponible</b></span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table> -->
+                                    <table class="table table-bordered">
+                                        <tbody class="text-muted">
+                                            <tr>
+                                                <td style="padding: 10px 8px; border: none" width="40%"><b>SIE&nbsp;&nbsp;&nbsp;</b> {{ acta.curso.codigo_sie }}</td>
+                                                <td style="padding: 10px 8px; border: none" width="60%">{{ acta.curso.nombre_sie }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 2px 8px; border: none" width="40%"><b>Nivel</b></td>
+                                                <td style="padding: 2px 8px; border: none" width="60%">{{ acta.curso.nivel }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Grado</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.grado }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Paralelo</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.paralelo }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 3px 8px; border: none" width="40%"><b>Turno</b></td>
+                                                <td style="padding: 3px 8px; border: none" width="60%">{{ acta.curso.turno }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 8px; border: none" colspan="2">
+                                                    {% if acta.curso.iec_id == 0 %}
+                                                    <span id="estado{{loop.index}}"><b class="text-danger">La Unidad Educativa no cuenta con el grado donde se quiere hacer la aceleración.</b></span>
+                                                    {% else %}
+                                                    <span id="estado{{loop.index}}"><b class="text-primary">&nbsp;</b></span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered tbl_aceleracion" id="tbl_aceleracion{{loop.index}}">
+                                        <thead>
+                                            <tr class="sinfo">
+                                                <th class="text-center"><b>No.</b></th>
+                                                <th class="text-center"><b>Áreas</b></th>
+                                                <th class="text-center"><b>Nota Promedio</b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if acta.materiasnotas|length > 0 %}
+                                            {% for currentmateria in acta.materiasnotas %}
+                                                <tr>
+                                                    <td>{{loop.index}}</td>
+                                                    <td><span>{{currentmateria.asignatura}}</span></td>
+                                                    <td>
+                                                        <input type="number" class="form-control number-only" maxlength="3" min="51" max="100" data-id="{{currentmateria.iecoId}}" data-idm="{{currentmateria.id}}" id="form_{{currentmateria.iecoId}}" name="currentmaterias[{{currentmateria.iecoId}}]" onkeyup="validate(event)" required>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="3"><span class="text-danger">Seleccione el Curso por Código SIE, Paralelo y Turno</span></td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    </br>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="acta_supletorio">Acta Supletoria</label>
+                                        <input type="file" class="form-control myfiles" id="acta_supletorio" name="acta_supletorio" accept=".pdf,.doc,.docx" required>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="cedula"><b>Comisión Técnica Pedagógica (agregue la nómina)</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="cedula" placeholder="Buscar por Cédula de Identidad" autocomplete="off">
+                                            <div class="input-group-addon" onclick="searchClick()" style="cursor: pointer"><i class="fa fa-search"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="hidden" id="dni">
+                                    <input type="hidden" id="nombre">
+                                    <input type="hidden" id="cargo">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="respuesta" autocomplete="off" disabled>
+                                            <div class="input-group-addon" style="background: #fafafa; cursor: pointer" onclick="agregarResponsable()">Agregar</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="tbl_comision">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Cédula Identidad</b></th>
+                                                    <th><b>Nombre Completo</b></th>
+                                                    <th>&nbsp;</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div><br>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <button type="button" class="btn btn-danger" onclick="cancelForm()">Cancelar</button>
+                                    {# <button type="button" class="btn btn-warning">Previsualizar Acta</button> #}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalNotificacion" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notificación</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <h5>¿Está seguro(a) de posponer el llenado de Acta(s) Supletorio(s)?</h5>
+                    <div class="alert alert-info" role="alert">Puede retomar el trámite en la bandeja de recibidos.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="redirect()">Aceptar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <div id="envio"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="guardar" onclick="sendSupletorio()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function() {
+            $('.myfiles').change(function() {
+                if(this.files[0].size > 2057157) {
+                    $(this).val('');
+                    $(this).css('background', '#ffebee');
+                } else {
+                    $(this).css('background', '#ffffff');
+                }
+            });
+        });
+        $('.noedit').keydown(function() {
+            return false;
+        });
+        function mesage(tipo, titulo, msg, estado, flag) {
+            $("#envio").html('<div class="alert alert-'+ tipo +'" role="alert">\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            if (flag) {
+                $("#envio").append('<center><a href="reporte/supletorio?idtramite='+$("#tramite_id").val()+'" class="" target="_blank"><i class="fa fa-file-pdf-o"></i> Imprimir Acta Supletoria</a></center>');
+            }
+            if (estado == true) {
+                setTimeout(function () { $("#envio").empty(); }, 3500);
+            }
+        }
+
+        function clearInput() {
+            $("#acta_supletorio").val('');
+        }
+
+        $("#form_supletorio").submit(function (event) {
+            event.preventDefault();
+            var cantidad_comision = $("#tbl_comision tbody").find("tr").length;
+            if (cantidad_comision == 0) {
+                $("#guardar").hide();
+                $("#modalConfirm").modal('show');
+                mesage('warning', 'Notificación', 'Debe agregar la comisión técnica pedagógica.', false, false);
+                return false;
+            }
+            $("#envio").html('<h5>¿Está seguro(a) de enviar el trámite con la información ingresada?</h5>');
+            $("#tramite_st").val(0);
+            $("#guardar").attr('disabled', false);
+            $("#guardar").show();
+            $("#modalConfirm").modal('show');
+        });
+
+        function sendSupletorio() {
+            $("#guardar").attr('disabled', true);
+            // var curso = {sie: $('#sel_sie').val(), nivel_id: $('#sel_nivel').val(), grado_id: $('#sel_grado').val(), paralelo_id: $('#sel_paralelo').val(), turno_id: $('#sel_turno').val()};
+            // var acta_primaria = [];
+            // $('#ptbl_notas tbody').find("tr").each(function() {
+            //     acta_primaria.push({'asignatura_id': $(this).find('td input').data('id'), 'asignatura': $(this).find('td span').text(), 'nota': $(this).find('td input').val()});
+            // });
+            // var acta_secundaria = [];
+            // $('#stbl_notas tbody').find("tr").each(function() {
+            //     acta_secundaria.push({'asignatura_id': $(this).find('td input').data('id'), 'asignatura': $(this).find('td span').text(), 'nota': $(this).find('td input').val()});
+            // });
+            var validarIEC = true;
+            var validarAsig = true;
+            var curso_asignatura_notas = [];
+            $('#tbl_cumano').find('table.tbl_aceleracion tbody').each(function(index, item) {
+                if ($('#iec_id'+(index+1)).val() == 0) {
+                    validarIEC = false;
+                }
+                var curso = {sie: $('#sel_sie'+(index+1)).val(), iec_id: $('#iec_id'+(index+1)).val(), nivel_id: $('#sel_nivel'+(index+1)).val(), grado_id: $('#sel_grado'+(index+1)).val(), paralelo_id: $('#sel_paralelo'+(index+1)).val(), turno_id: $('#sel_turno'+(index+1)).val()};
+                var asignaturanotas = [];
+                $(this).find("tr").each(function() {
+                    asignaturanotas.push({'asignatura_id': $(this).find('td input').data('idm'), 'asignatura': $(this).find('td span').text(), 'ieco_id': $(this).find('td input').data('id'), 'nota': $(this).find('td input').val()});
+                });
+                if (asignaturanotas.length==0) {
+                    validarAsig = false;
+                }
+                curso_asignatura_notas.push({curso: curso, asignatura_notas: asignaturanotas});
+            });
+            var lista_comision = [];
+            $("#tbl_comision tbody").find("tr").each(function(i, td) {
+                lista_comision.push({'ci': $(this).find('td')[0].innerText, 'nombre': $(this).find('td')[1].innerText});
+            });
+            if (validarIEC == true) {
+                if (validarAsig == true) {
+                    var fd = new FormData();
+                    fd.append('tramite_id', $("#tramite_id").val());
+                    fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
+                    fd.append('curso_asignatura_notas', JSON.stringify(curso_asignatura_notas));
+                    fd.append('notificar', $("#notificar").val());
+                    fd.append('comision', JSON.stringify(lista_comision));
+                    fd.append('devolucion', $("#devolucion").val());
+                    // var docsup = document.getElementById('acta_supletorio');
+                    // fd.append('acta_supletorio', docsup.files[0]);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tramite_acelera_save_suple'),
+                        data: fd,
+                        mimeType:"multipart/form-data",
+                        contentType: false,
+                        cache: false,
+                        processData:false,
+                        dataType: 'json',
+                        beforeSend: function () {
+                            $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                        },
+                        success: function (data) {
+                            $("#envio").empty();
+                            $("#guardar").hide();
+                            if (data.estado == 200) {
+                                clearInput();
+                                $("#tramite_st").val(1);
+                                mesage('info', 'Notificación', data.msg, false, true);
+                                //location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+                            } else {
+                                mesage('danger', 'Alerta', data.msg, false, false);
+                            }
+                        },
+                        error: function (error) {
+                            $("#guardar").attr('disabled', false);
+                        }
+                    });
+                } else {
+                    $("#tramite_st").val(0);
+                    $("#modalConfirm").modal('show');
+                    mesage('warning', 'Notificación', 'Algún acta supletoria, no cuenta con asignaturas.', false, false);
+                }
+            } else {
+                $("#tramite_st").val(0);
+                $("#modalConfirm").modal('show');
+                mesage('warning', 'Notificación', 'Es posible que algún curso no esté disponible.', false, false);
+            }
+        }
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val() == 1) {
+                location.href = "{{ path('wf_tramite_index', {'tipo':2}) }}";
+            }
+        }
+
+        function institucionEducativa(index) {
+            var id = $('#sel_sie'+index).val()
+            if (id.length > 7) {
+                var nivel = $('#sel_nivel'+index).val();
+                var grado = $('#sel_grado'+index).val();
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_acelera_search_ie', {'id': id, 'nivel': nivel, 'grado': grado}),
+                    beforeSend: function () {
+                        $("#sel_paralelo"+index).append('<option value="" selected disabled>Buscando...</option>');
+                        $("#sel_turno"+index).append('<option value="" selected disabled>Buscando...</option>');
+                        $("#estado"+index).html('<b class="text-warning">Buscando</b>');
+                    },
+                    success: function (data) {
+                        $("#iec_id"+index).val(data.iec_id);
+                        $("#txt_institucioneducativa"+index).html(data.nombre);
+                        //$("#txt_nivel"+index).text(data.nivel);
+                        //$("#txt_grado"+index).text(data.grado);
+                        //$("#sel_nivel"+index).val(data.nivel_id);
+                        //$("#sel_grado"+index).val(data.grado_id);
+
+                        $("#sel_paralelo"+index).empty();
+                        $("#sel_paralelo"+index).append('<option value="" selected disabled>Seleccionar...</option>');
+                        $.each(data.paralelo, function (i, value) {
+                            $("#sel_paralelo"+index).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        
+                        $("#sel_turno"+index).empty();
+                        $("#sel_turno"+index).append('<option value="" selected disabled>Seleccionar...</option>');
+                        $.each(data.turno, function (i, value) {
+                            $("#sel_turno"+index).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#estado"+index).html('<b class="text-warning">Seleccione paralelo y turno</b>');
+                    }
+                });
+            }
+        }
+
+        function cargarCurso(index) {
+            var id = $('#sel_sie'+index).val()
+            var nivel = $('#sel_nivel'+index).val();
+            var grado = $('#sel_grado'+index).val();
+            var paralelo = $("#sel_paralelo"+index).val();
+            var turno = $("#sel_turno"+index).val();
+            if (paralelo != null && turno != null) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('tramite_acelera_curso', {'id': id, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno}),
+                    beforeSend: function () {
+                        $("#estado"+index).html('<b class="text-warning">Buscando</b>');
+                    },
+                    success: function (data) {
+                        if (data.iec_id == 0 && data.materiasnotas.length==0) {
+                            $("#estado"+index).html('<b class="text-danger">No cuenta con el curso</b>');
+                            $("#sel_paralelo"+index).val('');
+                            $("#sel_turno"+index).val('');
+                        } else {
+                            $("#iec_id"+index).val(data.iec_id);
+                            $("#estado"+index).html('<b class="text-primary">&nbsp;</b>');
+                            var asignaturanota = '';
+                            data.materiasnotas.forEach(function(item, posicion) {
+                                asignaturanota += '<tr>';
+                                asignaturanota += '<td>'+(posicion+1)+'</td>';
+                                asignaturanota += '<td><span>'+item.asignatura+'</span></td>';
+                                asignaturanota += '<td>';
+                                    asignaturanota += '<input type="number" class="form-control number-only" maxlength="3" min="51" max="100" step="1" data-id="'+item.iecoId+'" data-idm="'+item.id+'" id="form_'+item.iecoId+'" name="currentmaterias['+item.iecoId+']" onkeyup="validate(event)" required>';
+                                asignaturanota += '</td></tr>';
+                            });
+                            $("#tbl_aceleracion"+index).html(asignaturanota);
+                        }
+                    }
+                });
+            }
+        }
+
+        function cancelForm() {
+            $("#modalNotificacion").modal('show');
+        }
+
+        function redirect() {
+            location.href = "{{ path('wf_tramite_index', {'tipo':1}) }}";
+        }
+        
+        $('#cedula').keypress(function (event) {
+            if (event.keyCode === 10 || event.keyCode === 13) {
+                event.preventDefault();
+                searchResponsable();
+            }
+        });
+        function searchClick() {
+            searchResponsable();
+        }
+        function searchResponsable() {
+            var cedula = $('#cedula').val();
+            if (cedula != "") {
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_acelera_search_ctp'),
+                    data: {'cedula': cedula},
+                    beforeSend: function () {
+                        $("#respuesta").val('Buscando...');
+                    },
+                    success: function (data) {
+                        if (data.msg == 'existe') {
+                            $("#respuesta").val(data.nombre);// + ', ' + data.cargo
+                            $("#dni").val(data.cedula);
+                            $("#nombre").val(data.nombre);
+                            $("#cargo").val(data.cargo);
+                        } else {
+                            $("#respuesta").val('Sin resultados');
+                        }
+                    }
+                });
+            } else {
+                $('#cedula').focus();
+            }
+        }
+
+        function agregarResponsable() {
+            var cedulas = [];
+            if ($("#respuesta").val() != "" && $("#nombre").val() != "") {
+                $("#tbl_comision tbody").find("tr").each(function(i, td) {
+                    cedulas.push($(this).find('td')[0].innerText);
+                });
+                var indice = cedulas.indexOf($("#dni").val());
+                if (indice == -1) {
+                    var rhtml = "<tr><td>"+$("#dni").val()+"</td><td>"+$("#nombre").val()+"</td><td><button type='button' class='btn btn-danger btn-sm delete-row'><i class='fa fa-trash'></i></button></td></tr>";
+                    $("#tbl_comision tbody").append(rhtml);
+                    $("#respuesta").val('');
+                    $("#dni").val('');
+                    $("#nombre").val('');
+                    $("#cedula").val('');
+                }
+            } else {
+                $('#cedula').focus();
+            }
+        }
+
+        $("#tbl_comision").on('click', '.delete-row', function(){
+            $(this).parents("tr").remove();
+        });
+
+        function validate(evt) {
+            if(evt.target.value != "") {
+                if(evt.target.value>100)
+                    evt.target.value = 100;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
+{% endblock %}

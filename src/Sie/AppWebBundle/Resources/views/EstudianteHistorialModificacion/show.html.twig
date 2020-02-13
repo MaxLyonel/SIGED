@@ -1,0 +1,191 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-cc-amex animated flip"></i>Modificación de Datos
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar </a>
+                    </li>
+
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningremoveins') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-list"></i>
+                    <div class="pull-right">
+                        <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar al listado</a>
+                    </div>                    
+                </div>
+                <div class="panel-body">
+
+                    <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                        <tbody>
+                            <tr>
+                                <th>Resolucion</th>
+                                <td>{{ entity.resolucion }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecharesolucion</th>
+                                <td>{{ entity.fechaResolucion|date('d-m-Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Justificacion</th>
+                                <td>{{ entity.justificacion }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecharegistro</th>
+                                <td>{{ entity.fechaRegistro|date('d-m-Y H:i:s') }}</td>
+                            </tr>
+                            
+                             <tr>
+                                <th>Datos Modificados</th>
+                                <td>
+                                <table border='1'>
+                                    <tbody>
+                                        <tr>
+                                            <th></th>
+                                            <td>Dato Anterior</td>
+                                            <td>Dato Actual</td>
+                                        </tr>
+                                        <tr>
+                                            <th>CI</th>
+                                            <td>{{ oldDataStudent.carnetIdentidad }}</td>
+                                            <td>{{ objStudent.carnetIdentidad }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Complemento</th>
+                                            <td>{{ oldDataStudent.complemento }}</td>
+                                            <td>{{ objStudent.complemento }}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Cod. Rude</th>
+                                            <td>{{ oldDataStudent.genero }}</td>
+                                            <td>{{ objStudent.generoTipo }}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Paterno</th>
+                                            <td>{{ oldDataStudent.paterno }}</td>
+                                            <td>{{ objStudent.paterno }}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Materno</th>
+                                            <td>{{ oldDataStudent.materno }}</td>
+                                            <td>{{ objStudent.materno }}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Nombre(s)</th>
+                                            <td>{{ oldDataStudent.nombre }}</td>
+                                            <td>{{ objStudent.nombre }}</td>                                            
+                                        </tr>
+
+                                        <tr>
+                                            <th>Pais</th>
+                                            <td>{{ oldDataStudent.pais }}</td>
+                                            <td>{{ objStudent.paisTipo }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Departamento</th>
+                                            <td>{{ oldDataStudent.lugarNacTipo }}</td>
+                                            <td>{{ objStudent.lugarNacTipo }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Provincia</th>
+                                            <td>{{ oldDataStudent.lugarProvNacTipo }}</td>
+                                            <td>{{ objStudent.lugarProvNacTipo }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Localidad</th>
+                                            <td>{{ oldDataStudent.localidad }}</td>
+                                            <td>{{ objStudent.localidadNac }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Oficialia</th>
+                                            <td>{{ oldDataStudent.oficialia }}</td>
+                                            <td>{{ objStudent.oficialia }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Partida</th>
+                                            <td>{{ oldDataStudent.libro }}</td>
+                                            <td>{{ objStudent.libro }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Partida</th>
+                                            <td>{{ oldDataStudent.partida }}</td>
+                                            <td>{{ objStudent.partida }}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <td>{{ oldDataStudent.folio }}</td>
+                                            <td>{{ objStudent.folio }}</td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                        <ul class="record_actions">
+                    <li>
+                        <a href="{{ path('estudiantehistorialmodificacion') }}">
+                            Retornar al listado
+                        </a>
+                    </li>
+                    {# <li>{{ form(delete_form) }}</li> #}
+                </ul>
+              </div>
+            </div>
+            <div id="dataStudent"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+   
+{% endblock %}
+                

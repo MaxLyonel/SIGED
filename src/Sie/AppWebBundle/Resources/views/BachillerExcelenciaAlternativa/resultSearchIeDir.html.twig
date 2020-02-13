@@ -124,6 +124,26 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_apellidoEsposo" class="col-sm-4 control-label">{{ form_label(form_dir.apellidoEsposo) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.apellidoEsposo, { 'attr': {'class': 'form-control jletters', 'value': '', 'style': 'text-transform:uppercase' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.apellidoEsposo) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-info">Llenar en caso de que tenga el enlazador en su Cédula sea "Vda." o "de".</div>
+                        </div>
+                        <div class="form-group">
+                            <div id='sandbox-container'>
+                                <div class="input-daterange" id="datepicker">
+                                    <label for="sie_appwebbundle_maestrocuentabancaria_fechaNacimiento" class="col-sm-4 control-label">{{ form_label(form_dir.fechaNacimiento) }}</label>
+                                    <div class="col-sm-4">
+                                        {{ form_widget(form_dir.fechaNacimiento, { 'attr': {'class': 'form-control calendario', 'value': entity.fechaNacimiento|date('d-m-Y'), 'style': 'text-transform:uppercase' }  }) }}
+                                        <div class="help-block with-errors">{{ form_errors(form_dir.fechaNacimiento) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 text-info">(dd-mm-yyyy)</div>
+                        </div>
+                        <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo" class="col-sm-4 control-label">{{ form_label(form_dir.entidadfinancieraTipo) }}</label>
                             <div class="col-sm-6">
                                 {{ form_widget(form_dir.entidadfinancieraTipo, { 'attr': {'class': 'form-control' }  }) }}

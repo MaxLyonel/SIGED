@@ -1,142 +1,62 @@
-tramite_rue:
-    path:     /
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:index" }
+tramite_rue_inicio_modificacion:
+    path:     /solicitud
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacion" }
 
-tramite_rue_inbox:
-    path:     /inbox
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:inbox" }
+tramite_rue_inicio_modificacion_guardar:
+    path:     /solicitud/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionGuardar" }
 
 tramite_rue_recepcion_distrito:
-    path:     /recepciondistrito
+    path:     /recepcion/distrito
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistrito" }
 
-tramite_rue_form_nuevo:
-    path:     /nuevoform
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:formNuevo" }
-
-tramite_rue_buscar_rue:
-    path:     /buscarrue
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRue" }
-
-recepcion_distrito_guardar:
-    path:     /recepciondistritoguardar
+tramite_rue_recepcion_distrito_guardar:
+    path:     /recepcion/distrito/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoGuardar" }
 
-tramite_rue_recepcion_distrito_nuevo:
-    path:     /recepciondistritonuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoNuevo" }
+tramite_rue_recepcion_departamento:
+    path:     /recepcion/departamento
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDepartamento" }
 
-tramite_rue_informe_distrito:
-    path:     /informedistrito
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:informeDistrito" }
+tramite_rue_recepcion_departamento_guardar:
+    path:     /recepcion/departamento/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDepartamentoGuardar" }
 
-tramite_rue_informe_distrito_nuevo:
-    path:     /informedistritonuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:informeDistritoNuevo" }
+tramite_rue_recepcion_minedu:
+    path:     /recepcio/nminedu
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionMinedu" }
 
-tramite_rue_informe_distrito_guardar:
-    path:     /informedistritoguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:informeDistritoGuardar" }
+tramite_rue_recepcion_minedu_guardar:
+    path:     /recepcion/minedu/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionMineduGuardar" }
 
-tramite_rue_recepcion_departamental:
-    path:     /recepciondepartamental
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDepartamental" }
+tramite_rue_envia_certificado_minedu:
+    path:     /envia/certificado/minedu
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:enviaCertificadoMinedu" }
 
-tramite_rue_recepcion_departamental_nuevo:
-    path:     /{id}/recepciondepartamentalnuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDepartamentalNuevo" }
+tramite_rue_envia_certificado_minedu_guardar:
+    path:     /envia/certificado/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:enviaCertificadoMineduGuardar" }
 
-tramite_rue_recepcion_departamental_guardar:
-    path:     /recepciondepartamentalguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDepartamentalGuardar" }
+tramite_rue_envia_certificado_departamento:
+    path:     /envia/certificado/departamento
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:enviaCertificadoDepartamento" }
 
-tramite_rue_juridica_departamental:
-    path:     /juridicadepartamental
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:juridicaDepartamental" }
+tramite_rue_entrega_certificado_distrito_guardar:
+    path:     /envia/certificado/departamento/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:enviaCertificadoDepartamentoGuardar" }
 
-tramite_rue_juridica_departamental_nuevo:
-    path:     /{id}/juridicadepartamentalnuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:juridicaDepartamentalNuevo" }
+tramite_rue_entrega_certificado_distrito:
+    path:     /entrega/certificado/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:entregaCertificadoDistrito" }
 
-tramite_rue_juridica_departamental_guardar:
-    path:     /juridicadepartamentalguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:juridicaDepartamentalGuardar" }
+tramite_rue_entrega_certificado_distrito_guardar:
+    path:     /entrega/certificado/distrito/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:entregaCertificadoDistritoGuardar" }
 
-tramite_rue_notificacion_departamental:
-    path:     /notificaciondepartamental
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:notificacionDepartamental" }
-
-tramite_rue_notificacion_departamental_nuevo:
-    path:     /{id}/notificaciondepartamentalnuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:notificacionDepartamentalNuevo" }
-
-tramite_rue_notificacion_departamental_guardar:
-    path:     /notificaciondepartamentalguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:notificacionDepartamentalGuardar" }
-    
-tramite_rue_resolucion_departamental:
-    path:     /resoluciondepartamental
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:resolucionDepartamental" }
-
-tramite_rue_resolucion_departamental_nuevo:
-    path:     /{id}/resoluciondepartamentalnuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:resolucionDepartamentalNuevo" }
-
-tramite_rue_resolucion_departamental_guardar:
-    path:     /resoluciondepartamentalguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:resolucionDepartamentalGuardar" }
-
-tramite_rue_formularios_departamental:
-    path:     /formulariosdepartamental
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:formulariosDepartamental" }
-
-tramite_rue_formularios_departamental_nuevo:
-    path:     /{id}/formulariosdepartamentalnuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:formulariosDepartamentalNuevo" }
-
-tramite_rue_formularios_departamental_guardar:
-    path:     /formulariosdepartamentalguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:formulariosDepartamentalGuardar" }
-
-tramite_rue_revisar_minedu:
-    path:     /revisarminedu
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:revisarMinedu" }
-
-tramite_rue_revisar_minedu_nuevo:
-    path:     /{id}/revisarminedunuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:revisarMineduNuevo" }
-
-tramite_rue_revisar_minedu_guardar:
-    path:     /revisarmineduguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:revisarMineduGuardar" }
-
-tramite_rue_notificacion_minedu:
-    path:     /notificacionminedu
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:notificacionMinedu" }
-
-tramite_rue_notificacion_minedu_nuevo:
-    path:     /{id}/notificacionminedunuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:notificacionMineduNuevo" }
-
-tramite_rue_notificacion_minedu_guardar:
-    path:     /notificacionmineduguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:notificacionMineduGuardar" }
-
-tramite_rue_registrar_minedu:
-    path:     /registrarminedu
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:registrarMinedu" }
-
-tramite_rue_resgistrar_minedu_nuevo:
-    path:     /{id}/resgistrarminedunuevo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:resgistrarMineduNuevo" }
-
-tramite_rue_resgistrar_minedu_guardar:
-    path:     /resgistrarmineduguardar
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:resgistrarMineduGuardar" }
-
-tramite_rue_flujoseguimiento_verflujo:
-    path:     /verflujo
-    defaults: { _controller: "SieProcesosBundle:TramiteRue:verFlujoRue" }
+tramite_rue_buscar_edificio:
+    path:     /buscaredificio
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscaredificio" }
 
 tramite_rue_le_buscar_provincias:
      path:    /provincias/{idDepartamento}/
@@ -149,11 +69,18 @@ tramite_rue_le_buscar_municipios:
      defaults: { _controller: "SieProcesosBundle:TramiteRue:municipios" }
      options:
          expose: true
+tramite_rue_le_buscar_comunidad:
+     path:    /cantones/{idMunicipio}/
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:comunidad" }
+     options:
+         expose: true
+
 tramite_rue_le_buscar_cantones:
      path:    /cantones/{idMunicipio}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:cantones" }
      options:
          expose: true
+
 tramite_rue_le_buscar_localidades:
      path:    /localidades/{idCanton}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:localidades" }
@@ -164,4 +91,16 @@ tramite_rue_le_buscar_distritos:
      path:    /distritos/{idDepartamento}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:distritos" }
      options:
-         expose: true    
+         expose: true
+
+tramite_rue_buscar_rue:
+    path:     /buscarrue
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRue" }
+
+tramite_rue_busca_tarea:
+    path:     /buscatarea
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarTarea" }
+
+tramite_rue_busca_requisitos:
+    path:     /buscarequisitos
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRequisitos" }

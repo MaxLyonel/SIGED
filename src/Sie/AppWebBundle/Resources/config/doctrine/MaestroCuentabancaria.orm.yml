@@ -86,6 +86,24 @@ Sie\AppWebBundle\Entity\MaestroCuentabancaria:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        apellidoEsposo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: apellido_esposo
+        expedido:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
     manyToOne:
         cargoTipo:
             targetEntity: CargoTipo

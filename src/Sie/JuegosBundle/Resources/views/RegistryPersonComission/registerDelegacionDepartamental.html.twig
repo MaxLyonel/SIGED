@@ -1,0 +1,59 @@
+    {% for flashMessage in app.session.flashbag.get('messageCommission') %}
+        <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong></strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h3 class="panel-title">Registrar Información de Comisión</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            {{form_start(form, { 'attr': {'data-toggle': 'validator', 'enctype':'multipart/form-data', 'role': "form", 'name': "idCommissionData", 'id':'idCommissionData'} } )}}
+            <div class="form-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <center>
+                                <label for="photoperson" class="control-label"><strong>Subir Foto</strong></label>                            
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100px; height: 100px;"></div>
+                                    <div>
+                                        <span class="btn btn-info btn-file">
+                                            <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                            <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                            {{ form_widget(form.photoperson, { 'attr': {'class': 'col-sm-12'} }) }} 
+                                        </span>
+                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                    </div>
+                                </div>    
+                            </center>
+                        </div>             
+                        <div class="col-md-6">
+                            <label for="departamento" class="control-label"><strong>Departamento</strong></label>                            
+                            {{form_widget(form.departamento)}}
+                            <label for="comisionTipo" class="control-label"><strong>Comisión</strong></label>
+                            {{form_widget(form.comisionTipo)}}
+                            {{form_widget(form.personId)}}
+                        </div>                        
+                    </div>
+                </div>                
+                <!-- /.form-body -->
+                
+                <div class="form-footer">
+                    <div class="pull-right">
+                        {# <button class="btn btn-danger mr-5">Cancel</button> #}
+                        {{form_widget(form.regCommission)}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.form-footer -->
+            </div>
+		    {{form_end(form) }}<!-- /.form-footer -->
+            
+        </div><!-- /.panel-body -->
+        
+    </div>

@@ -1,6 +1,13 @@
 {% extends 'layoutRegular.html.twig' %}
 {% block contentoption  %}
 
+<style>
+    .calificaciones{
+        background: #FFFFFF;
+        padding: 10px;
+    }
+</style>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="page-title">
@@ -21,10 +28,82 @@
 
 {% if arrayInscripciones is defined and arrayInscripciones|length > 0 %}
 
-
-
-
 <div class="row">
+<form class="" action="" method="post" name="form" id="form">
+    {% set cont = 0 %}
+
+    {% for notas in arrayInscripciones %}
+
+        {% if notas.nivel == 11 %}
+            {% set col = 12 %}
+        {% else %}
+            {% set col = 6 %}
+        {% endif %}
+
+        <input type="hidden" name="rude" value="{{notas.codigoRude}}">
+        <input type="hidden" name="estadoMatriculaActual[]" value="{{notas.estadomatriculaId}}">
+        <input type="hidden" name="arrIdInscripcion[]" value="{{notas.idInscripcion}}" class="idInscripcion" id="{{cont}}_inscripcion">
+        <input type="hidden" id="{{cont}}_nivel" name="arrNivel[]" value="{{notas.nivelId}}">
+
+
+        <div class="col-xs-12 col-sm-12 col-md-{{col}} col-lg-{{col}}">
+            <div class="calificaciones">
+                <table class="table alert-info">
+                    <tr>
+                        <th>Estudiante</th><td>{{notas.estudiante}}</td>
+                    </tr>
+                    <tr>
+                        <th>Código Rude</th><td>{{notas.codigoRude}}</td>
+                    </tr>
+                    <tr>
+                        <th>Unidad Educativa</th><td>{{notas.sie}} - {{notas.institucioneducativa}}</td>
+                    </tr>
+                    <tr>
+                        <th>Nivel - Grado - Paralelo</th>
+                        <td>
+                            {{notas.nivelname}} - {{notas.gradoname}} - {{notas.paraleloname}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Gestion</th><td>{{notas.gestion}}</td>
+                    </tr>
+                    <tr>
+                        <th>Estado Matrícula</th><td style="color:#2447E2; font-weight:bold; font-size:1.2em">{{notas.estadomatriculaname}}</td>
+                    </tr>
+                </table>
+                
+                {% include 'SieAppWebBundle:Services/Notas:regular.html.twig' with {'notas':notas, 'vista':0} %}
+                
+                <table class="table alert-info">
+                    <tr>
+                        {% if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 11 and notas.estadomatriculaId != 28 and notas.estadomatriculaId != 26 and notas.estadomatriculaId != 37 and notas.estadomatriculaId != 55 and notas.estadomatriculaId != 56 and notas.estadomatriculaId != 57 and notas.estadomatriculaId != 58  and  notas.estadomatriculaId != 4%}
+                        <th>Actualizar estado de matrícula a:</th>
+                        <td>
+
+                            <select name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" class="form-control idNuevoEstado">
+                                {% for e in notas.estadosCambiar %}
+                                    <option value="{{e.id}}">{{e.estadomatricula}}</option>
+                                {% endfor %}
+                            </select>
+
+                        </td>
+                        {% else %}
+                            <td colspan="2">No se puede actualizar el estado de matrícula</td>
+                            <input type="hidden" name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" value="{{notas.estadomatriculaId}}" class="idNuevoEstado">
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+            <br>
+        </div>
+        {% set cont = cont + 1 %}
+    {% endfor %}
+</form>
+</div>
+
+
+
+{# <div class="row">
 <form class="" action="" method="post" name="form" id="form">
     {% set cont = 0 %}
     {% for ai in arrayInscripciones %}
@@ -160,13 +239,16 @@
         {% set cont = cont + 1 %}
     {% endfor %}
 </form>
-</div>
+</div> #}
 
 {% endif %}
+
+
 
 <div id="respuesta" class="alert" style="display:none;">
 
 </div>
+<hr>
 <div class="row">
     <div class="col-lg-12 text-left" style="margin-top:10px">
         <button class="btn btn-success" onclick="guardar()" id="btnGuardar">Guardar</button>
@@ -254,178 +336,178 @@
             });
 
             var enviar = true;
-            var mensaje = "";
+            // var mensaje = "";
 
-            var validarNotas = false;
-            $(".idNuevoEstado").each(function (index) {
-                if($(this).val() == 6){ // Estado es no incorporado
-                    var idEst = $(this).attr('id');
-                    var valor = idEst.split('_');
+            // var validarNotas = false;
+            // $(".idNuevoEstado").each(function (index) {
+            //     if($(this).val() == 6){ // Estado es no incorporado
+            //         var idEst = $(this).attr('id');
+            //         var valor = idEst.split('_');
 
-                    var nivel = $('#'+valor[0]+'_nivel').val();
+            //         var nivel = $('#'+valor[0]+'_nivel').val();
 
-                    var tieneNotas = false;
-                    if(nivel == 11){ var idNotaInscripcion = valor[0]+'_1000_1';}
-                    if(nivel == 12){ var idNotaInscripcion = valor[0]+'_1011_1';}
-                    if(nivel == 13){ var idNotaInscripcion = valor[0]+'_1031_1';}
+            //         var tieneNotas = false;
+            //         if(nivel == 11){ var idNotaInscripcion = valor[0]+'_1000_1';}
+            //         if(nivel == 12){ var idNotaInscripcion = valor[0]+'_1011_1';}
+            //         if(nivel == 13){ var idNotaInscripcion = valor[0]+'_1031_1';}
 
-                    console.log(idNotaInscripcion);
-                    if(($('#'+idNotaInscripcion).val() > 0 && nivel != 11) || ($('#'+idNotaInscripcion).val() != "" && nivel == 11)){
-                        tieneNotas = true;
-                        console.log($('#'+idNotaInscripcion).val());
-                        if(!confirm('La inscripción ya cuenta con notas se sugiere cambiar al estado Retirado Traslado. \nUsted esta cambiando al estado No Incorporado, ¿Desea continuar?.')){
-                            enviar = false;
-                        }
-                        //mensaje = "La inscripcion ya cuenta con notas, y esta cambiando al estado No Incorporado. Desea continuar?";
-                        //enviar = false;
-                        //return false;
-                    }
-                }
-                if($(this).val() == 9){ // Estado es traslado
-                    var idEst = $(this).attr('id');
-                    var valor = idEst.split('_');
+            //         console.log(idNotaInscripcion);
+            //         if(($('#'+idNotaInscripcion).val() > 0 && nivel != 11) || ($('#'+idNotaInscripcion).val() != "" && nivel == 11)){
+            //             tieneNotas = true;
+            //             console.log($('#'+idNotaInscripcion).val());
+            //             if(!confirm('La inscripción ya cuenta con notas se sugiere cambiar al estado Retirado Traslado. \nUsted esta cambiando al estado No Incorporado, ¿Desea continuar?.')){
+            //                 enviar = false;
+            //             }
+            //             //mensaje = "La inscripcion ya cuenta con notas, y esta cambiando al estado No Incorporado. Desea continuar?";
+            //             //enviar = false;
+            //             //return false;
+            //         }
+            //     }
+            //     if($(this).val() == 9){ // Estado es traslado
+            //         var idEst = $(this).attr('id');
+            //         var valor = idEst.split('_');
 
-                    var tieneNotas = true;
-                    if(nivel == 11){ var idNotaInscripcion = valor[0]+'_1000_1';}
-                    if(nivel == 12){ var idNotaInscripcion = valor[0]+'_1011_1';}
-                    if(nivel == 13){ var idNotaInscripcion = valor[0]+'_1031_1';}
+            //         var tieneNotas = true;
+            //         if(nivel == 11){ var idNotaInscripcion = valor[0]+'_1000_1';}
+            //         if(nivel == 12){ var idNotaInscripcion = valor[0]+'_1011_1';}
+            //         if(nivel == 13){ var idNotaInscripcion = valor[0]+'_1031_1';}
 
-                    console.log(idNotaInscripcion);
-                    if($('#'+idNotaInscripcion).val() == 0 || $('#'+idNotaInscripcion).val() == ""){
-                        tieneNotas = false;
-                        mensaje = "La inscripción no cuenta con notas o tiene notas en cero, no se puede cambiar al estado Retirado Traslado.";
-                        enviar = false;
-                        //return false;
-                    }
+            //         console.log(idNotaInscripcion);
+            //         if($('#'+idNotaInscripcion).val() == 0 || $('#'+idNotaInscripcion).val() == ""){
+            //             tieneNotas = false;
+            //             mensaje = "La inscripción no cuenta con notas o tiene notas en cero, no se puede cambiar al estado Retirado Traslado.";
+            //             enviar = false;
+            //             //return false;
+            //         }
 
-                    validarNotas = true;
-                }
-            });
-            console.log('validarNota',validarNotas);
-            //return false;
-            if(validarNotas == true){
-                var nivel = $('#0_nivel').val();
-                var cantidad = $(".idInscripcion").length;
+            //         validarNotas = true;
+            //     }
+            // });
+            // console.log('validarNota',validarNotas);
+            // //return false;
+            // if(validarNotas == true){
+            //     var nivel = $('#0_nivel').val();
+            //     var cantidad = $(".idInscripcion").length;
 
-                if(cantidad == 3){
+            //     if(cantidad == 3){
 
-                    $(".nota").each(function (index) {
-                        var ids = $(this).attr('id');
-                        var valor = ids.split('_');
-                        var a = $('#0_'+valor[1]).val();
-                        var b = $('#1_'+valor[1]).val();
-                        var c = $('#2_'+valor[1]).val();
+            //         $(".nota").each(function (index) {
+            //             var ids = $(this).attr('id');
+            //             var valor = ids.split('_');
+            //             var a = $('#0_'+valor[1]).val();
+            //             var b = $('#1_'+valor[1]).val();
+            //             var c = $('#2_'+valor[1]).val();
 
-                        if(a === undefined){
-                            if(nivel == 11){
-                                a = '';
-                            }else{
-                                a = 0;
-                            }
-                        }
-                        if(b === undefined){
-                            if(nivel == 11){
-                                b = '';
-                            }else{
-                                b = 0;
-                            }
-                        }
-                        if(c === undefined){
-                            if(nivel == 11){
-                                c = '';
-                            }else{
-                                c = 0;
-                            }
-                        }
+            //             if(a === undefined){
+            //                 if(nivel == 11){
+            //                     a = '';
+            //                 }else{
+            //                     a = 0;
+            //                 }
+            //             }
+            //             if(b === undefined){
+            //                 if(nivel == 11){
+            //                     b = '';
+            //                 }else{
+            //                     b = 0;
+            //                 }
+            //             }
+            //             if(c === undefined){
+            //                 if(nivel == 11){
+            //                     c = '';
+            //                 }else{
+            //                     c = 0;
+            //                 }
+            //             }
 
-                        if(a != 0 && a != ''){
-                            if(b != 0 && b != ''){
-                                if(a != b){
-                                    $(this).css('background-color','#FFBEAB');
-                                    enviar = false;
-                                    mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
-                                }else{
-                                    if(c != 0 && c != ''){
-                                        if(b != c){
-                                            $(this).css('background-color','#FFBEAB');
-                                            enviar = false;
-                                            mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
-                                        }
-                                    }
-                                }
-                            }else{
-                                if(c != 0 && c != ''){
-                                    if(a != c){
-                                        $(this).css('background-color','#FFBEAB');
-                                        enviar = false;
-                                        mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
-                                    }
-                                }
-                            }
-                        }else{
-                            if(b != 0 && b != ''){
-                                if(c != 0 && c != ''){
-                                    if(b != c){
-                                        $(this).css('background-color','#FFBEAB');
-                                        enviar = false;
-                                        mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
-                                    }
-                                }
-                            }
-                        }
+            //             if(a != 0 && a != ''){
+            //                 if(b != 0 && b != ''){
+            //                     if(a != b){
+            //                         $(this).css('background-color','#FFBEAB');
+            //                         enviar = false;
+            //                         mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+            //                     }else{
+            //                         if(c != 0 && c != ''){
+            //                             if(b != c){
+            //                                 $(this).css('background-color','#FFBEAB');
+            //                                 enviar = false;
+            //                                 mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+            //                             }
+            //                         }
+            //                     }
+            //                 }else{
+            //                     if(c != 0 && c != ''){
+            //                         if(a != c){
+            //                             $(this).css('background-color','#FFBEAB');
+            //                             enviar = false;
+            //                             mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+            //                         }
+            //                     }
+            //                 }
+            //             }else{
+            //                 if(b != 0 && b != ''){
+            //                     if(c != 0 && c != ''){
+            //                         if(b != c){
+            //                             $(this).css('background-color','#FFBEAB');
+            //                             enviar = false;
+            //                             mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+            //                         }
+            //                     }
+            //                 }
+            //             }
 
-                    });
-                }
-                if(cantidad == 2){
-                    $(".nota").each(function (index) {
-                        var ids = $(this).attr('id');
-                        var valor = ids.split('_');
+            //         });
+            //     }
+            //     if(cantidad == 2){
+            //         $(".nota").each(function (index) {
+            //             var ids = $(this).attr('id');
+            //             var valor = ids.split('_');
 
-                        var a = $('#0_'+valor[1]+'_'+valor[2]).val();
-                        console.log('a',a);
-                        var b = $('#1_'+valor[1]+'_'+valor[2]).val();
-                        console.log('b',b);
+            //             var a = $('#0_'+valor[1]+'_'+valor[2]).val();
+            //             console.log('a',a);
+            //             var b = $('#1_'+valor[1]+'_'+valor[2]).val();
+            //             console.log('b',b);
 
-                        if(a === undefined){
-                            if(nivel == 11){
-                                a = '';
-                            }else{
-                                a = 0;
-                            }
-                        }
-                        if(b === undefined){
-                            if(nivel == 11){
-                                b = '';
-                            }else{
-                                b = 0;
-                            }
-                        }
+            //             if(a === undefined){
+            //                 if(nivel == 11){
+            //                     a = '';
+            //                 }else{
+            //                     a = 0;
+            //                 }
+            //             }
+            //             if(b === undefined){
+            //                 if(nivel == 11){
+            //                     b = '';
+            //                 }else{
+            //                     b = 0;
+            //                 }
+            //             }
 
-                        if(a != 0 && a != ''){
-                            if(b != 0 && b != ''){
-                                if(a != b){
-                                    $(this).css('background-color','#FFBEAB');
-                                    enviar = false;
-                                    mensaje = "Las notas no coinciden, verifique e iguale las notas de ambas inscripciones.";
-                                }
-                            }
-                        }
-                    });
-                }
-            }
+            //             if(a != 0 && a != ''){
+            //                 if(b != 0 && b != ''){
+            //                     if(a != b){
+            //                         $(this).css('background-color','#FFBEAB');
+            //                         enviar = false;
+            //                         mensaje = "Las notas no coinciden, verifique e iguale las notas de ambas inscripciones.";
+            //                     }
+            //                 }
+            //             }
+            //         });
+            //     }
+            // }
 
 
-            $(".nota").each(function (index) {
-                if($(this).val() == 0 || $(this).val() == ''){
-                    enviar = false;
-                    mensaje = "Las notas registradas no pueden ser cero y/o no pueden estar vacias.";
-                }
-            });
-            if(enviar == false && mensaje != ""){
-                alert(mensaje);
-            }
+            // $(".nota").each(function (index) {
+            //     if($(this).val() == 0 || $(this).val() == ''){
+            //         enviar = false;
+            //         mensaje = "Las notas registradas no pueden ser cero y/o no pueden estar vacias.";
+            //     }
+            // });
+            // if(enviar == false && mensaje != ""){
+            //     alert(mensaje);
+            // }
 
-            console.log(enviar);
+            // console.log(enviar);
 
             //return false;
 

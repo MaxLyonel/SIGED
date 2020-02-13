@@ -1,0 +1,15 @@
+estadistica_infraestructura_index:
+    path:     /infraestructura
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:infraestructuraIndex }
+
+estadistica_infraestructura_print_pdf:
+    path:     /informacion/infraestructura/ambientes/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:informacionCompletaAlternativaEspPrintPdf }
+
+estadistica_infraestructura_print_xls:
+    path:     /informacion/infraestructura/ambientes/print/xls
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:informacionCompletaAlternativaEspPrintXls }
+
+estadistica_gerenciales_pdf:
+    path:     /informacion/infraestructura/gerencial/print/pdf
+    defaults: { _controller: SieInfraestructuraBundle:Estadisticas:reportesGerencialesPdf }  

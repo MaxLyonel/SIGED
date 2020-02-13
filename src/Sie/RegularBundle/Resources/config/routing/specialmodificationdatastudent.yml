@@ -1,0 +1,42 @@
+specialmodificationdata_student_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:index }
+
+specialmodificationdata_student_lookfor_student:
+    path:     /lookforStudent
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:lookforStudent }
+    options:
+        expose: true
+
+specialmodificationdata_student_updateDataStudent:
+    path:     /updateDataStudent
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:updateDataStudent }
+    options:
+        expose: true
+
+specialmodificationdata_val_segip:
+    path:     /valsegip
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:valsegip }
+    options:
+        expose: true         
+
+
+specialmodificationdata_update_student:
+    path:     /updateStudent
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:updateStudent }
+    options:
+        expose: true
+
+specialmodificationdata_get_depto:
+    path:     /getDepto
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:getDepto }
+    options:
+        expose: true
+
+specialmodificationdata_get_provincia:
+    path:     /getProvincia
+    defaults: { _controller: SieRegularBundle:SpecialModificationDataStudent:getProvincia }
+    options:
+        expose: true
+        
+        

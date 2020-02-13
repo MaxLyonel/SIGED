@@ -42,7 +42,7 @@ class InscriptionIniPriTrueController extends Controller {
     public function indexAction() {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
-
+        // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -220,7 +220,7 @@ class InscriptionIniPriTrueController extends Controller {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6 ))
+                ->setParameter('mat', array( 3,4,5,6,10 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
@@ -240,6 +240,21 @@ class InscriptionIniPriTrueController extends Controller {
       //get values all data
       $form = $request->get('form');
       $setNotasInscription=false;
+
+      //validtation abuut if the ue close SEXTO
+      if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestionIns'])){
+          $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
+          $this->addFlash('idNoInscription', $message);
+          return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+      }
+
+      // validation if the ue is over 4 operativo
+      $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
+      if($operativo >= 4){
+        $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+        $this->addFlash('idNoInscription', $message);
+        return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+      }
 
       //validation inscription in the same U.E
       $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']);
@@ -426,7 +441,7 @@ class InscriptionIniPriTrueController extends Controller {
          $em->flush();
 
          //add the areas to the student
-         $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
+         // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
 
          // obtenemos las notas
          //$arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($studentInscription->getId());
@@ -959,7 +974,7 @@ class InscriptionIniPriTrueController extends Controller {
             $em->persist($studentInscription);
             $em->flush();
             //add the areas to the student
-            $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
+            // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción realizada sin problemas');
             return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));

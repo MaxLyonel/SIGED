@@ -69,7 +69,7 @@ class Areas {
         $matpriant = array(201, 203, 204, 205, 206, 207, 208, 209, 210, 251, 258);
         $matsecantter = array(301, 302, 303, 304, 305, 307, 308, 309, 310, 311, 312, 313, 315, 316, 317, 318, 319, 320, 321);
 
-        $matsecantcua = array(301, 302, 303, 304, 305, 309, 313, 316, 317, 318, 319);
+        $matsecantcua = array(301, 302, 303, 304, 305, 307, 308, 309, 210, 311, 312, 313, 316, 317, 318, 319);
         $matsecantquisex = array(301, 302, 303, 305, 307, 308, 310, 311, 312, 313, 315, 316, 317, 318, 319, 362);
 
 
@@ -399,7 +399,7 @@ class Areas {
                 // Verificamos si se puede adicionar materias, en base al operativo antes de tercer bimestre
                 if($gestion == $this->session->get('currentyear')){
                     $operativo = $this->funciones->obtenerOperativo($sie,$gestion);
-                    if($operativo <= 3 or ($tipoUE['id'] == 3 and in_array($nivel, array(3,13)))){
+                    if($operativo < 5 or ($tipoUE['id'] == 3 and in_array($nivel, array(3,13)))){
                         $vista = 1;
                     }else{
                         $vista = 0;

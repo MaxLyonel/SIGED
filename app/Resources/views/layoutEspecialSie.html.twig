@@ -357,7 +357,7 @@
                             <li><a href="{{ path('history_new_inscription_index') }}"> Historial de Inscripción</a></li>
                         </ul>
                     </li>
-                    <li class="submenu">
+                    {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bono Juancito Pinto</span>
@@ -366,7 +366,7 @@
                         <ul>
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
-                    </li>
+                    </li> #}
                     {% if app.session.get('roluser') != 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -384,6 +384,13 @@
                             </ul>
                         </li>
                     {% endif %}
+                    <li class="">
+                        <a href="{{path('wf_tramite_index')}}">
+                            <span class="icon"><i class="fa fa-list-alt"></i></span>
+                            <span class="text">Trámites</span>
+                            {# <span class="{{ route == 'wf_tramite_index' ? 'selected':'' }}"></span> #}
+                        </a>
+                    </li>
 
 
                     <!-- Start navigation - dashboard -->

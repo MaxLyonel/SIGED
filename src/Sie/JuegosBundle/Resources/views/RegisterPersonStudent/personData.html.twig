@@ -6,15 +6,6 @@
                 <div class="panel-body">
                     <div class="inner-all">
                         <ul class="list-unstyled">
-                            <li>
-                                {{form_start(form,{'attr':{'id':'idFormPersonToRegister'}})}}
-
-
-                                {{form_end(form)}}
-                           
-                                
-                            </li>
-                            <li><br></li>
                             {#
                             <li class="text-center">
                                 <img data-no-retina="" class="img-circle img-bordered-primary" src="{{asset('img/photo.png')}}" alt="krlos">
@@ -23,42 +14,32 @@
                             
                             <li>
                                 <div class="btn-group-vertical btn-block">
-
                                     <table class="table table-bordered table-striped">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>
-                                                Datos Persona
-                                            </th>
-                                        </tr>
+                                            <tr>
+                                                <th>Carnet</th>
+                                                <th>Complemento</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <th>Carnet:</th>
-                                            <td>{{dataPerson.carnet}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Complemento:</th>
-                                            <td>{{dataPerson.complemento}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Paterno:</th>
-                                            <td>{{dataPerson.paterno}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Materno:</th>
-                                            <td>{{dataPerson.materno}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Nombre(s):</th>
-                                            <td>{{dataPerson.nombre}}</td>
-                                        </tr>
-                                       
-                                   
+                                            <tr>
+                                                <td>{{dataPerson.carnet}}</td>
+                                                <td>{{dataPerson.complemento}}</td>
+                                                <td>{{dataPerson.paterno}}</td>
+                                                <td>{{dataPerson.materno}}</td>
+                                                <td>{{dataPerson.nombre}}</td>
+                                            </tr> 
                                         </tbody>
                                     </table>
                                 </div>
+                            </li>
+                            <li><br></li>
+                            <li>
+                                {{form_start(form,{'attr':{'id':'idFormPersonToRegister'}})}}
+                                {{form_end(form)}}   
                             </li>
                         </ul>
                     </div>

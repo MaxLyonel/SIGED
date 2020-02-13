@@ -77,30 +77,117 @@ class RegularizacionDobleInscripcionController extends Controller {
 
             $inscripciones = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
             $ins = $inscripciones->createQueryBuilder('ei')
-                                ->select('ei.id')
+                                ->select('ei.id, ie.id as sie, gt.id as gestion, e.codigoRude, e.nombre, e.paterno, e.materno, ie.institucioneducativa, nt.id as nivelId, nt.nivel, grt.grado, pt.paralelo, emt.id as estadomatriculaId, emt.estadomatricula')
                                 ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
                                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
                                 ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
+                                ->innerJoin('SieAppWebBundle:NivelTipo','nt','with','iec.nivelTipo = nt.id')
+                                ->innerJoin('SieAppWebBundle:GradoTipo','grt','with','iec.gradoTipo = grt.id')
+                                ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','with','iec.paraleloTipo = pt.id')
+                                ->innerJoin('SieAppWebBundle:EstadomatriculaTipo','emt','with','ei.estadomatriculaTipo = emt.id')
                                 ->where('e.codigoRude = :rude')
                                 ->andWhere('gt.id = :gestion')
+                                ->andWhere('ie.institucioneducativaTipo = 1')
                                 ->orderBy('ei.fechaInscripcion','ASC')
                                 ->setParameter('rude',$rude)
                                 ->setParameter('gestion',$gestion)
                                 ->getQuery()
                                 ->getResult();
 
+            $arrayEstados = [];
+            $estadosFinales = [5,26,37,55,56,57,58,11,28];
+            $tieneEstadoFinal = false;
             $arrayInscripciones = array();
+
             foreach ($ins as $i) {
-                $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($i['id']);
-                $arrayInscripciones[] = $arrayNotas;
+
+                $operativo = $this->get('funciones')->obtenerOperativo($i['sie'], $i['gestion']);
+                $inscripcionActual = $this->get('notas')->regular($i['id'], $operativo);
+
+                $inscripcionActual['estudiante'] = $i['nombre'].' '.$i['paterno'].' '.$i['materno'];
+                $inscripcionActual['codigoRude'] = $i['codigoRude'];
+                $inscripcionActual['sie'] = $i['sie'];
+                $inscripcionActual['institucioneducativa'] = $i['institucioneducativa'];
+                $inscripcionActual['nivelname'] = $i['nivel'];
+                $inscripcionActual['nivelId'] = $i['nivelId'];
+                $inscripcionActual['gradoname'] = $i['grado'];
+                $inscripcionActual['paraleloname'] = $i['paralelo'];
+                $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
+                $inscripcionActual['estadomatriculaname'] = $i['estadomatricula'];
+                $inscripcionActual['cantidadTotal'] = count($inscripcionActual['cuantitativas'])*$inscripcionActual['operativo'];
+
+                $arrayInscripciones[] = $inscripcionActual;
+                $arrayEstados[] = $i['estadomatriculaId'];
+
+                // VERIFICAMOS SI ALGUNA DE LAS INSCRIPCIONES YA CUENTA CON ESTADO FINAL
+                if (in_array($i['estadomatriculaId'], $estadosFinales)) {
+                    $tieneEstadoFinal = true;
+                }
+            }
+            
+            $cont = 0;
+            foreach ($arrayInscripciones as $ai) {
+
+                // VERIFICAMOS SI EL ESTADO DE LA INSCRIPCION NO ES UN ESTADO FINAL
+                // PARA CALCULAR LOS OTRSO POSIBLES ESTADOS A MODIFICAR
+                if (!in_array($ai['estadomatriculaId'], $estadosFinales)) {
+
+                    // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
+                    if ($ai['cantidadRegistrados'] > 0 and $ai['cantidadRegistrados'] < $ai['cantidadTotal']) {
+
+                        if ($tieneEstadoFinal) {
+                            $estadosdisp = [9]; // RETIRO TRASLADO
+                        }else{
+                            // VERIFICAMOS SI LA INSCRIPCION ACTUAL TIENE MAS CALIFICACIONES QUE LAS DEMAS
+                            $mayor = false;
+                            for ($i = 0; $i < count($arrayInscripciones); $i++) { 
+                                if ( $ai['cantidadRegistrados'] > $arrayInscripciones[$i]['cantidadRegistrados']) {
+                                    $mayor = true;
+                                }else{
+                                    if ($ai['idInscripcion'] != $arrayInscripciones[$i]['idInscripcion']) {
+                                        $mayor = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // SI LA INSCRIPCION TIENE MAS CALIFICACIONES QUE LAS DEMAS
+                            // ENTONCES PUEDE CAMBIAR AL ESTADO FINAL RETIRADO ABANDONO
+                            if ($mayor) {
+                                $estadosdisp = [10]; // RETIRO ABANDONO
+                            }else{
+                                $estadosdisp = [9]; // RETIRO TRASLADO
+                            }
+                        }
+
+                    }else{
+                        // SI NO TIENE CALIFICACIONES SOLO PUEDE CAMBIAR A NO INCORPORADO
+                        $estadosdisp = [6]; // NO INCORPORADO
+                    }
+                }else{
+                    $estadosdisp = [$ai['estadomatriculaId']]; //  AGREGAMOS EL MISMO ESTADO DE MATRICULA
+                }
+                
+
+                $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$estadosdisp));
+                foreach ($estados as $e) {
+                    $arrayInscripciones[$cont]['estadosCambiar'][] = array('id'=>$e->getId(), 'estadomatricula'=>$e->getEstadomatricula());
+                }
+                
+                $cont++;
             }
 
-            //dump($arrayInscripciones);
-            //die;
 
-            $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(6)));
+            // dump($arrayInscripciones);die;
 
-            return $this->render('SieRegularBundle:RegularizacionDobleInscripcion:result.html.twig',array('arrayInscripciones'=>$arrayInscripciones,'estados'=>$estados,'gestion'=>$gestion));
+            // $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(6,9)));
+
+            return $this->render('SieRegularBundle:RegularizacionDobleInscripcion:result.html.twig',array(
+              'arrayInscripciones'=>$arrayInscripciones,
+              // 'estados'=>$estados,
+              'gestion'=>$gestion
+            ));
 
         } catch (Exception $ex) {
 
@@ -112,139 +199,143 @@ class RegularizacionDobleInscripcionController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
 
-            $defaultController = new DefaultCont();
-            $defaultController->setContainer($this->container);
+            // $defaultController = new DefaultCont();
+            // $defaultController->setContainer($this->container);
 
-            $idEstudianteNota = $request->get('idEstudianteNota');
-            $nota = $request->get('nota');
-            $nivel = $request->get('nivel');
+            // $idEstudianteNota = $request->get('idEstudianteNota');
+            // $nota = $request->get('nota');
+            $nivel = $request->get('arrNivel');
             $rude = $request->get('rude');
-            $idInscripcion = $request->get('idInscripcion');
-            for($i=0; $i<count($idInscripcion); $i++){
-                if(isset($idEstudianteNota[$i])){
-                    $op = $idEstudianteNota[$i];
-                    for($j=0;$j<count($op);$j++){
-                        if($idEstudianteNota[$i][$j] != 'nuevo'){
-                            $updateNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i][$j]);
+            $idInscripcion = $request->get('arrIdInscripcion');
+            // for($i=0; $i<count($idInscripcion); $i++){
+            //     if(isset($idEstudianteNota[$i])){
+            //         $op = $idEstudianteNota[$i];
+            //         for($j=0;$j<count($op);$j++){
+            //             if($idEstudianteNota[$i][$j] != 'nuevo'){
+            //                 $updateNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i][$j]);
 
-                            if($nivel[$i] == 11){
-                              if($updateNota->getNotaCualitativa() != $nota[$i][$j]){
+            //                 if($nivel[$i] == 11){
+            //                   if($updateNota->getNotaCualitativa() != $nota[$i][$j]){
 
-                                  // Antes
-                                  $arrayRegistro = null;
+            //                       // Antes
+            //                       $arrayRegistro = null;
 
-                                  $arrayRegistro['id'] = $updateNota->getId();
-                                  $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
-                                  $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
-                                  $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
-                                  $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
-                                  $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
-                                  $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
-                                  $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
-                                  $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
-                                  $arrayRegistro['obs'] = $updateNota->getObs();
+            //                       $arrayRegistro['id'] = $updateNota->getId();
+            //                       $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
+            //                       $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
+            //                       $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
+            //                       $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
+            //                       $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
+            //                       $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
+            //                       $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
+            //                       $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
+            //                       $arrayRegistro['obs'] = $updateNota->getObs();
 
-                                  $antes = json_encode($arrayRegistro);
+            //                       $antes = json_encode($arrayRegistro);
 
-                                  // despues
-                                  $arrayRegistro = null;
+            //                       // despues
+            //                       $arrayRegistro = null;
 
-                                  $updateNota->setNotaCualitativa(mb_strtoupper($nota[$i][$j],'utf-8'));
+            //                       $updateNota->setNotaCualitativa(mb_strtoupper($nota[$i][$j],'utf-8'));
 
-                                  $arrayRegistro['id'] = $updateNota->getId();
-                                  $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
-                                  $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
-                                  $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
-                                  $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
-                                  $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
-                                  $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
-                                  $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
-                                  $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
-                                  $arrayRegistro['obs'] = $updateNota->getObs();
+            //                       $arrayRegistro['id'] = $updateNota->getId();
+            //                       $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
+            //                       $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
+            //                       $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
+            //                       $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
+            //                       $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
+            //                       $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
+            //                       $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
+            //                       $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
+            //                       $arrayRegistro['obs'] = $updateNota->getObs();
 
-                                  $despues = json_encode($arrayRegistro);
+            //                       $despues = json_encode($arrayRegistro);
 
-                                  // registro del log
-                                  $resp = $defaultController->setLogTransaccion(
-                                      $updateNota->getId(),
-                                      'estudiante_nota',
-                                      'U',
-                                      json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
-                                      $this->session->get('userId'),
-                                      '',
-                                      $despues,
-                                      $antes,
-                                      'SIGED',
-                                      json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                                  );
-                              }
-                            }else{
-                              if($updateNota->getNotaCuantitativa() != $nota[$i][$j]){
-                                  // Antes
-                                  $arrayRegistro = null;
+            //                       // registro del log
+            //                       $resp = $defaultController->setLogTransaccion(
+            //                           $updateNota->getId(),
+            //                           'estudiante_nota',
+            //                           'U',
+            //                           json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+            //                           $this->session->get('userId'),
+            //                           '',
+            //                           $despues,
+            //                           $antes,
+            //                           'SIGED',
+            //                           json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            //                       );
+            //                   }
+            //                 }else{
+            //                   if($updateNota->getNotaCuantitativa() != $nota[$i][$j]){
+            //                       // Antes
+            //                       $arrayRegistro = null;
 
-                                  $arrayRegistro['id'] = $updateNota->getId();
-                                  $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
-                                  $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
-                                  $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
-                                  $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
-                                  $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
-                                  $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
-                                  $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
-                                  $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
-                                  $arrayRegistro['obs'] = $updateNota->getObs();
+            //                       $arrayRegistro['id'] = $updateNota->getId();
+            //                       $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
+            //                       $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
+            //                       $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
+            //                       $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
+            //                       $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
+            //                       $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
+            //                       $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
+            //                       $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
+            //                       $arrayRegistro['obs'] = $updateNota->getObs();
 
-                                  $antes = json_encode($arrayRegistro);
+            //                       $antes = json_encode($arrayRegistro);
 
-                                  // despues
-                                  $arrayRegistro = null;
+            //                       // despues
+            //                       $arrayRegistro = null;
 
-                                  $updateNota->setNotaCuantitativa($nota[$i][$j]);
+            //                       $updateNota->setNotaCuantitativa($nota[$i][$j]);
 
-                                  $arrayRegistro['id'] = $updateNota->getId();
-                                  $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
-                                  $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
-                                  $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
-                                  $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
-                                  $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
-                                  $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
-                                  $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
-                                  $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
-                                  $arrayRegistro['obs'] = $updateNota->getObs();
+            //                       $arrayRegistro['id'] = $updateNota->getId();
+            //                       $arrayRegistro['nota_tipo_id'] = $updateNota->getNotaTipo()->getId();
+            //                       $arrayRegistro['estudiante_asignatura_id'] = $updateNota->getEstudianteAsignatura()->getId();
+            //                       $arrayRegistro['nota_cuantitativa'] = $updateNota->getNotaCuantitativa();
+            //                       $arrayRegistro['nota_cualitativa'] = $updateNota->getNotaCualitativa();
+            //                       $arrayRegistro['recomendacion'] = $updateNota->getRecomendacion();
+            //                       $arrayRegistro['usuario_id'] = $updateNota->getUsuarioId();
+            //                       $arrayRegistro['fecha_registro'] = $updateNota->getFechaRegistro();
+            //                       $arrayRegistro['fecha_modificacion'] = $updateNota->getFechaModificacion();
+            //                       $arrayRegistro['obs'] = $updateNota->getObs();
 
-                                  $despues = json_encode($arrayRegistro);
+            //                       $despues = json_encode($arrayRegistro);
 
-                                  // registro del log
-                                  $resp = $defaultController->setLogTransaccion(
-                                      $updateNota->getId(),
-                                      'estudiante_nota',
-                                      'U',
-                                      json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
-                                      $this->session->get('userId'),
-                                      '',
-                                      $despues,
-                                      $antes,
-                                      'SIGED',
-                                      json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                                  );
-                              }
-                            }
-                            $em->flush();
-                        }
+            //                       // registro del log
+            //                       $resp = $defaultController->setLogTransaccion(
+            //                           $updateNota->getId(),
+            //                           'estudiante_nota',
+            //                           'U',
+            //                           json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+            //                           $this->session->get('userId'),
+            //                           '',
+            //                           $despues,
+            //                           $antes,
+            //                           'SIGED',
+            //                           json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            //                       );
+            //                   }
+            //                 }
+            //                 $em->flush();
+            //             }
 
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
 
             //set new ESTADOS
-            $response =$this->validateEstadoStudent($request);
+            $response = $this->validateEstadoStudent($request);
 
             $em->getConnection()->commit();
             //verifcatiokn
+            
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[0]);
+
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_estados(:option::VARCHAR,:rude::VARCHAR,:gestion::VARCHAR)');
             $query->bindValue(':option', 2);
             $query->bindValue(':rude', $rude);
-            $query->bindValue(':gestion', 2016);
+            // $query->bindValue(':gestion', 2016);
+            $query->bindValue(':gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId());
             $query->execute();
             $em->getConnection()->commit();
 
@@ -275,15 +366,20 @@ class RegularizacionDobleInscripcionController extends Controller {
 
       private function validateEstadoStudent($request){
       // Create DB conexxion
+      // dump($request);die;
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the current states
       $arrEstudianteEstado = $request->get('estadoMatriculaActual');
-      $arrIdInscripcion = $request->get('idInscripcion');
-      $arridEstudianteAsignatura = $request->get('idEstudianteAsignatura');
+      $arrIdInscripcion = $request->get('arrIdInscripcion');
+      // $arridEstudianteAsignatura = $request->get('idEstudianteAsignatura');
       $arrEstadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
       $error = 'done';
       $error1 = '';
+
+      // dump($arrEstudianteEstado);
+      // dump($arrEstadoMatriculaNuevo);
+      // die;
       try {
 
         //validate the students stado
@@ -293,7 +389,7 @@ class RegularizacionDobleInscripcionController extends Controller {
           if(!in_array($estado, $arrEstados)){
             // get ids to change the estado
             $idInscripcion = isset($arrIdInscripcion[$key])?$arrIdInscripcion[$key]:'';
-            $dataEstudianteAsignatura = isset($arridEstudianteAsignatura[$key])?$arridEstudianteAsignatura[$key]:'';
+            // $dataEstudianteAsignatura = isset($arridEstudianteAsignatura[$key])?$arridEstudianteAsignatura[$key]:'';
             $idEstadoMatriculaNuevo = isset($arrEstadoMatriculaNuevo[$key])?$arrEstadoMatriculaNuevo[$key]:'';
             //save the new estado
             $this->changeStudentState($idInscripcion, $idEstadoMatriculaNuevo);

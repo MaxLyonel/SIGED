@@ -2,6 +2,7 @@
 
 namespace Sie\RegularBundle\Controller;
 
+use Sie\AppWebBundle\Entity\ControlInstalador;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;
@@ -339,17 +340,19 @@ class ConsolidationSieController extends Controller {
 
                 $objAllowUEQa = $this->get('funciones')->appValidationQuality(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27,48'));
                 if($objAllowUEQa){
-                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
+                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder cargar el archivo ');
                   system('rm -fr ' . $dirtmp);
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
-                // $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5'));
-                // if($objAllowUE){
-                //   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
-                //   system('rm -fr ' . $dirtmp);
-                //   return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                // }
+                if($aFileInfoSie[6]!=0){
+                    $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5,7'));
+                    if($objAllowUE){
+                      $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
+                      system('rm -fr ' . $dirtmp);
+                      return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                    }
+                }
 
                 //validation up old file ... only by tec distrito, depto
                 $aAccess = array(5, 2, 9);
@@ -370,46 +373,66 @@ class ConsolidationSieController extends Controller {
 
                 //validate the correct sie send with the correct version in current year
                 if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')))) == 0) {
+
                     if (
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED7'))) === 0    
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.3.0'))) === 0
+                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED9'))) === 0    
                     ){
 
                     }else{
-                      if(
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0
+
+                        if (
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9'))) === 0
+                                and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED7'))) === 0    
+                        ){
+
+                        }else{
+                          if(
+                            (
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0 || 
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.2'))) === 0 
+                            )
+                                and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED8'))) === 0
+                          ){
+
+                          }else{
+                            if(
+                              (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.7.1'))) === 0
+                                and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED6'))) === 0
+                            ){
+
+                            }else{
+                              $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
+                              system('rm -fr ' . $dirtmp);
+                              return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                            }
+                          }
+                        }
+                    }
+    
+                }else{
+                     if(
+                        (
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.1'))) === 0 || 
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9.2'))) === 0 
+                        )
                             and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED8'))) === 0
                       ){
 
                       }else{
-                        if(
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.7.1'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED6'))) === 0
-                        ){
+                          if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')-1))) == 0) {
+                            if (
+                                  (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
+                                    and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
+                            ){
 
-                        }else{
-                          $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
-                          system('rm -fr ' . $dirtmp);
-                          return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                        }
+                            }else{
+                              $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
+                              system('rm -fr ' . $dirtmp);
+                              return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                            }
+                          }
                       }
-                    }
-
-
-                    
-                }else{
-                  if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')-1))) == 0) {
-                    if (
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
-                    ){
-
-                    }else{
-                      $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
-                      system('rm -fr ' . $dirtmp);
-                      return $this->redirect($this->generateUrl('consolidation_sie_web'));
-                    }
-                  }
                }
                 //die;
                 //validate the correct sie send with the content of file

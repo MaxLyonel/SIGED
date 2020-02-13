@@ -170,7 +170,7 @@ class InfoStudentsController extends Controller {
    */
   private function createFormStudentInscription($data) {
       return $this->createFormBuilder()
-                      ->add('inscription', 'button', array('label' => 'Inscribir', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'doInscription()')))
+                      ->add('inscription', 'button', array('label' => 'Inscribir', 'attr' => array('class' => 'btn btn-success', 'onclick' => 'doInscription()')))
                       ->add('infoUe', 'hidden', array('data' => $data))
                       ->getForm();
   }
@@ -190,7 +190,7 @@ class InfoStudentsController extends Controller {
     $form = $this->createFormBuilder()
             ->add('rudeal','text', array('label'=>'Rude', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Rude', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
             ->add('data', 'hidden', array('data'=> $data))
-            ->add('find', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'findStudent()')))
+            ->add('find', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'findStudent()')))
             ->getForm();
     return $form;
   }
@@ -282,7 +282,7 @@ class InfoStudentsController extends Controller {
             //->add('caseespecial', 'checkbox', array('label'=>'Validacion Especial', 'attr'=>array('class'=>'form-control', 'checked'=>false ) ))
             ->add('data', 'hidden', array('data'=> $data))
             ->add('studentId', 'hidden', array('data'=> $studentId))
-            ->add('inscription', 'button', array('label'=> 'Inscribir', 'attr'=>array('class'=>'btn btn-danger btn-stroke','ata-placement'=>'top', 'onclick'=>'doInscription()')))
+            ->add('inscription', 'button', array('label'=> 'Inscribir', 'attr'=>array('class'=>'btn btn-success','data-placement'=>'top', 'onclick'=>'doInscription()')))
             ->getForm();
    return $form;
   }

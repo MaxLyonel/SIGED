@@ -6,10 +6,6 @@ sie_herramienta_estadistica_bth_matricula_pdf:
     path:     /matricula/pdf
     defaults: { _controller: SieHerramientaBundle:Estadistica:bthMatriculaPdf}
 
-sie_herramienta_estadistica_bth_matricula_xls:
-    path:     /matricula/xls
-    defaults: { _controller: SieHerramientaBundle:Estadistica:bthMatriculaXls}
-
 sie_herramienta_estadistica_bth_matricula_xlsx:
     path:     /matricula/xlsx
     defaults: { _controller: SieHerramientaBundle:Estadistica:bthMatriculaXlsx}
@@ -21,10 +17,6 @@ sie_herramienta_estadistica_bth_unidadeducativa_index:
 sie_herramienta_estadistica_bth_unidadeducativa_pdf:
     path:     /unidadeducativa/pdf
     defaults: { _controller: SieHerramientaBundle:Estadistica:bthUnidadEducativaPdf}
-
-sie_herramienta_estadistica_bth_unidadeducativa_xls:
-    path:     /unidadeducativa/xls
-    defaults: { _controller: SieHerramientaBundle:Estadistica:bthUnidadEducativaXls}
 
 sie_herramienta_estadistica_bth_unidadeducativa_xlsx:
     path:     /unidadeducativa/xlsx

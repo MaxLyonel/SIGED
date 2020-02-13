@@ -64,12 +64,12 @@ class TramiteEstadisticaController extends Controller {
 		$defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-		$activeMenu = $defaultTramiteController->setActiveMenu($route);
+		// $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
-		if(empty($activeMenu)){
-			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-		} 	
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+		// } 	
 
 		if ($request->isMethod('POST')) {
 			$gestion = $request->get('gestion');

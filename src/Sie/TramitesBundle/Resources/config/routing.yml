@@ -34,6 +34,10 @@ sie_tramite_homologacion:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteHomologacion.yml"
     prefix:   /tramite/homologacion
 
+sie_tramite_convalidacion:
+    resource: "@SieTramitesBundle/Resources/config/routing/tramiteConvalidacion.yml"
+    prefix:   /tramite/convalidacion
+
 sie_tramite_estadistica:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteEstadistica.yml"
     prefix:   /tramite/estadistica

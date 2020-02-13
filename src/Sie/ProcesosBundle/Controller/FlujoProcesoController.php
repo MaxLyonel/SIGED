@@ -91,7 +91,7 @@ class FlujoProcesoController extends Controller
         $form = $this->createFormBuilder()
             //->setAction($this->generateUrl('flujoproceso_guardar_pasos'))
             ->add('ptarea','choice',array('label'=>'Tarea','required'=>true,'empty_value' => 'Seleccionar tarea'))
-            ->add('nombre','text',array('label'=>'nombre','required'=>true))
+            ->add('nombre','text',array('label'=>'nombre','required'=>true,'attr'=>array('style'=>'text-transform:uppercase')))
             ->add('posicion','text',array('label'=>'posicion','required'=>true))
             ->add('tipopaso','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfPasosTipo','property'=>'nombre','empty_value' => 'Seleccionar tipo de paso'))
             ->getForm();
@@ -136,7 +136,7 @@ class FlujoProcesoController extends Controller
                 $procesotipo=$em->getRepository('SieAppWebBundle:ProcesoTipo')->find($form['tarea']);
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('flujo_proceso');")->execute();
                 $flujoproceso->setProceso($procesotipo);
-                $flujoproceso->setObs($form['observacion']);
+                $flujoproceso->setObs(mb_strtoupper($form['observacion'], 'UTF-8'));
                 $query1 = $em->getConnection()->prepare('SELECT fp.orden FROM flujo_proceso fp WHERE fp.flujo_tipo_id='. $form['proceso'] .' ORDER BY fp.orden desc limit 1');
                 $query1->execute();
                 $orden = $query1->fetchAll();
@@ -259,7 +259,7 @@ class FlujoProcesoController extends Controller
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_pasos_flujo_proceso');")->execute();
                 $wfpasosflujoproceso->setWfPasosTipo($wfpasostipo);
                 $wfpasosflujoproceso->setFlujoProceso($flujoproceso);
-                $wfpasosflujoproceso->setNombre($form['nombre']);
+                $wfpasosflujoproceso->setNombre(mb_strtoupper($form['nombre'], 'UTF-8'));
                 $wfpasosflujoproceso->setPosicion((int)$form['posicion']);
                 //dump(wf)
                 $em->persist($wfpasosflujoproceso);
@@ -769,7 +769,7 @@ class FlujoProcesoController extends Controller
             //->setAction($this->generateUrl('flujoproceso_guardar_pasos'))
             ->add('id','hidden',array('data'=>$entity->getId()))
             ->add('ptarea_edit','choice',array('label'=>'Tarea','required'=>true,'data'=>$entity->getFlujoProceso()->getId(),'choices'=>$tareasArray))
-            ->add('nombre_edit','text',array('label'=>'nombre','required'=>true, 'data'=>$entity->getNombre()))
+            ->add('nombre_edit','text',array('label'=>'nombre','required'=>true, 'data'=>$entity->getNombre(),'attr'=>array('style'=>'text-transform:uppercase')))
             ->add('posicion_edit','text',array('label'=>'posicion','required'=>true,'data'=>$entity->getPosicion()))
             ->add('tipopaso_edit','choice',array('label'=>'Tipo de asignación de tarea','required'=>true,'data'=>$entity->getWfPasosTipo()->getId(),'choices'=>$pasosArray))
             ->getForm();
@@ -809,7 +809,7 @@ class FlujoProcesoController extends Controller
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($form['ptarea_edit']);
                 $wfpasostipo = $em->getRepository('SieAppWebBundle:WfPasosTipo')->find($form['tipopaso_edit']);
                 //dump($wfpasostipo);die;
-                $entity->setNombre($form['nombre_edit']);
+                $entity->setNombre(mb_strtoupper($form['nombre_edit'], 'UTF-8'));
                 
                 $entity->setPosicion((int)$form['posicion_edit']);
                 //dump($entity);die;

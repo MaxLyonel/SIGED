@@ -564,7 +564,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -892,12 +892,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,15);
+        $rolPermitido = array(15,44,8);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -1239,12 +1239,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(15,16,8,44,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -2003,7 +2003,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2341,7 +2341,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2760,7 +2760,8 @@ class TramiteDetalleController extends Controller {
             	WHEN iec.nivel_tipo_id > 17 THEN
             	'Alternativa Técnica'
             END AS subsistema,
-            t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id
+            t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id, eid.documento_numero as documento_diplomatico
+            , ei.estadomatricula_inicio_tipo_id as estadomatricula_inicio_tipo_id
             from tramite as t
             inner join tramite_detalle as td on td.tramite_id = t.id
             inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
@@ -2776,6 +2777,7 @@ class TramiteDetalleController extends Controller {
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo as pat on pat.id = e.pais_tipo_id
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (1,9) and d.documento_estado_id = 1
+            left join estudiante_inscripcion_diplomatico as eid on eid.estudiante_inscripcion_id = ei.id
             where td.tramite_estado_id = 1 and td.flujo_proceso_id = ".$flujoProcesoId." and iec.gestion_tipo_id = ".$gestionId."::INT and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
             order by e.paterno, e.materno, e.nombre
         ");
@@ -2810,12 +2812,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,14);
+        $rolPermitido = array(14,16,8,43,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -3114,12 +3116,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,15);
+        $rolPermitido = array(15,16,8,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -3418,12 +3420,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -3827,8 +3829,19 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+            $options = array(
+                'http'=>array(
+                    'method'=>"GET",
+                    'header'=>"Accept-language: en\r\n",
+                    "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                    "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+                )
+            );            
+            $context = stream_context_create($options);
+
             // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -3869,17 +3882,17 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
-		if(empty($activeMenu)){
-			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-		} 
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+		// } 
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
         
         return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonIndex.html.twig', array(
             'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerie('tramite_detalle_diploma_humanistico_impresion_carton_pdf','','','1')->createView(),
@@ -3914,12 +3927,14 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
-		if(empty($activeMenu)){
-			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-		} 
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }        
+        
+        $rolPermitido = array(14,16,8,42,43);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -4036,18 +4051,18 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
         // $activeMenu = 'asds';
 		
-		if(empty($activeMenu)){
-			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-		} 
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+		// } 
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = array(16,8,42);
         
         return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonLoteIndex.html.twig', array(
             'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerieLote('tramite_detalle_diploma_humanistico_impresion_carton_lote_pdf','','','','1')->createView(),
@@ -4177,7 +4192,18 @@ class TramiteDetalleController extends Controller {
                 $response = new Response();
                 $response->headers->set('Content-type', 'application/pdf');
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+
+                $options = array(
+                    'http'=>array(
+                        'method'=>"GET",
+                        'header'=>"Accept-language: en\r\n",
+                        "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                        "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+                    )
+                );            
+                $context = stream_context_create($options);
+
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
                 $response->setStatusCode(200);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
                 $response->headers->set('Pragma', 'no-cache');
@@ -4222,12 +4248,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,14);
+        $rolPermitido = array(14,16,8,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -4535,12 +4561,12 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,13);
+        $rolPermitido = array(13,14,16,8,10,41,42,43);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 

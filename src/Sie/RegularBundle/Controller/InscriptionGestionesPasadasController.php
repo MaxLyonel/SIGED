@@ -39,7 +39,7 @@ class InscriptionGestionesPasadasController extends Controller {
     public function indexAction() {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
-
+        // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -519,8 +519,20 @@ class InscriptionGestionesPasadasController extends Controller {
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
-        $em = $this->getDoctrine()->getManager();
+
+         if($institucion){
+            $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestionselected);
+            
+            if($validacionIniConsolidation){
+                $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+            }else{
+                $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+            }
+
+
+        }else{
+             $nombreIE = ' Insitucion Educativa no existe...';
+        }
         //get the Niveles
 
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');

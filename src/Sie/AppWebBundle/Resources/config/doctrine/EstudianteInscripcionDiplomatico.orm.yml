@@ -1,0 +1,49 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionDiplomatico:
+    type: entity
+    table: estudiante_inscripcion_diplomatico
+    indexes:
+        estudiante_inscripcion_diplomatico_estudiante_inscripcion_idx:
+            columns:
+                - estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: estudiante_inscripcion_diplomatico_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        documentoNumero:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: documento_numero
+        documentoPath:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: documento_path
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

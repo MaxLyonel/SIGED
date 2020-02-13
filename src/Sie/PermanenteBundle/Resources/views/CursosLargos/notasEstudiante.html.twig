@@ -1,0 +1,291 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {#{{form_start(form,{'attr':{'id':'formModulo','class':'form-horizontal form-group'} })}}#}
+        <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+        {#<input type="hidden" name="lstmod" id="lstmod" value="{{ lstmod }}">#}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+
+                    <h3 class="panel-title">Notas Participantes</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="panel-body" id="lstmod">
+                <div class="alert " style="padding:10px">
+                    <h5 class="text-lilac">Datos del Curso</h5>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Subarea</th><td>{{curso.subarea}}</td>
+                        </tr>
+                        <tr>
+                            <th>Programa</th><td>{{curso.programa}}</td>
+
+                        </tr>
+                        <tr>
+                            <th>Especialidad</th><td>{{curso.cursolargo}}</td>
+                        </tr>
+                        <tr>
+                            <th>Nivel de Acreditación</th><td colspan="3">{{curso.acreditacion}}</td>
+                        </tr>
+
+                    </table>
+                    <h5 class="text-info">Datos del Estudiante</h5>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Codigo Rudeal</th><td>{{ estudiante.codigoRude }}</td>
+                            <th>Carnet de Identidad</th><td>{{ estudiante.carnetIdentidad }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estudiante</th><td>{{ estudiante.paterno }} {{ estudiante.materno }} {{ estudiante.nombre }}</td>
+                            {#<th>Fecha de Nacimiento</th><td> {{ estudiante.fechanacimiento }}</td>#}
+                        </tr>
+                    </table>
+                </div>
+
+                    {#<table class="table table-striped">#}
+                        {#<thead>#}
+                            {#<tr>#}
+                                {#<th>codigoRude</th>#}
+                                {#<th>carnetIdentidad</th>#}
+                                {#<th>paterno</th>#}
+                                {#<th>materno</th>#}
+                                {#<th>nombre</th>#}
+                            {#</tr>#}
+                        {#</thead>#}
+                        {#<tbody>#}
+                            {#<tr>#}
+                                {#<td>{{ estudiante.codigoRude }}</td>#}
+                                {#<td>{{ estudiante.carnetIdentidad }}</td>#}
+                                {#<td>{{ estudiante.paterno }}</td>#}
+                                {#<td>{{ estudiante.materno }}</td>#}
+                                {#<td>{{ estudiante.nombre }}</td>#}
+
+                            {#</tr>#}
+                        {#</tbody>#}
+                    {#</table>#}
+
+                {% if lstmod %}
+                <div id="moduloslistaest">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Módulo</th>
+                            <th>Horas</th>
+                            <th>Facilitador</th>
+                          {#   <th>Otros</th> #}
+                            <th> Notas </th>
+                            <th></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for lstmod in lstmod %}
+                            <tr>
+                                <td >{{ loop.index }}</td>
+                                <td >{{ lstmod.modulo }}</td>
+                                <td >{{ lstmod.horas_modulo }}</td>
+                                <td >{{ lstmod.nombre }}</td>
+                              {#   <td>
+                                    {% if ((lstmod.nombre == '') or (lstmod.nombre == null)) %}
+                                RS
+
+                                    {% endif %}
+                                </td> #}
+                                <td>
+                                    {#<form action="{{path('permanente_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">#}
+                                        {#<input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">#}
+                                        {#<input type="hidden" name="idInstitucion" value="{{institucion.id}}">#}
+                                        {#<input type="hidden" name="gestion" value="{{gestion}}">#}
+                                        {#<input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">#}
+                                        {#<input type="hidden" name="idCargo" value="{{maestro.cargoId}}">#}
+                                    {% if lstmod.nombre %}
+                                        <input id="form_nota_{{lstmod.idieco}}" name="form[nota][{{lstmod.idieco}}]" type="number" min="1" max="100" maxlength="3" value="{{lstmod.esnota}}" class="form-control" onblur="rangoNotas(this)" />
+                                        {#<input type="hidden" name="idNotaTipo[]" id="{{ idieco }}" value="{{idieco}}">#}
+                                        {#<button  class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Estado" onclick="elimEstMod({{ lstmod.idieco }},{{ lstmod.esaid }}));">Quitar Inscripcion</button>#}
+                                    {% else %}
+                                        <input id="form_nota_{{lstmod.idieco}}" name="form[nota][{{lstmod.idieco}}]" type="number" min="1" max="100" maxlength="3" value="{{lstmod.esnota}}" class="form-control"  onblur="rangoNotas(this)" />
+
+                                        {#<button  class="btn btn-danger" data-toggle="tooltip" data-placement="top" data-original-title="Estado"  onclick="insEstMod({{ lstmod.idieco }},{{ idinscripcion}},{{ idcurso}});">Inscribir</button>#}
+                                    {% endif %}
+                                    {#</form>#}
+                                </td>
+                                <td>
+
+                                    <form id="studentNota_{{lstmod.idieco}}" method="post">
+                                        <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                                        <input type="hidden" name="form[esinsid]" id="form_esinsid_{{lstmod.idieco}}" value="{{lstmod.esinsid}}">
+                                        <input type="hidden" name="form[esaid]" id="form_esaid_{{lstmod.idieco}}" value="{{lstmod.esaid}}">
+                                        <input type="hidden" name="form[idieco]" id="form_idieco_{{lstmod.idieco}}" value="{{lstmod.idieco}}">
+                                        <input type="hidden" name="form[esnotaid]" id="form_esnotaid_{{lstmod.idieco}}" value="{{lstmod.esnotaid}}">
+                                        <button type="button" class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateNota({{lstmod.idieco}});"><i class="fa fa-save"></i> </button>
+                                    </form>
+
+
+
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    No tiene módulos asignados!!!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-footer">
+                <div class="col-sm-offset-5">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+                    {#<td colspan="2" class="text-right">{{ form_widget(form.guardar) }}</div></td>#}
+
+            </div>
+        </div>
+    </div>
+    {#{{ form_end(form) }}#}
+</div>
+</div>
+
+<script>
+    $('#someInput').on('input', function() {
+        $(this).val() // get the current value of the input field.
+    });
+
+    var insEstMod= function (idieco, idestins, idcurso) {
+
+      //  var formData = $('#formModulo').serialize();
+//        $('#modal').modal('hide');
+        //alert(formData);
+        $.ajax({
+            type: 'post',
+            url: "{{ path('herramienta_per_inscribir_modest') }}",
+            data:({idieco: idieco, idestins: idestins,idcurso:idcurso}),
+            beforeSend: function () {
+
+                $("#moduloslistaest").empty();
+                $("#moduloslistaest").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#moduloslistaest').empty();
+                $('#moduloslistaest').html(data);
+
+            },
+            complete: function () {
+//
+            }
+
+
+        });
+    };
+
+
+
+    var updateNota = function(id){
+        //if(confirm('¡Se actualizará el registro! ¿Desea continuar?')){
+        var nota = $('#form_nota_'+id).val();
+        esinsid = $('#form_esinsid_'+id).val();
+        esaid = $('#form_esaid_'+id).val();
+        idieco = $('#form_idieco_'+id).val();
+        esnotaid = $('#form_esnotaid_'+id).val();
+       // alert(nota);
+        var formData = $('#studentNota_'+id)
+            .append('<input type="hidden" name="form[nota]" id="form_nota" value="'+nota+'">')
+            .append('<input type="hidden" name="form[esinsid]" id="form_esinsid" value="'+esinsid+'">')
+            .append('<input type="hidden" name="form[esaid]" id="form_esaid" value="'+esaid+'">')
+            .append('<input type="hidden" name="form[idieco]" id="form_idieco" value="'+idieco+'">')
+            .append('<input type="hidden" name="form[esnotaid]" id="form_esnotaid" value="'+esnotaid+'">')
+            .serialize();
+//        correo = $('#form_correo_'+id).val();
+//        discapacidadid = $('#form_discapacidad_'+id+' option:selected').val();
+//        tutorid = $('#form_tutor_'+id+' option:selected').val();
+
+//        emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+//        fonoRegex = /^([0-9])*$/;
+//
+//        if(telefono == '' || correo == '' || !emailRegex.test(correo) || !fonoRegex.test(telefono)){
+//            alert('Ingrese datos en los campos requeridos o ajuste a los formatos válidos');
+//            return false;
+//        }
+
+//        formData = $('#studentNota_'+id)
+//            .append('<input type="hidden" name="form[telefono]" id="form_telefono" value="'+telefono+'">')
+//            .append('<input type="hidden" name="form[correo]" id="form_correo" value="'+correo+'">')
+//            .append('<input type="hidden" name="form[discapacidadid]" id="form_discapacidadid" value="'+discapacidadid+'">')
+//            .append('<input type="hidden" name="form[tutorid]" id="form_tutorid" value="'+tutorid+'">')
+//            .serialize();
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('herramienta_per_cursos_largos_update_notas') }}",
+            data: formData,
+            beforeSend: function () {
+                $("#moduloslistaest").empty();
+                $("#moduloslistaest").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+            },
+            success: function (data) {
+                $("#moduloslistaest").empty();
+                $("#moduloslistaest").append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+        //}
+    }
+
+</script>
+
+
+<script type="text/javascript">
+
+
+
+    $('.calendario').datepicker({
+
+        format: 'dd-mm-yyyy',
+
+        todayBtn: 'linked'
+
+    });
+
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+        //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
+    var rangoNotas = function(control){
+        if(control.value == ""){ control.value = 0; }
+        if(control.value < 0){ control.value = 0; }
+        if(control.value > 100){ control.value = 100; }
+    }
+
+</script>

@@ -31,7 +31,7 @@ Sie\AppWebBundle\Entity\RolTipo:
         diminutivo:
             type: string
             nullable: true
-            length: 5
+            length: 8
             fixed: true
             comment: ''
     manyToOne:

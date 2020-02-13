@@ -39,16 +39,13 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-
-
-
             
             <link rel="stylesheet" type="text/css" href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
 
             <!-- START @THEME STYLES -->
             <link href="{{asset('webherramienta/assets/admin/css/reset.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('css/layout.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/plugins.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/themes/blue-gray.theme.css')}}" rel="stylesheet" id="theme">
@@ -56,6 +53,7 @@
             <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
             
             <!--/ END THEME STYLES -->
+            <link href="https://openlayers.org/api/theme/default/style.css" rel="stylesheet">
 
             <!-- START @IE SUPPORT -->
             <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -201,7 +199,7 @@
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
                                         <span class="avatar"><img src="{{asset('webherramienta/img/avatar/35/1.png')}}" class="img-circle" alt="admin"></span>
-                                        <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
+                                        <span class="text hidden-xs hidden-sm text-white">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
                                 </a>
@@ -315,7 +313,7 @@
                     {% endif %}
 
                     {% if app.session.get('roluser') == 9 %}
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -327,7 +325,7 @@
                             <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                             <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
                         </ul>
-                    </li> #}
+                    </li>
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -341,7 +339,7 @@
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
                         </ul>
                     </li>
-                    {#
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -349,10 +347,12 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
+                           
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
+                            
                         </ul>
                     </li>
-                    #}
+                    {% endif %}
                     {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -363,6 +363,7 @@
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
                     </li> #}
+                    
                     <li class="submenu">
                       <a href="javascript:void(0);">
                         <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -402,6 +403,7 @@
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                         {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
+                            <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
                         </ul>
                     </li> #}
                     
@@ -412,11 +414,13 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
+                            {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
+                            {% endif %}
                             <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
                         </ul>
                     </li>
-
+                   
                         {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -453,8 +457,7 @@
                       </ul>
                     </li>
 
-
-                    <li class="submenu">
+                    {# <li class="submenu">
                       <a href="javascript:void(0);">
                         <span class="icon"><i class="fa fa-diamond"></i></span>
                         <span class="text">Gestión</span>
@@ -462,11 +465,11 @@
                       </a>
                       <ul>
                           <li><a href="{{ path('herramienta_findsie_index')}}">Busqueda por SIE</a></li>
-                          {#<li><a href="{{ path('herramienta_newspeciality_index')}}">Registro Especialidad</a></li>#}
+                          <li><a href="{{ path('herramienta_newspeciality_index')}}">Registro Especialidad</a></li>
                           
                           <!--li><a href="{{ path('herramienta_apderado_estudiante_index')}}">Apoderado - Estudiante</a></li-->
                       </ul>
-                    </li>
+                    </li> #}
                     {% endif %}
                     <li class="">
                         <a href="{{path('wf_tramite_index')}}">
@@ -511,8 +514,8 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if  app.session.get('roluser') == 9   %}
-                        {#
+                    {% if  app.session.get('roluser') == 9  or  app.session.get('roluser') == 8 %}
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -521,12 +524,14 @@
                             </a>
                             <ul>
                                 <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Omitidos/Extemporáneos</a></li>
-                                <li><a href="{{ path('inscription_extranjeros_index')}}">Inicial/Primaria</a></li>
+                                <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
+                                {#<li><a href="{{ path('inscription_extranjeros_index')}}">Extranjeros</a></li>
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
+                                #}
                             </ul>
                         </li>
-                        #}
+                        
                     {% endif %}
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
@@ -538,9 +543,27 @@
                             <ul>
                                 <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
                             </ul>
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
                         </li>
                     {% endif %}
 
+                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('regularizacion_cut_index')}}">Nivelaci&oacute;n</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    
 
                     {#
                         <li class="submenu">
@@ -1377,6 +1400,11 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
 
+             <!-- Highcharts Charts -->
+            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+            <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+            <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+            <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
             <!--/ END CORE PLUGINS -->
 
             <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
@@ -1426,7 +1454,8 @@
 
             <!--/ END GOOGLE ANALYTICS -->
 
-            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+           
+
         {% endblock %}
     </body>
     <!--/ END BODY -->

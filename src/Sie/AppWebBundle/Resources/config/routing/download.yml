@@ -1,3 +1,15 @@
+download_estudiantes_nivelacion:
+    path: /listEstudiantesNivelacion/{sie}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listadoEstudiantesNivelacion }
+
+download_estudiantes_nivelacionttg:
+    path: /listEstudiantesNivelacionttg/{sie}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listadoEstudiantesNivelacionttg }
+
+download_tramite_modificacion_calificaciones:
+    path: /tramiteModificacionCalificaciones/{idTramite}
+    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificaciones }
+
 donwload_nnats:
     path: /nnats/{gestion}/{sie}
     defaults: { _controller: SieAppWebBundle:Download:nnats }
@@ -153,3 +165,23 @@ download_archs_olimpiadas_robotica_txt:
 donwload_listainscritosestudiantesolim:
     path: /listainscritosestudiantesolim/{codges}/{coddis}
     defaults: { _controller: SieAppWebBundle:Download:listainscritosestudiantesolim }
+
+donwload_studentHistModification:
+    path:     /downstudentHistModification/{id}/{studentId}
+    defaults: { _controller: SieAppWebBundle:Download:downstudentHistModification }
+
+donwload_studentBthEspecialidades:
+    path:     /downstudentEspecialidades/{ue}/{gestion}/{gradoId}
+    defaults: { _controller: SieAppWebBundle:Download:bthEspecialidades }
+
+donwload_studentBthEspecialidadesEliminadas:
+    path:     /downstudentEspecialidadesEliminadas/{ue}/{gestion}/{gradoId}
+    defaults: { _controller: SieAppWebBundle:Download:bthEspecialidadesEliminadas }
+
+donwload_boletinNivelacionTTGBth:
+    path:     /boletinNivelacionTTGBth/{iecId}/{codue}
+    defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTGBth }
+
+donwload_boletinNivelacionTTEBth:
+    path:     /boletinNivelacionTTEBth/{iecId}/{codue}
+    defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTEBth }    

@@ -43,10 +43,10 @@ class InscriptionExtranjerosController extends Controller {
     **/
     public function fillOptionsInscriptions(){
 
-         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', );
+         $this->arrOptionInscription = array('19' => 'Extranjero', /*'59'=>'Incial/Primaria',*/ );
 
         if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
-            $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
+            // $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
             $this->arrOptionInscription[77] = 'Post Bachillerato';
         }
     }
@@ -56,6 +56,8 @@ class InscriptionExtranjerosController extends Controller {
         $rol_id = $this->session->get('roluser');
 
         $em = $this->getDoctrine()->getManager();
+
+		// return $this->redirectToRoute('principal_web');
 
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -372,7 +374,7 @@ class InscriptionExtranjerosController extends Controller {
             $em->flush();
 
             //add the areas to the student
-            $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestion']);
+            // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestion']);
             //to register the new rude and the user
             $UsuarioGeneracionRude = new UsuarioGeneracionRude();
             $UsuarioGeneracionRude->setUsuarioId($this->session->get('userId'));
@@ -746,12 +748,22 @@ class InscriptionExtranjerosController extends Controller {
         $em->getConnection()->beginTransaction();
         //get the variblees
         $form = $request->get('form');
-
         $aDataStudent = unserialize($form['newdata']);
         $aDataOption = json_decode($aDataStudent['dataOption'],true);
 // dump($aDataOption);die;
 
         try {
+
+            if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestion'])){
+                $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria');
+                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+            }
+            // validation if the ue is over 4 operativo
+            $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestion']);
+            if($operativo >= 4){
+                $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos');
+                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+            }
 
           //validation inscription in the same U.E
           $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($aDataStudent['codigoRude'],$aDataStudent['gestion']);
@@ -925,7 +937,7 @@ class InscriptionExtranjerosController extends Controller {
             $em->persist($studentInscription);
             $em->flush();
             //add the areas to the student
-            $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(),$form['gestion']);
+            // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(),$form['gestion']);
             // save the file and register into DB
             switch ($aDataOption['optionInscription']) {
                 case 19:                           
@@ -1188,7 +1200,20 @@ class InscriptionExtranjerosController extends Controller {
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
+        if($institucion){
+            $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestion);
+            
+            if($validacionIniConsolidation){
+                $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+            }else{
+                $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+            }
+
+
+        }else{
+             $nombreIE = ' Insitucion Educativa no existe...';
+        }
+        
         $em = $this->getDoctrine()->getManager();
         //get the Niveles
 
