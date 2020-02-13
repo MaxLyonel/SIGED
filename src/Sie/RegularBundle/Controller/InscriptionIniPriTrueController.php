@@ -301,7 +301,8 @@ class InscriptionIniPriTrueController extends Controller {
         // dump($newInfInscription);
       }
       // dump($currentLevelStudent);die;
-      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];// dump($newLevelStudent);die;
+      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
+     
 //dump(((str_replace('-','',$newLevelStudent)) ));
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
@@ -312,15 +313,20 @@ class InscriptionIniPriTrueController extends Controller {
          //do the inscription
 
          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-
-
+ 
          if($keyNextLevelStudent >= 0){
            if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
              $message = 'Estudiante No Inscrito, no le puede bajar de curso';
              $this->addFlash('idNoInscription', $message);
              $swCorrectInscription = false;
            }else{
-             //do the inscription
+              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+               //do the inscriptin
+             }else{//dump($newInfInscription);die;
+               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+               $this->addFlash('idNoInscription', $message);
+               $swCorrectInscription = false;
+             }
            }
          }else{
            $message = 'Estudiante ya cuenta con inscripción';
@@ -399,6 +405,14 @@ class InscriptionIniPriTrueController extends Controller {
         }
 
     }///end validation
+    // get the last inscription
+    $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']-1);
+    // validata inscription to the same UE
+    if($form['institucionEducativa']!=$objCurrentInscriptionStudent[0]['sie']){
+        $message = 'Estudiante No inscrito, la Unidad Educativa no le corresponde';
+        $this->addFlash('idNoInscription', $message);
+        $swCorrectInscription = false;
+    }
     //check the inscription
        if($swCorrectInscription){
          //get the id of course
