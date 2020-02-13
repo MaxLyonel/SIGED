@@ -241,7 +241,7 @@ class NewInscriptionIniPriController extends Controller
 	                ->andwhere('iec.gestionTipo = :gestion')
 	                ->andwhere('iec.nivelTipo != :nivel')
 	                ->setParameter('sie', $id)
-	                ->setParameter('gestion', $this->session->get('currentyear') - 1)
+	                ->setParameter('gestion', $this->session->get('currentyear') )
 	                ->setParameter('nivel', '13')
 	                ->orderBy('iec.nivelTipo', 'ASC')
 	                ->distinct()
@@ -313,7 +313,7 @@ class NewInscriptionIniPriController extends Controller
         // get the send values
         $sie = $request->get('sie');
         $idnivel = $request->get('nivelId');
-        $gestionselected = $this->session->get('currentyear') - 1;
+        $gestionselected = $this->session->get('currentyear') ;
 
         //get grado
         $agrados = array();
@@ -366,7 +366,7 @@ class NewInscriptionIniPriController extends Controller
         $sie = $request->get('sie');
         $nivel = $request->get('nivelId');
         $grado = $request->get('gradoId');
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear') ;
 		//get paralelo
         $aparalelos = array();
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
@@ -416,7 +416,7 @@ class NewInscriptionIniPriController extends Controller
         $nivel = $request->get('nivelId');
         $grado = $request->get('gradoId');
         $paralelo = $request->get('paraleloId');
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear') ;
 		//get turno
         $aturnos = array();
 
@@ -469,7 +469,7 @@ class NewInscriptionIniPriController extends Controller
         $grado = $request->get('gradoId');
         $paralelo = $request->get('paraleloId');
         $turno = $request->get('turnoId');
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear') ;
         // get info about student
         $fecNac = $request->get('fecnacfind');
         $paterno = $request->get('paterno');
