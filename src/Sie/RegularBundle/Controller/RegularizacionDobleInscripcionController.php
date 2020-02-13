@@ -97,8 +97,11 @@ class RegularizacionDobleInscripcionController extends Controller {
 
             $arrayEstados = [];
             $estadosFinales = [5,26,37,55,56,57,58,11,28];
+            $estadosFinalSinNota = [56,57,58,26];
+            $estadosFinalConNota = [5,55,37,11,28,5,55];
             $tieneEstadoFinal = false;
             $arrayInscripciones = array();
+            $arrayMatriculaLista = array();
 
             foreach ($ins as $i) {
 
@@ -116,68 +119,95 @@ class RegularizacionDobleInscripcionController extends Controller {
                 $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
                 $inscripcionActual['estadomatriculaname'] = $i['estadomatricula'];
                 $inscripcionActual['cantidadTotal'] = count($inscripcionActual['cuantitativas'])*$inscripcionActual['operativo'];
+                $inscripcionActual['cantidadNotaFaltante'] = (count($inscripcionActual['cuantitativas'])*5)-$inscripcionActual['cantidadRegistrados'];
 
+                if ((in_array($i['estadomatriculaId'], $estadosFinalConNota) and $inscripcionActual['cantidadNotaFaltante'] == 0) or (in_array($i['estadomatriculaId'], $estadosFinalSinNota))) {
+                  $inscripcionActual['estadoFinal'] = true;
+                } else {
+                  $inscripcionActual['estadoFinal'] = false;
+                }
+
+
+                if ($inscripcionActual['cantidadRegistrados'] == 0){
+                  $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleSinNota($inscripcionActual['gestion']);
+                } else {
+                  $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion']);
+                }
+
+                $arrayMatriculaLista = $arrayMatriculaLista + $inscripcionActual['estadosCambiar'];
                 $arrayInscripciones[] = $inscripcionActual;
                 $arrayEstados[] = $i['estadomatriculaId'];
 
-                // VERIFICAMOS SI ALGUNA DE LAS INSCRIPCIONES YA CUENTA CON ESTADO FINAL
-                if (in_array($i['estadomatriculaId'], $estadosFinales)) {
-                    $tieneEstadoFinal = true;
-                }
+                // // VERIFICAMOS SI ALGUNA DE LAS INSCRIPCIONES YA CUENTA CON ESTADO FINAL
+                // // if (in_array($i['estadomatriculaId'], $estadosFinales)) {
+                // //     $tieneEstadoFinal = true;
+                // // }
+                // if ((in_array($i['estadomatriculaId'], $estadosFinalConNota) and $inscripcionActual['cantidadNotaFaltante'] == 0) or (in_array($i['estadomatriculaId'], $estadosFinalSinNota))) {
+                //     $tieneEstadoFinal = true;
+                // }
             }
             
-            $cont = 0;
-            foreach ($arrayInscripciones as $ai) {
-
-                // VERIFICAMOS SI EL ESTADO DE LA INSCRIPCION NO ES UN ESTADO FINAL
-                // PARA CALCULAR LOS OTRSO POSIBLES ESTADOS A MODIFICAR
-                if (!in_array($ai['estadomatriculaId'], $estadosFinales)) {
-
-                    // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
-                    if ($ai['cantidadRegistrados'] > 0 and $ai['cantidadRegistrados'] < $ai['cantidadTotal']) {
-
-                        if ($tieneEstadoFinal) {
-                            $estadosdisp = [9]; // RETIRO TRASLADO
-                        }else{
-                            // VERIFICAMOS SI LA INSCRIPCION ACTUAL TIENE MAS CALIFICACIONES QUE LAS DEMAS
-                            $mayor = false;
-                            for ($i = 0; $i < count($arrayInscripciones); $i++) { 
-                                if ( $ai['cantidadRegistrados'] > $arrayInscripciones[$i]['cantidadRegistrados']) {
-                                    $mayor = true;
-                                }else{
-                                    if ($ai['idInscripcion'] != $arrayInscripciones[$i]['idInscripcion']) {
-                                        $mayor = false;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            // SI LA INSCRIPCION TIENE MAS CALIFICACIONES QUE LAS DEMAS
-                            // ENTONCES PUEDE CAMBIAR AL ESTADO FINAL RETIRADO ABANDONO
-                            if ($mayor) {
-                                $estadosdisp = [10]; // RETIRO ABANDONO
-                            }else{
-                                $estadosdisp = [9]; // RETIRO TRASLADO
-                            }
-                        }
-
-                    }else{
-                        // SI NO TIENE CALIFICACIONES SOLO PUEDE CAMBIAR A NO INCORPORADO
-                        $estadosdisp = [6]; // NO INCORPORADO
-                    }
-                }else{
-                    $estadosdisp = [$ai['estadomatriculaId']]; //  AGREGAMOS EL MISMO ESTADO DE MATRICULA
-                }
-                
-
-                $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$estadosdisp));
-                foreach ($estados as $e) {
-                    $arrayInscripciones[$cont]['estadosCambiar'][] = array('id'=>$e->getId(), 'estadomatricula'=>$e->getEstadomatricula());
-                }
-                
-                $cont++;
+            //$arrayInscripciones['estadoMatriculaLista'] = array_unique($arrayInscripciones['estadoMatriculaLista']);
+            $estadosLista = $this->getEstadoMatriculaReglaLista(implode(',',array_column($arrayMatriculaLista,'id')));
+            $estadosListaArray = array();
+            foreach ($estadosLista as $est) {
+              $estadosListaArray[$est['estadomatricula_tipo_id']][] = $est['alterno_estadomatricula_tipo_id'];
             }
+            $estadosListaJson = 'var estadosListaArray = '.json_encode($estadosListaArray).';';
+            //dump($arrayInscripciones);dump($arrayMatriculaLista);dump($estadosLista);dump($estadosListaArray);dump($estadosListaJson);;die;
+            //dump($arrayInscripciones);dump($arrayMatriculaLista);dump($estados);die;
+            
+            // $cont = 0;
+            // foreach ($arrayInscripciones as $ai) {
 
+            //     // VERIFICAMOS SI EL ESTADO DE LA INSCRIPCION NO ES UN ESTADO FINAL
+            //     // PARA CALCULAR LOS OTRSO POSIBLES ESTADOS A MODIFICAR
+            //     if (!in_array($ai['estadomatriculaId'], $estadosFinales)) {
+
+            //         // VERIFICAMOS SI LA INSCRIPCION TIENE CALIFICACIONES
+            //         if ($ai['cantidadRegistrados'] > 0 and $ai['cantidadRegistrados'] < $ai['cantidadTotal']) {
+
+            //             if ($tieneEstadoFinal) {
+            //                 $estadosdisp = [9]; // RETIRO TRASLADO
+            //             }else{
+            //                 // VERIFICAMOS SI LA INSCRIPCION ACTUAL TIENE MAS CALIFICACIONES QUE LAS DEMAS
+            //                 $mayor = false;
+            //                 for ($i = 0; $i < count($arrayInscripciones); $i++) { 
+            //                     if ( $ai['cantidadRegistrados'] > $arrayInscripciones[$i]['cantidadRegistrados']) {
+            //                         $mayor = true;
+            //                     }else{
+            //                         if ($ai['idInscripcion'] != $arrayInscripciones[$i]['idInscripcion']) {
+            //                             $mayor = false;
+            //                             break;
+            //                         }
+            //                     }
+            //                 }
+
+            //                 // SI LA INSCRIPCION TIENE MAS CALIFICACIONES QUE LAS DEMAS
+            //                 // ENTONCES PUEDE CAMBIAR AL ESTADO FINAL RETIRADO ABANDONO
+            //                 if ($mayor) {
+            //                     $estadosdisp = [10]; // RETIRO ABANDONO
+            //                 }else{
+            //                     $estadosdisp = [9]; // RETIRO TRASLADO
+            //                 }
+            //             }
+
+            //         }else{
+            //             // SI NO TIENE CALIFICACIONES SOLO PUEDE CAMBIAR A NO INCORPORADO
+            //             $estadosdisp = [6]; // NO INCORPORADO
+            //         }
+            //     }else{
+            //         $estadosdisp = [$ai['estadomatriculaId']]; //  AGREGAMOS EL MISMO ESTADO DE MATRICULA
+            //     }
+                
+
+            //     $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$estadosdisp));
+            //     foreach ($estados as $e) {
+            //         $arrayInscripciones[$cont]['estadosCambiar'][] = array('id'=>$e->getId(), 'estadomatricula'=>$e->getEstadomatricula());
+            //     }
+                
+            //     $cont++;
+            // }
 
             // dump($arrayInscripciones);die;
 
@@ -185,8 +215,8 @@ class RegularizacionDobleInscripcionController extends Controller {
 
             return $this->render('SieRegularBundle:RegularizacionDobleInscripcion:result.html.twig',array(
               'arrayInscripciones'=>$arrayInscripciones,
-              // 'estados'=>$estados,
-              'gestion'=>$gestion
+              'estados'=>$estadosListaJson,
+              'gestion'=>$gestion,
             ));
 
         } catch (Exception $ex) {
@@ -194,10 +224,41 @@ class RegularizacionDobleInscripcionController extends Controller {
         }
     }
 
-    public function guardarAction(Request $request){
+    public function getEstadoMatriculaDisponibleConNota($gestion) {
+      $em = $this->getDoctrine()->getManager();
+      $queryEntidad = $em->getConnection()->prepare("
+          select * from estadomatricula_tipo where nota_presentacion_tipo_id in (1,3) and fin_proceso_educativo = false and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
+      ");
+      $queryEntidad->execute();
+      $objEntidad = $queryEntidad->fetchAll();
+      return $objEntidad;
+    }
+
+    public function getEstadoMatriculaDisponibleSinNota($gestion) {
+      $em = $this->getDoctrine()->getManager();
+      $queryEntidad = $em->getConnection()->prepare("
+          select * from estadomatricula_tipo where nota_presentacion_tipo_id in (2,3) and fin_proceso_educativo = false and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
+      ");
+      $queryEntidad->execute();
+      $objEntidad = $queryEntidad->fetchAll();
+      return $objEntidad;
+    }
+
+    public function getEstadoMatriculaReglaLista($ids) {
+      $em = $this->getDoctrine()->getManager();
+      $queryEntidad = $em->getConnection()->prepare("
+          select estadomatricula_tipo_id, alterno_estadomatricula_tipo_id from estadomatricula_regla where esactivo = true and estadomatricula_tipo_id in (".$ids.") order by alterno_estadomatricula_tipo_id
+      ");
+      $queryEntidad->execute();
+      $objEntidad = $queryEntidad->fetchAll();
+      return $objEntidad;
+    }
+
+    public function guardarAction(Request $request){               
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
         try {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
 
             // $defaultController = new DefaultCont();
             // $defaultController->setContainer($this->container);
@@ -324,9 +385,14 @@ class RegularizacionDobleInscripcionController extends Controller {
             // }
 
             //set new ESTADOS
-            $response = $this->validateEstadoStudent($request);
+            // $response = $this->validateEstadoStudent($request);
 
-            $em->getConnection()->commit();
+            $response = $this->validaEstadoInscripcionEstudiante($request);
+            if($response == false){
+              return new JsonResponse(array('mensaje'=>'No puede existir la asignación de estados que intenta registrar para el estudiante '.$rude.', ','typeMessage'=>'error'));
+            } 
+
+            //$em->getConnection()->commit();
             //verifcatiokn
             
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[0]);
@@ -341,7 +407,7 @@ class RegularizacionDobleInscripcionController extends Controller {
 
             $objValidationProcess = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$rude, 'validacionReglaTipo'=>6));
 
-            if($response == 'done'){
+            if($response == false){
               $message = 'Este caso no corresponde.';
               $this->addFlash('warning', $message);
               return new JsonResponse(array('mensaje'=> $message, 'typeMessage'=>'warning'));
@@ -363,6 +429,33 @@ class RegularizacionDobleInscripcionController extends Controller {
         }
     }
 
+    private function validaEstadoInscripcionEstudiante($request){
+      $estadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
+        $codigoRude = $request->get('rude');
+        $estadoMatriculaReglaLista = $this->getEstadoMatriculaReglaLista(implode(',',$estadoMatriculaNuevo));
+        $estadoMatriculaReglaListaArray = array();
+        foreach ($estadoMatriculaReglaLista as $est) {
+          $estadoMatriculaReglaListaArray[$est['estadomatricula_tipo_id']][] = $est['alterno_estadomatricula_tipo_id'];
+        }
+        //dump($estadoMatriculaNuevo[0]);dump($estadoMatriculaReglaLista);dump($estadoMatriculaReglaListaArray);
+
+        $c = true;
+        $cc = false;
+        foreach ($estadoMatriculaNuevo as $estNue) {
+          if($c == true){
+            $cc = false;
+            foreach ($estadoMatriculaReglaListaArray[$estNue] as $est) {
+              if($estNue == $est){
+                  $cc = true;
+              }
+            }
+            if($cc == false){
+              $c = false;
+            }
+          }
+        }
+        return $c;
+    }
 
       private function validateEstadoStudent($request){
       // Create DB conexxion
