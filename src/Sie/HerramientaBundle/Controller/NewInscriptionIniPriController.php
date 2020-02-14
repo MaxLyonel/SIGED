@@ -452,7 +452,6 @@ class NewInscriptionIniPriController extends Controller
      *
      */
     public function doInscriptioninipriAction(Request $request) {
-
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -476,6 +475,9 @@ class NewInscriptionIniPriController extends Controller
         $localidad = $request->get('localidad');
         $lugarNacTipoId = $request->get('lugarNacTipoId');
         $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
+        $carnet = $request->get('cifind');
+        $complemento = $request->get('complementofind');
+        $expedidoId = $request->get('expedidoIdfind');
 
         $withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
 

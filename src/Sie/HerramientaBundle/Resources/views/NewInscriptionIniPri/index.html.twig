@@ -453,6 +453,12 @@
         				this.buscando = false;
         				return;
 					}
+					if (typeof this.dataNewStudent.complementofind === "undefined") {
+					  this.dataNewStudent.complementofind = '';
+					}
+					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
+					  this.dataNewStudent.expedidoIdfind = 0;
+					}					
 				
 					
                     axios.get(Routing.generate('newinscriptionInipri_checksegipstudent', this.dataNewStudent ))
