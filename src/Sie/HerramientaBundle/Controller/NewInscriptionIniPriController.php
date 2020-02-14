@@ -605,7 +605,7 @@ class NewInscriptionIniPriController extends Controller
                 
                 $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
                 $query->bindValue(':sie', $sie);            
-                $query->bindValue(':gestion', $gestion+1);
+                $query->bindValue(':gestion', $gestion);
                 $query->execute();
                 $codigorude = $query->fetchAll();
 
