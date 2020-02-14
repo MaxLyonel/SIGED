@@ -119,7 +119,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                 $inscripcionActual['estadomatriculaId'] = $i['estadomatriculaId'];
                 $inscripcionActual['estadomatriculaname'] = $i['estadomatricula'];
                 $inscripcionActual['cantidadTotal'] = count($inscripcionActual['cuantitativas'])*$inscripcionActual['operativo'];
-                $inscripcionActual['cantidadNotaFaltante'] = (count($inscripcionActual['cuantitativas'])*5)-$inscripcionActual['cantidadRegistrados'];
+                $inscripcionActual['cantidadNotaFaltante'] = (count($inscripcionActual['cuantitativas'])*4)-$inscripcionActual['cantidadRegistrados'];
 
                 if ((in_array($i['estadomatriculaId'], $estadosFinalConNota) and $inscripcionActual['cantidadNotaFaltante'] == 0) or (in_array($i['estadomatriculaId'], $estadosFinalSinNota))) {
                   $inscripcionActual['estadoFinal'] = true;
@@ -134,7 +134,9 @@ class RegularizacionDobleInscripcionController extends Controller {
                   $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion']);
                 }
 
-                $arrayMatriculaLista = $arrayMatriculaLista + $inscripcionActual['estadosCambiar'];
+                //$arrayMatriculaLista = $arrayMatriculaLista + $inscripcionActual['estadosCambiar'];
+                $arrayMatriculaLista = array_merge($arrayMatriculaLista, $inscripcionActual['estadosCambiar']);
+                //dump($arrayMatriculaLista);
                 $arrayInscripciones[] = $inscripcionActual;
                 $arrayEstados[] = $i['estadomatriculaId'];
 
