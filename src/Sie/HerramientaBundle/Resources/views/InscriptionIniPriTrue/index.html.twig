@@ -56,11 +56,12 @@
         </div>
     </div>
 
-       <div class="alert alert-warning alert-dismissible" role="alert">
+       <!-- <div class="alert alert-warning alert-dismissible" role="alert">
            <strong> Observaci&oacute;n!  Después de realizar la inscripción, debe actualizar los datos en el formulario RUDE </strong>
-       </div>
+       </div> -->
     <div class="row">
                     <div class="col-xs-12 col-lg-12">
+                        {% if enableoption %}
                         <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
                                 <i class="fa fa-search"></i> Inserte Rude
@@ -98,6 +99,11 @@
                                 {{form_end(form)}}
                             </div>
                         </div>
+                        {% else %}
+                        <div class="panel-body">
+                            <div class="alert alert-warning"> <i class="fa fa-warning"></i> {{message}}</div>
+                        </div>
+                        {% endif %}
 
                     </div>
                 </div>
