@@ -292,20 +292,22 @@ class DefaultController extends Controller {
                 //$sysbutton = true;
                 //$layout = 'layoutHerramientaAlternativa.html.twig';
                 //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                $sysname = 'PROCESOS';
+
+                // $sysname = 'PROCESOS';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutProcesos.html.twig';
+                // $this->session->set('pathSystem', "SieProcesosBundle");
+                // break;
+
+                $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
-                $layout = 'layoutProcesos.html.twig';
-                $this->session->set('pathSystem', "SieProcesosBundle");
+                $layout = 'layoutRegular.html.twig';
+                $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
                 break;
-
-                //$sysname = 'REGULAR';
-                //$sysporlet = 'blue';
-                //$sysbutton = true;
-                //$layout = 'layoutRegular.html.twig';
-                //$this->session->set('pathSystem', "SieRegularBundle");
-                //$this->session->set('sistemaid', 1);
-                //break;
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
