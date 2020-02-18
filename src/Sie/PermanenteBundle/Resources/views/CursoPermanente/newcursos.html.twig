@@ -51,8 +51,11 @@ $.ajax({
 type: 'post',
 data: formData,
 url: "{{ path('herramienta_per_add_curso_nuevo') }}",
-beforeSend: function () {},
+beforeSend: function () {
+	$("#menestado").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+},
 success: function (data) {
+	$("#menestado").empty();
 $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + data.mensaje + "</strong></div>");
 if (data.reinicio == true) {
 window.location.href = Routing.generate('herramienta_permanente_admin');

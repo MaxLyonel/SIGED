@@ -14,7 +14,7 @@ Sie\AppWebBundle\Entity\PermanenteCursocortoTipo:
         cursocorto:
             type: string
             nullable: true
-            length: null
+            length: 120
             fixed: false
             comment: ''
         obs:
@@ -22,5 +22,9 @@ Sie\AppWebBundle\Entity\PermanenteCursocortoTipo:
             nullable: true
             length: null
             fixed: false
+            comment: ''
+        habilitado:
+            type: boolean
+            nullable: true
             comment: ''
     lifecycleCallbacks: {  }
