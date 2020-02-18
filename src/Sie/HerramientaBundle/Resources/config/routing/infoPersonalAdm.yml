@@ -95,3 +95,7 @@ herramienta_info_personal_adm_segip_verificar_persona:
 herramienta_info_personal_adm_persona_datos:
     path:     /registrarPersona
     defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:registrarPersona" }
+
+herramienta_info_personal_adm_persona_segip:
+    path:     /validarAdmSegip
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:validarAdmSegip" }

@@ -40,6 +40,23 @@ class NewInscriptionIniPriController extends Controller
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
+		$enableoption = true; 
+		$message = ''; 
+        // this is to check if the ue has registro_consolidacion
+        if($this->session->get('roluser')==9){
+
+        	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+        	));
+        	
+	        if(!$objRegConsolidation){
+	            $status = 'error';
+				$code = 400;
+				$message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
+				$enableoption = false; 
+	        }
+        }       
+        
         $arrExpedido = array();
          // this is to the new person
 	      $objExpedido = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
@@ -48,9 +65,11 @@ class NewInscriptionIniPriController extends Controller
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
-       	return $this->render('SieHerramientaBundle:NewInscriptionIniPri:index.html.twig', array(
+       	return $this->render($this->session->get('pathSystem') .':NewInscriptionIniPri:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
        		'allowwithoutci' => $userAllowedOnwithoutCI,
+       		'enableoption' => $enableoption,
+       		'message' => $message,
                // ...
         ));
     }
@@ -256,7 +275,7 @@ class NewInscriptionIniPriController extends Controller
 	        }else{
 	        	$status = 'error';
 				$code = 400;
-				$message = "no tiene level";
+				$message = "Información no consolidada - no tiene level";
 				$swprocess = false; 
 				$nombreIE = false; 
 	        }
@@ -452,7 +471,6 @@ class NewInscriptionIniPriController extends Controller
      *
      */
     public function doInscriptioninipriAction(Request $request) {
-
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -476,6 +494,9 @@ class NewInscriptionIniPriController extends Controller
         $localidad = $request->get('localidad');
         $lugarNacTipoId = $request->get('lugarNacTipoId');
         $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
+        $carnet = $request->get('cifind');
+        $complemento = $request->get('complementofind');
+        $expedidoId = $request->get('expedidoIdfind');
 
         $withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
 
@@ -605,7 +626,7 @@ class NewInscriptionIniPriController extends Controller
                 
                 $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
                 $query->bindValue(':sie', $sie);            
-                $query->bindValue(':gestion', $gestion+1);
+                $query->bindValue(':gestion', $gestion);
                 $query->execute();
                 $codigorude = $query->fetchAll();
 

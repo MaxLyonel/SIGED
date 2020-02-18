@@ -21,7 +21,7 @@
     <!--/ End page header -->
     <div class="body-content animated fadeIn">
         
-        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Ratificar Personal Docente', 'gestion': gestion_aux,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Ratificar maestro Docente', 'gestion': gestion_aux,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
 
         <div class="row">
             <div class="col-md-12">
@@ -136,6 +136,58 @@
             </div>
         </div>
 
+        {% if maestro_segip_obs is not empty %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel rounded shadow panel-warning">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Maestros observados - SEGIP (gestión {{ gestion_aux - 1 }})</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Carnet de Identidad</th>
+                                        <th>Complemento</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>Nombre(s)</th>
+                                        <th>Fecha de Nacimiento</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for maestro in maestro_segip_obs %}
+                                        {% set persona = maestro.persona %}
+                                        {% set formacion = maestro.formacionTipo %} 
+                                        <tr>
+                                            <td data-title="N°">{{ loop.index }}</td>
+                                            <td data-title="Carnet">{{ persona.carnet }}</td>
+                                            <td data-title="Carnet">{{ persona.complemento }}</td>
+                                            <td data-title="Paterno">{{ persona.paterno }}</td>
+                                            <td data-title="Materno">{{ persona.materno }}</td>
+                                            <td data-title="Nombre(s)">{{ persona.nombre }}</td>
+                                            <td data-title="FechaNac">{{ persona.fechaNacimiento|date('d-m-Y') }}</td>
+                                            <td data-title="Acciones">
+                                                <form action="{{path('herramienta_info_maestro_persona_segip')}}" method="post">
+                                                    <input type="hidden" id="form_persona" name="form[personaId]" value="{{persona.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel rounded shadow panel-primary">
@@ -184,7 +236,7 @@
                                                     </td>
                                                 </tr>
                                             {% endfor %}
-                                            <tr><td colspan="9"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-primary" value="Enviar Datos"></div></td></tr>
+                                            <tr><td colspan="10"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-primary" value="Enviar Datos"></div></td></tr>
                                         </tbody>
                                     </table>
                                 </form>

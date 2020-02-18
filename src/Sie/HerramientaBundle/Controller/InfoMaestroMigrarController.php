@@ -119,6 +119,23 @@ class InfoMaestroMigrarController extends Controller {
             $cargosArray[$c->getId()] = $c->getId();
         }
 
+        $query = $em->createQuery(
+            'SELECT mi, per, ft FROM SieAppWebBundle:MaestroInscripcion mi
+                INNER JOIN mi.persona per
+                INNER JOIN mi.formacionTipo ft
+                WHERE mi.institucioneducativa = :idInstitucion
+                AND mi.gestionTipo = :gestion
+                AND mi.cargoTipo IN (:cargos)
+                AND mi.esVigenteAdministrativo = :esvigente
+                AND per.segipId <> :segip
+                ORDER BY per.paterno, per.materno, per.nombre')
+            ->setParameter('idInstitucion', $institucion)
+            ->setParameter('gestion', $request->getSession()->get('currentyear') - 1)
+            ->setParameter('cargos', $cargosArray)
+            ->setParameter('esvigente', 't')
+            ->setParameter('segip', 1);
+        $maestro_segip_obs = $query->getResult();
+
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
 
         $query = $repository->createQueryBuilder('mi')
@@ -225,21 +242,22 @@ class InfoMaestroMigrarController extends Controller {
 
         if (!$activar_acciones) {
             return $this->render($this->session->get('pathSystem') . ':InfoMaestro:index.html.twig', array(
-                        'maestro' => $maestro,
-                        'institucion' => $institucion,
-                        'gestion' => $gestion,
-                        'activar_acciones' => $activar_acciones,
-                        'maestro_no_idioma' => $maestro_no_idioma,
+                'maestro' => $maestro,
+                'institucion' => $institucion,
+                'gestion' => $gestion,
+                'activar_acciones' => $activar_acciones,
+                'maestro_no_idioma' => $maestro_no_idioma,
             ));
         }
         else {
             return $this->render($this->session->get('pathSystem') . ':InfoMaestro:index_migrar.html.twig', array(
-                        'maestro' => $maestro,
-                        'institucion' => $institucion,
-                        'gestion' => $gestion,
-                        'maestro_aux' => $maestro_aux,
-                        'gestion_aux' => $request->getSession()->get('currentyear'),
-                        'activar_acciones' => $activar_acciones,
+                'maestro' => $maestro,
+                'institucion' => $institucion,
+                'gestion' => $gestion,
+                'maestro_aux' => $maestro_aux,
+                'gestion_aux' => $request->getSession()->get('currentyear'),
+                'activar_acciones' => $activar_acciones,
+                'maestro_segip_obs' => $maestro_segip_obs
             ));
         }
     }
@@ -373,7 +391,7 @@ class InfoMaestroMigrarController extends Controller {
 
     }
 
-     public function ratificarMaestroCurrentAction(Request $request) {
+    public function ratificarMaestroCurrentAction(Request $request) {
         $form = $request->get('ratificarMaestroG');
 
         $sie = $form['sie'];
@@ -383,6 +401,44 @@ class InfoMaestroMigrarController extends Controller {
         $request->getSession()->set('idGestion', $gestion);
 
         return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+    }
+
+    public function validarMaestroSegipAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['personaId']);
+        
+        if($persona){
+            $datos = array(
+                'complemento'=>$persona->getComplemento(),
+                'primer_apellido'=>$persona->getPaterno(),
+                'segundo_apellido'=>$persona->getMaterno(),
+                'nombre'=>$persona->getNombre(),
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+            );
+            if($persona->getCarnet()){
+                $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnet(),$datos,'prod','academico');
+
+                if($resultadoPersona){
+                    $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la persona se validaron correctamente con SEGIP.";
+                    $persona->setSegipId(1);
+                    $em->persist($persona);
+                    $em->flush();
+                    $this->addFlash('updateOk', $mensaje);
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP. Debe registrar a la maestra o maestro como \"Nueva(o)\".";
+                    $this->addFlash('updateError', $mensaje);
+                }                
+            } else {
+                $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de la persona.";
+                $this->addFlash('updateError', $mensaje);
+            }
+        } else {
+            $mensaje = "No se realizó la validación con SEGIP. No existe información de la persona.";
+            $this->addFlash('updateError', $mensaje);
+        }
+
+        return $this->redirect($this->generateUrl('herramienta_info_maestro_migrar_index'));
     }
 
 }
