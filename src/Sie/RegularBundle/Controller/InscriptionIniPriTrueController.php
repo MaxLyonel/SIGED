@@ -134,7 +134,7 @@ class InscriptionIniPriTrueController extends Controller {
             $form['codigoRude'] = $request->get('codigoRude');
         }
 
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
 
         //check if the student exists
         if ($student) {
