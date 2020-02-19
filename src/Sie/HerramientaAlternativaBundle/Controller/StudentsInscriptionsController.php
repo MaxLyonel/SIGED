@@ -1223,7 +1223,6 @@ class StudentsInscriptionsController extends Controller {
         //get the students age
         $arrYearStudent =$this->get('funciones')->getTheCurrentYear($arrStudent['fecNac'], '30-6-'.date('Y'));
         $yearStudent = $arrYearStudent['age'];
-        
         //validate the humanisticos
         // if($objInstitucioneducativaCursoStudent->getNivelTipo()->getId()==15){
         if($aInfoUeducativa['ueducativaInfoId']['nivelId']==15){
@@ -1269,7 +1268,7 @@ class StudentsInscriptionsController extends Controller {
           }
 
         } else{
-            if(!($yearStudent>=16)){
+            if(!($yearStudent>=15)){
               $validateYear=true;
             }
         }//end first if - validate the humanisticos
