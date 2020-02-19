@@ -440,22 +440,31 @@ class RegularizacionDobleInscripcionController extends Controller {
           $estadoMatriculaReglaListaArray[$est['estadomatricula_tipo_id']][] = $est['alterno_estadomatricula_tipo_id'];
         }
         //dump($estadoMatriculaNuevo[0]);dump($estadoMatriculaReglaLista);dump($estadoMatriculaReglaListaArray);
-
+        //dump($estadoMatriculaNuevo);dump($estadoMatriculaReglaLista);die;
         $c = true;
         $cc = false;
-        foreach ($estadoMatriculaNuevo as $estNue) {
-          if($c == true){
-            $cc = false;
-            foreach ($estadoMatriculaReglaListaArray[$estNue] as $est) {
-              if($estNue == $est){
-                  $cc = true;
+        //dump($estadoMatriculaNuevo);
+        foreach ($estadoMatriculaNuevo as $estNueRec) {
+          foreach ($estadoMatriculaNuevo as $estNue) {
+            if($estNueRec != $estNue){
+              //dump($estNueRec);
+              if($c == true){
+                $cc = false;
+                //dump($estadoMatriculaReglaListaArray[$estNue]);
+                foreach ($estadoMatriculaReglaListaArray[$estNue] as $est) {
+                  if($estNueRec == $est){
+                      $cc = true;
+                  }
+                  //dump($estNueRec."-".$est."-".$cc);
+                }
+                if($cc == false){
+                  $c = false;
+                }
               }
-            }
-            if($cc == false){
-              $c = false;
             }
           }
         }
+        //dump($c);die;
         return $c;
     }
 

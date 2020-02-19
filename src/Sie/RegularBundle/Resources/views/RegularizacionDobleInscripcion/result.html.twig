@@ -77,6 +77,7 @@
                 <table class="table alert-info">
                     <tr>
                         {# if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 11 and notas.estadomatriculaId != 28 and notas.estadomatriculaId != 26 and notas.estadomatriculaId != 37 and notas.estadomatriculaId != 55 and notas.estadomatriculaId != 56 and notas.estadomatriculaId != 57 and notas.estadomatriculaId != 58  and  notas.estadomatriculaId != 4 #}
+                        {# if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 55 #}
                         {% if notas.estadoFinal == false %}
                             <th>Actualizar estado de matrícula a:</th>
                             <td>
@@ -284,9 +285,25 @@
                         var estadosSeleccionados = "";
                         for (var i=0; i < estMatNue.length; i++){
                             if(estadosSeleccionados == ""){
-                                estadosSeleccionados = estMatNue[i].options[estMatNue[i].selectedIndex].text;   
+                                if (estMatNue[i].tagName == "SELECT"){
+                                    estadosSeleccionados = estMatNue[i].options[estMatNue[i].selectedIndex].text;
+                                } else {
+                                    if (estMatNue[i].tagName == "INPUT" && estMatNue[i].tagName == "hidden"){
+                                        estadosSeleccionados = "PROMOVIDO";
+                                    } else {
+                                        estadosSeleccionados = estMatNue[i].value;
+                                    }
+                                }                                   
                             } else {
-                                estadosSeleccionados = estadosSeleccionados + " - " + estMatNue[i].options[estMatNue[i].selectedIndex].text; 
+                                if (estMatNue[i].tagName == "SELECT"){
+                                    estadosSeleccionados = estadosSeleccionados + " - " + estMatNue[i].options[estMatNue[i].selectedIndex].text; 
+                                } else {
+                                    if (estMatNue[i].tagName == "INPUT" && estMatNue[i].type == "hidden"){
+                                        estadosSeleccionados = estadosSeleccionados + " - " + "PROMOVIDO";
+                                    } else {
+                                        estadosSeleccionados = estadosSeleccionados + " - " + estMatNue[i].value;
+                                    }
+                                }
                             }                                           
                         } 
                         alert("No puede existir la asignación de estados ("+estadosSeleccionados+") para un estudiante");
