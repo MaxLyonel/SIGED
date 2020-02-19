@@ -221,7 +221,7 @@ class InscriptionIniPriTrueController extends Controller {
                  if($this->session->get('roluser')==9){
                         $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($codigoRude,$gestionIns-1);
 
-                        dump($objCurrentInscriptionStudent);
+                        // dump($objCurrentInscriptionStudent);
                         if($this->session->get('ie_id')!=$objCurrentInscriptionStudent[0]['sie']){
 
                            $formOmitido = $formOmitido ->add('messageomitidos', 'hidden', array('label'=>'...','attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control' )));
