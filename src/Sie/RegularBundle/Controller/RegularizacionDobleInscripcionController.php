@@ -226,6 +226,16 @@ class RegularizacionDobleInscripcionController extends Controller {
         }
     }
 
+    public function getEstadoMatriculaFinProcesoEducativo() {
+      $em = $this->getDoctrine()->getManager();
+      $queryEntidad = $em->getConnection()->prepare("
+          select * from estadomatricula_tipo where fin_proceso_educativo = true 
+      ");
+      $queryEntidad->execute();
+      $objEntidad = $queryEntidad->fetchAll();
+      return $objEntidad;
+    }
+
     public function getEstadoMatriculaDisponibleConNota($gestion) {
       $em = $this->getDoctrine()->getManager();
       $queryEntidad = $em->getConnection()->prepare("
@@ -394,10 +404,37 @@ class RegularizacionDobleInscripcionController extends Controller {
               return new JsonResponse(array('mensaje'=>'No puede existir la asignación de estados que intenta registrar para el estudiante '.$rude.', ','typeMessage'=>'error'));
             } 
 
+            //dump($request);die;
+
+            $arrEstudianteEstado = $request->get('estadoMatriculaActual');
+            $arrIdInscripcion = $request->get('arrIdInscripcion');
+            $arrEstadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
+            $estadoMatriculaFinProcesoEducativo = $this->getEstadoMatriculaFinProcesoEducativo();
+            $listaEstadoMatriculaFinProcesoEducativo = array_column($estadoMatriculaFinProcesoEducativo,'id');
+
+            foreach ($arrEstudianteEstado as $key => $estado) {
+              // get ids to change the estado
+              //if(!in_array($estado, $listaEstadoMatriculaFinProcesoEducativo)){
+                $idInscripcion = isset($arrIdInscripcion[$key])?$arrIdInscripcion[$key]:'';
+                $idEstadoMatriculaNuevo = isset($arrEstadoMatriculaNuevo[$key])?$arrEstadoMatriculaNuevo[$key]:'';
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+                if(count($inscripcion)>0){
+                  $idEstadoMatriculaActual = $inscripcion->getEstadomatriculaTipo()->getId();
+                } else {
+                  $idEstadoMatriculaActual = 0;
+                }
+                if(!in_array($idEstadoMatriculaActual, $listaEstadoMatriculaFinProcesoEducativo)){
+                  $this->changeStudentState($idInscripcion, $idEstadoMatriculaNuevo);
+                  //dump($idEstadoMatriculaNuevo);
+                } else {
+                }
+              //}
+            }
+            //dump($arrEstudianteEstado);dump($arrIdInscripcion);dump($arrEstadoMatriculaNuevo);dump($listaEstadoMatriculaFinProcesoEducativo);die;
             //$em->getConnection()->commit();
             //verifcatiokn
             
-            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion[0]);
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrIdInscripcion[0]);
 
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_estados(:option::VARCHAR,:rude::VARCHAR,:gestion::VARCHAR)');
             $query->bindValue(':option', 2);
@@ -407,8 +444,8 @@ class RegularizacionDobleInscripcionController extends Controller {
             $query->execute();
             $em->getConnection()->commit();
 
-            $objValidationProcess = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$rude, 'validacionReglaTipo'=>6));
-
+            $objValidationProcess = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$rude, 'validacionReglaTipo'=>6, 'gestionTipo'=> $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId()));
+            
             if($response == false){
               $message = 'Este caso no corresponde.';
               $this->addFlash('warning', $message);
