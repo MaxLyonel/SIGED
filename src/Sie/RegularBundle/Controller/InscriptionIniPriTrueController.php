@@ -47,8 +47,30 @@ class InscriptionIniPriTrueController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+
+        $enableoption = true; 
+        $message = ''; 
+        // this is to check if the ue has registro_consolidacion
+        if($this->session->get('roluser')==9){
+
+          $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+          ));
+          
+          if(!$objRegConsolidation){
+              $status = 'error';
+        $code = 400;
+        $message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
+        $enableoption = false; 
+          }
+        }      
+
+
+
         return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:index.html.twig', array(
                     'form' => $this->createSearchForm()->createView(),
+                    'enableoption' => $enableoption,
+                    'message' => $message,
         ));
     }
 
@@ -112,7 +134,7 @@ class InscriptionIniPriTrueController extends Controller {
             $form['codigoRude'] = $request->get('codigoRude');
         }
 
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
 
         //check if the student exists
         if ($student) {
@@ -178,10 +200,10 @@ class InscriptionIniPriTrueController extends Controller {
      * @return type form
      */
     private function createFormInsc($idStudent, $sw, $data, $gestionIns, $codigoRude) {
-
+      
         $em = $this->getDoctrine()->getManager();
 
-        return $formOmitido = $this->createFormBuilder()
+         $formOmitido = $this->createFormBuilder()
                 ->setAction($this->generateUrl('inscription_ini_pri_rue_save'))
                 ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
                 ->add('institucionEducativaName', 'text', array('label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('class' => 'form-control')))
@@ -193,10 +215,35 @@ class InscriptionIniPriTrueController extends Controller {
                 ->add('sw', 'hidden', array('data' => $sw))
                 ->add('newdata', 'hidden', array('data' => serialize($data)))
                 ->add('gestionIns', 'hidden', array('data' => $gestionIns))
-                ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
-                ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
-                ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
+                ->add('codigoRude', 'hidden', array('data'=>$codigoRude));
+
+
+                 if($this->session->get('roluser')==9){
+                        $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($codigoRude,$gestionIns-1);
+
+                        // dump($objCurrentInscriptionStudent);
+                        if($this->session->get('ie_id')!=$objCurrentInscriptionStudent[0]['sie']){
+
+                           $formOmitido = $formOmitido ->add('messageomitidos', 'hidden', array('label'=>'...','attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control' )));
+
+
+                         $formOmitido = $formOmitido ->add('observacionOmitido', 'text', array( 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true, 'value' => 'TRANSFERENCIA','readonly' => true )));
+                        }else{
+
+                          $formOmitido = $formOmitido ->add('messageomitidos', 'text', array('label' =>'Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos. (Máximo 250 caracteres).', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','readonly' => true )));
+
+                          $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
+                        }
+                }else{
+                     $formOmitido = $formOmitido ->add('messageomitidos', 'hidden', array('label' =>'Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos. (Máximo 250 caracteres).', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','readonly' => true )));
+                  $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
+                }                
+
+
+              $formOmitido = $formOmitido   ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
                 ->getForm();
+
+                return $formOmitido;
     }
 
     private function getCurrentInscriptionsByGestoinValida($id, $gestion) {
@@ -301,7 +348,8 @@ class InscriptionIniPriTrueController extends Controller {
         // dump($newInfInscription);
       }
       // dump($currentLevelStudent);die;
-      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];// dump($newLevelStudent);die;
+      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
+     
 //dump(((str_replace('-','',$newLevelStudent)) ));
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
@@ -312,15 +360,20 @@ class InscriptionIniPriTrueController extends Controller {
          //do the inscription
 
          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-
-
+ 
          if($keyNextLevelStudent >= 0){
            if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
              $message = 'Estudiante No Inscrito, no le puede bajar de curso';
              $this->addFlash('idNoInscription', $message);
              $swCorrectInscription = false;
            }else{
-             //do the inscription
+              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+               //do the inscriptin
+             }else{//dump($newInfInscription);die;
+               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+               $this->addFlash('idNoInscription', $message);
+               $swCorrectInscription = false;
+             }
            }
          }else{
            $message = 'Estudiante ya cuenta con inscripción';
@@ -399,6 +452,16 @@ class InscriptionIniPriTrueController extends Controller {
         }
 
     }///end validation
+    // get the last inscription
+    $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']-1);
+    // validata inscription to the same UE
+    if($form['institucionEducativa']!=$objCurrentInscriptionStudent[0]['sie']){
+      $estadomatriculaTipo = 1;
+      $obsvalue = 'TRANSFERENCIA';
+    }else{
+      $estadomatriculaTipo = 7;
+      $obsvalue = $form['observacionOmitido'];
+    }
     //check the inscription
        if($swCorrectInscription){
          //get the id of course
@@ -429,19 +492,19 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-         $studentInscription->setObservacion($form['observacionOmitido']);
+         $studentInscription->setObservacion($obsvalue);
          $studentInscription->setObservacionId(6);
          $studentInscription->setFechaInscripcion(new \DateTime('now'));
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-         $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
+         $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estadomatriculaTipo));
          $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();
 
          //add the areas to the student
-         $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
+         // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
 
          // obtenemos las notas
          //$arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($studentInscription->getId());
@@ -974,7 +1037,7 @@ class InscriptionIniPriTrueController extends Controller {
             $em->persist($studentInscription);
             $em->flush();
             //add the areas to the student
-            $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
+            // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción realizada sin problemas');
             return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));

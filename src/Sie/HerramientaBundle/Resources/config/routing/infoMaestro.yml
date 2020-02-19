@@ -116,3 +116,7 @@ herramienta_info_maestro_segip_verificar_persona:
 herramienta_info_maestro_persona_datos:
     path:     /registrarPersonaM
     defaults: { _controller: "SieHerramientaBundle:InfoMaestro:registrarPersona" }
+
+herramienta_info_maestro_persona_segip:
+    path:     /validarMaestroSegip
+    defaults: { _controller: "SieHerramientaBundle:InfoMaestroMigrar:validarMaestroSegip" }

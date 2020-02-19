@@ -24,6 +24,11 @@ class PermanenteCursocortoTipo
      */
     private $obs;
 
+    /**
+     * @var boolean
+     */
+    private $habilitado;
+
 
     /**
      * Get id
@@ -79,5 +84,28 @@ class PermanenteCursocortoTipo
     public function getObs()
     {
         return $this->obs;
+    }
+
+    /**
+     * Set habilitado
+     *
+     * @param boolean $habilitado
+     * @return PermanenteCursocortoTipo
+     */
+    public function setHabilitado($habilitado)
+    {
+        $this->habilitado = $habilitado;
+    
+        return $this;
+    }
+
+    /**
+     * Get habilitado
+     *
+     * @return boolean 
+     */
+    public function getHabilitado()
+    {
+        return $this->habilitado;
     }
 }

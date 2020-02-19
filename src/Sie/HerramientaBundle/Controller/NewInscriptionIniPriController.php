@@ -40,6 +40,23 @@ class NewInscriptionIniPriController extends Controller
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
+		$enableoption = true; 
+		$message = ''; 
+        // this is to check if the ue has registro_consolidacion
+        if($this->session->get('roluser')==9){
+
+        	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+        	));
+        	
+	        if(!$objRegConsolidation){
+	            $status = 'error';
+				$code = 400;
+				$message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
+				$enableoption = false; 
+	        }
+        }       
+        
         $arrExpedido = array();
          // this is to the new person
 	      $objExpedido = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
@@ -48,15 +65,16 @@ class NewInscriptionIniPriController extends Controller
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
-       	return $this->render('SieHerramientaBundle:NewInscriptionIniPri:index.html.twig', array(
+       	return $this->render($this->session->get('pathSystem') .':NewInscriptionIniPri:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
        		'allowwithoutci' => $userAllowedOnwithoutCI,
+       		'enableoption' => $enableoption,
+       		'message' => $message,
                // ...
         ));
     }
 
     public function checksegipstudentAction(Request $request){
-		// dump($request);		// die;
     	//ini vars
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
@@ -95,9 +113,8 @@ class NewInscriptionIniPriController extends Controller
       	// validate the year old on the student
       	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
         $yearStudent = $arrYearStudent['age'];
-        // dump($yearStudent);die;
         // check if the student is on 5 - 8 years old
-        if($yearStudent<=8 && $yearStudent>=5){
+        if($yearStudent<=8 && $yearStudent>=4){
 
         	 // get genero data
 		     $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
@@ -123,7 +140,7 @@ class NewInscriptionIniPriController extends Controller
         }else{
         	$status = 'error';
 			$code = 400;
-			$message = "Estudiante no cumple con la edad requerida 5 a 8";
+			$message = "Estudiante no cumple con la edad requerida 4 a 8";
 			$swcreatestudent = false; 
         }
       }else{
@@ -153,8 +170,7 @@ class NewInscriptionIniPriController extends Controller
     }
 
     public function getDeptoAction(Request $request){
-    	// dump($request);
-    	// die;
+    	
         $response = new JsonResponse();
         $paisId = $request->get('paisId');
         $em = $this->getDoctrine()->getManager();
@@ -210,8 +226,7 @@ class NewInscriptionIniPriController extends Controller
      * @return type
      */
     public function getInfoUeAction(Request $request) {
-    	// dump($request);
-    	// die;
+    	
     	$response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $id = $request->get('sie');
@@ -241,7 +256,7 @@ class NewInscriptionIniPriController extends Controller
 	                ->andwhere('iec.gestionTipo = :gestion')
 	                ->andwhere('iec.nivelTipo != :nivel')
 	                ->setParameter('sie', $id)
-	                ->setParameter('gestion', $this->session->get('currentyear') - 1)
+	                ->setParameter('gestion', $this->session->get('currentyear') )
 	                ->setParameter('nivel', '13')
 	                ->orderBy('iec.nivelTipo', 'ASC')
 	                ->distinct()
@@ -260,7 +275,7 @@ class NewInscriptionIniPriController extends Controller
 	        }else{
 	        	$status = 'error';
 				$code = 400;
-				$message = "no tiene level";
+				$message = "Información no consolidada - no tiene level";
 				$swprocess = false; 
 				$nombreIE = false; 
 	        }
@@ -313,7 +328,7 @@ class NewInscriptionIniPriController extends Controller
         // get the send values
         $sie = $request->get('sie');
         $idnivel = $request->get('nivelId');
-        $gestionselected = $this->session->get('currentyear') - 1;
+        $gestionselected = $this->session->get('currentyear') ;
 
         //get grado
         $agrados = array();
@@ -366,7 +381,7 @@ class NewInscriptionIniPriController extends Controller
         $sie = $request->get('sie');
         $nivel = $request->get('nivelId');
         $grado = $request->get('gradoId');
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear') ;
 		//get paralelo
         $aparalelos = array();
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
@@ -416,7 +431,7 @@ class NewInscriptionIniPriController extends Controller
         $nivel = $request->get('nivelId');
         $grado = $request->get('gradoId');
         $paralelo = $request->get('paraleloId');
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear') ;
 		//get turno
         $aturnos = array();
 
@@ -456,8 +471,6 @@ class NewInscriptionIniPriController extends Controller
      *
      */
     public function doInscriptioninipriAction(Request $request) {
-// dump($request);
-// die;
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -469,7 +482,7 @@ class NewInscriptionIniPriController extends Controller
         $grado = $request->get('gradoId');
         $paralelo = $request->get('paraleloId');
         $turno = $request->get('turnoId');
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear') ;
         // get info about student
         $fecNac = $request->get('fecnacfind');
         $paterno = $request->get('paterno');
@@ -481,6 +494,9 @@ class NewInscriptionIniPriController extends Controller
         $localidad = $request->get('localidad');
         $lugarNacTipoId = $request->get('lugarNacTipoId');
         $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
+        $carnet = $request->get('cifind');
+        $complemento = $request->get('complementofind');
+        $expedidoId = $request->get('expedidoIdfind');
 
         $withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
 
@@ -488,10 +504,13 @@ class NewInscriptionIniPriController extends Controller
 
             // validation if the ue is over 4 operativo
             $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-
-            if(!$operativo >= 4){
-                $this->session->getFlashBag()->add('notiext', 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos');
-                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+            
+			$swinscription=true;
+            if($operativo >= 4){
+                $status = 'error';
+				$code = 400;
+				$message = "No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos";
+				$swinscription = false; 
             }
 
           //validation inscription in the same U.E
@@ -513,9 +532,10 @@ class NewInscriptionIniPriController extends Controller
               $swAccess = $defaultController->getAccessMenuCtrl(array('sie'=>$sie, 'gestion'=>$gestion));
               //validate if the user download the sie file
               if($swAccess){
-                $message = 'No se puede realizar la inscripción debido a que ya descargo el archivo SIE';
-                $this->addFlash('notiext', $message);
-                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                $status = 'error';
+				$code = 400;
+				$message = "No se puede realizar la inscripción debido a que ya descargo el archivo SIE";
+				$swinscription = false; 
               }
             }
 
@@ -525,9 +545,8 @@ class NewInscriptionIniPriController extends Controller
             //validate the year of student
             // validate the year old on the student
 	      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
-	        $yearStudent = $arrYearStudent['age'];
-			// dump($yearStudent);
-			$swinscription=true;
+	        $yearStudent = $arrYearStudent['age'];		
+			
             switch ($yearStudent) {
               case 4:
 
@@ -582,6 +601,7 @@ class NewInscriptionIniPriController extends Controller
 					$swinscription = false; 
                 break;
             }
+
             $arrStudent=array();
             $arrInscription=array();
             // check the years old validation
@@ -595,13 +615,10 @@ class NewInscriptionIniPriController extends Controller
 	                'institucioneducativa' => $sie,
 	                'gestionTipo' => $gestion,
 	            );
-	            // dump($arrQuery);
 
 
 	            //insert a new record with the new selected variables and put matriculaFinID like 5
 	            $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrQuery);
-
-	            // dump($objCurso);die;
 
 	             try {
 
@@ -609,14 +626,11 @@ class NewInscriptionIniPriController extends Controller
                 
                 $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
                 $query->bindValue(':sie', $sie);            
-                $query->bindValue(':gestion', $gestion+1);
+                $query->bindValue(':gestion', $gestion);
                 $query->execute();
                 $codigorude = $query->fetchAll();
 
                 $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
-                // dump($codigorude);
-                // dump($codigoRude);
-                // die;
                 
                 // set the data person to the student table
                 $estudiante = new Estudiante();
@@ -682,9 +696,6 @@ class NewInscriptionIniPriController extends Controller
 	                'institucioneducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie)->getInstitucioneducativa() ,
 	            );
 
-	          // dump($arrStudent)	  ;
-	          // dump($arrInscription)	  ;
-	          // die;
 	            $em->persist($studentInscription);
 	            $em->flush();          
 
@@ -731,6 +742,7 @@ class NewInscriptionIniPriController extends Controller
         'arrStudent'      => $arrStudent,       
         'arrInscription'  => $arrInscription,       
       );
+      
       $response->setStatusCode(200);
       $response->setData($arrResponse);
 
