@@ -212,6 +212,7 @@ class InfoEspecialController extends Controller{
       $em->getConnection()->beginTransaction();
       //get the values
       $form = $request->get('form');
+      //dump($form);die;
 
       //get the current operativo
       $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
@@ -261,23 +262,23 @@ class InfoEspecialController extends Controller{
       $query->bindValue(':ibimestre', $periodo);
       $query->execute();
       $inconsistencia = $query->fetchAll();
-
-      if(!$inconsistencia) {
+      
+      if(!$inconsistencia and $periodo > 0) {
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
           $registroConsol->setFecha(new \DateTime("now"));
-
+          
           switch ($periodo) {
               case 1: $registroConsol->setBim1('2'); break;
               case 2: $registroConsol->setBim2('2'); break;
               case 3: $registroConsol->setBim3('2'); break;
               case 4: $registroConsol->setBim4('2'); break;
           }
-
-          $em->persist($registroConsol);
+          
+          //$em->persist($registroConsol);
           $em->flush();
           $em->getConnection()->commit();
       }
-
+      //dump($form,$inconsistencia,$periodo);die;
       return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo));
     }
 

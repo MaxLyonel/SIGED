@@ -50,7 +50,7 @@ class Notas{
         }else{
             $tipoNota = 'Bimestre';
         }*/
-        if($gestion>2018 and $discapacidad == 2){
+        if($gestion>2019 and $discapacidad == 2){
             $tipoNota = 'Etapa';
         }else{
             if($gestion <= 2012){
@@ -2049,7 +2049,7 @@ die;/*
                             $valorNota = $an['notaCualitativa'];
                         }
                         if($i == $an['idNotaTipo']){
-                            if($gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5)){
+                            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
                                     'idEstudianteNota'=>$an['idNota'],
@@ -2131,7 +2131,7 @@ die;/*
                 foreach ($cualitativas as $c) {
                     if($c->getNotaTipo()->getId() == 18){
                         
-                        if (($nivel == 401 or $nivel == 402) and $gestion > 2018){
+                        if (($nivel == 401 or $nivel == 402) and $gestion > 2019){
                             $nota['notaCualitativa'] = json_decode($c->getNotaCualitativa(),true)['notaCualitativa'];
                             $nota['promovido'] = json_decode($c->getNotaCualitativa(),true)['promovido'];
                         }else{
@@ -2188,7 +2188,7 @@ die;/*
                 }
             }
 
-            if($gestion < 2019){
+            if($gestion < 2020){
                 $estadosPermitidos = array(0,4,5,70,71,72,73,47);    
             }else{
                 $estadosPermitidos = array(0,4,5,78,79,28);
@@ -2196,7 +2196,7 @@ die;/*
             }
             
 			// Tipos de notas
-            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2018){
+            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2019){
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,4));
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(5,28));
             }else{
@@ -2305,7 +2305,7 @@ die;/*
                                     ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','enc.notaTipo = nt.id')
                                     ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
                                     ->where('ei.estudiante = '. $inscripcion->getEstudiante()->getId())
-                                    ->andWhere('gt.id > 2018')
+                                    ->andWhere('gt.id > 2019')
                                     ->andWhere('iece.especialProgramaTipo = '.$programa)
                                     ->orderBy('gt.id','DESC')
                                     ->addOrderBy('nt.id','DESC')
@@ -2506,7 +2506,7 @@ die;/*
             $idNotaTipo = $request->get('idNotaTipo');
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-            if($gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5)){
+            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                 //$estadoPromovido = $request->get('contenidos');
                 $promovido = $request->get('promovido');
                 $contenidos = $request->get('contenidos');
@@ -2529,7 +2529,7 @@ die;/*
             $idEstudianteNotaCualitativa = $request->get('idEstudianteNotaCualitativa');
             $idNotaTipoCualitativa = $request->get('idNotaTipoCualitativa');
             $notaCualitativa = $request->get('notaCualitativa');
-            if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5)){
+            if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                 $notaCualitativa[0] = array('notaCualitativa'=>mb_strtoupper($notaCualitativa[0],'utf-8'),'promovido'=>mb_strtoupper($promovido,'utf-8'));
             }
             //dump($notaCualitativa);die;
@@ -2556,7 +2556,7 @@ die;/*
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                 $newNota->setNotaCuantitativa(0);
-                                if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
+                                if($gestion > 2019 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
                                     $newNota->setNotaCualitativa(json_encode($notas[$i]));
                                 }else{
                                     $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -2607,7 +2607,7 @@ die;/*
                             $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
-                                if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
+                                if($gestion > 2019 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
                                     $updateNota->setNotaCualitativa(json_encode($notas[$i]));
                                 }else{
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -2682,7 +2682,7 @@ die;/*
                             $newCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipoCualitativa[$j]));
                             $newCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                             $newCualitativa->setNotaCuantitativa(0);
-                            if($gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5) and $request->get('nuevoEstadomatricula') == 5){
+                            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5) and $request->get('nuevoEstadomatricula') == 5){
                                 $newCualitativa->setNotaCualitativa(json_encode($notaCualitativa[$j]));
                             }else{
                                 $newCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
@@ -2995,7 +2995,7 @@ die;/*
                 }
             }
             // Datos del siguimiento
-            if($gestion > 2018 and ($discapacidad == 4 or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
+            if($gestion > 2019 and ($discapacidad == 4 or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
                 $seguimientoNota = new EstudianteNotaCualitativa();
                 $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
                 $seguimientoNota->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion')));
@@ -3140,9 +3140,9 @@ die;/*
                 }
             }
             
-            if (($subarea == 4 or $subarea == 7 or $subarea == 2 or $subarea == 3 or $subarea == 5 or $subarea == 1 ) and $gestion > 2018){
+            if (($subarea == 4 or $subarea == 7 or $subarea == 2 or $subarea == 3 or $subarea == 5 or $subarea == 1 ) and $gestion > 2019){
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78));
-            }elseif ($subarea == 6 and $gestion > 2018){
+            }elseif ($subarea == 6 and $gestion > 2019){
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78,79));
             }else{
                 $estadosFinales = array();

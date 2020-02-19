@@ -169,7 +169,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(401,402,403,404);
       $programasLibreta = array(7,8,9,12,14,15);
-      if($gestion >2018 and $nivel <> 405){
+      if($gestion >2019 and $nivel <> 405){
         $arrDataLibreta['calificaciones'] = true;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
@@ -178,7 +178,7 @@ class InfoStudentsController extends Controller {
       }
      
       
-      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
@@ -435,7 +435,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(401,402,403,404);
       $programasLibreta = array(7,8,9,12,14,15);
-      if($gestion >2018 and $nivel <> 405){
+      if($gestion >2019 and $nivel <> 405){
         $arrDataLibreta['calificaciones'] = true;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
@@ -443,7 +443,7 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = false;
       }
       
-      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
@@ -661,7 +661,7 @@ class InfoStudentsController extends Controller {
       $nivelesLibreta = array(401,402,403,404);
       $programasLibreta = array(7,8,9,12,14,15);
       
-      if($gestion >2018 and $nivel <> 405){
+      if($gestion >2019 and $nivel <> 405){
         $arrDataLibreta['calificaciones'] = true;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
@@ -669,7 +669,7 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = false;
       }
       
-      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
@@ -808,7 +808,7 @@ class InfoStudentsController extends Controller {
     $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
     $nivelesLibreta = array(401,402,403,404);
     $programasLibreta = array(7,8,9,12,14,15);
-    if($gestion >2018 and $nivel <> 405){
+    if($gestion >2019 and $nivel <> 405){
       $arrDataLibreta['calificaciones'] = true;
     }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
       $arrDataLibreta['calificaciones'] = true;
@@ -816,7 +816,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['calificaciones'] = false;
     }
     
-    if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+    if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
       $arrDataLibreta['libreta'] = true;
     }else{
       $arrDataLibreta['libreta'] = false;

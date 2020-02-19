@@ -240,7 +240,7 @@ class AreasController extends Controller {
             ->andWhere('eat.id IN (:areas)')
             ->setParameter('idInstitucion', $sie)
             ->setParameter('gestion', $gestion);
-            if($gestion < 2019){
+            if($gestion < 2020){
                 $query = $query
                 ->setParameter('areas', array(1,2,3,5));
             }else{

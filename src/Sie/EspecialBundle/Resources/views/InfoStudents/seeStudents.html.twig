@@ -94,7 +94,7 @@
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
-                                {% if data.estadomatriculaId == 4 and gestion > 2018 %}
+                                {% if data.estadomatriculaId == 4 and gestion > 2019 %}
                                     <td>
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Cambiar estado">
                                             <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getEstadosMatricula('{{infoUe}}',{{data.estInsId}},{{arrDataLibreta.libreta}});">
@@ -129,7 +129,7 @@
                                             </form>
                                         {% endif %}        
                                     {% endif %}
-                                    {% if true %}
+                                    {% if onlyview == false and gestion == app.session.get('currentyear') %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>

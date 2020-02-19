@@ -1,7 +1,7 @@
 {% set onlyview = app.session.get('onlyview') %}
 {% if notas is defined %}
-	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad in [2,3,5] and seguimiento == false) %} style="width:80%; z-index:99999;" {% endif %}>
-	    <div class="modal-content" {% if ((notas.gestion < 2019 and discapacidad in [2,3,5]) or discapacidad not in [2,3,5]) %} style="width:900px; margin-left:-100px" {% endif %}>
+	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2019 and discapacidad in [2,3,5] and seguimiento == false) %} style="width:80%; z-index:99999;" {% endif %}>
+	    <div class="modal-content" {% if ((notas.gestion < 2020 and discapacidad in [2,3,5]) or discapacidad not in [2,3,5]) %} style="width:900px; margin-left:-100px" {% endif %}>
 	    	<form action="" id="formNotasEspecial" onsubmit="registrarNotasEspecial('{{infoUe}}'); return false">
 	 		<input type="hidden" name="actualizar" value="{{actualizar}}">
 	 		<input type="hidden" name="operativo" value="{{operativo}}">
@@ -40,14 +40,14 @@
 					            <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
 					        </tr>
 					    </table>
-						{% if (notas.gestion > 2018 and seguimiento == true) %}
+						{% if (notas.gestion > 2019 and seguimiento == true) %}
 						<h5 style="color:#0086DD">Seguimiento</h5>
 						{% else %}
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
 						{% endif %}
 					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
 						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
-						{% if discapacidad != 2 or (discapacidad == 2 and notas.gestion  < 2019)%}
+						{% if discapacidad != 2 or (discapacidad == 2 and notas.gestion  < 2020)%}
 							{% if (operativo >= 4 and notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and actualizar == false) or (notas.gestion < notas.gestionActual and notas.tipoNota == 'Trimestral' and discapacidad != 1) or (notas.gestion < notas.gestionActual and discapacidad == 1 and notas.nivel in [1,11,403]) and notas.cuantitativas|length > 0 %}
 								<table class="table table-condensed table-bordered" style="background:#8AE5B6">
 									<tr>
@@ -65,7 +65,7 @@
 												{% endfor %}
 											</select>
 											<div>
-											{% if discapacidad in [3,5] and  notas.gestion > 2018 %}
+											{% if discapacidad in [3,5] and  notas.gestion > 2019 %}
 												{% if notas.estadoMatricula == 5 %}
 													{% set display = "display:block"%}
 													{% if notas.cualitativas.0.promovido == "CON APOYO" %}
@@ -105,7 +105,7 @@
 	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
-				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2018 and seguimiento == true) %}
+				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2019 and seguimiento == true) %}
 					<button type="submit" class="btn btn-success">Guardar</button>
 				{% endif %}
 	        </div>
