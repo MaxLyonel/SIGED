@@ -318,7 +318,7 @@ class InscriptionIniPriTrueController extends Controller {
 
       //dato actual de inscription
       $dataCurrentInscription = unserialize($form['newdata']);
-      // dump($request);
+      // dump($dataCurrentInscription);die;
       //validate allow access
       $arrAllowAccessOption = array(7,8);
       if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
@@ -355,25 +355,83 @@ class InscriptionIniPriTrueController extends Controller {
     //if doesnt have next curso info is new or extranjero do the inscription
       
     if( (str_replace('-','',$currentLevelStudent) )!=''){
-      if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')){
+      if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
 
          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
- 
+
          if($keyNextLevelStudent >= 0){
            if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
              $message = 'Estudiante No Inscrito, no le puede bajar de curso';
              $this->addFlash('idNoInscription', $message);
              $swCorrectInscription = false;
            }else{
-              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+        $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataCurrentInscription['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
+         $yearStudent = $arrYearStudent['age'];   
+      
+            switch ($yearStudent) {
+              case 4:
+
+                # code...
+                if($form['nivel']=='11' && $form['grado']=='1'){
+                  //good
+                }else{
+                  $status = 'error';
+                  $code = 400;
+                  $message = "El estudiante no cumple con lo requerido en edad";
+                  $swCorrectInscription = false;           
+                }
+                break;
+              case 5:
+                # code...
+                if($form['nivel']=='11' && $form['grado']=='2'){
+                  //good
+                }else{
+                  $status = 'error';
+                  $code = 400;
+                  $message = "El estudiante no cumple con lo requerido en edad";
+                  $swCorrectInscription = false;                   
+                }
+                break;
+              case 6:
+                # code...
+                if($form['nivel']=='12' && $form['grado']=='1'){
+                  //good
+                }else{
+                  $status = 'error';
+                  $code = 400;
+                  $message = "El estudiante no cumple con lo requerido en edad";
+                  $swCorrectInscription = false; 
+                }
+                break;
+              case 7 or 8:
+                if($form['nivel']=='12' && $form['grado']=='1'){
+                  //good
+                }else{
+                  $status = 'error';
+                  $code = 400;
+                  $message = "El estudiante no cumple con lo requerido en edad";
+                  $swCorrectInscription = false; 
+                }
+                break;
+
+              default:
+                # code...
+                  $status = 'error';
+                  $code = 400;
+                  $message = "El estudiante no cumple con lo requerido en edad";
+                  $swCorrectInscription = false; 
+                break;
+            }
+
+            /*  if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
                //do the inscriptin
              }else{//dump($newInfInscription);die;
                $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
                $this->addFlash('idNoInscription', $message);
                $swCorrectInscription = false;
-             }
+             }*/
            }
          }else{
            $message = 'Estudiante ya cuenta con inscripción';
