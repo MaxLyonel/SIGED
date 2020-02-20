@@ -35,7 +35,7 @@ class ControlOperativoMenuController extends Controller {
             if(in_array($this->session->get('roluser'), array(7,8,10))){
                 $operativo++;
             }
-            $tipoUE = $this->get('funciones')->getTipoUE($sie,$this->session->get('currentyear'));
+            $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
 
             $mensaje = "";
 
