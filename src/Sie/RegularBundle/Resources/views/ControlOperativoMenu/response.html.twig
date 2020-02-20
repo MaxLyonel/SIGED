@@ -23,7 +23,7 @@
 		<div style="font-size: 1.7em; background:#4A9FFF; color:#FFFFFF; padding: 5px; text-align:center">
 			{{nombreOperativo}}____{{gestion}}
 		</div>
-		{% if tipoUE.id in [5,6,7] and registro is not null %}
+		{% if tipoUE.id in [5,6,7,11] and registro is not null %}
 			<div style="text-align:center; background:#EAEAEA; padding:5px 0 5px 0">Archivo</div>
 			<div id="estado" style="font-size:25px; text-align:center; background:#EAEAEA; padding:5px 0 10px 0">
 				{% if registro.estadoMenu == 0 %}
