@@ -349,7 +349,6 @@ class InscriptionIniPriTrueController extends Controller {
       }
       // dump($currentLevelStudent);die;
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
-     
 //dump(((str_replace('-','',$newLevelStudent)) ));
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
@@ -367,63 +366,73 @@ class InscriptionIniPriTrueController extends Controller {
              $this->addFlash('idNoInscription', $message);
              $swCorrectInscription = false;
            }else{
+           
         $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataCurrentInscription['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
-         $yearStudent = $arrYearStudent['age'];   
-      
-            switch ($yearStudent) {
-              case 4:
+         $yearStudent = $arrYearStudent['age'];
+          if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
+              switch ($yearStudent) {
+                case 4:
+                  # code...
+                  if($form['nivel']=='11' && $form['grado']=='1'){
+                    //good
+                  }else{
+                    $status = 'error';
+                    $code = 400;
+                    $message = "El estudiante no cumple con lo requerido en edad";
+                    $swCorrectInscription = false;           
+                  }
+                  break;
+                case 5:
+                  # code...
+                  if($form['nivel']=='11' && $form['grado']=='2'){
+                    //good
+                  }else{
+                    $status = 'error';
+                    $code = 400;
+                    $message = "El estudiante no cumple con lo requerido en edad";
+                    $swCorrectInscription = false;                   
+                  }
+                  break;
+                case 6:
+                  # code...
+                  if($form['nivel']=='12' && $form['grado']=='1'){
+                    //good
+                  }else{
+                    $status = 'error';
+                    $code = 400;
+                    $message = "El estudiante no cumple con lo requerido en edad";
+                    $swCorrectInscription = false; 
+                  }
+                  break;
+                case 7 or 8:
+                  if($form['nivel']=='12' && $form['grado']=='1'){
+                    //good
+                  }else{
+                    $status = 'error';
+                    $code = 400;
+                    $message = "El estudiante no cumple con lo requerido en edad";
+                    $swCorrectInscription = false; 
+                  }
+                  break;
 
-                # code...
-                if($form['nivel']=='11' && $form['grado']=='1'){
-                  //good
-                }else{
-                  $status = 'error';
-                  $code = 400;
-                  $message = "El estudiante no cumple con lo requerido en edad";
-                  $swCorrectInscription = false;           
-                }
-                break;
-              case 5:
-                # code...
-                if($form['nivel']=='11' && $form['grado']=='2'){
-                  //good
-                }else{
-                  $status = 'error';
-                  $code = 400;
-                  $message = "El estudiante no cumple con lo requerido en edad";
-                  $swCorrectInscription = false;                   
-                }
-                break;
-              case 6:
-                # code...
-                if($form['nivel']=='12' && $form['grado']=='1'){
-                  //good
-                }else{
-                  $status = 'error';
-                  $code = 400;
-                  $message = "El estudiante no cumple con lo requerido en edad";
-                  $swCorrectInscription = false; 
-                }
-                break;
-              case 7 or 8:
-                if($form['nivel']=='12' && $form['grado']=='1'){
-                  //good
-                }else{
-                  $status = 'error';
-                  $code = 400;
-                  $message = "El estudiante no cumple con lo requerido en edad";
-                  $swCorrectInscription = false; 
-                }
-                break;
+                default:
+                  # code...
+                    $status = 'error';
+                    $code = 400;                  
+                    $message = "El estudiante no cumple con lo requerido en edad";
+                    $swCorrectInscription = false; 
+                  break;
+              }
+              $this->addFlash('idNoInscription', $message);
+              
+            }else{
 
-              default:
-                # code...
-                  $status = 'error';
-                  $code = 400;
-                  $message = "El estudiante no cumple con lo requerido en edad";
-                  $swCorrectInscription = false; 
-                break;
+              $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+              $this->addFlash('idNoInscription', $message);
+              $swCorrectInscription = false;
+
             }
+  
 
             /*  if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
                //do the inscriptin
