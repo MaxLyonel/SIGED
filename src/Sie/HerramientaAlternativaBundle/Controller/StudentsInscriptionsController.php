@@ -901,9 +901,10 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$request->get('nombre'),
         );
         
-        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
+        // $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
         
-        if(sizeof($objRudesStudent)==1){
+        // if(sizeof($objRudesStudent)==1){
+        if(true){
           try {
             // get info about the students inscriptions
             $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId); 
