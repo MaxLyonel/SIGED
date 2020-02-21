@@ -1,0 +1,166 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaEncuesta:
+    type: entity
+    table: institucioneducativa_encuesta
+    indexes:
+        IDX_ABDEF9A03AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_ABDEF9A0179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_ABDEF9A04961DA1:
+            columns:
+                - proveedor_ue_id
+        IDX_ABDEF9A04D3B6290:
+            columns:
+                - proveedor_zona_id
+        IDX_ABDEF9A07C313E53:
+            columns:
+                - realiza_pago_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidadSala:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_sala
+        cantidadComputadora:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_computadora
+        anioAdquisicion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: anio_adquisicion
+        costoInternet:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: costo_internet
+        proveedorOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: proveedor_otro
+        foto1:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        foto2:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        pagoOtro:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: pago_otro
+        tieneSala:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tiene_sala
+        tienePiso:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tiene_piso
+        tieneInternet:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tiene_internet
+        tieneSenal:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tiene_senal
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        proveedorUe:
+            targetEntity: ProveedorTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                proveedor_ue_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        proveedorZona:
+            targetEntity: ProveedorTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                proveedor_zona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        realizaPago:
+            targetEntity: ProveedorTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                realiza_pago_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
