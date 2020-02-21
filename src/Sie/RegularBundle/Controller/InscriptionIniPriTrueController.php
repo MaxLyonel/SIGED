@@ -349,12 +349,11 @@ class InscriptionIniPriTrueController extends Controller {
       }
       // dump($currentLevelStudent);die;
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
-//dump(((str_replace('-','',$newLevelStudent)) ));
-//dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
       
     if( (str_replace('-','',$currentLevelStudent) )!=''){
-      if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
+      // if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
+      if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
 
