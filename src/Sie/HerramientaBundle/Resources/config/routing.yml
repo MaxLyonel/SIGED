@@ -142,6 +142,10 @@ sie_herramienta_solicitud_bth:
     resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
     prefix:   /sie/tramite/solicitudbth
 
+sie_herramienta_encuesta_ue:
+    resource: "@SieHerramientaBundle/Resources/config/routing/encuestaUe.yml"
+    prefix:   /sie/tramite/encuestaUe    
+
 
 #sie_herramienta_wf_tramite:
 #    resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
