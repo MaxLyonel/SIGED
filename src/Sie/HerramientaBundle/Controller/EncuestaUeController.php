@@ -72,6 +72,10 @@ class EncuestaUeController extends Controller {
         $query = $em->getConnection()->prepare("SELECT id, entidad FROM realiza_pago_tipo ORDER BY 1");
         $query->execute();
         $realizaPago = $query->fetchAll(); 
+
+        $query = $em->getConnection()->prepare("SELECT id, gestion FROM gestion_tipo ORDER BY 1");
+        $query->execute();
+        $gestionTipo = $query->fetchAll(); 
        //dump($proveedor);die;
         $verificarUe = $this->Validacion($ie_id,$gestion);
 
@@ -82,13 +86,14 @@ class EncuestaUeController extends Controller {
                 'ie_id'=> $ie_id ,
                 'gestion'=>$gestion,
                 'proveedores'=>$proveedor,
-                'realizaPago'=>$realizaPago
+                'realizaPago'=>$realizaPago,
+                'gestionTipo'=>$gestionTipo
                 
             ));
         
     }
     public function Validacion ($ie_id,$gestion) {  //dump($ie_id);die;     
-        $gestion = 2018; ////BORRAR
+      // $gestion = 2018; ////BORRAR
         $verificaUe = 0;
         $em = $this->getDoctrine()->getManager();
         //verificamos que la UE sea publica y de regular y q e este abierta y que n haya realizado la encuents
@@ -132,11 +137,10 @@ class EncuestaUeController extends Controller {
         //$em = $this->getDoctrine()->getManager();
         $res = 1; $msg = '';
         $em = $this->getDoctrine()->getManager();
-        //$em->getConnection()->beginTransaction();
-       
-        //$gestion=2019;
+        //dump((int)$request->get('proveedores'));die;
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->get('ie_id'));
-        //dump($request->get('proveedores'));die;
+        $em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('proveedores'));
+
         $realia=$em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('proveedores'));
         try {
                 $entity = new InstitucioneducativaEncuesta();
@@ -151,15 +155,15 @@ class EncuestaUeController extends Controller {
                 $entity->setTieneInternet($request->get('tieneInternet'));
                 $entity->setCostoInternet($request->get('costo'));
                 
-                $entity->setProveedorUe($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('proveedores'))); //$request->get('proveedores')
+                
+                $entity->setProveedorUe($em->getRepository('SieAppWebBundle:ProveedorTipo')->find((int)$request->get('proveedores')));                        
                 $entity->setProveedorOtro($request->get('otroProveedor'));
 
-                $entity->setRealizaPago($em->getRepository('SieAppWebBundle:RealizaPagoTipo')->find($request->get('pago')));
-                //$entity->setRealizaPago($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('pago')));
+                $entity->setRealizaPago($em->getRepository('SieAppWebBundle:RealizaPagoTipo')->find((int)$request->get('pago')));               
                 $entity->setPagoOtro($request->get('realizaPagoOtro'));
 
                 $entity->setTieneSenal($request->get('tieneInternetZona'));
-                $entity->setProveedorZona($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('proveedorZona')));                
+                $entity->setProveedorZona($em->getRepository('SieAppWebBundle:ProveedorTipo')->find((int)$request->get('proveedorZona')));                
                 $entity->setProveedorZonaOtro( $request->get('otroProveedorZona'));
                 
                $entity->setFoto1($request->get('foto1'));

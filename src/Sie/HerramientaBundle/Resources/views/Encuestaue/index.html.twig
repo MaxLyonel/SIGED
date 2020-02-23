@@ -101,9 +101,15 @@
                                         ¿Año de Adquisicion?
                                     </div>
                                     <div class="col-md-3">
-                                        <input  id="anioAdqui" oninput="maxLengthCheck(this)" type="number" min = "1900" max = "2020"  
-                                        class="estilo" title="Año en la que se adquirio las computadoras">
                                         
+                                        <select data-placeholder="Seleccionar"  id="anioAdqui" name="select_gestiom[]" title="Año en la que se adquirio las computadoras" class="chosen-select"  tabindex="-1" style="display: none;">
+                                            {% for gestionTipo in gestionTipo %}
+                                                <option value="{{ gestionTipo.id }}">{{ gestionTipo.gestion }}</option>
+                                            {% endfor %}
+                                        </select>  
+                                       <!--  <input  id="anioAdqui" oninput="maxLengthCheck(this)" type="number" min = "1900" max = "2020"  
+                                        class="estilo" title="Año en la que se adquirio las computadoras">
+                                        --> 
                                     </div>
                                 </div>                        
                         </div>
@@ -342,6 +348,8 @@
                 $('#cantComputadoras').val('');
                 $('#cantSalas').val('');
                 $('#anioAdqui').val('');
+                $('#foto1').val('');
+                $('#foto2').val('');
                 
             }
          }  else if(valor == 2){
@@ -353,7 +361,8 @@
                
                 $('#costo').val('');
                 $('#otroProveedorTexto').val('');
-                
+                $('#foto1').val('');
+                $('#foto2').val('');                
                 
             }
          } else{
@@ -363,6 +372,8 @@
             }else {
                 $('#respuestaProveedor').hide(1000);
                 $('#otroProveedorZonaTexto').val('');
+                $('#foto1').val('');
+                $('#foto2').val('');
             }
          }
         
@@ -475,7 +486,7 @@
                     swal("Debe introducir el costo aprox. de Internet (Valor redondeado)");
                     return false;
                 }
-
+                //console.log($('#proveedoresUe').val());
                 if($('#proveedoresUe').val()) {
                     ip.proveedores = $('#proveedoresUe').val();
                     var cod = document.getElementById("proveedoresUe").value;
@@ -509,8 +520,10 @@
                 }
             } else if(respuestaInternet=='no'){
                 ip.tieneInternet = 2;
+                ip.proveedores =0;
             } else {
                 ip.tieneInternet = 3;
+                ip.proveedores =0;
             }
             var respuestaInternetZona=$('input:radio[name=radiotype3]:checked').val(); 
             if(respuestaInternetZona=='si'){
@@ -547,17 +560,22 @@
 
             if($('#observacion').val()) {
                 ip.observacion = $('#observacion').val();                        
-            }/* else {
-                swal("Debe introducior alguna Observacion");
-                return false;
-            }*/
-            if($('#foto1').val()==''|| $('#foto2').val()=='') {
-                swal("Debe seleccionar una imagen.");
-                return false;  
-            } else {
-                ip.foto1 = foto1;
-                ip.foto2 = foto2;
             }
+
+            //console.log(respuesta,respuestaInternet,respuestaInternetZona);
+            if(respuesta=='si' || respuestaInternet=='si'|| respuestaInternetZona=='si' ) {
+                if($('#foto1').val()==''|| $('#foto2').val()=='') {
+                    swal("Debe seleccionar una imagen.");
+                    return false;  
+                } else {
+                    ip.foto1 = foto1;
+                    ip.foto2 = foto2;
+                }
+            }else {
+                $('#foto1').val()=='';
+                $('#foto2').val()=='';
+            }
+            
 
             var fd = new FormData();
             fd.append('tieneSala', ip.tieneSala);
@@ -599,7 +617,7 @@
                 success: function (data) {
                     if (data.estado==1 ){
                         swal("Sus respuestas fueron registradas con éxito.");
-                        //location.href = "{{ path('encuestaUe_index') }}";
+                        location.href = "{{ path('encuestaUe_index') }}";
                     } else {
                         swal('Su formulario no se envío correctamente');
                     }
