@@ -54,13 +54,9 @@ class EncuestaUeController extends Controller {
         $id_usuario     = $this->session->get('userId');
         $id_rol         = $this->session->get('roluser');
         $ie_id          = $this->session->get('ie_id');
-        $gestion = $request->getSession()->get('currentyear'); 
+        $gestion        = $this->session->get('currentyear'); 
         //validation if the user is logged
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        // Verificamos si no ha caducado la session
-        if (!$this->session->get('userId')) {
+        if (!$id_usuario) {
             return $this->redirect($this->generateUrl('login'));
         }
         $em = $this->getDoctrine()->getManager();
@@ -85,9 +81,9 @@ class EncuestaUeController extends Controller {
                 'estado' => $verificarUe,
                 'ie_id'=> $ie_id ,
                 'gestion'=>$gestion,
-                'proveedores'=>$proveedor,
-                'realizaPago'=>$realizaPago,
-                'gestionTipo'=>$gestionTipo
+                'proveedores'=>($proveedor!= null)?$proveedor:array(),
+                'realizaPago'=>($realizaPago!= null)?$realizaPago:array(),
+                'gestionTipo'=>($gestionTipo!= null)?$gestionTipo:array()
                 
             ));
         

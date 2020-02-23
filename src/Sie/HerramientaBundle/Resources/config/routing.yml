@@ -144,7 +144,7 @@ sie_herramienta_solicitud_bth:
 
 sie_herramienta_encuesta_ue:
     resource: "@SieHerramientaBundle/Resources/config/routing/encuestaUe.yml"
-    prefix:   /sie/tramite/encuestaUe    
+    prefix:   /sie/encuestaUe    
 
 
 #sie_herramienta_wf_tramite:
