@@ -101,11 +101,11 @@
                                         ¿Año de Adquisicion?
                                     </div>
                                     <div class="col-md-3">
-                                        <input  id="anioAdqui" oninput="maxLengthCheck(this)" type="number" min = "1" max = "10"  
+                                        <input  id="anioAdqui" oninput="maxLengthCheck(this)" type="number" min = "1900" max = "2020"  
                                         class="estilo" title="Año en la que se adquirio las computadoras">
+                                        
                                     </div>
-                                </div>
-                        
+                                </div>                        
                         </div>
                         <hr>
                         <br>
@@ -132,7 +132,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
+                        <hr>
+                    
                         <br>
                         <div class="row">                            
                             <div class="col-md-3">
@@ -168,7 +169,7 @@
                                 <div class="col-md                                                                                                                                                                                  -1">                                       
                                 </div>
                                 <div class="col-md-4">
-                                    ¿Costo del Internet? Bs. (agregar un costo redondeado)                              
+                                    ¿Costo del Internet? <span style="color:brown;">(Agregar un costo redondeado Exp. Bs.)</span>                              
                                 </div>
                                 <div class="col-md-5">
                                     <input type="number" id="costo" oninput="maxLengthCheck(this)" min = "1" max = "9999" class="estilo" 
@@ -210,14 +211,14 @@
                                 </div>
                                 <div class="col-md-3" id="otroRealizaPago" style="display: none;">
                                     <input type="text" id="otroRealizapagoTexto" maxlength="50"  title="Otro Realiza Pago">
-                                </div>
-                                
-                            </div>
-                            <hr>
+                                </div>                                
+                            </div>                            
                         </div>
+                        <hr>
+                    
                         <br>                       
                         <h4><i class="fa fa-industry"></i> <b>En la zona/comunidad o cercania:</b></h4>
-                        
+                        <br>
                         <div class="row">
                             <div class="col-md-3">
                                 ¿Llega la Señal de Internet?
@@ -242,43 +243,65 @@
                             </div>
                         </div>
                         <div class="row" id="respuestaProveedor">
-                            <div class="col-md-3">
-                                ¿De que proveedor?
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Si su respuesta fue <strong>SI</strong> debe llenar la siguiente información.
+                                </div>   
                             </div>
-                            <div class="col-md-3">
-                                <select data-placeholder="Seleccionar"  id="proveedoresZona" name="select_proveedores[]" onchange="otroProveedorZona()" class="chosen-select"  tabindex="-1" style="display: none;">
-                                    {% for proveedores in proveedores %}
-                                        <option value="{{ proveedores.id }}">{{ proveedores.proveedor }}</option>
-                                    {% endfor %}
-                                </select>                               
+                            <br>
+                            <div class="row">
+                                <div class="col-md-1">                                       
+                                </div>
+                                <div class="col-md-3">
+                                    ¿De que proveedor?
+                                </div>
+                                <div class="col-md-3">
+                                    <select data-placeholder="Seleccionar"  id="proveedoresZona" name="select_proveedores[]" onchange="otroProveedorZona()" class="chosen-select"  tabindex="-1" style="display: none;">
+                                        {% for proveedores in proveedores %}
+                                            <option value="{{ proveedores.id }}">{{ proveedores.proveedor }}</option>
+                                        {% endfor %}
+                                    </select>                               
+                                </div>
+                                <div class="col-md-3" id="otroProveedorZona" style="display: none;" >
+                                    <input type="text" id="otroProveedorZonaTexto" maxlength="50"  title="Otro Proveedor">
+                                </div>
                             </div>
-                            <div class="col-md-3" id="otroProveedorZona" style="display: none;" >
-                                <input type="text" id="otroProveedorZonaTexto" maxlength="50"  title="Otro Proveedor">
-                            </div>
+                            
                         </div>
                         <br>                      
-                        Subir imagenes
-                        <br>
-                        (Recomendacion 2 una general panoramica representativa, y una de la computadora o un acercamiento)
+                        <h4><i class="fa fa-upload"></i> <b>Subir 2 fotografias una general panoramica representativa, y una de la computadora o un acercamiento.</b></h4>                         
+                        
+                        <br>                        
                         <div class="row">
-                            <div class="pull-center">
-                            <div class="col-md-4">
-                                <input type="file" id="foto1" title="Adjuntar Fotografia" accept="application/jpeg,.jpg,.png">
-                                <input type="file" id="foto2" title="Adjuntar Fotografia" accept="application/jpeg,.jpg,.png">
-                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="foto1">
+                                    Fotografia 1: <input type="file" id="foto1" title="Adjuntar Fotografia" onchange="selectFoto1(this)" accept="application/jpeg,.jpg,.png">
+                                    </label>
+                                    <label for="foto2">
+                                    Fotografia 2: <input type="file" id="foto2" title="Adjuntar Fotografia" onchange="selectFoto2(this)" accept="application/jpeg,.jpg,.png">
+                                    </label>
+                                </div>  
                             </div> 
                         </div>
                            <br>
+                           <hr>                          
+                          <h4><i class="fa fa-eye"></i> <b>Si tiene alguna observación adicional puede escribirla en el suguiente caja de texto:</b></h4>                         
+                         <br> 
                          <div class="row">
-                             <input type="text" id="observacion" title="Observacion adicional">
+                            <div class="col-md-12">
+                             <textarea type="text" id="observacion" cols="50" rows="3" title="Observacion adicional"></textarea>
+                            </div>
                          </div>                      
-                        <div class="row pull-center">
-                            <button class="btn btn-success"  title="Registrar Encuesta" onclick="registarRespuesta()"> Registrar Encuesta</button>
+                        <div class="row">
+                            <div class="text-center">
+                                <button class="btn btn-success btn-lg"  title="Sus respuestas serán registradas" onclick="registarRespuesta()"> Registrar Encuesta</button>
+                            </div>
                         </div>
                     </div><!-- /.panel-body -->
                     {% else %}
-                    <div class="row">
-                        
+                    <div class="row">                        
                         <div class="col-md-12">
                             <div class="panel rounded shadow">
                                 <div class="alert alert-warning ">
@@ -308,6 +331,7 @@
 {% block javascripts%}
 {{ parent() }}
 <script>
+    var foto1 = foto2 = '';
     function ocultarSala(valor){
          if(valor == 1) {
             var respuesta=$('input:radio[name=radiotype]:checked').val();        
@@ -326,7 +350,7 @@
                 $('#respuestaInternet').show(1000);
             }else {
                 $('#respuestaInternet').hide(1000);
-                $('#respuestasSala').hide(1000);
+               
                 $('#costo').val('');
                 $('#otroProveedorTexto').val('');
                 
@@ -365,7 +389,20 @@
             $('#otroRealizaPago').show(2000);
         } 
     }
-    
+    function selectFoto1(evt) {
+        var reader = new FileReader();
+        reader.readAsDataURL(evt.files[0]);
+        reader.onload = function(e) {
+            foto1 = e.target.result;
+        };
+    }
+    function selectFoto2(evt) {
+        var reader = new FileReader();
+        reader.readAsDataURL(evt.files[0]);
+        reader.onload = function(e) {
+            foto2 = e.target.result;
+        };
+    }    
     function registarRespuesta(){
         swal({
             title: "¿Está Segura/o de enviar la encuesta?",
@@ -378,30 +415,30 @@
             .then(function(willDelete)  {
                 if (willDelete) {
                     var ip = {
-                        tieneSala: 0,
-                        cantSalas: 0,
-                        cantComputadoras: 0,
-                        anioAdqui: 0,
+                                tieneSala: 0,
+                                cantSalas: 0,
+                                cantComputadoras: 0,
+                                anioAdqui: 0,
 
-                        respuestaPiso: '',
+                                respuestaPiso: '',
 
-                        tieneInternet: '',
-                        costo: 0,
+                                tieneInternet: '',
+                                costo: 0,
 
-                        proveedores: '',
-                        otroProveedor: '',
+                                proveedores: '',
+                                otroProveedor: '',
 
-                        pago: '',
-                        realizaPagoOtro: '',
+                                pago: '',
+                                realizaPagoOtro: '',
 
-                        tieneInternetZona: '',
-                        proveedorZona: '',
-                        otroProveedorZona: '',
-                        
-                        foto1: '',
-                        foto2: '',
-                        observacion:''
-                    };
+                                tieneInternetZona: '',
+                                proveedorZona: '',
+                                otroProveedorZona: '',
+                                
+                                foto1: '',
+                                foto2: '',
+                                observacion:''
+                             };
         var respuesta=$('input:radio[name=radiotype]:checked').val();        
         if(respuesta=='si'){
             if($('#cantSalas').val()) {
@@ -510,16 +547,18 @@
 
             if($('#observacion').val()) {
                 ip.observacion = $('#observacion').val();                        
-            } else {
+            }/* else {
                 swal("Debe introducior alguna Observacion");
                 return false;
-            } 
-            
-            var foto1 = document.getElementById('foto1');
-            ip.foto1 = foto1; 
-            var foto2 = document.getElementById('foto2');
-            ip.foto2 = foto2; 
-            
+            }*/
+            if($('#foto1').val()==''|| $('#foto2').val()=='') {
+                swal("Debe seleccionar una imagen.");
+                return false;  
+            } else {
+                ip.foto1 = foto1;
+                ip.foto2 = foto2;
+            }
+
             var fd = new FormData();
             fd.append('tieneSala', ip.tieneSala);
             fd.append('cantSalas', ip.cantSalas);
@@ -535,8 +574,8 @@
             fd.append('tieneInternetZona', ip.tieneInternetZona);
             fd.append('proveedorZona', ip.proveedorZona);
             fd.append('otroProveedorZona', ip.otroProveedorZona);
-            fd.append('foto1', ip.foto1.files[0]);
-            fd.append('foto2', ip.foto2.files[0]);
+            fd.append('foto1', ip.foto1);
+            fd.append('foto2', ip.foto2);
             fd.append('observacion', ip.observacion);
             fd.append('ie_id', {{ie_id}} );                      
             fd.append('gestion', {{gestion}});
@@ -559,12 +598,13 @@
                 },
                 success: function (data) {
                     if (data.estado==1 ){
-                        swal(" Sus respuestas fueron registradas con éxito.");
-                    }                            
-                    else {
+                        swal("Sus respuestas fueron registradas con éxito.");
+                        //location.href = "{{ path('encuestaUe_index') }}";
+                    } else {
                         swal('Su formulario no se envío correctamente');
                     }
                 },
+                
                 complete: function () {
                     swal.stopLoading();
                     swal.close();

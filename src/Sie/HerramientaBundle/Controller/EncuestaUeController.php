@@ -121,15 +121,16 @@ class EncuestaUeController extends Controller {
 
     public function guardarRespuestaAction(Request $request) {//dump($request);die;      
         
-        $foto1 = $request->files->get('foto1');
-        $type = pathinfo($foto1, PATHINFO_EXTENSION);
+        /*$foto1 = $request->files->get('foto1');
+        $type = $foto1->getClientOriginalExtension();//pathinfo($foto1, PATHINFO_EXTENSION);
         $foto1 = 'data:image/' . $type . ';base64,' . base64_encode($foto1);
         
-        $foto2 = $request->get('foto2');
-        $type = pathinfo($foto2, PATHINFO_EXTENSION);
-        $foto2 = 'data:image/' . $type . ';base64,' . base64_encode($foto2);
-
+        $foto2 = $request->files->get('foto2');
+        $type = $foto2->getClientOriginalExtension();//pathinfo($foto2, PATHINFO_EXTENSION);
+        $foto2 ='data:image/' . $type . ';base64,' . base64_encode($foto2);
+        */
         //$em = $this->getDoctrine()->getManager();
+        $res = 1; $msg = '';
         $em = $this->getDoctrine()->getManager();
         //$em->getConnection()->beginTransaction();
        
@@ -153,16 +154,17 @@ class EncuestaUeController extends Controller {
                 $entity->setProveedorUe($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('proveedores'))); //$request->get('proveedores')
                 $entity->setProveedorOtro($request->get('otroProveedor'));
 
-                //$entity->setRealizaPago($em->getRepository('SieAppWebBundle:RealizaPagoTipo')->find($request->get('pago')));
-                $entity->setRealizaPago($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('pago')));
+                $entity->setRealizaPago($em->getRepository('SieAppWebBundle:RealizaPagoTipo')->find($request->get('pago')));
+                //$entity->setRealizaPago($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('pago')));
                 $entity->setPagoOtro($request->get('realizaPagoOtro'));
 
                 $entity->setTieneSenal($request->get('tieneInternetZona'));
                 $entity->setProveedorZona($em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('proveedorZona')));                
-               //$entity->setProveedorZonaOtro( $em->getRepository('SieAppWebBundle:ProveedorTipo')->find($request->get('otroProveedorZona'));
+                $entity->setProveedorZonaOtro( $request->get('otroProveedorZona'));
                 
-               $entity->setFoto1($foto1);
-               $entity->setFoto2($foto2);
+               $entity->setFoto1($request->get('foto1'));
+               $entity->setFoto2($request->get('foto2'));
+               //$entity->setFoto2($foto2);
                $entity->setObservacion($request->get('observacion'));
                $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($request->get('gestion')));
                $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));            
@@ -172,9 +174,10 @@ class EncuestaUeController extends Controller {
            // $em->getConnection()->commit();
         } catch (Exception $exceptione) {
            $res=2;
+           $msg = $exceptione->getMessage();
         }
 
-        return  new JsonResponse(array('estado' => $res));       
+        return  new JsonResponse(array('estado' => $res, 'msg' => $msg));       
 
     }
     

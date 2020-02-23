@@ -565,10 +565,10 @@ class InstitucioneducativaEncuesta
     /**
      * Set realizaPago
      *
-     * @param \Sie\AppWebBundle\Entity\ProveedorTipo $realizaPago
+     * @param \Sie\AppWebBundle\Entity\RealizaPagoTipo $realizaPago
      * @return InstitucioneducativaEncuesta
      */
-    public function setRealizaPago(\Sie\AppWebBundle\Entity\ProveedorTipo $realizaPago = null)
+    public function setRealizaPago(\Sie\AppWebBundle\Entity\RealizaPagoTipo $realizaPago = null)
     {
         $this->realizaPago = $realizaPago;
     
@@ -578,10 +578,38 @@ class InstitucioneducativaEncuesta
     /**
      * Get realizaPago
      *
-     * @return \Sie\AppWebBundle\Entity\ProveedorTipo 
+     * @return \Sie\AppWebBundle\Entity\RealizaPagoTipo 
      */
     public function getRealizaPago()
     {
         return $this->realizaPago;
+    }
+    /**
+     * @var string
+     */
+    private $proveedorZonaOtro;
+
+
+    /**
+     * Set proveedorZonaOtro
+     *
+     * @param string $proveedorZonaOtro
+     * @return InstitucioneducativaEncuesta
+     */
+    public function setProveedorZonaOtro($proveedorZonaOtro)
+    {
+        $this->proveedorZonaOtro = $proveedorZonaOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get proveedorZonaOtro
+     *
+     * @return string 
+     */
+    public function getProveedorZonaOtro()
+    {
+        return $this->proveedorZonaOtro;
     }
 }

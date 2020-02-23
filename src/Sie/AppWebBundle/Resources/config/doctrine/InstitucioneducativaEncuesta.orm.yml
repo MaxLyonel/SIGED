@@ -117,6 +117,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaEncuesta:
             unsigned: false
             comment: ''
             column: tiene_senal
+        proveedorZonaOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: proveedor_zona_otro
     manyToOne:
         institucioneducativa:
             targetEntity: Institucioneducativa
@@ -155,7 +162,7 @@ Sie\AppWebBundle\Entity\InstitucioneducativaEncuesta:
                     referencedColumnName: id
             orphanRemoval: false
         realizaPago:
-            targetEntity: ProveedorTipo
+            targetEntity: RealizaPagoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
