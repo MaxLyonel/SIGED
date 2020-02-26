@@ -75,10 +75,10 @@
                                     <div class="col-md-1">                                       
                                     </div>
                                     <div class="col-md-4">
-                                        ¿Cuántas  salas?
+                                        ¿Cuántas salas de computación?
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="number"  min = "1" max = "10"  oninput="maxLengthCheck(this)" id="cantSalas"  class="estilo" title="Cantidad de salas">
+                                        <input type="number"  min = "1" max = "10" onchange="validaNumeroSalas()" oninput="maxLengthCheck(this)" id="cantSalas"  class="estilo" title="Cantidad de salas">
                                     </div>
                                 </div>
                                 <br>
@@ -86,30 +86,26 @@
                                     <div class="col-md-1">                                       
                                     </div>
                                     <div class="col-md-4">
-                                        ¿Cuántas  Computadoras?
+                                        ¿Cuántas computadoras tiene en la sala de computación?
                                     </div>
                                     <div class="col-md-3">
-                                        <input  id="cantComputadoras" oninput="maxLengthCheck(this)"
+                                        <input  id="cantComputadoras" onchange="validaNumeroComputadoras()" oninput="maxLengthCheck(this)"
                                         type = "number" min = "1" max = "10"  class="estilo" title="Cantidad de computadoras">
                                     </div>
                                 </div>
                                 <br>
-                                <div class="row">
+                                <div class="row" id='anio' style="display: none;">
                                     <div class="col-md-1">                                       
                                     </div>
                                     <div class="col-md-4">
-                                        ¿Año de Adquisicion?
+                                        ¿Año de Adquisicion de la(s) computadoras?
                                     </div>
-                                    <div class="col-md-3">
-                                        
+                                    <div class="col-md-3">                                        
                                         <select data-placeholder="Seleccionar"  id="anioAdqui" name="select_gestiom[]" title="Año en la que se adquirio las computadoras" class="chosen-select"  tabindex="-1" style="display: none;">
                                             {% for gestionTipo in gestionTipo %}
                                                 <option value="{{ gestionTipo.id }}">{{ gestionTipo.gestion }}</option>
                                             {% endfor %}
-                                        </select>  
-                                       <!--  <input  id="anioAdqui" oninput="maxLengthCheck(this)" type="number" min = "1900" max = "2020"  
-                                        class="estilo" title="Año en la que se adquirio las computadoras">
-                                        --> 
+                                        </select>
                                     </div>
                                 </div>                        
                         </div>
@@ -172,14 +168,18 @@
                             </div>
                             <br>
                             <div class="row">
-                                <div class="col-md                                                                                                                                                                                  -1">                                       
+                                <div class="col-md-1                                                                                                                                                                                  -1">                                       
                                 </div>
                                 <div class="col-md-4">
-                                    ¿Costo del Internet? <span style="color:brown;">(Agregar un costo redondeado Exp. Bs.)</span>                              
+                                    ¿Costo mensual del Internet?                               
                                 </div>
-                                <div class="col-md-5">
-                                    <input type="number" id="costo" oninput="maxLengthCheck(this)" min = "1" max = "9999" class="estilo" 
-                                     title="Costo aproximado del Internet (Bs.)">
+                                <div class="col-md-3">
+                                <input type="number" id="costo" onchange="validaCosto()" oninput="maxLengthCheck(this)" min = "1" max = "9999" class="estilo" 
+                                     title="Costo aproximado del Internet (Bs.)"> 
+                                </div>
+                                <div class="col-md-3">
+                                    <span style="color:brown;">
+                                        (Agregar un costo redondeado Exp. Bs.)</span>
                                 </div>
                             </div>
                             <br>
@@ -293,11 +293,11 @@
                         </div>
                            <br>
                            <hr>                          
-                          <h4><i class="fa fa-eye"></i> <b>Si tiene alguna observación adicional puede escribirla en la siguiente caja de texto:</b></h4>                         
+                          <h4><i class="fa fa-eye"></i> <b>Observaciones/sugerencias de la encuesta. <span class="text-danger"> (No mayor a 200 caractéres)</span></b></h4>                         
                          <br> 
                          <div class="row">
                             <div class="col-md-12">
-                             <textarea type="text" id="observacion" cols="50" rows="3" title="Observacion adicional"></textarea>
+                             <textarea type="text" id="observacion" cols="100" rows="3" title="Observación adicional (No mayor a 200 caractéres)"></textarea>
                             </div>
                          </div>                      
                         <div class="row">
@@ -413,7 +413,34 @@
         reader.onload = function(e) {
             foto2 = e.target.result;
         };
-    }    
+    }
+    
+    function validaNumeroSalas() {        
+        if($('#cantSalas').val() < 1) {
+            swal("El valor introducido no puede ser 0, debe introducir otro valor");
+            $('#cantSalas').val('');
+            document.getElementById("cantSalas").focus();
+        }        
+    }
+
+    function validaCosto() {
+        if($('#costo').val() < 1) {
+            swal("El valor introducido no puede ser 0, debe introducir otro valor");
+            $('#costo').val('');
+            document.getElementById("costo").focus();
+        }  
+          
+    }
+    function validaNumeroComputadoras() {        
+        if($('#cantComputadoras').val() < 1) {
+            swal("El valor introducido no puede ser 0, debe introducir otro valor");
+            $('#cantComputadoras').val('');
+            document.getElementById("cantComputadoras").focus();
+        } else{
+            $('#anio').show();            
+        }  
+
+    }
     function registarRespuesta(){
         swal({
             title: "¿Está Segura/o de enviar la encuesta?",
@@ -559,7 +586,12 @@
             }
 
             if($('#observacion').val()) {
-                ip.observacion = $('#observacion').val();                        
+                if($('#observacion').val().length>=200){
+                    swal("La longitud de la observación no debe superar 200 caractéres.");
+                }else{
+                    ip.observacion = $('#observacion').val();                        
+                }
+                
             }
 
             //console.log(respuesta,respuestaInternet,respuestaInternetZona);
