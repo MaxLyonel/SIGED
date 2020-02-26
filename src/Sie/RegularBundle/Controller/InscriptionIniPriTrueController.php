@@ -358,9 +358,9 @@ class InscriptionIniPriTrueController extends Controller {
          //do the inscription
 
          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-
          if($keyNextLevelStudent >= 0){
-           if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
+           
+           if(((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent)) || ( $newLevelStudent != $this->aCursos[$keyNextLevelStudent] ) ){
              $message = 'Estudiante No Inscrito, no le puede bajar de curso';
              $this->addFlash('idNoInscription', $message);
              $swCorrectInscription = false;
@@ -369,6 +369,7 @@ class InscriptionIniPriTrueController extends Controller {
         $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataCurrentInscription['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
          $yearStudent = $arrYearStudent['age'];
           if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
+            $message = false;
               switch ($yearStudent) {
                 case 4:
                   # code...
@@ -422,7 +423,8 @@ class InscriptionIniPriTrueController extends Controller {
                     $swCorrectInscription = false; 
                   break;
               }
-              $this->addFlash('idNoInscription', $message);
+
+              // $this->addFlash('idNoInscription', $message);
               
             }else{
 
@@ -603,6 +605,7 @@ class InscriptionIniPriTrueController extends Controller {
          ));*/
          //notas
        }else{
+          $this->addFlash('idNoInscription', $message);
          //no notas
          return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array(
            'setNotasInscription'=> $setNotasInscription,
