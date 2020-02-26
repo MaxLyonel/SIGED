@@ -76,7 +76,7 @@ class EncuestaUeController extends Controller {
         $verificarUe = $this->Validacion($ie_id,$gestion);
 
        
-        return $this->render('SieHerramientaBundle:EncuestaUe:index.html.twig',
+        return $this->render('SieHerramientaBundle:Encuestaue:index.html.twig',
             array(
                 'estado' => $verificarUe,
                 'ie_id'=> $ie_id ,
