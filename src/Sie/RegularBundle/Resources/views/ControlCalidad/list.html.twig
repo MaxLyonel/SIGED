@@ -32,59 +32,71 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
-                <div class="portlet-heading">
-                    <div class="pull-left">
-                        <h4 class="portlet-title">Inconsistencias respecto a {{ entidad.entidad }} - {{gestion}}</h4>
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-list-ul"></i> <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Inconsistencias respecto a {{ entidad.entidad }} - {{gestion}}</a>
+                        </h4>
                     </div>
-                    <div class="clearfix"></div>
-                </div><!-- /.panel-heading -->
-                <div class="portlet-body">
-                    <div class="panel-body panel-primary">
-                        {% if lista_inconsistencias is not empty %}
-                            <div id="no-more-tables" class="table-responsive">
-                                <table class="table table-bordered table-hover cf dataTable">
-                                    <thead  class="cf">
-                                        <tr>
-                                            <th>N°</th>
-                                            <th>Descripción</th>
-                                            <th>Detalle</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for lista in lista_inconsistencias %}
-                                            <tr {% if lista.poderacion > 50 %}class="danger"{% elseif lista.poderacion <= 50 and lista.poderacion > 20 %}class="warning"{% else %}class="success"{% endif %}>
-                                                <td data-title="N°">{{ loop.index }}</td>
-                                                <td data-title="Descripcion">{{ lista.descripcion }}</td>
-                                                <td data-title="Detalle">{{ lista.detalle }}</td>
-                                                <td data-title="Acciones">
-                                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 %}
-                                                        <button type="button" class="btn-link" onclick="mostrarDetalle({{lista.id}})" title="VerDetalles"><i class="fa fa-search"></i> Ver detalle</button>
-                                                        {% if app.session.get('roluser') != 9 %}
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            {% if lista_inconsistencias is not empty %}
+                                <div id="no-more-tables" class="table-responsive">
+                                    <table class="table table-bordered table-hover cf dataTable">
+                                        <thead  class="cf">
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Descripción</th>
+                                                <th>Detalle</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for lista in lista_inconsistencias %}
+                                                <tr {% if lista.poderacion > 50 %}class="danger"{% elseif lista.poderacion <= 50 and lista.poderacion > 20 %}class="warning"{% else %}class="success"{% endif %}>
+                                                    <td data-title="N°">{{ loop.index }}</td>
+                                                    <td data-title="Descripcion">{{ lista.descripcion }}</td>
+                                                    <td data-title="Detalle">{{ lista.detalle }}</td>
+                                                    <td data-title="Acciones">
+                                                        {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 %}
+                                                            <button type="button" class="btn-link" onclick="mostrarDetalle({{lista.id}})" title="VerDetalles"><i class="fa fa-search"></i> Ver detalle</button>
+                                                            {% if app.session.get('roluser') != 9 %}
+                                                                <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
+                                                            {% endif %}
+                                                        {% elseif app.session.get('roluser') == 7 %}
                                                             <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
                                                         {% endif %}
-                                                    {% elseif app.session.get('roluser') == 7 %}
-                                                        <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% else %}
-                            No presenta inconsistencias respecto a {{ entidad.entidad }} para la gestión {{gestion}}.
-                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No presenta inconsistencias respecto a {{ entidad.entidad }} para la gestión {{gestion}}.
+                            {% endif %}
+                        </div>
                     </div>
-                </div><!-- /.panel-body -->
-            </div>
-        </div>
+                </div>
+                <div id="divDetalle" class="panel"></div>
+                
+                <div class="panel panel-info invisible" id="solution">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-tasks"></i> <a id="collapseThreeTitle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"></a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="panel-body"  id="collapseThreeBody">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>        
     </div>
-    <div class="row">
-        <div id="divDetalle"></div>
-    </div> 
 {% endblock %}
 
 {% block javascripts %}
@@ -107,6 +119,7 @@
                         type: 'info',
                         showCloseButton: true
                     });
+
                 },
                 success: function (data) {
                     $("#divDetalle").empty();
