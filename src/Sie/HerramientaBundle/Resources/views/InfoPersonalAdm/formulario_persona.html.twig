@@ -22,7 +22,7 @@
     </div>
     <div class="form-group">
         <label>{{form_label(form_verificar.fecha_nacimiento)}} (*):</label>
-        {{form_widget(form_verificar.fecha_nacimiento, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)', 'required': true}})}}
+        {{form_widget(form_verificar.fecha_nacimiento, {'attr': {'class': 'form-control calendario', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)', 'required': true}})}}
     </div>
     <input type="hidden" id="sie_verificar_persona_segip_entorno" name="sie_verificar_persona_segip[entorno]" value="prod">
     <input type="hidden" id="sie_verificar_persona_segip_institucion" name="sie_verificar_persona_segip[institucion]" value="{{institucion}}">
