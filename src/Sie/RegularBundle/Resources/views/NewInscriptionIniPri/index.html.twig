@@ -126,6 +126,31 @@
                             </div>
 
                             <div class="alert alert-info" v-if="message != ''"> <i class="fa fa-warning"></i> ${message}</div>
+
+							<div v-if=" message != '' && existStudent != ''">
+
+                            	<!-- data new studen  -->
+                            	<p class="encabezado bg-primary">INFORMACIÓN DEL ESTUDIANTE EXISTENTE</p>
+                            	<table class="table table-dark">
+								  <tbody>
+								  	<tr>
+								  		<th colspan="3" >Cod. RUDE: ${DBstudentExist.rude | uppercase}</th>
+								  	</tr>
+								    <tr>
+								      <th>Paterno: ${DBstudentExist.paterno | uppercase}</th>
+								      <th>Materno: ${DBstudentExist.materno | uppercase}</th>
+								      <th>Nombre(s): ${DBstudentExist.nombre | uppercase}</th>
+								    </tr>
+								    <tr>
+								      <th>CI: ${DBstudentExist.carnet}</th>
+								      <th>Complemento: ${DBstudentExist.complemento}</th>
+								      <th>Fecha Nacimiento: ${DBstudentExist.fecNac}</th>
+								    </tr>
+								    
+								    
+								  </tbody>
+								</table>
+                        	</div>
                             
                             <div v-if="responseprocess">
 
@@ -355,6 +380,7 @@
             	nombreue:true,
             	buscando:false,
                 buscandoue:false,
+                existStudent:false,
             	message:'',           	
             	messageue:'',           	
                 DBPais: {},
@@ -366,7 +392,7 @@
                 DBTurno:{},
                 DBNewStudent:{},
                 DBNewInscription:{},
-
+                DBstudentExist:{},
 
 
                 codigoRude:'',
@@ -403,6 +429,8 @@
                     this.responseprocess = false;
                     this.swinscription = false;
                     this.swprocessue = false;
+                    this.DBstudentExist=false;
+                    this.existStudent=false;
                     this.message = '';
                     this.dataNewStudent.generoId= '';
                     this.dataNewStudent.paisId= '';
@@ -474,6 +502,9 @@
                         	this.message = response.data.message;
                         	this.DBGenero= response.data.arrGenero;
                         	this.DBPais= response.data.arrPais;
+                        	this.DBstudentExist= response.data.arrStudentExist;
+                        	this.existStudent = response.data.existStudent;
+                        	
                         }                        
                         this.buscando = false;
                     })

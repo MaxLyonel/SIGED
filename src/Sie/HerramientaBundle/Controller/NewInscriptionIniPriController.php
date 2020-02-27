@@ -13,7 +13,7 @@ use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion; 
 use Sie\AppWebBundle\Entity\EstudianteInscripcion; 
 use Sie\AppWebBundle\Entity\Estudiante; 
-
+use Symfony\Component\Validator\Constraints\DateTime;
 class NewInscriptionIniPriController extends Controller
 {
 
@@ -87,68 +87,116 @@ class NewInscriptionIniPriController extends Controller
     	$nombre = $request->get('nombre');
     	$withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
     	$expedidoIdfind = $request->get('expedidoIdfind');
-
+// dump($request);die;
     	$arrGenero = array();
     	$arrPais = array();
-    	
+		$arrStudentExist = false;
+		$existStudent = '';
     	// check if the inscription is by ci or not
 		if($withoutcifind){
 			$answerSegip = true;
 		}else{
-			// to do the segip validation
-	    	$arrParametros = array(
-		        'complemento'=>$complemento,
-		        'primer_apellido'=>$paterno,
-		        'segundo_apellido'=>$materno,
-		        'nombre'=>$nombre,
-		        'fecha_nacimiento'=>$fecNac
-	      	);
-	      	
-			$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+
+			// list($day, $month, $year) = explode('-', $fecNac);
+			$arrayCondition['paterno'] = $paterno;
+			$arrayCondition['materno'] = $materno;
+				$arrayCondition['nombre'] = $nombre;
+			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
+			$arrayCondition['carnetIdentidad'] = $carnet;
+			if($complemento){
+				$arrayCondition['complemento'] = $complemento;
+			}else{
+				$arrayCondition['complemento'] = "";
+			}
+			// dump($arrayCondition);die;
+
+			// find the student by arrayCondition
+			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
+			$existStudent = false;
+			if(sizeof($objStudent)>0){
+				$existStudent=true;
+				
+			}			
+
+			if(!$existStudent){
+				// to do the segip validation
+		    	$arrParametros = array(
+			        'complemento'=>$complemento,
+			        'primer_apellido'=>$paterno,
+			        'segundo_apellido'=>$materno,
+			        'nombre'=>$nombre,
+			        'fecha_nacimiento'=>$fecNac
+		      	);
+		      	
+				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+			}
+
+		}
+		// check if the student exists
+		if(!$existStudent){
+		      // check if the data person is true
+		      if($answerSegip){
+		      	// validate the year old on the student
+		      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
+		        $yearStudent = $arrYearStudent['age'];
+		        // check if the student is on 5 - 8 years old
+		        if($yearStudent<=8 && $yearStudent>=4){
+
+		        	 // get genero data
+				     $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
+				      foreach ($objGenero as $value) {
+				          if($value->getId()<3){
+				              $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());
+				          }
+				      }
+
+				            //get pais data
+				      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+				      foreach ($objPais as $value) {
+				        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
+				      }
+
+
+		        	$status = 'success';
+		            $code = 200;
+		            $message = "Estudiante cumple con los requerimientos!!!";
+		            $swcreatestudent = true; 
+
+
+		        }else{
+		        	$status = 'error';
+					$code = 400;
+					$message = "Estudiante no cumple con la edad requerida 4 a 8";
+					$swcreatestudent = false; 
+		        }
+		      }else{
+					$status = 'error';
+					$code = 400;
+					$message = "Estudiante no cumple con la validacion segip";
+					$swcreatestudent = false; 
+		      }
+
+		}else{
+
+			$arrStudentExist = array(
+					'paterno'=>$objStudent->getPaterno(),
+					'materno'=>$objStudent->getMaterno(),
+					'nombre'=>$objStudent->getNombre(),
+					'carnet'=>$objStudent->getCarnetIdentidad(),
+					'complemento'=>$objStudent->getComplemento(),
+					'fecNac'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
+					'rude'=>$objStudent->getCodigoRude() ,
+				);
+			$existStudent = true;
+
+			$status = 'error';
+			$code = 400;
+			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el modulo de Omitidos/Transferencia";
+			$swcreatestudent = false; 
+
 		}
 		
 
-      // check if the data person is true
-      if($answerSegip){
-      	// validate the year old on the student
-      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
-        $yearStudent = $arrYearStudent['age'];
-        // check if the student is on 5 - 8 years old
-        if($yearStudent<=8 && $yearStudent>=4){
-
-        	 // get genero data
-		     $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
-		      foreach ($objGenero as $value) {
-		          if($value->getId()<3){
-		              $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());
-		          }
-		      }
-
-		            //get pais data
-		      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
-		      foreach ($objPais as $value) {
-		        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
-		      }
-
-
-        	$status = 'success';
-            $code = 200;
-            $message = "Estudiante cumple con los requerimientos!!!";
-            $swcreatestudent = true; 
-
-
-        }else{
-        	$status = 'error';
-			$code = 400;
-			$message = "Estudiante no cumple con la edad requerida 4 a 8";
-			$swcreatestudent = false; 
-        }
-      }else{
-			$status = 'error';
-			$code = 400;
-			$message = "Estudiante no cumple con la validacion segip";
-			$swcreatestudent = false; 
-      }
 
 
        $arrResponse = array(
@@ -158,6 +206,8 @@ class NewInscriptionIniPriController extends Controller
         'swcreatestudent' => $swcreatestudent,    
         'arrGenero' => $arrGenero,    
         'arrPais' => $arrPais,    
+        'arrStudentExist' => $arrStudentExist,    
+        'existStudent' => $existStudent,    
         
       );
       

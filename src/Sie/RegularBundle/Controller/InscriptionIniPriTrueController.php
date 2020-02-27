@@ -532,6 +532,43 @@ class InscriptionIniPriTrueController extends Controller {
     }
     //check the inscription
        if($swCorrectInscription){
+
+        // add validation segip if the student has CI
+        if(!$dataCurrentInscription['segipId'] && $dataCurrentInscription['carnetIdentidad']){
+          $answerSegip = false;
+          // to do the segip validation
+          $arrParametros = array(
+              'complemento'=> $dataCurrentInscription['complemento'],
+              'primer_apellido'=>$dataCurrentInscription['paterno'],
+              'segundo_apellido'=>$dataCurrentInscription['materno'],
+              'nombre'=>$dataCurrentInscription['nombre'],
+              'fecha_nacimiento'=>$dataCurrentInscription['fechaNacimiento']->format('d-m-Y')
+            );            
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $dataCurrentInscription['carnetIdentidad'],$arrParametros,'prod', 'academico');
+            if($answerSegip){
+              $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
+              $objStudent->setSegipId(1);
+              $em->persist($objStudent);
+              $em->flush();
+              
+              $arrayNEW = json_encode(array('segipId'=>1));
+              $arrayOLD = json_encode(array('segipId'=>0));
+
+             $this->get('funciones')->setLogTransaccion(
+               $form['idStudent'],
+               'estudiante',
+               'U',
+               'omitido/TRANSFERENCIA',
+               $arrayNEW,
+               $arrayOLD,
+               'SIGED',
+               json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+              );
+
+            }
+
+        }
+        
          //get the id of course
          $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
              'nivelTipo' => $form['nivel'],
@@ -570,6 +607,8 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();
+
+
 
          //add the areas to the student
          // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
@@ -1165,7 +1204,7 @@ class InscriptionIniPriTrueController extends Controller {
         $query = $entity->createQueryBuilder('e')
                 ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
                  'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
-                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento, e.paterno, e.materno, e.nombre, e.carnetIdentidad, e.complemento, e.segipId')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
