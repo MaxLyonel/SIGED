@@ -8,3 +8,9 @@ maestroAsignacion_asignar:
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestro }
     options:
         expose: true
+
+maestroAsignacion_asignar_materia:
+    path:     /asignar/materia
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateria }
+    options:
+        expose: true

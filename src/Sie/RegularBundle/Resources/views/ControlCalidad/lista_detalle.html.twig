@@ -240,7 +240,7 @@
                                         {% else %}
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionFinanciamientoMaestro({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% endif %}
-                                    {% elseif regla.id == 14 %}
+                                    {% elseif regla.id == 14 %}                                    
                                         <form action="{{path('ccalidad_verificar')}}" method="post">
                                             <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                             <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -248,7 +248,7 @@
                                             <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
                                             <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
                                         </form>
-                                        <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}})"><i class="fa fa-eye"></i> Ver solución</button>
+                                        <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}}, '{{detalle.obs}}')"><i class="fa fa-eye"></i> Ver solución</button>
                                     {% endif %}
                                     </td>
                                 </tr>
@@ -344,31 +344,29 @@
     $('#collapseOne').removeClass('in').addClass('collapse');
     $('#collapseTwo').removeClass('collapse').addClass('in');
 
-    var ingresarSolucionAsignarMateria = function(vp_id, llave, gestion){
-        var htmlTitulo = "Inconsistencias: "+llave+"";
+    var ingresarSolucionAsignarMateria = function(vp_id, llave, gestion, obs){
+        var htmlTitulo = "Inconsistencia: "+obs+"";
         $('#collapseThreeTitle').html(htmlTitulo);
-        //$.ajax({
-        //    type: 'get',
-        //    url: Routing.generate('ccalidad_solucion_historico', {'vp_id': vp_id, 'llave': llave, 'gestion': gestion}),
-        //    beforeSend: function () {
-        //        $("#idCuerpo").empty();
-        //        $("#idCuerpo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
-        //    },
-        //    success: function (data) {
-        //        $("#idCuerpo").empty();
-        //        $("#idCuerpo").html("...123...");
-        //    },
-        //    error: function(error){
-        //        $("#message").empty(); 
-        //        $("#message").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
-        //    },
-        //});
-        
-        $('#collapseOne').removeClass('in').addClass('collapse');
-        $('#collapseTwo').removeClass('in').addClass('collapse');
-        $('#collapseThree').removeClass('collapse').addClass('in');
-        $('#solution').removeClass('invisible').addClass('visible');
-        $("#collapseThreeBody").html("...123...");
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_asignar_materia', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#solution').removeClass('invisible').addClass('visible');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
     }
 
     var mostrarSolucionNuevoMaestro = function(reglaId, solucionId){

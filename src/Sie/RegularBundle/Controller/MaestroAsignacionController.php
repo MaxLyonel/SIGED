@@ -63,4 +63,37 @@ class MaestroAsignacionController extends Controller {
 
         return $this->redirectToRoute('maestroAsignacion');
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega el fomulario para registrar o modificar la asignacion de un maestro
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function asignarMaestroMateriaAction(Request $request) {
+        $validacionProcesoId = $request->get('vp_id');
+        $maestroInscripcionId = $request->get('id');
+        $gestion = $request->get('gestion');
+  
+        $em = $this->getDoctrine()->getManager();
+        $maestroInscripcionEntidad = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+        dump($maestroInscripcionId);
+        dump($maestroInscripcionEntidad);
+        if($validacionProcesoId > 0){
+            $validacionProcesoEntidad = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
+        } else {
+
+        }
+        $arr = array(0 => array('id' => 1, 'name' => 'red', 'detail' => 'color rojo'), 1 => array('id' => 2, 'name' => 'blue', 'detail' => 'color azul'), 2 => array('id' => 3, 'name' => 'black', 'detail' => 'color negro'));
+        $keys = "";
+        foreach($arr[0] as $key => $value){
+            $keys = $keys ."-". $key;
+        }
+        dump($keys);die;
+        // $maestros = $this->get('maestroAsignacion')->listar($idCursoOferta);
+
+        return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMateriaIndex.html.twig',array(
+
+        ));
+    }
 }
