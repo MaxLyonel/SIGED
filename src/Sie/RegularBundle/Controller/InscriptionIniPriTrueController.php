@@ -339,27 +339,21 @@ class InscriptionIniPriTrueController extends Controller {
       $swCorrectInscription = true;
 
       $currentLevelStudent = $dataCurrentInscription['nivelId'].'-'.$dataCurrentInscription['cicloId'].'-'. $dataCurrentInscription['gradoId'];
-
       if (!($dataCurrentInscription['nivelId']>10)) {
         // getCourseOld
         $newInfInscription = $this->getCourseOld($dataCurrentInscription['nivelId'],$dataCurrentInscription['cicloId'],$dataCurrentInscription['gradoId'],$dataCurrentInscription['estadoMatriculaId']);
         $currentLevelStudent = $this->aCursos[$newInfInscription-1];
-        // dump($this->aCursos[$newInfInscription-1]);
-        // dump($newInfInscription);
       }
       // dump($currentLevelStudent);die;
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
     //if doesnt have next curso info is new or extranjero do the inscription
-      
     if( (str_replace('-','',$currentLevelStudent) )!=''){
       // if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
       if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
-
-         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, 5);
          if($keyNextLevelStudent >= 0){
-           
            if(((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent)) || ( $newLevelStudent != $this->aCursos[$keyNextLevelStudent] ) ){
              $message = 'Estudiante No Inscrito, no le puede bajar de curso';
              $this->addFlash('idNoInscription', $message);
