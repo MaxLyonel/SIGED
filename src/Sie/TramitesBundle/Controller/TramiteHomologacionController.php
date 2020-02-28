@@ -725,6 +725,12 @@ class TramiteHomologacionController extends Controller {
                     $newStudent['ci'] = $student->getCarnetIdentidad();
                     $newStudent['complemento'] = $student->getComplemento();
                     $newStudent['pasaporte'] = $student->getPasaporte();
+                    $rude = $student->getCodigoRude();
+                    // $segipId = $student->getSegipId();
+                    // if ($segipId != 1){
+                    //     $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
+                    //     return $response->setData(array('estado' => false, 'msg' => $msg));
+                    // } 
                 }
             }
             
@@ -889,6 +895,7 @@ class TramiteHomologacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
+                and ei.estadomatricula_tipo_id in (4,5,55,9,10,11)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);
