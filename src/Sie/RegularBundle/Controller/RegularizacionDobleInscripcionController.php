@@ -127,13 +127,28 @@ class RegularizacionDobleInscripcionController extends Controller {
                   $inscripcionActual['estadoFinal'] = false;
                 }
 
+                $rol_usuario = $this->session->get('roluser');
 
-                if ($inscripcionActual['cantidadRegistrados'] == 0){
-                  $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleSinNota($inscripcionActual['gestion']);
+                if ($rol_usuario == '31') {
+                  $inscripcionActual['estadosCambiar'] = $this->getEstadoMatricula();
                 } else {
-                  $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion']);
+                  if ($inscripcionActual['cantidadRegistrados'] == 0){
+                    $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleSinNota($inscripcionActual['gestion']);
+                  } else {
+                    $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion']);
+                  }
                 }
-
+                
+                // dump($ins);dump($inscripcionActual['estadosCambiar']);
+                if(count($ins) <= 1){
+                  $keysTraslado = array_keys(array_column($inscripcionActual['estadosCambiar'], 'id'), 9);
+                  if (count($keysTraslado)>0){
+                    unset($inscripcionActual['estadosCambiar'][$keysTraslado[0]]);
+                  }                  
+                  //dump(array_keys(array_column($inscripcionActual['estadosCambiar'], 'id'), 9));
+                }
+                //dump($ins);dump($inscripcionActual['estadosCambiar']);
+                // die;
                 //$arrayMatriculaLista = $arrayMatriculaLista + $inscripcionActual['estadosCambiar'];
                 $arrayMatriculaLista = array_merge($arrayMatriculaLista, $inscripcionActual['estadosCambiar']);
                 //dump($arrayMatriculaLista);
@@ -224,6 +239,16 @@ class RegularizacionDobleInscripcionController extends Controller {
         } catch (Exception $ex) {
 
         }
+    }
+
+    public function getEstadoMatricula() {
+      $em = $this->getDoctrine()->getManager();
+      $queryEntidad = $em->getConnection()->prepare("
+          select * from estadomatricula_tipo where nota_presentacion_tipo_id in (1,2,3)
+      ");
+      $queryEntidad->execute();
+      $objEntidad = $queryEntidad->fetchAll();
+      return $objEntidad;
     }
 
     public function getEstadoMatriculaFinProcesoEducativo() {
