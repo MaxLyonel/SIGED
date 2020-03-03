@@ -350,9 +350,13 @@ class InscriptionIniPriTrueController extends Controller {
     if( (str_replace('-','',$currentLevelStudent) )!=''){
       // if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
       if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
-        //|| ($currentLevelStudent == '12-1-1')
+         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
-         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, 5);
+          if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112))){
+            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, 5);
+          }else{
+            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+          }
          if($keyNextLevelStudent >= 0){
            if(((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent)) || ( $newLevelStudent != $this->aCursos[$keyNextLevelStudent] ) ){
              $message = 'Estudiante No Inscrito, no le puede bajar de curso';
