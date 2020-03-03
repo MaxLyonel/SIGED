@@ -359,8 +359,9 @@
                 $("#collapseThreeBody").html(data);        
                 $('#collapseOne').removeClass('in').addClass('collapse');
                 $('#collapseTwo').removeClass('in').addClass('collapse');
-                $('#collapseThree').removeClass('collapse').addClass('in');
                 $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
             },
             error: function(error){
                 $("#collapseThreeBody").empty(); 

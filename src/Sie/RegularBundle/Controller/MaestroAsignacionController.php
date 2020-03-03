@@ -89,9 +89,19 @@ class MaestroAsignacionController extends Controller {
         foreach($arr[0] as $key => $value){
             $keys = $keys ."-". $key;
         }
-        dump($keys);die;
+        dump($keys);//die;
         // $maestros = $this->get('maestroAsignacion')->listar($idCursoOferta);
-
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('asdasd_asd_asdasd'))
+                ->add('info', 'hidden', array('label' => 'Info', 'attr' => array('value' => $valll)))
+                ->add('turno', 'choice', array('label' => 'Especialidad', 'empty_value' => 'Seleccione Especialidad', 'choices' => $entidadEspecialidad, 'data' => $especialidadId, 'attr' => array('class' => 'form-control', 'disabled' => 'disabled', 'onchange' => 'listar_nivel(this.value)', 'required' => true)))
+                ->add('nivel', 'choice', array('label' => 'Nivel', 'empty_value' => 'Seleccione Nivel', 'choices' => $entidadNivel, 'data' => $nivelId, 'attr' => array('class' => 'form-control', 'required' => true, 'disabled' => 'disabled', 'onchange' => 'listar_grado_asignatura()')))
+                ->add('grado', 'choice', array('label' => 'Grado', 'empty_value' => 'Seleccione Grado', 'choices' => $entidadGrado, 'data' => $gradoId, 'attr' => array('class' => 'form-control', 'required' => true, 'disabled' => 'disabled', 'onchange' => 'listar_paralelo()')))
+                ->add('paralelo', 'choice', array('label' => 'Paralelo', 'empty_value' => 'Seleccione Paralelo', 'choices' => $entidadParalelo, 'data' => $paraleloId, 'attr' => array('class' => 'form-control', 'required' => true, 'disabled' => 'disabled', 'onchange' => 'habilitarSubmit()')))
+                ->add('asignatura', 'choice', array('label' => 'Asignatura', 'empty_value' => 'Seleccione Asignatura', 'choices' => $entidadAsignatura, 'data' => $asignaturaId, 'attr' => array('class' => 'form-control', 'required' => true, 'disabled' => 'disabled', 'onchange' => 'habilitarSubmit()')))
+                ->add('buscar', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue', 'disabled' => 'disabled')))
+                ->getForm()->createView();
+        
         return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMateriaIndex.html.twig',array(
 
         ));
