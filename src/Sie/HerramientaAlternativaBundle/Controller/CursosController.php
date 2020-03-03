@@ -675,42 +675,7 @@ class CursosController extends Controller {
                 }
                 $em->flush();
 
-               //paso 7 borrando apoderados
-                //dump($arrInfoStudent);
-                //dump($arrInfoStudent['eInsId']);die;
-
-                $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
-
-                if(($objEstudianteInscripcionSocioeconomicoRegular)){
-                  $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
-                    'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-                  ));
-                  foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
-                      $em->remove($element);
-                  }
-                  $em->flush();
-
-                  $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
-                    'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-                  ));
-                  foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
-                      $em->remove($element);
-                  }
-                  $em->flush();
-
-                  $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
-                    'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-                  ));
-                  foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
-                      $em->remove($element);
-                  }
-                  $em->flush();
-
-                  $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
-                  $em->flush();
-                }
-
-
+                //paso 7 borrando apoderados
                 // this is for the new RUDE dev
                 $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$arrInfoStudent['eInsId']));
                 if($objRude){
