@@ -98,12 +98,42 @@
                         {% endif %}
                     </tr>
                 </table>
+                <table class="table btn-default">
+                    <tr>
+                        <td>
+                            {% if app.session.get('roluser') == 31 %}
+                                <div class="title dark-blue">                                    
+                                    <div class="form-group">
+                                        <label for="{{cont}}_observacion">Observación</label>
+                                        <textarea class="form-control" rows="2" id="{{cont}}_observacion" name="observacion[]"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{cont}}_documentoTipo">Tipo de Documento</label>
+                                        <select name="documentoTipo[]" id="{{cont}}_documentoTipo" class="form-control">
+                                            <option value="">Seleccione</option>
+                                            <option value="13">Resolución Administrativa</option>
+                                            <option value="14">Informe Tecnico</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{cont}}_documento">Documento</label>
+                                        <input type="file" id="{{cont}}_documento" name="documento[]" class="" accept="image/*">
+                                    </div>
+
+                                    
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <br>
         </div>
         {% set cont = cont + 1 %}
     {% endfor %}
 </form>
+
+
+
 </div>
 
 
@@ -248,15 +278,12 @@
 
 {% endif %}
 
-
-
 <div id="respuesta" class="alert" style="display:none;">
 
 </div>
-<hr>
 <div class="row">
     <div class="col-lg-12 text-left" style="margin-top:10px">
-        <button class="btn btn-success" onclick="guardar()" id="btnGuardar">Guardar</button>
+        <button class="btn btn-success col-lg-12" onclick="guardar()" id="btnGuardar">Guardar</button>
     </div>
 </div>
 
@@ -601,13 +628,17 @@
             // console.log(enviar);
 
             //return false;
-
+            var form = $('#form')[0];
+            var formData = new FormData(form);
             if(enviar == true){
                 if(confirm('¿Está seguro de realizar los cambios?, tenga en cuenta que esta ratificando los estados y notas del estudiante. ¿Desea continuar?')){
                     $.ajax({
                         type: 'post',
+                        processData: false,
+                        contentType: false,
                         url: Routing.generate('regularizacionDobleInscripcion_guardar'),
-                        data: $('#form').serialize(),
+                        //data: $('#form').serialize(),
+                        data: formData,
                         beforeSend: function () {
                             $("#respuesta").empty();
                             $("#respuesta").css('display','block');

@@ -12,6 +12,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionDocumento;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 
 /**
@@ -305,6 +306,7 @@ class RegularizacionDobleInscripcionController extends Controller {
             $nivel = $request->get('arrNivel');
             $rude = $request->get('rude');
             $idInscripcion = $request->get('arrIdInscripcion');
+            //dump($request);die;
             // for($i=0; $i<count($idInscripcion); $i++){
             //     if(isset($idEstudianteNota[$i])){
             //         $op = $idEstudianteNota[$i];
@@ -434,6 +436,9 @@ class RegularizacionDobleInscripcionController extends Controller {
             $arrEstudianteEstado = $request->get('estadoMatriculaActual');
             $arrIdInscripcion = $request->get('arrIdInscripcion');
             $arrEstadoMatriculaNuevo = $request->get('estadoMatriculaNuevo');
+            $arrObservacion = $request->get('observacion');
+            $arrayDocumentoTipo = $request->get('documentoTipo');
+            $arrayFile = $request->files->get('documento');
             $estadoMatriculaFinProcesoEducativo = $this->getEstadoMatriculaFinProcesoEducativo();
             $listaEstadoMatriculaFinProcesoEducativo = array_column($estadoMatriculaFinProcesoEducativo,'id');
 
@@ -442,19 +447,27 @@ class RegularizacionDobleInscripcionController extends Controller {
               //if(!in_array($estado, $listaEstadoMatriculaFinProcesoEducativo)){
                 $idInscripcion = isset($arrIdInscripcion[$key])?$arrIdInscripcion[$key]:'';
                 $idEstadoMatriculaNuevo = isset($arrEstadoMatriculaNuevo[$key])?$arrEstadoMatriculaNuevo[$key]:'';
+                $observacion = isset($arrObservacion[$key])?$arrObservacion[$key]:'';
+                $file = isset($arrayFile[$key])?$arrayFile[$key]:null;
+                $documentoTipoId = isset($arrayDocumentoTipo[$key])?$arrayDocumentoTipo[$key]:0;
                 $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+                
                 if(count($inscripcion)>0){
                   $idEstadoMatriculaActual = $inscripcion->getEstadomatriculaTipo()->getId();
                 } else {
                   $idEstadoMatriculaActual = 0;
                 }
                 if(!in_array($idEstadoMatriculaActual, $listaEstadoMatriculaFinProcesoEducativo)){
-                  $this->changeStudentState($idInscripcion, $idEstadoMatriculaNuevo);
+                  $this->changeStudentState($idInscripcion, $idEstadoMatriculaNuevo);                  
                   //dump($idEstadoMatriculaNuevo);
-                } else {
+                } 
+
+                if(isset($file) and $file != null){ 
+                  $this->insertDocumentoInscripcion($idInscripcion, $file, $observacion, $documentoTipoId);
                 }
               //}
             }
+            
             //dump($arrEstudianteEstado);dump($arrIdInscripcion);dump($arrEstadoMatriculaNuevo);dump($listaEstadoMatriculaFinProcesoEducativo);die;
             //$em->getConnection()->commit();
             //verifcatiokn
@@ -618,7 +631,34 @@ class RegularizacionDobleInscripcionController extends Controller {
     }
 
 
+    private function insertDocumentoInscripcion($estudianteInscripcionId, $file, $obs, $documentoTipoId){
+      $em = $this->getDoctrine()->getManager();
 
+      $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcionId);
+      $rude = $estudianteInscripcion->getEstudiante()->getCodigoRude();
+      $gestion = $estudianteInscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+      
+      $filename = "";
+      $filename = $rude.'_ResolucionAdministrativa_CambioEstado_'.$gestion.'_'.$estudianteInscripcionId.'.'.$file->guessExtension();
+      $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/documento_estudiante/'.$rude.'/';   
+      $file->move($adjuntoDir, $filename);
+
+      // if (!file_exists($adjuntoDir.'/'.$filename)){
+      //     $em->getConnection()->rollback();
+      //     $msg  = 'La fotografía ('.$file->getClientOriginalName().') del '.$grados[$i].'° año de escolaridad, no fue registrada.';
+      //     return $response->setData(array('estado' => false, 'msg' => $msg));
+      // }     
+
+      $estudianteInscripcionDocumento = new EstudianteInscripcionDocumento();
+      $estudianteInscripcionDocumento->setObservacion(strtoupper($obs));
+      $estudianteInscripcionDocumento->setEstudianteInscripcion($estudianteInscripcion);
+      $estudianteInscripcionDocumento->setDocumentoTipo($em->getRepository('SieAppWebBundle:DocumentoTipo')->find($documentoTipoId)); // resolucion administrativa
+      $estudianteInscripcionDocumento->setRutaImagen($rude.'/'.$filename);  
+      $em->persist($estudianteInscripcionDocumento);      
+      $em->flush();
+
+      return true;
+    }
 
 
 }
