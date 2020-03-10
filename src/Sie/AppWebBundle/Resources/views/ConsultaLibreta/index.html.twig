@@ -104,6 +104,8 @@
                                     <strong>Warning!</strong> {{ flashMessage }}
                                 </div>
                             {% endfor %}
+
+
                             {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'class':'form-horizontal', 'onsubmit':'verificarForm(this);return false;', 'id':'formConsultaLibreta'} } )}}
 
                             <fieldset>
@@ -120,11 +122,13 @@
                                 <div class="form-group">
                                     <label for="inputEmail3" class="col-sm-3 control-label">{{form_label(form.fechaNacimiento)}}</label>
                                     <div class="text-center">
-                                        <span class="glyphicon glyphicon-calendar"></span> día/mes/año
+                                        <span class="glyphicon glyphicon-calendar"></span> dd-mm-yyyy
                                     </div>
-                                    <!--div  id="sandbox-container"-->
+                                    <div id='sandbox-container'>
+                                        <div class="input-daterange" id="datepicker">
                                         <div class="col-sm-9">{{ form_widget(form.fechaNacimiento, { 'attr': {'class': 'form-control','placeholder': ""} }) }}</div>
-                                    <!--/div-->
+                                        </div>
+                                    </div>
 
                                 </div>
 
