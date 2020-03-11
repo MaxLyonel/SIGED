@@ -45,6 +45,11 @@ class ConsultaLibretaController extends Controller {
         $session = new Session();
         $form = $request->get('form');
 
+        if( strpos($form["fechaNacimiento"], "../") ){
+            exit("P.T.A. B-(");
+            die;
+        }
+
         if ((strlen($form['fechaNacimiento']) < 10 ) ) {
             //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
             $session->getFlashBag()->add('notice', 'No existe el Estudiante, revise datos de entrada(rude/ci o fecha nacimiento)');
@@ -52,7 +57,7 @@ class ConsultaLibretaController extends Controller {
         }
 
         //if ($request->getMethod() == 'POST') {
-        list($form['day'], $form['month'], $form['year']) = (explode('-', str_replace('/', '-', $form['fechaNacimiento'])));
+        list($form['day'], $form['month'], $form['year']) = explode('-',  $form['fechaNacimiento']);
         $session->set('rudeoci', $form['rudeoci']);
         $session->set('year', $form['year']);
         $session->set('month', $form['month']);
