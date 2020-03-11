@@ -42,7 +42,6 @@ class ConsultaLibretaController extends Controller {
      */
     public function buscarAction(Request $request) {
 
-        $session = new Session();
         $form = $request->get('form');
 
         if( strpos($form["fechaNacimiento"], "../") ){
@@ -52,35 +51,35 @@ class ConsultaLibretaController extends Controller {
 
         if ((strlen($form['fechaNacimiento']) < 10 ) ) {
             //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
-            $session->getFlashBag()->add('notice', 'No existe el Estudiante, revise datos de entrada(rude/ci o fecha nacimiento)');
+            $this->session->getFlashBag()->add('notice', 'No existe el Estudiante, revise datos de entrada(rude/ci o fecha nacimiento)');
             return $this->redirect($this->generateUrl('consultalibreta'));
         }
 
         //if ($request->getMethod() == 'POST') {
         list($form['day'], $form['month'], $form['year']) = explode('-',  $form['fechaNacimiento']);
-        $session->set('rudeoci', $form['rudeoci']);
-        $session->set('year', $form['year']);
-        $session->set('month', $form['month']);
-        $session->set('day', $form['day']);
-        $session->set('fnac', $form['fechaNacimiento']);
+        $this->session->set('rudeoci', $form['rudeoci']);
+        $this->session->set('year', $form['year']);
+        $this->session->set('month', $form['month']);
+        $this->session->set('day', $form['day']);
+        $this->session->set('fnac', $form['fechaNacimiento']);
         //}
-        $form['rudeoci'] = ($session->get('rudeoci')) ? $session->get('rudeoci') : $form['rudeoci'];
-        $form['year'] = ($session->get('year')) ? $session->get('year') : $form['year'];
-        $form['month'] = ($session->get('month')) ? $session->get('month') : $form['month'];
-        $form['day'] = ($session->get('day')) ? $session->get('day') : $form['day'];
+        $form['rudeoci'] = ($this->session->get('rudeoci')) ? $this->session->get('rudeoci') : $form['rudeoci'];
+        $form['year'] = ($this->session->get('year')) ? $this->session->get('year') : $form['year'];
+        $form['month'] = ($this->session->get('month')) ? $this->session->get('month') : $form['month'];
+        $form['day'] = ($this->session->get('day')) ? $this->session->get('day') : $form['day'];
         $em = $this->getDoctrine()->getManager();
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->getDataStudent($form['rudeoci'], $form['year'] . '-' . $form['month'] . '-' . $form['day']);
 
         //check if the student exists
         if (!$objStudent) {
             //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
-            $session->getFlashBag()->add('notice', 'No existe el Estudiante');
+            $this->session->getFlashBag()->add('notice', 'No existe el Estudiante');
             return $this->redirect($this->generateUrl('consultalibreta'));
         }
 
         if (sizeof($objStudent)>1) {
             //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
-            $session->getFlashBag()->add('notice', 'Estudiante presenta mas de  un registro en el sistema, favor regularizar con su respectivo ténico');
+            $this->session->getFlashBag()->add('notice', 'Estudiante presenta mas de  un registro en el sistema, favor regularizar con su respectivo ténico');
             return $this->redirect($this->generateUrl('consultalibreta'));
         }
 
@@ -94,7 +93,7 @@ class ConsultaLibretaController extends Controller {
           $objInscriptionStudent = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentInscriptionData($objStudent[0]['id'], $form['gestion']);
           if (!($objInscriptionStudent)) {
               //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
-              $session->getFlashBag()->add('notice', 'Estudiante no presenta Historial con estado EFECTIVO/PROMOVIDO en la gestión '.$form['gestion']);
+              $this->session->getFlashBag()->add('notice', 'Estudiante no presenta Historial con estado EFECTIVO/PROMOVIDO en la gestión '.$form['gestion']);
               return $this->redirect($this->generateUrl('consultalibreta'));
           }
           $gestionUse = $form['gestion'];
@@ -118,7 +117,7 @@ class ConsultaLibretaController extends Controller {
 
           if (($sw)) {
               //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
-              $session->getFlashBag()->add('notice', 'Estudiante no presenta Historial con estado EFECTIVO/PROMOVIDO en la gestión '.$this->session->get('currentyear'));
+              $this->session->getFlashBag()->add('notice', 'Estudiante no presenta Historial con estado EFECTIVO/PROMOVIDO en la gestión '.$this->session->get('currentyear'));
               return $this->redirect($this->generateUrl('consultalibreta'));
           }
         }
@@ -143,9 +142,9 @@ class ConsultaLibretaController extends Controller {
         $formsearch = $this->createFormBuilder()
                 ->setAction($this->generateUrl('consultalibreta_buscar'))
                 ->add('rudeoci', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $objStudent[0]['codigoRude']))
-                ->add('year', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $session->get('year')))
-                ->add('month', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $session->get('month')))
-                ->add('day', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $session->get('day')))
+                ->add('year', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('year')))
+                ->add('month', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('month')))
+                ->add('day', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('day')))
                 ->add('fechaNacimiento', 'hidden', array('data' => $form['fechaNacimiento']))
                 ->add('gestion', 'choice', array('mapped' => false, 'choices' => $arrGetsion, 'required' => true, 'invalid_message' => 'Campor 2 obligatorio'))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))

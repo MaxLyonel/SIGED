@@ -199,42 +199,10 @@
 //datepicker calendario
             $('#sandbox-container input').datepicker({
                 autoclose: true,
-                todayHighlight: true,
+                todayHighlight: false,
                 format: 'dd-mm-yyyy',
                 language: "es"
             });
-
-            $('#sie_appwebbundle_usuario_save').click(function () {
-
-                if ($('#sie_appwebbundle_usuario_username').val() == '' && $('#sie_appwebbundle_usuario_password').val() == '') {
-                    $('#myModal').modal('show');
-                    return false;
-                }
-                $('#sie_appwebbundle_usuario').submit();
-
-            });
-
-
-            $("#form_captcha").keyup(function () {
-                $("#form_captcha").val($("#form_captcha").val().toUpperCase());
-            });
-
-            function showCaptcha() {
-                element = document.getElementById("divCaptcha");
-                check = document.getElementById("form_check");
-                captcha = document.getElementById("form_captcha");
-                if (check.checked) {
-                    element.style.display = 'none';
-                    $('#form_captcha').removeAttr("required");
-                    $('#form_captcha').val('');
-                }
-                else {
-                    element.style.display = 'block';
-                    $('#form_captcha').attr('required', 'true');
-                }
-            }
-
-
 
         </script>
         <script src="{{asset('validator/js/validator.js')}}"></script>
