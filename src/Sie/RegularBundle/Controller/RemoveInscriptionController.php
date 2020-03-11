@@ -233,38 +233,6 @@ class RemoveInscriptionController extends Controller {
             }
             $em->flush();
 
-           //paso 7 borrando apoderados
-            $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $eiid ));
-
-            if($objEstudianteInscripcionSocioeconomicoRegular){
-              $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
-                'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-              ));
-              foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
-                  $em->remove($element);
-              }
-              $em->flush();
-
-              $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
-                'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-              ));
-              foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
-                  $em->remove($element);
-              }
-              $em->flush();
-
-              $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
-                'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-              ));
-              foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
-                  $em->remove($element);
-              }
-              $em->flush();
-
-              $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
-              $em->flush();
-            }
-
             //step 8 delete EstudianteInscripcionSocioeconomicoAlternativa data
             $objApoInsAlternativa = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findBy(array('estudianteInscripcion' => $eiid ));
             //dump($objApoIns);die;
