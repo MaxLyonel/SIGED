@@ -233,33 +233,6 @@ class RemoveInscriptionController extends Controller {
             }
             $em->flush();
 
-            //step 8 delete EstudianteInscripcionSocioeconomicoAlternativa data
-            $objApoInsAlternativa = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findBy(array('estudianteInscripcion' => $eiid ));
-            //dump($objApoIns);die;
-
-            foreach ($objApoInsAlternativa as $element) {
-                $objApoInsDatAltHabla = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $element->getId()));
-                foreach ($objApoInsDatAltHabla as $element1){
-                    $em->remove($element1);
-                }
-                $objApoInsDatAltOcupacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacion')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $element->getId()));
-                foreach ($objApoInsDatAltOcupacion as $element1){
-                    $em->remove($element1);
-                }
-                $objApoInsDatAltAcceso = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltAcceso')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $element->getId()));
-                foreach ($objApoInsDatAltAcceso as $element1){
-                    $em->remove($element1);
-                }
-                $objApoInsDatAltTransporte = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporte')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $element->getId()));
-                foreach ($objApoInsDatAltTransporte as $element1){
-                    $em->remove($element1);
-                }
-
-                $em->remove($element);
-
-            }
-            $em->flush();
-
              //paso X borrando objHumanistico
             $objHumanistico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findBy(array('estudianteInscripcion' => $eiid ));
             foreach ($objHumanistico as $element) {
