@@ -848,7 +848,7 @@ class TramiteRueController extends Controller
         //dump($tramites,$form);die;
         $em = $this->getDoctrine()->getManager();
 
-        $gestionActual = 2019;//$this->session->get('currentyear');
+        $gestionActual = $this->session->get('currentyear');//2019;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $flujotipo = $form['flujotipo'];

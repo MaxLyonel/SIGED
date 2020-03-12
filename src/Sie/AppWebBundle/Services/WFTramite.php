@@ -518,8 +518,9 @@ class WFTramite {
                 if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
                     $query = $this->em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
-                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2019 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2019 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    
                     
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
@@ -677,12 +678,11 @@ class WFTramite {
         }
 
         if($flujoproceso->getRolTipo()->getId() == 9 ){ //director
-            $gestionActual = 2019;//(new \DateTime())->format('Y');
+            $gestionActual = (new \DateTime())->format('Y');//2019;
             $uRemitente = $this->em->getRepository('SieAppWebBundle:MaestroInscripcion')->createQueryBuilder('mi')
                         ->select('u')
                         ->innerJoin('SieAppWebBundle:Usuario','u','with','mi.persona = u.persona')
                         ->where('mi.institucioneducativa = '. $institucioneducativa->getId())
-                        //->andWhere('mi.gestionTipo = '. (new \DateTime())->format('Y'))   
                         ->andWhere('mi.gestionTipo = '. $gestionActual)
                         ->andWhere("mi.cargoTipo in (1,12)")
                         ->andWhere("mi.esVigenteAdministrativo=true")
