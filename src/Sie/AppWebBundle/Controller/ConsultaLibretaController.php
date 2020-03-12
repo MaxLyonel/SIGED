@@ -26,6 +26,7 @@ class ConsultaLibretaController extends Controller {
         $usuario = new Usuario();
         $form = $this->createFormBuilder($usuario)
                 ->setAction($this->generateUrl('consultalibreta_buscar'))
+                ->setMethod('POST')
                 ->add('rudeoci', 'text', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio'))
                 ->add('fechaNacimiento', 'text', array('mapped' => false, 'label' => 'Fecha de Nacimiento', 'attr' => array('class' => 'form-control', 'maxlength'=> '10')))
                 ->add('save', 'submit', array('label' => 'Aceptar'))
@@ -141,6 +142,7 @@ class ConsultaLibretaController extends Controller {
 
         $formsearch = $this->createFormBuilder()
                 ->setAction($this->generateUrl('consultalibreta_buscar'))
+                ->setMethod('POST')
                 ->add('rudeoci', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $objStudent[0]['codigoRude']))
                 ->add('year', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('year')))
                 ->add('month', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('month')))
