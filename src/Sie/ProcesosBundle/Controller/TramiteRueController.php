@@ -109,12 +109,14 @@ class TramiteRueController extends Controller
     public function createInicioModificacionForm($flujotipo,$tarea,$tramite,$idrue,$institucioneducativa)
     {
         $em = $this->getDoctrine()->getManager();
-       
+        
         $this->tramiteTipoArray = array(33,44,54);
-        //$this->tramiteTipoArray = array(32,33,39,40,44);
+
+        if($institucioneducativa->getNroResolucion() and $institucioneducativa->getEstadoinstitucionTipo()->getId()==10 and in_array($institucioneducativa->getDependenciaTipo()->getId(),array(1,2))){
+            array_push($this->tramiteTipoArray,46);
+        }
         if(in_array($institucioneducativa->getDependenciaTipo()->getId(),array(0,3,4,5))){
-            array_push($this->tramiteTipoArray,36,38,39,40);
-            //array_push($this->tramiteTipoArray,36,38);
+            array_push($this->tramiteTipoArray,36,38,39,40,46);
         }
         //dump($this->tramiteTipoArray);die;
         $form = $this->createFormBuilder()
@@ -130,7 +132,6 @@ class TramiteRueController extends Controller
                 return $tr->createQueryBuilder('tr')
                     ->where('tr.obs = :rue')
                     ->andWhere('tr.id not in (:tipo)')
-                    //->andWhere('tr.id in (34,35,36,37,38,41,42,43,44,45)')
                     ->setParameter('rue','RUE')
                     ->setParameter('tipo',$this->tramiteTipoArray)
                     ->orderBy('tr.tramiteTipo','ASC');},
@@ -339,6 +340,12 @@ class TramiteRueController extends Controller
                     'tramiteTipo' => $tramiteTipo,
                 );
                 break;
+            case 46://Regularización RUE
+                $data = array(
+                    'id' => $id,
+                    'tramiteTipo' => $tramiteTipo,
+                );
+                break;
             case 54://apertura de unidad educativa
                 $data = array(
                     'id' => $id,
@@ -355,7 +362,7 @@ class TramiteRueController extends Controller
         $id = $request->get('id');
         //dump($request);die;
         $em = $this->getDoctrine()->getManager();
-        if($id != 54){
+        if($id != 54 and $id != 46){
             $ie = $request->get('ie');
             $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
         }else{
@@ -417,7 +424,7 @@ class TramiteRueController extends Controller
                         ->add('i_esalquiler_dependencia', 'choice', array('label' => 'Infraestructura arrendada:','required'=>false,'empty_value'=>false,'multiple' => false,'expanded' => true,'choices'=>array('SI'=>'SI','NO'=>'NO')))
                         ->add('i_contrato_dependencia', 'file', array('label' => 'Adjuntar Copia notariada de contrato de arrendamiento (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_dependencia', 'file', array('label' => 'Adjuntar convenio vigente de prestación de servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
-                        ->add('i_area_dependencia', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))
+                        ->add('i_area_dependencia', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'URBANA','R'=>'RURAL')))
                         ->add('i_certificacion_gam', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_certificacionde_convenio', 'file', array('label' => 'Adjuntar Certificación de convenio emitida por el Responsable de Institución Prestadora de Servicios (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar contrato",'accept'=>"application/pdf,.img,.jpg")))
                         ->add('i_convenio_administracion', 'checkbox', array('label' => 'Convenio de administración de infraestructura firmado entre el Gobierno Autónomo Municipal correspondiente y la Institución prestadora del servicio (si corresponde):','required'  => false))
@@ -490,7 +497,7 @@ class TramiteRueController extends Controller
                 $form = $form
                     ->add('i_resolucion_jur', 'file', array('label' => 'Adjuntar Resolucion Administrativa de Autorización de apertura y funcionamiento emitida por la DDE (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar resolución",'accept'=>"application/pdf,.img,.jpg")))
                     ->add('i_certificacion_jur', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuyo cambio de jurisdicción administrativa es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")))
-                    ->add('i_area_jur', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))
+                    ->add('i_area_jur', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'URBANA','R'=>'RURAL')))
                     ->add('i_certificadorue_jur', 'checkbox', array('label' => 'Original de Certificado RUE (en caso de extravío respaldado con los informes de justificación correspondiente).','required'  => false))
                     ->add('ii_planos_jur', 'checkbox', array('label' => '2.1 Planos arquitectónicos (especificando los ambientes), aprobados por el Gobierno Autónomo Municipal para infraestructura','required'  => false))
                     ->add('ii_inventario_jur', 'checkbox', array('label' => 'Inventario del mobiliario y equipamento de la unidad educativa de acuerdo a norma.','required'  => false))
@@ -517,7 +524,7 @@ class TramiteRueController extends Controller
                 $requisitos = array('legal'=>true,'infra'=>true,'admi'=>false);
                 $form = $form
                     ->add('i_solicitud_infra', 'file', array('label' => 'Adjuntar Solicitud de Cambio de Infraestructura (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar solicitud",'accept'=>"application/pdf,.img,.jpg")))
-                    ->add('i_area_infra', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))
+                    ->add('i_area_infra', 'choice', array('label' => 'Área geográfica establecida por el municipio:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'URBANA','R'=>'RURAL')))
                     ->add('i_certificacion_infra', 'file', array('label' => 'Adjuntar Certificación emitida por el Gobierno Autónomo Municipal correspondiente estableciendo si la unidad educativa cuya solicitud de cambio de infraestructura es del área rural o urbana (Máximo permitido 3M):','required'=>false, 'attr' => array('title'=>"Adjuntar certificación",'accept'=>"application/pdf,.img,.jpg")));
                 if($ie->getDependenciaTipo()->getId() == 2){
                     $form = $form
@@ -585,6 +592,7 @@ class TramiteRueController extends Controller
                     'constitucion' => 0
                 );
                 break;
+            case 46://Regularización
             case 54://apertura
                 $requisitos = array('legal'=>true,'infra'=>true,'admi'=>true);
                 //$dependencia = 1;  
@@ -616,7 +624,7 @@ class TramiteRueController extends Controller
                 if( $dependencia == 1 or $dependencia == 2){
                     $form = $form
                         ->add('i_certificacion_apertura', 'checkbox', array('label' => 'Certificación  emitida por el Gobierno Autónomo Municipal correspondiente, estableciendo si la unidad educativa cuya apertura y funcionamiento es del área rural o urbana, señalando la dirección exacta de la infraestructura.','required'  => false))
-                        ->add('i_area_apertura', 'choice', array('label' => 'Área geográfica:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('R'=>'RURAL','U'=>'URBANA')))    
+                        ->add('i_area_apertura', 'choice', array('label' => 'Área geográfica:','required' => false,'empty_value' => false,'multiple' => false,'expanded' => true,'choices'=>array('U'=>'URBANA','R'=>'RURAL')))    
                         ->add('i_compromiso_apertura', 'checkbox', array('label' => 'Compromiso Municipal de dotación y mantenimiento de infraestructura y equipamiento para la unidad educativa a crearse (en caso de unidades educativas fiscales y de convenio).','required'  => false));
                 }
                 if($dependencia == 3){
@@ -1089,6 +1097,42 @@ class TramiteRueController extends Controller
                 case 45://Nuevo Certificado RUE
                     $datos[$tramite['tramite_tipo']]['i_solicitud_nuevorue']=$this->upload($files['i_solicitud_nuevorue'],$ruta);
                     break;
+                case 46://regularizacion rue
+                    $datos[$tramite['tramite_tipo']]['i_solicitud_apertura']=$this->upload($files['i_solicitud_apertura'],$ruta);
+                    if($ie->getDependenciaTipo()->getId() == 1){
+                        $datos[$tramite['tramite_tipo']]['i_actafundacion_apertura']=$this->upload($files['i_actafundacion_apertura'],$ruta);
+                        $datos[$tramite['tramite_tipo']]['i_folio_apertura']=$form['i_folio_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_certificacion_apertura']=$form['i_certificacion_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_area_apertura']=$form['i_area_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_compromiso_apertura']=$form['i_compromiso_apertura'];
+                    }
+                    if($ie->getDependenciaTipo()->getId() == 2){
+                        $datos[$tramite['tramite_tipo']]['i_representante_apertura']=$form['i_representante_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_actafundacion_apertura']=$this->upload($files['i_actafundacion_apertura'],$ruta);
+                        $datos[$tramite['tramite_tipo']]['i_folio_apertura']=$form['i_folio_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_convenio_apertura']=$form['i_convenio_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_convenioadministracion_apertura']=isset($form['i_convenioadministracion_apertura'])?$form['i_convenioadministracion_apertura']:0;
+                        $datos[$tramite['tramite_tipo']]['i_certificacion_apertura']=$form['i_certificacion_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_area_apertura']=$form['i_area_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_constitucion_apertura']=$form['i_constitucion_apertura'];
+                        $datos[$tramite['tramite_tipo']]['i_registro_culto_apertura']=isset($form['i_registro_culto_apertura'])?$form['i_registro_culto_apertura']:0;
+                        $datos[$tramite['tramite_tipo']]['i_org_nogubernamental_apertura']=isset($form['i_org_nogubernamental_apertura'])?$form['i_org_nogubernamental_apertura']:0;
+                        $datos[$tramite['tramite_tipo']]['i_form_fundaempresa_apertura']=isset($form['i_form_fundaempresa_apertura'])?$form['i_form_fundaempresa_apertura']:0;
+                        if(isset($form['i_form_fundaempresa_apertura'])){
+                            $datos[$tramite['tramite_tipo']]['nro_fundaempresa_apertura']=$form['nro_fundaempresa_apertura'];
+                            $datos[$tramite['tramite_tipo']]['fecha_fundaempresa_apertura']=$form['fecha_fundaempresa_apertura'];
+                        }                        
+                        $datos[$tramite['tramite_tipo']]['i_fotocopia_nit_apertura']=isset($form['i_fotocopia_nit_apertura'])?$form['i_fotocopia_nit_apertura']:0;
+                        if(isset($form['i_fotocopia_nit_apertura'])){
+                            $datos[$tramite['tramite_tipo']]['nit_apertura']=$form['nit_apertura'];
+                            $datos[$tramite['tramite_tipo']]['i_balance_apertura']=$form['i_balance_apertura'];
+                        }                        
+                        $datos[$tramite['tramite_tipo']]['i_testimonioconvenio']=$form['i_testimonioconvenio'];
+                    }
+                    $datos[$tramite['tramite_tipo']]['ii_inventario_apertura']=$form['ii_inventario_apertura'];
+                    $datos[$tramite['tramite_tipo']]['ii_planos_apertura']=$form['ii_planos_apertura'];
+                    $datos[$tramite['tramite_tipo']]['iii_poa_apertura']=$form['iii_poa_apertura'];                    
+                    break;    
                 case 54://apertura
                     $datos[$tramite['tramite_tipo']]['institucioneducativa']=trim(mb_strtoupper($form['institucioneducativa'],'utf-8'));
                     $datos[$tramite['tramite_tipo']]['fechafundacion']=$form['fechafundacion'];
@@ -1385,8 +1429,11 @@ class TramiteRueController extends Controller
                         $requisitos['Requisitos Legales'] = 'Requisitos Legales';
                     }
                     break;
+                case 46:
                 case 38:
-                    $jurisdicion = 1;
+                    if($t['id'] == 38){
+                        $jurisdicion = 1;
+                    }
                     if(!isset($requisitos['Requisitos Legales'])){
                         $requisitos['Requisitos Legales'] = 'Requisitos Legales';
                     }
@@ -1912,6 +1959,7 @@ class TramiteRueController extends Controller
                                 $iddistrito = $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'];
                             }                            
                             $tipo = '';
+                            //dump($tareasDatos);die;
                             foreach($tareasDatos[0]['datos']['tramites'] as $t){
                                 $vAnterior = array();
                                 $vNuevo = array();
@@ -2067,6 +2115,18 @@ class TramiteRueController extends Controller
                                     $vNuevo['estado']['id'] = $estado->getId();
                                     $vNuevo['estado']['estado'] = $estado->getEstadoinstitucion();
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[1]['datos']['resolucion'],$tareasDatos[1]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
+                                }elseif($t['id'] == 46){#regularizacion rue
+                                    $vAnterior['nro_resolucion'] = $institucioneducativa->getNroResolucion();
+                                    $vAnterior['fecha_resolucion'] = $institucioneducativa->getFechaResolucion()?$institucioneducativa->getFechaResolucion()->format('d-m-Y'):'';
+                                    $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativa->setFechaModificacion(new \DateTime('now'));
+                                    $institucioneducativa->setObsRue($observacion);
+                                    $em->flush();
+                                    
+                                    $vNuevo['nro_resolucion'] = $tareasDatos[2]['datos']['resolucion'];
+                                    $vNuevo['fecha_resolucion'] = $tareasDatos[2]['datos']['fecharesolucion'];
+                                    $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
                                 }elseif($t['id'] == 54){
                                     //$nuevaInstitucioneducativa = $this->registrarInstitucioneducativa($tareasDatos[0][$t['tramite_tipo']]);
                                     $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];

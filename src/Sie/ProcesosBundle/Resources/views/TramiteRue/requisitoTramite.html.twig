@@ -706,7 +706,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    {% elseif id == 54 %}{# apertura #}
+                                    {% elseif id in [46,54] %}{# regularización y apertura #}
                                         <div class="tab-pane fade inner-all in active" id="tab1-1-{{id}}">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
@@ -1274,7 +1274,13 @@
         $('#msg45').empty();
     });
     $(".req54").click(function(){
-        $('#validar54').val(0);
-        $('#msg54').empty();
+        if('{{id}}' == 54){
+            $('#validar54').val(0);
+            $('#msg54').empty();
+        }else{
+            $('#validar46').val(0);
+            $('#msg46').empty();
+        }
+        
     });  
 </script>

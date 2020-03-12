@@ -127,7 +127,7 @@
                                                         <strong>FECHA DE FUNDACIÓN:</strong>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        {{ institucioneducativa.fechaResolucion|date('d-m-Y') }}
+                                                        {{ institucioneducativa.fechaFundacion ? institucioneducativa.fechaFundacion|date('d-m-Y'):'' }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
@@ -1052,15 +1052,19 @@
                 return false;
             }
 
-            if(id != 54){
+            if(id != 54 && id != 46){
                 var formData = {id: id,ie:'{{institucioneducativa.id}}'};
             }else{
-                if($('#form_dependencia').length == 0 || $('#form_dependencia').val() == ''){
+                if(id == 54 && ($('#form_dependencia').length == 0 || $('#form_dependencia').val() == '')){
                     alert('Primero debe registrar y validar los datos de la nueva Unidad Educativa.');
                     $('#modal_'+id).modal('toggle');
                     return false;
                 }
-                var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:1};
+                if(id == 54){
+                    var formData = {id: id,dependencia:$('#form_dependencia').val(), constitucion:1};
+                }else{
+                    var formData = {id: id,dependencia:'{{institucioneducativa.dependenciaTipo.id}}', constitucion:1};
+                }
             }            
             
             $.ajax({
@@ -1115,7 +1119,7 @@
             });
         }
 
-        function verificarRequisitos(id,dependenciaId){
+        function verificarRequisitos(id,dependenciaId,constitucion){
             switch (id){
                 case 34: //ampliacion de nivel
                     if($('#form_i_solicitud_ampliar').val()==''){
@@ -1401,6 +1405,7 @@
                         $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxtio.</div>');
                     }
                     break;
+                case 46: //Regularización RUE
                 case 54: //apertura
                     if($('#form_i_solicitud_apertura').val()==''){
                         alert('Debe adjuntar la solicitud de apertura.');

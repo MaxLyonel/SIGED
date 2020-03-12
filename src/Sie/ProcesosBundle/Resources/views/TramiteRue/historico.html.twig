@@ -1323,14 +1323,17 @@
                                                                         {% elseif t.id == 45 %}{# nuevo certifcado rue #}
                                                                             <td></td>
                                                                             <td></td>
+                                                                        {% elseif t.id == 46 %}{# Regularización rue #}
+                                                                            <td></td>
+                                                                            <td></td>
                                                                         {% elseif t.id == 54 %}{# apertura #}
                                                                             <td></td>
                                                                             <td>
-                                                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal_apertura" data-placement="top" title="Ver datos de la Nueva Unidad Educativa" ><i class="glyphicon glyphicon-plus"></i>Ver datos de la Unidad Educativa</button>
+                                                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal_aperturah" data-placement="top" title="Ver datos de la Nueva Unidad Educativa" ><i class="glyphicon glyphicon-plus"></i>Ver datos de la Unidad Educativa</button>
                                                                             </td>
                                                                         {% endif %}
                                                                         <td>
-                                                                            <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
+                                                                            <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}h" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>
                                                                         </td>
                                                                     </tr>
                                                                 {% endif %}

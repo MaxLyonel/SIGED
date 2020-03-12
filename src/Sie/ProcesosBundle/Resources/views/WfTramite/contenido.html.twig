@@ -368,3 +368,77 @@
         </div>
     </div>
 {% endif %}
+
+{# TRAMITES PENDIENTES #}
+{% if tipo == 6 %}
+    <style>
+        .modal-dialog{
+            width: 70%;
+        }
+    </style>
+    <div class="row">
+		<div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-primary" id="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="min-width: 15px;">No. Trámite</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Trámite</th>
+                            <th>Tipo de Trámite</th>
+                            <th>Tarea</th>
+                            <th>Observación</th>
+                            <th>Estado</th>
+                            <th>Detalle</th>
+                            <th>Usuario Remitente</th>
+                            <th>Fecha de recepción</th>
+                            <th>Usuario Destinatario</th>
+                            <th>Fecha de envío</th>                            
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="text-center" style="min-width: 15px;">No. Trámite</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Trámite</th>
+                            <th>Tipo de Trámite</th>
+                            <th>Tarea</th>
+                            <th>Observación</th>
+                            <th>Estado</th>
+                            <th>Detalle</th>
+                            <th>Usuario Remitente</th>
+                            <th>Fecha de recepción</th>
+                            <th>Usuario Destinatario</th>
+                            <th>Fecha de envío</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for entity in entities %}
+                            <tr>
+                                <td>{{ entity.id }}</td>
+                                <td>{{ entity.codigo_tabla }}</td>
+                                <td>{{ entity.nombre }}</td>
+                                <td>{{ entity.flujo }}</td>
+                                <td>{{ entity.tramite_tipo }}</td>
+                                <td>{{ entity.proceso_tipo }}</td>
+                                <td><spam class = "more">{{ entity.obs }}</spam></td>
+                                <td>{{ entity.tramite_estado }}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
+                                        <i class="fa fa-list"></i>
+                                    </a>
+                                </td>
+                                <td>{{ entity.usuario_remitente }}</td>
+                                <td>{{ entity.fecha_recepcion ? entity.fecha_recepcion|date('d-m-Y'):"" }}</td>
+                                <td>{{ entity.usuario_destinatario }}</td>
+                                <td>{{ entity.fecha_envio|date('d-m-Y') ? entity.fecha_envio|date('d-m-Y'):"" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
