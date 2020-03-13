@@ -147,7 +147,7 @@ class ConsultaLibretaController extends Controller {
                 ->add('year', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('year')))
                 ->add('month', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('month')))
                 ->add('day', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('day')))
-                ->add('fechaNacimiento', 'hidden', array('data' => $form['fechaNacimiento']))
+                ->add('fechaNacimiento', 'hidden', array('data' => $form['fechaNacimiento'],'attr'=>array( 'readonly'=>true) ))
                 ->add('gestion', 'choice', array('mapped' => false, 'choices' => $arrGetsion, 'required' => true, 'invalid_message' => 'Campor 2 obligatorio'))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
