@@ -98,7 +98,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getStudentCourseAlterPerStudentId($studentId,$gestionId) {
+    public function getStudentCourseAlterPerStudentId($studentId,$gestionId,$per_id_cod) {
         $qb = $this->getEntityMAnager()->createQueryBuilder();
         $qb
 
@@ -108,6 +108,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
                 ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')                
                 ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
@@ -115,9 +116,11 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->innerJoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'i.estadomatriculaTipo = emt.id')
                 ->where('j.id = :studentId')
                 ->andwhere('h.gestionTipo = :gestionId')
+                ->andwhere('f.periodoTipoId = :periodo')
                 ->orderBy('h.gestionTipo, a.codigo,b.codigo ,d.codigo')
                 ->setParameter('studentId', $studentId)
                 ->setParameter('gestionId', $gestionId)
+                ->setParameter('periodo', $per_id_cod)
         ;
         return $qb->getQuery()->getResult();
     }    

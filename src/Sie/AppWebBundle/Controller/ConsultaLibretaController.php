@@ -28,7 +28,7 @@ class ConsultaLibretaController extends Controller {
                 ->setAction($this->generateUrl('consultalibreta_buscar'))
                 ->setMethod('POST')
                 ->add('rudeoci', 'text', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio'))
-                ->add('fechaNacimiento', 'text', array('mapped' => false, 'label' => 'Fecha de Nacimiento', 'attr' => array('class' => 'form-control', 'maxlength'=> '10')))
+                ->add('fechaNacimiento', 'text', array('mapped' => false, 'label' => 'Fecha de Nacimiento', 'attr' => array('class' => 'form-control', 'maxlength'=> '10', 'readonly'=>true)))
                 ->add('save', 'submit', array('label' => 'Aceptar'))
                 ->getForm();
 
@@ -46,8 +46,8 @@ class ConsultaLibretaController extends Controller {
         $form = $request->get('form');
 
         if( strpos($form["fechaNacimiento"], "../") ){
-            exit("P.T.A. B-(");
-            die;
+          $this->session->getFlashBag()->add('P.T.A. B-(');
+          return $this->redirect($this->generateUrl('consultalibreta'));
         }
 
         if ((strlen($form['fechaNacimiento']) < 10 ) ) {
@@ -147,7 +147,7 @@ class ConsultaLibretaController extends Controller {
                 ->add('year', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('year')))
                 ->add('month', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('month')))
                 ->add('day', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $this->session->get('day')))
-                ->add('fechaNacimiento', 'hidden', array('data' => $form['fechaNacimiento']))
+                ->add('fechaNacimiento', 'hidden', array('data' => $form['fechaNacimiento'],'attr'=>array( 'readonly'=>true) ))
                 ->add('gestion', 'choice', array('mapped' => false, 'choices' => $arrGetsion, 'required' => true, 'invalid_message' => 'Campor 2 obligatorio'))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
