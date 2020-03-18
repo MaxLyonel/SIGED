@@ -40,8 +40,8 @@ class NewInscriptionIniPriController extends Controller
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
-		$enableoption = true; 
-		$message = ''; 
+			$enableoption = true; 
+			$message = ''; 
         // this is to check if the ue has registro_consolidacion
         if($this->session->get('roluser')==9){
 
@@ -79,29 +79,38 @@ class NewInscriptionIniPriController extends Controller
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
     	//get send values
-    	$carnet = $request->get('cifind');
-    	$complemento = $request->get('complementofind');
-    	$fecNac = $request->get('fecnacfind');
-    	$paterno = $request->get('paterno');
-    	$materno = $request->get('materno');
-    	$nombre = $request->get('nombre');
+    	$carnet = trim($request->get('cifind'));
+    	$complemento = trim($request->get('complementofind'));
+    	$fecNac = trim($request->get('fecnacfind'));
+    	$paterno = trim($request->get('paterno'));
+    	$materno = trim($request->get('materno'));
+    	$nombre = trim($request->get('nombre'));
     	$withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
     	$expedidoIdfind = $request->get('expedidoIdfind');
-// dump($request);die;
     	$arrGenero = array();
     	$arrPais = array();
 		$arrStudentExist = false;
+		$studentId = false;
 		$existStudent = '';
     	// check if the inscription is by ci or not
-		if($withoutcifind){
+
+    	// list($day, $month, $year) = explode('-', $fecNac);
+			$arrayCondition['paterno'] = mb_strtoupper($paterno,'utf-8');
+			$arrayCondition['materno'] = mb_strtoupper($materno,'utf-8');
+			$arrayCondition['nombre']  = mb_strtoupper($nombre,'utf-8');
+			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
+
+		if($withoutcifind){	
+
+			// find the student by arrayCondition
+			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+			$existStudent = false;
+			if(sizeof($objStudent)>0){
+				$existStudent=true;				
+			}
+
 			$answerSegip = true;
 		}else{
-
-			// list($day, $month, $year) = explode('-', $fecNac);
-			$arrayCondition['paterno'] = $paterno;
-			$arrayCondition['materno'] = $materno;
-				$arrayCondition['nombre'] = $nombre;
-			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
 			$arrayCondition['carnetIdentidad'] = $carnet;
 			if($complemento){
 				$arrayCondition['complemento'] = $complemento;
@@ -111,13 +120,12 @@ class NewInscriptionIniPriController extends Controller
 			// dump($arrayCondition);die;
 
 			// find the student by arrayCondition
-			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
+			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+			// dump($objStudent);die;
 			$existStudent = false;
 			if(sizeof($objStudent)>0){
-				$existStudent=true;
-				
-			}			
-
+				$existStudent=true;				
+			}
 			if(!$existStudent){
 				// to do the segip validation
 		    	$arrParametros = array(
@@ -132,6 +140,8 @@ class NewInscriptionIniPriController extends Controller
 			}
 
 		}
+		// dump($objStudent);
+		// die;
 		// check if the student exists
 		if(!$existStudent){
 		      // check if the data person is true
@@ -141,23 +151,11 @@ class NewInscriptionIniPriController extends Controller
 		        $yearStudent = $arrYearStudent['age'];
 		        // check if the student is on 5 - 8 years old
 		        if($yearStudent<=8 && $yearStudent>=4){
-
-		        	 // get genero data
-				     $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
-				      foreach ($objGenero as $value) {
-				          if($value->getId()<3){
-				              $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());
-				          }
-				      }
-
-				            //get pais data
-				      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
-				      foreach ($objPais as $value) {
-				        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
-				      }
-
-
-		        	$status = 'success';
+		        		
+		        		$dataGenderAndCountry = $this->getGenderAndCountry();
+		        		$arrGenero = $dataGenderAndCountry['gender'];
+		        		$arrPais 	 = $dataGenderAndCountry['country'];
+		        		$status = 'success';
 		            $code = 200;
 		            $message = "Estudiante cumple con los requerimientos!!!";
 		            $swcreatestudent = true; 
@@ -165,9 +163,9 @@ class NewInscriptionIniPriController extends Controller
 
 		        }else{
 		        	$status = 'error';
-					$code = 400;
-					$message = "Estudiante no cumple con la edad requerida 4 a 8";
-					$swcreatestudent = false; 
+							$code = 400;
+							$message = "Estudiante no cumple con la edad requerida 4 a 8";
+							$swcreatestudent = false; 
 		        }
 		      }else{
 					$status = 'error';
@@ -178,15 +176,23 @@ class NewInscriptionIniPriController extends Controller
 
 		}else{
 
-			$arrStudentExist = array(
-					'paterno'=>$objStudent->getPaterno(),
-					'materno'=>$objStudent->getMaterno(),
-					'nombre'=>$objStudent->getNombre(),
-					'carnet'=>$objStudent->getCarnetIdentidad(),
-					'complemento'=>$objStudent->getComplemento(),
-					'fecNac'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
-					'rude'=>$objStudent->getCodigoRude() ,
-				);
+			$arrStudentExist = array();
+			if(sizeof($objStudent)>0){
+				foreach ($objStudent as $value) {
+					$arrStudentExist[] = array(
+						'paterno'=>$value->getPaterno(),
+						'materno'=>$value->getMaterno(),
+						'nombre'=>$value->getNombre(),
+						'carnet'=>$value->getCarnetIdentidad(),
+						'complemento'=>$value->getComplemento(),
+						'fecNac'=>$value->getFechaNacimiento()->format('d-m-Y') ,
+						'rude'=>$value->getCodigoRude() ,
+					);
+				}
+				
+			}
+
+			// $studentId = $objStudent->getId();
 			$existStudent = true;
 
 			$status = 'error';
@@ -196,9 +202,6 @@ class NewInscriptionIniPriController extends Controller
 
 		}
 		
-
-
-
        $arrResponse = array(
         'status'          => $status,
         'code'            => $code,
@@ -208,6 +211,7 @@ class NewInscriptionIniPriController extends Controller
         'arrPais' => $arrPais,    
         'arrStudentExist' => $arrStudentExist,    
         'existStudent' => $existStudent,    
+        'swhomonimo' => $withoutcifind,
         
       );
       
@@ -217,6 +221,84 @@ class NewInscriptionIniPriController extends Controller
       return $response;
 
       die;
+    }
+
+    public function gohomonimoAction(Request $request){
+    	$response = new JsonResponse();
+    	$em = $this->getDoctrine()->getManager();
+    	//get send values
+    	$carnet = $request->get('cifind');
+    	$complemento = $request->get('complementofind');
+    	$fecNac = $request->get('fecnacfind');
+    	$paterno = $request->get('paterno');
+    	$materno = $request->get('materno');
+    	$nombre = $request->get('nombre');
+    	$withoutcifind = true;
+    	$expedidoIdfind = $request->get('expedidoIdfind');
+// dump($request);die;
+    	$arrGenero = array();
+    	$arrPais = array();
+			$arrStudentExist = false;
+			$existStudent = true;
+			$answerSegip = true;
+
+			$dataGenderAndCountry = $this->getGenderAndCountry();
+			$arrGenero = $dataGenderAndCountry['gender'];
+			$arrPais 	 = $dataGenderAndCountry['country'];
+			$status = 'success';
+			$code = 200;
+			$message = "Estudiante cumple con los requerimientos!!!";
+			$swcreatestudent = true; 
+
+			$arrStudentExist = array(
+					'paterno'=>$request->get('paterno'),
+					'materno'=>$request->get('materno'),
+					'nombre'=>$request->get('nombre'),
+					'carnet'=>$request->get('cifind'),
+					'complemento'=>$request->get('complementofind'),
+					'fecNac'=>$request->get('fecnacfind'),
+					'rude'=>'' ,
+			);
+	
+       $arrResponse = array(
+        'status'          => $status,
+        'code'            => $code,
+        'message'         => $message,
+        'swcreatestudent' => $swcreatestudent,    
+        'arrGenero' => $arrGenero,    
+        'arrPais' => $arrPais,    
+        'arrStudentExist' => $arrStudentExist,    
+        'existStudent' => $existStudent,    
+        'swhomonimo' => true,  
+        
+      );
+      
+      $response->setStatusCode(200);
+      $response->setData($arrResponse);
+
+      return $response;    	
+				
+    }
+
+    public function getGenderAndCountry(){
+    		$em = $this->getDoctrine()->getManager();
+	        	 // get genero data
+	     $objGenero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();
+	      foreach ($objGenero as $value) {
+	          if($value->getId()<3){
+	              $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());
+	          }
+	      }
+	      $arrData['gender'] = $arrGenero;
+
+	            //get pais data
+	      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+	      foreach ($objPais as $value) {
+	        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
+	      }
+	      $arrData['country'] = $arrPais;
+
+	      return $arrData;
     }
 
     public function getDeptoAction(Request $request){
@@ -521,41 +603,42 @@ class NewInscriptionIniPriController extends Controller
      *
      */
     public function doInscriptioninipriAction(Request $request) {
+    	
+    	
+    	$arrDatos = json_decode($request->get('datos'), true);
+    	
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();        
         // get the send values
         //get info ABOUT UE
-        $sie = $request->get('sie');
-        $nivel = $request->get('nivelId');
-        $grado = $request->get('gradoId');
-        $paralelo = $request->get('paraleloId');
-        $turno = $request->get('turnoId');
+        $sie = $arrDatos['sie'];
+        $nivel = $arrDatos['nivelId'];
+        $grado = $arrDatos['gradoId'];
+        $paralelo = $arrDatos['paraleloId'];
+        $turno = $arrDatos['turnoId'];
         $gestion = $this->session->get('currentyear') ;
         // get info about student
-        $fecNac = $request->get('fecnacfind');
-        $paterno = $request->get('paterno');
-        $materno = $request->get('materno');
-        $nombre = $request->get('nombre');
-        $genero = $request->get('generoId');
+        $fecNac = $arrDatos['fecnacfind'];
+        $paterno = $arrDatos['paterno'];
+        $materno = $arrDatos['materno'];
+        $nombre = $arrDatos['nombre'];
+        $genero = $arrDatos['generoId'];
         // get info about ubication
-        $paisId = $request->get('paisId');
-        $localidad = $request->get('localidad');
-        $lugarNacTipoId = $request->get('lugarNacTipoId');
-        $lugarProvNacTipoId = $request->get('lugarProvNacTipoId');
-        $carnet = $request->get('cifind');
-        $complemento = $request->get('complementofind');
-        $expedidoId = $request->get('expedidoIdfind');
-
-        $withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
-
-       
+        $paisId = $arrDatos['paisId'];
+        $localidad = $arrDatos['localidad'];
+        $lugarNacTipoId = isset($arrDatos['lugarNacTipoId'])?$arrDatos['lugarNacTipoId']:'';
+        $lugarProvNacTipoId = isset($arrDatos['lugarProvNacTipoId'])?$arrDatos['lugarProvNacTipoId']:'';
+        $carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
+        $complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
+        $expedidoId = $arrDatos['expedidoIdfind'];
+        $withoutcifind = ($arrDatos['withoutcifind']==false)?false:true;
 
             // validation if the ue is over 4 operativo
             $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             
-			$swinscription=true;
+				$swinscription=true;
             if($operativo >= 4){
                 $status = 'error';
 				$code = 400;
@@ -745,6 +828,50 @@ class NewInscriptionIniPriController extends Controller
 	                'sie' => $sie,
 	                'institucioneducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie)->getInstitucioneducativa() ,
 	            );
+
+	            // save the file in case if exists
+	                    // check if the file exists
+        		  // if(isset($_FILES['informe'])){
+            //     $file = $_FILES['informe'];
+
+            //     $type = $file['type'];
+            //     $size = $file['size'];
+            //     $tmp_name = $file['tmp_name'];
+            //     $name = $file['name'];
+            //     $extension = explode('.', $name);
+            //     $extension = $extension[count($extension)-1];
+            //     $new_name = date('YmdHis').'.'.$extension;
+
+            //     // GUARDAMOS EL ARCHIVO
+            //     $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentIniPri/' .date('Y');
+            //     if (!file_exists($directorio)) {
+            //         mkdir($directorio, 0775, true);
+            //     }
+
+            //     $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentIniPri/' .date('Y').'/'.$studentInscription->getId();
+            //     if (!file_exists($directoriomove)) {
+            //         mkdir($directoriomove, 0775, true);
+            //     }
+
+            //     $archivador = $directoriomove.'/'.$new_name;
+            //     //unlink($archivador);
+            //     if(!move_uploaded_file($tmp_name, $archivador)){
+            //         $response->setStatusCode(500);
+            //         return $response;
+            //     }
+
+            //     // CREAMOS LOS DATOS DE LA IMAGEN
+            //     $informe = array(
+            //         'name' => $name,
+            //         'type' => $type,
+            //         'tmp_name' => 'nueva_ruta',
+            //         'size' => $size,
+            //         'new_name' => $new_name
+            //     );
+            // }else{
+            //     $informe = null;
+            //     $archivador = 'empty';
+            // }
 
 	            $em->persist($studentInscription);
 	            $em->flush();          

@@ -128,21 +128,33 @@
                             <div v-if=" message != '' && existStudent != ''">
 
                             	<!-- data new studen  -->
-                            	<p class="encabezado bg-primary">INFORMACIÓN DEL ESTUDIANTE EXISTENTE</p>
+                            	<p class="encabezado bg-primary">INFORMACIÓN ESTUDIANTE(S) EXISTENTE</p>
                             	<table class="table table-dark">
 								  <tbody>
 								  	<tr>
-								  		<th colspan="3" >Cod. RUDE: ${DBstudentExist.rude | uppercase}</th>
+								  	  <th>#</th>
+								  	  <th>Cod. RUDE</th>
+								      <th>CI-COMPL.</th>
+								      <th>Paterno</th>
+								      <th>Materno</th>
+								      <th>Nombre(s)</th>
+								      <th>Fecha Nacimiento</th>	
 								  	</tr>
-								    <tr>
-								      <th>Paterno: ${DBstudentExist.paterno | uppercase}</th>
-								      <th>Materno: ${DBstudentExist.materno | uppercase}</th>
-								      <th>Nombre(s): ${DBstudentExist.nombre | uppercase}</th>
+								    
+								    <tr v-for="(DBstudent,rindex) in DBstudentExist">
+								      <td>${ rindex }</td>
+								      <td>${DBstudent.rude | uppercase}</td>
+								      <td>${DBstudent.carnet} ${DBstudent.complemento}</td>
+								      <td>${DBstudent.paterno | uppercase}</td>
+								      <td>${DBstudent.materno | uppercase}</td>
+								      <td>${DBstudent.nombre | uppercase}</td>
+								      <td>${DBstudent.fecNac}</td>
 								    </tr>
-								    <tr>
-								      <th>CI: ${DBstudentExist.carnet}</th>
-								      <th>Complemento: ${DBstudentExist.complemento}</th>
-								      <th>Fecha Nacimiento: ${DBstudentExist.fecNac}</th>
+
+								    <tr v-if="dataNewStudent.withoutcifind">
+								    	<th colspan="3" align="center">
+								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-warning"><i class="fa fa-book"></i> HOMONIMO PERFECTO</button>								    		
+								    	</th>
 								    </tr>
 								    
 								    
@@ -185,10 +197,14 @@
 	                            <div class="row">
 	                             <div class="col-sm-3">
 		                             <label for="genero">G&eacute;nero</label>
-		                                <select name="arrGenero" id="idarrGenero" v-model="dataNewStudent.generoId" class="custom-select form-control">  
+		                                <select name="arrGenero" id="idarrGenero" v-model="dataNewStudent.generoId" class="custom-select form-control">
 		                                  <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
 		                                </select>
 	                              </div>
+	                             	<div class="col-sm-3" v-if="swhomonimo">
+			                             <label for="genero">Adjuntar Documento</label>
+			                                <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+	                              	</div>
 	                          	</div>
 
 	                            <div class="row">
@@ -381,6 +397,7 @@
             	buscando:false,
                 buscandoue:false,
                 existStudent:false,
+                swhomonimo:false,
             	message:'',           	
             	messageue:'',           	
                 DBPais: {},
@@ -393,6 +410,7 @@
                 DBNewStudent:{},
                 DBNewInscription:{},
 				DBstudentExist:{},
+				informe:'',
 
 
                 codigoRude:'',
@@ -412,7 +430,7 @@
                 dataStudentModif: {},
                 dataModifyToSend:[],
                 archivoAdjunto:'',
-                informe:'',
+                
                 showbuttonPDF:false,
                 swCertification:false,
                
@@ -438,6 +456,7 @@
                 	this.DBProvincia= '';
                 	this.dataNewStudent.localidad='';
                 	this.dataNewStudent.sie = '';
+                	this.swhomonimo = false;
 
 
                 	this.dataNewStudent.nivelId='';
@@ -512,6 +531,44 @@
                         this.buscando = false;
                     });
                 },
+                goHomonimo: function(){
+                	this.swhomonimo = false;
+
+                	Swal.fire({
+                        title: 'Estudiante Homónimo?',
+                        text: "esta seguro de CONTINUAR la Inscripción",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	if (result.value) {                	
+
+						axios.get(Routing.generate('newinscriptionInipri_gohomonimo', this.dataNewStudent ))
+	                    .then(response => {
+	                        if (response.status == 200) {
+	                        	this.responseprocess = response.data.swcreatestudent;
+	                        	this.message = response.data.message;
+	                        	this.DBGenero= response.data.arrGenero;
+	                        	this.DBPais= response.data.arrPais;
+	                        	// this.DBstudentExist= response.data.arrStudentExist;
+	                        	this.existStudent = response.data.existStudent;
+	                        	this.swhomonimo = response.data.swhomonimo;
+	                        }                        
+	                        this.buscando = false;
+	                    })
+	                    .catch(e => {
+	                        console.log(e);
+	                        this.buscando = false;
+	                    });
+	                   }
+	                })
+
+
+                },
+
                 setGenero: function(){
                     var me = this;
                     $.each(this.DBGenero, function (i, value) {
@@ -705,7 +762,11 @@
                     }).then((result) => {
                     	if (result.value) {
 
-	            		    axios.post(Routing.generate('newinscriptionInipri_doInscriptioninipri', this.dataNewStudent ))
+                    		var data = new FormData();
+                            data.append('datos', JSON.stringify(this.dataNewStudent));
+                            data.append('informe', this.informe);
+
+	            		    axios.post(Routing.generate('newinscriptionInipri_doInscriptioninipri'), data )
 	                        .then(response => {
 	                            if (response.status == 200) {
 	                                this.DBNewStudent = response.data.arrStudent;
@@ -714,10 +775,13 @@
 									this.swinscription=response.data.swinscription;
 									this.message=response.data.message;
 	                                this.dataNewStudent = {};
+
 	                                $('[data-toggle="tooltip"]').tooltip();
 	                            }
 	                           
 	                            this.buscandoue = false;
+	                            this.message = false;
+	                            this.existStudent = false;
 	                        })
 	                        .catch(e => {
 	                            console.log(e);
