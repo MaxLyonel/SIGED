@@ -32,8 +32,37 @@ class ConsultaLibretaController extends Controller {
                 ->add('save', 'submit', array('label' => 'Aceptar'))
                 ->getForm();
 
-        return $this->render('SieAppWebBundle:ConsultaLibreta:index.html.twig', array("form" => $form->createView()));
+        return $this->render('SieAppWebBundle:ConsultaLibreta:downindex.html.twig', array("form" => $form->createView()));
     }
+
+    function canonicalize_path($path, $cwd=null) {
+
+        // don't prefix absolute paths
+        if (substr($path, 0, 1) === "/") {
+          $filename = $path;
+        }
+
+        // prefix relative path with $root
+        else {
+          $root      = is_null($cwd) ? getcwd() : $cwd;
+          $filename  = sprintf("%s/%s", $root, $path);
+        }
+
+        // get realpath of dirname
+        $dirname   = dirname($filename);
+        $canonical = realpath($dirname);
+
+        // trigger error if $dirname is nonexistent
+        if ($canonical === false) {
+          trigger_error(sprintf("Directory `%s' does not exist", $dirname), E_USER_ERROR);
+        }
+
+        // prevent double slash "//" below
+        if ($canonical === "/") $canonical = null;
+
+        // return canonicalized path
+        return sprintf("%s",  basename($filename));
+      }
 
     /**
      *
@@ -44,12 +73,12 @@ class ConsultaLibretaController extends Controller {
     public function buscarAction(Request $request) {
 
         $form = $request->get('form');
-
+        
         if( strpos($form["fechaNacimiento"], "../") ){
           $this->session->getFlashBag()->add('P.T.A. B-(');
           return $this->redirect($this->generateUrl('consultalibreta'));
         }
-
+        $form["fechaNacimiento"]=$this->canonicalize_path($form["fechaNacimiento"],null);
         if ((strlen($form['fechaNacimiento']) < 10 ) ) {
             //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
             $this->session->getFlashBag()->add('notice', 'No existe el Estudiante, revise datos de entrada(rude/ci o fecha nacimiento)');
