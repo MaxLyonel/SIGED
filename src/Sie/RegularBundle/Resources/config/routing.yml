@@ -395,3 +395,7 @@ sie_regular_lista_operativo_notas_sexto:
 sie_regular_data_transfer_installer:
     resource: "@SieRegularBundle/Resources/config/routing/dataTransferInstaller.yml"
     prefix:   /sie/datatransfer
+
+sie_eliminar_doble_inscripcion:
+    resource: "@SieRegularBundle/Resources/config/routing/eliminarDobleInscripcion.yml"
+    prefix:   /sie/eliminarDobleInscripcion

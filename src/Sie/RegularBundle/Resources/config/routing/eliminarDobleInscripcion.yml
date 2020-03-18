@@ -1,0 +1,9 @@
+eliminar_doble_inscripcion_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:EliminarDobleInscripcion:index }
+
+eliminar_doble_inscripcion_eliminar:
+    path:     /eliminar
+    defaults: { _controller: "SieRegularBundle:EliminarDobleInscripcion:eliminar" }
+    options:
+         expose: true
