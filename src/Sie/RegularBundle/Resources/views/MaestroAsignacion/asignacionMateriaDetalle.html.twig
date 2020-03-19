@@ -1,0 +1,112 @@
+  
+	<div id="no-more-tables" class="table-responsive">
+        <table class="table table-bordered table-hover cf dataTable">
+            {% if listaAsignatura is defined %}  
+                {% set lista = listaAsignatura[0] %}
+            {% endif %}
+            {% if listaCurso is defined %}  
+                {% set lista = listaCurso[0] %}
+            {% endif %}
+            <thead  class="cf">
+                <tr>
+                    {% for key, dato in lista %}
+                        <th class="text-center">{{key}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% if listaAsignatura is defined %}       
+                    {% for key, asignatura in listaAsignatura %}
+                        <tr>
+                            {% for name, dato in asignatura %}
+                                <td data-title="{{name}}">
+                                    {% if dato.estado is defined %}
+                                        {% if dato.estado == "t" %}
+                                            {% set botonColorClase = "btn-green" %}
+                                            {% set botonNombre = "SI" %}
+                                        {% else %}
+                                            {% set botonColorClase = "btn-default" %}
+                                            {% set botonNombre = "NO" %}
+                                        {% endif %}
+                                        <button type="button" class="btn {{ botonColorClase }} btn-block" onclick='formulario("{{ dato.value }}", this)' data-toggle="modal" data-target="#popup">
+                                            {{ botonNombre }}
+                                        </button>
+                                    {% else %}
+                                        {{ dato }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% else %}    
+                    {% for key, curso in listaCurso %}
+                        <tr>
+                            {% for name, dato in curso %}
+                                <td data-title="{{name}}">
+                                    {% if dato.estado is defined %}
+                                        {% if dato.estado == "t" %}
+                                            {% set botonColorClase = "btn-green" %}
+                                            {% set botonNombre = "SI" %}
+                                        {% else %}
+                                            {% set botonColorClase = "btn-default" %}
+                                            {% set botonNombre = "NO" %}
+                                        {% endif %}
+                                        <button type="button" class="btn {{ botonColorClase }} btn-block" onclick='formulario("{{ dato.value }}", this)' data-toggle="modal" data-target="#popup">
+                                            {{ botonNombre }}
+                                        </button>
+                                    {% else %}
+                                        {{ dato }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Standard Modal -->
+    <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="standardModalLabel">&nbsp;</h4>
+                </div>
+                <div class="modal-body" id="popupBody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+	<script>
+        var botonForm = null;
+        var formulario = function(val, bot){
+            botonForm = $(bot); 
+            var info = document.getElementById('form_info').value;
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_formulario', {'val': val, 'info': info}),
+                beforeSend: function () {
+                    $("#popupBody").empty();
+                    $("#popupBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#popupBody").empty();  
+                    $("#popupBody").html(data);                  
+                },
+                error: function(error){          
+                    $("#popupBody").empty();           
+                    $("#popupBody").append('<div class="text-center">Error</div>');   
+                },
+            });          
+        }        
+	</script>

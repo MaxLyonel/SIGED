@@ -14,3 +14,57 @@ maestroAsignacion_asignar_materia:
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateria }
     options:
         expose: true
+
+maestroAsignacion_asignar_materia_lista_nivel:
+    path:     /asignar/materia/lista/nivel
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaListaNivel }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_grado_asignatura:
+    path:     /asignar/materia/lista/grado_asignatura
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaGradoAsignatura }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_paralelo:
+    path:     /asignar/materia/lista/paralelo
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaParalelo }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_asignatura_curso:
+    path:     /asignar/materia/lista/asignatura_curso
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaAsignaturaCurso }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_curso_asignatura:
+    path:     /asignar/materia/lista/curso_asignatura
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaCursoAsignatura }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_formulario:
+    path:     /asignar/materia/formulario
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaFormulario }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_guarda:
+    path:     /asignar/materia/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaGuarda }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_elimina:
+    path:     /asignar/materia/elimina
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaElimina }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_edita:
+    path:     /asignar/materia/edita
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaEdita }
+    options:
+        expose: true

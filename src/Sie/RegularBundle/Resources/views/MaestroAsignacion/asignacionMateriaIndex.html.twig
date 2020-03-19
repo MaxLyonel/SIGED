@@ -1,8 +1,217 @@
 
 	<div class="row">
         <div class="col-lg-12">
-            asjdkhsjkahdjkhsjakd 123
+            {{form_start(form, { 'attr': {'role': "form", 'class': 'form-inline center'} } )}}
+                {{ form_widget(form.info) }}
+                <div class="form-group">
+                    {{ form_widget(form.turno, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.nivel) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.grado) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.paralelo) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.asignatura) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.buscar) }}
+                </div>
+            {{form_end(form)}}
         </div>
-    </div>    
-	<script>		
+    </div>  
+    
+	<div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body"  id="solucionContent">
+                    
+                </div>
+            </div>
+        </div>
+    </div>     
+	<script>
+        var listar_nivel = function(){
+            var turno = document.getElementById('form_turno').value;
+            var info = document.getElementById('form_info').value;
+            $("#solucionContent").empty();
+            $("#form_grado").empty();
+            $('#form_grado').hide();
+            $("#form_paralelo").empty();
+            $("#form_paralelo").hide();
+            $("#form_asignatura").empty();
+            $("#form_asignatura").hide();
+            $("#form_nivel").empty();
+            $("#form_nivel").hide();
+            if(turno == null || turno == "" || turno == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_lista_nivel', {'info': info, 'turno': turno}),
+                beforeSend: function () {                    
+                    $('#form_nivel').show();
+                    $("#form_nivel").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {            
+                    $("#form_nivel").empty();
+                    $("#form_nivel").append('<option value="">Seleccione Nivel</option>');
+                    for (var i in data.niveles) {
+                        $("#form_nivel").append('<option value="' + data.niveles[i].id + '">' + data.niveles[i].nivel + '</option>');
+                    }
+                },
+                error: function(error){            
+                    alert("Error, no existe informacion para el turno seleccionado");        
+                    $("#form_nivel").empty();
+                    $('#form_nivel').hide();
+                },
+            });             
+        }
+
+        var listar_grado_asignatura = function(){
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var info = document.getElementById('form_info').value;
+
+            $("#solucionContent").empty();
+            $("#form_asignatura").empty();
+            $('#form_asignatura').hide();
+            $("#form_grado").empty();
+            $('#form_grado').hide();
+            $("#form_paralelo").empty();
+            $('#form_paralelo').hide();
+            if(nivel == null || nivel == "" || nivel == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_lista_grado_asignatura', {'info': info, 'turno': turno, 'nivel': nivel}),
+                beforeSend: function () {
+                    if(nivel == 13){
+                        $('#form_asignatura').show();
+                        $("#form_asignatura").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    } else {
+                        $('#form_grado').show();
+                        $("#form_grado").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    }
+                },
+                success: function (data) {            
+                    if(data.grados){
+                        $("#form_grado").empty();
+                        $("#form_grado").append('<option value="">Seleccione Grado</option>');
+                        for (var i in data.grados) {
+                            $("#form_grado").append('<option value="' + data.grados[i].id + '">' + data.grados[i].grado + '</option>');
+                        }
+                    } else {
+                        $("#form_asignatura").empty();
+                        $("#form_asignatura").append('<option value="">Seleccione Asignatura</option>');
+                        for (var i in data.asignaturas) {
+                            $("#form_asignatura").append('<option value="' + data.asignaturas[i].id + '">' + data.asignaturas[i].asignatura + '</option>');
+                        }
+                    }                    
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el nivel seleccionado"); 
+                    if(nivel == 13){       
+                        $("#form_asignatura").empty();
+                        $('#form_asignatura').hide();
+                    } else {    
+                        $("#form_grado").empty();
+                        $('#form_grado').hide();
+                        $("#form_paralelo").empty();
+                        $('#form_paralelo').hide();
+                    }      
+                    
+                },
+            });
+        }
+
+        var listar_paralelo = function(){
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var grado = document.getElementById('form_grado').value;
+            var info = document.getElementById('form_info').value;
+            $("#solucionContent").empty();
+            $("#form_paralelo").empty();
+            $("#form_paralelo").hide();
+            if(grado == null || grado == "" || grado == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_lista_paralelo', {'info': info, 'turno': turno, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                    $('#form_paralelo').show();
+                    $("#form_paralelo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccione Paralelo</option>');
+                    for (var i in data.paralelos) {
+                        $("#form_paralelo").append('<option value="' + data.paralelos[i].id + '">' + data.paralelos[i].paralelo + '</option>');
+                    }                    
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el grado seleccionado");     
+                    $("#form_paralelo").empty();
+                    $('#form_paralelo').hide();
+                    
+                },
+            });    
+        }
+
+        var listar_asignatura_curso = function(){
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var grado = document.getElementById('form_grado').value;
+            var paralelo = document.getElementById('form_paralelo').value;
+            var info = document.getElementById('form_info').value;
+            if(paralelo == null || paralelo == "" || paralelo == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_lista_asignatura_curso', {'info': info, 'turno': turno, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo}),
+                beforeSend: function () {
+                    $("#solucionContent").empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#solucionContent").empty(); 
+                    $("#solucionContent").html(data);                 
+                },
+                error: function(error){          
+                    $("#solucionContent").empty();                    
+                },
+            });          
+        }
+
+        var listar_curso_asignatura = function(){
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var asignatura = document.getElementById('form_asignatura').value;
+            var info = document.getElementById('form_info').value;
+            if(asignatura == null || asignatura == "" || asignatura == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_lista_curso_asignatura', {'info': info, 'turno': turno, 'nivel': nivel, 'asignatura': asignatura}),
+                beforeSend: function () {
+                    $("#solucionContent").empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#solucionContent").empty();  
+                    $("#solucionContent").html(data);                  
+                },
+                error: function(error){          
+                    $("#solucionContent").empty();                    
+                },
+            });          
+        }
 	</script>
