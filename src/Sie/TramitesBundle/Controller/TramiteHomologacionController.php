@@ -335,11 +335,9 @@ class TramiteHomologacionController extends Controller {
                     'mapped' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 
                     'query_builder' => function (EntityRepository $e) {
                         return $e->createQueryBuilder('dt')
-                            ->where('dt.id != :id')
-                            ->setParameter('id', 0)
                             ->orderBy('dt.id', 'ASC');
                     }, 'property' => 'departamento',
-                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '1')
+                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '0')
                 ))
                 ->add('pasaporte', 'text', array('label' => 'Pasaporte', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Pasaporte' , 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
                 ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
