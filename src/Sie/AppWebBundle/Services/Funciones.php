@@ -26,6 +26,43 @@ class Funciones {
         $this->session = new Session();
 	}
 
+    /**
+     * SERVICIO DE VALIDACION DE RUTA POR ROL DE USUARIO
+     * PARA QUE EL USUARIO NO PUEDA INGRESAR POR LA URL A UNA RUTA NO AUTORIZADA
+     * @param  [type] $ruta [description]
+     * @return [type]       [description]
+     * By JHONNY
+     */
+    public function validarRuta($ruta){
+
+        $sistemaId = $this->session->get('sistemaid');
+        $rolId = $this->session->get('roluser');
+        $datosRuta = $this->em->createQueryBuilder()
+                ->select('msr')
+                ->from('SieAppWebBundle:SistemaRol','sr')
+                ->innerJoin('SieAppWebBundle:MenuSistemaRol','msr','with','msr.sistemaRol = sr.id')
+                ->innerJoin('SieAppWebBundle:MenuSistema','ms','with','msr.menuSistema = ms.id')
+                ->innerJoin('SieAppWebBundle:MenuTipo','mt','with','ms.menuTipo = mt.id')
+                ->where('sr.rolTipo = :rol')
+                ->andWhere('sr.sistemaTipo = :sistema')
+                ->andWhere('mt.ruta = :ruta')
+                ->setParameter('rol',$rolId)
+                ->setParameter('sistema',$sistemaId)
+                ->setParameter('ruta',$ruta)
+                ->getQuery()
+                ->getResult();
+
+        $permitido = false;
+
+        if (count($datosRuta) > 0) {
+            if ($datosRuta[0]->getEsactivo()) {
+                $permitido = true;
+            }
+        }
+
+        return $permitido;
+    }
+
 	/*
      * verificamos si tiene tuicion
      */

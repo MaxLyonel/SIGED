@@ -27,6 +27,7 @@ class StudentsInscriptionsController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) {
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         //validation if the user is logged
