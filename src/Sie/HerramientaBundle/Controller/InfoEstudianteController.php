@@ -1922,4 +1922,39 @@ class InfoEstudianteController extends Controller {
         ));
     }
 
+    public function validarEstudianteSegipAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $codigoRude = $request->get('codigoRude');
+        $persona = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
+        $estado = false;
+        $mensaje = "";
+        if($persona){
+            $datos = array(
+                'complemento'=>$persona->getComplemento(),
+                'primer_apellido'=>$persona->getPaterno(),
+                'segundo_apellido'=>$persona->getMaterno(),
+                'nombre'=>$persona->getNombre(),
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+            );
+            if($persona->getCarnetIdentidad()){
+                $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
+
+                if($resultadoPersona){
+                    $persona->setSegipId(1);
+                    $em->persist($persona);
+                    $em->flush();
+                    $mensaje = "Válido SEGIP";
+                    $estado = true;
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP. Debe actualizar la información a través del módulo: Modificación de Datos.";
+                }                
+            } else {
+                $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de la/el estudiante.";
+            }
+        } else {
+            $mensaje = "No se realizó la validación con SEGIP. No existe información de la/el estudiante.";
+        }
+
+        return new JsonResponse(array('estado' => $estado, 'mensaje' => $mensaje));
+    }
 }

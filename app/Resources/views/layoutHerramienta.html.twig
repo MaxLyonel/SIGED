@@ -516,7 +516,16 @@
                         </li>
                     {% endif %}
                     {% if  app.session.get('roluser') == 9  or  app.session.get('roluser') == 8 %}
-                        
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Estudiante</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                            </ul>
+                        </li>
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -532,7 +541,6 @@
                                 #}
                             </ul>
                         </li>
-                        
                     {% endif %}
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
