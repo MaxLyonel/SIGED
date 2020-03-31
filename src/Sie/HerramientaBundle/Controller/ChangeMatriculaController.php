@@ -15,6 +15,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 
@@ -27,6 +28,7 @@ class ChangeMatriculaController extends Controller {
     public $session;
     public $idInstitucion;
     public $operativo;
+    public $arrQuestion;
 
     /**
      * the class constructor
@@ -36,6 +38,10 @@ class ChangeMatriculaController extends Controller {
         $this->session = new Session();
         $this->aCursos = $this->fillCursos();
         $this->aCursosOld = $this->fillCursosOld();
+        $this->arrQuestion = array(
+        0 => "...",
+        1 => "Estudiante nunca asistio a clases",
+      2 => "Estudiante asistio algunos dias a clases", );
     }
 
     public function indexAction(Request $request){
@@ -45,7 +51,7 @@ class ChangeMatriculaController extends Controller {
         $infoStudent = $request->get('infoStudent');
         $arrInfoStudent = json_decode($infoStudent,true);
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($arrInfoStudent['id']);
-        return $this->render('SieHerramientaBundle:ChangeMatricula:index.html.twig', array(
+        return $this->render('SieHerramientaBundle:ChangeMatricula:indexquestion.html.twig', array(
             'infoStudent'         => json_decode($infoStudent,true),
             'infoUnidadEducativa' => unserialize($infoUe),
             'form'                => $this->matriculaForm($infoStudent, $infoUe)->createView(),
@@ -60,20 +66,25 @@ class ChangeMatriculaController extends Controller {
       $arrInfoData = $arrInfoUe['requestUser'];
       //get the operativo
       $this->operativo = $this->get('funciones')->obtenerOperativo($arrInfoData['sie'],$arrInfoData['gestion']);
-
+      
       return $this->createFormBuilder()
 
-            ->add('estadoMatricula', 'entity', array('class' => 'SieAppWebBundle:EstadomatriculaTipo','label'=>'Estado Mátricula ',
+            /*->add('estadoMatricula', 'entity', array('class' => 'SieAppWebBundle:EstadomatriculaTipo','label'=>'Estado Mátricula ',
             'query_builder' => function (EntityRepository $e) {
                 return $e->createQueryBuilder('emt')
                         ->where('emt.id IN (:id)')
                         ->setParameter('id', ($this->operativo>1)?array('4','10'):array('4','6'))
                         ->orderBy('emt.id', 'ASC')
                 ;
-            }, 'property' => 'estadomatricula'))
+            }, 'property' => 'estadomatricula'))*/
+
+            ->add('questionStatus', 'choice', array('choices'=>$this->arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this)')))
+            ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
+             ->add('classdays', 'choice', array('choices'=>array(1,2,3), 'attr'=>array('class'=>'form-control')))
+
             ->add('infoStudent', 'hidden', array('data'=>$infoStudent))
             ->add('infoUe', 'hidden', array('data'=>$infoUe))
-            ->add('Guardar','button', array('label'=>'Guardar', 'attr'=>array('class'=>'btn btn-primary btn-xs', 'onclick'=>'saveChangeMatricula()')))
+            ->add('Registrar','button', array('label'=>'Guardar', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveChangeMatricula()')))
             ->getForm();
     }
     private function fillCursos() {
@@ -358,20 +369,36 @@ class ChangeMatriculaController extends Controller {
           if(isset($value['notas'][0]['nota']) && $value['notas'][0]['nota']>0)
             $notasRegistradas[] = $value['notas'][0]['nota'];
       }
+      
     
-        if($form['estadoMatricula']==6){
+        /*if($form['estadoMatricula']==6){
           if(sizeof($notasRegistradas)>1){
             $message = 'Cambio no realizado, debido a que la/el estudiante cuenta con calificaciones';  
             $this->addFlash('noinscription',$message);
             $swChangeStatus=false;
           }
-        }
+        }*/
         
+        if($form['questionStatus']==1){
+          $updateMatricula = 6;
+        }else{
+          $updateMatricula = 9;
+        }
+
         if($swChangeStatus){
+
+          $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
+          $objEstudianteInscripcionCambioestado->setJustificacion($form['observation']);
+          $objEstudianteInscripcionCambioestado->setJson(json_encode($form));
+          $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
+          $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
+          $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']) );
+           $em->persist($objEstudianteInscripcionCambioestado);
+          
           //find to update
-          $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);
+          $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);         
           $oldInscriptionStudent = clone $currentInscrip;
-          $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoMatricula']));
+          $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($updateMatricula));
           $em->persist($currentInscrip);
           $em->flush();
           $message = 'Cambio de estado realizado';  
