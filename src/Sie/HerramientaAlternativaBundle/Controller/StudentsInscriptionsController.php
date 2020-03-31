@@ -1316,7 +1316,7 @@ class StudentsInscriptionsController extends Controller {
       // get info course
       $objUeducativa = $objUeducativa[0];
       // look for students inscription to validate on Primaria && secundaria && tec
-      $arrstudentInscription = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getStudentCourseAlterPerStudentId($studentId, $this->session->get('ie_gestion'));
+      $arrstudentInscription = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getStudentCourseAlterPerStudentId($studentId, $this->session->get('ie_gestion'), $this->session->get('ie_per_cod'));
       // if the level is primaria or seccundaria to the validation
      if($objUeducativa['nivelId']==15){
        reset($arrstudentInscription);
