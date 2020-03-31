@@ -40,8 +40,8 @@ class ChangeMatriculaController extends Controller {
         $this->aCursosOld = $this->fillCursosOld();
         $this->arrQuestion = array(
         0 => "...",
-        1 => "Estudiante nunca asistio a clases",
-      2 => "Estudiante asistio algunos dias a clases", );
+        1 => "Nunca asistio a clases",
+      2 => "Asistio algunos dias a clases", );
     }
 
     public function indexAction(Request $request){
@@ -84,7 +84,7 @@ class ChangeMatriculaController extends Controller {
 
             ->add('infoStudent', 'hidden', array('data'=>$infoStudent))
             ->add('infoUe', 'hidden', array('data'=>$infoUe))
-            ->add('Registrar','button', array('label'=>'Guardar', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveChangeMatricula()')))
+            ->add('Registrar','submit', array('label'=>'Guardar', 'attr'=>array('class'=>'btn btn-primary')))
             ->getForm();
     }
     private function fillCursos() {
@@ -174,289 +174,85 @@ class ChangeMatriculaController extends Controller {
 
         $aInfoUeducativa = unserialize($infoUe);
 
-// dump($aInfoUeducativa['requestUser']);die;
-        //get the values throght the infoUe
-        $sie = $aInfoUeducativa['requestUser']['sie'];
-        $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
-        $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
-        $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
-        $turno = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
-        $ciclo = $aInfoUeducativa['ueducativaInfoId']['cicloId'];
-        $gestion = $aInfoUeducativa['requestUser']['gestion'];
-        $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
-        $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
-        $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
         //get db connexion
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
-        $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$sie,'gestion'=>$aInfoUeducativa['requestUser']['gestion']));
-        $arrAllowInscription=array(1,2,3,4,5);
-        $objTypeOfUEId = (sizeof($objTypeOfUE))>0?$objTypeOfUE[0]->getInstitucioneducativaHumanisticoTecnicoTipo()->getId():100;
-        if(in_array((sizeof($objTypeOfUE))>0?$objTypeOfUE[0]->getInstitucioneducativaHumanisticoTecnicoTipo()->getId():100,$arrAllowInscription)){
-          $this->session->set('allowInscription',true);
-        }else{
-          $this->session->set('allowInscription',false);
-        }
-        //get turnos
-        //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($iecId, '5');
-        //get th position of next level
-
-        // $positionCurso = $this->getCourse($nivel, $ciclo, $grado, '5');
-        $posicionCurso = ($gestion > 2010) ? $this->getCourse($nivel, $ciclo, $grado, '5') : $this->getCourseOld($nivel, $ciclo, $grado, '5');
-        //$dataNextLevel = explode('-', $this->aCursos[$positionCurso]);
-
-        //get next level data
-        $objNextCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
-            'institucioneducativa' => $sie,
-            'nivelTipo' => $nivel,
-            'cicloTipo' => $ciclo,
-            'gradoTipo' => $grado,
-            'paraleloTipo' => $paralelo,
-            'turnoTipo' => $turno,
-            'gestionTipo' => $gestion
-        ));
-
-        $exist = true;
-        $objStudents = array();
-        $aData = array();
-        //check if the data exist
-        // if ($objNextCurso) {
-        //     //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($objNextCurso->getId(), '5');
-        //     //get students list
-        //     $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
-        //     $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
-        // } else {
-        //     $message = 'No existen estudiantes inscritos...';
-        //     $this->addFlash('warninsueall', $message);
-        //     $exist = false;
-        // }
-
-        // Para el centralizador
-        $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
-
-        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
-
-
-
-        //to add the especialidad
-        $UePlenasAddSpeciality=false;
-        $arrUePlenasAddSpeciality = array(
-          '81410160',
-          '81410080',
-          '40730250',
-          '81410037',
-          '81410134',
-          '82220009',
-          '80480060',
-          '81981445',
-          '80660080',
-          '81340038',
-          '81340065',
-          '80730395',
-          '80730391',
-          '71170009',
-          '60730046',
-          '71170010',
-          '81410157',
-
-          '60900064',
-          '81981463',
-          '81480060',
-          '80630028',
-          '81470005',
-          '81470069',
-          '80980556',
-          '80920034',
-          '80980514',
-          '71480114',
-          '40730531',
-          '82220001',
-          '81170016',
-          '80480163'
-        );
-        $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
-
-        // Impresion de libretas
-        $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
-        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-
-        $imprimirLibreta = false;
-        $estadosPermitidosImprimir = array(4,5,11,55);
-
-        if($tipoUE){
-            /*
-             *  GESTION ACTUAL
-             */
-            if($gestion == $this->session->get('currentyear')){
-                // Unidades educativas plenas, modulares y humanisticas
-                if(in_array($tipoUE['id'], array(1,3,5)) and $operativo >= 2){
-                    $imprimirLibreta = true;
-                }
-                // Unidades educativas tecnicas tecnologicas
-                if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
-                    $imprimirLibreta = true;
-                }
-            }
-
-
-            /*
-             * GESTIONES PASADAS
-             */
-            if($gestion < $this->session->get('currentyear')){
-                // Para unidades educativas en gestiones pasadas
-                if(in_array($tipoUE['id'], array(1,2,3,5)) and $gestion >= 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
-                    $imprimirLibreta = true;
-                }
-
-                // PAra ues tecnicas tecnologicas
-                if(in_array($tipoUE['id'], array(2)) and $gestion >= 2011){
-                    $imprimirLibreta = true;
-                }
-
-                // Caso especial de la unidad educativa AMERINST
-                if($sie == '80730460' and $gestion <= 2015){
-                    $imprimirLibreta = false;
-                    if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
-                        $imprimirLibreta = true;
-                    }
-                    if($gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
-                        $imprimirLibreta = true;
-                    }
-                }
-            }
-        }
-
-      $aRemovesUeAllowed = array(
-      '61710014',
-      '61710089',
-      '61710076',
-      '61710068',
-      '61710090',
-      '61710042',
-      '61710087',
-      '61710084',
-      '61710083',
-      '61710085',
-      '61710088',
-      '61710063',
-      '61710028',
-      '61710086',
-      '61710041',
-      '61710043',
-      '61710062',
-      '61710031',
-      '61710077',
-      '61710021',
-      '61710022',
-      '61710036',
-      '61710038',
-      '61710091',
-      '61710092',
-      '61710093',
-      '61710004'
-      );
-  $this->session->set('removeInscriptionAllowed', false);
-  if(in_array($this->session->get('ie_id'),$aRemovesUeAllowed))
-    $this->session->set('removeInscriptionAllowed',true);
-    $swChangeStatus = true;
-    try {
-      //ge notas to do the changeMatricula
-      $notas = $this->get('notas')->regular($infoStudent['eInsId'],1);
-      $notasStudent = $notas['cuantitativas'];
-      $notasRegistradas = array();
-      foreach ($notasStudent as $key => $value) {
-          if(isset($value['notas'][0]['nota']) && $value['notas'][0]['nota']>0)
-            $notasRegistradas[] = $value['notas'][0]['nota'];
-      }
-      
-    
-        /*if($form['estadoMatricula']==6){
-          if(sizeof($notasRegistradas)>1){
-            $message = 'Cambio no realizado, debido a que la/el estudiante cuenta con calificaciones';  
-            $this->addFlash('noinscription',$message);
-            $swChangeStatus=false;
-          }
-        }*/
+        $swChangeStatus = true;
+        try {
         
-        if($form['questionStatus']==1){
-          $updateMatricula = 6;
-        }else{
-          $updateMatricula = 9;
+          if($form['questionStatus']==1){
+            $updateMatricula = 6;
+          }else{
+            $updateMatricula = 10;
+            // $updateMatricula = 9;
+          }
+
+          if($swChangeStatus){
+
+            $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
+            $objEstudianteInscripcionCambioestado->setJustificacion($form['observation']);
+            $objEstudianteInscripcionCambioestado->setJson(json_encode($form));
+            $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
+            $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
+            $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']) );
+             $em->persist($objEstudianteInscripcionCambioestado);
+            
+            //find to update
+            $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);         
+            $oldInscriptionStudent = clone $currentInscrip;
+            $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($updateMatricula));
+            $em->persist($currentInscrip);
+            $em->flush();
+            $message = 'Cambio de estado realizado';  
+            $this->addFlash('goodinscription',$message);
+            // added set log info data
+            $this->get('funciones')->setLogTransaccion(
+                                  $infoStudent['eInsId'],
+                                  'estudiante_inscripcion',
+                                  'U',
+                                  '',
+                                  $currentInscrip,
+                                  $oldInscriptionStudent,
+                                  'SIGED',
+                                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );     
+
+            // Try and commit the transaction
+            $em->getConnection()->commit();
+
+          }
+
+        } catch (Exception $e) {
+          $em->getConnection()->rollback();
+          return $response->setData(array('status'=>'error', 'msg'=>'No se pudo cambiar el estado de matrícula del estudiante'));
         }
 
-        if($swChangeStatus){
+        $response = new JsonResponse();
+        return $response->setData(array('status'=>'success','infoUe'=>$infoUe));
 
-          $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
-          $objEstudianteInscripcionCambioestado->setJustificacion($form['observation']);
-          $objEstudianteInscripcionCambioestado->setJson(json_encode($form));
-          $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
-          $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
-          $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']) );
-           $em->persist($objEstudianteInscripcionCambioestado);
-          
-          //find to update
-          $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);         
-          $oldInscriptionStudent = clone $currentInscrip;
-          $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($updateMatricula));
-          $em->persist($currentInscrip);
-          $em->flush();
-          $message = 'Cambio de estado realizado';  
-          $this->addFlash('goodinscription',$message);
-          // added set log info data
-          $this->get('funciones')->setLogTransaccion(
-                                $infoStudent['eInsId'],
-                                'estudiante_inscripcion',
-                                'U',
-                                '',
-                                $currentInscrip,
-                                $oldInscriptionStudent,
-                                'SIGED',
-                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-          );     
-
-          // Try and commit the transaction
-          $em->getConnection()->commit();
-
-        }
-
-    } catch (Exception $e) {
-      $em->getConnection()->rollback();
-      echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-    }
-    if ($objNextCurso) {
-        //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($objNextCurso->getId(), '5');
-        //get students list
-        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
-        $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
-    } else {
-        $message = 'No existen estudiantes inscritos...';
-        $this->addFlash('warninsueall', $message);
-        $exist = false;
-    }
-
-        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
-                    'objStudents' => $objStudents,
-                    'sie' => $sie,
-                    'turno' => $turno,
-                    'nivel' => $nivel,
-                    'grado' => $grado,
-                    'paralelo' => $paralelo,
-                    'gestion' => $gestion,
-                    'aData' => $aData,
-                    'gradoname' => $gradoname,
-                    'paraleloname' => $paraleloname,
-                    // 'nivelname' => $nivelname,
-                    'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                    'infoUe' => $infoUe,
-                    'exist' => $exist,
-                    'itemsUe'=>$itemsUe,
-                    'ciclo'=>$ciclo,
-                    'operativo'=>$operativo,
-                    'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
-                    'imprimirLibreta'=>$imprimirLibreta,
-                    'estadosPermitidosImprimir'=>$estadosPermitidosImprimir
-        ));
+        // return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
+        //             'objStudents' => $objStudents,
+        //             'sie' => $sie,
+        //             'turno' => $turno,
+        //             'nivel' => $nivel,
+        //             'grado' => $grado,
+        //             'paralelo' => $paralelo,
+        //             'gestion' => $gestion,
+        //             'aData' => $aData,
+        //             'gradoname' => $gradoname,
+        //             'paraleloname' => $paraleloname,
+        //             // 'nivelname' => $nivelname,
+        //             'form' => $this->createFormStudentInscription($infoUe)->createView(),
+        //             'infoUe' => $infoUe,
+        //             'exist' => $exist,
+        //             'itemsUe'=>$itemsUe,
+        //             'ciclo'=>$ciclo,
+        //             'operativo'=>$operativo,
+        //             'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
+        //             'imprimirLibreta'=>$imprimirLibreta,
+        //             'estadosPermitidosImprimir'=>$estadosPermitidosImprimir
+        // ));
     }
 
     public function updateMatricula1Action(Request $request){
@@ -506,6 +302,8 @@ class ChangeMatriculaController extends Controller {
         $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
         // Para el centralizador
         $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
+    
+
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'sie' => $sie,
