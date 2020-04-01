@@ -35,6 +35,7 @@ class NewInscriptionIniPriController extends Controller
     }
     // index method
     public function indexAction(Request $request){
+      return $this->redirect($this->generateUrl('principal_web'));
     	$em = $this->getDoctrine()->getManager();
         //validation if the user is logged
         if (!isset($this->userlogged)) {
