@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.flujoTipo.flujo}}</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ tramite.id }}: <span>{{tramite.tramiteTipo.tramiteTipo}}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -78,19 +78,19 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="form-group col-md-12">
-                                                <div class="col-md-3"><strong>REQUISITOS PRESENTADOS:</strong></div>
-                                                <div class="col-md-9">
+                                                <div class="col-md-4"><strong>REQUISITOS PRESENTADOS:</strong></div>
+                                                <div class="col-md-8">
                                                 {% for r in form.requisitos %}
                                                     <div class="ckbox ckbox-primary">
-                                                        {{ form_widget(r) }}
+                                                        {{ form_widget(r,{'attr':{'required':true}}) }}
                                                         {{ form_label(r) }}
                                                     </div>
                                                 {% endfor %}   
                                                 </div>
                                             </div>
                                             <div class="form-group  col-md-12">
-                                                <div class="col-md-3"><strong>TRÁMITE PROCEDENTE:</strong></div>
-                                                <div class="col-md-9">
+                                                <div class="col-md-4"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                                <div class="col-md-8">
                                                     {% for a in form.varevaluacion1 %}
                                                         <div class="col-md-3 rdio rdio-primary circle">
                                                             {{ form_widget(a) }}
@@ -115,46 +115,73 @@
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="form-group  col-md-12" id="obs" style="display:none">
-                                                <div class="col-md-3"><strong>FINALIZAR TRÁMITE:</strong></div>
-                                                <div class="col-md-9">
+                                            <div class="form-group  col-md-12 obs" style="display:none">
+                                                <div class="col-md-4"><strong>FINALIZAR TRÁMITE:</strong></div>
+                                                <div class="col-md-8">
                                                     {% for b in form.varevaluacion2 %}
                                                         <div class="col-md-3 rdio rdio-primary circle">
                                                             {{ form_widget(b) }}
-                                                            {{ form_label(b) }}
+                                                            {{ form_label(b) }}</br>
+                                                            {% if b.vars.value =='SI' %}
+                                                                <em><font size=2 color="gray">(Finalizar el trámite)</font></em>
+                                                            {% else %}
+                                                                <em><font size=2 color="gray">(Devolver a la Unidad Educativa)</font></em>
+                                                            {% endif %}
                                                         </div>
                                                     {% endfor %}
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12 inf">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
 	        			        				    {{ form_label(form.informedistrito) }}
                                                 </div>   
-			        			        		<div class="col-md-9">
+			        			        		<div class="col-md-8">
                                                     {{ form_widget(form.informedistrito) }}
 					        		            </div>
                                             </div>
                                             <div class="form-group col-md-12 inf">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
 								                    {{ form_label(form.fechainformedistrito) }}
                                                 </div>
-                                                <div class="col-md-9">
+                                                <div class="col-md-8">
 	    							                {{ form_widget(form.fechainformedistrito) }}
                                                 </div>
 			    				            </div>
                                             <div class="form-group col-md-12 inf">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
     					    			            {{ form_label(form.adjuntoinforme) }}
                                                 </div>
-                                                <div class="col-md-9">
+                                                <div class="col-md-8">
 	        						    	        {{ form_widget(form.adjuntoinforme) }}
                                                 </div>
             		        			    </div>
+                                            {% set sw = 0 %}
+                                            {% for t in datos[0].datos.tramites %}
+                                                {% if t.id == 38 %} {% set sw = 1 %} {% endif %}
+                                            {% endfor %}
+                                            {% if sw == 1 %}
+                                                <div class="form-group col-md-12 jur">
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.actaconformidad) }}
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ form_widget(form.actaconformidad) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 jur">
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.bidistrital) }}
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ form_widget(form.bidistrital) }}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
                                             <div class="form-group col-md-12">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
     					    			            {{ form_label(form.observacion) }}
                                                 </div>
-                                                <div class="col-md-9">
+                                                <div class="col-md-8">
 	        						    	        {{ form_widget(form.observacion) }}
                                                 </div>
             		        			    </div>
@@ -175,6 +202,7 @@
             </div>
         </div>
     </div>
+    {% include 'SieProcesosBundle:TramiteRue:requisitosHistorico.html.twig' with {'datos': datos[0].datos,'institucioneducativa':tramite.institucioneducativa} %}
 {% endblock %}
  {% block javascripts %}
     {{ parent() }} 
@@ -199,13 +227,29 @@
                 language: 'es'
             });
         });
+        
+        $(document).on('change','input[type="file"]',function(){
+            var fileName = this.files[0].name;
+            var fileSize = this.files[0].size;
+            var sizePermitido = 3 * (1024 * 1024)
+            if(fileSize > sizePermitido){
+                alert('El archivo adjunto no debe superar los 3MB');
+                this.value = '';
+                this.files[0].name = '';
+            }
+        });
+
+        $('.date').keydown(function() {
+            return false;
+        });
         //$("#form_fechainformesubdireccion").datepicker();
         $('#form_varevaluacion1_0').click(function(){
             //alert('entra');
             if ($("#form_varevaluacion1_0").is(':checked')){
                 $('#informe').show();
-                $('#obs').hide();
+                $('.obs').hide();
                 $('.inf').show();
+                $('.jur').show();
                 $('#titulo').text('DATOS DEL INFORME');
                 $('#form_observacion').attr('required',false);
                 $("#form_varevaluacion2_0").attr('required',false);
@@ -213,16 +257,19 @@
                 $("#form_informedistrito").attr('required',true);
                 $("#form_fechainformedistrito").attr('required',true);
                 $("#form_adjuntoinforme").attr('required',true);
+                $("#form_actaconformidad").attr('required',true);
+                $("#form_bidistrital").attr('required',true);
                 limpiarInforme();
-                limpiarObs();               
+                limpiarObs();
             }
         });
 
         $('#form_varevaluacion1_1').click(function(){
             if ($("#form_varevaluacion1_1").is(':checked')){
                 $('#informe').show();
-                $('#obs').show();
+                $('.obs').show();
                 $('.inf').hide();
+                $('.jur').hide();
                 $('#titulo').text('DATOS DE LA OBSERVACIÓN');
                 $('#form_observacion').attr('required',false);
                 $("#form_varevaluacion2_0").attr('required',true);
@@ -230,6 +277,8 @@
                 $("#form_informedistrito").attr('required',false);
                 $("#form_fechainformedistrito").attr('required',false);
                 $("#form_adjuntoinforme").attr('required',false);
+                $("#form_actaconformidad").attr('required',false);
+                $("#form_bidistrital").attr('required',false);
                 limpiarInforme();
                 limpiarObs();
             }
@@ -239,10 +288,13 @@
             //alert('entra');
             if ($("#form_varevaluacion2_0").is(':checked')){
                 $('.inf').show();
+                $('.jur').hide();
                 $('#form_observacion').attr('required',false);
                 $("#form_informedistrito").attr('required',true);
                 $("#form_fechainformedistrito").attr('required',true);
                 $("#form_adjuntoinforme").attr('required',true);
+                $("#form_actaconformidad").attr('required',true);
+                $("#form_bidistrital").attr('required',true);
                 limpiarInforme();
             }
         });
@@ -250,10 +302,13 @@
         $('#form_varevaluacion2_1').click(function(){
             if ($("#form_varevaluacion2_1").is(':checked')){
                 $('.inf').hide();
+                $('.jur').hide();
                 $('#form_observacion').attr('required',true);
                 $("#form_informedistrito").attr('required',false);
                 $("#form_fechainformedistrito").attr('required',false);
                 $("#form_adjuntoinforme").attr('required',false);
+                $("#form_actaconformidad").attr('required',false);
+                $("#form_bidistrital").attr('required',false);
                limpiarInforme();
             }
         });
@@ -263,12 +318,29 @@
             $("#form_informedistrito").val('');
             $("#form_fechainformedistrito").val('');
             $("#form_adjuntoinforme").val('');
+            $("#form_actaconformidad").val('');
+            $("#form_bidistrital").val('');
         }
         function limpiarObs(){
             $("#form_varevaluacion2_0").prop('checked',false);
             $("#form_varevaluacion2_1").prop('checked',false);
         }
 
-       
+        $('.btn-lilac').click(function(){
+            $(this).removeClass("btn-lilac");
+            $(this).addClass("btn-teal");
+            
+        });
+
+        function validacion(){
+            if($('.btn-lilac').length > 0){
+                alert('Debe abrir y verificar todos los archivos adjuntos de los formularios anteriores.');
+                return false;
+            }else{
+                $('#form_guardar').prop('disabled',true);
+                return true;
+            }
+        }
+        
     </script>   
     {% endblock %}

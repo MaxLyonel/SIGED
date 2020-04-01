@@ -117,7 +117,9 @@
                             <tr>
                                 <th>#</th>
                                 <th>CÓDIGO RUDE</th>
+                                <th>C.I.</th>
                                 <th>ESTUDIANTE</th>
+                                <th>FECHA NAC.</th>
                                 <th>ESTADO DE MATRÍCULA</th>
                                 <th>OPCIONES</th>
                                 <!--td>
@@ -166,28 +168,54 @@
                             {# set the array student info and convert on json string #}
                             {# set objInfoStudent = objInfoStudent|merge(data) #}
                             {# set jsnInfoStudent = objInfoStudent|json_encode() #}
-                            <tr>
+                            <tr {% if data.segipId == 0 %}class="text-danger"{% endif %} id="trEstudianteSegip_{{data.codigoRude}}">
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
-                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+                                <td>{{data.carnetIdentidad}}{% if data.complemento %}-{{data.complemento}}{% endif %}</td>
+                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
+                                <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
-                                    {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
-                                        {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
-                                            {{data.estadomatricula}}
-                                        {% else %}
-                                            {% if data.estadomatriculaId == 4 %}
-                                                <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                            {% else %}
-                                                <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
-                                            {% endif %}
-                                            {{data.estadomatricula}}
+                                    {% if gestion == 2020 %}
+                                        {% if data.cambioEstadoMatricula == true and 1 == 2 %}
+                                            <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                {{data.estadomatricula}}
                                             </button>
+                                        {% else %}
+                                            {{data.estadomatricula}}
                                         {% endif %}
                                     {% else %}
-                                        {{data.estadomatricula}}
+                                        {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
+                                            {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
+                                                {{data.estadomatricula}}
+                                            {% else %}
+                                                {% if data.estadomatriculaId == 4 %}
+                                                    <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                {% else %}
+                                                    <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
+                                                {% endif %}
+                                                {{data.estadomatricula}}
+                                                </button>
+                                            {% endif %}
+                                        {% else %}
+                                            {{data.estadomatricula}}
+                                        {% endif %}
+                                        
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {# VALIDACIÓN SEGIP #}
+                                    <div id="estudianteSegip_{{data.codigoRude}}">
+                                        {% if data.segipId == 1 %}
+                                            <span class="badge badge-success"><i class="fa fa-fw fa-check"></i> Válido SEGIP</span>
+                                        {% elseif data.segipId == 0 and data.carnetIdentidad %}
+                                            <form action="{{path('herramienta_info_estudiante_validar_segip')}}" method="post">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{data.codigoRude}}">
+                                                <button type="button" class="btn btn-link text-danger" onclick="validarEstudianteSegip('{{data.codigoRude}}');"><i class="fa fa-fw fa-edit"></i> Validar con SEGIP</button>
+                                            </form>
+                                        {% else %}
+                                            <span class="badge badge-info"><i class="fa fa-fw fa-info"></i> No cuenta con C.I.</span>
+                                        {% endif %}
+                                    </div>
                                     {# AREAS ESTUDIANTE #}
                                     {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
@@ -774,6 +802,40 @@
                 }
             }
         });
+    };
+
+    var validarEstudianteSegip = function(codigoRude){
+        if(confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?')) {
+            $.ajax({
+                type: 'post',
+                data: ({codigoRude: codigoRude}),
+                url: "{{path('herramienta_info_estudiante_validar_segip')}}",
+                beforeSend: function () {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    $('#estudianteSegip_'+codigoRude).html('Cargando...');
+                },
+                success: function (data) {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    if(data.estado){
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-success');
+                        $('#estudianteSegip_'+codigoRude).html('<span class="badge badge-success"><i class="fa fa-fw fa-check"></i> '+data.mensaje+'</span>');
+                    } else {
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-warning');
+                        $('#estudianteSegip_'+codigoRude).html('<span>'+data.mensaje+'</span>');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                        $('#estudianteSegip_'+codigoRude).empty();
+                        $('#estudianteSegip_'+codigoRude).html('Ocurrió un error interno.');                        
+                    },
+                    404: function () {
+                        $('#estudianteSegip_'+codigoRude).empty();
+                        $('#estudianteSegip_'+codigoRude).html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        }
     };
 
 </script>

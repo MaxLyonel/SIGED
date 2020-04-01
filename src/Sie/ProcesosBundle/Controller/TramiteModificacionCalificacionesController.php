@@ -72,7 +72,8 @@ class TramiteModificacionCalificacionesController extends Controller {
         return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:index.html.twig', array(
             'flujoTipo'=>$flujoTipo,
             'historial'=>$historial,
-            'idTramite'=>$idTramite
+            'idTramite'=>$idTramite,
+            'sieActual'=>$ie_id
         ));
     }
 
@@ -83,6 +84,15 @@ class TramiteModificacionCalificacionesController extends Controller {
         $codigoRude = $request->get('codigoRude');
         $flujoTipo = $request->get('flujoTipo');
         $sie = $this->session->get('ie_id');
+        $rol = $this->session->get('roluser');
+
+        // VALIDAMOS QUE EL USUARIO QUE ESTA REALIZANDO LA SOLICITUD SEA CON ROL DE DIRECTOR
+        // PARA EVITAR ERRORES CUANDO SE SOBREESCRIBEN LAS SESIONES
+        if ($rol != 9) {
+            $response->setStatusCode(202);
+            $response->setData('El usuario actual no tiene rol de Director, cierre sesion e ingrese nuevamente al sistema.');
+            return $response;
+        }
 
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
@@ -104,7 +114,7 @@ class TramiteModificacionCalificacionesController extends Controller {
         }
 
         $inscripciones = $em->createQueryBuilder()
-                            ->select('ei.id, ie.id as sie, ie.institucioneducativa, get.gestion, nt.id idNivel, nt.nivel, gt.grado, pt.paralelo, tt.turno, emt.estadomatricula, emt.id estadomatriculaId')
+                            ->select('ei.id, ie.id as sie, ie.institucioneducativa, get.gestion, nt.id idNivel, nt.nivel, gt.grado, pt.paralelo, tt.turno, emt.estadomatricula, emt.id estadomatriculaId, dep.departamento, dt.distrito')
                             ->from('SieAppWebBundle:EstudianteInscripcion','ei')
                             ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
@@ -115,8 +125,13 @@ class TramiteModificacionCalificacionesController extends Controller {
                             ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','with','iec.paraleloTipo = pt.id')
                             ->innerJoin('SieAppWebBundle:TurnoTipo','tt','with','iec.turnoTipo = tt.id')
                             ->innerJoin('SieAppWebBundle:EstadomatriculaTipo','emt','with','ei.estadomatriculaTipo = emt.id')
+                            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','with','ie.leJuridicciongeografica = jg.id')
+                            ->innerJoin('SieAppWebBundle:DistritoTipo','dt','with','jg.distritoTipo = dt.id')
+                            ->innerJoin('SieAppWebBundle:DepartamentoTipo','dep','with','dt.departamentoTipo = dep.id')
                             ->where('e.codigoRude = :rude')
+                            // ->andWhere('ie.id = :sie')
                             ->setParameter('rude', $codigoRude)
+                            // ->setParameter('sie', $sie)
                             ->addOrderBy('get.id','DESC')
                             ->addOrderBy('nt.id','DESC')
                             ->addOrderBy('gt.id','DESC')
@@ -126,17 +141,17 @@ class TramiteModificacionCalificacionesController extends Controller {
         // SI EL ESTUDIANTE NO TIENE INSCRIPCIONES
         if(!$inscripciones){
             $response->setStatusCode(202);
-            $response->setData('El estudiante no tiene inscripciones disponibles');
+            $response->setData('El estudiante no tiene inscripciones registradas en esta Unidad Educativa');
             return $response;
         }
 
 
         // VALIDAMOS SI LA UNIDAD EDUCATIVA TIENE TUICION SOBRE EL ESTUDIANTE
-        if($inscripciones[0]['sie'] != $sie){
-            $response->setStatusCode(202);
-            $response->setData('No tiene tuición sobre el estudiante');
-            return $response;   
-        }
+        // if($inscripciones[0]['sie'] != $sie){
+        //     $response->setStatusCode(202);
+        //     $response->setData('No tiene tuición sobre el estudiante');
+        //     return $response;   
+        // }
 
         $inscripcionesArray = [];
         foreach ($inscripciones as $key => $value) {
@@ -151,16 +166,29 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'turno'=>$value['turno'],
                 'estadomatricula'=>$value['estadomatricula'],
                 'estadomatriculaId'=>$value['estadomatriculaId'],
-                'idNivel'=>$value['idNivel']
+                'idNivel'=>$value['idNivel'],
+                'departamento'=>$value['departamento'],
+                'distrito'=>$value['distrito']
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
         }
+
+        // OBTENEMOS EL DATO DEL DIRECTOR
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $directorNombre = $user->getPersona()->getNombre().' '.$user->getPersona()->getPaterno().' '.$user->getPersona()->getMaterno();
+        $directorCarnet = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getCarnet():'';
+        $directorComplemento = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getComplemento():'';
 
         $response->setStatusCode(200);
         $response->setData(array(
             'codigoRude'=>$estudiante->getCodigoRude(),
             'estudiante'=> $estudiante->getNombre().' '.$estudiante->getPaterno().' '.$estudiante->getMaterno(),
-            'inscripciones'=>$inscripcionesArray
+            'carnet'=>($estudiante->getSegipId() == 1)?$estudiante->getCarnetIdentidad():'',
+            'complemento'=>($estudiante->getSegipId() == 1)?$estudiante->getComplemento():'',
+            'inscripciones'=>$inscripcionesArray,
+            'directorNombre'=>$directorNombre,
+            'directorCarnet'=>$directorCarnet,
+            'directorComplemento'=>$directorComplemento
         ));
 
         return $response;
@@ -212,7 +240,6 @@ class TramiteModificacionCalificacionesController extends Controller {
             }
         }
 
-// dump($datos);die;
         // ESTADOS MATRICULAS
         $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(4,5,11,28)));
         $arrayEstados = [];
@@ -242,31 +269,16 @@ class TramiteModificacionCalificacionesController extends Controller {
         // ));
     }
 
-    // public function formularioAction(Request $request, $idInscripcion, $flujoTipo){
-
-    //     $em = $this->getDoctrine()->getManager();
-    //     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-    //     $estudiante = $inscripcion->getEstudiante();
-
-    //     $data = $this->get('notas')->regular($idInscripcion, 4);
-
-    //     return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formulario.html.twig', array(
-    //         'inscripcion'=>$inscripcion,
-    //         'estudiante'=>$estudiante,
-    //         'data'=>$data,
-    //         'idInscripcion'=>$inscripcion->getId(),
-    //         'flujoTipo'=>$flujoTipo
-    //     ));
-    // }
-    // dxvyfxvy
-
     public function formularioSaveAction(Request $request){
         $response = new JsonResponse();
         try {
             // OBTENEMOS EL ID DE INSCRIPCION
             $idTramite = $request->get('idTramite');
             $idInscripcion = $request->get('idInscripcion');
+            
             $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             // $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             // $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
@@ -316,6 +328,8 @@ class TramiteModificacionCalificacionesController extends Controller {
             // OBTENEMOS LA INFORMACION DEL FORMULARIO
             $codigoRude = $request->get('codigoRude');
             $estudiante = $request->get('estudiante');
+            $carnet = $request->get('carnet');
+            $complemento = $request->get('complemento');
             $sieInscripcion = $request->get('sie');
             $institucioneducativa = $request->get('institucioneducativa');
             $nivelInscripcion = $request->get('nivel');
@@ -323,6 +337,12 @@ class TramiteModificacionCalificacionesController extends Controller {
             $paraleloInscripcion = $request->get('paralelo');
             $turnoInscripcion = $request->get('turno');
             $gestionInscripcion = $request->get('gestion');
+            $departamentoInscripcion = $request->get('departamento');
+            $distritoInscripcion = $request->get('distrito');
+            
+            $directorNombre = $request->get('directorNombre');
+            $directorCarnet = $request->get('directorCarnet');
+            $directorComplemento = $request->get('directorComplemento');
 
             $flujoTipo = $request->get('flujoTipo');
             $notas = json_decode($request->get('notas'),true);
@@ -337,6 +357,8 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'idInscripcion'=> $idInscripcion,
                 'codigoRude' => $codigoRude,
                 'estudiante' => $estudiante,
+                'carnet' => $carnet,
+                'complemento' => $complemento,
                 'sie' => $sieInscripcion,
                 'institucioneducativa' => $institucioneducativa,
                 'nivel' => $nivelInscripcion,
@@ -344,6 +366,11 @@ class TramiteModificacionCalificacionesController extends Controller {
                 'paralelo' => $paraleloInscripcion,
                 'turno' => $turnoInscripcion,
                 'gestion' => $gestionInscripcion,
+                'departamento' => $departamentoInscripcion,
+                'distrito' => $distritoInscripcion,
+                'directorNombre'=>$directorNombre,
+                'directorCarnet'=>$directorCarnet,
+                'directorComplemento'=>$directorComplemento,
                 'flujoTipo'=>$flujoTipo,
                 'notas'=> $notas,
                 'notasCualitativas'=>$notasCualitativas,
@@ -365,7 +392,11 @@ class TramiteModificacionCalificacionesController extends Controller {
             $tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'AMN'));
 
             if ($idTramite == null) {
-                // REGISTRAMOS UNA NUEVO TRAMITE
+                
+                // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
+                $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
+
+                // REGISTRAMOS UN NUEVO TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
                     $this->session->get('userId'),
                     $this->session->get('roluser'),
@@ -382,11 +413,20 @@ class TramiteModificacionCalificacionesController extends Controller {
                     $lugarTipo['lugarTipoIdDistrito']
                 );
 
+                if ($registroTramite['dato'] == false) {
+                    $response->setStatusCode(500);
+                    return $response;
+                }
+
                 $idTramite = $registroTramite['idtramite'];
 
                 // $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
 
             }else{
+                // RECUPERAMOS EL OPERATIVO DONDE SE INICIO EL TRAMITE Y LO AGREGAMOS AL ARRAY DE DATOS
+                $datosFormulario = $this->datosFormulario($idTramite);
+                $data['operativoActual'] = $datosFormulario['operativoActual'];
+
                 // NUEVAMENTE ENVIAMOS EL TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteEnviado(
                     $this->session->get('userId'),
@@ -403,7 +443,10 @@ class TramiteModificacionCalificacionesController extends Controller {
                     $lugarTipo['lugarTipoIdDistrito']
                 );
 
-                // dump($registroTramie);die;
+                if ($registroTramite['dato'] == false) {
+                    $response->setStatusCode(500);
+                    return $response;
+                }
 
                 $msg = "El Tramite ".$registroTramite['msg']." fue enviado exitosamente";
 
@@ -412,14 +455,21 @@ class TramiteModificacionCalificacionesController extends Controller {
                         ->add('exito', $msg);
             }
 
+            $datos = $this->datosFormulario($idTramite);
+            $codigoQR = 'FTMC'.$idTramite.'|'.$datos['codigoRude'].'|'.$datos['sie'].'|'.$datos['gestion'];
+
             $response->setStatusCode(200);
             $response->setData(array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones', array('idTramite'=>$idTramite))
+                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones_formulario', array('idTramite'=>$idTramite, 'codigoQR'=>$codigoQR))
             ));
+
+            $em->getConnection()->commit();
+
             return $response;
 
         } catch (Exception $e) {
+            $em->getConnection()->rollback();
             $response->setStatusCode(500);
             return $response;
         }
@@ -431,7 +481,10 @@ class TramiteModificacionCalificacionesController extends Controller {
         // dump($idTramite);die;
         $idTramiteDetalle = $request->get('id_td');
 
-        return $this->redirectToRoute('download_tramite_modificacion_calificaciones', array('idTramite'=>$idTramite));
+        $datos = $this->datosFormulario($idTramite);
+        $codigoQR = 'FTMC'.$idTramite.'|'.$datos['codigoRude'].'|'.$datos['sie'].'|'.$datos['gestion'];
+
+        return $this->redirectToRoute('download_tramite_modificacion_calificaciones_formulario', array('idTramite'=>$idTramite, 'codigoQR'=>$codigoQR));
     }
 
     public function formularioObtenerDatosAction(Request $request){
@@ -513,6 +566,46 @@ class TramiteModificacionCalificacionesController extends Controller {
                 }
             }
             // dump($dato);die;
+            return $dato;
+
+        } catch (Exception $e) {
+            
+        }
+    }
+
+    // OBTENEMOS DATOS DEL FORMULARIO DE LA UNIDAD EDUCATIVA
+    public function datosFormulario($idTramite){
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+            $tareaActual = '';
+            foreach ($tarea as $t) {
+                $tareaActual = $t['tarea_actual'];
+            }
+
+            $query = $em->getConnection()->prepare("
+                        select * from tramite t 
+                        inner join tramite_detalle td on td.tramite_id = t.id
+                        inner join flujo_proceso fp on td.flujo_proceso_id = fp.id
+                        inner join proceso_tipo pt on fp.proceso_id = pt.id
+                        inner join rol_tipo rt on fp.rol_tipo_id = rt.id
+                        left JOIN wf_solicitud_tramite wf on td.id=wf.tramite_detalle_id
+                        where ((wf.id is not null and wf.es_valido is true) or td.id is not null) 
+                        and td.tramite_id = ". $idTramite ." 
+                        and wf.es_valido is true
+                        and fp.orden = 1
+                        order by td.id desc
+                        limit 1
+                        ");
+
+            $query->execute();
+            $dato = $query->fetchAll();
+            // OBTENEMOS EL OBJETO JSON
+            $dato = $dato[0]['datos'];
+
+            // CONVERTIMOS EN ARRAY EL OBJETO JSON
+            $dato = json_decode($dato,true);
+
             return $dato;
 
         } catch (Exception $e) {
@@ -656,16 +749,18 @@ class TramiteModificacionCalificacionesController extends Controller {
         $notasMasDeUnBimestreAtras = 0;
         foreach ($historial as $key => $value) {
             if ($value['orden'] == 1 and $value['datos']['gestion'] == $gestionActual) {
-                // dump($value['datos']);die;
-                // OBTENEMOS OPERATIVO CONSOLIDADO
-                $operativo = $this->get('funciones')->obtenerOperativo($value['datos']['sie'],$value['datos']['gestion']);
+
+                // RECUPERAMOS EL OPERATIVO DONDE LA AUNIDAD EDUCATIVA INICIO EL TRAMITE
+                $datosFormulario = $this->datosFormulario($idTramite);
+                $operativo = $datosFormulario['operativoActual'];
+
                 // VERIFICAMOS SI EL OPERATIVO SE ENCUENTRA ENTRE PRIMER Y TERCER BIMESTRE
                 if ($operativo > 0 and $operativo < 4) {
                     // RECORREMOS LAS NOTAS PARA VER A QUE BIMESTRE PERTENECEN
                     foreach ($value['datos']['notas'] as $n) {
-                        if ($n['idNotaTipo'] == $operativo) {
+                        if ($n['idNotaTipo'] == ($operativo - 1)) {
                         }else{
-                            // SI EXISTE UNA NOTA 
+                            // SI EXISTE UNA NOTA QUE PERTENECE A MAS DE UN OPERATIVO ATRAS
                             $notasMasDeUnBimestreAtras++;
                         }
                     }
@@ -673,6 +768,18 @@ class TramiteModificacionCalificacionesController extends Controller {
                     // SI EL OPERATIVO ES MAYOR O IGUAL A 4 O CUANDO LA GESTION ACTUAL YA HA SIDO CERRADA
                     $notasMasDeUnBimestreAtras++;
                 }
+
+                /*----------  VALIDACION GESTION 2019  ----------*/
+                // SI ES GESTION 2019 Y OPERATIVO MENOR A 4TO BIMESTRE RESETEAMOS LA VARIABLE notasMasDeUnBimestreAtras Y
+                // CON ESTO HACEMOS QUE LA SOLICITUD SEA APROBADA POR EL DISTRITO DIRECTAMENTE
+                // 
+                if ($value['datos']['gestion'] == 2019 and ($operativo - 1) < 4) {
+                    $notasMasDeUnBimestreAtras = 0;
+                }
+
+                /*=====  End of VALIDACION GESTION 2019  ======*/
+                
+
             }else{
                 // VERIFICAMOS SI ES DE ORDEN 1 Y GESTION DIFERENTE A LA ACTUAL
                 if ($value['orden'] == 1) {
@@ -692,6 +799,11 @@ class TramiteModificacionCalificacionesController extends Controller {
         return $aprobarDistrito;
     }
     
+    /**
+     * Recepcion y despliegue del formulario del distrito
+     * @param  integer idTramite    id del tramite
+     * @return vista                formulario de recepcion distrito
+     */
     public function recepcionVerificaDistritoAction(Request $request){
         $idTramite = $request->get('id');
         $em = $this->getDoctrine()->getManager();
@@ -705,12 +817,33 @@ class TramiteModificacionCalificacionesController extends Controller {
         ));
     }    
 
+    /**
+     * derivacion del formulario de distrito
+     * @param  Request $request datos formulario distrito
+     * @return msg              respuesta en formato json
+     */
     public function derivaDistritoAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
 
             $idTramite = $request->get('idTramite');
+
+            /*----------  VERIFICACION  ----------*/
+            // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
+            // PARA EVITAR DOBLE PROMOCION
+            $respuesta = $this->calcularNuevoEstado($idTramite);
+            if ($respuesta['nuevoEstado'] == 5) {
+                $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
+                if ($inscripcionSimilar) {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('errorTAMC', 'El trámite no puede ser aprobado, porque la solicitud modificará el estado de matrícula de la inscripción a promovido, pero el estudiante ya tiene otra inscripción del mismo nivel y grado con estado promovido o efectivo.');
+                    return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                }
+            }
+            /*=====  End of VERIFICACION  ======*/
+
             $procedente = $request->get('procedente');
             $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
             $checkInforme = $request->get('checkInforme');
@@ -723,6 +856,7 @@ class TramiteModificacionCalificacionesController extends Controller {
             $sie = $tramite->getInstitucioneducativa()->getId();
             $gestion = $tramite->getGestionId();
 
+            // OBTENEMOS EL LUGAR TIPO DEL TRAMITE
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
 
             // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
@@ -781,6 +915,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 $informe = null;
             }
 
+            // CREAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
             $datos = json_encode(array(
                 'sie'=>$sie,
                 'procedente'=>$procedente,
@@ -818,12 +953,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                 // VERIFICAMOS SI EL DISTRITO PUEDE APROBAR
                 $aprobarDistrito = ($this->verificarBimestreAnterior($idTramite))?'SI':'NO';
 
-                // dump($aprobarDistrito);
-                // dump($tareaActual);
-                // dump($tareaSiguienteSi);
-                // dump($tareaSiguienteNo);
-                // die;
-
+                // ARMAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
                 $datos = json_encode(array(
                     'sie'=>$sie,
                     'finalizar'=>$finalizar,
@@ -849,9 +979,7 @@ class TramiteModificacionCalificacionesController extends Controller {
 
                 if ($aprobarDistrito == 'SI') {
 
-                    // dump($tareaActual);
-                    // dump($tareaSiguienteSi);
-
+                    // OBTENEMOS EL ID DE LA TAREA SIGUIENTE
                     $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
                     $tareaActual = '';
                     $tareaSiguienteSi = '';
@@ -862,10 +990,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                         }
                     }
 
-                    // dump($tareaActual);
-                    // dump($tareaSiguienteSi);
-                    // die;
-
+                    // RECIBIMOS EL TRAMITE
                     $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
                         $this->session->get('userId'),
                         $tareaSiguienteSi,
@@ -878,12 +1003,14 @@ class TramiteModificacionCalificacionesController extends Controller {
 
                     /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/
 
+                    // ARMAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
                     $datos = json_encode(array(
                         'sie'=>$sie,
                         'aprobarDistrito'=>$aprobarDistrito,
                         'observacion'=>$observacion
                     ), JSON_UNESCAPED_UNICODE);
 
+                    // ENVIAMOS EL TRAMITE
                     $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
                         $this->session->get('userId'),
                         $this->session->get('roluser'),
@@ -899,9 +1026,6 @@ class TramiteModificacionCalificacionesController extends Controller {
                         $lugarTipo['lugarTipoIdDistrito']
                     );
                 }
-                
-
-                // dump($enviarTramite);die;
 
             }
 
@@ -976,6 +1100,23 @@ class TramiteModificacionCalificacionesController extends Controller {
             $em->getConnection()->beginTransaction();
 
             $idTramite = $request->get('idTramite');
+
+            /*----------  VERIFICACION  ----------*/
+            // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
+            // PARA EVITAR DOBLE PROMOCION
+            $respuesta = $this->calcularNuevoEstado($idTramite);
+            if ($respuesta['nuevoEstado'] == 5) {
+                $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
+                if ($inscripcionSimilar) {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('errorTAMC', 'El trámite no puede ser aprobado, porque la solicitud modificará el estado de matrícula de la inscripción a promovido, pero el estudiante ya tiene otra inscripción del mismo nivel y grado con estado promovido o efectivo.');
+                    return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                }
+            }
+            /*=====  End of VERIFICACION  ======*/
+            
+
             $aprueba = $request->get('aprueba');
             $checkInforme = $request->get('checkInforme');
             $checkCuaderno = $request->get('checkCuaderno');
@@ -1016,7 +1157,7 @@ class TramiteModificacionCalificacionesController extends Controller {
             //     }
             // }
 
-            // VERIFICAMOS SI EXISTE EL INFORME Y SI EL ESTADO DE MATRICULA DEL ESTUDIANTE ES DIFERENTE A EFECTIVO 4
+            // VERIFICAMOS SI EXISTE EL ARCHIVO DE LA RESOLUCION ADMINISTRATIVA
             if(isset($_FILES['resAdm'])){
                 $file = $_FILES['resAdm'];
 
@@ -1057,6 +1198,47 @@ class TramiteModificacionCalificacionesController extends Controller {
                 $resAdm = null;
             }
 
+            // VERIFICAMOS SI EXISTE EL ARCHIVO DEL INFORME
+            if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                if ($file['name'] != "") {
+                    $type = $file['type'];
+                    $size = $file['size'];
+                    $tmp_name = $file['tmp_name'];
+                    $name = $file['name'];
+                    $extension = explode('.', $name);
+                    $extension = $extension[count($extension)-1];
+                    $new_name = date('YmdHis').'.'.$extension;
+
+                    // GUARDAMOS EL ARCHIVO
+                    $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionNotas/' . $sie;
+                    if (!file_exists($directorio)) {
+                        mkdir($directorio, 0777, true);
+                    }
+
+                    $archivador = $directorio.'/'.$new_name;
+                    //unlink($archivador);
+                    if(!move_uploaded_file($tmp_name, $archivador)){
+                        $response->setStatusCode(500);
+                        return $response;
+                    }
+                    
+                    // CREAMOS LOS DATOS DE LA IMAGEN
+                    $informe = array(
+                        'name' => $name,
+                        'type' => $type,
+                        'tmp_name' => 'nueva_ruta',
+                        'size' => $size,
+                        'new_name' => $new_name
+                    );
+                }else{
+                    $informe = null;
+                }
+            }else{
+                $informe = null;
+            }
+
             // VERIFICAMOS SI LA GESTION ES CONSOLIDADA OPERATIVO >= 4 O LA GESTION PERMITE LA IMPRESION DE LA LIBRETA ELECTRONICA
             // $gestionConsolidada = 'NO';
             // if($gestionInscripcion >= 2015){
@@ -1089,6 +1271,7 @@ class TramiteModificacionCalificacionesController extends Controller {
                     'checkInformeDistrito'=>($checkInformeDistrito == null)?false:true,
                     'observacion'=>$observacion,
                     'resAdm'=>$resAdm,
+                    'informe'=>$informe,
                     'nroResAdm'=>$request->get('nroResAdm'),
                     'fechaResAdm'=>$request->get('fechaResAdm')
                 ), JSON_UNESCAPED_UNICODE);
@@ -1147,19 +1330,62 @@ class TramiteModificacionCalificacionesController extends Controller {
                     '',
                     $lugarTipo['lugarTipoIdDistrito']
                 );
+
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', "El Tramite ". $idTramite ." fue aprobado y finalizado exitosamente");
+
+            }else{
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
             }
 
             $em->getConnection()->commit();
-
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
 
             return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
 
         } catch (Exception $e) {
             $em->getConnection()->rollback();
         }
+    }
+
+    public function actaImprimirAction(Request $request){
+
+        $idTramite = $request->get('idtramite');
+        // dump($idTramite);die;
+        $idTramiteDetalle = $request->get('id_td');
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+                    select * from tramite t 
+                    inner join tramite_detalle td on td.tramite_id = t.id
+                    inner join flujo_proceso fp on td.flujo_proceso_id = fp.id
+                    inner join proceso_tipo pt on fp.proceso_id = pt.id
+                    inner join rol_tipo rt on fp.rol_tipo_id = rt.id
+                    left JOIN wf_solicitud_tramite wf on td.id=wf.tramite_detalle_id
+                    where ((wf.id is not null and wf.es_valido is true) or td.id is not null) 
+                    and td.tramite_id = ". $idTramite ." 
+                    and wf.es_valido is true
+                    and fp.orden = 6
+                    limit 1
+                    ");
+
+        $query->execute();
+        $dato = $query->fetchAll();
+
+        $nroResAdm = 'NULL';
+        $fechaResAdm = 'NULL';
+
+        if ($dato) {
+            $datos = json_decode($dato[0]['datos'], true);
+            $nroResAdm = str_replace('/', '_', $datos['nroResAdm']);
+            $fechaResAdm = str_replace('-', '', $datos['fechaResAdm']);
+        }
+
+        $codigoQR = 'acta_tramite_modificacion_calificaciones|'.$idTramite.'|'.$nroResAdm.'|'.$fechaResAdm;
+
+        return $this->redirectToRoute('download_tramite_modificacion_calificaciones_acta', array('idTramite'=>$idTramite, 'codigoQR'=>$codigoQR));
     }
     
     /*=====  End of RECEPCION Y VERIFICACION DEPARTAMENTO  ======*/
@@ -1168,6 +1394,11 @@ class TramiteModificacionCalificacionesController extends Controller {
     =            FUNCIONES COMPLEMENTARIAS            =
     =================================================*/
     
+    /**
+     * Funcion para consolidar las calificaciones del tramite a la base de datos
+     * @param  integer $idTramite       id del trámite
+     * @return boolean                  true cuando la modificacion es exitosa y false si da error
+     */
     private function modificarCalificacionesSIE($idTramite){
         $em = $this->getDoctrine()->getManager();
         $historial = $this->historial($idTramite);
@@ -1239,6 +1470,153 @@ class TramiteModificacionCalificacionesController extends Controller {
         $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
 
         return true;
+    }
+
+    /**
+     * Funcion para calcular el nuevo estado de matricula con las notas de la solicitud
+     * @param  integer $idTramite     id del tramite
+     * @return array                  [idInscripcion: inscripcion del estudiante, nuevoEstado: nuevo estado de matricula]
+     */
+    public function calcularNuevoEstado($idTramite){
+        try {
+            $historial = $this->historial($idTramite);
+            $datosNotas = null;
+            $idInscripcion = null;
+            foreach ($historial as $h) {
+                if($h['orden'] == 1){
+                    $idInscripcion = $h['datos']['idInscripcion'];
+                    $datosNotas = $h['datos']['notas'];
+                }
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+            $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            
+            // OOBTENEMOS EL TIPO DE NOTA BIMESTRE O TRIMESTRE
+            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+            $array = [];
+            $arrayPromedios = [];
+            $cont = 0;
+            $asignaturas = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$idInscripcion));
+            $notas = [];
+            if ($tipo == 'Bimestre') {
+                /*----------  NOTAS BIMESTRALES  ----------*/
+                $notas = array(1,2,3,4);
+                $notaMinima = 51;
+            }
+            if ($tipo == 'Trimestre') {
+                /*----------  NOTAS TRIMESTRALES  ----------*/
+                $notas = array(30,27,31,28,32,29,10);
+                $notaMinima = 36;
+            }
+
+            // RECORREMOS LAS ASIGNATURAS Y VERIFICAMOS LAS CALIFICACIONES
+            foreach ($asignaturas as $a) {
+                $suma = 0;
+                $array[$cont] = array('id'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId(),'asignatura'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getAsignatura());                
+                // GENERAMOS UN ARRAY CON LAS CALIFICACIONES
+                foreach ($notas as $n) {
+                    $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>$n));
+                    if ($nota) {
+                        // VERIFICAMOS SI EXISTE UNA NOTA PARA EDITAR EN EL TRAMITE
+                        $notaSolicitud = 0;
+                        foreach ($datosNotas as $dn) {
+                            if ($dn['idEstudianteNota'] == $nota->getId()) {
+                                $notaSolicitud = $dn['notaNueva'];
+                            }
+                        }
+
+                        if ($notaSolicitud == 0) {
+                            // VERIFICAMOS SI EXISTE UNA NOTA PARA ADICIONAR
+                            foreach ($datosNotas as $dn) {
+                                if ($dn['idEstudianteAsignatura'] == $a->getId() and $dn['idNotaTipo'] == $n) {
+                                    $notaSolicitud = $dn['notaNueva'];
+                                }
+                            }
+                        }
+                    }else{
+                        $notaSolicitud = 0;
+                        // VERIFICAMOS SI EXISTE UNA NOTA PARA ADICIONAR
+                        foreach ($datosNotas as $dn) {
+                            if ($dn['idEstudianteAsignatura'] == $a->getId() and $dn['idNotaTipo'] == $n) {
+                                $notaSolicitud = $dn['notaNueva'];
+                            }
+                        }
+                    }
+
+                    if ($notaSolicitud != 0) {
+                        $array[$cont][$n] = $notaSolicitud;
+                    }else{
+                        if ($nota) {
+                            $array[$cont][$n] = $nota->getNotaCuantitativa();
+                        }else{
+                            $array[$cont][$n] = 0;
+                        }
+                    }
+                }
+
+                // GENERAMOS EL ARRAY DE PROMEDIOS BIMESTRALES
+                if ($tipo == 'Bimestre') {
+                    if ($array[$cont]['1'] != 0 and $array[$cont]['2'] != 0 and $array[$cont]['3'] != 0 and $array[$cont]['4'] != 0) {
+                        $suma = $array[$cont]['1'] + $array[$cont]['2'] + $array[$cont]['3'] + $array[$cont]['4'];
+                        $promedio = round($suma/4);
+                        if ($gestion != 2018 or ($gestion == 2018 and $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() != 1052 and $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() != 1053)) {
+                                $arrayPromedios[] = $promedio;
+                        }
+                    }
+                }
+
+                // GENERAMOS EL ARRAY DE PROMEDIOS TRIMESTRALES
+                if ($tipo == 'Trimestre') {
+                    $prompt = 0;
+                    $promst = 0;
+                    $promtt = 0;
+                    $promAnual = 0;
+                    $promFinal = 0;
+
+                    $prompt = $array[$cont]['30'] + $array[$cont]['27'];
+                    $promst = $array[$cont]['31'] + $array[$cont]['28'];
+                    $promtt = $array[$cont]['32'] + $array[$cont]['29'];
+
+                    $promAnual = round(($prompt + $promst + $promtt) / 3);
+                    if ($promAnual < 36 and $array[$cont]['10'] != 0) {
+                        $promFinal = $promAnual + $array[$cont]['10'];
+                        $arrayPromedios[] = $promFinal;
+                    }else{
+                        $arrayPromedios[] = $promAnual;
+                    }
+                }
+
+                $cont++;
+            }
+
+            // VERIFICAMOS LOS PROMEDIOS
+            $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
+            if ((count($asignaturas) == count($arrayPromedios)) or ($gestion == 2018 and (count($asignaturas) == count($arrayPromedios) - 2))) {
+                $nuevoEstado = 5; // APROBADO
+                $contadorReprobados = 0;
+                foreach ($arrayPromedios as $ap) {
+                    if ($ap < $notaMinima) {
+                        $contadorReprobados++;
+                    }
+                }
+                if ($contadorReprobados > 0) {
+                    $nuevoEstado == 11; // REPROBADO
+                }
+            }
+
+            return array(
+                'nuevoEstado'=>$nuevoEstado,
+                'idInscripcion'=>$idInscripcion
+            );
+
+        } catch (Exception $e) {
+            
+        }
     }
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/

@@ -6,6 +6,10 @@ tramite_rue_inicio_modificacion_guardar:
     path:     /solicitud/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionGuardar" }
 
+tramite_rue_inicio_modificacion_reporte:
+    path:     /solicitud/reporte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:inicioSolicitudModificacionReporte" }
+
 tramite_rue_recepcion_distrito:
     path:     /recepcion/distrito
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistrito" }
@@ -13,6 +17,10 @@ tramite_rue_recepcion_distrito:
 tramite_rue_recepcion_distrito_guardar:
     path:     /recepcion/distrito/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoGuardar" }
+
+tramite_rue_recepcion_distrito_apertura:
+    path:     /recepcion/distrito/apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoApertura" }
 
 tramite_rue_recepcion_departamento:
     path:     /recepcion/departamento
@@ -59,36 +67,36 @@ tramite_rue_buscar_edificio:
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscaredificio" }
 
 tramite_rue_le_buscar_provincias:
-     path:    /provincias/{idDepartamento}/
+     path:    /provincias/{idDepartamento}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:provincias" }
      options:
          expose: true
 
 tramite_rue_le_buscar_municipios:
-     path:    /municipios/{idProvincia}/
+     path:    /municipios/{idProvincia}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:municipios" }
      options:
          expose: true
 tramite_rue_le_buscar_comunidad:
-     path:    /cantones/{idMunicipio}/
+     path:    /comunidades/{idMunicipio}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:comunidad" }
      options:
          expose: true
 
 tramite_rue_le_buscar_cantones:
-     path:    /cantones/{idMunicipio}/
+     path:    /cantones/{idMunicipio}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:cantones" }
      options:
          expose: true
 
 tramite_rue_le_buscar_localidades:
-     path:    /localidades/{idCanton}/
+     path:    /localidades/{idCanton}/{censo}/
      defaults: { _controller: "SieProcesosBundle:TramiteRue:localidades" }
      options:
          expose: true
 
 tramite_rue_le_buscar_distritos:
-     path:    /distritos/{idDepartamento}/
+     path:    /distritos/{idDepartamento}/  
      defaults: { _controller: "SieProcesosBundle:TramiteRue:distritos" }
      options:
          expose: true
@@ -97,6 +105,18 @@ tramite_rue_buscar_rue:
     path:     /buscarrue
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRue" }
 
+tramite_rue_buscar_solicitud:
+    path:     /buscar/solicitud
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarSolicitud" }
+
+tramite_rue_buscar_ruecomparte:
+    path:     /buscarrue/comparte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
+
+tramite_rue_validarnombredistrito:
+    path:     /validar/nombre/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:validarNombreDistrito" }
+
 tramite_rue_busca_tarea:
     path:     /buscatarea
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarTarea" }
@@ -104,3 +124,11 @@ tramite_rue_busca_tarea:
 tramite_rue_busca_requisitos:
     path:     /buscarequisitos
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRequisitos" }
+
+tramite_rue_apertura:
+    path:     /apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:apertura" }
+
+tramite_rue_recepcion_distrito_apertura_guardar:
+    path:     /recepcion/distrito/apertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoAperturaGuardar" }

@@ -3,6 +3,7 @@
 namespace Sie\AppWebBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\LogTransaccion;
@@ -110,20 +111,23 @@ class WFTramite {
             if ($flujoproceso->getEsEvaluacion() == true) 
             {
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
-                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
-                $tarea_sig_id = $wfcondiciontarea[0]->getCondicionTareaSiguiente();
+                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findOneBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
+                $tarea_sig_id = $wfcondiciontarea->getCondicionTareaSiguiente();
             }else{
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
             }
-            $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-            
-            if($uDestinatario == false){
-                $this->em->getConnection()->rollback();
-                $mensaje['dato'] = false;
-                $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
-                return $mensaje;
-            }else{
-                $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
+
+            if($tarea_sig_id != null){
+                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                if($uDestinatario == false){
+                    $this->em->getConnection()->rollback();
+                    $mensaje['dato'] = false;
+                    $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                    $mensaje['tipo'] = 'error';
+                    return $mensaje;
+                }else{
+                    $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
+                }
             }
             $this->em->flush();
             /**
@@ -135,11 +139,14 @@ class WFTramite {
             $mensaje['dato'] = true;
             $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se guardó correctamente';
             $mensaje['idtramite'] = $tramite->getId();
+            $mensaje['iddatos'] = $wfSolicitudTramite->getId();
+            $mensaje['tipo'] = 'exito';
             return $mensaje;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
             $mensaje['dato'] = false;
-            $mensaje['msg'] = '¡Ocurrio un error al guardar el trámite.!';
+            $mensaje['msg'] = '¡Ocurrio un error al guardar el trámite.!</br>'.$ex->getMessage();
+            $mensaje['tipo'] = 'error';
             return $mensaje;    
         }
     }
@@ -157,6 +164,7 @@ class WFTramite {
         if( !$usuario or $tramiteDetalle->getUsuarioRemitente()->getId() != $usuario->getId()){
             $mensaje['dato'] = false;
             $mensaje['msg'] = '¡Error, tramite no enviado pues el usuario remitente no corresponde.!';
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
 
@@ -169,40 +177,22 @@ class WFTramite {
             {
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
                 //dump($tramiteDetalle);die;
-                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
+                $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findOneBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
                 //dump($wfcondiciontarea);die;
-                if ($wfcondiciontarea[0]->getCondicionTareaSiguiente() != null){
-                    $tarea_sig_id = $wfcondiciontarea[0]->getCondicionTareaSiguiente();
-                    $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-                    //dump($uDestinatario);die;
-                    if($uDestinatario == false){
-                        //dump($uDestinatario);die;
-                        $this->em->getConnection()->rollback();
-                        $mensaje['dato'] = false;
-                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
-                        return $mensaje;
-                    }else{
-                        $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-                    }
-                    
-                }else{
-                    // si despues de la evaluacion termina el tramite
-                    $tarea_sig_id = null;
-                }
+                $tarea_sig_id = $wfcondiciontarea->getCondicionTareaSiguiente();
             }else{
-                if ($flujoproceso->getTareaSigId() != null){
-                    $tarea_sig_id = $flujoproceso->getTareaSigId();
-                    $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-                    if($uDestinatario == false){
-                        $this->em->getConnection()->rollback();
-                        $mensaje['dato'] = false;
-                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
-                        return $mensaje;
-                    }else{
-                        $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-                    }
+                $tarea_sig_id = $flujoproceso->getTareaSigId();
+            }
+            if($tarea_sig_id != null){
+                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                if($uDestinatario == false){
+                    $this->em->getConnection()->rollback();
+                    $mensaje['dato'] = false;
+                    $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                    $mensaje['tipo'] = 'error';
+                    return $mensaje;
                 }else{
-                    $tarea_sig_id = null;
+                    $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                 }
             }
             /**
@@ -264,11 +254,14 @@ class WFTramite {
             }
             $this->em->getConnection()->commit();
             $mensaje['dato'] = true;
+            $mensaje['idtramite'] = $tramite->getId();
+            $mensaje['tipo'] = 'exito';
             return $mensaje;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
             $mensaje['dato'] = false;
-            $mensaje['msg'] = '¡Ocurrio un error al enviar el trámite.!';
+            $mensaje['msg'] = '¡Ocurrio un error al enviar el trámite.!</br>'.$ex->getMessage();
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
     }
@@ -288,6 +281,7 @@ class WFTramite {
         if($verifica == false){
             $mensaje['dato'] = false;
             $mensaje['msg'] = 'El usuario, no corresponde para recibir la tarea <strong>'. $flujoproceso->getProceso()->getProcesoTipo() . '</strong>.';
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
         $this->em->getConnection()->beginTransaction();
@@ -316,11 +310,13 @@ class WFTramite {
             $this->em->getConnection()->commit();
             $mensaje['dato'] = true;
             $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se recibió correctamente';
+            $mensaje['tipo'] = 'exito';
             return $mensaje;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
             $mensaje['dato'] = false;
-            $mensaje['msg'] = 'Ocurrio un error al guardar el trámite.';
+            $mensaje['msg'] = '¡Ocurrio un error al guardar el trámite!</br>'.$ex->getMessage();
+            $mensaje['tipo'] = 'error';
             return $mensaje;
         }
     }
@@ -330,6 +326,13 @@ class WFTramite {
      */
     public function eliminarTramiteNuevo($idtramite)
     {
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+
         $this->em->getConnection()->beginTransaction();
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
@@ -341,7 +344,7 @@ class WFTramite {
             $this->em->flush();
             $this->em->getConnection()->commit();
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
             return false;
         }
@@ -351,7 +354,15 @@ class WFTramite {
     * funcion que elimina tramite recibido
     */
     public function eliminarTramiteRecibido($idtramite)
-    {
+    {   
+        //$this->em->clear();
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+        
         $this->em->getConnection()->beginTransaction();
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
@@ -359,13 +370,15 @@ class WFTramite {
             $tramite->setTramite($tramiteDetalle->getTramiteDetalle()->getId());
             $this->em->remove($tramiteDetalle);
             $this->em->flush();
-            //dump($tramite);die;
+            
             $this->em->getConnection()->commit();
+            
             return true;
             
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
-            return false;
+            //return false;
+            return $ex->getMessage();
         }
         
     }
@@ -375,19 +388,24 @@ class WFTramite {
     */
     public function eliminarTramiteEnviado($idtramite,$idusuario)
     {
-                
+        //dump($this->em);die;
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+        //$this->em->clear();
         $this->em->getConnection()->beginTransaction();
+        //dump($this->em);die;
         try {
             $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
             $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-            $tramiteDetalle->setValorEvaluacion(null);
-            $tramiteDetalle->setUsuarioDestinatario($this->em->getRepository('SieAppWebBundle:Usuario')->find($idusuario));
-            $tramiteDetalle->setObs(null);
-            $tramiteDetalle->setFechaEnvio(null);
-            $tramiteDetalle->setTramiteEstado($this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(3));
+            
+            $wfSolicitudTramite = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findOneBy(array('tramiteDetalle'=>$tramiteDetalle->getId()));
+            $this->em->remove($wfSolicitudTramite);
             $this->em->flush();
-            $query = $this->em->getConnection()->prepare("delete from wf_solicitud_tramite where tramite_detalle_id =". $tramiteDetalle->getId());
-            $query->execute();
+
             $wfDatos = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
                     ->select('wf')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
@@ -396,18 +414,28 @@ class WFTramite {
                     ->where('fp.id =' . $tramiteDetalle->getFlujoProceso()->getId())
                     ->andwhere('t.id =' . $idtramite)
                     ->andwhere('wf.esValido =false')
+                    ->orderBy('wf.id','desc')
                     ->getQuery()
                     ->getResult();
             if($wfDatos){
                 $wfDatos[0]->setEsValido(true);
                 $wfDatos[0]->setFechaModificacion(null);
+                $this->em->flush();
             }
-
+            $tramite->setFechaFin(null);
+            $tramiteDetalle->setValorEvaluacion(null);
+            $tramiteDetalle->setUsuarioDestinatario($this->em->getRepository('SieAppWebBundle:Usuario')->find($idusuario));
+            $tramiteDetalle->setObs(null);
+            $tramiteDetalle->setFechaEnvio(null);
+            $tramiteDetalle->setTramiteEstado($this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(3));
+            $this->em->flush();       
+            
             $this->em->getConnection()->commit();
             return true;
-        } catch (Exception $ex) {
+           
+        } catch (\Exception $ex) {
             $this->em->getConnection()->rollback();
-            return false;
+            return $ex->getMessage();
         }
         
     }
@@ -491,7 +519,9 @@ class WFTramite {
                     $query = $this->em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
                     where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2019 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    
+                    
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     //dump($uDestinatario);die;
@@ -500,7 +530,7 @@ class WFTramite {
                     }else{
                         return false;
                     }
-                }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8){ // si es tecnico nacional
+                }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8 or $flujoprocesoSiguiente->getRolTipo()->getId() == 43){ // si es tecnico nacional
                     $query = $this->em->getConnection()->prepare("select * from wf_usuario_flujo_proceso ufp where ufp.esactivo is true and ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and lugar_tipo_id=1");
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
@@ -535,7 +565,7 @@ class WFTramite {
         (select td.usuario_destinatario_id,count(*) as nro
         from tramite t
         join tramite_detalle td on cast(t.tramite as int)=td.id
-        where flujo_proceso_id=". $tarea_actual_id ." and (td.tramite_estado_id=15 or td.tramite_estado_id=4) group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
+        where (flujo_proceso_id=". $tarea_actual_id ." and td.tramite_estado_id in(15,4)) or (flujo_proceso_id=". $tarea_sig_id ." and td.tramite_estado_id =3) group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
         $query->execute();
         $usuarios = $query->fetchAll();
         //dump($usuarios);die;
@@ -641,18 +671,19 @@ class WFTramite {
                 $lugarTipoId = $lugar_tipo_departamento;
                 break;
             case 0://nivel nacional
-                if($flujoproceso->getRolTipo()->getId() == 8){ // si es tecnico nacional
+                if($flujoproceso->getRolTipo()->getId() == 8 or $flujoproceso->getRolTipo()->getId() == 43){ // si es tecnico nacional
                     $lugarTipoId = 1;
                 }
                 break;
         }
 
         if($flujoproceso->getRolTipo()->getId() == 9 ){ //director
+            $gestionActual = (new \DateTime())->format('Y');//2019;
             $uRemitente = $this->em->getRepository('SieAppWebBundle:MaestroInscripcion')->createQueryBuilder('mi')
                         ->select('u')
                         ->innerJoin('SieAppWebBundle:Usuario','u','with','mi.persona = u.persona')
                         ->where('mi.institucioneducativa = '. $institucioneducativa->getId())
-                        ->andWhere('mi.gestionTipo = '. (new \DateTime())->format('Y'))   
+                        ->andWhere('mi.gestionTipo = '. $gestionActual)
                         ->andWhere("mi.cargoTipo in (1,12)")
                         ->andWhere("mi.esVigenteAdministrativo=true")
                         ->andWhere("u.esactivo=true")
