@@ -335,11 +335,9 @@ class TramiteHomologacionController extends Controller {
                     'mapped' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 
                     'query_builder' => function (EntityRepository $e) {
                         return $e->createQueryBuilder('dt')
-                            ->where('dt.id != :id')
-                            ->setParameter('id', 0)
                             ->orderBy('dt.id', 'ASC');
                     }, 'property' => 'departamento',
-                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '1')
+                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '0')
                 ))
                 ->add('pasaporte', 'text', array('label' => 'Pasaporte', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Pasaporte' , 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
                 ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
@@ -725,6 +723,12 @@ class TramiteHomologacionController extends Controller {
                     $newStudent['ci'] = $student->getCarnetIdentidad();
                     $newStudent['complemento'] = $student->getComplemento();
                     $newStudent['pasaporte'] = $student->getPasaporte();
+                    $rude = $student->getCodigoRude();
+                    // $segipId = $student->getSegipId();
+                    // if ($segipId != 1){
+                    //     $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
+                    //     return $response->setData(array('estado' => false, 'msg' => $msg));
+                    // } 
                 }
             }
             
@@ -889,6 +893,7 @@ class TramiteHomologacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
+                and ei.estadomatricula_tipo_id in (4,5,55,9,10,11)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);

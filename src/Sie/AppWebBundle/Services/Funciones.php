@@ -26,6 +26,43 @@ class Funciones {
         $this->session = new Session();
 	}
 
+    /**
+     * SERVICIO DE VALIDACION DE RUTA POR ROL DE USUARIO
+     * PARA QUE EL USUARIO NO PUEDA INGRESAR POR LA URL A UNA RUTA NO AUTORIZADA
+     * @param  [type] $ruta [description]
+     * @return [type]       [description]
+     * By JHONNY
+     */
+    public function validarRuta($ruta){
+
+        $sistemaId = $this->session->get('sistemaid');
+        $rolId = $this->session->get('roluser');
+        $datosRuta = $this->em->createQueryBuilder()
+                ->select('msr')
+                ->from('SieAppWebBundle:SistemaRol','sr')
+                ->innerJoin('SieAppWebBundle:MenuSistemaRol','msr','with','msr.sistemaRol = sr.id')
+                ->innerJoin('SieAppWebBundle:MenuSistema','ms','with','msr.menuSistema = ms.id')
+                ->innerJoin('SieAppWebBundle:MenuTipo','mt','with','ms.menuTipo = mt.id')
+                ->where('sr.rolTipo = :rol')
+                ->andWhere('sr.sistemaTipo = :sistema')
+                ->andWhere('mt.ruta = :ruta')
+                ->setParameter('rol',$rolId)
+                ->setParameter('sistema',$sistemaId)
+                ->setParameter('ruta',$ruta)
+                ->getQuery()
+                ->getResult();
+
+        $permitido = false;
+
+        if (count($datosRuta) > 0) {
+            if ($datosRuta[0]->getEsactivo()) {
+                $permitido = true;
+            }
+        }
+
+        return $permitido;
+    }
+
 	/*
      * verificamos si tiene tuicion
      */
@@ -102,21 +139,25 @@ class Funciones {
             // Si no existe es operativo inicio de gestion
             $operativo = 0;
         }else{
-            //dump($objRegistroConsolidado);die;
-            if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 1; // Primer Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 2; // segundo Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 3; // tercero Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 4; // cuarto Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
-                $operativo = 5; // Fin de gestion o cerrado
+            if($objRegistroConsolidado[0]['bim1'] == 3){
+                $operativo = 0;
+            }else{
+                //dump($objRegistroConsolidado);die;
+                if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 1; // Primer Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 2; // segundo Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 3; // tercero Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 4; // cuarto Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
+                    $operativo = 5; // Fin de gestion o cerrado
+                }
             }
         }
 
@@ -1081,7 +1122,7 @@ class Funciones {
                 ->where('rc.unidadEducativa = :ue')
                 ->andWhere('rc.gestion = :gestion')
                 ->setParameter('ue',$sie)
-                ->setParameter('gestion',$gestion)
+                ->setParameter('gestion',$gestion - 1)
                 ->getQuery()
                 ->getResult();
 
@@ -1094,6 +1135,25 @@ class Funciones {
         return $response;
 
     }
+
+    public function getConsolidationInitioOpe($sie,$gestion){
+
+        $repositorio = $this->em->getRepository('SieAppWebBundle:RegistroConsolidacion');
+        $regConsol = $repositorio->createQueryBuilder('rc')
+                ->where('rc.unidadEducativa = :ue')
+                ->andWhere('rc.gestion = :gestion')
+                ->setParameter('ue',$sie)
+                ->setParameter('gestion',$gestion)
+                ->getQuery()
+                ->getResult();
+
+        if(sizeof($regConsol)>0 ){
+            return false;
+        }else{
+            return true;
+        }
+
+    }    
 
 
      /**
@@ -1265,11 +1325,50 @@ class Funciones {
         return $tiempo;
     }
 
-    public function getTheCurrentYear($fechanacimiento, $fechaLimit){
-        $dias = explode("-", $fechanacimiento, 3);
-        $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
-        $edad = (int)((time()-$dias)/31556926 );
-        return $edad;        
+    public function getTheCurrentYear($dob, $fechaLimit){
+
+        $today = $fechaLimit;
+        $dob_a = explode("-", $dob);
+        $today_a = explode("-", $today);
+        $dob_d = $dob_a[0];$dob_m = $dob_a[1];$dob_y = $dob_a[2];
+        $today_d = $today_a[0];$today_m = $today_a[1];$today_y = $today_a[2];
+        $years = $today_y - $dob_y;
+        $months = $today_m - $dob_m;
+        if ($today_m.$today_d < $dob_m.$dob_d) 
+        {
+            $years--;
+            $months = 12 + $today_m - $dob_m;
+        }
+
+        if ($today_d < $dob_d) 
+        {
+            $months--;
+        }
+
+        $firstMonths=array(1,3,5,7,8,10,12);
+        $secondMonths=array(4,6,9,11);
+        $thirdMonths=array(2);
+
+        if($today_m - $dob_m == 1) 
+        {
+            if(in_array($dob_m, $firstMonths)) 
+            {
+                array_push($firstMonths, 0);
+            }
+            elseif(in_array($dob_m, $secondMonths)) 
+            {
+                array_push($secondMonths, 0);
+            }elseif(in_array($dob_m, $thirdMonths)) 
+            {
+                array_push($thirdMonths, 0);
+            }
+        }
+        $arrAge = array('age'=>$years, 'months'=>$months);
+        return $arrAge;
+        // $dias = explode("-", $fechanacimiento, 3);
+        // $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+        // $edad = (int)((time()-$dias)/31556926 );
+        // return $edad;        
         // list($dia,$mes,$anno) = explode("-",$fechanacimiento);
         // list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
 
@@ -1724,5 +1823,25 @@ class Funciones {
         }
 
         return $sextoCerrado;
+    }
+
+    public function lookforRudesbyDataStudent($data){
+
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('e')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->where('e.paterno like :paterno')
+                ->andWhere('upper(e.materno) like :materno')
+                ->andWhere('upper(e.nombre) like :nombre')
+                ->setParameter('paterno', '%' . mb_strtoupper($data['paterno'], 'utf8') . '%')
+                ->setParameter('materno', '%' . mb_strtoupper($data['materno'], 'utf8') . '%')
+                ->setParameter('nombre', '%' . mb_strtoupper($data['nombre'], 'utf8') . '%')
+                ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;
+        
     }
 }

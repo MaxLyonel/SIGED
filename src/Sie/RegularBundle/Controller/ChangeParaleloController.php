@@ -191,11 +191,9 @@ class ChangeParaleloController extends Controller {
     public function changeAction(Request $request) {
 
         $form = $request->get('form');
-
-        //die('krlos');
+        
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-
         try {
             //old condition query
             $oldCondition = array(
@@ -209,7 +207,7 @@ class ChangeParaleloController extends Controller {
             );
             //get the old paralelo info
             $objCourseOld = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($oldCondition);
-
+            
             //new condition query
             $newCondition = array(
                 'institucioneducativa' => $form['ueid'],
@@ -222,8 +220,11 @@ class ChangeParaleloController extends Controller {
             );
             //get the new paralelo info
             $objCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($newCondition);
+            $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['eiId']);
+            $estudianteInscripcion->setInstitucioneducativaCurso($objCourse);
+            $em->flush($estudianteInscripcion);
 
-            $query = $em->getConnection()->prepare('SELECT sp_cambio_paralelo_estudiante_2018(:igestion, :icodue, :irude, :inivel, :igrado, :iturno, :iparalelo, :iturnonuevo, :iparalelonuevo )');
+            /*$query = $em->getConnection()->prepare('SELECT sp_cambio_paralelo_estudiante_2018(:igestion, :icodue, :irude, :inivel, :igrado, :iturno, :iparalelo, :iturnonuevo, :iparalelonuevo )');
 
             $query->bindValue(':igestion', $this->session->get('currentyear'));
             $query->bindValue(':icodue', $form['ueid']);
@@ -255,14 +256,17 @@ class ChangeParaleloController extends Controller {
                 
             } else{
                 $message = "Cambio de paralelo NO realizado...";
-            }
-
+            }*/
+            $em->getConnection()->commit();
+            $message = "Cambio de paralelo realizado...";
             $this->addFlash('successchangeparalelo', $message);
             //go the index page
             return $this->redirectToRoute('change_paralelo_sie_index');
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            $message = "Cambio de paralelo NO realizado...";
+            $this->addFlash('warningchangeparalelo', $message);
+            return $this->redirectToRoute('change_paralelo_sie_index');
         }
     }
 

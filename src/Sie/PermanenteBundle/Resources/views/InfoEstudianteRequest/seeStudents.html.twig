@@ -30,7 +30,7 @@
 
 {% if exist == true %}
 
-  <small id="listEstudiante">
+  <div id="listEstudiante">
 
       <div class="w3-container">
           <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
@@ -100,8 +100,8 @@
                   </button>
               </div>
               <div class="col-md-3">
-                  <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
-                      <i class="fa fa-user"></i> Inscrip. con Rudeal
+                  <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
+                      <i class="fa fa-user"></i> Inscripci&oacute;n con CI
                   </button>
               </div>
               {#<div class="col-md-3">#}
@@ -135,11 +135,11 @@
         <div class="col-md-3">
 
             {#IMPRESION CERTIFICADOS#}
-            {#<a href="{{path('permanente_reporte_cert_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Certificados</a>#}
+            <a href="{{path('permanente_reporte_cert_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Certificados</a>
 
-            {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
-            {##}
-            {#</button>#}
+         {#    <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" > #}
+            
+            </button>
         </div>
         {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
 
@@ -299,6 +299,10 @@
                                                               <i class="fa fa-times"></i>
                                                           </button>
 
+                                                          {# <button class="btn btn-warning btn-xs" onclick="rudeal('{{ objStudents.idestins }}')">
+                                                            <i class="fa fa-list"></i>
+                                                          </button> #}
+
 
                                                       </td>
                                                       {% endif %}
@@ -450,9 +454,11 @@
     </div>
 {% endif %}
 
-</small>
+</div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
@@ -776,6 +782,31 @@
             return false;
         }
     };
+
+    var rudeal = function (infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoStudent: infoStudent}),
+            url: "{{ path('perm_estudiante_rudeal_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#modal').modal('show');
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
 
 
 function getSelectedValue()

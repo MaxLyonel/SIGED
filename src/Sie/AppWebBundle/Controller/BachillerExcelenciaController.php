@@ -41,7 +41,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -84,7 +84,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -122,7 +122,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -297,7 +297,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -336,7 +336,7 @@ class BachillerExcelenciaController extends Controller {
             $maestroinscripcionId = $form_aux['maestroInscripcion'];
             $institucioneducativaId = $form_aux['institucioneducativa'];
             $cargoTipoId = $form_aux['cargoTipo'];
-            $gestion = $this->session->get('currentyear');
+            $gestion = 2019;
 
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -469,7 +469,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -846,7 +846,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -891,7 +891,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
+        $fechaCorte = new \DateTime('2020-02-13');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));

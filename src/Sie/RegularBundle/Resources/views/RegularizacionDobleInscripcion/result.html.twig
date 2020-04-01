@@ -76,29 +76,64 @@
                 
                 <table class="table alert-info">
                     <tr>
-                        {% if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 11 and notas.estadomatriculaId != 28 and notas.estadomatriculaId != 26 and notas.estadomatriculaId != 37 and notas.estadomatriculaId != 55 and notas.estadomatriculaId != 56 and notas.estadomatriculaId != 57 and notas.estadomatriculaId != 58  and  notas.estadomatriculaId != 4%}
-                        <th>Actualizar estado de matrícula a:</th>
-                        <td>
-
-                            <select name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" class="form-control idNuevoEstado">
-                                {% for e in notas.estadosCambiar %}
-                                    <option value="{{e.id}}">{{e.estadomatricula}}</option>
-                                {% endfor %}
-                            </select>
-
-                        </td>
+                        {# if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 11 and notas.estadomatriculaId != 28 and notas.estadomatriculaId != 26 and notas.estadomatriculaId != 37 and notas.estadomatriculaId != 55 and notas.estadomatriculaId != 56 and notas.estadomatriculaId != 57 and notas.estadomatriculaId != 58  and  notas.estadomatriculaId != 4 #}
+                        {# if notas.estadomatriculaId != 5 and notas.estadomatriculaId != 55 #}
+                        {% if notas.estadoFinal == false %}
+                            <th>Actualizar estado de matrícula a:</th>
+                            <td>
+                                <select name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" class="form-control idNuevoEstado" required="required">
+                                    <option value="">Seleccione</option>
+                                    {% for e in notas.estadosCambiar %}
+                                        {% if e.id == notas.estadomatriculaId %}
+                                            <option value="{{e.id}}" selected>{{e.estadomatricula}}</option>
+                                        {% else %}
+                                            <option value="{{e.id}}">{{e.estadomatricula}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
                         {% else %}
                             <td colspan="2">No se puede actualizar el estado de matrícula</td>
                             <input type="hidden" name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" value="{{notas.estadomatriculaId}}" class="idNuevoEstado">
                         {% endif %}
                     </tr>
                 </table>
+                <table class="table btn-default">
+                    <tr>
+                        <td>
+                            {% if app.session.get('roluser') == 31 %}
+                                <div class="title dark-blue">                                    
+                                    <div class="form-group">
+                                        <label for="{{cont}}_observacion">Observación</label>
+                                        <textarea class="form-control" rows="2" id="{{cont}}_observacion" name="observacion[]"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{cont}}_documentoTipo">Tipo de Documento</label>
+                                        <select name="documentoTipo[]" id="{{cont}}_documentoTipo" class="form-control">
+                                            <option value="">Seleccione</option>
+                                            <option value="13">Resolución Administrativa</option>
+                                            <option value="14">Informe Tecnico</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{cont}}_documento">Documento</label>
+                                        <input type="file" id="{{cont}}_documento" name="documento[]" class="" accept="image/*">
+                                    </div>
+
+                                    
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <br>
         </div>
         {% set cont = cont + 1 %}
     {% endfor %}
 </form>
+
+
+
 </div>
 
 
@@ -243,15 +278,12 @@
 
 {% endif %}
 
-
-
 <div id="respuesta" class="alert" style="display:none;">
 
 </div>
-<hr>
 <div class="row">
     <div class="col-lg-12 text-left" style="margin-top:10px">
-        <button class="btn btn-success" onclick="guardar()" id="btnGuardar">Guardar</button>
+        <button class="btn btn-success col-lg-12" onclick="guardar()" id="btnGuardar">Guardar</button>
     </div>
 </div>
 
@@ -260,6 +292,79 @@
     {{parent()}}
 
     <script>
+
+        $(document).ready(function(){    
+            {% autoescape %}
+                {% if estados is defined %}
+                    {{ estados|raw }}
+                {% endif %} 
+            {% endautoescape %}
+
+            var prevValue;
+            $(".idNuevoEstado").bind('focus', function(e) {
+                prevValue = this.value;
+            }).bind('change', function (e) {  
+                if (this.value != ""){
+                    var verEst = verificaEstado(this.value, $(this).attr('id'), estadosListaArray);
+                    if(verEst == false){
+                        
+                        var estMatNue = document.getElementsByName('estadoMatriculaNuevo[]'); 
+                        var estadosSeleccionados = "";
+                        for (var i=0; i < estMatNue.length; i++){
+                            if(estadosSeleccionados == ""){
+                                if (estMatNue[i].tagName == "SELECT"){
+                                    estadosSeleccionados = estMatNue[i].options[estMatNue[i].selectedIndex].text;
+                                } else {
+                                    if (estMatNue[i].tagName == "INPUT" && estMatNue[i].tagName == "hidden"){
+                                        estadosSeleccionados = "PROMOVIDO";
+                                    } else {
+                                        estadosSeleccionados = estMatNue[i].value;
+                                    }
+                                }                                   
+                            } else {
+                                if (estMatNue[i].tagName == "SELECT"){
+                                    estadosSeleccionados = estadosSeleccionados + " - " + estMatNue[i].options[estMatNue[i].selectedIndex].text; 
+                                } else {
+                                    if (estMatNue[i].tagName == "INPUT" && estMatNue[i].type == "hidden"){
+                                        estadosSeleccionados = estadosSeleccionados + " - " + "PROMOVIDO";
+                                    } else {
+                                        estadosSeleccionados = estadosSeleccionados + " - " + estMatNue[i].value;
+                                    }
+                                }
+                            }                                           
+                        } 
+                        alert("No puede existir la asignación de estados ("+estadosSeleccionados+") para un estudiante");
+                        this.value = prevValue;                                              
+                    }
+                    return verEst;
+                }                
+            });            
+        });
+
+        var verificaEstado = function(estado, selectId, estadoLista){
+            var estMatNue = document.getElementsByName('estadoMatriculaNuevo[]');  
+            var estMatNueId = ""
+            var c = true;
+            var cc = false;
+            for (var i=0; i < estMatNue.length; i++){
+                if(selectId != estMatNue[i].id && c == true && estMatNue[i].value != ""){
+                    //alert(estMatNue[i].value);    
+                    cc = false;
+                    for (j in estadoLista[estado]){
+                        if(estMatNue[i].value == estadoLista[estado][j]){
+                            cc = true;
+                        }
+                        //alert(estadoLista[estado][j]);
+                    }
+                    if(cc == false){
+                        c = false;
+                    }
+                }               
+            }  
+            //alert(c); 
+            return c;
+        }
+
         var promedio = function(control,clase){
             //if(control.value == ""){ control.value = 0; }
             if(control.value < 0){ control.value = 0; }
@@ -330,6 +435,19 @@
         }
 
         function guardar(){
+
+            var estMatNue = document.getElementsByName('estadoMatriculaNuevo[]'); 
+            var c = 0; 
+            for (var i=0; i < estMatNue.length; i++){
+                if(estMatNue[i].value == ""){
+                    c = c + 1;
+                }
+                //alert(estMatNue[i].value);                    
+            }
+            if(c > 0){
+                alert("Debe seleccionar los estados de matricula de todas las inscripciones");
+                return false;
+            }
 
             $(".nota").each(function (index) {
                 $(this).css('background-color','#FFFFFF');
@@ -510,13 +628,17 @@
             // console.log(enviar);
 
             //return false;
-
+            var form = $('#form')[0];
+            var formData = new FormData(form);
             if(enviar == true){
                 if(confirm('¿Está seguro de realizar los cambios?, tenga en cuenta que esta ratificando los estados y notas del estudiante. ¿Desea continuar?')){
                     $.ajax({
                         type: 'post',
+                        processData: false,
+                        contentType: false,
                         url: Routing.generate('regularizacionDobleInscripcion_guardar'),
-                        data: $('#form').serialize(),
+                        //data: $('#form').serialize(),
+                        data: formData,
                         beforeSend: function () {
                             $("#respuesta").empty();
                             $("#respuesta").css('display','block');

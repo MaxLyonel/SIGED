@@ -6,9 +6,6 @@
                 <div class="portlet-title">
                     <h4>Información Estudiante</h4>
                 </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
-                </div>
                 <div class="clearfix"></div>
             </div>
             <div id="pinfoestudiante" class="panel-collapse collapse in">
@@ -45,7 +42,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-lg-12">
 
@@ -53,9 +49,6 @@
             <div class="portlet-heading">
                 <div class="portlet-title">
                     <h4>Historial de Inscripciones</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -74,39 +67,6 @@
                     {% if dataInscriptionP %}
                         {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP, 'visible': visible} %}
                     {% endif %}
-
-                    {# <div id="no-more-tables">
-                        <table class="table table-bordered table-hover cf">
-                            <thead class="cf">
-                                <tr class="info">
-                                    <th class="text-center"><small>Gestion</small></th>
-                                    <th class="text-center"><small>SIE</small></th>
-                                    <th class="text-center"><small>Unidad Educativa</small></th>
-                                    <th class="text-center"><small>Nivel</small></th>
-                                    <th class="text-center"><small>Grado</small></th>
-                                    <th class="text-center"><small>Paralelo</small></th>
-                                    <th class="text-center"><small>Turno</small></th>
-                                    <th class="text-center"><small>Estado Matricula</small></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for data in dataInscription%}
-                                    <tr>
-                                        <td data-title="Rude"><small>{{data.gestion}}</small></td>
-                                        <td data-title="Rude"><small>{{data.sie}}</small></td>
-                                        <td data-title="Rude"><small>{{data.institucioneducativa}}</small></td>
-                                        <td data-title="Nombre"><small>{{ data.nivel|e }} </small></td>
-                                        <td data-title="Paterno"><small>{{data.grado|e}}</small></td>
-                                        <td data-title="Materno"><small>{{data.paralelo|e}}</small></td>
-                                        <td data-title="CI"><small>{{data.turno}} </small></td>
-                                        <td data-title="Est. Matricula" class="text-center"><small>{{data.estadoMatricula}}</small></td>
-                                    </tr>
-                                {%endfor%}
-                            </tbody>
-                        </table>
-                    </div> #}
-
-
                 </div>
             </div>
 

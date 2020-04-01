@@ -187,6 +187,12 @@ herramienta_per_show_especialidad_edit:
     options:
          expose: true
 
+herramienta_per_especialidad_acreditacion_delete:
+    path:     /deleteespecialidad/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteEspecialidad"}
+    options:
+         expose: true
+
 herramienta_per_especialidad_delete:
     path:     /deleteesp/
     defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteEsp"}
@@ -256,6 +262,18 @@ herramienta_per_show_list_curso_corto:
 herramienta_permanente_admin:
     path:     /admincursos
     defaults: { _controller: "SiePermanenteBundle:CursoPermanente:admincursos"}
+    options:
+         expose: true
+
+herramienta_permanente_admin_curso_corto:
+    path:     /admincursoscortos
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:adminCursosCortos"}
+    options:
+         expose: true
+
+herramienta_per_curso_corto_cambiar_estado:
+    path:     /cursoestado/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:cambiarEstadoCurso"}
     options:
          expose: true
 

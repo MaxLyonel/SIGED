@@ -151,3 +151,9 @@ herramienta_info_estudiante_closeOperativoSextoSecc:
     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:closeOperativoSextoSecc }
     options:
          expose: true         
+
+herramienta_info_estudiante_validar_segip:
+    path:     /validarEstudianteSegip
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudiante:validarEstudianteSegip" }
+    options:
+        expose: true

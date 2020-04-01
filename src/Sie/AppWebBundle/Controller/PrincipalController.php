@@ -152,6 +152,20 @@ class PrincipalController extends Controller {
         if (isset($sieaux)) {
             $sieaux = -1;
         }*/
+        //Lista de observados consolidacion inscripcion
+        if ($rol_usuario == 9){
+            $query = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->createQueryBuilder('eio')
+                ->where('eio.gestionTipo = :gestion')
+                ->andWhere('eio.institucioneducativa = :ie')
+                ->setParameter('gestion', $this->sesion->get('currentyear'))
+                ->setParameter('ie', $this->sesion->get('ie_id'))
+                ->getQuery();
+            
+            $observacion = $query->getResult();
+        }else{
+            $observacion = array();
+        }
+        
 
         //$objObservactionSie = $em->getRepository('SieAppWebBundle:ValidacionProceso')->getObservationPerSie(array('sie'=> $sieaux, 'gestion'=>2016));
 
@@ -159,6 +173,45 @@ class PrincipalController extends Controller {
             return $this->redirectToRoute('sie_gis_homepage');
         }
 
+                $query = $em->getConnection()->prepare('select lt4.lugar as departamento,initcap(lt5.lugar) as distrito,initcap(lt3.lugar) as provincia,lt2.lugar as municipio,ie.id as sie,ie.institucioneducativa as ue
+                from institucioneducativa_encuesta iee
+                inner join institucioneducativa ie on ie.id = iee.institucioneducativa_id
+                inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
+                left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+                left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+                left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+                left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+                left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito');
+            $query->execute();
+            $dataEncuesta= $query->fetchAll();
+        if (count($dataEncuesta) > 0){
+            $existe = true;
+        }
+        else {
+            $existe = false;
+        }
+         $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
+            $query = $em->createQuery(
+                'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+                ->setParameter('nivel', 8)
+                ->setParameter('lt1', $paisNac);
+            $dptoNacE = $query->getResult();
+
+            $dptoNacArray = array();
+            foreach ($dptoNacE as $value) {
+                if( $value->getId()== 11 || $value->getId()==79355  )
+                {
+
+                }else {
+                    $dptoNacArray[$value->getId()] = $value->getLugar();
+                }
+            }
+        //    dump($dptoNacArray);die;
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
@@ -167,10 +220,15 @@ class PrincipalController extends Controller {
           'entitiestot' => $nacional,
           'entitiesdpto' => $departamental,
           'form' => $this->searchForm()->createView(),
+          'form2' => $this->searchForm2()->createView(),
           'rie' => $this->obtieneDatosPrincipal(), //Datos para la pantalla principal de RIE
           'instalador'=>$instalador,
           //'objObservactionSie' => $objObservactionSie
           'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
+          'observacion' => $observacion,
+          'dataEncuesta' => $dataEncuesta,
+          'existe' => $existe,
+          'depto' => $dptoNacArray
         ));
     }
 
@@ -216,6 +274,28 @@ class PrincipalController extends Controller {
                 ->getForm();
         return $form;
     }
+     private function searchForm2() {
+        $em = $this->getDoctrine()->getManager();
+
+        $departamentos = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
+        $arrayDepartamentos = array();
+
+        $cont = 0;
+        foreach ($departamentos as $key => $value) {
+            if($cont > 0){
+                $arrayDepartamentos[$value->getId()] = $value;
+            }
+            $cont++;
+        }
+
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('herramienta_info_encuesta_internet'))
+                ->add('dpto', 'choice', array('choices' => $arrayDepartamentos, 'label' => 'Departamento:', 'required' => true, 'attr' => array('class' => 'form-control')))
+                ->add('getReporte', 'submit', array('label' => 'Reporte Encuesta', 'attr' => array('class' => 'form-control btn btn-md btn-primary')))
+                ->getForm();
+        return $form;
+    }
+
 
     /**
      * obtenemos informacion del usuario

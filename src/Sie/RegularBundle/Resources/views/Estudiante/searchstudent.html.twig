@@ -10,84 +10,101 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
-
                 </ol>
             </div>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
-
     <div class="row">
-
         <div class="col-md-12">
             {% for flashMessage in app.session.flashbag().get('warningstudent') %}
-                <div class="alert alert-warning alert-dismissible" role="alert">
+                <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Warning!</strong> {{ flashMessage }}
+                    <strong><i class="fa fa-fw fa-warning"></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
-
-            <!-- Website Stats  Widget -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-12">
+        </div>
+    </div>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="tabs-accordions.html#buscar1">BÚSQUEDA POR APELLIDOS Y NOMBRES</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#buscar2">BÚSQUEDA POR CARNET DE IDENTIDAD</a></li>
+                </ul>
+    
+                <div id="myTabContent" class="tab-content">
+                    <div id="buscar1" class="tab-pane fade in active">
                         <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
-                                <i class="fa fa-search"></i> Inserte Datos
+                                <i class="fa fa-search"></i> Búsqueda por Apellidos y Nombres
                             </div>
                             <div class="panel-body">
-
                                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{form_label(form.paterno)}}
+                                            {{form_widget(form.paterno)}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{form_label(form.materno)}}
+                                            {{form_widget(form.materno)}}
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            {{form_label(form.nombre)}}
+                                            {{form_widget(form.nombre)}}
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <input id="form_tipo" name="form[tipo]" type="hidden" value="0">
+                                        <div class="col-md-12">{{form_widget(form.buscar0, { 'attr': {'onclick': 'validarDatos();'} } )}}</div>
+                                    </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="buscar2" class="tab-pane fade">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Búsqueda por Carnet de Identidad
+                            </div>
+                            <div class="panel-body">
+                                {{form_start(form1, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
                                 <div class="row">
                                     <div class="col-md-4">
-                                        {{form_label(form.paterno)}}
-                                        {{form_widget(form.paterno)}}
+                                        {{form_label(form1.carnetIdentidad)}}
+                                        {{form_widget(form1.carnetIdentidad)}}
                                     </div>
                                     <div class="col-md-4">
-                                        {{form_label(form.materno)}}
-                                        {{form_widget(form.materno)}}
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        {{form_label(form.nombre)}}
-                                        {{form_widget(form.nombre)}}
+                                        {{form_label(form1.complemento)}}
+                                        {{form_widget(form1.complemento)}}
                                     </div>
                                 </div>
                                 <br />
                                 <div class="row">
-                                    <div class="col-md-12">{{form_widget(form.lookfor)}}</div>
+                                    <input id="form_tipo" name="form[tipo]" type="hidden" value="1">
+                                    <div class="col-md-12">{{form_widget(form1.buscar1)}}</div>
                                 </div>
-                                {{form_end(form)}}
+                                {{form_end(form1)}}
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
-
-            <!-- End of Website Stats Widget -->
-
         </div>
     </div>
-
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
     <script>
-        //call the ajax function by krlos
-        $('#form_lookfor').click(function () {
-
-            if ($('#form_paterno').val().length == 0 && $('#form_materno').val().length == 0 && $('#form_nombre').val().length == 0) {
+        validarDatos = function () {
+            if ($('#form_paterno').val() == '' && $('#form_materno').val() == '' && $('#form_nombre').val() == '') {
                 alert('Debe introducir por lo menos Nombre y/o Apellido Paterno y/o Apellido Materno');
-                return false
+                return false;
             }
-
-        });
-
+        };
     </script>
-
-
 {% endblock %}

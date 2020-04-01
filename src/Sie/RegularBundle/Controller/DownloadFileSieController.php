@@ -605,9 +605,9 @@ class DownloadFileSieController extends Controller {
             
             //  if ($objSie) {
             if ($objStatusUe->getEstadoInstitucionTipo()->getId()==10) {
-                foreach ($objSie as $gsie) {
-                    $aGestion[] = array('id'=>$gsie->getGestion(),'gestion'=>$gsie->getGestion());
-                }
+                // foreach ($objSie as $gsie) {
+                //     $aGestion[] = array('id'=>$gsie->getGestion(),'gestion'=>$gsie->getGestion());
+                // }
                 //this is for current year
                 $aGestion[] =array('id'=>$this->session->get('currentyear'),'gestion'=>$this->session->get('currentyear'));
                 $status = 'success';
@@ -683,12 +683,35 @@ class DownloadFileSieController extends Controller {
     }
 
     private function validateThePrevOperativo($data){
+      $em = $this->getDoctrine()->getManager();
       $swcompleteOperativo = true;
       $operativo = $this->get('funciones')->obtenerOperativoDown($data['sie'], $data['gestion']);
         if($operativo == 5){//if 4 everything is done
           $swcompleteOperativo = true;
         }else{
-          $swcompleteOperativo = false;
+          if($operativo == 0 || $operativo == 1){
+            // is probably ue new creation
+            $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']);
+            $currentyear = $this->session->get('currentyear');
+
+            if(($objUE->getFechaCreacion()->format('Y') <= $currentyear && $objUE->getFechaCreacion()->format('Y') >= $currentyear - 1 ) ){              
+              if( $objUE->getFechaCreacion()->format('Y') == $currentyear ){
+                $swcompleteOperativo = true;  
+              }else{
+
+                if(($objUE->getFechaCreacion()->format('m') >= 3 ) ){
+                  $swcompleteOperativo = true;  
+                }else{
+                  $swcompleteOperativo = false;  
+                }
+
+              }             
+            }else{
+              $swcompleteOperativo = false;
+            }
+          }else{
+            $swcompleteOperativo = false;
+          }
         }
 
         return $swcompleteOperativo;
@@ -776,18 +799,19 @@ class DownloadFileSieController extends Controller {
 
           $swcompleteOperativo = $this->validateThePrevOperativo(array('sie'=>$sie, 'gestion'=>$gestionVal));
           
+          if(!$swcompleteOperativo){
+            //need to validate the QA actions
+            // validte the QA actions
+            $dataVal['reglas'] = '1,2,3,10,12,13,16,27,48';
+            $dataVal['gestion'] = $gestionVal;
+            $dataVal['bimestre'] = 4;
 
-          //need to validate the QA actions
-          // validte the QA actions
-          $dataVal['reglas'] = '1,2,3,10,12,13,16,27,48';
-          $dataVal['gestion'] = $gestionVal;
-          $dataVal['bimestre'] = 4;
+            $arrObservationQA =  $this->getAllObservationUE($dataVal);
 
-          $arrObservationQA =  $this->getAllObservationUE($dataVal);
-
-          // $arrObservationQA['observaciones_incosistencia'] = (sizeof($objInconsistencia)>0)?$objInconsistencia:array();
-          if(sizeof($arrObservationQA)>0){
-            $swquality = true;
+            // $arrObservationQA['observaciones_incosistencia'] = (sizeof($objInconsistencia)>0)?$objInconsistencia:array();
+            if(sizeof($arrObservationQA)>0){
+              $swquality = true;
+            }
           }
           
         }

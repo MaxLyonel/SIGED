@@ -60,7 +60,7 @@ class CursosController extends Controller {
                     'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'],'sfatCodigo'=>$uEducativa['sfatCodigo'],'setId'=>$uEducativa['setId'],'periodoId'=>$uEducativa['periodoId'],)
                 ));
 
-                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId']);
+                $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId'], 'iecId' => $uEducativa['iecId']);
 
             }
         } else {
@@ -78,11 +78,11 @@ class CursosController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
+        // dump($request);die;
         $em = $this->getDoctrine()->getManager();
-
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-// dump($aInfoUeducativa);die;
+        // dump($aInfoUeducativa);die;
         $exist = true;
         $objStudents = array();
         $dataUe=(unserialize($infoUe));
@@ -141,7 +141,8 @@ class CursosController extends Controller {
                     'dataUe'=> $dataUe['ueducativaInfo'],
                     'totalInscritos'=>count($objStudents),
                     'swSetNameModIntEmer' => $swSetNameModIntEmer,
-                    'primariaNuevo' => $primariaNuevo
+                    'primariaNuevo' => $primariaNuevo,
+                    'iecId'  => $request->get('iecId')
         ));
     }
 
@@ -480,6 +481,7 @@ class CursosController extends Controller {
 
 
     public function inscriptionAction(Request $request) {
+
         // create the conexion to DB
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -502,32 +504,10 @@ class CursosController extends Controller {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
             $query->execute();
 
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_alternativa');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Acceso');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Habla');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Ocupacion');");
-            // $query->execute();
-
-            // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_Inscripcion_Socioeconomico_Alt_Transporte');");
-            // $query->execute();
-
             while ($valStudents = current($dataStudents)) {
+                // dump(isset($valStudents['student']));
+                // dump($valStudents);
               if(isset($valStudents['student'])){
-
-                    
-                
-                $altersocio = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByEstudianteInscripcion($valStudents['eInsId']);
-                
-                if (count($altersocio) == 1){
-                    $altsocioaux = clone $altersocio[0];
-
-                    
 
                     $studentInscription = new EstudianteInscripcion();
                     $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
@@ -544,46 +524,6 @@ class CursosController extends Controller {
                     $studentInscription->setCodUeProcedenciaId(0);
                     $em->persist($studentInscription);
                     $em->flush();
-
-                    $altsocioaux->setEstudianteInscripcion($studentInscription);
-                    $em->persist($altsocioaux);
-                    $em->flush();
-
-                    // $altersocioAccesso = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltAcceso')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-                    // $altersocioHabla = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-                    // $altersocioOcupacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacion')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-                    // $altersocioTransporte = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporte')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
-
-                    
-                    // if($altersocioAccesso){
-                    //     $altersocioAccessoAux = clone $altersocioAccesso[0];
-                    //     $altersocioAccessoAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altsocioaux);
-                    //     $em->flush();
-                    // }
-                    
-                    // if($altersocioHabla){
-                    //     $altersocioHablaAux = clone $altersocioHabla[0];
-                    //     $altersocioHablaAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altersocioHablaAux);
-                    //     $em->flush();
-                    // }
-
-                    // if($altersocioOcupacion){
-                    //     $altersocioOcupacionAux = clone $altersocioOcupacion[0];
-                    //     $altersocioOcupacionAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altersocioOcupacionAux);
-                    //     $em->flush();
-                    // }
-                    // if($altersocioTransporte){
-                    //     $altersocioTransporteAux = clone $altersocioTransporte[0];
-                    //     $altersocioTransporteAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    //     $em->persist($altersocioTransporteAux);
-                    //     $em->flush();
-                    // }
-                    //add the areas to the student
-                    //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objNextCurso->getId(), $dataInscription['gestion']);
-                }
               }
               next($dataStudents);
             }
@@ -605,7 +545,8 @@ class CursosController extends Controller {
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe'=> $arraInfoUe['ueducativaInfo'],
                         'totalInscritos'=>count($objStudents),
-                        'primariaNuevo' => $primariaNuevo
+                        'primariaNuevo' => $primariaNuevo,
+                        'iecId'  => $iecId[0]['id']
             ));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -626,7 +567,8 @@ class CursosController extends Controller {
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe'=> $arraInfoUe['ueducativaInfo'],
                         'totalInscritos'=>count($objStudents),
-                        'primariaNuevo' => $primariaNuevo
+                        'primariaNuevo' => $primariaNuevo,
+                        'iecId'  => $iecId[0]['id']
             ));
         }
     }
@@ -636,6 +578,8 @@ class CursosController extends Controller {
     * values to send infoUe and infoStudent
     **/
     public function removeInscriptionAction(Request $request){
+        // dump($request);
+        // die;
         // create the conexion to DB
         $em = $this->getDoctrine()->getManager();
         // $em->getConnection()->beginTransaction();
@@ -685,70 +629,6 @@ class CursosController extends Controller {
                     $em->flush();
                 }
 
-                //find estudiante_inscripcion_socioeconomico_alternativa data to delete
-                $objSocioEconomicos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findBy(array(
-                  'estudianteInscripcion' => $arrInfoStudent['eInsId']
-                ));
-
-                foreach ($objSocioEconomicos as $socionEco) {
-                  # code...
-
-                  //dump($socionEco->getId());
-                    /*eliminar idiomas*/
-                    $idiomas = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId() ));
-                    foreach ($idiomas as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-
-                    /*eliminar ocupacion*/
-                    $ocupacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacion')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId() ));
-                    foreach ($ocupacion as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-
-                    /*eliminar acceso*/
-                    $acceso = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltAcceso')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId() ));
-                    foreach ($acceso as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-
-                    /*eliminar transporte*/
-                    $transporte = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporte')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
-                    foreach ($transporte as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-
-                    /*
-                    //eliminar unidad militar
-                    $unimili = $em->getRepository('SieAppWebBundle:UnidadMilitar')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
-                    foreach ($unimili as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-                    //eliminar penal
-                    $penal = $em->getRepository('SieAppWebBundle:Penal')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
-                    foreach ($penal as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-                    //eliminar educacion diversa
-                    $eddiv = $em->getRepository('SieAppWebBundle:EducacionDiversa')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
-                    foreach ($eddiv as $value) {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-                    */
-                    //remove estudiante_inscripcion_socioeconomico_alternativa
-                    //dump($socionEco);
-                    $em->remove($socionEco);
-                    $em->flush();
-
-                }
-
                 //INI new relation to remove by krlos
 
                 //step 4 delete socio economico data
@@ -795,42 +675,7 @@ class CursosController extends Controller {
                 }
                 $em->flush();
 
-               //paso 7 borrando apoderados
-                //dump($arrInfoStudent);
-                //dump($arrInfoStudent['eInsId']);die;
-
-                $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
-
-                if(($objEstudianteInscripcionSocioeconomicoRegular)){
-                  $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
-                    'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-                  ));
-                  foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
-                      $em->remove($element);
-                  }
-                  $em->flush();
-
-                  $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
-                    'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-                  ));
-                  foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
-                      $em->remove($element);
-                  }
-                  $em->flush();
-
-                  $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
-                    'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-                  ));
-                  foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
-                      $em->remove($element);
-                  }
-                  $em->flush();
-
-                  $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
-                  $em->flush();
-                }
-
-
+                //paso 7 borrando apoderados
                 // this is for the new RUDE dev
                 $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$arrInfoStudent['eInsId']));
                 if($objRude){
@@ -953,7 +798,8 @@ class CursosController extends Controller {
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe' => $arrInfoUe['ueducativaInfo'],
                         'totalInscritos' => count($objStudents),
-                        'primariaNuevo' => $primariaNuevo
+                        'primariaNuevo' => $primariaNuevo,
+                        'iecId'  => $arrInfoUe['ueducativaInfoId']['iecId']
             ));
         } catch (Exception $e) {
             $em->getConnection()->rollback();

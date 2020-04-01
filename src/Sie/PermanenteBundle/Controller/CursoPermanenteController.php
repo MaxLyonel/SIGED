@@ -760,7 +760,7 @@ class CursoPermanenteController extends Controller
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('herramienta_per_add_curso_nuevo'))
 
-            ->add('curso', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true)))
+            ->add('curso', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
             ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true)))
             ->getForm();
         return $this->render('SiePermanenteBundle:CursoPermanente:newcursos.html.twig', array(
@@ -782,7 +782,7 @@ class CursoPermanenteController extends Controller
 
         $form = $request->get('form');
         $curso = $form['curso'];
-
+      
         $query = $em->getConnection()->prepare('
         select * from permanente_cursocorto_tipo where cursocorto =:curso
         ');
@@ -791,23 +791,25 @@ class CursoPermanenteController extends Controller
         $cursofinal = $query->fetchAll();
         //dump($cursofinal);die;
         // $reinicio = true;
+          $cursocorto = strtoupper($form['curso']);  
         $em->getConnection()->beginTransaction();
         if ($cursofinal == null || $cursofinal == "") {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permanente_cursocorto_tipo');")->execute();
 
             $cursocortotipo = new PermanenteCursocortoTipo();
-            $cursocortotipo->setCursocorto($form['curso']);
+            $cursocortotipo->setCursocorto($cursocorto);
+            $cursocortotipo->setHabilitado(false);
             // dump($cursocortotipo);die;
             $em->persist($cursocortotipo);
             $em->flush();
 
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
-            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+            $this->get('session')->getFlashBag()->add('successcons', 'El curso Corto fue guardado correctamente.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_curso_corto'));
         } else {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
-            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+            $this->get('session')->getFlashBag()->add('warningcons', 'El curso Corto no fue guardado.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_curso_corto'));
         }
 
 
@@ -821,11 +823,11 @@ class CursoPermanenteController extends Controller
     }
 
     public function showCursoEditAction(Request $request)
-    {
+    {//dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
-        $idc = $request->get('form');
+        $idc = $request->get('idcurso');
         $cursocorto =$em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find($idc);
         //$nombrecurso=$em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findOneBy($cursocorto->getCursocorto());
         $nombrecurso=$cursocorto->getCursocorto();
@@ -834,7 +836,7 @@ class CursoPermanenteController extends Controller
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('herramienta_per_edit_curso_nuevo'))
             ->add('idc', 'hidden', array('data' => $idc))
-            ->add('curso', 'text', array('required' => true, 'data' =>$nombrecurso ,'attr' => array('class' => 'form-control', 'enabled' => true)))
+            ->add('curso', 'text', array('required' => true, 'data' =>$nombrecurso ,'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
             ->add('guardarb', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
             ->getForm();
         return $this->render('SiePermanenteBundle:CursoPermanente:editcursos.html.twig', array(
@@ -846,16 +848,16 @@ class CursoPermanenteController extends Controller
 
     }
     public function editCursoAction(Request $request)
-    {
+    {//dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-        $curso=$form['curso'];
+        $curso=strtoupper($form['curso']);
         $idcurso=$form['idc'];
         //
-        //dump($form);die;
+        //
 
         $em->getConnection()->beginTransaction();
-        if ($curso != null || $curso != "") {
+        try{
             $cursocorto =$em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find($idcurso);
             $cursocorto->setCursocorto($curso);
             //  dump($cursocorto);die;
@@ -863,29 +865,25 @@ class CursoPermanenteController extends Controller
             $em->flush();
 
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
-            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
-        } else {
-            $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
-            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+            $this->get('session')->getFlashBag()->add('successcons', 'El curso Corto fue actualizado correctamente.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_curso_corto'));
+        }catch  (Exception $ex)
+        {
+             $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('warningcons', 'El curso Corto fue actualizado');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_curso_corto'));
         }
-
-
-
-
-
-
-
+        
     }
+
     public function deleteCursoAction(Request $request)
     {
-      //  dump($request);die;
+       
         $em = $this->getDoctrine()->getManager();
-
-        $idc = $request->get('form');
-
+        $idc = $request->get('idcurso');
+        //dump($idc);die;
         $em->getConnection()->beginTransaction();
+       
         $reinicio = true;
 
         $query = $em->getConnection()->prepare('
@@ -895,28 +893,33 @@ class CursoPermanenteController extends Controller
         $query->bindValue(':curso', $idc);
         $query->execute();
         $cursofinal = $query->fetchAll();
+          $response = new JsonResponse();
        // dump($cursofinal);die;
-        if($cursofinal==null || $cursofinal=='')
+        try{
+            if($cursofinal==null || $cursofinal=='')
+            {
+               
+                $cursocorto =$em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find($idc);
+                $em->remove($cursocorto);
+                $em->flush();
+                $em->getConnection()->commit();
+                //$em->getConnection()->commit();
+                 $eliminado=true;
+               $msg = 'Registro Eliminado';
+                    return $response->setData(array('msg' => $msg,'eliminado' => $eliminado));
+            }
+            else
+            {$em->getConnection()->rollback();
+                 $eliminado=false;
+                 $msg = 'No se puede eliminar';
+                    return $response->setData(array('msg' => $msg,'eliminado' => $eliminado));
+            }
+        }catch  (Exception $ex)
         {
-
-            $cursocorto =$em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find($idc);
-           // dump($cursocorto);die;
-            $em->remove($cursocorto);
-           // $em->persist($institucioncursocorto);
-            $em->flush();
-            $em->getConnection()->commit();
-            //$em->getConnection()->commit();
-            $response = new JsonResponse();
-                    return $response->setData(array('mensaje' => 'Curso Eliminado',
-                'reinicio' => $reinicio));
-        }
-        else
-        {$em->getConnection()->rollback();
-            $reinicio = false;
-            $response = new JsonResponse();
-            return $response->setData(array('mensaje' => 'Error al eliminar el curso, Verifique que no se este utilizando por un CEA',
-                'reinicio' => $reinicio));
-
+            $em->getConnection()->rollback();
+          //  $this->get('session')->getFlashBag()->add('warningcons', 'El cambio de estado no fue realizado.');
+           // $session->getFlashBag()->add('warningcons', 'Error al eliminar el curso, Verifique que no se este utilizando por un CEA');
+            return $this->render('SiePermanenteBundle:CursoPermanente:adminCursoCorto.html.twig');
         }
 
     }
@@ -1167,6 +1170,7 @@ class CursoPermanenteController extends Controller
     {
               //  dump($request);die;
         $form = $request->get('form');
+        $em = $this->getDoctrine()->getManager();
       //  dump($form);
         if (isset($form['tecbas'])){
             $tecbas = 1;
@@ -1184,17 +1188,22 @@ class CursoPermanenteController extends Controller
             $tecmed = 0;
         }
         $especialidad = strtoupper($form['especialidad']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
+       // dump($request);die;
+         $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('especialidad' =>$especialidad));
+      //   dump($especialidadTipo);die;
 
         try{
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_especialidad_tipo');")->execute();
-            $especialidadTipo = new SuperiorEspecialidadTipo();
-            $especialidadTipo ->setCodigo(50);
-            $especialidadTipo ->setEspecialidad($especialidad);
-            $especialidadTipo ->setSuperiorFacultadAreaTipo($em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->find(40));
-            $em->persist($especialidadTipo);
-            $em->flush($especialidadTipo);
+            if(!$especialidadTipo){
+               // dump('no existe');die;
+                 $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_especialidad_tipo');")->execute();
+                $especialidadTipo = new SuperiorEspecialidadTipo();
+                $especialidadTipo ->setCodigo(50);
+                $especialidadTipo ->setEspecialidad($especialidad);
+                $especialidadTipo ->setSuperiorFacultadAreaTipo($em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->find(40));
+                $em->persist($especialidadTipo);
+                $em->flush($especialidadTipo);
 
            //dump($especialidadTipo);die;
             if($tecbas==1)
@@ -1225,9 +1234,14 @@ class CursoPermanenteController extends Controller
                 $em->persist($acreditacionEspecialidad);
                 $em->flush($acreditacionEspecialidad);
             }
-
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
+            
+            } else{
+                // dump('existe');die;
+                 $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados, la especialidad ya existe.');
+                 
+            }
             $db = $em->getConnection();
             $query = " 	select ---sae.id, 
                       sest.id, sest.especialidad,
@@ -1261,22 +1275,14 @@ class CursoPermanenteController extends Controller
 
             ));
 
-
-//            return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
-
         }
         catch(Exception $ex)
         {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
-            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_especialidades'));
         }
-//dump($especialidad);die;
-        // return $this->render('SiePermanenteBundle:CursoPermanente:nuevaespecialidad.html.twig', array(
 
-           // 'form' => $form->createView()
-
-     //   ));
     }
 
     public function showEspecialidadEditAction(Request $request)
@@ -1699,8 +1705,156 @@ class CursoPermanenteController extends Controller
 
     }
 
+    public function deleteEspecialidadAction(Request $request)
+    {
+         
+        $idesp = $request->get('idesp');
+       // dump($idesp);die;
+        try{
+            $em = $this->getDoctrine()->getManager();
+         //   $em->getConnection()->beginTransaction();
+            $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('id' =>$idesp));
+            $especialidadNivel = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findBy(array('superiorEspecialidadTipo' =>$idesp));
+            
+            if (count($especialidadTipo) > 0){
+                    $em->getConnection()->beginTransaction();
+                foreach($especialidadNivel as $nivel)
+                {
+                        $em->remove($nivel);
+                        $em->flush();
+                }
 
+                $em->remove($especialidadTipo);
+                $em->flush();
+                //dump($especialidadNivel);die;
+                $em->getConnection()->commit();
+                $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron eliminados correctamente.');
+            }
+           
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+            $especialidades = $db->prepare($query);
+            $params = array();
+            $especialidades->execute($params);
+            $esp = $especialidades->fetchAll();
 
+            if (count($esp) > 0){
+                $existesp = true;
+            }
+            else {
+                $existesp = false;
+            }
+            // dump($esp);die;
+            return $this->render('SiePermanenteBundle:CursoPermanente:listEspecialidades.html.twig', array(
+                'especialidades' => $esp,
+                'cantesp'=>count($esp),
+                'existeesp'=>$existesp,
+                'mensaje' => 'Especialidad Eliminada'
 
+            ));
+
+        }
+        catch(Exception $ex)
+        {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron Eliminados.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin_especialidades'));
+        }
+
+    }
+
+     public function adminCursosCortosAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $em->getConnection()->commit();
+            $query = $em->getConnection()->prepare('select distinct pcct.*, 
+                                                    CASE WHEN piecc.id is null THEN false
+                                                        ELSE true END
+                                                        AS existe
+                                                    from permanente_cursocorto_tipo  pcct
+                                                    left join permanente_institucioneducativa_cursocorto piecc on piecc.cursocorto_tipo_id = pcct.id
+                                                    order by cursocorto');
+            $query->execute();
+            $listacurso= $query->fetchAll();
+        if (count($listacurso) > 0){
+            $existecurso = true;
+        }
+        else {
+            $existecurso = false;
+        }
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('herramienta_per_add_curso_nuevo'))
+//->add('crear', 'submit', array('label' => 'Generar Reportes', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+        return $this->render($this->session->get('pathSystem') . ':CursoPermanente:adminCursoCorto.html.twig', array(
+            'form' => $form->createView(),
+            'listacurso'=>$listacurso,
+            'existecurso'=>$existecurso
+        ));
+    }
+    public function cambiarEstadoCursoAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->get('idcurso');
+        // dump($request);die;
+        $cursos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findOneBy(array('id' => $id));
+        
+        // dump($activo);die;
+        $em->getConnection()->beginTransaction();
+        try {
+            $activo = !($cursos->getHabilitado());
+            $cursos ->setHabilitado($activo);
+            $em->persist($cursos);
+            $em->flush();
+            $em->getConnection()->commit();
+            $query = $em->getConnection()->prepare('select distinct pcct.*, 
+                                                    CASE WHEN piecc.id is null THEN false
+                                                        ELSE true END
+                                                        AS existe
+                                                    from permanente_cursocorto_tipo  pcct
+                                                    left join permanente_institucioneducativa_cursocorto piecc on piecc.cursocorto_tipo_id = pcct.id
+                                                    order by cursocorto');
+            $query->execute();
+            $listacurso= $query->fetchAll();
+            if (count($listacurso) > 0){
+                $existecurso = true;
+            }
+            else {
+                $existecurso = false;
+            }
+
+            $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('herramienta_per_add_curso_nuevo'))
+//->add('crear', 'submit', array('label' => 'Generar Reportes', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+             return $this->render($this->session->get('pathSystem') . ':CursoPermanente:listCursoCorto.html.twig', array(
+            'form' => $form->createView(),
+            'listacurso'=>$listacurso,
+            'existecurso'=>$existecurso
+        ));
+        }
+        catch  (Exception $ex)
+        {
+            $em->getConnection()->rollback();
+          //  $this->get('session')->getFlashBag()->add('warningcons', 'El cambio de estado no fue realizado.');
+            return $this->render('SiePermanenteBundle:CursoPermanente:adminCursoCorto.html.twig');
+        }
+    }   
 
 }

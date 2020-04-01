@@ -445,7 +445,7 @@ class EstudianteNotasController extends Controller {
                 if($gestion >= 2016){
                     $estAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]);
                     if($notas[$i]==0){ $nuevoEstado = 3; } // RETIRADO
-                    if($notas[$i]>=1 and $notas[$i]<=50){ $nuevoEstado = 22; } // PORTERGADO
+                    if($notas[$i]>=1 and $notas[$i]<=50){ $nuevoEstado = 25; } // PORTERGADO
                     if($notas[$i]>=51 and $notas[$i]<=100){ $nuevoEstado = 5; } // APROBADO
                     $estAsignatura->setEstudianteasignaturaEstado($em->getRepository('SieAppWebBundle:EstudianteasignaturaEstado')->find($nuevoEstado));
                     $em->flush($estAsignatura);
@@ -453,7 +453,7 @@ class EstudianteNotasController extends Controller {
                     if($idNotaTipo[$i] == 22 or $idNotaTipo[$i] == 26){
                         $estAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]);
                         if($notas[$i]==0){ $nuevoEstado = 3; } // RETIRADO
-                        if($notas[$i]>=1 and $notas[$i]<=35){ $nuevoEstado = 22; } // POSTERGADO
+                        if($notas[$i]>=1 and $notas[$i]<=35){ $nuevoEstado = 25; } // POSTERGADO
                         if($notas[$i]>=36 and $notas[$i]<=70){ $nuevoEstado = 5; } // APROBADO
                         $estAsignatura->setEstudianteasignaturaEstado($em->getRepository('SieAppWebBundle:EstudianteasignaturaEstado')->find($nuevoEstado));
                         $em->flush($estAsignatura);

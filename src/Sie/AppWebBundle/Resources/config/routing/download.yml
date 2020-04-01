@@ -1,10 +1,14 @@
-download_tramite_modificacion_calificaciones_formulario:
-    path: /tramiteModificacionCalificacionesFormulario/{idTramite}/{codigoQR}
-    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificacionesFormulario }
+download_estudiantes_nivelacion:
+    path: /listEstudiantesNivelacion/{sie}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listadoEstudiantesNivelacion }
 
-download_tramite_modificacion_calificaciones_acta:
-    path: /tramiteModificacionCalificacionesActa/{idTramite}/{codigoQR}
-    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificacionesActa }
+download_estudiantes_nivelacionttg:
+    path: /listEstudiantesNivelacionttg/{sie}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listadoEstudiantesNivelacionttg }
+
+download_tramite_modificacion_calificaciones:
+    path: /tramiteModificacionCalificaciones/{idTramite}
+    defaults: { _controller: SieAppWebBundle:Download:tramiteModificacionCalificaciones }
 
 donwload_nnats:
     path: /nnats/{gestion}/{sie}

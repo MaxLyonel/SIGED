@@ -6634,4 +6634,19 @@ class ReporteController extends Controller {
         }                                    
         return $list;
     }  
+
+       public function reporteEncuestaInternetAction(Request $request) {
+        $form = $request->get('form');
+        $departamento =$form['dpto'];
+        $arch = 'Encuesta'.date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_encuesta_internet_v1_ma.rptdesign&deptoid=' . $departamento .'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

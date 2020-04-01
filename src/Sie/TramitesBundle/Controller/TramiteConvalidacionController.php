@@ -186,13 +186,13 @@ class TramiteConvalidacionController extends Controller {
          * Verifica si la Unidad Educativa puede otorgar diplomas de bachiller o registrar para titulos tecnico medio alternativa
          */
         $query = $em->getConnection()->prepare("
-            select iec.nivel_tipo_id, iec.gestion_tipo_id, iec.grado_tipo_id, ie.id as institucioneducativa_id, ie.institucioneducativa from estudiante as e
+            select distinct iec.nivel_tipo_id, iec.gestion_tipo_id, iec.grado_tipo_id, ie.id as institucioneducativa_id, ie.institucioneducativa from estudiante as e
             inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
-            where iec.nivel_tipo_id in (13) and ei.estadomatricula_tipo_id in (4,5,55) and e.id = :id
+            where iec.nivel_tipo_id in (13,3) and ei.estadomatricula_tipo_id in (4,5,55) and e.id = :id
             union all
-            select sat.codigo as nivel_tipo_id, ies.gestion_tipo_id, sest.codigo as grado_tipo_id, ie.id as institucioneducativa_id, ie.institucioneducativa
+            select distinct sat.codigo as nivel_tipo_id, ies.gestion_tipo_id, sest.codigo as grado_tipo_id, ie.id as institucioneducativa_id, ie.institucioneducativa
             from superior_facultad_area_tipo as sfat
             inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
             inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -285,7 +285,7 @@ class TramiteConvalidacionController extends Controller {
             $form['institucionEducativaName'] = $entityIntitucionEducativa->getInstitucioneducativa();
         }        
         
-        $form['gestionActual'] = $gestionActual;
+        $form['gestionActual'] = $gestionActual-1;
         $form['inscripciones'] = array(
                                 'grado1' => array('gestion' => 0, 'institucionEducativa' => ''),
                                 'grado2' => array('gestion' => 0, 'institucionEducativa' => ''),
@@ -350,39 +350,39 @@ class TramiteConvalidacionController extends Controller {
             'grado4' => array('gestion' => 0, 'institucionEducativa' => '', 'estado' => false)
         );
         $estado = true;
-        $form['gestionActual'] = $gestionActual;
+        $form['gestionActual'] = $gestionActual-1;
         $cont = 0;
         foreach ($entidadInscripciones as $inscripcion) {
-            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 3) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 2)){
+            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 3) or ($inscripcion['nivel_tipo_id'] == 3 and $inscripcion['grado_tipo_id'] == 1) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 2)){
                 $inscripciones['grado1'] = array('gestion'=>$inscripcion['gestion_tipo_id'],'institucionEducativa'=>$inscripcion['institucioneducativa'], 'estado' => true);
                 if($gestionActual == $inscripcion['gestion_tipo_id']){
                     $estado = false;
                 }
                 $cont++;
             }
-            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 4) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 2)){
+            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 4) or ($inscripcion['nivel_tipo_id'] == 3 and $inscripcion['grado_tipo_id'] == 2) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 2)){
                 $inscripciones['grado2'] = array('gestion'=>$inscripcion['gestion_tipo_id'],'institucionEducativa'=>$inscripcion['institucioneducativa'], 'estado' => true);
                 if($gestionActual == $inscripcion['gestion_tipo_id']){
                     $estado = false;
                 }
                 $cont++;
             }
-            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 5) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 3)){
+            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 5) or ($inscripcion['nivel_tipo_id'] == 3 and $inscripcion['grado_tipo_id'] == 3) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 3)){
                 $inscripciones['grado3'] = array('gestion'=>$inscripcion['gestion_tipo_id'],'institucionEducativa'=>$inscripcion['institucioneducativa'], 'estado' => true);
                 if($gestionActual == $inscripcion['gestion_tipo_id']){
                     $estado = false;
                 }
                 $cont++;
             }
-            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 6) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 3)){
+            if(($inscripcion['nivel_tipo_id'] == 13 and $inscripcion['grado_tipo_id'] == 6) or ($inscripcion['nivel_tipo_id'] == 3 and $inscripcion['grado_tipo_id'] == 4) or ($inscripcion['nivel_tipo_id'] == 2 and $inscripcion['grado_tipo_id'] == 3)){
                 $inscripciones['grado4'] = array('gestion'=>$inscripcion['gestion_tipo_id'],'institucionEducativa'=>$inscripcion['institucioneducativa'], 'estado' => true);
                 if($gestionActual == $inscripcion['gestion_tipo_id']){
                     $estado = false;
                 }
                 $cont++;
             }
-            $form['gestionActual'] = $inscripcion['gestion_tipo_id'];
-        }      
+            //$form['gestionActual'] = $inscripcion['gestion_tipo_id'];
+        }     
         if($cont == 4){
             $estado = false;
         }
@@ -441,7 +441,7 @@ class TramiteConvalidacionController extends Controller {
     *
     * @return \Symfony\Component\Form\Form The form
     */
-   private function createEstudianteForm($form) {
+    private function createEstudianteForm($form) {
         $em = $this->getDoctrine()->getManager();
         $estudiante = new Estudiante();
         $form = $this->createFormBuilder()
@@ -452,11 +452,9 @@ class TramiteConvalidacionController extends Controller {
                     'mapped' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 
                     'query_builder' => function (EntityRepository $e) {
                         return $e->createQueryBuilder('dt')
-                            ->where('dt.id != :id')
-                            ->setParameter('id', 0)
                             ->orderBy('dt.id', 'ASC');
                     }, 'property' => 'departamento',
-                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '1')
+                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '0')
                 ))
                 ->add('pasaporte', 'text', array('label' => 'Pasaporte', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Pasaporte' , 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
                 ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
@@ -548,8 +546,9 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta1', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion1', 'button', array('label' => $form['inscripciones']['grado1']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion1', 'button', array('label' => $form['inscripciones']['grado1']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado1']['gestion'])))
                     ->add('libreta1', 'button', array('label' => $form['inscripciones']['grado1']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado1']['institucionEducativa'])));
+            // $form['gestionActual'] = $form['inscripciones']['grado1']['gestion']+3;
         }        
         $entityGestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $form['gestionActual']-2));
         if($form['inscripciones']['grado2']['gestion'] == 0){
@@ -563,8 +562,9 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta2', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion2', 'button', array('label' => $form['inscripciones']['grado2']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion2', 'button', array('label' => $form['inscripciones']['grado2']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado2']['gestion'])))
                     ->add('libreta2', 'button', array('label' => $form['inscripciones']['grado2']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado2']['institucionEducativa'])));
+            // $form['gestionActual'] = $form['inscripciones']['grado2']['gestion']+2;
         }
         $entityGestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $form['gestionActual']-1));
         if($form['inscripciones']['grado3']['gestion'] == 0){
@@ -578,8 +578,9 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta3', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion3', 'button', array('label' => $form['inscripciones']['grado3']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion3', 'button', array('label' => $form['inscripciones']['grado3']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado3']['gestion'])))
                     ->add('libreta3', 'button', array('label' => $form['inscripciones']['grado3']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado3']['institucionEducativa'])));
+            // $form['gestionActual'] = $form['inscripciones']['grado3']['gestion']+1;
         }
         $entityGestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $form['gestionActual']));
         if($form['inscripciones']['grado4']['gestion'] == 0){
@@ -593,8 +594,9 @@ class TramiteConvalidacionController extends Controller {
                 ))
                 ->add('libreta4', 'file', array('label' => 'Diploma (.png)', 'required' => true));
         } else {
-            $formulario = $formulario->add('gestion4', 'button', array('label' => $form['inscripciones']['grado4']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border')))
+            $formulario = $formulario->add('gestion4', 'button', array('label' => $form['inscripciones']['grado4']['gestion'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado4']['gestion'])))
                     ->add('libreta4', 'button', array('label' => $form['inscripciones']['grado4']['institucionEducativa'], 'attr' => array('class' => 'btn form-control btn-xs border', 'value' => $form['inscripciones']['grado4']['institucionEducativa'])));
+            // $form['gestionActual'] = $form['inscripciones']['grado4']['gestion'];
         }
 
             $formulario = $formulario->add('guardar', 'button', array('label' => 'Guardar'))
@@ -627,7 +629,7 @@ class TramiteConvalidacionController extends Controller {
             $newStudent = $form;
             $response = new JsonResponse();
         
-            // dump($form);die;            
+            // dump($form['institucionEducativa']);dump($files);die;            
             // $newStudent = unserialize($form['newdata']);
             // $newStudent = unserialize($newStudent['fullInfo']);
             $rude = "";
@@ -693,7 +695,15 @@ class TramiteConvalidacionController extends Controller {
                     $newStudent['ci'] = $student->getCarnetIdentidad();
                     $newStudent['complemento'] = $student->getComplemento();
                     $newStudent['pasaporte'] = $student->getPasaporte();
+                    $newStudent['nombre'] = $student->getNombre();
+                    $newStudent['paterno'] = $student->getPaterno();
+                    $newStudent['materno'] = $student->getMaterno();
                     $rude = $student->getCodigoRude();
+                    $segipId = $student->getSegipId();
+                    if ($segipId != 1){
+                        $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
+                        return $response->setData(array('estado' => false, 'msg' => $msg));
+                    } 
                 }
             }
             
@@ -704,7 +714,7 @@ class TramiteConvalidacionController extends Controller {
                 return $response->setData(array('estado' => false, 'msg' => $msg));
             }
 
-            
+            // dump($newStudent);die();
 
             for ($i = 1 ; $i <= 4 ; $i++){           
 
@@ -719,7 +729,7 @@ class TramiteConvalidacionController extends Controller {
                     $libreta = null;
                 }
                 $file = $libreta;
-                //dump($file);die;
+                
                 if($gestion < 2011){
                     $grados = array(1 => 1, 2 => 2, 3 => 3, 4 => 4);
                     $ciclos = array(1 => 1, 2 => 1, 3 => 3, 4 => 3);
@@ -731,8 +741,7 @@ class TramiteConvalidacionController extends Controller {
                 $nivel = ($gestion < 2011) ? 3 : 13;    
                 $ciclo = $ciclos[$grado];      
                 
-                if(isset($files['libreta'.$i]) or $studentId == 0){  
-
+                if(isset($files['libreta'.$i]) or $studentId == 0){
                     if(!isset($file)){
                         $em->getConnection()->rollback();
                         $msg = 'No adjunto la libreta de '.$grados[$i].'° año de escolaridad';
@@ -761,9 +770,9 @@ class TramiteConvalidacionController extends Controller {
                     $verInscripcion = $this->verificaInscripcionGestionNivelGrago($newStudent['ci'],$newStudent['complemento'],$newStudent['pasaporte'],$nivel,$grado,$gestion);            
                     if ($verInscripcion){
                         $em->getConnection()->rollback();
-                        $msg  = 'El Registro del estudiante en la gestión, nivel y grado seleccionado, ya existe';
+                        $msg  = 'El Registro del estudiante en la gestión ('.$gestion.'), nivel ('.$nivel.') y grado ('.$grado.') seleccionado, ya existe';
                         return $response->setData(array('estado' => false, 'msg' => $msg));
-                    }           
+                    }     
                     
                     $verInscripcion = $this->verificaInscripcionBachiller($newStudent['ci'],$newStudent['complemento'],$newStudent['pasaporte'],$nivel,$grado,$gestion);           
                     if ($verInscripcion){
@@ -786,7 +795,7 @@ class TramiteConvalidacionController extends Controller {
                     $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion);
                     $entidadEstadoMatriculaTipo = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5);
                     $entidadEstadoMatriculaInicioTipo = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(45);
-                    $entidadDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->find(11);
+                    $entidadDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->find(12); // libreta escolar
                 
                     if (count($objCurso) == 0){
                         $studentInstitucioneducativaCurso = new InstitucioneducativaCurso();
@@ -840,11 +849,9 @@ class TramiteConvalidacionController extends Controller {
                     $studentInscriptionDocumento->setRutaImagen($rude.'/'.$filename);                   
                     $studentInscriptionDocumento->setObservacion('Convalidación de libretas para emision de Diploma de Bachiller');
                     $em->persist($studentInscriptionDocumento); 
-                    //$em->flush(); 
-                }                     
+                }                 
             }
             $em->flush(); 
-            // dump($i);die;
             //do the commit of DB
             $em->getConnection()->commit();
             // $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El Registro de homologación del estudiante fue correcto ...'));
@@ -853,7 +860,6 @@ class TramiteConvalidacionController extends Controller {
             //return $this->redirect($this->generateUrl('tramite_homologacion_diploma_humanistico_index'));
 
         } catch (\Doctrine\ORM\NoResultException $ex) {
-            dump($ex);die;
             $em->getConnection()->rollback();
             $msg  = 'Error al realizar el registro del estudiante, intente nuevamente';
             return $response->setData(array('estado' => false, 'msg' => $msg));
@@ -875,6 +881,7 @@ class TramiteConvalidacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
+                and ei.estadomatricula_tipo_id in (4,5,55,9,10,11)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);

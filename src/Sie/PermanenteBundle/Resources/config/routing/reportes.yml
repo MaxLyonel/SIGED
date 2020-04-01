@@ -34,3 +34,6 @@ permanente_reporte_centralizador_curso_largo:
     path:     /reportcentralizadorcl
     defaults: { _controller: SiePermanenteBundle:Reportes:reportCentralizadorCL }
 
+permanente_reporte_socioeconomico:
+    path:     /socioeconomico
+    defaults: { _controller: SiePermanenteBundle:Reportes:socioeconomico }

@@ -601,7 +601,7 @@ class CursosController extends Controller {
               $em->flush();
             }
             //END new relation to remove by krlos
-dump($objEstudianteInscripcionSocioeconomicoRegular);die;
+//dump($objEstudianteInscripcionSocioeconomicoRegular);die;
             //find the inscription to delete $arrInfoStudent['eInsId']
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $arrInfoStudent['id'], 'institucioneducativaCurso' => $arrInfoUe['ueducativaInfoId']['iecId']));
             if($objStudentInscription){

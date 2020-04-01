@@ -506,41 +506,64 @@ class InscriptionGestionesPasadasController extends Controller {
      */
     public function findIEAction($id, $gestionselected) {
         $em = $this->getDoctrine()->getManager();
-        //get the tuicion
-        //select * from get_ue_tuicion(137746,82480002)
-        /*
-          $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT)');
-          $query->bindValue(':user_id', $this->session->get('userId'));
-          $query->bindValue(':sie', $id);
-          $query->execute();
-          $aTuicion = $query->fetchAll();
+
+         /*
+         * verificamos si tiene tuicion
          */
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $id);
+        $query->bindValue(':rolId', $this->session->get('roluser'));
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+        
         $aniveles = array();
+        if ($aTuicion[0]['get_ue_tuicion']) {
+
+                $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
+
+             if($institucion){
+                $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestionselected);
+                
+                if($validacionIniConsolidation){
+                    $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+                }else{
+                    $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+                }
+
+
+            }else{
+                 $nombreIE = ' Insitucion Educativa no existe...';
+            }
+            //get the Niveles
+
+            $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+            $query = $entity->createQueryBuilder('iec')
+                    ->select('(iec.nivelTipo)')
+                    //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                    ->where('iec.institucioneducativa = :sie')
+                    ->andwhere('iec.gestionTipo = :gestion')
+                    ->setParameter('sie', $id)
+                    ->setParameter('gestion', $gestionselected)
+                    ->distinct()
+                    ->getQuery();
+            $aNiveles = $query->getResult();
+            foreach ($aNiveles as $nivel) {
+                $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
+            }
+
+            /*     } else {
+              $nombreIE = 'No tiene Tuición';
+              } */
+
+            
+        } else {
+             $nombreIE = 'No tiene tuición sobre la unidad educativa';
+        }
+      
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
-        $em = $this->getDoctrine()->getManager();
-        //get the Niveles
-
-        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-        $query = $entity->createQueryBuilder('iec')
-                ->select('(iec.nivelTipo)')
-                //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
-                ->where('iec.institucioneducativa = :sie')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->setParameter('sie', $id)
-                ->setParameter('gestion', $gestionselected)
-                ->distinct()
-                ->getQuery();
-        $aNiveles = $query->getResult();
-        foreach ($aNiveles as $nivel) {
-            $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
-        }
-
-        /*     } else {
-          $nombreIE = 'No tiene Tuición';
-          } */
+        
 
         $response = new JsonResponse();
 

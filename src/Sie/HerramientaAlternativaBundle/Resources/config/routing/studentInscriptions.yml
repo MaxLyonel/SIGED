@@ -15,3 +15,57 @@ alter_inscriptionstudent_saveinscription:
     defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:saveInscription"}
     options:
          expose: true
+
+alter_inscriptionstudent_showListStudent:
+    path:     /showListStudent
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:showListStudent"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_inscriptionbyCi:
+    path:     /inscriptionbyCi
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:inscriptionbyCi"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_getdepto:
+    path:     /getdepto
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:getdepto"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_getProvincia:
+    path:     /getProvincia
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:getProvincia"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_checkDataStudent:
+    path:     /checkDataStudent
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:checkDataStudent"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_showHistory:
+    path:     /showHistory
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:showHistory"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_studentsInscription:
+    path:     /studentsInscription
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:studentsInscription"}
+    options:
+         expose: true 
+
+alter_inscriptionstudent_studentsInscriptionlist:
+    path:     /studentsInscriptionlist
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:studentsInscriptionlist"}
+    options:
+         expose: true          
+         
+alter_inscriptionstudent_studentsInscriptionNEW:
+    path:     /studentsInscriptionNEW
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:studentsInscriptionNEW"}
+    options:
+         expose: true         

@@ -747,25 +747,25 @@ class InstitucioneducativaController extends Controller {
                         }
                     }
 
-                    $query = "select count(a.estudiante_inscripcion_id) 
-                                from estudiante_inscripcion_socioeconomico_alternativa a 
-                                inner join estudiante_inscripcion b on b.id = a.estudiante_inscripcion_id
-                                inner join institucioneducativa_curso c on c.id = b.institucioneducativa_curso_id
-                                inner join institucioneducativa d on d.id = c.institucioneducativa_id
-                                inner join institucioneducativa_sucursal e on e.institucioneducativa_id = d.id
-                                where c.institucioneducativa_id = '".$this->session->get('ie_id')."'
-                                and e.gestion_tipo_id = 2017 and e.periodo_tipo_id = 3";                    
-                    $obs= $db->prepare($query);
-                    $params = array();
-                    $obs->execute($params);
-                    $socioeco = $obs->fetchAll();
-                    //dump($socioeco);die;
-                    if (!$socioeco){
-                        $query = "select * from sp_genera_migracion_socioeconomicos_alter('".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$gestant."','".$perant."','".$this->session->get('ie_gestion')."','".$this->session->get('ie_per_cod')."','');";
-                        $obs= $db->prepare($query);
-                        $params = array();
-                        $obs->execute($params);
-                    }
+                    // $query = "select count(a.estudiante_inscripcion_id) 
+                    //             from estudiante_inscripcion_socioeconomico_alternativa a 
+                    //             inner join estudiante_inscripcion b on b.id = a.estudiante_inscripcion_id
+                    //             inner join institucioneducativa_curso c on c.id = b.institucioneducativa_curso_id
+                    //             inner join institucioneducativa d on d.id = c.institucioneducativa_id
+                    //             inner join institucioneducativa_sucursal e on e.institucioneducativa_id = d.id
+                    //             where c.institucioneducativa_id = '".$this->session->get('ie_id')."'
+                    //             and e.gestion_tipo_id = 2017 and e.periodo_tipo_id = 3";                    
+                    // $obs= $db->prepare($query);
+                    // $params = array();
+                    // $obs->execute($params);
+                    // $socioeco = $obs->fetchAll();
+                    // //dump($socioeco);die;
+                    // if (!$socioeco){
+                    //     $query = "select * from sp_genera_migracion_socioeconomicos_alter('".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$gestant."','".$perant."','".$this->session->get('ie_gestion')."','".$this->session->get('ie_per_cod')."','');";
+                    //     $obs= $db->prepare($query);
+                    //     $params = array();
+                    //     $obs->execute($params);
+                    // }
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
 
                     $query = "select * from sp_validacion_alternativa_ig_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
@@ -1448,25 +1448,25 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                         }
                     }
 
-                    $query = "select count(a.estudiante_inscripcion_id) 
-                                from estudiante_inscripcion_socioeconomico_alternativa a 
-                                inner join estudiante_inscripcion b on b.id = a.estudiante_inscripcion_id
-                                inner join institucioneducativa_curso c on c.id = b.institucioneducativa_curso_id
-                                inner join institucioneducativa d on d.id = c.institucioneducativa_id
-                                inner join institucioneducativa_sucursal e on e.institucioneducativa_id = d.id
-                                where c.institucioneducativa_id = '".$this->session->get('ie_id')."'
-                                and e.gestion_tipo_id = 2017 and e.periodo_tipo_id = 3";                    
-                    $obs= $db->prepare($query);
-                    $params = array();
-                    $obs->execute($params);
-                    $socioeco = $obs->fetchAll();
-                    //dump($socioeco);die;
-                    if (!$socioeco){
-                        $query = "select * from sp_genera_migracion_socioeconomicos_alter('".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$gestant."','".$perant."','".$this->session->get('ie_gestion')."','".$this->session->get('ie_per_cod')."','');";
-                        $obs= $db->prepare($query);
-                        $params = array();
-                        $obs->execute($params);
-                    }
+                    // $query = "select count(a.estudiante_inscripcion_id) 
+                    //             from estudiante_inscripcion_socioeconomico_alternativa a 
+                    //             inner join estudiante_inscripcion b on b.id = a.estudiante_inscripcion_id
+                    //             inner join institucioneducativa_curso c on c.id = b.institucioneducativa_curso_id
+                    //             inner join institucioneducativa d on d.id = c.institucioneducativa_id
+                    //             inner join institucioneducativa_sucursal e on e.institucioneducativa_id = d.id
+                    //             where c.institucioneducativa_id = '".$this->session->get('ie_id')."'
+                    //             and e.gestion_tipo_id = 2017 and e.periodo_tipo_id = 3";                    
+                    // $obs= $db->prepare($query);
+                    // $params = array();
+                    // $obs->execute($params);
+                    // $socioeco = $obs->fetchAll();
+                    // //dump($socioeco);die;
+                    // if (!$socioeco){
+                    //     $query = "select * from sp_genera_migracion_socioeconomicos_alter('".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$gestant."','".$perant."','".$this->session->get('ie_gestion')."','".$this->session->get('ie_per_cod')."','');";
+                    //     $obs= $db->prepare($query);
+                    //     $params = array();
+                    //     $obs->execute($params);
+                    // }
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
 
                     $query = "select * from sp_validacion_alternativa_ig_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
@@ -2800,12 +2800,12 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $subceasArray[$sc['sucursal']] = $sc['sucursal'];
             }
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE:','data'=>$ie_id,'read_only'=>true,'attr'=>array('class'=>'form-control validar')))
+                ->add('codsie','text',array('label'=>'Cod. SIE:','data'=>$ie_id,'read_only'=>true,'attr'=>array('class'=>'form-control')))
                 ->add('gestion','choice',array('label'=>'Gestión:','required'=>true,'data'=>(new \DateTime())->format('Y'),'choices'=>$gestionesArray,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
                 ->add('subcea','choice',array('label'=>'Sucursal:','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
         }else{
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE:', 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+                ->add('codsie','text',array('label'=>'Cod. SIE:', 'attr'=>array('maxlength' => '8','class'=>'form-control')))
                 ->add('gestion','choice',array('label'=>'Gestión:','required'=>true,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
                 ->add('subcea','choice',array('label'=>'Sucursal:','required'=>true,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
         }

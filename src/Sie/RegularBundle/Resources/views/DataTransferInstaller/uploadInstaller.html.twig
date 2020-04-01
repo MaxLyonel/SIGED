@@ -67,7 +67,7 @@
 
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
                                         <div class="input-append">
-                                            <form class="form" method ="POST"  enctype="multipart/form-data" action="{{path('consolidation_sie_control_installer_upload')}}">
+                                            <form class="form" method ="POST"  enctype="multipart/form-data" action="{{path('data_transfer_installer_upload')}}">
 
                                                 <table class="table table-bordered table-hover cf" border=''>
                                                     <tr>
@@ -80,6 +80,11 @@
                                                          <input type="text" name="namefile" required="required"/>
 
                                                            <br>
+                                                         <p class='text-green'>Detalle</p>
+                                                         <input type="text" name="detail" required="required"/>
+
+                                                           <br>
+                                                          
                                                           
                                                             <i class='fa fa-upload'></i> <div class="uneditable-input span6">
                                                                 <i class="icon-file fileupload-exists"></i> 
@@ -110,6 +115,7 @@
                                                     <th>N°</th>
                                                     <th>Gestión</th>
                                                     <th>Instalador</th>
+                                                    <th>Detalle</th>
                                                     <th>Opciones</th>
                                                 </tr>
 
@@ -122,6 +128,7 @@
                                                 {#<td data-title="Carnet">{{ cursocorto.sub_area }}</td>#}
                                                 <td data-title="gestion">{{ instalador.gestion_tipo_id }}</td>
                                                 <td data-title="instalador">{{ instalador.instalador }}</td>
+                                                <td data-title="instalador">{{ instalador.detalle }}</td>
                                                 <td data-title="Opciones">
                                                 {% if (instalador.activo == 'true') %}
                                                     <button type="button" class="btn btn-success"   onclick="activarInstalador({{instalador.id}})">Habilitado</button>
@@ -184,7 +191,7 @@
        
         $.ajax({
             type: 'post',
-            url: "{{ path('consolidation_sie_control_installer_activate') }}",
+            url: "{{ path('data_transfer_installer_activate') }}",
             data:{id:id},
             beforeSend: function () {
 

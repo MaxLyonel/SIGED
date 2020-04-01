@@ -5,6 +5,7 @@
                                                     <th>N°</th>
                                                     <th>Gestión</th>
                                                     <th>Instalador</th>
+                                                     <th>Detalle</th>
                                                     <th>Opciones</th>
                                                 </tr>
 
@@ -17,6 +18,7 @@
                                                 {#<td data-title="Carnet">{{ cursocorto.sub_area }}</td>#}
                                                 <td data-title="gestion">{{ instalador.gestion_tipo_id }}</td>
                                                 <td data-title="instalador">{{ instalador.instalador }}</td>
+                                                 <td data-title="instalador">{{ instalador.detalle }}</td>
                                                  <td data-title="Opciones">
                                                     {% if (instalador.activo == 'true') %}
                                                     <button type="button" class="btn btn-success"   onclick="activarInstalador({{instalador.id}})">Habilitado</button>
