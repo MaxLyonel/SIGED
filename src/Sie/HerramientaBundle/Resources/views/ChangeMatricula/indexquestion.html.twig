@@ -64,10 +64,11 @@
             <br/>
             <div class="row">
               <div class="col-md-10 col-md-offset-1">
-                {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'matriculaForm'} } )}}
-              
+                <form action="" id="matriculaForm" onsubmit="saveChangeMatricula(); return false;" method="post">
+                {# {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'matriculaForm'} } )}} #}
+                     
                       <div  class="form-group">
-                        <label for="inputPassword6">Motivo</label>
+                        <label for="inputPassword6">¿Cuántos dias asistio a clases el estudiante?</label>
                         {{form_widget(form.questionStatus)}}
                       </div>
                       <div id="myDIV" class="form-group">
@@ -79,9 +80,10 @@
                         <label for="inputPassword6">Justificativo</label>
                         {{form_widget(form.observation)}}
                       </div>
-                    
+                      {{form_widget(form)}}
+                </form>
                       
-                {{form_end(form)}}
+                {# {{form_end(form)}} #}
               </div>
 
             </div>
@@ -147,8 +149,15 @@
                                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                                 },
                                 success: function (data) {
-                                    $("#idstudents").empty();
-                                    $("#idstudents").append(data);
+                                    // $("#idstudents").empty();
+                                    // $("#idstudents").append(data);
+                                    if (data.status == 'success') {
+                                        seeStudents(data.infoUe);
+                                    }
+
+                                    if (data.status == 'error') {
+                                        alert(data.msg);
+                                    }
                                 },
                                 statusCode: {
                                     500: function () {

@@ -611,7 +611,6 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
@@ -668,6 +667,53 @@ class InfoEstudianteController extends Controller {
 
             $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
             $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
+            
+            
+            /*========================================================
+            =            VALIDACION PARA CAMBIO DE ESTADO            =
+            ========================================================*/
+
+            if ($gestion == 2020) {
+                for ($i=0; $i < count($objStudents); $i++) {
+                    // OBTENEMOS LA INSCRIPCION ACTUAL
+                    $inscripcionActual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objStudents[0]['eInsId']);
+                    $gestionActual = $inscripcionActual->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+                    $nivelActual = $inscripcionActual->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+                    $gradoActual = $inscripcionActual->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+                    $estudianteId = $inscripcionActual->getEstudiante()->getId();
+
+                    $inscripcionesSimilares = $em->createQueryBuilder()
+                                        ->select('ei')
+                                        ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                                        ->where('ei.estadomatriculaTipo = 4')
+                                        ->andWhere('ei.estudiante = :estudiante')
+                                        ->andWhere('iec.gestionTipo = :gestion')
+                                        ->andWhere('iec.nivelTipo = :nivel')
+                                        ->andWhere('iec.gradoTipo = :grado')
+                                        ->setParameter('estudiante', $estudianteId)
+                                        ->setParameter('gestion', $gestionActual)
+                                        ->setParameter('nivel',  $nivelActual)
+                                        ->setParameter('grado',  $gradoActual)
+                                        ->getQuery()
+                                        ->getResult();
+
+                    // PREGUNTAMOS SI TIEN MAS DE UNA INSCRIPCION
+                    if (count($inscripcionesSimilares) > 1) {
+                        $objStudents[$i]['cambioEstadoMatricula'] = false;   
+                    }else{
+                        // VERIFICAMOS SI EL ESTUDIANTE TIENE ESTADO EFECTIVO
+                        if ($objStudents[$i]['estadomatriculaId'] == 4) {
+                            $objStudents[$i]['cambioEstadoMatricula'] = true;    
+                        }else{
+                            $objStudents[$i]['cambioEstadoMatricula'] = false;
+                        }
+                    }
+                }
+            }
+            
+            /*=====  End of VALIDACION PARA CAMBIO DE ESTADO  ======*/
+
         } else {
             $message = 'No existen estudiantes inscritos...';
             $this->addFlash('warninsueall', $message);
