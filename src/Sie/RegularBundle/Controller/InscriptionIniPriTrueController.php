@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 /**
  * InscriptionIniPriTrue controller.
@@ -174,15 +175,13 @@ class InscriptionIniPriTrueController extends Controller {
 
 // dump($infoInscription);die;
             $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($student->getCodigoRude(), $form['gestion']);
-
             //check if the student was Approved on the gestion selected
-            if ($inscriptionsGestionSelected) {
+            if ($inscriptionsGestionSelected['valor']) {
                 // $message = "El estudiante cuenta con inscripción en la gestion seleccionada";
                 // $this->addFlash('notiext', $message);
                 
                 // return $this->redirectToRoute('inscription_ini_pri_rue_index');
-                dump($inscriptionsGestionSelected);die;
-                $idOtraInscripcion = $inscriptionsGestionSelected->getId();
+                $idOtraInscripcion = $inscriptionsGestionSelected['idInscripcion'];
                 // $idOtraInscripcion = 465042769;
                 $formInsc = $this->createFormInsc1($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude'], $idOtraInscripcion);
                 //everything is ok build the info
@@ -692,7 +691,7 @@ class InscriptionIniPriTrueController extends Controller {
             }
             
             //find to update
-            $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['idOtraInscripcion']);         
+            $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']);         
             $oldInscriptionStudent = clone $currentInscrip;
             $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
             $em->persist($currentInscrip);
@@ -705,7 +704,7 @@ class InscriptionIniPriTrueController extends Controller {
                 'unidadOrigen' => array(
                     'eInsId'=>$oldInscriptionStudent->getId(),
                     'sie'=>$oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
-                    'estadoAnterior'=>$oldInscriptionStudent->getEstadomatriculaTiopo()->getId(),
+                    'estadoAnterior'=>$oldInscriptionStudent->getEstadomatriculaTipo()->getId(),
                     'nuevoEstado'=>$nuevoEstado
                 ),
                 'unidadActual' => array(
@@ -718,13 +717,13 @@ class InscriptionIniPriTrueController extends Controller {
             $objEstudianteInscripcionCambioestado->setJson(json_encode($datos));
             $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
             $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
-            $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']) );
+            $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']) );
              $em->persist($objEstudianteInscripcionCambioestado);
 
 
             // added set log info data
             $this->get('funciones')->setLogTransaccion(
-                                  $infoStudent['eInsId'],
+                                  $form['idOtraInscripcion'],
                                   'estudiante_inscripcion',
                                   'U',
                                   '',
@@ -1369,7 +1368,7 @@ class InscriptionIniPriTrueController extends Controller {
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->select('ei.id as idInscripcion, n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -1415,7 +1414,7 @@ class InscriptionIniPriTrueController extends Controller {
                 }
               }
             }
-            return $swInscription;;
+            return array('valor'=>$swInscription, 'idInscripcion'=>$objLastInscription['idInscripcion']);
         } catch (Exception $ex) {
             return $ex;
         }

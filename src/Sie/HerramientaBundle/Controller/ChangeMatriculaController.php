@@ -78,9 +78,14 @@ class ChangeMatriculaController extends Controller {
                 ;
             }, 'property' => 'estadomatricula'))*/
 
+            $arrDias = [];
+            for ($i=1; $i <= 50; $i++) { 
+                $arrDias[] = $i;
+            }
+
             ->add('questionStatus', 'choice', array('choices'=>$this->arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this)')))
             ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
-             ->add('classdays', 'choice', array('choices'=>array(1,2,3), 'attr'=>array('class'=>'form-control')))
+             ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))
 
             ->add('infoStudent', 'hidden', array('data'=>$infoStudent))
             ->add('infoUe', 'hidden', array('data'=>$infoUe))
