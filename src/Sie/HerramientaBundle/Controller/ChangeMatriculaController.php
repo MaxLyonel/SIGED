@@ -67,6 +67,11 @@ class ChangeMatriculaController extends Controller {
       //get the operativo
       $this->operativo = $this->get('funciones')->obtenerOperativo($arrInfoData['sie'],$arrInfoData['gestion']);
       
+      $arrDias = [];
+      for ($i=1; $i <= 50; $i++) { 
+          $arrDias[] = $i;
+      }
+
       return $this->createFormBuilder()
 
             /*->add('estadoMatricula', 'entity', array('class' => 'SieAppWebBundle:EstadomatriculaTipo','label'=>'Estado Mátricula ',
@@ -80,7 +85,7 @@ class ChangeMatriculaController extends Controller {
 
             ->add('questionStatus', 'choice', array('choices'=>$this->arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this)')))
             ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
-             ->add('classdays', 'choice', array('choices'=>array(1,2,3), 'attr'=>array('class'=>'form-control')))
+             ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))
 
             ->add('infoStudent', 'hidden', array('data'=>$infoStudent))
             ->add('infoUe', 'hidden', array('data'=>$infoUe))
