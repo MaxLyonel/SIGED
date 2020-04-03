@@ -176,7 +176,7 @@
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
                                     {% if gestion == 2020 %}
-                                        {% if data.cambioEstadoMatricula == true and 1 == 2 %}
+                                        {% if data.cambioEstadoMatricula == true and 1 == 1 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
                                             </button>
