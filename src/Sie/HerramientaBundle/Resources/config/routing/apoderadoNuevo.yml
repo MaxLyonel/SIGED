@@ -1,0 +1,30 @@
+apoderado_nuevo_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ApoderadoNuevo:index }
+    options:
+         expose: true
+
+apoderado_nuevo_apoderados:
+    path:     /apoderados/{idInscripcion}
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoNuevo:apoderados" }
+    options:
+         expose: true
+
+apoderado_nuevo_validar:
+    path:     /validar
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoNuevo:validar" }
+    options:
+         expose: true
+
+apoderado_nuevo_registrar:
+    path:     /registrar
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoNuevo:registrar" }
+    options:
+         expose: true
+
+apoderado_nuevo_eliminar:
+    path:     /eliminar/{idApoderado}
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoNuevo:eliminar" }
+    options:
+         expose: true
+
