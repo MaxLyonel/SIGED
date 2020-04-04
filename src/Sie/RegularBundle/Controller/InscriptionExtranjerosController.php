@@ -52,6 +52,9 @@ class InscriptionExtranjerosController extends Controller {
     }
 
     public function indexAction(Request $request) {
+
+        return $this->redirect($this->generateUrl('principal_web'));
+
         $this->session = $request->getSession();
         $rol_id = $this->session->get('roluser');
 

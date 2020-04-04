@@ -41,7 +41,7 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
-        return $this->redirect($this->generateUrl('principal_web'));
+        //return $this->redirect($this->generateUrl('principal_web'));
 // die('krlos');
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
@@ -1413,6 +1413,8 @@ class InscriptionIniPriTrueController extends Controller {
 
                 }
               }
+            }else{
+              $objLastInscription['idInscripcion'] = false;
             }
             return array('valor'=>$swInscription, 'idInscripcion'=>$objLastInscription['idInscripcion']);
         } catch (Exception $ex) {
