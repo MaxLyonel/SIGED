@@ -190,6 +190,9 @@ class InscriptionIniPriTrueController extends Controller {
                             'currentInscription' => $inscriptions,
                             'formInscription' => $formInsc->createView()
                 ));
+            }else{
+              //if the student does not have a current inscription return on the main page so far
+              return $this->redirect($this->generateUrl('principal_web'));
             }
 
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
@@ -273,9 +276,10 @@ class InscriptionIniPriTrueController extends Controller {
         $formOmitido = $this->createFormBuilder()
                 ->setAction($this->generateUrl('inscription_ini_pri_rue_save'))
 
-                ->add('questionStatus', 'choice', array('choices'=>$arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this.value)')))
+                /*->add('questionStatus', 'choice', array('choices'=>$arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this.value)')))
                 ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
-                ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))
+                ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))*/
+                ->add('dateRequest', 'text', array('attr'=>array('class'=>'form-control')))
 
                 ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
                 ->add('institucionEducativaName', 'text', array('label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('class' => 'form-control')))
@@ -291,26 +295,9 @@ class InscriptionIniPriTrueController extends Controller {
                 ->add('idOtraInscripcion', 'hidden', array('data'=>$idOtraInscripcion));
 
 
-                 if($this->session->get('roluser')==9){
-                        $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($codigoRude,$gestionIns-1);
+                
 
-                        // dump($objCurrentInscriptionStudent);
-                        if($this->session->get('ie_id')!=$objCurrentInscriptionStudent[0]['sie']){
-
-                           $formOmitido = $formOmitido ->add('messageomitidos', 'hidden', array('label'=>'...','attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control' )));
-
-
-                         $formOmitido = $formOmitido ->add('observacionOmitido', 'text', array( 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true, 'value' => 'TRANSFERENCIA','readonly' => true )));
-                        }else{
-
-                          $formOmitido = $formOmitido ->add('messageomitidos', 'text', array('label' =>'Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos. (Máximo 250 caracteres).', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','readonly' => true )));
-
-                          $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
-                        }
-                }else{
-                     $formOmitido = $formOmitido ->add('messageomitidos', 'hidden', array('label' =>'Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos. (Máximo 250 caracteres).', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','readonly' => true )));
-                  $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
-                }                
+                          $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));                
 
 
               $formOmitido = $formOmitido   ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
@@ -668,9 +655,15 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-         $studentInscription->setObservacion($obsvalue);
+         
          $studentInscription->setObservacionId(6);
-         $studentInscription->setFechaInscripcion(new \DateTime('now'));
+         if (isset($form['dateRequest']) and $form['dateRequest'] != ''){
+          $studentInscription->setFechaInscripcion(new \DateTime($form['dateRequest']));
+          $studentInscription->setObservacion($form['observacionOmitido']);
+         }else{
+          $studentInscription->setFechaInscripcion(new \DateTime('now'));
+          $studentInscription->setObservacion($obsvalue);
+         }
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
          $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estadomatriculaTipo));
@@ -683,12 +676,9 @@ class InscriptionIniPriTrueController extends Controller {
         =            ACTUALIZACION DEL ESTADO DE MATRICULA            =
         =============================================================*/
 
-        if (isset($form['questionStatus']) and $form['questionStatus'] != '') {
-            if ($form['questionStatus'] == 1) {
-                $nuevoEstado = 6; // NO INCORPORADO
-            }else{
-                $nuevoEstado = 9; // RETIRADO TRASLADO
-            }
+        if (isset($form['dateRequest']) and $form['dateRequest'] != '') {
+           
+            $nuevoEstado = 9; // RETIRADO TRASLADO
             
             //find to update
             $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']);         
@@ -710,21 +700,26 @@ class InscriptionIniPriTrueController extends Controller {
                 'unidadActual' => array(
                     'eInsId'=>$studentInscription->getId(),
                     'sie'=>$studentInscription->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId()
+                ),
+                'dataRequest' => array(
+                  'dateRequest' => $form['dateRequest']
+
                 )
             );
             $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
-            $objEstudianteInscripcionCambioestado->setJustificacion($form['observation']);
+            $objEstudianteInscripcionCambioestado->setJustificacion($form['observacionOmitido']);
             $objEstudianteInscripcionCambioestado->setJson(json_encode($datos));
             $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
             $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
             $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']) );
+            $objEstudianteInscripcionCambioestado->setInstitucioneducativaAnt( $em->getRepository('SieAppWebBundle:Institucioneducativa')->find( $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() ) );
              $em->persist($objEstudianteInscripcionCambioestado);
 
 
             // added set log info data
             $this->get('funciones')->setLogTransaccion(
                                   $form['idOtraInscripcion'],
-                                  'estudiante_inscripcion',
+                                  'estudian $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() te_inscripcion',
                                   'U',
                                   '',
                                   $currentInscrip,
