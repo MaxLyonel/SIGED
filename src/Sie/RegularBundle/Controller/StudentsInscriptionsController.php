@@ -49,7 +49,7 @@ class StudentsInscriptionsController extends Controller {
         }
         return $this->createFormBuilder()
                         ->setAction($this->generateUrl('students_inscriptions_find'))
-                        ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase', 'onkeyup'=>'getYearOfUe(this.value)')))
+                        ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase', 'onkeyup'=>'getYearOfUe(this.value)', 'onchange'=>'getYearOfUe(this.value)')))
                         ->add('gestion', 'choice', array('label' => 'Gestión',  'attr' => array('class' => 'form-control')))
                         ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
                         ->getForm();
@@ -134,14 +134,16 @@ class StudentsInscriptionsController extends Controller {
                 SELECT DISTINCT gestion_tipo_id
                 FROM institucioneducativa_curso
                 WHERE institucioneducativa_id = '. $sie .'
-                order by gestion_tipo_id
+                order by gestion_tipo_id DESC
                 ');
         $query->execute();
         $arryearsOfUe = $query->fetchAll();
+        
         $arryearsofue = array();
         foreach ($arryearsOfUe as $yearofue) {
             $arryearsofue[$yearofue['gestion_tipo_id']] = $yearofue['gestion_tipo_id'];
         }
+        //dump($arryearsofue);die;
         $response = new JsonResponse();
         return $response->setData(array('arryearsofue' => $arryearsofue));
 
