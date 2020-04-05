@@ -234,3 +234,7 @@ sie_downloadinfrafile:
 sie_newinscriptionInipri:
      resource: "@SieHerramientaBundle/Resources/config/routing/newinscriptionInipri.yml"
      prefix:   /sie/newinscriptionInipri
+
+sie_apoderado_nuevo:
+     resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoNuevo.yml"
+     prefix:   /sie/apoderadoNuevo
