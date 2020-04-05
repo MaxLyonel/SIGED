@@ -5,6 +5,9 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado:
         IDX_E5D73F34A1104027:
             columns:
                 - estudiante_inscripcion_id
+        IDX_E5D73F34ED003C9F:
+            columns:
+                - institucioneducativa_ant_id
     id:
         id:
             type: integer
@@ -63,6 +66,15 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado:
             inversedBy: null
             joinColumns:
                 estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaAnt:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_ant_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
