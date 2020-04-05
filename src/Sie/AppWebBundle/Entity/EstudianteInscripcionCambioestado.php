@@ -248,4 +248,32 @@ class EstudianteInscripcionCambioestado
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativaAnt;
+
+
+    /**
+     * Set institucioneducativaAnt
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativaAnt
+     * @return EstudianteInscripcionCambioestado
+     */
+    public function setInstitucioneducativaAnt(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativaAnt = null)
+    {
+        $this->institucioneducativaAnt = $institucioneducativaAnt;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaAnt
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativaAnt()
+    {
+        return $this->institucioneducativaAnt;
+    }
 }

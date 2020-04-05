@@ -176,7 +176,7 @@
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
                                     {% if gestion == 2020 %}
-                                        {% if data.cambioEstadoMatricula == true and 1 == 2 %}
+                                        {% if data.cambioEstadoMatricula == true and 1 == 1 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
                                             </button>
@@ -216,6 +216,16 @@
                                             <span class="badge badge-info"><i class="fa fa-fw fa-info"></i> No cuenta con C.I.</span>
                                         {% endif %}
                                     </div>
+
+                                    {# APODERADOS #}
+                                    {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado">
+                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderado('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                                <i class="fa fa-users"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+
                                     {# AREAS ESTUDIANTE #}
                                     {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
@@ -556,6 +566,38 @@
             beforeSend: function () {
                 $('#modal').empty();
                 $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var apoderado = function (infoUe, infoStudent, editar) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
+            url: "{{ path('apoderado_nuevo_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');
             },
             success: function (data) {
                 $('#modal').empty();
