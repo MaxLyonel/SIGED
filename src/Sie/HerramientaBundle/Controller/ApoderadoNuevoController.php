@@ -79,6 +79,14 @@ class ApoderadoNuevoController extends Controller {
                         ->getQuery()
                         ->getResult();
 
+        $paises = $em->createQueryBuilder()
+                        ->select('pt.id, pt.pais')
+                        ->from('SieAppWebBundle:PaisTipo','pt')
+                        ->where('pt.id not in (0)')
+                        ->addOrderBy('pt.id','asc')
+                        ->getQuery()
+                        ->getResult();
+
         $ocupaciones = $em->createQueryBuilder()
                         ->select('aot.id, aot.ocupacion')
                         ->from('SieAppWebBundle:ApoderadoOcupacionTipo','aot')
@@ -122,9 +130,11 @@ class ApoderadoNuevoController extends Controller {
                         ->getResult();
 
         $extranjeros = array(
-                            array('id'=>0,'extranjero'=>'NO'),
-                            array('id'=>1,'extranjero'=>'SI')
+                            array('id'=>1,'extranjero'=>'NO'),
+                            array('id'=>2,'extranjero'=>'SI')
                         );
+
+
 
         return $response->setData([
             'status'=>'success',
@@ -132,6 +142,7 @@ class ApoderadoNuevoController extends Controller {
             'apoderados2020'=>$apoderados2020,
             'expedidos'=>$expedidos,
             'generos'=>$generos,
+            'paises'=>$paises,
             'ocupaciones'=>$ocupaciones,
             'instrucciones'=>$instrucciones,
             'parentescoTutor'=>$parentescoTutor,
@@ -164,21 +175,27 @@ class ApoderadoNuevoController extends Controller {
                                 ai.id,
                                 p.carnet,
                                 p.complemento,
-                                dt.sigla as expedido,
+                                dt.id as expedido,
+                                dt.sigla as expedidoText,
                                 p.paterno, 
                                 p.materno, 
-                                p.nombre,
+                                p.nombre as nombres,
                                 p.fechaNacimiento,
-                                gt.genero,
+                                gt.id as genero,
+                                gt.genero as generoText,
                                 p.correo,
                                 p.celular,
-                                at.id as tipo, 
-                                at.apoderado,
-                                aot.ocupacion,
+                                at.id as parentesco,
+                                at.apoderado as parentescoText,
+                                aot.id as ocupacion,
+                                aot.ocupacion as ocupacionText,
                                 aid.empleo as ocupacionOtro,
-                                it.instruccion,
+                                it.id as instruccion,
+                                it.instruccion as instruccionText,
                                 p.esExtranjero as extranjero,
-                                aid.obs as lugar
+                                p.localidadNac as lugar,
+                                pt.id as pais,
+                                pt.pais as paisText
                             ')
                             ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
                             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
@@ -189,6 +206,7 @@ class ApoderadoNuevoController extends Controller {
                             ->innerJoin('SieAppWebBundle:ApoderadoInscripcionDatos','aid','with','aid.apoderadoInscripcion = ai.id')
                             ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
                             ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
+                            ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
                             ->where('ei.id = :idInscripcion')
                             ->andWhere('p.segipId = 1')
                             ->setParameter('idInscripcion', $inscripcion[0]->getId())
@@ -201,7 +219,8 @@ class ApoderadoNuevoController extends Controller {
                 $tutor = '';
                 foreach ($apoderados as $ap) {
                     $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
-                    switch ($ap['tipo']) {
+                    $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
+                    switch ($ap['parentesco']) {
                         case 1: $padre = $ap; break;
                         case 2: $madre = $ap; break;
                         default: $tutor = $ap; break;
@@ -323,6 +342,9 @@ class ApoderadoNuevoController extends Controller {
         
         if ($validado) {
             $em = $this->getDoctrine()->getManager();
+
+            $apoderado['extranjero'] = ($apoderado['extranjero'] == 1)?false:true;
+
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
                 'carnet'=>$apoderado['carnet'],
                 'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8'),
@@ -339,6 +361,8 @@ class ApoderadoNuevoController extends Controller {
                 $persona->setCorreo($apoderado['correo']);
                 $persona->setCelular($apoderado['celular']);
                 $persona->setEsExtranjero($apoderado['extranjero']);
+                $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
+                $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                 $em->flush();
                 
             }else{
@@ -369,6 +393,8 @@ class ApoderadoNuevoController extends Controller {
                     $persona->setFechaNacimiento(new \DateTime($apoderado['fechaNacimiento']));
                     $persona->setSegipId(1);
                     $persona->setEsExtranjero($apoderado['extranjero']);
+                    $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
+                    $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                     $em->persist($persona);
                     $em->flush();
                 }
@@ -424,7 +450,7 @@ class ApoderadoNuevoController extends Controller {
                 }else{
                     $apoderadoInscripcionDatos->setEmpleo('');
                 }
-                $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
+                // $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
                 $em->persist($apoderadoInscripcionDatos);
                 $em->flush();
 
@@ -438,7 +464,7 @@ class ApoderadoNuevoController extends Controller {
                 }else{
                     $apoderadoInscripcionDatos->setEmpleo('');
                 }
-                $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
+                // $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
                 $em->persist($apoderadoInscripcionDatos);
                 $em->flush();
             }
