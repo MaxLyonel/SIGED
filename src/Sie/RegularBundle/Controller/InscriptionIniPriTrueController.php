@@ -297,7 +297,7 @@ class InscriptionIniPriTrueController extends Controller {
 
                 
 
-                          $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));                
+                          $formOmitido = $formOmitido ->add('observacionOmitido', 'textarea', array('label' => 'Registre una breve justificación de la inscripción del estudiante', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));                
 
 
               $formOmitido = $formOmitido   ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
