@@ -390,6 +390,17 @@
           var turno = $('#form_turno').val();
          // var question = $('#form_questionStatus').val();
           var observation = $('#form_dateRequest').val();
+          var arrDate = observation.split('-');
+
+          if(arrDate[2]!=2020){
+             Swal.fire({
+                icon: 'error',
+                title: 'el año introducido no es el correcto!',
+                type: 'error',
+                showConfirmButton: true,
+            })
+            return;
+          }          
 
           if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0 && observation.length > 0){
 
