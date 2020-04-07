@@ -37,9 +37,8 @@
 	.datos > h3{
 		color: #40B1CB;
 		/*color: #FFFFFF;*/
-		margin-bottom: 10px;
-		padding-bottom: 7px;
-		border-bottom: 1px solid #EEEEEE;
+		margin-bottom: 2px;
+		padding-bottom: 2px;
 		font-weight: bold;
 		font-size: 1.4em;
 	}
@@ -51,6 +50,16 @@
 		font-size: 1.2em;
 		/*color: #40B2CB;*/
 		/*color: #2A7180;*/
+	}
+	.datos .parentesco{
+		color:#CCCCCC;
+		padding-top:0px;
+		padding-bottom:7px;
+		margin-bottom: 25px;
+		font-style: italic;
+		text-transform: capitalize;
+		border-bottom: 1px solid #EEEEEE;
+		font-size: 1em;
 	}
 	h5{
 		padding-top: 15px;
@@ -121,10 +130,10 @@
 									<td>
 										<div v-if="apoderado != ''">
 											<div class="nombre-apoderado">
-												${apoderado.paterno} ${apoderado.materno} ${apoderado.nombre}
+												${apoderado.paterno} ${apoderado.materno} ${apoderado.nombres}
 											</div>
 											<div class="opciones">
-												<a type="button" @click="verApoderadoDatos(apoderado)" class="text-primary">Ver datos</a>
+												<a type="button" @click="verApoderadoDatos(apoderado, 2019)" class="text-primary">Ver datos</a>
 												{# <a type="button" @click="eliminar(apoderado.id)" class="text-danger">Eliminar</a> #}
 											</div>
 										</div>
@@ -153,10 +162,10 @@
 									<td>
 										<div v-if="apoderado != ''">
 											<div class="nombre-apoderado">
-												${apoderado.paterno} ${apoderado.materno} ${apoderado.nombre}
+												${apoderado.paterno} ${apoderado.materno} ${apoderado.nombres}
 											</div>
 											<div class="opciones">
-												<a type="button" @click="verApoderadoDatos(apoderado)" class="text-primary">Ver datos</a>
+												<a type="button" @click="verApoderadoDatos(apoderado, 2020)" class="text-primary">Ver datos</a>
 												{# <a type="button" @click="eliminar(apoderado.id)" class="text-danger">Eliminar</a> #}
 											</div>
 										</div>
@@ -171,7 +180,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div v-else>No tiene apoderados registrados</div>
+					<div v-else class="opciones">No tiene apoderados registrados</div>
 					{# <button v-if="apoderados2020.length < 3" type="button" @click="abrirFormulario()">Registrar apoderado</button> #}
 				</div>
 				<div v-show="formulario">
@@ -224,24 +233,16 @@
 					<div v-if="validado">
 						<div class="row">
 							<div class="form-group col-md-4">
-								<label>Parentesco <span class="requerido">*</span></label>
-								<select v-model="apoderado.parentesco" class="form-control jupper">
-									<option v-for="(parentesco, key) in parentescos" :key="key" :value="parentesco.id" v-text="parentesco.apoderado"></option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-3">
 								<label>Pais de nacimiento <span class="requerido">*</span></label>
 								<select v-model="apoderado.pais" class="form-control jupper">
 									<option v-for="(pais, key) in paises" :key="key" :value="pais.id" v-text="pais.pais"></option>
 								</select>
 							</div>
-							<div class="form-group col-md-7">
+							<div class="form-group col-md-8">
 								<label>Lugar de nacimiento <span class="requerido">*</span></label>
 								<input v-model="apoderado.lugar" type="text" class="form-control jupper" maxlength="100" v-on:keypress="alfanumerico">
 							</div>
-							<div class="form-group col-md-2">
+							{# <div class="form-group col-md-2">
 								<label>Género <span class="requerido">*</span></label>
 								<select v-model="apoderado.genero" class="form-control jupper">
 									<option v-for="(genero, key) in generos" :key="key" :value="genero.id" v-text="genero.genero"></option>
@@ -250,12 +251,9 @@
 							<div class="form-group col-md-4">
 								<label>Correo</label>
 								<input v-model="apoderado.correo" type="text" class="form-control" maxlength="50">
-							</div>
-							<div class="form-group col-md-4">
-								<label>Celular <span class="requerido">*</span></label>
-								<input v-model="apoderado.celular" type="text" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
-							</div>
-							<div class="form-group col-md-4">
+							</div> #}
+							
+							{# <div class="form-group col-md-4">
 								<label>Teléfono</label>
 								<input v-model="apoderado.telefono" type="text" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
 							</div>
@@ -270,16 +268,26 @@
 									<label>Especificar otra ocupación <span class="requerido">*</span></label>
 									<input v-model="apoderado.ocupacionOtro" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfanumerico">
 								</div>
-							</div>
+							</div> #}
 						</div>
 						<div class="row">
-							<div class="form-group col-md-6">
+							<div class="form-group col-md-4">
+								<label>Parentesco <span class="requerido">*</span></label>
+								<select v-model="apoderado.parentesco" class="form-control jupper">
+									<option v-for="(parentesco, key) in parentescos" :key="key" :value="parentesco.id" v-text="parentesco.apoderado"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<label>Celular <span class="requerido">*</span></label>
+								<input v-model="apoderado.celular" type="text" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
+							</div>
+							{# <div class="form-group col-md-6">
 								<label>Mayor grado de instrucción alcanzado <span class="requerido">*</span></label>
 								<select v-model="apoderado.instruccion" class="form-control jupper">
 									<option v-for="(instruccion, key) in instrucciones" :key="key" :value="instruccion.id" v-text="instruccion.instruccion"></option>
 								</select>
-							</div>
-							<div class="form-group col-md-6">
+							</div> #}
+							<div class="form-group col-md-4">
 								<label>¿Es extranjero? <span class="requerido">*</span></label>
 								<select v-model="apoderado.extranjero" class="form-control jupper">
 									<option v-for="(extranjero, key) in extranjeros" :key="key" :value="extranjero.id" v-text="extranjero.extranjero"></option>
@@ -296,9 +304,14 @@
 				</div>
 				<div v-if="verdatos && apoderadoDatos != ''" class="datos">
 					<h3 style="padding-top: 0px;">
-						${apoderadoDatos.paterno} ${apoderadoDatos.materno} ${apoderadoDatos.nombre}
+						${apoderadoDatos.paterno} ${apoderadoDatos.materno} ${apoderadoDatos.nombres}
 						<span style="float:right"> <i class="fa fa-close" @click="verdatos = false"></i> </span>
 					</h3>
+					<div class="row">
+						<div class="col-md-12">
+							<p class="parentesco">${apoderadoDatos.parentescoText}</p>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-6">
 							<label>Carnet</label>
@@ -328,10 +341,10 @@
 							<label>Fecha de nacimiento</label>
 							<p>${apoderadoDatos.fechaNacimiento}</p>
 						</div>
-						<div class="col-md-6">
+						{# <div class="col-md-6">
 							<label>Género</label>
 							<p>${apoderadoDatos.generoText}</p>
-						</div>
+						</div> #}
 					</div>
 					<div class="row">
 						<div class="col-md-4">
@@ -344,39 +357,39 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-4">
+						{# <div class="col-md-4">
 							<label>Correo</label>
 							<p>${apoderadoDatos.correo}</p>
-						</div>
-						<div class="col-md-4">
+						</div> #}
+						{# <div class="col-md-4">
 							<label>Teléfono</label>
 							<p>${apoderadoDatos.telefono}</p>
-						</div>
-						<div class="col-md-4">
+						</div> #}
+						<div class="col-md-6">
 							<label>Celular</label>
 							<p>${apoderadoDatos.celular}</p>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
+					{# </div>
+					<div class="row"> #}
+						{# <div class="col-md-12">
 							<label>Ocupación laboral actual</label>
 							<p v-if="apoderadoDatos.ocupacion != 10035">${apoderadoDatos.ocupacionText}</p>
 							<p v-else>${apoderadoDatos.ocupacionOtro}</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
+						</div> #}
+					{# </div>
+					<div class="row"> #}
+						{# <div class="col-md-6">
 							<label>Mayor grado de instrucción alcanzado</label>
 							<p>${apoderadoDatos.instruccionText}</p>
-						</div>
+						</div> #}
 						<div class="col-md-6">
 							<label>Extranjero</label>
 							<p v-if="apoderadoDatos.extranjero == 2">SI</p>
 							<p v-else>NO</p>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-12 text-right" style="border-top: 1px solid #EEEEEE;">
+					<div v-if="gestion == 2020" class="row">
+						<div class="col-md-12 text-right" style="padding-top: 15px; margin-top:10px; border-top:1px solid #EEEEEE">
 							{# <a type="button" @click="actualizar(apoderadoDatos)" class="btn btn-primary">Actualizar</a> #}
 							<a type="button" @click="abrirFormulario(apoderadoDatos.parentesco)" class="btn btn-primary">Cambiar apoderado</a>
 							<a type="button" @click="eliminar(apoderadoDatos.id)" class="btn btn-danger">Eliminar</a>
@@ -419,6 +432,7 @@
 	    	apoderados2019: '',
 	    	apoderados2020: '',
 	    	errores: [],
+	    	gestion: '',
 	    	apoderado: {
 	    		carnet: '',
 	    		complemento: '',
@@ -544,9 +558,10 @@
 	    				console.log(e);
 	    			});
 	    	},
-	    	verApoderadoDatos(apoderado){
+	    	verApoderadoDatos(apoderado, gestion){
 	    		this.apoderadoDatos = apoderado;
 	    		this.verdatos = true;
+	    		this.gestion = gestion;
 	    	},
 	    	limpiarFormulario(){
 	    		this.apoderado.carnet = '';
@@ -676,23 +691,23 @@
 	    		if (this.apoderado.lugar == '') {
 	    			this.errores.push('Lugar de nacimiento');
 	    		}
-	    		if (this.apoderado.genero == '') {
-	    			this.errores.push('Género');
-	    		}
+	    		// if (this.apoderado.genero == '') {
+	    		// 	this.errores.push('Género');
+	    		// }
 	    		if (this.apoderado.celular == '') {
 	    			this.errores.push('Celular');
 	    		}
-	    		if (this.apoderado.ocupacion == '') {
-	    			this.errores.push('Ocupación laboral actual');
-	    		}
-	    		if (this.apoderado.ocupacion == 10035) {
-	    			if (this.apoderado.ocupacionOtro == '') {
-	    				this.errores.push('Especificar otra ocupación');
-	    			}
-	    		}
-	    		if (this.apoderado.instruccion == '') {
-	    			this.errores.push('Mayor grado de instrucción alcanzado');
-	    		}
+	    		// if (this.apoderado.ocupacion == '') {
+	    		// 	this.errores.push('Ocupación laboral actual');
+	    		// }
+	    		// if (this.apoderado.ocupacion == 10035) {
+	    		// 	if (this.apoderado.ocupacionOtro == '') {
+	    		// 		this.errores.push('Especificar otra ocupación');
+	    		// 	}
+	    		// }
+	    		// if (this.apoderado.instruccion == '') {
+	    		// 	this.errores.push('Mayor grado de instrucción alcanzado');
+	    		// }
 	    		if (this.apoderado.extranjero == '') {
 	    			this.errores.push('¿Es extranjero?');
 	    		}
