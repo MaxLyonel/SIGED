@@ -203,7 +203,7 @@ class ApoderadoNuevoController extends Controller {
                             ->innerJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
                             ->innerJoin('SieAppWebBundle:GeneroTipo','gt','with','p.generoTipo = gt.id')
                             ->innerJoin('SieAppWebBundle:ApoderadoTipo','at','with','ai.apoderadoTipo = at.id')
-                            ->innerJoin('SieAppWebBundle:ApoderadoInscripcionDatos','aid','with','aid.apoderadoInscripcion = ai.id')
+                            ->leftJoin('SieAppWebBundle:ApoderadoInscripcionDatos','aid','with','aid.apoderadoInscripcion = ai.id')
                             ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
                             ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
                             ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
@@ -332,7 +332,8 @@ class ApoderadoNuevoController extends Controller {
         // $validacion = $this->validarSegip($apoderado);
         // $validado = $validacion['validado'];
         
-        if($apoderado['carnet'] == '' or $apoderado['nombres'] == '' or $apoderado['fechaNacimiento'] == '' or $apoderado['expedido'] == '' or $apoderado['genero'] == '' or $apoderado['celular'] == '' or $apoderado['ocupacion'] == '' or $apoderado['instruccion'] == '' or $apoderado['parentesco'] == '' or $apoderado['extranjero'] == ''){
+        // if($apoderado['carnet'] == '' or $apoderado['nombres'] == '' or $apoderado['fechaNacimiento'] == '' or $apoderado['expedido'] == '' or $apoderado['genero'] == '' or $apoderado['celular'] == '' or $apoderado['ocupacion'] == '' or $apoderado['instruccion'] == '' or $apoderado['parentesco'] == '' or $apoderado['extranjero'] == ''){
+        if($apoderado['carnet'] == '' or $apoderado['nombres'] == '' or $apoderado['fechaNacimiento'] == '' or $apoderado['expedido'] == '' or $apoderado['celular'] == '' or $apoderado['parentesco'] == '' or $apoderado['extranjero'] == ''){
             return $response->setData([
                 'status'=>'error',
                 'registrado'=>false,
@@ -357,8 +358,8 @@ class ApoderadoNuevoController extends Controller {
             if (is_object($persona) && $persona->getSegipId() == 1) {
                 // ACTUALIZAMOS LOS DATOS DE LA PERSONA
                 $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
-                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
-                $persona->setCorreo($apoderado['correo']);
+                // $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
+                // $persona->setCorreo($apoderado['correo']);
                 $persona->setCelular($apoderado['celular']);
                 $persona->setEsExtranjero($apoderado['extranjero']);
                 $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
@@ -380,7 +381,8 @@ class ApoderadoNuevoController extends Controller {
                 }else{
                     $persona = new Persona();
                     $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
-                    $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
+                    // $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
+                    $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find(3));
                     $persona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
                     $persona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
                     $persona->setCarnet($apoderado['carnet']);
@@ -433,41 +435,41 @@ class ApoderadoNuevoController extends Controller {
                 $idApoderadoInscripcion = $apoderadoInscripcion->getId();
             }
 
-            $apoderadoInscripcionDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array(
-                'apoderadoInscripcion'=>$idApoderadoInscripcion
-            ));
+            // $apoderadoInscripcionDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array(
+            //     'apoderadoInscripcion'=>$idApoderadoInscripcion
+            // ));
 
-            if (!is_object($apoderadoInscripcionDatos)) {
-                // REGISTRAMOS LOS DATOS DEL APODERADO
-                $apoderadoInscripcionDatos = new ApoderadoInscripcionDatos();
-                $apoderadoInscripcionDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(98));
-                $apoderadoInscripcionDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($apoderado['instruccion']));
-                $apoderadoInscripcionDatos->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderadoInscripcion));
-                $apoderadoInscripcionDatos->setTelefono($apoderado['telefono']);
-                $apoderadoInscripcionDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($apoderado['ocupacion']));
-                if ($apoderado['ocupacion'] == 10035) { // OTRA OCUPACION
-                    $apoderadoInscripcionDatos->setEmpleo(mb_strtoupper($apoderado['ocupacionOtro'],'utf-8'));    
-                }else{
-                    $apoderadoInscripcionDatos->setEmpleo('');
-                }
-                // $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
-                $em->persist($apoderadoInscripcionDatos);
-                $em->flush();
+            // if (!is_object($apoderadoInscripcionDatos)) {
+            //     // REGISTRAMOS LOS DATOS DEL APODERADO
+            //     $apoderadoInscripcionDatos = new ApoderadoInscripcionDatos();
+            //     $apoderadoInscripcionDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(98));
+            //     $apoderadoInscripcionDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($apoderado['instruccion']));
+            //     $apoderadoInscripcionDatos->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderadoInscripcion));
+            //     $apoderadoInscripcionDatos->setTelefono($apoderado['telefono']);
+            //     $apoderadoInscripcionDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($apoderado['ocupacion']));
+            //     if ($apoderado['ocupacion'] == 10035) { // OTRA OCUPACION
+            //         $apoderadoInscripcionDatos->setEmpleo(mb_strtoupper($apoderado['ocupacionOtro'],'utf-8'));    
+            //     }else{
+            //         $apoderadoInscripcionDatos->setEmpleo('');
+            //     }
+            //     // $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
+            //     $em->persist($apoderadoInscripcionDatos);
+            //     $em->flush();
 
-            }else{
-                // ACTUALIZAMOS LOS DATOS DEL APODERADO
-                $apoderadoInscripcionDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($apoderado['instruccion']));
-                $apoderadoInscripcionDatos->setTelefono($apoderado['telefono']);
-                $apoderadoInscripcionDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($apoderado['ocupacion']));
-                if ($apoderado['ocupacion'] == 10035) { // OTRA OCUPACION
-                    $apoderadoInscripcionDatos->setEmpleo(mb_strtoupper($apoderado['ocupacionOtro'],'utf-8'));    
-                }else{
-                    $apoderadoInscripcionDatos->setEmpleo('');
-                }
-                // $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
-                $em->persist($apoderadoInscripcionDatos);
-                $em->flush();
-            }
+            // }else{
+            //     // ACTUALIZAMOS LOS DATOS DEL APODERADO
+            //     $apoderadoInscripcionDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($apoderado['instruccion']));
+            //     $apoderadoInscripcionDatos->setTelefono($apoderado['telefono']);
+            //     $apoderadoInscripcionDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($apoderado['ocupacion']));
+            //     if ($apoderado['ocupacion'] == 10035) { // OTRA OCUPACION
+            //         $apoderadoInscripcionDatos->setEmpleo(mb_strtoupper($apoderado['ocupacionOtro'],'utf-8'));    
+            //     }else{
+            //         $apoderadoInscripcionDatos->setEmpleo('');
+            //     }
+            //     // $apoderadoInscripcionDatos->setObs(mb_strtoupper($apoderado['lugar'],'utf-8'));
+            //     $em->persist($apoderadoInscripcionDatos);
+            //     $em->flush();
+            // }
 
             return $response->setData([
                 'status'=>'success',
