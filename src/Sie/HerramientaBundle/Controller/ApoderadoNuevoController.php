@@ -53,6 +53,7 @@ class ApoderadoNuevoController extends Controller {
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
         if (!is_object($inscripcion)) {
             return $response->setData([
                 'status'=>'error',
@@ -60,8 +61,7 @@ class ApoderadoNuevoController extends Controller {
             ]);
         }
 
-        $apoderados2019 = $this->obtenerApoderados($inscripcion->getEstudiante()->getId(), 2019);
-        $apoderados2020 = $this->obtenerApoderados($inscripcion->getEstudiante()->getId(), 2020);
+        $apoderados = $this->obtenerApoderados($inscripcion->getEstudiante()->getId());
 
         $expedidos = $em->createQueryBuilder()
                         ->select('dt.id, dt.sigla')
@@ -105,26 +105,34 @@ class ApoderadoNuevoController extends Controller {
                         ->getQuery()
                         ->getResult();
 
-        $parentescoTutor = $em->createQueryBuilder()
-                        ->select('at.id, at.apoderado')
-                        ->from('SieAppWebBundle:ApoderadoTipo','at')
-                        ->where('at.id not in (0,1,2,9,10,11,12)')
-                        ->addOrderBy('at.id','asc')
-                        ->getQuery()
-                        ->getResult();
+        // $parentescoTutor = $em->createQueryBuilder()
+        //                 ->select('at.id, at.apoderado')
+        //                 ->from('SieAppWebBundle:ApoderadoTipo','at')
+        //                 ->where('at.id not in (0,1,2,9,10,11,12)')
+        //                 ->addOrderBy('at.id','asc')
+        //                 ->getQuery()
+        //                 ->getResult();
 
-        $parentescoPadre = $em->createQueryBuilder()
-                        ->select('at.id, at.apoderado')
-                        ->from('SieAppWebBundle:ApoderadoTipo','at')
-                        ->where('at.id in (1)')
-                        ->addOrderBy('at.id','asc')
-                        ->getQuery()
-                        ->getResult();
+        // $parentescoPadre = $em->createQueryBuilder()
+        //                 ->select('at.id, at.apoderado')
+        //                 ->from('SieAppWebBundle:ApoderadoTipo','at')
+        //                 ->where('at.id in (1)')
+        //                 ->addOrderBy('at.id','asc')
+        //                 ->getQuery()
+        //                 ->getResult();
 
-        $parentescoMadre = $em->createQueryBuilder()
+        // $parentescoMadre = $em->createQueryBuilder()
+        //                 ->select('at.id, at.apoderado')
+        //                 ->from('SieAppWebBundle:ApoderadoTipo','at')
+        //                 ->where('at.id in (2)')
+        //                 ->addOrderBy('at.id','asc')
+        //                 ->getQuery()
+        //                 ->getResult();
+
+        $parentescos = $em->createQueryBuilder()
                         ->select('at.id, at.apoderado')
                         ->from('SieAppWebBundle:ApoderadoTipo','at')
-                        ->where('at.id in (2)')
+                        ->where('at.id not in (0,9,10,11,12)')
                         ->addOrderBy('at.id','asc')
                         ->getQuery()
                         ->getResult();
@@ -138,105 +146,83 @@ class ApoderadoNuevoController extends Controller {
 
         return $response->setData([
             'status'=>'success',
-            'apoderados2019'=>$apoderados2019,
-            'apoderados2020'=>$apoderados2020,
+            'apoderados2020'=>$apoderados,
             'expedidos'=>$expedidos,
             'generos'=>$generos,
             'paises'=>$paises,
             'ocupaciones'=>$ocupaciones,
             'instrucciones'=>$instrucciones,
-            'parentescoTutor'=>$parentescoTutor,
-            'parentescoPadre'=>$parentescoPadre,
-            'parentescoMadre'=>$parentescoMadre,
+            // 'parentescoTutor'=>$parentescoTutor,
+            // 'parentescoPadre'=>$parentescoPadre,
+            // 'parentescoMadre'=>$parentescoMadre,
+            'parentescos'=>$parentescos,
             'extranjeros'=>$extranjeros,
         ]);
     }
 
-    private function obtenerApoderados($idEstudiante, $gestion){
+    private function obtenerApoderados($idEstudiante){
         $em = $this->getDoctrine()->getManager();
-        $inscripcion = $em->createQueryBuilder()
-                        ->select('ei')
-                        ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+
+        $apoderados = $em->createQueryBuilder()
+                        ->select('
+                            ai.id,
+                            p.carnet,
+                            p.complemento,
+                            dt.id as expedido,
+                            dt.sigla as expedidoText,
+                            p.paterno, 
+                            p.materno, 
+                            p.nombre as nombres,
+                            p.fechaNacimiento,
+                            gt.id as genero,
+                            gt.genero as generoText,
+                            p.correo,
+                            p.celular,
+                            at.id as parentesco,
+                            at.apoderado as parentescoText,
+                            aot.id as ocupacion,
+                            aot.ocupacion as ocupacionText,
+                            aid.empleo as ocupacionOtro,
+                            it.id as instruccion,
+                            it.instruccion as instruccionText,
+                            p.esExtranjero as extranjero,
+                            p.localidadNac as lugar,
+                            pt.id as pais,
+                            pt.pais as paisText,
+                            gest.id as gestion,
+                            p.id as idPersona
+                        ')
+                        ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
+                        ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
                         ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->innerJoin('SieAppWebBundle:GestionTipo','gest','with','iec.gestionTipo = gest.id')
+                        ->innerJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
+                        ->innerJoin('SieAppWebBundle:GeneroTipo','gt','with','p.generoTipo = gt.id')
+                        ->innerJoin('SieAppWebBundle:ApoderadoTipo','at','with','ai.apoderadoTipo = at.id')
+                        ->leftJoin('SieAppWebBundle:ApoderadoInscripcionDatos','aid','with','aid.apoderadoInscripcion = ai.id')
+                        ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
+                        ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
+                        ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
                         ->where('ei.estudiante = :idEstudiante')
-                        ->andWhere('iec.gestionTipo = :gestion')
+                        ->andWhere('p.segipId = 1')
                         ->setParameter('idEstudiante', $idEstudiante)
-                        ->setParameter('gestion', $gestion)
-                        ->addOrderBy('ei.id','DESC')
-                        ->setMaxResults(1)
+                        ->orderBy('ai.id','DESC')
                         ->getQuery()
                         ->getResult();
-
-        $apoderados = [];
-
-        if (count($inscripcion) > 0) {
-            $apoderados = $em->createQueryBuilder()
-                            ->select('
-                                ai.id,
-                                p.carnet,
-                                p.complemento,
-                                dt.id as expedido,
-                                dt.sigla as expedidoText,
-                                p.paterno, 
-                                p.materno, 
-                                p.nombre as nombres,
-                                p.fechaNacimiento,
-                                gt.id as genero,
-                                gt.genero as generoText,
-                                p.correo,
-                                p.celular,
-                                at.id as parentesco,
-                                at.apoderado as parentescoText,
-                                aot.id as ocupacion,
-                                aot.ocupacion as ocupacionText,
-                                aid.empleo as ocupacionOtro,
-                                it.id as instruccion,
-                                it.instruccion as instruccionText,
-                                p.esExtranjero as extranjero,
-                                p.localidadNac as lugar,
-                                pt.id as pais,
-                                pt.pais as paisText
-                            ')
-                            ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
-                            ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
-                            ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
-                            ->innerJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
-                            ->innerJoin('SieAppWebBundle:GeneroTipo','gt','with','p.generoTipo = gt.id')
-                            ->innerJoin('SieAppWebBundle:ApoderadoTipo','at','with','ai.apoderadoTipo = at.id')
-                            ->leftJoin('SieAppWebBundle:ApoderadoInscripcionDatos','aid','with','aid.apoderadoInscripcion = ai.id')
-                            ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
-                            ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
-                            ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
-                            ->where('ei.id = :idInscripcion')
-                            ->andWhere('p.segipId = 1')
-                            ->setParameter('idInscripcion', $inscripcion[0]->getId())
-                            ->getQuery()
-                            ->getResult();
-            
-            if (count($apoderados) > 0 or $gestion == 2020) {
-                $padre = '';
-                $madre = '';
-                $tutor = '';
-                foreach ($apoderados as $ap) {
-                    $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
-                    $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
-                    switch ($ap['parentesco']) {
-                        case 1: $padre = $ap; break;
-                        case 2: $madre = $ap; break;
-                        default: $tutor = $ap; break;
-                    }
-                }
-
-                $apoderados = array(
-                    $padre,
-                    $madre,
-                    $tutor
-                );
-
+        
+        $arrayPersonas = [];
+        $arrayApoderados = [];
+        foreach ($apoderados as $ap) {
+            if (!in_array($ap['idPersona'], $arrayPersonas)) {
+                $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
+                $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
+                $arrayApoderados[] = $ap;
             }
+            $arrayPersonas[] = $ap['idPersona'];
         }
 
-        return $apoderados;
+        return $arrayApoderados;
     }
 
     public function validarAction(Request $request){
@@ -250,45 +236,28 @@ class ApoderadoNuevoController extends Controller {
 
     private function validarSegip($apoderado){
         if($apoderado['carnet'] != '' && $apoderado['nombres'] != '' && $apoderado['fechaNacimiento'] != ''){
-            $em = $this->getDoctrine()->getManager();
-            $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
-                'carnet'=>$apoderado['carnet'],
+            $datos = array(
                 'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8'),
-                'paterno'=>mb_strtoupper($apoderado['paterno'], 'utf-8'),
-                'materno'=>mb_strtoupper($apoderado['materno'], 'utf-8'),
+                'primer_apellido'=>mb_strtoupper($apoderado['paterno'], 'utf-8'),
+                'segundo_apellido'=>mb_strtoupper($apoderado['materno'], 'utf-8'),
                 'nombre'=>mb_strtoupper($apoderado['nombres'], 'utf-8'),
-                'fechaNacimiento'=>new \DateTime($apoderado['fechaNacimiento'])
-            ]);
+                'fecha_nacimiento'=>$apoderado['fechaNacimiento']
+            );
 
-            if (is_object($persona) && $persona->getSegipId() == 1) {
+            $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($apoderado['carnet'],$datos,'prod','academico');
+            if($resultadoPersona){
+
                 return [
                     'status'=>'success',
                     'validado'=>true,
-                    'msg'=>'Los datos fueron validados correctamente BD'
+                    'msg'=>'Los datos fueron validados correctamente SEGIP'
                 ];
-            }else{
-                $datos = array(
-                    'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8'),
-                    'primer_apellido'=>mb_strtoupper($apoderado['paterno'], 'utf-8'),
-                    'segundo_apellido'=>mb_strtoupper($apoderado['materno'], 'utf-8'),
-                    'nombre'=>mb_strtoupper($apoderado['nombres'], 'utf-8'),
-                    'fecha_nacimiento'=>$apoderado['fechaNacimiento']
-                );
-
-                $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($apoderado['carnet'],$datos,'prod','academico');
-                if($resultadoPersona){
-                    return [
-                        'status'=>'success',
-                        'validado'=>true,
-                        'msg'=>'Los datos fueron validados correctamente SEGIP'
-                    ];
-                } else {
-                    return [
-                        'status'=>'error',
-                        'validado'=>false,
-                        'msg'=>'Los datos ingresados no son correctos, verifique e intente nuevamente'
-                    ];
-                }
+            } else {
+                return [
+                    'status'=>'error',
+                    'validado'=>false,
+                    'msg'=>'Los datos ingresados no son correctos, verifique e intente nuevamente'
+                ];
             }
         }
         
@@ -342,10 +311,12 @@ class ApoderadoNuevoController extends Controller {
         }
         
         if ($validado) {
+
             $em = $this->getDoctrine()->getManager();
 
             $apoderado['extranjero'] = ($apoderado['extranjero'] == 1)?false:true;
 
+            // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
                 'carnet'=>$apoderado['carnet'],
                 'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8'),
@@ -355,50 +326,108 @@ class ApoderadoNuevoController extends Controller {
                 'fechaNacimiento'=>new \DateTime($apoderado['fechaNacimiento'])
             ]);
 
-            if (is_object($persona) && $persona->getSegipId() == 1) {
+            if (is_object($persona)) {
                 // ACTUALIZAMOS LOS DATOS DE LA PERSONA
+                if ($persona->getSegipId() == 0) {
+                    $persona->setSegipId(1);
+                }
                 $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
-                // $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
-                // $persona->setCorreo($apoderado['correo']);
                 $persona->setCelular($apoderado['celular']);
                 $persona->setEsExtranjero($apoderado['extranjero']);
                 $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
                 $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                 $em->flush();
-                
             }else{
+                // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS MENOS LA FECHA DE NACIMIENTO
                 $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
                     'carnet'=>$apoderado['carnet'],
-                    'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8')
+                    'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8'),
+                    'paterno'=>mb_strtoupper($apoderado['paterno'], 'utf-8'),
+                    'materno'=>mb_strtoupper($apoderado['materno'], 'utf-8'),
+                    'nombre'=>mb_strtoupper($apoderado['nombres'], 'utf-8')
                 ]);
 
                 if (is_object($persona)) {
-                    return $response->setData([
-                        'status'=>'error',
-                        'registrado'=>false,
-                        'msg'=>'El número de carnet ya esta registrado con otros datos'
-                    ]);
-                }else{
-                    $persona = new Persona();
-                    $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
-                    // $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
-                    $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find(3));
-                    $persona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
-                    $persona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
-                    $persona->setCarnet($apoderado['carnet']);
-                    $persona->setComplemento(mb_strtoupper($apoderado['complemento'],'utf-8'));
-                    $persona->setCelular($apoderado['celular']);
-                    $persona->setRda(0);
-                    $persona->setPaterno(mb_strtoupper($apoderado['paterno'],'utf-8'));
-                    $persona->setMaterno(mb_strtoupper($apoderado['materno'],'utf-8'));
-                    $persona->setNombre(mb_strtoupper($apoderado['nombre'],'utf-8'));
+                    // ACTUALIZAMOS LOS DATOS DE LA PERSONA
+                    if ($persona->getSegipId() == 0) {
+                        $persona->setSegipId(1);
+                    }
                     $persona->setFechaNacimiento(new \DateTime($apoderado['fechaNacimiento']));
-                    $persona->setSegipId(1);
+                    $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
+                    $persona->setCelular($apoderado['celular']);
                     $persona->setEsExtranjero($apoderado['extranjero']);
                     $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
                     $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
-                    $em->persist($persona);
                     $em->flush();
+
+                }else{
+                    // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS MENOS EL COMPLEMENTO
+                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
+                        'carnet'=>$apoderado['carnet'],
+                        'paterno'=>mb_strtoupper($apoderado['paterno'], 'utf-8'),
+                        'materno'=>mb_strtoupper($apoderado['materno'], 'utf-8'),
+                        'nombre'=>mb_strtoupper($apoderado['nombres'], 'utf-8'),
+                        'fechaNacimiento'=>new \DateTime($apoderado['fechaNacimiento'])
+                    ]);
+
+                    if (is_object($persona)) {
+                        // ACTUALIZAMOS LOS DATOS DE LA PERSONA
+                        if ($persona->getSegipId() == 0) {
+                            $persona->setSegipId(1);
+                        }
+                        $persona->setComplemento(mb_strtoupper($apoderado['complemento'], 'utf-8'));
+                        $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
+                        $persona->setCelular($apoderado['celular']);
+                        $persona->setEsExtranjero($apoderado['extranjero']);
+                        $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
+                        $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
+                        $em->flush();
+
+                    }else{
+                        // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS SOLO CON EL CARNET
+                        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
+                            'carnet'=>$apoderado['carnet']
+                        ]);
+                        
+                        if (is_object($persona)) {
+                            if ($persona->getSegipId() == 1) {
+                                // SI EL NUMERO DE CARNET YA ESTA OCUPADO Y EL REGISTRO EN LA BASE DE DATOS TIENE VALIDACION SEGIP 1
+                                // MANDAMOS UN MENSAJE INDICANDO QUE EL USUARIO SE COMUNIQUE CON EL MINISTERIO DE EDUCACION O CON EL SEGIP
+                                return $response->setData([
+                                    'status'=>'error',
+                                    'registrado'=>false,
+                                    'msg'=>'No se pudo realizar el regsitro, el número de carnet ya esta registrado con otros datos, comuniquese con el Ministerio de Educación o con el Segip para solucionar el problema'
+                                ]);
+                            }
+                            
+                            $persona->setCarnet($persona->getCarnet().'±');
+                            $em->flush();
+                                
+                        }
+
+                        $persona = null;
+
+                        $persona = new Persona();
+                        $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
+                        // $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
+                        $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find(3));
+                        $persona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
+                        $persona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+                        $persona->setCarnet($apoderado['carnet']);
+                        $persona->setComplemento(mb_strtoupper($apoderado['complemento'],'utf-8'));
+                        $persona->setCelular($apoderado['celular']);
+                        $persona->setRda(0);
+                        $persona->setPaterno(mb_strtoupper($apoderado['paterno'],'utf-8'));
+                        $persona->setMaterno(mb_strtoupper($apoderado['materno'],'utf-8'));
+                        $persona->setNombre(mb_strtoupper($apoderado['nombre'],'utf-8'));
+                        $persona->setFechaNacimiento(new \DateTime($apoderado['fechaNacimiento']));
+                        $persona->setSegipId(1);
+                        $persona->setEsExtranjero($apoderado['extranjero']);
+                        $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
+                        $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
+                        $em->persist($persona);
+                        $em->flush();
+                    }
                 }
             }
 
@@ -410,7 +439,7 @@ class ApoderadoNuevoController extends Controller {
 
             $apoderadoInscripcion = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
                 'estudianteInscripcion'=>$idInscripcion,
-                'apoderadoTipo'=>$parentesco
+                'persona'=>$persona->getId()
             ));
 
             if (!is_object($apoderadoInscripcion)) {
@@ -425,14 +454,23 @@ class ApoderadoNuevoController extends Controller {
 
                 $idApoderadoInscripcion = $newApoderadoInscripcion->getId();
             }else{
-                // ACTUALIZAMOS LA RELACION APODERADO ESTUDIANTE
-                $apoderadoInscripcion->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($apoderado['parentesco']));
-                $apoderadoInscripcion->setPersona($persona);
-                $apoderadoInscripcion->setEsValidado(1);
-                $em->persist($apoderadoInscripcion);
-                $em->flush();
 
-                $idApoderadoInscripcion = $apoderadoInscripcion->getId();
+                if ($apoderadoInscripcion->getApoderadoTipo()->getId() == $apoderado['parentesco']) {
+                    // ACTUALIZAMOS LA RELACION APODERADO ESTUDIANTE
+                    $apoderadoInscripcion->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($apoderado['parentesco']));
+                    $apoderadoInscripcion->setPersona($persona);
+                    $apoderadoInscripcion->setEsValidado(1);
+                    $em->persist($apoderadoInscripcion);
+                    $em->flush();
+
+                    $idApoderadoInscripcion = $apoderadoInscripcion->getId();
+                }else{
+                    return $response->setData([
+                        'status'=>'error',
+                        'registrado'=>false,
+                        'msg'=>'La persona ya fue registrada como apoderado'
+                    ]);
+                }
             }
 
             // $apoderadoInscripcionDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array(

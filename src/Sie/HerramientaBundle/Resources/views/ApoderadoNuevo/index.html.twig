@@ -33,6 +33,7 @@
 		top: 0px;
 		right: 0px;
 		height: 100%;
+		z-index: 1000;
 	}
 	.datos > h3{
 		color: #40B1CB;
@@ -117,71 +118,43 @@
 					</div>
 				</div>
 				<div v-show="!formulario">
-					<h5>Apoderados registrados en la gestión 2019</h5>
-					<div v-if="apoderados2019.length > 0">
-						<table class="table">
-							<tbody>
-								<tr v-for="(apoderado, key) in apoderados2019" :key="key">
-									<td>
-										<span v-if="key == 0">Padre</span>
-										<span v-if="key == 1">Madre</span>
-										<span v-if="key == 2">Tutor <span v-if="apoderado != ''"> <br> ${apoderado.parentescoText}</span> </span>
-									</td>
-									<td>
-										<div v-if="apoderado != ''">
-											<div class="nombre-apoderado">
-												${apoderado.paterno} ${apoderado.materno} ${apoderado.nombres}
-											</div>
-											<div class="opciones">
-												<a type="button" @click="verApoderadoDatos(apoderado, 2019)" class="text-primary">Ver datos</a>
-												{# <a type="button" @click="eliminar(apoderado.id)" class="text-danger">Eliminar</a> #}
-											</div>
-										</div>
-										<div v-else class="no-registrado">
-											<div class="no-registrado">No registrado</div>
-											<div class="opciones">
-												{# <a type="button" @click="abrirFormulario()">Registrar</a>  #}
-											</div>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div v-else class="opciones">No tiene apoderados registrados</div>
-					<h5>Apoderados registrados en la gestión 2020</h5>
+					<h5>Apoderados registrados</h5>
 					<div v-if="apoderados2020.length > 0">
 						<table class="table bordered">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Paterno</th>
+									<th>Materno</th>
+									<th>Nombre</th>
+									<th>Fecha de Nacimiento</th>
+									<th>Parentesco</th>
+									<th>Gestión</th>
+								</tr>
+							</thead>
 							<tbody>
 								<tr v-for="(apoderado, key) in apoderados2020" :key="key">
-									<td width="120px">
-										<span v-if="key == 0">Padre</span>
-										<span v-if="key == 1">Madre</span>
-										<span v-if="key == 2">Tutor <span v-if="apoderado != ''"> <br> ${apoderado.parentescoText}</span> </span>
-									</td>
 									<td>
-										<div v-if="apoderado != ''">
-											<div class="nombre-apoderado">
-												${apoderado.paterno} ${apoderado.materno} ${apoderado.nombres}
-											</div>
-											<div class="opciones">
-												<a type="button" @click="verApoderadoDatos(apoderado, 2020)" class="text-primary">Ver datos</a>
-												{# <a type="button" @click="eliminar(apoderado.id)" class="text-danger">Eliminar</a> #}
-											</div>
-										</div>
-										<div v-else class="no-registrado">
-											<div class="no-registrado">No registrado</div>
-											<div class="opciones">
-												<a type="button" @click="abrirFormulario(key + 1)" class="text-info">Registrar</a> 
-											</div>
+										<div class="opciones">
+											<button type="button" @click="verApoderadoDatos(apoderado)" class="btn btn-info btn-sm">Ver datos</button>
+											{# <a type="button" @click="eliminar(apoderado.id)" class="text-danger">Eliminar</a> #}
 										</div>
 									</td>
+									<td>${apoderado.paterno}</td>
+									<td>${apoderado.materno}</td>
+									<td>${apoderado.nombres}</td>
+									<td>${apoderado.fechaNacimiento}</td>
+									<td><b>${apoderado.parentescoText}</b></td>
+									<td>${apoderado.gestion}</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 					<div v-else class="opciones">No tiene apoderados registrados</div>
-					{# <button v-if="apoderados2020.length < 3" type="button" @click="abrirFormulario()">Registrar apoderado</button> #}
+					<div class="text-right" style="margin-top:15px;">
+						<button type="button" @click="abrirFormulario()" class="btn btn-primary">Registrar apoderado</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+					</div>
 				</div>
 				<div v-show="formulario">
 					<h5>Registrar datos del apoderado <span class="requerido"> ( * campos requeridos )</span></h5>
@@ -279,7 +252,7 @@
 							</div>
 							<div class="form-group col-md-4">
 								<label>Celular <span class="requerido">*</span></label>
-								<input v-model="apoderado.celular" type="text" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
+								<input v-model="apoderado.celular" type="text" class="form-control jupper" maxlength="8" v-on:keypress="numerico">
 							</div>
 							{# <div class="form-group col-md-6">
 								<label>Mayor grado de instrucción alcanzado <span class="requerido">*</span></label>
@@ -388,10 +361,10 @@
 							<p v-else>NO</p>
 						</div>
 					</div>
-					<div v-if="gestion == 2020" class="row">
-						<div class="col-md-12 text-right" style="padding-top: 15px; margin-top:10px; border-top:1px solid #EEEEEE">
+					<div v-if="apoderadoDatos.gestion == 2020" class="row">
+						<div class="col-md-12 text-right" style="padding-top: 5px; margin-top:5px; border-top:1px solid #EEEEEE">
 							{# <a type="button" @click="actualizar(apoderadoDatos)" class="btn btn-primary">Actualizar</a> #}
-							<a type="button" @click="abrirFormulario(apoderadoDatos.parentesco)" class="btn btn-primary">Cambiar apoderado</a>
+							{# <a type="button" @click="abrirFormulario(apoderadoDatos.parentesco)" class="btn btn-primary">Cambiar apoderado</a> #}
 							<a type="button" @click="eliminar(apoderadoDatos.id)" class="btn btn-danger">Eliminar</a>
 						</div>
 					</div>
@@ -429,7 +402,6 @@
 	    	validando: false,
 	    	verdatos: false,
 	    	idInscripcion: '{{idInscripcion}}',
-	    	apoderados2019: '',
 	    	apoderados2020: '',
 	    	errores: [],
 	    	gestion: '',
@@ -461,9 +433,9 @@
 	    	ocupaciones: [],
 	    	instrucciones: [],
 	    	parentescos: [],
-	    	parentescoPadre: [],
-	    	parentescoMadre: [],
-	    	parentescoTutor: [],
+	    	// parentescoPadre: [],
+	    	// parentescoMadre: [],
+	    	// parentescoTutor: [],
 	    	extranjeros: [],
 	    },
 	    mounted(){
@@ -542,16 +514,16 @@
 	    		axios.get(Routing.generate('apoderado_nuevo_apoderados', {idInscripcion: this.idInscripcion}))
 	    			.then(response => {
 	    				console.log(response.data);
-	    				this.apoderados2019 = response.data.apoderados2019;
 	    				this.apoderados2020 = response.data.apoderados2020;
 	    				this.expedidos = response.data.expedidos;
 	    				this.generos = response.data.generos;
 	    				this.paises = response.data.paises;
 	    				this.ocupaciones = response.data.ocupaciones;
 	    				this.instrucciones = response.data.instrucciones;
-	    				this.parentescoPadre = response.data.parentescoPadre;
-	    				this.parentescoMadre = response.data.parentescoMadre;
-	    				this.parentescoTutor = response.data.parentescoTutor;
+	    				// this.parentescoPadre = response.data.parentescoPadre;
+	    				// this.parentescoMadre = response.data.parentescoMadre;
+	    				// this.parentescoTutor = response.data.parentescoTutor;
+	    				this.parentescos = response.data.parentescos;
 	    				this.extranjeros = response.data.extranjeros;
 	    			})
 	    			.catch(e => {
@@ -585,18 +557,18 @@
 	    	},
 	    	abrirFormulario(tipo){
 
-	    		this.apoderadoTipo = tipo;
-	    		if (tipo == 1) {
-	    			this.parentescos = this.parentescoPadre;
-	    			this.apoderado.parentesco = tipo;
-	    		}else{
-	    			if (tipo == 2) {
-	    				this.parentescos = this.parentescoMadre;
-	    				this.apoderado.parentesco = tipo;
-	    			}else{
-	    				this.parentescos = this.parentescoTutor;
-	    			}
-	    		}
+	    		// this.apoderadoTipo = tipo;
+	    		// if (tipo == 1) {
+	    		// 	this.parentescos = this.parentescoPadre;
+	    		// 	this.apoderado.parentesco = tipo;
+	    		// }else{
+	    		// 	if (tipo == 2) {
+	    		// 		this.parentescos = this.parentescoMadre;
+	    		// 		this.apoderado.parentesco = tipo;
+	    		// 	}else{
+	    		// 		this.parentescos = this.parentescoTutor;
+	    		// 	}
+	    		// }
 
 	    		this.formulario = true;
 	    		this.validado = false;
@@ -697,6 +669,9 @@
 	    		if (this.apoderado.celular == '') {
 	    			this.errores.push('Celular');
 	    		}
+	    		if (this.apoderado.celular.length < 8) {
+	    			this.errores.push('Celular - Número no válido');
+	    		}
 	    		// if (this.apoderado.ocupacion == '') {
 	    		// 	this.errores.push('Ocupación laboral actual');
 	    		// }
@@ -754,7 +729,7 @@
 	    		console.log(this.apoderado);
 	    		console.log(apoderado);
 	    		this.apoderado = apoderado;
-	    		this.abrirFormulario(apoderado.parentesco);
+	    		this.abrirFormulario();
 	    	},
 	    	eliminar(id){
 	    		Swal.fire({
