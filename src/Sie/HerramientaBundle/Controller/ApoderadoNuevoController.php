@@ -132,7 +132,7 @@ class ApoderadoNuevoController extends Controller {
         $parentescos = $em->createQueryBuilder()
                         ->select('at.id, at.apoderado')
                         ->from('SieAppWebBundle:ApoderadoTipo','at')
-                        ->where('at.id not in (0,9,10,11,12)')
+                        ->where('at.id in (1,2,3,4,5,6,7,8)')
                         ->addOrderBy('at.id','asc')
                         ->getQuery()
                         ->getResult();
