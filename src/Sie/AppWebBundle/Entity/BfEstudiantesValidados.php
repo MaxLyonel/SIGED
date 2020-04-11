@@ -164,4 +164,116 @@ class BfEstudiantesValidados
     {
         return $this->gestionTipoId;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaCorte;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Estudiante
+     */
+    private $estudiante;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OrgcurricularTipo
+     */
+    private $orgcurricularTipo;
+
+
+    /**
+     * Set fechaCorte
+     *
+     * @param \DateTime $fechaCorte
+     * @return BfEstudiantesValidados
+     */
+    public function setFechaCorte($fechaCorte)
+    {
+        $this->fechaCorte = $fechaCorte;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaCorte
+     *
+     * @return \DateTime 
+     */
+    public function getFechaCorte()
+    {
+        return $this->fechaCorte;
+    }
+
+    /**
+     * Set estudiante
+     *
+     * @param \Sie\AppWebBundle\Entity\Estudiante $estudiante
+     * @return BfEstudiantesValidados
+     */
+    public function setEstudiante(\Sie\AppWebBundle\Entity\Estudiante $estudiante = null)
+    {
+        $this->estudiante = $estudiante;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudiante
+     *
+     * @return \Sie\AppWebBundle\Entity\Estudiante 
+     */
+    public function getEstudiante()
+    {
+        return $this->estudiante;
+    }
+
+    /**
+     * Set gestionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
+     * @return BfEstudiantesValidados
+     */
+    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
+    {
+        $this->gestionTipo = $gestionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GestionTipo 
+     */
+    public function getGestionTipo()
+    {
+        return $this->gestionTipo;
+    }
+
+    /**
+     * Set orgcurricularTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OrgcurricularTipo $orgcurricularTipo
+     * @return BfEstudiantesValidados
+     */
+    public function setOrgcurricularTipo(\Sie\AppWebBundle\Entity\OrgcurricularTipo $orgcurricularTipo = null)
+    {
+        $this->orgcurricularTipo = $orgcurricularTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get orgcurricularTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OrgcurricularTipo 
+     */
+    public function getOrgcurricularTipo()
+    {
+        return $this->orgcurricularTipo;
+    }
 }
