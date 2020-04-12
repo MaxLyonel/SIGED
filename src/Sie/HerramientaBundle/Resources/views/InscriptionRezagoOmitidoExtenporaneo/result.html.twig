@@ -1,0 +1,493 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+ <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Inscripción  <span> Resultado</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('inscription_reza_omi_exten_index')}}">Inscripción - Resultado</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+<!-- the new -->
+<div class="body-content animated fadeIn">
+
+     <div class="row">
+        {% for flashMessage in app.session.flashbag.get('newUser') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ flashMessage.mensaje }}<br>
+                <button class="btn-link" data-toggle="tooltip" data-placement="top" title="Descargar declaracion jurada"><img src="{{asset('assets/images/pdf.png')}}"> Declaración jurada</button>
+                    {# flashMessage.nombre #}
+                    {# flashMessage.usuario #}
+                    {# flashMessage.password #}
+            </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Inscripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <table class="table">
+                              <tr>
+                                <td>Rude:</td>
+                                <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                              </tr>
+                              <tr>
+                                <td>Nombre:</td>
+                                <td data-title="Nombre">
+                                {{datastudent.paterno|e}}
+                                {{datastudent.materno|e}}
+                                {{ datastudent.nombre|e }}
+                              </td>
+                              </tr>
+                              <tr>
+                                <td>CI:</td>
+
+                                <td data-title="CI">{{datastudent.carnetIdentidad}}</td>
+                              </tr>
+                              <tr>
+                                <td>complemento:</td>
+
+                                <td data-title="Complemento">{{datastudent.complemento}}</td>
+                              </tr>
+                              <tr><td>Género:</td>
+                                <td data-title="Genero">{{datastudent.generoTipo}} </td>
+                              </tr>
+                            </table>
+                        </td>
+                        <td>
+                          {{form_start(formInscription, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'formInscription' } } )}}
+
+                          <div class="row">
+                              <div class="col-md-4">
+                                  {{form_label(formInscription.institucionEducativa)}}
+                                  {{form_widget(formInscription.institucionEducativa, {'attr':{'onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                                  <div class="help-block without-errors"></div>
+                              </div>
+                              <div class="col-md-8">
+                                  {{form_label(formInscription.institucionEducativaName)}}
+                                  {{form_widget(formInscription.institucionEducativaName)}}
+                              </div>
+                          </div>
+
+                          <div class="row">
+                              <div class="col-md-6">
+                                  {{form_label(formInscription.nivel)}}
+                                  {{form_widget(formInscription.nivel,{'attr':{'onchange':'getGrado(this.value)'} })}}
+                              </div>
+                              <div class="col-md-6">
+                                  {{form_label(formInscription.grado)}}
+                                  {{form_widget(formInscription.grado, {'attr':{'onchange':'getParalelo(this.value)' } } )}}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                  {{form_label(formInscription.paralelo)}}
+                                  {{form_widget(formInscription.paralelo,{'attr':{'onchange':'getTurno(this.value)','onchange':'getTurno(this.value)' } } )}}
+                              </div>
+                              <div class="col-md-6">
+                                  {{form_label(formInscription.turno)}}
+                                  {{form_widget(formInscription.turno)}}
+                              </div>
+                          </div>
+                          </br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger alert" role="alert">
+                                        <button type="button" class="close"  ><span aria-hidden="true"></span></button>
+                                        <strong>Importante!</strong> Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos.
+                                        <br>(Máximo 250 caracteres).
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{form_label(formInscription.observacionOmitido)}}
+                                    {{form_widget(formInscription.observacionOmitido )}}
+                                </div>
+                            </div>
+                          {{form_widget(formInscription.save, {'attr':{'class':'btn btn-primary'} }) }}
+                          {{form_end(formInscription)}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        
+      </div>
+
+    </div>
+
+
+    {%if currentInscription  | length >1 %}
+
+<div class="panel">
+    <div class="panel-heading">
+        <div class="pull-left">
+            <h3 class="panel-title">Información Inscripción</h3>
+        </div><!-- /.pull-left -->
+        <div class="pull-right">
+            <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+        </div><!-- /.pull-right -->
+        <div class="clearfix"></div>
+    </div><!-- /.panel-heading -->
+    <div class="panel-body" style="display: none;">
+            <table class="table table-bordered table-hover cf">
+                    <thead class="cf">
+                        <tr class="info">
+                            <th class="text-center">Gestión</th>
+                            <th class="text-center">Sie</th>
+                            <th class="text-center">Institución Educativa</th>
+                            <th class="text-center">Nivel</th>
+                            <th class="text-center">Grado</th>
+                            <th class="text-center">Paralelo</th>
+                            <th class="text-center">Turno</th>
+                            <th class="text-center">Est. Matrícula</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inscription in currentInscription%}
+                            <tr>
+
+                                <td data-title="Gestión">{{inscription.gestion}}</td>
+                                <td data-title="Sie">{{inscription.sie}}</td>
+                                <td data-title="Institución Educativa">{{inscription.institucioneducativa}}</td>
+                                <td data-title="Nivel">{{inscription.nivel}} </td>
+                                <td data-title="Grado">{{inscription.grado}}</td>
+                                <td data-title="Paralelo">{{inscription.paralelo}}</td>
+                                <td data-title="Turno">{{inscription.turno}} </td>
+                                <td data-title="Est. Matricula">{{inscription.estadoMatricula}}</td>
+                            </tr>
+                        {% endfor%}
+                    </tbody>
+                </table>
+            </div><!-- /.panel-body -->
+            </div>
+
+        
+    {%endif%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="" id="answerInscriptino">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('inscription_reza_omi_exten_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+    
+</div>
+<!-- the new end -->
+
+   
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        //call the ajax function by krlos
+        function institucionEducativa(id) {
+            gestionselected = $('#form_gestionIns').val();
+
+            if (id.length > 7) {
+
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_gestiones_pasadas_findIE', {'id': id, 'gestionselected': gestionselected}),
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_nivel").empty();
+                        $("#form_nivel").append('<option value="">Seleccionar</option>');
+                        $.each(data.aniveles, function (i, value) {
+                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_grado").empty();
+                        $("#form_paralelo").empty();
+                        $("#form_turno").empty();
+                    }
+                });
+            } else {
+
+                //$("#form_institucionEducativaName").val(data.nombre);
+                $("#form_nivel").empty();
+                $("#form_grado").empty();
+                $("#form_paralelo").empty();
+                $("#form_turno").empty();
+
+
+            }
+
+        }
+
+        function getGrado(idnivel) {
+
+            sie = $('#form_institucionEducativa').val();
+            gestionselected = $('#form_gestionIns').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_gestiones_pasadas_findgrado', {'idnivel': idnivel, 'sie': sie, 'gestionselected': gestionselected}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Seleccionar</option>');
+                    $.each(data.agrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+                }
+            });
+
+        }
+
+        function getParalelo(grado) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            gestionselected = $('#form_gestionIns').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_gestiones_pasadas_findparalelo', {'grado': grado, 'sie': sie, 'nivel': nivel, 'gestionselected': gestionselected}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.aparalelos, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+        function getTurno(paralelo) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            grado = $('#form_grado').val();
+            gestionselected = $('#form_gestionIns').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_gestiones_pasadas_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado, 'gestionselected': gestionselected}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+
+        var checkInscription = function (){
+
+          var sie = $('#form_institucionEducativa').val();
+          var nivel = $('#form_nivel').val();
+          var grado = $('#form_grado').val();
+          var paralelo = $('#form_paralelo').val();
+          var turno = $('#form_turno').val();
+          var obs = $('#form_observacionOmitido').val();
+
+          if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0 && obs.length > 0 ) {
+
+            formInscription = $('#formInscription').serialize();
+            $.ajax({
+              type: 'post',
+              data: formInscription,
+              url: "{{ path('inscription_reza_omi_exten_verificainscription') }}",
+              beforeSend: function(){
+                $('answerInscriptino').empty();
+                $('answerInscriptino').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+              },
+              success: function(data){
+                $('#answerInscriptino').empty();
+                $('#answerInscriptino').append(data);
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+
+
+            });
+            $('#form_save').attr("disabled", true);
+          }else{
+            alert('Necesita SIE, NIVEL, GRADO, PARALELO , TURNO Y JUSTIFICATIVO, para realizar la inscripción');
+            return false;
+          }
+
+        }
+
+        var saveNotasInscription = function (){
+            var enviar = true;
+            var mensaje = "";
+            $(".nota").each(function (index) {
+                if($(this).val() == 0 || $(this).val() == "" ){
+                    enviar = false;
+                    mensaje = "Las notas registradas no pueden estar vacias o estar en cero";
+                }
+            });
+
+            $(".cualitativas").each(function (index) {
+                if($(this).val().length < 15){
+                    enviar = false;
+                    if(mensaje == ""){
+                        mensaje = "Las notas cualitativas deben tener al menos 15 digitos";
+                    }
+                }
+            });
+            if(enviar == false){
+                alert(mensaje);
+            }
+            if(enviar == true){
+                formData = $('#formNotasInscription').serialize();
+                $.ajax({
+                   type: 'post',
+                   url: Routing.generate('inscription_reza_omi_exten_notasInscription'),
+                   data: formData,
+                   beforeSend: function () {
+                       $("#answerInscriptino").empty();
+                       $("#answerInscriptino").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                   },
+                   success: function (data) {
+                       $("#answerInscriptino").empty();
+                       $("#answerInscriptino").append(data);
+                       //location.reload(true);
+                   },
+                   statusCode: {
+                       500: function () {
+
+                       },
+                       404: function () {
+
+                       }
+                   }
+                });
+            }
+        };
+
+        function validarNota(e,id,nota){
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //NUmeros
+                && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+            )
+            return false;
+        }
+
+        function validarNota1(id,nota){
+
+                var grado = $('#idGrado').val();
+                var gestion = $('#idGestion').val();
+                if(gestion < 2013){
+                    if(nota<0){$('#'+id).val(0);}
+                    if(nota>70){$('#'+id).val(70);}
+                }else{
+                    if(gestion == 2013){
+                        if(grado == 1){
+                            if(nota<0){$('#'+id).val(0);}
+                            if(nota>100){$('#'+id).val(100);}
+                        }else{
+                            if(nota<0){$('#'+id).val(0);}
+                            if(nota>70){$('#'+id).val(70);}
+                        }
+                    }else{
+                        if(nota<0){$('#'+id).val(0);}
+                        if(nota>100){$('#'+id).val(100);}
+                    }
+                }
+
+        }
+
+        function validarNotaCualitativa(e,id,nota){
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 97 || k > 122)//letras minusculas
+                && (k < 65 || k > 90) //letras mayusculas
+                && (k < 48 || k > 57) //NUmeros
+                && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+                && (k != 241) //ñ
+                 && (k != 209) //Ñ
+                 && (k != 32) //espacio
+                 && (k != 225) //á
+                 && (k != 233) //é
+                 && (k != 237) //í
+                 && (k != 243) //ó
+                 && (k != 250) //ú
+                 && (k != 193) //Á
+                 && (k != 201) //É
+                 && (k != 205) //Í
+                 && (k != 211) //Ó
+                 && (k != 218) //Ú
+                 && (k != 44) //coma ,
+                 && (k != 46) //punto .
+                )
+            return false;
+        }
+
+    </script>
+
+
+{% endblock %}

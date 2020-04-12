@@ -403,3 +403,7 @@ sie_eliminar_doble_inscripcion:
 sie_regular_newForeign:
     resource: "@SieRegularBundle/Resources/config/routing/newForeign.yml"
     prefix:   /sie/newforeign
+
+sie_app_web_inscription_reza_omi_exten:
+    resource: "@SieRegularBundle/Resources/config/routing/inscriptionRezagoOmitidoExtenporaneo.yml"
+    prefix:   /sie/inscriptionStudentsOmi
