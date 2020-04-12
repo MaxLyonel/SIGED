@@ -399,3 +399,7 @@ sie_regular_data_transfer_installer:
 sie_eliminar_doble_inscripcion:
     resource: "@SieRegularBundle/Resources/config/routing/eliminarDobleInscripcion.yml"
     prefix:   /sie/eliminarDobleInscripcion
+
+sie_regular_newForeign:
+    resource: "@SieRegularBundle/Resources/config/routing/newForeign.yml"
+    prefix:   /sie/newforeign
