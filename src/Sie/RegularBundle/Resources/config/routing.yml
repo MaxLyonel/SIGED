@@ -399,3 +399,7 @@ sie_regular_data_transfer_installer:
 sie_eliminar_doble_inscripcion:
     resource: "@SieRegularBundle/Resources/config/routing/eliminarDobleInscripcion.yml"
     prefix:   /sie/eliminarDobleInscripcion
+
+sie_consulta_bono_familia:
+    resource: "@SieRegularBundle/Resources/config/routing/consultaBonoFamilia.yml"
+    prefix:   /consulta-bono-familia
