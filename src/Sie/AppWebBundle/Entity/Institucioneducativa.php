@@ -623,4 +623,8 @@ class Institucioneducativa
     {
         return $this->fechaFundacion;
     }
+
+    public function __toString() {
+        return $this->institucioneducativa;
+    }
 }
