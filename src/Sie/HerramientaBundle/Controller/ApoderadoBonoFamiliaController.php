@@ -17,7 +17,7 @@ use Sie\AppWebBundle\Entity\Persona;
 /**
  * Apoderado2020 Controller
  */
-class ApoderadoNuevoController extends Controller {
+class ApoderadoBonoFamiliaController extends Controller {
 
     public $session;
 
@@ -43,7 +43,7 @@ class ApoderadoNuevoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
-        return $this->render('SieHerramientaBundle:ApoderadoNuevo:index.html.twig', array(
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:index.html.twig', array(
             'idInscripcion'=>$idInscripcion,
             'inscripcion'=>$inscripcion
         ));
@@ -62,6 +62,14 @@ class ApoderadoNuevoController extends Controller {
         }
 
         $apoderados = $this->obtenerApoderados($inscripcion->getEstudiante()->getId());
+        $apoderados2019 = $apoderados['apoderados2019'];
+        $apoderados2020 = $apoderados['apoderados2020'];
+
+        if (count($apoderados2020) > 0) {
+            $apoderadoBonoFamilia = $apoderados2020[0];
+        }else{
+            $apoderadoBonoFamilia = '';
+        }
 
         $expedidos = $em->createQueryBuilder()
                         ->select('dt.id, dt.sigla')
@@ -146,7 +154,8 @@ class ApoderadoNuevoController extends Controller {
 
         return $response->setData([
             'status'=>'success',
-            'apoderados2020'=>$apoderados,
+            'apoderados2019'=>$apoderados2019,
+            'apoderadoBonoFamilia'=>$apoderadoBonoFamilia,
             'expedidos'=>$expedidos,
             'generos'=>$generos,
             'paises'=>$paises,
@@ -205,6 +214,7 @@ class ApoderadoNuevoController extends Controller {
                         ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
                         ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
                         ->where('ei.estudiante = :idEstudiante')
+                        ->andWhere('ai.esValidado = 1')
                         ->andWhere('p.segipId = 1')
                         ->setParameter('idEstudiante', $idEstudiante)
                         ->orderBy('ai.id','DESC')
@@ -212,17 +222,69 @@ class ApoderadoNuevoController extends Controller {
                         ->getResult();
         
         $arrayPersonas = [];
-        $arrayApoderados = [];
+        $arrayApoderados2019 = [];
+        $arrayApoderados2020 = [];
         foreach ($apoderados as $ap) {
             if (!in_array($ap['idPersona'], $arrayPersonas)) {
                 $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
                 $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
-                $arrayApoderados[] = $ap;
+                if ($ap['gestion'] == 2020) {
+                    $arrayApoderados2020[] = $ap;
+                }else{
+                    $arrayApoderados2019[] = $ap;
+                }
             }
             $arrayPersonas[] = $ap['idPersona'];
         }
 
-        return $arrayApoderados;
+        return array('apoderados2019'=>$arrayApoderados2019, 'apoderados2020'=>$arrayApoderados2020);
+    }
+
+    public function habilitarAction(Request $request){
+        $response = new JsonResponse();
+        $idApoderado = $request->get('idApoderado', null);
+        $idInscripcion = $request->get('idInscripcion', null);
+
+        if ($idApoderado == null || $idInscripcion == null) {
+            return $response->setData([
+                'status'=>'error',
+                'msg'=>'No se pudo validar el apoderado'
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $apoderadoInscripcion = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderado);
+        if (!is_object($apoderadoInscripcion)) {
+            return $response->setData([
+                'status'=>'error',
+                'msg'=>'No se pudo validar el apoderado'
+            ]);
+        }
+
+        $verificamosRegistroParecido = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
+            'apoderadoTipo'=>$apoderadoInscripcion->getApoderadoTipo()->getId(),
+            'persona'=>$apoderadoInscripcion->getPersona()->getId(),
+            'estudianteInscripcion'=>$idInscripcion,
+        ));
+
+        if (is_object($verificamosRegistroParecido)) {
+            $verificamosRegistroParecido->setEsValidado(1);
+            $em->flush();
+        }else{
+            $nuevoApoderado = new ApoderadoInscripcion();
+            $nuevoApoderado->setApoderadoTipo($apoderadoInscripcion->getApoderadoTipo());
+            $nuevoApoderado->setPersona($apoderadoInscripcion->getPersona());
+            $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+            $nuevoApoderado->setObs('');
+            $nuevoApoderado->setEsValidado(1);
+            $em->persist($nuevoApoderado);
+            $em->flush();
+        }
+
+        return $response->setData([
+            'status'=>'success',
+            'msg'=>'Apoderado habilitado exitosamente'
+        ]);
     }
 
     public function validarAction(Request $request){
@@ -302,7 +364,7 @@ class ApoderadoNuevoController extends Controller {
         // $validado = $validacion['validado'];
         
         // if($apoderado['carnet'] == '' or $apoderado['nombres'] == '' or $apoderado['fechaNacimiento'] == '' or $apoderado['expedido'] == '' or $apoderado['genero'] == '' or $apoderado['celular'] == '' or $apoderado['ocupacion'] == '' or $apoderado['instruccion'] == '' or $apoderado['parentesco'] == '' or $apoderado['extranjero'] == ''){
-        if($apoderado['carnet'] == '' or $apoderado['nombres'] == '' or $apoderado['fechaNacimiento'] == '' or $apoderado['expedido'] == '' or $apoderado['celular'] == '' or $apoderado['parentesco'] == '' or $apoderado['extranjero'] == ''){
+        if($apoderado['carnet'] == '' or $apoderado['nombres'] == '' or $apoderado['fechaNacimiento'] == '' or $apoderado['celular'] == '' or $apoderado['parentesco'] == '' or $apoderado['extranjero'] == ''){
             return $response->setData([
                 'status'=>'error',
                 'registrado'=>false,
@@ -327,16 +389,44 @@ class ApoderadoNuevoController extends Controller {
             ]);
 
             if (is_object($persona)) {
+
+                $datosAnteriores = array(
+                    'celular'=>$persona->getCelular(),
+                    'es_extranjero'=>$persona->getEsExtranjero(),
+                    'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                    'localidad_nac'=>$persona->getLocalidadNac(),
+                    'segip_id'=>$persona->getSegipId()
+                );
+
                 // ACTUALIZAMOS LOS DATOS DE LA PERSONA
                 if ($persona->getSegipId() == 0) {
                     $persona->setSegipId(1);
                 }
-                $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
+                // $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
                 $persona->setCelular($apoderado['celular']);
                 $persona->setEsExtranjero($apoderado['extranjero']);
                 $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
                 $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                 $em->flush();
+
+                $datosNuevos = array(
+                    'celular'=>$persona->getCelular(),
+                    'es_extranjero'=>$persona->getEsExtranjero(),
+                    'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                    'localidad_nac'=>$persona->getLocalidadNac(),
+                    'segip_id'=>$persona->getSegipId()
+                );
+
+                $this->get('funciones')->setLogTransaccion(
+                                        $persona->getId(),
+                                        'persona',
+                                        'U',
+                                        '',
+                                        $datosNuevos,
+                                        $datosAnteriores,
+                                        'Academico',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+
             }else{
                 // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS MENOS LA FECHA DE NACIMIENTO
                 $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy([
@@ -348,17 +438,48 @@ class ApoderadoNuevoController extends Controller {
                 ]);
 
                 if (is_object($persona)) {
+
+                    $fechaNacimiento = ($persona->getFechaNacimiento())?$persona->getFechaNacimiento()->format('d-m-Y'):'';
+
+                    $datosAnteriores = array(
+                        'fecha_nacimiento'=>$fechaNacimiento,
+                        'celular'=>$persona->getCelular(),
+                        'es_extranjero'=>$persona->getEsExtranjero(),
+                        'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                        'localidad_nac'=>$persona->getLocalidadNac(),
+                        'segip_id'=>$persona->getSegipId()
+                    );
+
                     // ACTUALIZAMOS LOS DATOS DE LA PERSONA
                     if ($persona->getSegipId() == 0) {
                         $persona->setSegipId(1);
                     }
                     $persona->setFechaNacimiento(new \DateTime($apoderado['fechaNacimiento']));
-                    $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
+                    // $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
                     $persona->setCelular($apoderado['celular']);
                     $persona->setEsExtranjero($apoderado['extranjero']);
                     $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
                     $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                     $em->flush();
+
+                    $datosAnteriores = array(
+                        'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
+                        'celular'=>$persona->getCelular(),
+                        'es_extranjero'=>$persona->getEsExtranjero(),
+                        'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                        'localidad_nac'=>$persona->getLocalidadNac(),
+                        'segip_id'=>$persona->getSegipId()
+                    );
+
+                    $this->get('funciones')->setLogTransaccion(
+                                            $persona->getId(),
+                                            'persona',
+                                            'U',
+                                            '',
+                                            $datosNuevos,
+                                            $datosAnteriores,
+                                            'Academico',
+                                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
 
                 }else{
                     // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS MENOS EL COMPLEMENTO
@@ -371,17 +492,46 @@ class ApoderadoNuevoController extends Controller {
                     ]);
 
                     if (is_object($persona)) {
+
+                        $datosAnteriores = array(
+                            'complemento'=>$persona->getComplemento(),
+                            'celular'=>$persona->getCelular(),
+                            'es_extranjero'=>$persona->getEsExtranjero(),
+                            'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                            'localidad_nac'=>$persona->getLocalidadNac(),
+                            'segip_id'=>$persona->getSegipId()
+                        );
+
                         // ACTUALIZAMOS LOS DATOS DE LA PERSONA
                         if ($persona->getSegipId() == 0) {
                             $persona->setSegipId(1);
                         }
                         $persona->setComplemento(mb_strtoupper($apoderado['complemento'], 'utf-8'));
-                        $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
+                        // $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($apoderado['expedido']));
                         $persona->setCelular($apoderado['celular']);
                         $persona->setEsExtranjero($apoderado['extranjero']);
                         $persona->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($apoderado['pais']));
                         $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                         $em->flush();
+
+                        $datosNuevos = array(
+                            'complemento'=>$persona->getComplemento(),
+                            'celular'=>$persona->getCelular(),
+                            'es_extranjero'=>$persona->getEsExtranjero(),
+                            'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                            'localidad_nac'=>$persona->getLocalidadNac(),
+                            'segip_id'=>$persona->getSegipId()
+                        );
+
+                        $this->get('funciones')->setLogTransaccion(
+                                                $persona->getId(),
+                                                'persona',
+                                                'U',
+                                                '',
+                                                $datosNuevos,
+                                                $datosAnteriores,
+                                                'Academico',
+                                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
 
                     }else{
                         // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS SOLO CON EL CARNET
@@ -390,6 +540,7 @@ class ApoderadoNuevoController extends Controller {
                         ]);
                         
                         if (is_object($persona)) {
+
                             if ($persona->getSegipId() == 1) {
                                 // SI EL NUMERO DE CARNET YA ESTA OCUPADO Y EL REGISTRO EN LA BASE DE DATOS TIENE VALIDACION SEGIP 1
                                 // MANDAMOS UN MENSAJE INDICANDO QUE EL USUARIO SE COMUNIQUE CON EL MINISTERIO DE EDUCACION O CON EL SEGIP
@@ -399,9 +550,27 @@ class ApoderadoNuevoController extends Controller {
                                     'msg'=>'No se pudo realizar el regsitro, el número de carnet ya esta registrado con otros datos, comuniquese con el Ministerio de Educación o con el Segip para solucionar el problema'
                                 ]);
                             }
+
+                            $datosAnteriores = array(
+                                'carnet'=>$persona->getCarnet()
+                            );
                             
                             $persona->setCarnet($persona->getCarnet().'±');
                             $em->flush();
+
+                            $datosNuevos = array(
+                                'carnet'=>$persona->getCarnet()
+                            );
+
+                            $this->get('funciones')->setLogTransaccion(
+                                                    $persona->getId(),
+                                                    'persona',
+                                                    'U',
+                                                    '',
+                                                    $datosNuevos,
+                                                    $datosAnteriores,
+                                                    'Academico',
+                                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
                                 
                         }
 
@@ -427,6 +596,35 @@ class ApoderadoNuevoController extends Controller {
                         $persona->setLocalidadNac(mb_strtoupper($apoderado['lugar'], 'utf-8'));
                         $em->persist($persona);
                         $em->flush();
+
+                        $datosNuevos = array(
+                            'idioma_materno'=>$persona->getIdiomaMaterno()->getId(),
+                            'genero_tipo'=>$persona->getGeneroTipo()->getId(),
+                            'sangre_tipo'=>$persona->getSangreTipo()->getId(),
+                            'estado_civil'=>$persona->getEstadocivilTipo()->getId(),
+                            'carnet'=>$persona->getCarnet(),
+                            'complemento'=>$persona->getComplemento(),
+                            'celular'=>$persona->getCelular(),
+                            'rda'=>$persona->getRda(),
+                            'paterno'=>$persona->getPaterno(),
+                            'materno'=>$persona->getMaterno(),
+                            'nombre'=>$persona->getNombre(),
+                            'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
+                            'segip_id'=>$persona->getSegipId(),
+                            'es_extranjero'=>$persona->getEsExtranjero(),
+                            'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                            'localidad_nac'=>$persona->getLocalidadNac()
+                        );
+
+                        $this->get('funciones')->setLogTransaccion(
+                                                $persona->getId(),
+                                                'persona',
+                                                'C',
+                                                '',
+                                                $datosNuevos,
+                                                '',
+                                                'Academico',
+                                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
                     }
                 }
             }
@@ -455,7 +653,7 @@ class ApoderadoNuevoController extends Controller {
                 $idApoderadoInscripcion = $newApoderadoInscripcion->getId();
             }else{
 
-                if ($apoderadoInscripcion->getApoderadoTipo()->getId() == $apoderado['parentesco']) {
+                // if ($apoderadoInscripcion->getApoderadoTipo()->getId() == $apoderado['parentesco']) {
                     // ACTUALIZAMOS LA RELACION APODERADO ESTUDIANTE
                     $apoderadoInscripcion->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($apoderado['parentesco']));
                     $apoderadoInscripcion->setPersona($persona);
@@ -464,13 +662,13 @@ class ApoderadoNuevoController extends Controller {
                     $em->flush();
 
                     $idApoderadoInscripcion = $apoderadoInscripcion->getId();
-                }else{
-                    return $response->setData([
-                        'status'=>'error',
-                        'registrado'=>false,
-                        'msg'=>'La persona ya fue registrada como apoderado'
-                    ]);
-                }
+                // }else{
+                //     return $response->setData([
+                //         'status'=>'error',
+                //         'registrado'=>false,
+                //         'msg'=>'La persona ya fue registrada como apoderado'
+                //     ]);
+                // }
             }
 
             // $apoderadoInscripcionDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array(
@@ -529,12 +727,15 @@ class ApoderadoNuevoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $apoderadoInscripcion = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderado);
         if (is_object($apoderadoInscripcion)) {
-            $apoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array('apoderadoInscripcion'=>$apoderadoInscripcion->getId()));
-            if (is_object($apoderadoDatos)) {
-                $em->remove($apoderadoDatos);
-                $em->flush();
-            }
-            $em->remove($apoderadoInscripcion);
+            // $apoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array('apoderadoInscripcion'=>$apoderadoInscripcion->getId()));
+            // if (is_object($apoderadoDatos)) {
+            //     $em->remove($apoderadoDatos);
+            //     $em->flush();
+            // }
+            // $em->remove($apoderadoInscripcion);
+            // $em->flush();
+            
+            $apoderadoInscripcion->setEsValidado(0);
             $em->flush();
 
             return $response->setData([

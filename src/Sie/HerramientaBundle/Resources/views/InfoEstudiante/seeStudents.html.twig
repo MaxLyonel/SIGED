@@ -226,6 +226,15 @@
                                         </div>
                                     {% endif %}
 
+                                    {# APODERADO BONO FAMILIA #}
+                                    {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
+                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                                <i class="fa fa-user"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+
                                     {# AREAS ESTUDIANTE #}
                                     {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
@@ -596,6 +605,38 @@
             type: 'post',
             data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
             url: "{{ path('apoderado_nuevo_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var apoderadoBonoFamilia = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('apoderado_bono_familia_index') }}",
             beforeSend: function () {
                 $('#modal').empty();
                 $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');

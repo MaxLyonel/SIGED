@@ -22,6 +22,9 @@
 		font-style: italic !important;
 		color: #CCCCCC;
 	}
+	.table{
+		margin-bottom: 10px;
+	}
 	.datos{
 		background: #FFFFFF;
 		border-left: 2px #EEEEEE solid;
@@ -93,6 +96,34 @@
 		list-style: square inside;
 		padding-left: 30px;
 	}
+	.tarjeta{
+		width: 100%;
+		border: 1px solid #d7e9c3;
+		margin-bottom: 10px;
+		background: #EEEEEE;
+	}
+	.tarjeta-head{
+		padding: 10px;
+		font-weight: bold;
+		/*background: #d7e9c3;*/
+		color: #587f2e;
+	}
+	.tarjeta-head h3{
+		padding: 0px;
+		margin: 0px;
+	}
+	.tarjeta-body{
+		font-size: 1.1em;
+		padding: 7px;
+		/*background: #d7e9c3;*/
+	}
+	.tarjeta-body label{
+		font-weight: bold;
+	}
+
+	.tarjeta-success{
+		background: #E4ECDB;
+	}
 </style>
 <div class="modal-dialog modal-lg">
 	<div class="modal-content" style="height: 90%;">
@@ -100,60 +131,154 @@
 		<div v-cloak>
 			<div class="modal-header bg-primary">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Apoderados</h4>
+				<h4 class="modal-title">Habilitar apoderado para realizar el cobro del Bono Familia</h4>
 			</div>
 			<div class="modal-body">
-				<h5 style="padding-top: 0px !important;">Datos del estudiante</h5>
-				<div class="row">
-					<div class="col-md-12">
-						<table class="table table-bordered table-condensed">
-							<tbody>
-								<tr><th width="120px">Código RUDE</th><td>{{inscripcion.estudiante.codigoRude}}</td></tr>
-								<tr><th>Estudiante</th><td>{{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}} {{inscripcion.estudiante.nombre}}</td></tr>
-								<tr><th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td></tr>
-								<tr><th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td></tr>
-								<tr><th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td></tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+				
+        		<table class="table table-bordered table-condensed">
+					<tbody>
+						<tr><th width="120px">Código RUDE</th><td>{{inscripcion.estudiante.codigoRude}}</td></tr>
+						<tr><th>Estudiante</th><td>{{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}} {{inscripcion.estudiante.nombre}}</td></tr>
+						<tr><th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td></tr>
+						<tr><th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td></tr>
+						<tr><th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td></tr>
+					</tbody>
+				</table>
+				      		
 				<div v-show="!formulario">
-					<h5>Apoderados registrados</h5>
-					<div v-if="apoderados2020.length > 0">
-						<table class="table bordered">
-							<thead>
-								<tr>
-									<th></th>
-									<th>Paterno</th>
-									<th>Materno</th>
-									<th>Nombre</th>
-									<th>Fecha de Nacimiento</th>
-									<th>Parentesco</th>
-									<th>Gestión</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(apoderado, key) in apoderados2020" :key="key">
-									<td>
-										<div class="opciones">
-											<button type="button" @click="verApoderadoDatos(apoderado)" class="btn btn-info btn-sm">Ver datos</button>
-											{# <a type="button" @click="eliminar(apoderado.id)" class="text-danger">Eliminar</a> #}
-										</div>
-									</td>
-									<td>${apoderado.paterno}</td>
-									<td>${apoderado.materno}</td>
-									<td>${apoderado.nombres}</td>
-									<td>${apoderado.fechaNacimiento}</td>
-									<td><b>${apoderado.parentescoText}</b></td>
-									<td>${apoderado.gestion}</td>
-								</tr>
-							</tbody>
-						</table>
+					<div v-if="generos.length == 0" class="text-center">
+						{# <i class="fa fa-refresh fa-2x fa-spin"></i> Cargando... #}
+						<img src="{{asset("img/loading.gif")}}"><br>Cargando...
 					</div>
-					<div v-else class="opciones">No tiene apoderados registrados</div>
-					<div class="text-right" style="margin-top:15px;">
-						<button type="button" @click="abrirFormulario()" class="btn btn-primary">Registrar apoderado</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+
+					<div v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
+						<div class="alert alert-info">
+							<i class="fa fa-info-circle"></i> No se tiene habilitado un apoderado para realizar el cobro. <br>
+							<div v-show="apoderados2019.length > 0"><b>Nota:</b> Se identificarón apoderados registrados, puede habilitar uno de ellos o registrar un nuevo apoderado para que pueda realizar el cobro del bono familia.</div>
+						</div>
+						<div class="row">
+							<div v-for="(apoderado, key) in apoderados2019" :key="key" class="col-md-6">
+								<div class="tarjeta">
+									<div class="tarjeta-head">
+										<h3>${apoderado.nombres} ${apoderado.paterno} ${apoderado.materno}</h3>
+									</div>
+									<div class="tarjeta-body">
+										<div class="row">
+											<div class="col-md-4">
+												<label>Carnet</label>
+												<p>${apoderado.carnet}</p>
+											</div>
+											<div class="col-md-4">
+												<label>Complemento</label>
+												<p>${apoderado.complemento}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<label>Fecha de nacimiento</label>
+												<p>${apoderado.fechaNacimiento}</p>
+											</div>
+											<div class="col-md-6">
+												<label>Pais de nacimiento</label>
+												<p>${apoderado.paisText}</p>
+											</div>
+											<div class="col-md-12">
+												<label>Lugar de nacimiento</label>
+												<p>${apoderado.lugar}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">
+												<label>Celular</label>
+												<p>${apoderado.celular}</p>
+											</div>
+											<div class="col-md-4">
+												<label>¿Es extranjero?</label>
+												<p>
+													<span v-if="apoderado.extranjero == 1">No</span>
+													<span v-if="apoderado.extranjero == 2">Si</span>
+												</p>
+											</div>
+											<div class="col-md-4">
+												<label>Parentesco</label>
+												<p>${apoderado.parentescoText}</p>
+											</div>
+										</div>
+										<button type = "button" @click="habilitarApoderado(apoderado)" class="btn btn-info btn-block"> <i class="fa fa-check"></i> Habilitar para realizar cobro</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="tarjeta">
+									<button type="button" @click="abrirFormulario()" class="btn btn-primary btn-block">
+										<i class="fa fa-plus fa-3x"></i> <br>
+										Registrar nuevo apoderado
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div v-if="generos.length > 0 && apoderadoBonoFamilia != ''">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="alert alert-success">
+									<p> <i class="fa fa-check-circle"></i> Apoderado habilitado para realizar el cobro del bono familia</p>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="tarjeta tarjeta-success">
+									<div class="tarjeta-head">
+										<h3> ${apoderadoBonoFamilia.nombres} ${apoderadoBonoFamilia.paterno} ${apoderadoBonoFamilia.materno}</h3>
+									</div>
+									<div class="tarjeta-body">
+										<div class="row">
+											<div class="col-md-4">
+												<label>Carnet</label>
+												<p>${apoderadoBonoFamilia.carnet}</p>
+											</div>
+											<div class="col-md-4">
+												<label>Complemento</label>
+												<p>${apoderadoBonoFamilia.complemento}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<label>Fecha de nacimiento</label>
+												<p>${apoderadoBonoFamilia.fechaNacimiento}</p>
+											</div>
+											<div class="col-md-6">
+												<label>Pais de nacimiento</label>
+												<p>${apoderadoBonoFamilia.paisText}</p>
+											</div>
+											<div class="col-md-12">
+												<label>Lugar de nacimiento</label>
+												<p>${apoderadoBonoFamilia.lugar}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">
+												<label>Celular</label>
+												<p>${apoderadoBonoFamilia.celular}</p>
+											</div>
+											<div class="col-md-4">
+												<label>¿Es extranjero?</label>
+												<p>
+													<span v-if="apoderadoBonoFamilia.extranjero == 1">No</span>
+													<span v-if="apoderadoBonoFamilia.extranjero == 2">Si</span>
+												</p>
+											</div>
+											<div class="col-md-4">
+												<label>Parentesco</label>
+												<p>${apoderadoBonoFamilia.parentescoText}</p>
+											</div>
+										</div>
+									</div>
+									<div class="tarjeta-footer">
+										<button type="button" class="btn btn-default btn-block" @click="eliminar(apoderadoBonoFamilia.id)">Eliminar</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div v-show="formulario">
@@ -166,13 +291,17 @@
 							</div>
 							<div class="form-group col-md-3">
 								<label>Complemento</label>
-								<input v-model="apoderado.complemento" type="text" class="form-control jupper" maxlength="2">
+								<input v-model="apoderado.complemento" type="text" class="form-control jupper" maxlength="2" data-toggle="popover" data-placement="top" data-content="El complemento consta de dos dígitos que se usa para diferenciar números de carnet idénticos. No se refiere al lugar de expedición" data-trigger="focus">
 							</div>
-							<div class="form-group col-md-3">
+							{# <div class="form-group col-md-3">
 								<label>Expedido <span class="requerido">*</span></label>
 								<select v-model="apoderado.expedido" class="form-control jupper">
 									<option v-for="(expedido, key) in expedidos" :key="key" :value="expedido.id" v-text="expedido.sigla"></option>
 								</select>
+							</div> #}
+							<div class="form-group col-md-4">
+								<label>Nombres <span class="requerido">*</span></label>
+								<input v-model="apoderado.nombres" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
 							</div>
 							<div class="form-group col-md-4">
 								<label>Paterno <span class="requerido">*</span></label>
@@ -181,10 +310,6 @@
 							<div class="form-group col-md-4">
 								<label>Materno <span class="requerido">*</span></label>
 								<input v-model="apoderado.materno" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
-							</div>
-							<div class="form-group col-md-4">
-								<label>Nombres <span class="requerido">*</span></label>
-								<input v-model="apoderado.nombres" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
 							</div>
 							<div class="form-group col-md-6">
 								<label>Fecha nacimiento <span class="opciones">( dd-mm-aaaa ) </span> <span class="requerido"> * </span></label>
@@ -275,100 +400,6 @@
 					</div>
 
 				</div>
-				<div v-if="verdatos && apoderadoDatos != ''" class="datos">
-					<h3 style="padding-top: 0px;">
-						${apoderadoDatos.paterno} ${apoderadoDatos.materno} ${apoderadoDatos.nombres}
-						<span style="float:right"> <i class="fa fa-close" @click="verdatos = false"></i> </span>
-					</h3>
-					<div class="row">
-						<div class="col-md-12">
-							<p class="parentesco">${apoderadoDatos.parentescoText}</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<label>Carnet</label>
-							<p>${apoderadoDatos.carnet}</p>
-						</div>
-						<div class="col-md-3">
-							<label>Complemento</label>
-							<p>${apoderadoDatos.complemento}</p>
-						</div>
-						<div class="col-md-3">
-							<label>Expedido</label>
-							<p>${apoderadoDatos.expedidoText}</p>
-						</div>
-						{# <div class="col-md-4">
-							<label>Paterno</label>
-							<p>${apoderadoDatos.paterno}</p>
-						</div>
-						<div class="col-md-4">
-							<label>Materno</label>
-							<p>${apoderadoDatos.materno}</p>
-						</div>
-						<div class="col-md-4">
-							<label>Nombre(s)</label>
-							<p>${apoderadoDatos.nombre}</p>
-						</div> #}
-						<div class="col-md-6">
-							<label>Fecha de nacimiento</label>
-							<p>${apoderadoDatos.fechaNacimiento}</p>
-						</div>
-						{# <div class="col-md-6">
-							<label>Género</label>
-							<p>${apoderadoDatos.generoText}</p>
-						</div> #}
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<label>Pais de nacimiento</label>
-							<p>${apoderadoDatos.paisText}</p>
-						</div>
-						<div class="col-md-8">
-							<label>Lugar de nacimiento</label>
-							<p>${apoderadoDatos.lugar}</p>
-						</div>
-					</div>
-					<div class="row">
-						{# <div class="col-md-4">
-							<label>Correo</label>
-							<p>${apoderadoDatos.correo}</p>
-						</div> #}
-						{# <div class="col-md-4">
-							<label>Teléfono</label>
-							<p>${apoderadoDatos.telefono}</p>
-						</div> #}
-						<div class="col-md-6">
-							<label>Celular</label>
-							<p>${apoderadoDatos.celular}</p>
-						</div>
-					{# </div>
-					<div class="row"> #}
-						{# <div class="col-md-12">
-							<label>Ocupación laboral actual</label>
-							<p v-if="apoderadoDatos.ocupacion != 10035">${apoderadoDatos.ocupacionText}</p>
-							<p v-else>${apoderadoDatos.ocupacionOtro}</p>
-						</div> #}
-					{# </div>
-					<div class="row"> #}
-						{# <div class="col-md-6">
-							<label>Mayor grado de instrucción alcanzado</label>
-							<p>${apoderadoDatos.instruccionText}</p>
-						</div> #}
-						<div class="col-md-6">
-							<label>Extranjero</label>
-							<p v-if="apoderadoDatos.extranjero == 2">SI</p>
-							<p v-else>NO</p>
-						</div>
-					</div>
-					<div v-if="apoderadoDatos.gestion == 2020" class="row">
-						<div class="col-md-12 text-right" style="padding-top: 5px; margin-top:5px; border-top:1px solid #EEEEEE">
-							{# <a type="button" @click="actualizar(apoderadoDatos)" class="btn btn-primary">Actualizar</a> #}
-							{# <a type="button" @click="abrirFormulario(apoderadoDatos.parentesco)" class="btn btn-primary">Cambiar apoderado</a> #}
-							<a type="button" @click="eliminar(apoderadoDatos.id)" class="btn btn-danger">Eliminar</a>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 		</div>
@@ -380,6 +411,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script> #}
 <script src="{{asset('js/inputmask.js')}}"></script>
 <script>
+	
+	$(function () {
+	  	// $('[data-toggle="popover"]').popover()
+	})
 	
 	$('.numeros').on('keypress',function(e){
         console.log('carnet');
@@ -400,9 +435,9 @@
 	    	formulario: false,
 	    	validado: false,
 	    	validando: false,
-	    	verdatos: false,
 	    	idInscripcion: '{{idInscripcion}}',
-	    	apoderados2020: '',
+	    	apoderados2019: '',
+	    	apoderadoBonoFamilia: '',
 	    	errores: [],
 	    	gestion: '',
 	    	apoderado: {
@@ -425,7 +460,6 @@
 	    		parentesco: '',
 	    		extranjero: ''
 	    	},
-	    	apoderadoDatos: '',
 	    	apoderadoTipo: '',
 	    	expedidos: [],
 	    	generos: [],
@@ -442,6 +476,7 @@
 	    	this.cargar();
 	    	var selector = document.getElementById("fecha");
 	    	Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "dd-mm-yyyy", inputEventOnly: true}).mask(selector);
+	    	$('[data-toggle="popover"]').popover();
 	    },
 	    methods: {
 	    	numerico: function(event){
@@ -511,10 +546,11 @@
                 }
             },
 	    	cargar(){
-	    		axios.get(Routing.generate('apoderado_nuevo_apoderados', {idInscripcion: this.idInscripcion}))
+	    		axios.get(Routing.generate('apoderado_bono_familia_apoderados', {idInscripcion: this.idInscripcion}))
 	    			.then(response => {
 	    				console.log(response.data);
-	    				this.apoderados2020 = response.data.apoderados2020;
+	    				this.apoderados2019 = response.data.apoderados2019;
+	    				this.apoderadoBonoFamilia = response.data.apoderadoBonoFamilia;
 	    				this.expedidos = response.data.expedidos;
 	    				this.generos = response.data.generos;
 	    				this.paises = response.data.paises;
@@ -530,10 +566,44 @@
 	    				console.log(e);
 	    			});
 	    	},
-	    	verApoderadoDatos(apoderado, gestion){
-	    		this.apoderadoDatos = apoderado;
-	    		this.verdatos = true;
-	    		this.gestion = gestion;
+	    	habilitarApoderado(apoderado){
+	    		Swal.fire({
+	    		  	title: 'Habilitar apoderado',
+	    		  	html: 'Se habilitará a '+ apoderado.paterno + ' ' + apoderado.materno + ' ' + apoderado.nombres + ' para realizar el cobro del bono familia. ¿Esta seguro de habilitar al apoderado?' ,
+	    		  	type: 'question',
+	    		  	showCancelButton: true,
+	    		  	confirmButtonColor: '#3085d6',
+	    		  	cancelButtonColor: '#d33',
+	    		  	confirmButtonText: 'Si, habilitar',
+	    		  	cancelButtonText: 'No, cancelar'
+	    		}).then((result) => {
+	    		  	if (result.value) {
+			    		this.validando = true;
+			    		axios.post(Routing.generate('apoderado_bono_familia_habilitar', {idApoderado: apoderado.id, idInscripcion: this.idInscripcion}))
+			    			.then(response => {
+			    				this.validando = false;
+			    				if (response.data.status == 'success') {
+			    					Swal.fire(
+    		  					  		'Habilitado!',
+    		  					  		response.data.msg,
+    		  					  		'success'
+    		  						)
+			    					this.cargar();
+			    				}
+			    				if (response.data.status == 'error') {
+		    						Swal.fire(
+		    					  		'Aviso!',
+		    					  		response.data.msg,
+		    					  		'warning'
+		    						)
+			    				}
+			    			})
+			    			.catch(e => {
+			    				this.validando = false;
+			    				console.log(e);
+			    			});
+	    		  	}
+	    		});
 	    	},
 	    	limpiarFormulario(){
 	    		this.apoderado.carnet = '';
@@ -585,9 +655,9 @@
 	    		if (this.apoderado.carnet == '') {
 	    			this.errores.push('Carnet');
 	    		}
-	    		if (this.apoderado.expedido == '') {
-	    			this.errores.push('Expedido');
-	    		}
+	    		// if (this.apoderado.expedido == '') {
+	    		// 	this.errores.push('Expedido');
+	    		// }
 	    		if (this.apoderado.nombres == '') {
 	    			this.errores.push('Nombres');
 	    		}
@@ -606,7 +676,7 @@
 	    		
 	    		if (this.errores.length == 0) {
 		    		this.validando = true;
-		    		axios.post(Routing.generate('apoderado_nuevo_validar', {apoderado: this.apoderado}))
+		    		axios.post(Routing.generate('apoderado_bono_familia_validar', {apoderado: this.apoderado}))
 		    			.then(response => {
 		    				this.validando = false;
 		    				if (response.data.status == 'success') {
@@ -642,9 +712,9 @@
 	    		if (this.apoderado.carnet == '') {
 	    			this.errores.push('Carnet');
 	    		}
-	    		if (this.apoderado.expedido == '') {
-	    			this.errores.push('Expedido');
-	    		}
+	    		// if (this.apoderado.expedido == '') {
+	    		// 	this.errores.push('Expedido');
+	    		// }
 	    		if (this.apoderado.nombres == '') {
 	    			this.errores.push('Nombres');
 	    		}
@@ -668,9 +738,10 @@
 	    		// }
 	    		if (this.apoderado.celular == '') {
 	    			this.errores.push('Celular');
-	    		}
-	    		if (this.apoderado.celular.length < 8) {
-	    			this.errores.push('Celular - Número no válido');
+	    		}else{
+		    		if (this.apoderado.celular.length < 8) {
+		    			this.errores.push('Celular - Número no válido');
+		    		}
 	    		}
 	    		// if (this.apoderado.ocupacion == '') {
 	    		// 	this.errores.push('Ocupación laboral actual');
@@ -688,7 +759,7 @@
 	    		}
 
 	    		if (this.errores.length == 0) {
-		    		axios.post(Routing.generate('apoderado_nuevo_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
+		    		axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
 		    			.then(response => {
 		    				if (response.data.status == 'success') {
 		    					this.cargar();
@@ -742,7 +813,7 @@
 	    		  	confirmButtonText: 'Si, eliminar'
 	    		}).then((result) => {
 	    		  	if (result.value) {
-	    		  		axios.post(Routing.generate('apoderado_nuevo_eliminar', {idApoderado: id}))
+	    		  		axios.post(Routing.generate('apoderado_bono_familia_eliminar', {idApoderado: id}))
 	    		  			.then(response => {
 	    		  				if (response.data.status == 'success') {
 	    		  					this.cargar();

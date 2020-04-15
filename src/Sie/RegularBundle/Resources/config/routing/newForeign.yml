@@ -1,0 +1,59 @@
+newForeign_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:index }
+    options:
+         expose: true
+
+newForeign_checksegipstudent:
+    path:     /checksegipstudent
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:checksegipstudent }
+    options:
+         expose: true
+  
+newForeign_getdepto:
+    path:     /getdepto
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:getdepto }
+    options:
+         expose: true
+  
+newForeign_getprovincia:
+    path:     /getprovincia
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:getprovincia }
+    options:
+         expose: true
+  
+newForeign_getInfoUe:
+    path:     /getInfoUe
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:getInfoUe }
+    options:
+         expose: true
+  
+newForeign_setGrado:
+    path:     /setGrado
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:setGrado }
+    options:
+         expose: true
+  
+newForeign_setParalelo:
+    path:     /setParalelo
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:setParalelo }
+    options:
+         expose: true
+  
+newForeign_setTurno:
+    path:     /setTurno
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:setTurno }
+    options:
+         expose: true
+  
+newForeign_doInscriptionExt:
+    path:     /doInscriptionExt
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:doInscriptionExt }
+    options:
+         expose: true
+  
+newForeign_gohomonimo:
+    path:     /gohomonimo
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:gohomonimo }
+    options:
+         expose: true  

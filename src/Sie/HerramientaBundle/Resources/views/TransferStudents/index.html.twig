@@ -1,0 +1,241 @@
+
+{#
+{% extends 'layoutHerramienta.html.twig' %}
+#}
+{% block contentoption %}
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i>  <span></span></h2>
+        {#
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Estudiantes con Retiro Traslado</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Buscar</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+#}
+
+    <!-- /.row -->
+<div id="app">
+<div v-cloak>
+	<!-- <div class="body-content animated fadeIn"> -->
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong>  se identificará a los Estudiantes que fueron inscritos en otra Unidad Educativa
+                        <strong> </strong>
+                        <div class="pull-right">
+                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
+                        </div>                                        
+                    </div>
+                   
+                    <div class="panel-body">
+                        <!-- form to search student -->
+
+                        <form class="form-inline">
+						 
+						  <div class="form-group mx-sm-3 mb-2">
+						    <label for="inputsie" class="sr-only">SIE</label>
+						    <input type="text" class="form-control" placeholder="SIE" v-model="objData.sie" value="objData.sie"> 
+						  </div>
+					
+						  <button v-on:click="lookforstudents()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+						</form>
+
+                        	<div v-if="buscando" class="text-center">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                            </div>						
+                       
+						<div v-if="objData.response"> 
+							<div class="table-responsive">
+		                        <table class="table table-striped">
+								  <tbody>
+								  	<tr>
+								  		<th>#</th>
+								  		<!-- <th colspan="6">Información de la busqueda</th> -->
+								  		 <th>Cod. RUDE</th>
+										      <th>CI-COMPLEMENTO.</th>
+										      <th>Paterno</th>
+										      <th>Materno</th>
+										      <th>Nombre(s)</th>
+										      <th colspan="2">Unidad Educativa Actual</th>
+										      <!-- <th>Fecha Nacimiento</th> -->
+
+								  	</tr>
+								  	
+								    
+								    <tr v-for="(student,rindex) in DBstudent">
+								      <td>${ rindex }</td>
+								     
+						      			<td>${student.codigoRude | uppercase}</td>
+									    <td>${student.carnetIdentidad} ${DBstudent.complemento}</td>
+									    <td>${student.paterno | uppercase}</td>
+									    <td>${student.materno | uppercase}</td>
+									    <td>${student.nombre | uppercase}</td>
+									    <td>${student.sieCurrent}</td>
+									    <td>${student.sieCurrentName}</td>
+									    {#<td>${student.fechaNacimiento}</td>#}
+						      		 
+
+		{#
+								      <td colspan="6" >
+
+								      	<table border="1"  style="width: 100%;">
+								      		<tbody>
+										    <tr>
+										  	  
+										  	 	
+										  	</tr>
+								      		
+								      		
+								      		<tr>
+											    <th>UE. Anterior:</th>
+											    
+											    <td>
+											    	${student.sieOld}
+											    	${student.sieOldName}
+											    </td>
+											    <td>
+											    	<strong>Estado Matrícula:</strong>
+											    ${student.matriculaOld}</td>
+											    <td>
+											    	${student.nivel} 
+											    	${student.grado}    	
+											    </td>
+											  </tr>
+											  <tr>
+											     <th>UE. Actual:</th>
+											     <td>
+											     	${student.sieCurrent}
+											     	${student.sieCurrentName}
+											     </td>
+											     <td>
+											     	<strong>Estado Matrícula:</strong>
+											     ${student.matriculaCurrent}</td>
+											  </tr>
+											 
+								      		<tbody>
+								      	</table>
+								     
+								      	
+								      </td> #}
+
+								    </tr>
+		 
+								  </tbody>
+								</table>
+								</div>
+						</div>
+
+                       
+                            
+                            
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+	
+</div>
+</div>
+
+{% endblock %}
+{% block javascripts%}
+    
+    <script type="text/javascript">
+		// $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+	</script>
+	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+      <script src="{{asset('js/inputmask.js')}}"></script>
+    <script type="text/javascript">
+// $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+    
+    Vue.filter('uppercase', function (value) {
+    	if (typeof value === "undefined") 
+			return '';
+		else
+			return value.toUpperCase()
+	})
+
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+
+            /*components: {
+			  	vuejsDatepicker
+			  },*/
+
+            data: {
+            	objData:{'sie':'{{sie}}','response':false },
+            	buscando:false,
+            	DBstudent: {},
+
+            	
+               
+            },
+            methods: {
+            	lookforstudents: function(){
+            		 this.buscando = true;
+            		 this.objData.response = false;
+            		 this.DBstudent = false;
+            		 if (typeof this.objData.sie=== "undefined") {
+	        				Swal.fire(
+		                        'Código SIE es requerido',
+		                        'Debe ingresar un Código SIE',
+		                        'warning'
+		                        );
+	        				this.buscando = false;
+		                    return;
+						} 	
+            		
+                    axios.get(Routing.generate('transferstudents_lookforStudents', this.objData ))
+                    .then(response => {
+                        if (response.status == 200) {
+                        	this.responseprocess = response.data.swcreatestudent;
+                        	this.message = response.data.message;
+                        	this.DBstudent = response.data.arrStudents;
+                        	this.objData.response = response.data.swprocessue;
+
+                        }    
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });            		
+            	},
+
+                              
+
+            },
+            mounted(){
+               
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+   
+
+
+    </script>
+{%endblock%}
