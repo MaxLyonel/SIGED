@@ -78,7 +78,7 @@ class InstitucioneducativaRepository extends EntityRepository {
     public function getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
-                ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, coalesce(eiht.horas,0) as horasPlena, coalesce(eiht.esvalido,false) as esvalidoPlena, case when eiht.id is null then false else true end as conespecialidad, case when eiht.esvalido = true then true else false end as imprimirCut")
+                ->select("e.id, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, e.segipId, nt.nivel,gt.grado,pt.paralelo,tt.turno, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, coalesce(eiht.horas,0) as horasPlena, coalesce(eiht.esvalido,false) as esvalidoPlena, case when eiht.id is null then false else true end as conespecialidad, case when eiht.esvalido = true then true else false end as imprimirCut")
                 ->from('SieAppWebBundle:Institucioneducativa', 'ie')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ie.id = iec.institucioneducativa')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'iec.id = ei.institucioneducativaCurso ')
@@ -106,7 +106,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->setParameter('grado', $grado)
                 ->setParameter('paralelo', $paralelo)
                 ->setParameter('turno', $turno)
-                ->orderBy('e.paterno, e.materno')
+                ->orderBy('e.paterno, e.materno, e.nombre')
         ;
         return $qb->getQuery()->getResult();
     }
@@ -883,7 +883,30 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->orderBy('e.paterno, e.materno')
         ;
         return $qb->getQuery()->getResult();
-    }        
+    } 
+
+    /**
+     * get the list of students per course to transfer students
+     * @param type $sie
+     * @param type $gestion
+     * @return return object of students per course
+     */
+    public function getListTransferStudents($sie, $gestion) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select("e.id as studentId, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, g.id as generoId, g.genero, e.fechaNacimiento, e.segipId, ei.id as eInsId, eice.id as eiceId, IDENTITY(ei.institucioneducativaCurso) as cursoId, IDENTITY(ei.estadomatriculaTipo) as matriculaId, eice.json")
+                ->from('SieAppWebBundle:EstudianteInscripcionCambioestado', 'eice')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'eice.estudianteInscripcion = ei.id ')
+                ->leftjoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante = e.id')
+                 ->leftjoin('SieAppWebBundle:generoTipo', 'g', 'WITH', 'e.generoTipo = g.id')
+                 ->leftjoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'ei.estadomatriculaTipo = emt.id')
+                ->where('eice.institucioneducativaAnt = :sie')
+                ->setParameter('sie', $sie)
+                ->orderBy('e.paterno, e.materno, e.nombre')
+        ;
+        return $qb->getQuery()->getResult();
+
+    }           
 
 
 

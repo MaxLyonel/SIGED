@@ -1,0 +1,119 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+	<style>
+		[v-cloak]{
+			display: none;
+		}
+	</style>
+	<div class="row">
+	    <div class="col-lg-12">
+	        <div class="page-title">
+	            <h1>Eliminar Inscripción
+	                <small></small>
+	            </h1>
+	            <ol class="breadcrumb">
+	                <li><i class="fa fa-file-o"></i> Eliminar</li>
+	            </ol>
+	        </div>
+	    </div>
+	</div>
+	<div id="app">
+		<div v-cloak>
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Panel title</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tr>
+							<th>Estudiante</th>
+							<th>Inscripciones</th>
+						</tr>
+						{% for dato in datos %}
+							<tr>
+								<td>{{dato.estudiante}}</td>
+								<td>
+									{% if dato.inscripciones is defined and dato.inscripciones|length > 0 %}
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>rude</th>
+												<th>gestion</th>
+												<th>sie</th>
+												<th>nivel</th>
+												<th>grado</th>
+												<th>paralelo</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for ins in dato.inscripciones %}
+												<tr>
+													<td>{{ins.rude}}</td>
+													<td>{{ins.gestion}}</td>
+													<td>{{ins.sie}}</td>
+													<td>{{ins.nivel}}</td>
+													<td>{{ins.grado}}</td>
+													<td>{{ins.paralelo}}</td>
+													<td>
+														<form action="{{path('history_new_inscription_index')}}" method="post" style="display:inline-block">
+							                                <input type="hidden" name="form[tipo]" value="0">
+							                                <input type="hidden" name="form[codigoRudeHistory]" value="{{ins.rude}}">
+							                                <button type="submit" class="btn-link" style="color:#4E4E4E"> Historial</button>
+							                            </form>
+														<button type="button" @click="eliminarInscripcion({{ins.id}})">Eliminar</button>
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script>
+		var app = new Vue({
+			delimiters: ['${', '}'],
+			el: '#app',
+			data() {
+				return {
+					
+				}
+			},
+			methods: {
+				eliminarInscripcion(id){
+					axios.post(Routing.generate('eliminar_doble_inscripcion_eliminar', {id: id}))
+						.then(response => {
+							if (response.data.status == 'success') {
+								Swal.fire(
+	                              	'Aviso!',
+	                              	response.data.msg,
+	                              	'success'
+	                            );
+							}
+							if (response.data.status == 'error') {
+								Swal.fire(
+	                              	'Aviso!',
+	                              	response.data.msg,
+	                              	'warning'
+	                            );
+							}
+							
+						})
+				}
+			}
+		});
+	</script>
+{% endblock %}

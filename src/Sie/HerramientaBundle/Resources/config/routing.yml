@@ -142,6 +142,10 @@ sie_herramienta_solicitud_bth:
     resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
     prefix:   /sie/tramite/solicitudbth
 
+sie_herramienta_encuesta_ue:
+    resource: "@SieHerramientaBundle/Resources/config/routing/encuestaUe.yml"
+    prefix:   /sie/encuestaUe    
+
 
 #sie_herramienta_wf_tramite:
 #    resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
@@ -230,3 +234,15 @@ sie_downloadinfrafile:
 sie_newinscriptionInipri:
      resource: "@SieHerramientaBundle/Resources/config/routing/newinscriptionInipri.yml"
      prefix:   /sie/newinscriptionInipri
+
+sie_apoderado_nuevo:
+     resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoNuevo.yml"
+     prefix:   /sie/apoderadoNuevo
+
+sie_transfer_students:
+     resource: "@SieHerramientaBundle/Resources/config/routing/transferstudents.yml"
+     prefix:   /sie/transferstudents
+
+sie_apoderado_bono_familia:
+     resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoBonoFamilia.yml"
+     prefix:   /sie/apoderado-bono-familia

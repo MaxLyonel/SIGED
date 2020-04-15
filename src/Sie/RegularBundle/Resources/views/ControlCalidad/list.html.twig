@@ -60,7 +60,7 @@
                                                 <td data-title="Descripcion">{{ lista.descripcion }}</td>
                                                 <td data-title="Detalle">{{ lista.detalle }}</td>
                                                 <td data-title="Acciones">
-                                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 %}
+                                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 31 %}
                                                         <button type="button" class="btn-link" onclick="mostrarDetalle({{lista.id}})" title="VerDetalles"><i class="fa fa-search"></i> Ver detalle</button>
                                                         {% if app.session.get('roluser') != 9 %}
                                                             <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>

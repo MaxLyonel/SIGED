@@ -32,7 +32,7 @@ class ControlCalidadController extends Controller {
 
         $rol_usuario = $this->session->get('roluser');
 
-        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9') {
+        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9' && $rol_usuario != '31') {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -85,6 +85,18 @@ class ControlCalidadController extends Controller {
                     ->addOrderBy('vret.id')
                     ->getQuery();
                 break;
+            case 31://nacional (super usuario)
+                $query = $repository->createQueryBuilder('vret')
+                    ->select('vret.id, vret.entidad, vret.obs')
+                    ->innerJoin('SieAppWebBundle:ValidacionReglaTipo', 'vrt', 'WITH', 'vrt.validacionReglaEntidadTipo = vret.id')
+                    ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
+                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
+                    ->andWhere('vrt.esActivo = :esActivo')
+                    ->setParameter('esActivo', true)
+                    ->addGroupBy('vret.id, vret.entidad, vret.obs')
+                    ->addOrderBy('vret.id')
+                    ->getQuery();
+                break;
         }
 
         $entidades = $query->getResult();
@@ -127,6 +139,17 @@ class ControlCalidadController extends Controller {
                     ->addOrderBy('gt.id', 'DESC')
                     ->getQuery();
                 break;
+            case 31://nacional (super usuario)
+                $query = $repository->createQueryBuilder('vret')
+                    ->select('gt.id')
+                    ->innerJoin('SieAppWebBundle:ValidacionReglaTipo', 'vrt', 'WITH', 'vrt.validacionReglaEntidadTipo = vret.id')
+                    ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
+                    ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
+                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
+                    ->addGroupBy('gt.id')
+                    ->addOrderBy('gt.id', 'DESC')
+                    ->getQuery();
+                break;
         }
 
         $gestiones = $query->getResult();
@@ -140,7 +163,7 @@ class ControlCalidadController extends Controller {
     }
 
     public function listAction(Request $request, $id, $gestion) {
-
+        
         $request->getSession()->set('idGestionCalidad',$gestion);
         $id_usuario = $this->session->get('userId');
 
@@ -150,7 +173,7 @@ class ControlCalidadController extends Controller {
 
         $rol_usuario = $this->session->get('roluser');
 
-        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9') {
+        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9' && $rol_usuario != '31') {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -217,6 +240,22 @@ class ControlCalidadController extends Controller {
                     ->setParameter('fisquim', 27)
                     ->getQuery();
                 break;
+            case 31://nacional (super usuario)
+                $query = $repository->createQueryBuilder('vrt')
+                    ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vrt.id = vp.validacionReglaTipo')
+                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
+                    ->where('vrt.validacionReglaEntidadTipo = :reglaEntidad')
+                    ->andWhere('vp.esActivo = :esactivo')
+                    ->andWhere('vp.gestionTipo = :gestion')
+                    ->andWhere('vrt.esActivo = :esActivo')
+                    ->andWhere('vrt.id != :fisquim')
+                    ->setParameter('reglaEntidad', $id)
+                    ->setParameter('esactivo', 'f')
+                    ->setParameter('gestion', $gestion)
+                    ->setParameter('esActivo', true)
+                    ->setParameter('fisquim', 27)
+                    ->getQuery();
+                break;
         }
         
         $lista_inconsistencias = $query->getResult();
@@ -239,7 +278,7 @@ class ControlCalidadController extends Controller {
 
         $rol_usuario = $this->session->get('roluser');
 
-        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9') {
+        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9' && $rol_usuario != '31') {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -280,6 +319,19 @@ class ControlCalidadController extends Controller {
                     ->setParameter('reglaTipo', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('sie', $this->session->get('ie_id'))
+                    ->setParameter('gestion', $gestion)
+                    ->addOrderBy('vp.gestionTipo', 'desc')
+                    ->getQuery();
+                break;
+            case 31://nacional (super usuario)
+                $query = $repository->createQueryBuilder('vrt')
+                    ->select('vp')->distinct()
+                    ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vrt.id = vp.validacionReglaTipo')
+                    ->where('vrt.id = :reglaTipo')
+                    ->andWhere('vp.esActivo = :esactivo')
+                    ->andWhere('vp.gestionTipo = :gestion')
+                    ->setParameter('reglaTipo', $id)
+                    ->setParameter('esactivo', 'f')
                     ->setParameter('gestion', $gestion)
                     ->addOrderBy('vp.gestionTipo', 'desc')
                     ->getQuery();

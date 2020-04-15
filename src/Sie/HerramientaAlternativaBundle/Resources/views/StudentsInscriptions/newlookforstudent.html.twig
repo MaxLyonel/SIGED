@@ -135,7 +135,7 @@
                           </div>
                           <div class="col-sm-3">
                               <label for="Nombre(s)">Localidad</label>
-                              <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="30" autocomplete="off" style="text-transform:uppercase">
+                              <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="50" autocomplete="off" style="text-transform:uppercase">
                           </div>
                         </div>
                         </br> 
@@ -215,7 +215,7 @@
                               </div>
                               <div class="col-sm-3">
                                   <label for="localidad">Localidad</label>
-                                  <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="18" autocomplete="off" style="text-transform:uppercase">
+                                  <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="50" autocomplete="off" style="text-transform:uppercase">
                               </div>
                             </div>
                             </br>
@@ -329,13 +329,43 @@
                 <strong><i class='fa fa-linux'></i> ${message}</strong>
               </div>
 
-                <div   class="" role="">
+                <div   v-if="message && DBRudesStudent"  class="" role="">
 
-                  <table v-if="message && DBRudesStudent" id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+                  <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+
                     <thead>
+                      <tr><th colspan="7"><p>Estudiante Nuevo</p></th></tr>
+                      <tr role="row">
+                        <th class="text-center">CI</th>
+                        <th class="text-center">COMPLEMENTO</th>
+                        <th class="text-center">PATERNO</th>
+                        <th class="text-center">MATERNO</th>
+                        <th class="text-center">NOMBRE(S)</th>
+                        <th class="text-center">FECHA NACIMIENTO</th>
+                        <th class="text-center">-</th>
+                      </tr>
+                    </thead>
+                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                      <tr>
+                        <td>${dataStudent.carnet} </td>
+                        <td>${dataStudent.complemento }</td>
+                        <td>${dataStudent.paterno}</td>
+                        <td>${dataStudent.materno}</td>
+                        <td>${dataStudent.nombre}</td>
+                        <td>${dataStudent.fecNac}</td>                        
+                        <td><button v-on:click="studentsInscriptionNEW()" type="button" class="btn btn-info"><i class="fa fa-book"></i>Inscribir Nuevo</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info" style="font-size:11px">
+
+                    <thead>
+                      <tr><th colspan="8"><p>Estudiantes Existentes</p></th></tr>
                       <tr role="row">
                         <th class="text-center">RUDE</th>
-                        <th class="text-center">CI COMPLEMENTO</th>
+                        <th class="text-center">CI</th>
+                        <th class="text-center">COMPLEMENTO</th>
                         <th class="text-center">PATERNO</th>
                         <th class="text-center">MATERNO</th>
                         <th class="text-center">NOMBRE(S)</th>
@@ -347,7 +377,8 @@
                     <tbody role="alert" aria-live="polite" aria-relevant="all">
                       <tr v-for="(infostudent, indexst) in DBRudesStudent">
                         <td>${infostudent.codigorude}</td>
-                        <td>${infostudent.ci} ${infostudent.complemento }</td>
+                        <td>${infostudent.ci} </td>
+                        <td>${infostudent.complemento }</td>
                         <td>${infostudent.paterno}</td>
                         <td>${infostudent.materno}</td>
                         <td>${infostudent.nombre}</td>
@@ -904,10 +935,7 @@ var app = new Vue({
 
     studentsInscriptionbylist: function(idstudent, fnac){
     
-    this.dataStudent.iecId = this.iecId;
-    this.swproceso = true;
-    this.DBRudesStudent = false;
-    this.message = false;    
+ 
        
 
           Swal.fire({
@@ -921,12 +949,67 @@ var app = new Vue({
             cancelButtonText: 'Cancelar'
         }).then((result) => {
         if (result.value) {
+            this.dataStudent.iecId = this.iecId;
+            this.swproceso = true;
+            this.DBRudesStudent = false;
+            this.message = false;    
 
       axios.post(Routing.generate('alter_inscriptionstudent_studentsInscriptionlist', {
         iecId: this.iecId, idstudent: idstudent,
         casespecial:this.dataStudent.casespecial,
         fecNac:fnac
       } ))
+      .then(response => {
+          if (response.status == 200) {
+
+            this.DBRudesStudent = response.data.arrRudesStudent;
+            this.message = response.data.message;
+            this.swcreatestudent = response.data.swcreatestudent;
+            if(this.swcreatestudent){
+              showListStudent(this.iecId, this.infoUe);
+            }
+
+            this.buscando = false;
+            this.swproceso = false;
+            
+          }
+          if( response.status == 202){
+              //this.respuesta = response.data;
+          }
+
+          
+      })
+      .catch(e => {
+          console.log(e);
+          this.buscando = false;
+      });
+      }
+      
+    })
+      
+    }, 
+    studentsInscriptionNEW: function(){
+    
+ 
+       
+
+          Swal.fire({
+            title: '¿Realizar incripción?',
+            text: "El estudiante será inscrito en el curso seleccionado",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar...',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+        if (result.value) {
+            this.dataStudent.iecId = this.iecId;
+            this.swproceso = true;
+            this.DBRudesStudent = false;
+            this.message = false;    
+
+      axios.post(Routing.generate('alter_inscriptionstudent_studentsInscriptionNEW', this.dataStudent ))
       .then(response => {
           if (response.status == 200) {
 

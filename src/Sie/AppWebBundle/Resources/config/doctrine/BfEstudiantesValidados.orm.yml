@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\BfEstudiantesValidados:
+    type: entity
+    table: bf_estudiantes_validados
+    indexes:
+        pk_bf_estudiantes_validados:
+            columns:
+                - gestion_tipo_id
+                - codigo_rude
+        IDX_FDEF0F659590C39:
+            columns:
+                - estudiante_id
+        IDX_FDEF0F6179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_FDEF0F6E653442:
+            columns:
+                - orgcurricular_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        fechaCorte:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_corte
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

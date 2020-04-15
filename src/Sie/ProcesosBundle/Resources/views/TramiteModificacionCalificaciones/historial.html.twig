@@ -1,4 +1,14 @@
 <p style="font-size:1.5em; font-weight:bold">Trámite Nro. {{ idTramite }}</p>
+
+{% if app.session.flashBag.has('errorTAMC') %}
+	<div class="alert alert-warning">
+		{% for msg in app.session.flashBag.get('errorTAMC') %}
+	    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    	<strong>Nota !</strong> {{msg}}
+		{% endfor %}
+	</div>
+{% endif %}
+
 <div class="panel panel-primary">
 	<div class="panel-heading" data-action="collapse" style="cursor:pointer">
 		<div class="pull-left">
@@ -48,30 +58,58 @@
 										            <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
 										        </div>
 
-										        <table class="table table-condensed">
-										            <thead>
-										                <tr><th colspan="2"><h5>Datos Estudiante</h5></th></tr>
-										            </thead>
-										            <tbody>
-										                <tr><th>Código Rude</th><td>{{h.datos.codigoRude}}</td></tr>
-										                <tr><th>Nombre completo</th><td>{{h.datos.estudiante}}</td></tr>
-										            </tbody>
-										        </table>
-										        <br>
-										        <table class="table table-condensed">
-										            <thead>
-										                <tr><th colspan="2"><h5>Datos Inscripción</h5></th></tr>
-										            </thead>
-										            <tbody>
-										                <tr><th>Código SIE</th><td>{{ h.datos.sie }}</td></tr>
-										                <tr><th>Unidad Educativa</th><td>{{ h.datos.institucioneducativa }}</td></tr>
-										                <tr><th>Nivel</th><td>{{ h.datos.nivel }}</td></tr>
-										                <tr><th>Grado</th><td>{{ h.datos.grado }}</td></tr>
-										                <tr><th>Paralelo</th><td>{{ h.datos.paralelo }}</td></tr>
-										                <tr><th>Turno</th><td>{{ h.datos.turno }}</td></tr>
-										                <tr><th>Gestión</th><td>{{ h.datos.gestion }}</td></tr>
-										            </tbody>
-										        </table>
+										        <div class="row">
+										        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+										        		<table class="table table-condensed table-bordered">
+										        		    <thead>
+										        		        <tr><th colspan="4"><b>Datos del Estudiante</b></th></tr>
+										        		    </thead>
+										        		    <tbody>
+										        		        <tr><th>Código Rude</th><td colspan="3">{{h.datos.codigoRude}}</td></tr>
+										        		        <tr><th>Nombre</th><td colspan="3">{{h.datos.estudiante}}</td></tr>
+										        		        <tr>
+										        		        	<th>Cédula de Identidad</th><td>{{h.datos.carnet}}</td>
+										        		        	<th>Complemento</th><td>{{h.datos.complemento}}</td>
+										        		        </tr>
+										        		    </tbody>
+										        		</table>
+										        	</div>
+										        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+										        		<table class="table table-condensed table-bordered">
+										        		    <thead>
+										        		        <tr><th colspan="4"><b>Datos de la Unidad Educativa (Solicitante)</b></th></tr>
+										        		    </thead>
+										        		    <tbody>
+										        		        <tr><th>Unidad Educativa</th><td colspan="3">{{ h.datos.sie }} - {{ h.datos.institucioneducativa }}</td></tr>
+										        		        <tr><th>Departamento</th><td>{{ h.datos.departamento }}</td><th>Distrito</th><td>{{h.datos.distrito}}</td></tr>
+										        		    </tbody>
+										        		</table>
+										        	</div>
+										        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+										        	    <table class="table table-condensed table-bordered">
+										        	        <thead>
+										        	            <tr><th colspan="4"><b>Datos del Director (Solicitante)</b></th></tr>
+										        	        </thead>
+										        	        <tbody>
+										        	            <tr><th>Nombre</th><td colspan="3">{{h.datos.directorNombre}}</td></tr>
+										        	            <tr><th>Cédula de Identidad</th><td>{{h.datos.directorCarnet}}</td><th>Complemento</th><td>{{h.datos.directorComplemento}}</td></tr>
+										        	        </tbody>
+										        	    </table>
+										        	</div>
+										        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+										        	    <table class="table table-condensed table-bordered">
+										        	        <thead>
+										        	            <tr><th colspan="4"><b>Datos del Trámite</b></th></tr>
+										        	        </thead>
+										        	        <tbody>
+										        	        	<tr><th colspan="4">Datos de Inscripción</th></tr>
+										        	            <tr><th>Nivel</th><td>{{ h.datos.nivel }}</td><th>Paralelo</th><td>{{ h.datos.paralelo }}</td></tr>
+										        		        <tr><th>Grado</th><td>{{ h.datos.grado }}</td><th>Turno</th><td>{{ h.datos.turno }}</td></tr>
+										        		        <tr><td colspan="2"></td><th>Gestión</th><td>{{ h.datos.gestion }}</td></tr>
+										        	        </tbody>
+										        	    </table>
+										        	</div>
+										        </div>
 										        <hr>
 										        <h5>
 										            <b>Detalle de calificaciones</b>
@@ -103,8 +141,8 @@
 										                </tbody>
 										            </table>
 										        {% endif %}
-										        <br>
 										        {% if h.datos.notasCualitativas|length > 0 %}
+										        	<br>
 										            <table class="table table-bordered table-striped table-condensed">
 										                <thead>
 										                    <tr>
@@ -349,6 +387,14 @@
 												<div class="form-group">
 												    <p><b>R.A.</b></p>
 												    <a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.resAdm.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver R.A. adjunto </b></a>
+												    <br>
+												</div>
+											{% endif %}
+										{% else %}
+											{% if h.datos.informe is defined and h.datos.informe is not null %}
+												<div class="form-group">
+												    <p><b>Informe de la dirección Departamental</b></p>
+												    <a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.informe.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver Informe adjunto </b></a>
 												    <br>
 												</div>
 											{% endif %}

@@ -201,11 +201,15 @@
                     <div class="form-group">
                         <br>
                         <button class="btn btn-lg btn-block no-margin rounded btn-aceptar" type="submit"><i class="fa fa-unlock"></i>Aceptar</button>
+                        {#
                         {% if app.session.get('sistemaid') == 1 %}
                             <div class="consulta text-center">
                                 <a href="{{path('consultalibreta')}}" style="color:#455A64; font-size:1em;"><span class="glyphicon glyphicon-list-alt"></span> Consultar Libreta</a>
                             </div>
                         {% endif %}
+                        #}
+                        <br>
+                         {# <a href="{{path('consulta_bono_familia_index')}}" style="color:#455A64; font-size:1em; margin-top:20px;">Consulta si eres beficiario del bono familia</a> #}
                     </div><!-- /.form-group -->
                 </div><!-- /.sign-footer -->
                 {% endif %}

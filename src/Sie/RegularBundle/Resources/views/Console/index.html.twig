@@ -43,9 +43,15 @@
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				    <div class="panel" v-bind:style="{opacity: valueop}">
 				        <div class="panel-body">
+				        	<div class="alert alert-info">
+				        		<ul>
+				        			<li>Ya se puede ejecutar solo texto seleccionado</li>
+				        			<li>Se puede ejecutar la consulta con las techas <b>ctrl+enter</b></li>
+				        		</ul>
+				        	</div>
 				            <div class="consola">
 				                <h5>Consultas</h5>
-				                <textarea name="consulta" id="consulta" cols="30" rows="10" class="form-control">select * from registro_consolidacion limit 5</textarea>
+				                <textarea name="consulta" id="consulta" cols="30" rows="15" class="form-control" @keyup.ctrl.13="consulta($event)">select * from registro_consolidacion limit 5</textarea>
 				                <br>
 				                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 				                    <button class="btn btn-primary btn-block" onclick="ejecutarConsulta()">Ejecutar</button>
@@ -85,6 +91,10 @@
 					}else{
 						this.valueop = 0
 					}
+				},
+
+				consulta(event){
+					ejecutarConsulta();
 				}
 			}
 		});
@@ -94,6 +104,14 @@
 
 	    function ejecutarConsulta(){
 	        var consulta = $('#consulta').val();
+	        var texto = document.getElementById('consulta');
+	        var inicio = texto.selectionStart;
+	        var fin = texto.selectionEnd;
+
+	        if(fin != inicio){
+	        	consulta = consulta.slice(inicio, fin);
+	        }
+
 	        xhr = $.ajax({
 	            url: Routing.generate('console_execute'),
 	            type: 'post',
@@ -125,6 +143,9 @@
 	                    });
 
 	                    control += '</tbody></table>';
+
+	                    texto.selectionStart = inicio;
+	        			texto.selectionEnd = fin;
 	                }else{
 	                    control += '<p>Sin resultados</p>';
 	                }

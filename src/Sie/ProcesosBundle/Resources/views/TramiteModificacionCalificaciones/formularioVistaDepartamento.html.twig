@@ -16,15 +16,15 @@
             font-size: 0.9rem;
         }
         .requisitos{
-            background: #EEEEEE;
+            /* background: #EEEEEE; */
             padding: 5px;
-            padding-left: 50px;
-            box-shadow: 4px 4px #DDDDDD;
+            /* padding-left: 10px; */
+            /* box-shadow: 4px 4px #DDDDDD; */
             margin-bottom: 15px;
         }
         .requisitos > .checkbox > label{
             color: #2A3271;
-            font-size: 1.2rem !important;
+            font-size: 1.1rem !important;
         }
     </style>
     <div class="header-content">
@@ -58,7 +58,7 @@
                 <form id="formDepartamento" action="{{path('tramite_modificacion_calificaciones_deriva_departamento')}}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="idTramite" value="{{idTramite}}">
 
-                    <label>¿Que requisitos esta recepcionando de la Direccion Distrital?</label>
+                    <label>Marcar los requisitos presentados por la Direccion Distrital</label>
                     <div class="requisitos">
                         <div class="checkbox">
                             <label>
@@ -120,10 +120,16 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Adjuntar R.A.</label>
+                            <label>Adjuntar R.A. <i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="Debe adjuntar un archivo pdf o una imagen, el tamaño del archivo debe ser menor a 2MB"></i></label>
                             <input type="file" id="resAdm" name="resAdm" required onchange="cargarArchivo(event);">
                         </div>
                         <br>
+                    </div>
+                    <div id="divInforme" style="display:none">
+                        <div class="form-group">
+                            <label>Adjuntar Informe <i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="Debe adjuntar un archivo pdf o una imagen, el tamaño del archivo debe ser menor a 2MB"></i></label>
+                            <input type="file" id="informe" name="informe" required onchange="cargarArchivo(event);">
+                        </div>
                     </div>
                     <div class="form-group">
                         <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
@@ -147,12 +153,18 @@
                 $('#resAdm').attr('required','required');
                 $('#nroResAdm').attr('required','required');
                 $('#fechaResAdm').attr('required','required');
+                
+                $('#divInforme').css('display','none');
+                $('#informe').removeAttr('required');
             }else{
                 if($('#aprueba2').is(':checked')){
                     $('#divRA').css('display','none');
                     $('#resAdm').removeAttr('required');
                     $('#nroResAdm').removeAttr('required');
                     $('#fechaResAdm').removeAttr('required');
+                    
+                    $('#divInforme').css('display','block');
+                    $('#informe').attr('required','required');
                 }
             }
         }
@@ -184,7 +196,6 @@
                     return false;
                 }
             }
-            this.informe = event.target.files[0];
         }
 
         function validarFormatoFecha(campo) {

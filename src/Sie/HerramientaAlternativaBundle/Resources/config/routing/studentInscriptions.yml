@@ -56,9 +56,16 @@ alter_inscriptionstudent_studentsInscription:
     path:     /studentsInscription
     defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:studentsInscription"}
     options:
-         expose: true  
+         expose: true 
+
 alter_inscriptionstudent_studentsInscriptionlist:
     path:     /studentsInscriptionlist
     defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:studentsInscriptionlist"}
+    options:
+         expose: true          
+         
+alter_inscriptionstudent_studentsInscriptionNEW:
+    path:     /studentsInscriptionNEW
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:studentsInscriptionNEW"}
     options:
          expose: true         

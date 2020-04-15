@@ -1,22 +1,28 @@
 {% if id == 34 %} {# ampliacion de nivel #}
-    {{ form_widget(form.form_34) }}
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'fusion' %}<strong>(Por Fusión)</strong>{% endif %}</td>
     <td>
         <ul>
+            {% set nt =[] %}
             {% for n in ieNivel %}
                 <li type=square>{{ n.nivel }}</li>
+                {% set nt = nt|merge([n.id]) %}
             {% endfor %}
         </ul>
     </td>
     <td>
         {% for a in form.nivelampliar %}
             <div class="ckbox ckbox-primary">
-                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {% if a.vars.value in nt %}
+                    {{ form_widget(a,{'attr':{'disabled':'disabled','checked':'checked'}}) }}
+                {% else %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {% endif %}
                 {{ form_label(a) }}
             </div>
         {% endfor %}
     </td>
 {% elseif id == 35 %}{# Reduccion de Nivel #}
-    {{ form_widget(form.form_35) }}
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'desglose' %}<strong>(Por Desglose){% endif %}</strong></td>
     <td>
         <ul>
             {% for n in ieNivel %}
@@ -27,73 +33,89 @@
     <td>
         {% for a in form.nivelreducir %}
             <div class="ckbox ckbox-primary">
-                {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {{ form_widget(a,{'attr':{'class':'niveltipo','checked':'checked'}}) }}
                 {{ form_label(a) }}
             </div>
         {% endfor %}
     </td>
 {% elseif id == 36 %}{# cambio de dependencia #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
-        
+        {{dependencia.dependencia|upper}}
     </td>
     <td>
-        <div class="row">
-            <div class="form-group col-md-6">
-                <div class="col-md-5">
-                    {{ form_label(form.dependencia) }}
+        <div class="col-md-12">
+            {% for a in form.dependencia %}
+                <div class="ckbox ckbox-primary">
+                    {{ form_widget(a,{'attr':{'required':true}}) }}
+                    {{ form_label(a) }}
                 </div>
-                <div class="col-md-7">
-                    {{ form_widget(form.dependencia) }}
-                </div>
-            </div>
-            <div class="form-group col-md-6" id="convenio" style="display:none">
-                <div class="col-md-5">
-                    {{ form_label(form.conveniotipo) }}
-                </div>
-                <div class="col-md-7">
-                    {{ form_widget(form.conveniotipo) }}
-                </div>
-            </div>
+            {% endfor %}
         </div>
+        {% if dependencia.id == 1 %}
+            <div class="form-inline">
+                {{ form_label(form.conveniotipo) }}
+                {{ form_widget(form.conveniotipo) }}
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 37 %}{# cambio de nombre #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
-        
+        {{nombre_actual|upper}}
     </td>
     <td>
-        <div class="row">
-            <div class="form-group  col-md-12">
-                <div class="col-md-3">
-                    {{ form_label(form.institucioneducativa) }}
-                </div>
-                <div class="col-md-9">
-                    {{ form_widget(form.institucioneducativa) }}
-                </div>
-            </div>
-        </div>
+        {{ form_label(form.nuevo_nombre) }}
+        {{ form_widget(form.nuevo_nombre) }}
     </td>
 {% elseif id == 38 %}{# cambio de jurisdiccion administrativa #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
-        
+        {{distrito|upper}}
     </td>
     <td>
-        <div class="row">
-            <div class="form-group  col-md-6">
-                <div class="col-md-5">
-                    {{ form_label(form.distrito) }}
-                </div>
-                <div class="col-md-7">
-                    {{ form_widget(form.distrito) }}
-                </div>
-            </div>
+        <div class="form-inline">
+            {{ form_label(form.nuevo_distrito) }}
+            {{ form_widget(form.nuevo_distrito) }}
         </div>
     </td>
 {% elseif id == 39 %}{# Fusion #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
-        
+        <ul>
+            {% set nt =[] %}
+            {% for n in ieNivel %}
+                <li type=square>{{ n.nivel }}</li>
+                {% set nt = nt|merge([n.id]) %}
+            {% endfor %}
+        </ul>
     </td>
     <td>
-        
+        {% for a in form.nivelampliar %}
+            <div class="ckbox ckbox-primary">
+                {% if a.vars.value in nt %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo','disabled':'disabled','checked':'checked'}}) }}
+                {% else %}
+                    {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                {% endif %}
+                {{ form_label(a) }}
+            </div>
+        {% endfor %}
+    </td>
+    <td>
+        {% if estadoinstitucion.id == 10 %}
+            {{estadoinstitucion.estadoinstitucion|upper}}
+        {% else %}
+            <span class="label label-danger">LA UNIDAD EDUCATIVA ESTA CERRADA</span>
+        {% endif %}
+    </td>
+    <td>
+        {% if estadoinstitucion.id == 10 %}
+            <div class="col-md-12 ckbox ckbox-primary">
+                {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                {{ form_label(form.estadoinstitucion) }}                                                            
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 40 %} {# desglose #}
     <td>
@@ -103,115 +125,283 @@
         
     </td>
 {% elseif id == 41 %} {# cambio de infraestructura #}
-    <td>
-        
-    </td>
+    <style>
+        /* Tooltip */
+        .msg + .tooltip > .tooltip-inner {
+            background-color: #E9F9FC; 
+            color: #01B1E1; 
+            border: 1px solid #01B1E1; 
+            padding: 15px;
+        }
+    </style>
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
         <div class="row">
-            <div class="form-group col-md-6">
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">  
-                        {{ form_label(form.lejurisdiccion) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.lejurisdiccion,{'attr':{'oninput':'buscarEdificioEscolar(this.value)'} }) }}
-                    </div>
+            <div class="form-group col-md-12">
+                <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>DEPARTAMENTO:</strong>
                 </div>
-                <div class="form-group col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.departamento) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.departamento,{'attr':{'onchange':'provincia(this.value)'}}) }}
-                    </div>
-                </div>
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.provincia) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.provincia,{'attr':{'onchange':'municipio(this.value)'}}) }}
-                    </div>
-                </div>
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.municipio) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.municipio,{'attr':{'onchange':'comunidad(this.value)'}}) }}
-                    </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2001.lugarTipo.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
                 </div>
             </div>
-            <div class="form-group col-md-6">
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.comunidad) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.comunidad) }}
-                    </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>PROVINCIA:</strong>
                 </div>
-                {# <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.canton) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.canton,{'attr':{'onchange':'localidad(this.value)'}}) }}
-                    </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2001.lugarTipo.lugarTipo.lugartipo.lugar }}
                 </div>
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.localidad) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.localidad) }}
-                    </div>
-                </div> #}
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.zona) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.zona) }}
-                    </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>MUNICIPIO:</strong>
                 </div>
-                <div class="form-group  col-md-12">
-                    <div class="col-md-5">
-                        {{ form_label(form.direccion) }}
-                    </div>
-                    <div class="col-md-7">
-                        {{ form_widget(form.direccion) }}
-                    </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2001.lugarTipo.lugartipo.lugar }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>CANTÓN:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2001.lugarTipo.lugar }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>LOCALIDAD:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2001.lugar }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></span></h5>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>DEPARTAMENTO: </strong>
+                </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2012.lugarTipo.lugarTipo.lugartipo.lugar|upper }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>PROVINCIA:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2012.lugarTipo.lugarTipo.lugar|upper }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>MUNICIPIO:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2012.lugartipo.lugar|upper }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>COMUNIDAD:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ lugarTipo2012.lugar|upper }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <h5><span style="background:#E9F9FC"><strong>Dirección</strong></span></h5>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>ZONA:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ zona }}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4">
+                    <strong>DIRECCIÓN:</strong>
+                </div>
+                <div class="col-md-8">
+                    {{ direccion }}
                 </div>
             </div>
         </div>
     </td>
-{% elseif id == 42 %} {# cierre temporal #}
     <td>
-        
+        <div class="row">
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">  
+                    {{ form_label(form.lejurisdiccion) }}
+                </div>
+                <div class="col-md-7 form-inline">
+                    {{ form_widget(form.lejurisdiccion,{'attr':{'oninput':'buscarEdificioEscolar(this.value)'} }) }}
+                    <span class="glyphicon glyphicon-question-sign msg" data-toggle="tooltip" title="Si la nueva infraestructura ya cuenta con un Código de local educativo." data-placement="top"></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></span></h5>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.departamento2001) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.departamento2001,{'attr':{'onchange':'provincia(this.value,2001)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.provincia2001) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.provincia2001,{'attr':{'onchange':'municipio(this.value,2001)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.municipio2001) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.municipio2001,{'attr':{'onchange':'canton(this.value,2001)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.canton2001) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.canton2001,{'attr':{'onchange':'localidad(this.value,2001)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.localidad2001) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.localidad2001) }}
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h5><span style="background:#E9F9FC"><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></span></h5>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.departamento2012) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.departamento2012,{'attr':{'onchange':'provincia(this.value,2012)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.provincia2012) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.provincia2012,{'attr':{'onchange':'municipio(this.value,2012)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.municipio2012) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.municipio2012,{'attr':{'onchange':'comunidad(this.value,2012)'}}) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.comunidad2012) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.comunidad2012) }}
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h5><span style="background:#E9F9FC"><strong>Dirección</strong></span></h5>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.zona) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.zona) }}
+                </div>
+            </div>
+            <div class="form-group  col-md-12">
+                <div class="col-md-5">
+                    {{ form_label(form.direccion) }}
+                </div>
+                <div class="col-md-7">
+                    {{ form_widget(form.direccion) }}
+                </div>
+            </div>
+        </div>
+    </td>
+{% elseif id == 42 or id == 43 %} {# cierre temporal #}
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'fusion' %}<strong>(Por Fusión)</strong>{% endif %}</td>
+    <td>
+        {% if tipo == 'fusion' %}
+            {{ form_label(form.siefusion) }}
+            {{ form_widget(form.siefusion, {'attr':{'oninput':'siefusion(this.value)'}}) }}
+        {% else %}
+            {% if estadoinstitucion.id == 10 %}
+                {{estadoinstitucion.estadoinstitucion|upper}}
+            {% else %}
+                <span class="label label-danger">LA UNIDAD EDUCATIVA ESTA CERRADA</span>
+            {% endif %}
+        {% endif %}
     </td>
     <td>
-        
-    </td>
-{% elseif id == 43 %} {# cierre definitivo #}
-    <td>
-        
-    </td>
-    <td>
-        
+        {% if estadoinstitucion.id == 10 %}
+            <div class="col-md-12 ckbox ckbox-primary" {% if tipo == 'fusion' %}style="display:none" {% endif %}id="fusion">
+                {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                {{ form_label(form.estadoinstitucion) }}                                                            
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 44 %}{# Reapertura #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
     <td>
-        
+        {% if estadoinstitucion.id == 19 %}
+            {{estadoinstitucion.estadoinstitucion|upper}}
+        {% else %}
+            <span class="label label-danger">LA UNIDAD EDUCATIVA SE ENCUENTRA ABIERTA</span>
+        {% endif %}
     </td>
     <td>
-        
+        {% if estadoinstitucion.id == 19 %}
+            <div class="col-md-12 ckbox ckbox-primary">
+                {{ form_widget(form.estadoinstitucion) }}&nbsp;
+                {{ form_label(form.estadoinstitucion) }}                                                            
+            </div>
+        {% endif %}
     </td>
 {% elseif id == 45 %}{# nuevo certifcado rue #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
+    <td>        
+    </td>
+    <td>        
+    </td>
+{% elseif id == 46 %}{# Regularización RUE #}
+    <td>{{tramiteTipo.tramiteTipo}}</td>
+    <td>        
+    </td>
+    <td>        
+    </td>
+{% elseif id == 54 %}{# apertura de unidad educativa #}
+    <td>{{tramiteTipo.tramiteTipo}} {% if tipo == 'desglose' %}<strong>(Por Desglose){% endif %}</strong></td>
     <td>
-        
     </td>
     <td>
-        
+        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal_apertura" data-placement="top" title="Datos de la Nueva Unidad Educativa" onclick="apertura({{id}})"><i class="glyphicon glyphicon-plus"></i>Registrar Nueva Unidad Educativa</button>
     </td>
 {% endif %}

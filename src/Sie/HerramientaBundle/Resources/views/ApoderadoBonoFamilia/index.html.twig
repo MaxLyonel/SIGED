@@ -1,0 +1,856 @@
+<style>
+	[v-cloak]{
+		display: none;
+	}
+	.jupper{
+		text-transform: uppercase;
+	}
+	.nombre-apoderado{
+		/*background: #40B2CB;*/
+		color: #40B2CB;
+		font-weight: bold;
+		font-size: 1.3em;
+		padding: 5px;
+		padding-left: 0px;
+	}
+	.no-registrado{
+		/*padding: 5px;*/
+		font-style: italic;
+		color: #CCCCCC;
+	}
+	.opciones{
+		font-style: italic !important;
+		color: #CCCCCC;
+	}
+	.table{
+		margin-bottom: 10px;
+	}
+	.datos{
+		background: #FFFFFF;
+		border-left: 2px #EEEEEE solid;
+		padding: 10px;
+		padding-top: 0px;
+		position: absolute;
+		width: 400px;
+		height: 500px;
+		top: 0px;
+		right: 0px;
+		height: 100%;
+		z-index: 1000;
+	}
+	.datos > h3{
+		color: #40B1CB;
+		/*color: #FFFFFF;*/
+		margin-bottom: 2px;
+		padding-bottom: 2px;
+		font-weight: bold;
+		font-size: 1.4em;
+	}
+	.datos label{
+		color:#9B9B9B;
+	}
+	.datos p{
+		font-weight: bold;
+		font-size: 1.2em;
+		/*color: #40B2CB;*/
+		/*color: #2A7180;*/
+	}
+	.datos .parentesco{
+		color:#CCCCCC;
+		padding-top:0px;
+		padding-bottom:7px;
+		margin-bottom: 25px;
+		font-style: italic;
+		text-transform: capitalize;
+		border-bottom: 1px solid #EEEEEE;
+		font-size: 1em;
+	}
+	h5{
+		padding-top: 15px;
+		/*color:#40B2CB;*/
+		font-weight: bold;
+	}
+	.msg-segip-validado{
+		padding: 7px;
+		/*background: #8CC152;*/
+		color:#8CC152;
+		font-weight: bold;
+		width: 100%;
+		text-align: center;
+		font-size: 1.1em;
+	}
+	.requerido{
+		color:#FF5656;
+	}
+	.validando{
+		/*text-align: center;*/
+		/*padding: 5px;*/
+		/*font-size: 1.1em;*/
+		/*background: #4dcde6;*/
+		/*color: #FFFFFF;*/
+	}
+	.errores{
+		text-align: left;
+	}
+	.errores li{
+		list-style: square inside;
+		padding-left: 30px;
+	}
+	.tarjeta{
+		width: 100%;
+		border: 1px solid #d7e9c3;
+		margin-bottom: 10px;
+		background: #EEEEEE;
+	}
+	.tarjeta-head{
+		padding: 10px;
+		font-weight: bold;
+		/*background: #d7e9c3;*/
+		color: #587f2e;
+	}
+	.tarjeta-head h3{
+		padding: 0px;
+		margin: 0px;
+	}
+	.tarjeta-body{
+		font-size: 1.1em;
+		padding: 7px;
+		/*background: #d7e9c3;*/
+	}
+	.tarjeta-body label{
+		font-weight: bold;
+	}
+
+	.tarjeta-success{
+		background: #E4ECDB;
+	}
+</style>
+<div class="modal-dialog modal-lg">
+	<div class="modal-content" style="height: 90%;">
+		<div id="app">
+		<div v-cloak>
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Habilitar apoderado para realizar el cobro del Bono Familia</h4>
+			</div>
+			<div class="modal-body">
+				
+        		<table class="table table-bordered table-condensed">
+					<tbody>
+						<tr><th width="120px">Código RUDE</th><td>{{inscripcion.estudiante.codigoRude}}</td></tr>
+						<tr><th>Estudiante</th><td>{{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}} {{inscripcion.estudiante.nombre}}</td></tr>
+						<tr><th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td></tr>
+						<tr><th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td></tr>
+						<tr><th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td></tr>
+					</tbody>
+				</table>
+				      		
+				<div v-show="!formulario">
+					<div v-if="generos.length == 0" class="text-center">
+						{# <i class="fa fa-refresh fa-2x fa-spin"></i> Cargando... #}
+						<img src="{{asset("img/loading.gif")}}"><br>Cargando...
+					</div>
+
+					<div v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
+						<div class="alert alert-info">
+							<i class="fa fa-info-circle"></i> No se tiene habilitado un apoderado para realizar el cobro. <br>
+							<div v-show="apoderados2019.length > 0"><b>Nota:</b> Se identificarón apoderados registrados, puede habilitar uno de ellos o registrar un nuevo apoderado para que pueda realizar el cobro del bono familia.</div>
+						</div>
+						<div class="row">
+							<div v-for="(apoderado, key) in apoderados2019" :key="key" class="col-md-6">
+								<div class="tarjeta">
+									<div class="tarjeta-head">
+										<h3>${apoderado.nombres} ${apoderado.paterno} ${apoderado.materno}</h3>
+									</div>
+									<div class="tarjeta-body">
+										<div class="row">
+											<div class="col-md-4">
+												<label>Carnet</label>
+												<p>${apoderado.carnet}</p>
+											</div>
+											<div class="col-md-4">
+												<label>Complemento</label>
+												<p>${apoderado.complemento}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<label>Fecha de nacimiento</label>
+												<p>${apoderado.fechaNacimiento}</p>
+											</div>
+											<div class="col-md-6">
+												<label>Pais de nacimiento</label>
+												<p>${apoderado.paisText}</p>
+											</div>
+											<div class="col-md-12">
+												<label>Lugar de nacimiento</label>
+												<p>${apoderado.lugar}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">
+												<label>Celular</label>
+												<p>${apoderado.celular}</p>
+											</div>
+											<div class="col-md-4">
+												<label>¿Es extranjero?</label>
+												<p>
+													<span v-if="apoderado.extranjero == 1">No</span>
+													<span v-if="apoderado.extranjero == 2">Si</span>
+												</p>
+											</div>
+											<div class="col-md-4">
+												<label>Parentesco</label>
+												<p>${apoderado.parentescoText}</p>
+											</div>
+										</div>
+										<button type = "button" @click="habilitarApoderado(apoderado)" class="btn btn-info btn-block"> <i class="fa fa-check"></i> Habilitar para realizar cobro</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="tarjeta">
+									<button type="button" @click="abrirFormulario()" class="btn btn-primary btn-block">
+										<i class="fa fa-plus fa-3x"></i> <br>
+										Registrar nuevo apoderado
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div v-if="generos.length > 0 && apoderadoBonoFamilia != ''">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="alert alert-success">
+									<p> <i class="fa fa-check-circle"></i> Apoderado habilitado para realizar el cobro del bono familia</p>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="tarjeta tarjeta-success">
+									<div class="tarjeta-head">
+										<h3> ${apoderadoBonoFamilia.nombres} ${apoderadoBonoFamilia.paterno} ${apoderadoBonoFamilia.materno}</h3>
+									</div>
+									<div class="tarjeta-body">
+										<div class="row">
+											<div class="col-md-4">
+												<label>Carnet</label>
+												<p>${apoderadoBonoFamilia.carnet}</p>
+											</div>
+											<div class="col-md-4">
+												<label>Complemento</label>
+												<p>${apoderadoBonoFamilia.complemento}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<label>Fecha de nacimiento</label>
+												<p>${apoderadoBonoFamilia.fechaNacimiento}</p>
+											</div>
+											<div class="col-md-6">
+												<label>Pais de nacimiento</label>
+												<p>${apoderadoBonoFamilia.paisText}</p>
+											</div>
+											<div class="col-md-12">
+												<label>Lugar de nacimiento</label>
+												<p>${apoderadoBonoFamilia.lugar}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">
+												<label>Celular</label>
+												<p>${apoderadoBonoFamilia.celular}</p>
+											</div>
+											<div class="col-md-4">
+												<label>¿Es extranjero?</label>
+												<p>
+													<span v-if="apoderadoBonoFamilia.extranjero == 1">No</span>
+													<span v-if="apoderadoBonoFamilia.extranjero == 2">Si</span>
+												</p>
+											</div>
+											<div class="col-md-4">
+												<label>Parentesco</label>
+												<p>${apoderadoBonoFamilia.parentescoText}</p>
+											</div>
+										</div>
+									</div>
+									<div class="tarjeta-footer">
+										<button type="button" class="btn btn-default btn-block" @click="eliminar(apoderadoBonoFamilia.id)">Eliminar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div v-show="formulario">
+					<h5>Registrar datos del apoderado <span class="requerido"> ( * campos requeridos )</span></h5>
+					<fieldset :disabled="validado">
+						<div class="row">
+							<div class="form-group col-md-6">
+								<label>Carnet <span class="requerido">*</span> </label>
+								<input v-model="apoderado.carnet" type="text" class="form-control jupper numeros" maxlength="11" v-on:keypress="numerico">
+							</div>
+							<div class="form-group col-md-3">
+								<label>Complemento</label>
+								<input v-model="apoderado.complemento" type="text" class="form-control jupper" maxlength="2" data-toggle="popover" data-placement="top" data-content="El complemento consta de dos dígitos que se usa para diferenciar números de carnet idénticos. No se refiere al lugar de expedición" data-trigger="focus">
+							</div>
+							{# <div class="form-group col-md-3">
+								<label>Expedido <span class="requerido">*</span></label>
+								<select v-model="apoderado.expedido" class="form-control jupper">
+									<option v-for="(expedido, key) in expedidos" :key="key" :value="expedido.id" v-text="expedido.sigla"></option>
+								</select>
+							</div> #}
+							<div class="form-group col-md-4">
+								<label>Nombres <span class="requerido">*</span></label>
+								<input v-model="apoderado.nombres" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+							</div>
+							<div class="form-group col-md-4">
+								<label>Paterno <span class="requerido">*</span></label>
+								<input v-model="apoderado.paterno" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+							</div>
+							<div class="form-group col-md-4">
+								<label>Materno <span class="requerido">*</span></label>
+								<input v-model="apoderado.materno" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+							</div>
+							<div class="form-group col-md-6">
+								<label>Fecha nacimiento <span class="opciones">( dd-mm-aaaa ) </span> <span class="requerido"> * </span></label>
+								<input v-model="apoderado.fechaNacimiento" type="text" class="form-control" maxlength="11" id="fecha" autocomplete="off">
+							</div>
+							<div class="form-group col-md-6">
+								<label></label>
+								<div v-if="validando" class="validando">
+									<button type="button" class="btn btn-info btn-block"><i class="fa fa-refresh fa-spin"></i> Validando</button>
+								</div>
+								<div v-else>
+									<button v-if="!validado" type="button" @click="validar()" class="btn btn-info btn-block">Validar datos con el SEGIP</button>
+									<div v-else class="msg-segip-validado"> <i class="fa fa-check"></i> Datos validados correctamente</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					
+					<div v-if="validado">
+						<div class="row">
+							<div class="form-group col-md-4">
+								<label>Pais de nacimiento <span class="requerido">*</span></label>
+								<select v-model="apoderado.pais" class="form-control jupper">
+									<option v-for="(pais, key) in paises" :key="key" :value="pais.id" v-text="pais.pais"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-8">
+								<label>Lugar de nacimiento <span class="requerido">*</span></label>
+								<input v-model="apoderado.lugar" type="text" class="form-control jupper" maxlength="100" v-on:keypress="alfanumerico">
+							</div>
+							{# <div class="form-group col-md-2">
+								<label>Género <span class="requerido">*</span></label>
+								<select v-model="apoderado.genero" class="form-control jupper">
+									<option v-for="(genero, key) in generos" :key="key" :value="genero.id" v-text="genero.genero"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<label>Correo</label>
+								<input v-model="apoderado.correo" type="text" class="form-control" maxlength="50">
+							</div> #}
+							
+							{# <div class="form-group col-md-4">
+								<label>Teléfono</label>
+								<input v-model="apoderado.telefono" type="text" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
+							</div>
+							<div class="form-group col-md-6">
+								<label>Ocupación laboral actual <span class="requerido">*</span></label>
+								<select v-model="apoderado.ocupacion" class="form-control jupper">
+									<option v-for="(ocupacion, key) in ocupaciones" :key="key" :value="ocupacion.id" v-text="ocupacion.ocupacion"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<div v-if="apoderado.ocupacion == 10035">
+									<label>Especificar otra ocupación <span class="requerido">*</span></label>
+									<input v-model="apoderado.ocupacionOtro" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfanumerico">
+								</div>
+							</div> #}
+						</div>
+						<div class="row">
+							<div class="form-group col-md-4">
+								<label>Parentesco <span class="requerido">*</span></label>
+								<select v-model="apoderado.parentesco" class="form-control jupper">
+									<option v-for="(parentesco, key) in parentescos" :key="key" :value="parentesco.id" v-text="parentesco.apoderado"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<label>Celular <span class="requerido">*</span></label>
+								<input v-model="apoderado.celular" type="text" class="form-control jupper" maxlength="8" v-on:keypress="numerico">
+							</div>
+							{# <div class="form-group col-md-6">
+								<label>Mayor grado de instrucción alcanzado <span class="requerido">*</span></label>
+								<select v-model="apoderado.instruccion" class="form-control jupper">
+									<option v-for="(instruccion, key) in instrucciones" :key="key" :value="instruccion.id" v-text="instruccion.instruccion"></option>
+								</select>
+							</div> #}
+							<div class="form-group col-md-4">
+								<label>¿Es extranjero? <span class="requerido">*</span></label>
+								<select v-model="apoderado.extranjero" class="form-control jupper">
+									<option v-for="(extranjero, key) in extranjeros" :key="key" :value="extranjero.id" v-text="extranjero.extranjero"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" @click="cerrarFormulario()">Cancelar</button>
+						<button v-if="validado" type="button" class="btn btn-primary" @click="registrar()">Registrar apoderado</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+{# 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script> #}
+<script src="{{asset('js/inputmask.js')}}"></script>
+<script>
+	
+	$(function () {
+	  	// $('[data-toggle="popover"]').popover()
+	})
+	
+	$('.numeros').on('keypress',function(e){
+        console.log('carnet');
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    });
+
+	var app = new Vue({
+	    delimiters: ['${', '}'],
+	    el: '#app',
+	    data: {
+	    	formulario: false,
+	    	validado: false,
+	    	validando: false,
+	    	idInscripcion: '{{idInscripcion}}',
+	    	apoderados2019: '',
+	    	apoderadoBonoFamilia: '',
+	    	errores: [],
+	    	gestion: '',
+	    	apoderado: {
+	    		carnet: '',
+	    		complemento: '',
+	    		expedido: '',
+	    		paterno: '',
+	    		materno: '',
+	    		nombres: '',
+	    		fechaNacimiento: '',
+	    		lugar: '',
+	    		genero: '',
+	    		pais: '',
+	    		correo: '',
+	    		celular: '',
+	    		telefono: '',
+	    		ocupacion: '',
+	    		ocupacionOtro: '',
+	    		instruccion: '',
+	    		parentesco: '',
+	    		extranjero: ''
+	    	},
+	    	apoderadoTipo: '',
+	    	expedidos: [],
+	    	generos: [],
+	    	paises: [],
+	    	ocupaciones: [],
+	    	instrucciones: [],
+	    	parentescos: [],
+	    	// parentescoPadre: [],
+	    	// parentescoMadre: [],
+	    	// parentescoTutor: [],
+	    	extranjeros: [],
+	    },
+	    mounted(){
+	    	this.cargar();
+	    	var selector = document.getElementById("fecha");
+	    	Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "dd-mm-yyyy", inputEventOnly: true}).mask(selector);
+	    	$('[data-toggle="popover"]').popover();
+	    },
+	    methods: {
+	    	numerico: function(event){
+	    	    var k = event.charCode || event.keyCode;
+	    	    if ((k < 48 || k > 57) //NUmeros
+	    	        && (k != 13) //ENTER
+	    	        && (k != 8) //retroceso
+	    	        && (k != 9) //tab
+	    	    ){
+	    	        event.preventDefault();
+	    	        return false;
+	    	    }
+	    	},
+	    	alfabetico: function(event){
+                var k = event.charCode || event.keyCode;
+                if ((k < 97 || k > 122)//letras minusculas
+                    && (k < 65 || k > 90) //letras mayusculas
+                    && (k != 13) //ENTER
+                    && (k != 8) //retroceso
+                    && (k != 9) //tab
+                    && (k != 241) //ñ
+                     && (k != 209) //Ñ
+                     && (k != 32) //espacio
+                     && (k != 225) //á
+                     && (k != 233) //é
+                     && (k != 237) //í
+                     && (k != 243) //ó
+                     && (k != 250) //ú
+                     && (k != 193) //Á
+                     && (k != 201) //É
+                     && (k != 205) //Í
+                     && (k != 211) //Ó
+                     && (k != 218) //Ú
+                     && (k != 44) //coma ,
+                     && (k != 46) //punto .
+                ){
+                	event.preventDefault();
+                	return false;
+                }
+            },
+	    	alfanumerico: function(event){
+                var k = event.charCode || event.keyCode;
+                if ((k < 97 || k > 122)//letras minusculas
+                    && (k < 65 || k > 90) //letras mayusculas
+                    && (k < 48 || k > 57) //NUmeros
+                    && (k != 13) //ENTER
+                    && (k != 8) //retroceso
+                    && (k != 9) //tab
+                    && (k != 241) //ñ
+                     && (k != 209) //Ñ
+                     && (k != 32) //espacio
+                     && (k != 225) //á
+                     && (k != 233) //é
+                     && (k != 237) //í
+                     && (k != 243) //ó
+                     && (k != 250) //ú
+                     && (k != 193) //Á
+                     && (k != 201) //É
+                     && (k != 205) //Í
+                     && (k != 211) //Ó
+                     && (k != 218) //Ú
+                     && (k != 44) //coma ,
+                     && (k != 46) //punto .
+                ){
+                	event.preventDefault();
+                	return false;
+                }
+            },
+	    	cargar(){
+	    		axios.get(Routing.generate('apoderado_bono_familia_apoderados', {idInscripcion: this.idInscripcion}))
+	    			.then(response => {
+	    				console.log(response.data);
+	    				this.apoderados2019 = response.data.apoderados2019;
+	    				this.apoderadoBonoFamilia = response.data.apoderadoBonoFamilia;
+	    				this.expedidos = response.data.expedidos;
+	    				this.generos = response.data.generos;
+	    				this.paises = response.data.paises;
+	    				this.ocupaciones = response.data.ocupaciones;
+	    				this.instrucciones = response.data.instrucciones;
+	    				// this.parentescoPadre = response.data.parentescoPadre;
+	    				// this.parentescoMadre = response.data.parentescoMadre;
+	    				// this.parentescoTutor = response.data.parentescoTutor;
+	    				this.parentescos = response.data.parentescos;
+	    				this.extranjeros = response.data.extranjeros;
+	    			})
+	    			.catch(e => {
+	    				console.log(e);
+	    			});
+	    	},
+	    	habilitarApoderado(apoderado){
+	    		Swal.fire({
+	    		  	title: 'Habilitar apoderado',
+	    		  	html: 'Se habilitará a '+ apoderado.paterno + ' ' + apoderado.materno + ' ' + apoderado.nombres + ' para realizar el cobro del bono familia. ¿Esta seguro de habilitar al apoderado?' ,
+	    		  	type: 'question',
+	    		  	showCancelButton: true,
+	    		  	confirmButtonColor: '#3085d6',
+	    		  	cancelButtonColor: '#d33',
+	    		  	confirmButtonText: 'Si, habilitar',
+	    		  	cancelButtonText: 'No, cancelar'
+	    		}).then((result) => {
+	    		  	if (result.value) {
+			    		this.validando = true;
+			    		axios.post(Routing.generate('apoderado_bono_familia_habilitar', {idApoderado: apoderado.id, idInscripcion: this.idInscripcion}))
+			    			.then(response => {
+			    				this.validando = false;
+			    				if (response.data.status == 'success') {
+			    					Swal.fire(
+    		  					  		'Habilitado!',
+    		  					  		response.data.msg,
+    		  					  		'success'
+    		  						)
+			    					this.cargar();
+			    				}
+			    				if (response.data.status == 'error') {
+		    						Swal.fire(
+		    					  		'Aviso!',
+		    					  		response.data.msg,
+		    					  		'warning'
+		    						)
+			    				}
+			    			})
+			    			.catch(e => {
+			    				this.validando = false;
+			    				console.log(e);
+			    			});
+	    		  	}
+	    		});
+	    	},
+	    	limpiarFormulario(){
+	    		this.apoderado.carnet = '';
+	    		this.apoderado.complemento = '';
+	    		this.apoderado.expedido = '';
+	    		this.apoderado.paterno = '';
+	    		this.apoderado.materno = '';
+	    		this.apoderado.nombres = '';
+	    		this.apoderado.fechaNacimiento = '';
+	    		this.apoderado.lugar = '';
+	    		this.apoderado.genero = '';
+	    		this.apoderado.pais = '';
+	    		this.apoderado.correo = '';
+	    		this.apoderado.celular = '';
+	    		this.apoderado.telefono = '';
+	    		this.apoderado.ocupacion = '';
+	    		this.apoderado.ocupacionOtro = '';
+	    		this.apoderado.instruccion = '';
+	    		this.apoderado.parentesco = '';
+	    		this.apoderado.extranjero = '';
+	    	},
+	    	abrirFormulario(tipo){
+
+	    		// this.apoderadoTipo = tipo;
+	    		// if (tipo == 1) {
+	    		// 	this.parentescos = this.parentescoPadre;
+	    		// 	this.apoderado.parentesco = tipo;
+	    		// }else{
+	    		// 	if (tipo == 2) {
+	    		// 		this.parentescos = this.parentescoMadre;
+	    		// 		this.apoderado.parentesco = tipo;
+	    		// 	}else{
+	    		// 		this.parentescos = this.parentescoTutor;
+	    		// 	}
+	    		// }
+
+	    		this.formulario = true;
+	    		this.validado = false;
+	    		this.verdatos = false;
+	    	},
+	    	cerrarFormulario(){
+	    		this.formulario = false;
+	    		this.validado = false;
+	    		this.verdatos = false;
+	    		this.limpiarFormulario();
+	    	},
+	    	validar(){
+	    		this.errores = [];
+	    		if (this.apoderado.carnet == '') {
+	    			this.errores.push('Carnet');
+	    		}
+	    		// if (this.apoderado.expedido == '') {
+	    		// 	this.errores.push('Expedido');
+	    		// }
+	    		if (this.apoderado.nombres == '') {
+	    			this.errores.push('Nombres');
+	    		}
+	    		if (this.apoderado.paterno == '' && this.apoderado.materno == '') {
+	    			this.errores.push('Apellidos Paterno y Materno (mínimo uno)');
+	    		}
+
+	    		if (this.apoderado.fechaNacimiento == '') {
+	    			this.errores.push('Fecha de nacimiento');
+	    		}else{
+	    			if (!this.validarFormatoFecha(this.apoderado.fechaNacimiento)) {
+	    				this.errores.push('Formato de fecha no válido');
+	    			}
+	    		}
+	    		
+	    		
+	    		if (this.errores.length == 0) {
+		    		this.validando = true;
+		    		axios.post(Routing.generate('apoderado_bono_familia_validar', {apoderado: this.apoderado}))
+		    			.then(response => {
+		    				this.validando = false;
+		    				if (response.data.status == 'success') {
+		    					this.validado = true;
+		    				}
+		    				if (response.data.status == 'error') {
+	    						Swal.fire(
+	    					  		'Validación SEGIP!',
+	    					  		response.data.msg,
+	    					  		'warning'
+	    						)
+		    				}
+		    			})
+		    			.catch(e => {
+		    				this.validando = false;
+		    				console.log(e);
+		    			});
+		    	}else{
+		    		let texto = '<div class="errores">';
+		    		$.each(this.errores, function (i, value) {
+                        texto = texto + '<li>' + value + '</li>';
+                    });
+                    texto = texto + '</div>';
+	    			Swal.fire({
+	    		  		title:'Debe completar la siguiente información',
+	    		  		html:texto,
+	    		  		type:'warning'
+	    			});
+		    	}
+	    	},
+	    	registrar(){
+	    		this.errores = [];
+	    		if (this.apoderado.carnet == '') {
+	    			this.errores.push('Carnet');
+	    		}
+	    		// if (this.apoderado.expedido == '') {
+	    		// 	this.errores.push('Expedido');
+	    		// }
+	    		if (this.apoderado.nombres == '') {
+	    			this.errores.push('Nombres');
+	    		}
+	    		if (this.apoderado.paterno == '' && this.apoderado.materno == '') {
+	    			this.errores.push('Apellidos Paterno y Materno (mínimo uno)');
+	    		}
+	    		if (this.apoderado.fechaNacimiento == '') {
+	    			this.errores.push('Fecha de nacimiento');
+	    		}
+	    		if (this.apoderado.parentesco == '') {
+	    			this.errores.push('Parentesco');
+	    		}
+	    		if (this.apoderado.pais == '') {
+	    			this.errores.push('Pais de nacimiento');
+	    		}
+	    		if (this.apoderado.lugar == '') {
+	    			this.errores.push('Lugar de nacimiento');
+	    		}
+	    		// if (this.apoderado.genero == '') {
+	    		// 	this.errores.push('Género');
+	    		// }
+	    		if (this.apoderado.celular == '') {
+	    			this.errores.push('Celular');
+	    		}else{
+		    		if (this.apoderado.celular.length < 8) {
+		    			this.errores.push('Celular - Número no válido');
+		    		}
+	    		}
+	    		// if (this.apoderado.ocupacion == '') {
+	    		// 	this.errores.push('Ocupación laboral actual');
+	    		// }
+	    		// if (this.apoderado.ocupacion == 10035) {
+	    		// 	if (this.apoderado.ocupacionOtro == '') {
+	    		// 		this.errores.push('Especificar otra ocupación');
+	    		// 	}
+	    		// }
+	    		// if (this.apoderado.instruccion == '') {
+	    		// 	this.errores.push('Mayor grado de instrucción alcanzado');
+	    		// }
+	    		if (this.apoderado.extranjero == '') {
+	    			this.errores.push('¿Es extranjero?');
+	    		}
+
+	    		if (this.errores.length == 0) {
+		    		axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
+		    			.then(response => {
+		    				if (response.data.status == 'success') {
+		    					this.cargar();
+		    					this.validado = false;
+		    					this.formulario = false;
+		    					Swal.fire(
+	    					  		'Registro realizado!',
+	    					  		response.data.msg,
+	    					  		'success'
+	    						)
+	    						this.limpiarFormulario();
+		    				}
+		    				if (response.data.status == 'error') {
+		    					Swal.fire(
+	    					  		'Aviso',
+	    					  		response.data.msg,
+	    					  		'warning'
+	    						)
+		    				}
+		    			})
+		    			.catch(e => {
+		    				console.log(e);
+		    			});
+		    	}else{
+		    		let texto = '<div class="errores">';
+		    		$.each(this.errores, function (i, value) {
+                        texto = texto + '<li>' + value + '</li>';
+                    });
+                    texto = texto + '</div>';
+	    			Swal.fire({
+	    		  		title:'Debe completar la siguiente información',
+	    		  		html:texto,
+	    		  		type:'warning'
+	    			});
+		    	}
+	    	},
+	    	actualizar(apoderado){
+	    		console.log(this.apoderado);
+	    		console.log(apoderado);
+	    		this.apoderado = apoderado;
+	    		this.abrirFormulario();
+	    	},
+	    	eliminar(id){
+	    		Swal.fire({
+	    		  	title: 'Eliminar apoderado?',
+	    		  	html: 'Se eliminará el apoderado actual. <br> <b>Nota:</b> Podrá realizar el registro de un nuevo apoderado',
+	    		  	type: 'question',
+	    		  	showCancelButton: true,
+	    		  	confirmButtonColor: '#3085d6',
+	    		  	cancelButtonColor: '#d33',
+	    		  	confirmButtonText: 'Si, eliminar'
+	    		}).then((result) => {
+	    		  	if (result.value) {
+	    		  		axios.post(Routing.generate('apoderado_bono_familia_eliminar', {idApoderado: id}))
+	    		  			.then(response => {
+	    		  				if (response.data.status == 'success') {
+	    		  					this.cargar();
+	    		  					this.validado = false;
+	    		  					this.formulario = false;
+	    		  					this.apoderadoDatos = '';
+	    		  					this.verdatos = false;
+
+    		  						Swal.fire(
+    		  					  		'Eliminado!',
+    		  					  		response.data.msg,
+    		  					  		'success'
+    		  						)
+	    		  				}
+	    		  				if (response.data.status == 'error') {
+	    		  					Swal.fire(
+    		  					  		'Eliminado!',
+    		  					  		response.data.msg,
+    		  					  		'error'
+    		  						)
+	    		  				}
+	    		  			})
+	    		  			.catch(e => {
+	    		  				console.log(e);
+	    		  			});
+	    		  	}
+	    		});
+	    	},
+	    	validarFormatoFecha(campo) {
+    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+    	                return true;
+    	        } else {
+    	                return false;
+    	        }
+	    	}  
+	    }
+	});
+
+</script>

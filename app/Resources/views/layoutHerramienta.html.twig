@@ -307,6 +307,7 @@
                             {% else %}
                             <ul>
                                 <li><a href="{{ path('sie_herramienta_tramite_index')}}">Regularización U.E.</a></li>
+                                
                             </ul>
                             {% endif %}
                         </li>
@@ -333,7 +334,7 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            {#<li><a href="{{ path('herramienta_change_paralelo_sie_index_calidad')}}">Cambio de Paralelo</a></li>#}
+                            <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                             <li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>
                             <li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li>
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
@@ -515,7 +516,16 @@
                         </li>
                     {% endif %}
                     {% if  app.session.get('roluser') == 9  or  app.session.get('roluser') == 8 %}
-                        
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Estudiante</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                            </ul>
+                        </li>
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -525,13 +535,12 @@
                             <ul>
                                 <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Omitidos/Transferencia</a></li>
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
-                                {#<li><a href="{{ path('inscription_extranjeros_index')}}">Extranjeros</a></li>
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
+                                {#<li><a href="{{ path('inscription_extranjeros_index')}}">Extranjeros</a></li>
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                                 #}
                             </ul>
                         </li>
-                        
                     {% endif %}
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
@@ -1452,6 +1461,14 @@
             <script src="{{ asset('js/initialize.js')}}"></script>
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+            <script type="text/javascript">
+                $('.calendario').datepicker({
+                    format: 'dd-mm-yyyy',
+                    todayBtn: 'linked',
+                    language: 'es',
+                    autoclose: true
+                });
+            </script>
             <!--/ END GOOGLE ANALYTICS -->
 
            

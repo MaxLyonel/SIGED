@@ -395,3 +395,20 @@ sie_regular_lista_operativo_notas_sexto:
 sie_regular_data_transfer_installer:
     resource: "@SieRegularBundle/Resources/config/routing/dataTransferInstaller.yml"
     prefix:   /sie/datatransfer
+
+sie_eliminar_doble_inscripcion:
+    resource: "@SieRegularBundle/Resources/config/routing/eliminarDobleInscripcion.yml"
+    prefix:   /sie/eliminarDobleInscripcion
+
+sie_regular_newForeign:
+    resource: "@SieRegularBundle/Resources/config/routing/newForeign.yml"
+    prefix:   /sie/newforeign
+
+sie_app_web_inscription_reza_omi_exten:
+    resource: "@SieRegularBundle/Resources/config/routing/inscriptionRezagoOmitidoExtenporaneo.yml"
+    prefix:   /sie/inscriptionStudentsOmi
+
+sie_consulta_bono_familia:
+    resource: "@SieRegularBundle/Resources/config/routing/consultaBonoFamilia.yml"
+    prefix:   /consulta-bono-familia
+
