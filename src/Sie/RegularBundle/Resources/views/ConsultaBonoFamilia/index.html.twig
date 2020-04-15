@@ -71,6 +71,9 @@
 		  	background: #EFF7FF;
 		  	color: #11BCFB;
 		}
+		.subtitulo{
+			font-size: 1.2em;
+		}
 	</style>
 </head>
 <body>
@@ -83,18 +86,7 @@
 				<div class="col-md-6 col-xs-12 col-md-offset-3 caja">
 					<h2 class="titulo">¿Soy beneficiario del bono?</h2>
 					<div v-show="!validado" class="contenido">
-						<p>Ingrese los datos del apoderado</p>
-						<div class="row">
-							<div class="form-group col-md-8">
-								<label>Carnet</label>
-								<input type="text" v-model="apoderado.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
-							</div>
-							<div class="form-group col-md-4">
-								<label>Complemento <i class="fa fa-info-circle"></i> </label>
-								<input type="text" v-model="apoderado.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="focus">
-							</div>
-						</div>
-						<p>Ingrese los datos del estudiante</p>
+						<p class="subtitulo">Verificar si el estudiante es beneficiario del bono familia</p>
 						<p>Puede realizar la búsqueda por:</p>
 						<div class="row">
 							<div class="col-md-12">
@@ -116,8 +108,8 @@
 										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
 											<div class="row">
 												<div class="form-group col-md-12">
-													<label>Código Rude</label>
-													<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="17" v-on:keypress="alfanumerico" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="focus">
+													<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
+													<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="17" v-on:keypress="alfanumerico">
 												</div>
 											</div>
 										</div>
@@ -128,8 +120,8 @@
 													<input type="text" v-model="estudiante.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
 												</div>
 												<div class="form-group col-md-4">
-													<label>Complemento <i class="fa fa-info-circle"></i> </label>
-													<input type="text" v-model="estudiante.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="focus">
+													<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+													<input type="text" v-model="estudiante.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico">
 												</div>
 											</div>
 										</div>
@@ -171,18 +163,35 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-12 text-center">
-								<button type="button" class="btn btn-primary" @click="consultar">Consultar</button>
+						</div>
+						<br>
+						<p class="subtitulo">Ingrese los datos del apoderado</p>
+						<div class="row">
+							<div class="form-group col-md-8">
+								<label>Carnet</label>
+								<input type="text" v-model="apoderado.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
 							</div>
+							<div class="form-group col-md-4">
+								<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+								<input type="text" v-model="apoderado.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico">
+							</div>
+						</div>
+
+						<div class="col-md-12 text-center">
+							<button type="button" class="btn btn-primary" @click="consultar">Verificar</button>
 						</div>
 					</div>
 					<div v-if="validado" class="respuesta">
-						<div class="alert alert-success">
-							<p>${datos.msg}</p>
-							<p>Su número de carnet es: <b>${datos.apoderadoCarnet} ${datos.apoderadoComplemento}</b></p>
-							<p>El código rude del estudiante es:</p>
-							<h3>${datos.estudianteCodigoRude}</h3>
-							<p><b>Nota:</b> Debe guardar el Código Rude del estudiante, es un requisito para poder realizar el cobro del bono</p>
+						<div class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
+							<p>Estudiante</p>
+							<p><b> ${datos.msgEstudiante} </b></p>
+						</div>
+
+						<div v-if="datos.msgApoderado != ''">
+							<div class="alert" :class="[{'alert-success':datos.statusApoderado == 'success'},{'alert-warning':datos.statusApoderado == 'warning'}]">
+								<p>Apoderado</p>
+								<p><b> ${datos.msgApoderado} </b></p>
+							</div>
 						</div>
 						<div class="botones">
 							<button type="button" @click="cerrar" class="btn btn-default">Volver a consultar</button>
@@ -231,7 +240,7 @@
 		    	},
 		    	validado: false,
 		    	cortina: false,
-		    	datos: []
+		    	datos: [],
 		    },
 		    mounted(){
 		    	var selector = document.getElementById("fecha");
@@ -319,6 +328,7 @@
 		    			});
 		    			return false;
 		    		}
+		    		this.datos = [];
 		    		this.validado = false;
 		    		this.cortina = true;
 	    			Swal.fire({
