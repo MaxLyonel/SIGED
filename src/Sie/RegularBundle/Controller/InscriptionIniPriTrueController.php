@@ -41,8 +41,8 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
-        return $this->redirect($this->generateUrl('principal_web'));
-// die('krlos');
+        //return $this->redirect($this->generateUrl('principal_web'));
+        // die('krlos');
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
