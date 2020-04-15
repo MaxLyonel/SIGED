@@ -407,3 +407,8 @@ sie_regular_newForeign:
 sie_app_web_inscription_reza_omi_exten:
     resource: "@SieRegularBundle/Resources/config/routing/inscriptionRezagoOmitidoExtenporaneo.yml"
     prefix:   /sie/inscriptionStudentsOmi
+
+sie_consulta_bono_familia:
+    resource: "@SieRegularBundle/Resources/config/routing/consultaBonoFamilia.yml"
+    prefix:   /consulta-bono-familia
+

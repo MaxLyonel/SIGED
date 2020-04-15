@@ -1,0 +1,15 @@
+consulta_bono_familia_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ConsultaBonoFamilia:index }
+
+consulta_bono_familia_cargar:
+    path:     /cargar
+    defaults: { _controller: SieRegularBundle:ConsultaBonoFamilia:cargar }
+    options:
+         expose: true
+
+consulta_bono_familia_buscar:
+    path:     /buscar
+    defaults: { _controller: SieRegularBundle:ConsultaBonoFamilia:buscar }
+    options:
+         expose: true
