@@ -590,6 +590,7 @@ class ApoderadoBonoFamiliaController extends Controller {
                         $persona->setCarnet($apoderado['carnet']);
                         $persona->setComplemento(mb_strtoupper($apoderado['complemento'],'utf-8'));
                         $persona->setCelular($apoderado['celular']);
+                        $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
                         $persona->setRda(0);
                         $persona->setPaterno(mb_strtoupper($apoderado['paterno'],'utf-8'));
                         $persona->setMaterno(mb_strtoupper($apoderado['materno'],'utf-8'));
