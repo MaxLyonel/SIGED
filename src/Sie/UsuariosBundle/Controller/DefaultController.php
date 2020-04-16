@@ -143,7 +143,7 @@ class DefaultController extends Controller
                 $datos_filas[0]["libreta_militar"] = $p->getLibretaMilitar();
                 $datos_filas[0]["pasaporte"] = $p->getPasaporte();
                 $datos_filas[0]["estado_civil"] = $p->getEstadoCivilTipo()->getEstadocivil();
-                $datos_filas[0]["idioma"] = $p->getIdiomaMaterno()->getIdiomaMaterno();
+                $datos_filas[0]["idioma"] = $p->getIdiomaMaterno()->getIdioma();
                 $datos_filas[0]["count_edit"] = $p->getCountEdit();
                 $datos_filas[0]["foto"] = $p->getFoto();                
                 //NACIONAL
