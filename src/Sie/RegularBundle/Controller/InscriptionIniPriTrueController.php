@@ -592,7 +592,7 @@ class InscriptionIniPriTrueController extends Controller {
       // $estadomatriculaTipo = 7;
       $obsvalue = $form['observacionOmitido'];
     }
-    $estadomatriculaTipo = 9;
+    $estadomatriculaTipo = 15;
     //check the inscription
        if($swCorrectInscription){
 
