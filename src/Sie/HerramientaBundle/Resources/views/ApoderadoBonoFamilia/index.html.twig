@@ -124,11 +124,27 @@
 	.tarjeta-success{
 		background: #E4ECDB;
 	}
+	.cortina{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: #FFFFFF;
+		z-index: 1000;
+		opacity: 0.7;
+		text-align: center;
+		padding-top: 180px;
+		font-size: 1.2em;
+		color: #32A4FC;
+	}
 </style>
 <div class="modal-dialog modal-lg">
 	<div class="modal-content" style="height: 90%;">
 		<div id="app">
 		<div v-cloak>
+			<div v-show="registrando" class="cortina">
+				<i class="fa fa-refresh fa-spin"></i> Procesando... <br>
+				Espere un momento
+			</div>
 			<div class="modal-header bg-primary">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Habilitar apoderado para realizar el cobro del Bono Familia</h4>
@@ -329,17 +345,11 @@
 					</fieldset>
 					
 					<div v-if="validado">
-						<div class="row">
-							<div class="form-group col-md-4">
-								<label>Pais de nacimiento <span class="requerido">*</span></label>
-								<select v-model="apoderado.pais" class="form-control jupper">
-									<option v-for="(pais, key) in paises" :key="key" :value="pais.id" v-text="pais.pais"></option>
-								</select>
-							</div>
-							<div class="form-group col-md-8">
+						{# <div class="row"> #}
+							{# <div class="form-group col-md-8">
 								<label>Lugar de nacimiento <span class="requerido">*</span></label>
 								<input v-model="apoderado.lugar" type="text" class="form-control jupper" maxlength="100" v-on:keypress="alfanumerico">
-							</div>
+							</div> #}
 							{# <div class="form-group col-md-2">
 								<label>Género <span class="requerido">*</span></label>
 								<select v-model="apoderado.genero" class="form-control jupper">
@@ -367,15 +377,15 @@
 									<input v-model="apoderado.ocupacionOtro" type="text" class="form-control jupper" maxlength="50" v-on:keypress="alfanumerico">
 								</div>
 							</div> #}
-						</div>
+						{# </div> #}
 						<div class="row">
-							<div class="form-group col-md-4">
+							<div class="form-group col-md-6">
 								<label>Parentesco <span class="requerido">*</span></label>
 								<select v-model="apoderado.parentesco" class="form-control jupper">
 									<option v-for="(parentesco, key) in parentescos" :key="key" :value="parentesco.id" v-text="parentesco.apoderado"></option>
 								</select>
 							</div>
-							<div class="form-group col-md-4">
+							<div class="form-group col-md-6">
 								<label>Celular <span class="requerido">*</span></label>
 								<input v-model="apoderado.celular" type="text" class="form-control jupper" maxlength="8" v-on:keypress="numerico">
 							</div>
@@ -387,8 +397,14 @@
 							</div> #}
 							<div class="form-group col-md-4">
 								<label>¿Es extranjero? <span class="requerido">*</span></label>
-								<select v-model="apoderado.extranjero" class="form-control jupper">
+								<select v-model="apoderado.extranjero" class="form-control jupper" @change="seleccionarPais()">
 									<option v-for="(extranjero, key) in extranjeros" :key="key" :value="extranjero.id" v-text="extranjero.extranjero"></option>
+								</select>
+							</div>
+							<div v-show="apoderado.extranjero == 2" class="form-group col-md-8">
+								<label>Pais de nacimiento <span class="requerido">*</span></label>
+								<select v-model="apoderado.pais" class="form-control jupper">
+									<option v-for="(pais, key) in paises" :key="key" :value="pais.id" v-text="pais.pais"></option>
 								</select>
 							</div>
 						</div>
@@ -435,6 +451,7 @@
 	    	formulario: false,
 	    	validado: false,
 	    	validando: false,
+	    	registrando: false,
 	    	idInscripcion: '{{idInscripcion}}',
 	    	apoderados2019: '',
 	    	apoderadoBonoFamilia: '',
@@ -579,6 +596,7 @@
 	    		}).then((result) => {
 	    		  	if (result.value) {
 			    		this.validando = true;
+			    		this.registrando = true;
 			    		axios.post(Routing.generate('apoderado_bono_familia_habilitar', {idApoderado: apoderado.id, idInscripcion: this.idInscripcion}))
 			    			.then(response => {
 			    				this.validando = false;
@@ -589,6 +607,7 @@
     		  					  		'success'
     		  						)
 			    					this.cargar();
+			    					this.registrando = false;
 			    				}
 			    				if (response.data.status == 'error') {
 		    						Swal.fire(
@@ -596,6 +615,7 @@
 		    					  		response.data.msg,
 		    					  		'warning'
 		    						)
+		    						this.registrando = false;
 			    				}
 			    			})
 			    			.catch(e => {
@@ -707,6 +727,14 @@
 	    			});
 		    	}
 	    	},
+	    	seleccionarPais(){
+	    		if (this.apoderado.extranjero == 1) {
+	    			this.apoderado.pais = 1;
+	    		}
+	    		if (this.apoderado.extranjero == 2) {
+	    			this.apoderado.pais = '';
+	    		}
+	    	},
 	    	registrar(){
 	    		this.errores = [];
 	    		if (this.apoderado.carnet == '') {
@@ -727,12 +755,9 @@
 	    		if (this.apoderado.parentesco == '') {
 	    			this.errores.push('Parentesco');
 	    		}
-	    		if (this.apoderado.pais == '') {
-	    			this.errores.push('Pais de nacimiento');
-	    		}
-	    		if (this.apoderado.lugar == '') {
-	    			this.errores.push('Lugar de nacimiento');
-	    		}
+	    		// if (this.apoderado.lugar == '') {
+	    		// 	this.errores.push('Lugar de nacimiento');
+	    		// }
 	    		// if (this.apoderado.genero == '') {
 	    		// 	this.errores.push('Género');
 	    		// }
@@ -756,12 +781,18 @@
 	    		// }
 	    		if (this.apoderado.extranjero == '') {
 	    			this.errores.push('¿Es extranjero?');
+	    		}else{
+		    		if (this.apoderado.pais == '') {
+		    			this.errores.push('Pais de nacimiento');
+		    		}
 	    		}
 
 	    		if (this.errores.length == 0) {
+	    			this.registrando = true;
 		    		axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
 		    			.then(response => {
 		    				if (response.data.status == 'success') {
+		    					this.registrando = false;
 		    					this.cargar();
 		    					this.validado = false;
 		    					this.formulario = false;
@@ -773,6 +804,7 @@
 	    						this.limpiarFormulario();
 		    				}
 		    				if (response.data.status == 'error') {
+		    					this.registrando = false;
 		    					Swal.fire(
 	    					  		'Aviso',
 	    					  		response.data.msg,
@@ -813,6 +845,7 @@
 	    		  	confirmButtonText: 'Si, eliminar'
 	    		}).then((result) => {
 	    		  	if (result.value) {
+	    		  		this.registrando = true;
 	    		  		axios.post(Routing.generate('apoderado_bono_familia_eliminar', {idApoderado: id}))
 	    		  			.then(response => {
 	    		  				if (response.data.status == 'success') {
@@ -821,8 +854,8 @@
 	    		  					this.formulario = false;
 	    		  					this.apoderadoDatos = '';
 	    		  					this.verdatos = false;
-
-    		  						Swal.fire(
+	    		  					this.registrando = false;
+    		  						Swal.fire(	
     		  					  		'Eliminado!',
     		  					  		response.data.msg,
     		  					  		'success'
@@ -834,6 +867,7 @@
     		  					  		response.data.msg,
     		  					  		'error'
     		  						)
+    		  						this.registrando = false;
 	    		  				}
 	    		  			})
 	    		  			.catch(e => {
