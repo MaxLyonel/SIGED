@@ -582,7 +582,7 @@ class ApoderadoBonoFamiliaController extends Controller {
                         $persona = null;
 
                         $persona = new Persona();
-                        $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
+                        $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(98));
                         // $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($apoderado['genero']));
                         $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find(3));
                         $persona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
