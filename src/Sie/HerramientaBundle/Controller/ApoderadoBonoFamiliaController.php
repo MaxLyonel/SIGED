@@ -593,7 +593,7 @@ class ApoderadoBonoFamiliaController extends Controller {
                         $persona->setRda(0);
                         $persona->setPaterno(mb_strtoupper($apoderado['paterno'],'utf-8'));
                         $persona->setMaterno(mb_strtoupper($apoderado['materno'],'utf-8'));
-                        $persona->setNombre(mb_strtoupper($apoderado['nombre'],'utf-8'));
+                        $persona->setNombre(mb_strtoupper($apoderado['nombres'],'utf-8'));
                         $persona->setFechaNacimiento(new \DateTime($apoderado['fechaNacimiento']));
                         $persona->setSegipId(1);
                         $persona->setEsExtranjero($apoderado['extranjero']);
