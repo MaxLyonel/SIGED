@@ -586,12 +586,13 @@ class InscriptionIniPriTrueController extends Controller {
     $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']-1);
     // validata inscription to the same UE
     if($form['institucionEducativa']!=$objCurrentInscriptionStudent[0]['sie']){
-      $estadomatriculaTipo = 1;
+      // $estadomatriculaTipo = 1;
       $obsvalue = 'TRANSFERENCIA';
     }else{
-      $estadomatriculaTipo = 7;
+      // $estadomatriculaTipo = 7;
       $obsvalue = $form['observacionOmitido'];
     }
+    $estadomatriculaTipo = 9;
     //check the inscription
        if($swCorrectInscription){
 
