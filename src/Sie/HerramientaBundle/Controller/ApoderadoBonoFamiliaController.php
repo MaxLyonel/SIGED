@@ -389,11 +389,16 @@ class ApoderadoBonoFamiliaController extends Controller {
             ]);
 
             if (is_object($persona)) {
-
+                
+                if (is_null($persona->getPaisTipo()) ) {
+                    $codpais = 'NULL';
+                }else{
+                    $codpais = $persona->getPaisTipo()->getId();
+                }
                 $datosAnteriores = array(
                     'celular'=>$persona->getCelular(),
                     'es_extranjero'=>$persona->getEsExtranjero(),
-                    'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                    'pais_tipo'=>$codpais ,
                     'localidad_nac'=>$persona->getLocalidadNac(),
                     'segip_id'=>$persona->getSegipId()
                 );
