@@ -41,8 +41,8 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
-        return $this->redirect($this->generateUrl('principal_web'));
-// die('krlos');
+        //return $this->redirect($this->generateUrl('principal_web'));
+        // die('krlos');
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
@@ -192,7 +192,10 @@ class InscriptionIniPriTrueController extends Controller {
                 ));
             }else{
               //if the student does not have a current inscription return on the main page so far
-              return $this->redirect($this->generateUrl('principal_web'));
+              $message = "El estudiante NO cuenta con inscripción en la gestion seleccionada";
+              $this->addFlash('notiext', $message);
+              return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));
+              
             }
 
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
@@ -203,7 +206,8 @@ class InscriptionIniPriTrueController extends Controller {
                         'formInscription' => $formInsc->createView()
             ));
         } else {
-            $message = "Estudiante con rude " . $form['codigoRude'] . " no se encuentra registrado";
+            //$message = "Estudiante con rude " . $form['codigoRude'] . " no se encuentra registrado";
+            $message = "Estudiante no se encuentra registrado";
             $this->addFlash('notiext', $message);
             return $this->redirectToRoute('inscription_ini_pri_rue_index');
         }
