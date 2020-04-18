@@ -195,30 +195,35 @@
 												<p>${apoderado.fechaNacimiento}</p>
 											</div>
 											<div class="col-md-6">
-												<label>Pais de nacimiento</label>
-												<p>${apoderado.paisText}</p>
-											</div>
-											<div class="col-md-12">
-												<label>Lugar de nacimiento</label>
-												<p>${apoderado.lugar}</p>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-4">
-												<label>Celular</label>
-												<p>${apoderado.celular}</p>
-											</div>
-											<div class="col-md-4">
-												<label>¿Es extranjero?</label>
-												<p>
-													<span v-if="apoderado.extranjero == 1">No</span>
-													<span v-if="apoderado.extranjero == 2">Si</span>
-												</p>
-											</div>
-											<div class="col-md-4">
 												<label>Parentesco</label>
 												<p>${apoderado.parentescoText}</p>
 											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<label>Celular</label>
+												<p>${apoderado.celular}</p>
+											</div>
+											
+											{# <div class="col-md-12">
+												<label>Lugar de nacimiento</label>
+												<p>${apoderado.lugar}</p>
+											</div> #}
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<label>¿Es extranjero?</label>
+												<p>
+													<span v-if="apoderado.extranjero == 1">NO</span>
+													<span v-if="apoderado.extranjero == 2">SI</span>
+												</p>
+											</div>
+											<div class="col-md-6">
+												<label>Pais de nacimiento</label>
+												<p>${apoderado.paisText}</p>
+											</div>
+											
+											
 										</div>
 										<button type = "button" @click="habilitarApoderado(apoderado)" class="btn btn-info btn-block"> <i class="fa fa-check"></i> Habilitar para realizar cobro</button>
 									</div>
@@ -258,34 +263,34 @@
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-4">
 												<label>Fecha de nacimiento</label>
 												<p>${apoderadoBonoFamilia.fechaNacimiento}</p>
 											</div>
-											<div class="col-md-6">
-												<label>Pais de nacimiento</label>
-												<p>${apoderadoBonoFamilia.paisText}</p>
-											</div>
-											<div class="col-md-12">
+											{# <div class="col-md-12">
 												<label>Lugar de nacimiento</label>
 												<p>${apoderadoBonoFamilia.lugar}</p>
+											</div> #}
+											<div class="col-md-4">
+												<label>Parentesco</label>
+												<p>${apoderadoBonoFamilia.parentescoText}</p>
 											</div>
-										</div>
-										<div class="row">
 											<div class="col-md-4">
 												<label>Celular</label>
 												<p>${apoderadoBonoFamilia.celular}</p>
 											</div>
-											<div class="col-md-4">
+										</div>
+										<div class="row">
+											<div class="col-md-6">
 												<label>¿Es extranjero?</label>
 												<p>
-													<span v-if="apoderadoBonoFamilia.extranjero == 1">No</span>
-													<span v-if="apoderadoBonoFamilia.extranjero == 2">Si</span>
+													<span v-if="apoderadoBonoFamilia.extranjero == 1">NO</span>
+													<span v-if="apoderadoBonoFamilia.extranjero == 2">SI</span>
 												</p>
 											</div>
-											<div class="col-md-4">
-												<label>Parentesco</label>
-												<p>${apoderadoBonoFamilia.parentescoText}</p>
+											<div class="col-md-6">
+												<label>Pais de nacimiento</label>
+												<p>${apoderadoBonoFamilia.paisText}</p>
 											</div>
 										</div>
 									</div>
