@@ -629,7 +629,7 @@ class InscriptionIniPriTrueController extends Controller {
       $obsvalue = $form['observacionOmitido'];
     }
     $estadomatriculaTipo = 15;
-
+    $form['observacionOmitido'] = preg_replace("/[\r\n|\n|\r]+/", " ", $form['observacionOmitido']);
     //check if the student has inscription like RT (9)
       $objInfoInscriptionRetiroTraslado = $em->createQueryBuilder()
                       ->select('ei')
