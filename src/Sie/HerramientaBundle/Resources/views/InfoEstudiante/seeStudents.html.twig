@@ -111,16 +111,19 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                <div id="no-more-tables">
+                <div id="no-more-tables" class="table-responsive">
                     <table class="table table-bordered table-hover cf">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>CÓDIGO RUDE</th>
                                 <th>C.I.</th>
-                                <th>ESTUDIANTE</th>
+                                <th>PATERNO</th>
+                                <th>MATERNO</th>
+                                <th>NOMBRE(S)</th>
                                 <th>FECHA NAC.</th>
                                 <th>ESTADO DE MATRÍCULA</th>
+                                <th>Obs. SEGIP</th>
                                 <th>OPCIONES</th>
                                 <!--td>
                                     <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
@@ -172,7 +175,9 @@
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.carnetIdentidad}}{% if data.complemento %}-{{data.complemento}}{% endif %}</td>
-                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
+                                <td>{{data.paterno}}</td>
+                                <td>{{data.materno}}</td>
+                                <td>{{data.nombre}}</td>
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
                                     {% if gestion == 2020 %}
@@ -202,7 +207,7 @@
                                         
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {# VALIDACIÓN SEGIP #}
                                     <div id="estudianteSegip_{{data.codigoRude}}">
                                         {% if data.segipId == 1 %}
@@ -216,7 +221,8 @@
                                             <span class="badge badge-info"><i class="fa fa-fw fa-info"></i> No cuenta con C.I.</span>
                                         {% endif %}
                                     </div>
-
+                                </div>
+                                <td class="text-center">
                                     {# APODERADOS #}
                                     {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado">
