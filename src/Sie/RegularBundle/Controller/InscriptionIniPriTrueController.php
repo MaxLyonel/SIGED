@@ -593,6 +593,32 @@ class InscriptionIniPriTrueController extends Controller {
       $obsvalue = $form['observacionOmitido'];
     }
     $estadomatriculaTipo = 15;
+
+    //check if the student has inscription like RT (9)
+      $objInfoInscriptionRetiroTraslado = $em->createQueryBuilder()
+                      ->select('ei')
+                      ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                      ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                      ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')                            
+                      ->where('e.id = :idEstudiante')
+                      ->andWhere('ei.estadomatriculaTipo = 9')
+                      ->andWhere('iec.gestionTipo = :gestion')
+                      ->setParameter('idEstudiante', $form['idStudent'])
+                      ->setParameter('gestion', $this->session->get('currentyear'))
+                      ->getQuery()
+                      ->getResult();
+
+      foreach ($objInfoInscriptionRetiroTraslado as $value) {
+        dump($form['institucionEducativa']);
+        dump($value->getCodUeProcedenciaId());
+        if($form['institucionEducativa']==$value->getCodUeProcedenciaId()){
+          $message = 'El/la estudiante ya tiene un registro en la misma Unidad Educativa';
+          $this->addFlash('idNoInscription', $message);
+          $swCorrectInscription = false;
+        }
+      
+      }
+
     //check the inscription
        if($swCorrectInscription){
 
