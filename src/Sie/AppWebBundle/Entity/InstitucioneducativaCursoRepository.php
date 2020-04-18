@@ -80,7 +80,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
         $qb = $this->getEntityMAnager()->createQueryBuilder();
         $qb
 
-                ->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.complemento, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId')
+                ->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.complemento, j.segipId, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId')
                 ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
                 ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
