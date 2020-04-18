@@ -637,7 +637,7 @@ class InscriptionIniPriTrueController extends Controller {
                       ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
                       ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')                            
                       ->where('e.id = :idEstudiante')
-                      ->andWhere('ei.estadomatriculaTipo = 4')
+                      ->andWhere('ei.estadomatriculaTipo = 9')
                       ->andWhere('iec.gestionTipo = :gestion')
                       ->setParameter('idEstudiante', $form['idStudent'])
                       ->setParameter('gestion', $this->session->get('currentyear'))
