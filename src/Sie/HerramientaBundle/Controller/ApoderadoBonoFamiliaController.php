@@ -378,16 +378,18 @@ class ApoderadoBonoFamiliaController extends Controller {
 
             $apoderado['extranjero'] = ($apoderado['extranjero'] == 1)?false:true;
 
+            $apoderado['carnet'] = trim($apoderado['carnet']);
+            $apoderado['complemento'] = trim(mb_strtoupper($apoderado['complemento'], 'utf-8'));
+            $apoderado['paterno'] = trim(mb_strtoupper($apoderado['paterno'], 'utf-8'));
+            $apoderado['materno'] = trim(mb_strtoupper($apoderado['materno'], 'utf-8'));
+            $apoderado['nombres'] = trim(mb_strtoupper($apoderado['nombres'], 'utf-8'));
+            $apoderado['lugar'] = trim(mb_strtoupper($apoderado['lugar'], 'utf-8'));
+
             // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON EL CARNET
             $personas = $em->getRepository('SieAppWebBundle:Persona')->findBy([
                 'carnet'=>$apoderado['carnet']
             ]);
 
-            $apoderado['complemento'] = mb_strtoupper($apoderado['complemento'], 'utf-8');
-            $apoderado['paterno'] = mb_strtoupper($apoderado['paterno'], 'utf-8');
-            $apoderado['materno'] = mb_strtoupper($apoderado['materno'], 'utf-8');
-            $apoderado['nombres'] = mb_strtoupper($apoderado['nombres'], 'utf-8');
-            $apoderado['lugar'] = mb_strtoupper($apoderado['lugar'], 'utf-8');
 
             if (count($personas) == 0) {
                 // SI NO ENCONTRAMOS REGISTROS CON EL CARNET ENTONCES REGISTRAMOS A LA PERSONA
