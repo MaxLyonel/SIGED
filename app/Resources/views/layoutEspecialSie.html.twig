@@ -367,7 +367,7 @@
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
                     </li> #}
-                    {% if app.session.get('roluser') != 20 %}
+                    {# {% if app.session.get('roluser') != 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -383,14 +383,14 @@
                                 {% endif %}
                             </ul>
                         </li>
-                    {% endif %}
-                    <li class="">
+                    {% endif %} #}
+                    {# <li class="">
                         <a href="{{path('wf_tramite_index')}}">
                             <span class="icon"><i class="fa fa-list-alt"></i></span>
                             <span class="text">Trámites</span>
-                            {# <span class="{{ route == 'wf_tramite_index' ? 'selected':'' }}"></span> #}
+                            <span class="{{ route == 'wf_tramite_index' ? 'selected':'' }}"></span>
                         </a>
-                    </li>
+                    </li> #}
 
 
                     <!-- Start navigation - dashboard -->

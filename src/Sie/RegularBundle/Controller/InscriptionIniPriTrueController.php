@@ -409,179 +409,215 @@ class InscriptionIniPriTrueController extends Controller {
         $currentLevelStudent = $this->aCursos[$newInfInscription-1];
       }
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
+
+
     //if doesnt have next curso info is new or extranjero do the inscription
-    if( (str_replace('-','',$currentLevelStudent) )!=''){
-      // if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
-      if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
-         //|| ($currentLevelStudent == '12-1-1')
-         //do the inscription
-          if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112))){
-            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, 5);
-          }else{
-            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-          }
-         if($keyNextLevelStudent >= 0){
-           // if(((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent)) || ( $newLevelStudent != $this->aCursos[$keyNextLevelStudent] ) ){
-          if(! in_array(str_replace('-','',$currentLevelStudent), array(1111,1112,1211)) ){
-             $message = 'Estudiante No Inscrito, no le puede bajar de curso';
-             $this->addFlash('idNoInscription', $message);
-             $swCorrectInscription = false;
-           }else{
-           
-        $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataCurrentInscription['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
-         $yearStudent = $arrYearStudent['age'];
-          if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
-            $message = false;
-              switch ($yearStudent) {
-                case 4:
-                  # code...
-                  if($form['nivel']=='11' && $form['grado']=='1'){
-                    //good
-                  }else{
-                    $status = 'error';
-                    $code = 400;
-                    $message = "El estudiante no cumple con lo requerido en edad";
-                    $swCorrectInscription = false;           
-                  }
-                  break;
-                case 5:
-                  # code...
-                  if($form['nivel']=='11' && $form['grado']=='2'){
-                    //good
-                  }else{
-                    $status = 'error';
-                    $code = 400;
-                    $message = "El estudiante no cumple con lo requerido en edad";
-                    $swCorrectInscription = false;                   
-                  }
-                  break;
-                case 6:
-                  # code...
-                  if($form['nivel']=='12' && $form['grado']=='1'){
-                    //good
-                  }else{
-                    $status = 'error';
-                    $code = 400;
-                    $message = "El estudiante no cumple con lo requerido en edad";
-                    $swCorrectInscription = false; 
-                  }
-                  break;
-                case 7 or 8:
-                  if($form['nivel']=='12' && $form['grado']=='1'){
-                    //good
-                  }else{
-                    $status = 'error';
-                    $code = 400;
-                    $message = "El estudiante no cumple con lo requerido en edad";
-                    $swCorrectInscription = false; 
-                  }
-                  break;
 
-                default:
-                  # code...
-                    $status = 'error';
-                    $code = 400;                  
-                    $message = "El estudiante no cumple con lo requerido en edad";
-                    $swCorrectInscription = false; 
-                  break;
-              }
-
-              // $this->addFlash('idNoInscription', $message);
-              
-            }else{
-
-              $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
-              $this->addFlash('idNoInscription', $message);
-              $swCorrectInscription = false;
-
-            }
+      //get current inscription
+      $objInfoInscriptionEfectivo = $em->createQueryBuilder()
+                      ->select('iec')
+                      ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                      ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                      ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')                            
+                      ->where('e.id = :idEstudiante')
+                      ->andWhere('ei.estadomatriculaTipo = 4')
+                      ->andWhere('iec.gestionTipo = :gestion')
+                      ->setParameter('idEstudiante', $form['idStudent'])
+                      ->setParameter('gestion', $this->session->get('currentyear'))
+                      ->getQuery()
+                      ->getResult();
   
-
-            /*  if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
-               //do the inscriptin
-             }else{//dump($newInfInscription);die;
-               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
-               $this->addFlash('idNoInscription', $message);
-               $swCorrectInscription = false;
-             }*/
-           }
-         }else{
-           $message = 'Estudiante ya cuenta con inscripción';
-           $this->addFlash('idNoInscription', $message);
-           $swCorrectInscription = false;
-         }
-
+     $currentDataInscription = $objInfoInscriptionEfectivo[0]->getNivelTipo()->getId().$objInfoInscriptionEfectivo[0]->getCicloTipo()->getId().$objInfoInscriptionEfectivo[0]->getGradoTipo()->getId();
+      $message = false;
+       if( (str_replace('-','',$currentLevelStudent) )!=''){
+            if(str_replace('-','',$newLevelStudent)==$currentDataInscription){
+              }else{
+                $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+                $this->addFlash('idNoInscription', $message);
+                $swCorrectInscription = false;
+              }
        }else{
-         //get the current level inscription to do the validation
-         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-        //  dump($keyNextLevelStudent);die;
-         //validate the next level
-         if($keyNextLevelStudent>0){
-           if($keyNextLevelStudent == sizeof($this->aCursos)){
-             $message = 'Estudiante bachiller';
-             $this->addFlash('idNoInscription', $message);
-             $swCorrectInscription = false;
-           }else{
-             //validate the level selected
-             if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
-               //do the inscriptin
-             }else{//dump($newInfInscription);die;
-               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
-               $this->addFlash('idNoInscription', $message);
-               $swCorrectInscription = false;
-             }
-           }
-           //dump(sizeof($this->aCursos));
-           //dump('krlos');
-
-         }else{
-           $message = 'Estudiante ya cuenta con inscripción';
-           $this->addFlash('idNoInscription', $message);
-           $swCorrectInscription = false;
-         }
-       }
-    }else{
-      //do inscription inicial/ primaria or extranjero
-      //get the year of student
-
-      $dataStudent = unserialize($form['newdata']);
-      $arrStudentFecnac = array();
-      $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
-      list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
-      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
-
-      //new student validation
-        if ($tiempo[0]<=6){
-          switch ($tiempo[0]) {
-            case 4:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
-            break;
-            case 5:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
-            break;
-            case 6:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
-            break;
-            default:
-              # code...
-              break;
-          }
-
-        }else{
-          //do inscription
-          $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
-        }//end new student validation
-        $message='';
-        if(!$swCorrectInscription){
-          $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+         $message = 'Estudiante No inscrito, el curso seleccionado no existe';
           $this->addFlash('idNoInscription', $message);
           $swCorrectInscription = false;
-        }
+       }        
 
-    }///end validation
+      //if(in_array(str_replace('-','',$newLevelStudent), array())){
+    // if( (str_replace('-','',$currentLevelStudent) )!=''){
+    //   // if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')|| ($currentLevelStudent == '12-1-1')){
+    //   if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
+    //      //|| ($currentLevelStudent == '12-1-1')
+    //      //do the inscription
+    //     dump(str_replace('-','',$newLevelStudent));
+    //       if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112))){
+    //         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, 5);
+    //       }else{
+
+    //         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+    //       }
+    //       dump($keyNextLevelStudent);
+    //      if($keyNextLevelStudent >= 0){
+    //        // if(((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent)) || ( $newLevelStudent != $this->aCursos[$keyNextLevelStudent] ) ){
+    //       if(! in_array(str_replace('-','',$currentLevelStudent), array(1111,1112,1211)) ){
+    //          $message = 'Estudiante No Inscrito, no le puede bajar de curso';
+    //          $this->addFlash('idNoInscription', $message);
+    //          $swCorrectInscription = false;
+    //        }else{
+           
+    //     $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataCurrentInscription['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
+    //      $yearStudent = $arrYearStudent['age'];
+    //       if(in_array(str_replace('-','',$newLevelStudent), array(1111,1112,1211))){
+    //         $message = false;
+    //           switch ($yearStudent) {
+    //             case 4:
+    //               # code...
+    //               if($form['nivel']=='11' && $form['grado']=='1'){
+    //                 //good
+    //               }else{
+    //                 $status = 'error';
+    //                 $code = 400;
+    //                 $message = "El estudiante no cumple con lo requerido en edad";
+    //                 $swCorrectInscription = false;           
+    //               }
+    //               break;
+    //             case 5:
+    //               # code...
+    //               if($form['nivel']=='11' && $form['grado']=='2'){
+    //                 //good
+    //               }else{
+    //                 $status = 'error';
+    //                 $code = 400;
+    //                 $message = "El estudiante no cumple con lo requerido en edad";
+    //                 $swCorrectInscription = false;                   
+    //               }
+    //               break;
+    //             case 6:
+    //               # code...
+    //               if($form['nivel']=='12' && $form['grado']=='1'){
+    //                 //good
+    //               }else{
+    //                 $status = 'error';
+    //                 $code = 400;
+    //                 $message = "El estudiante no cumple con lo requerido en edad";
+    //                 $swCorrectInscription = false; 
+    //               }
+    //               break;
+    //             case 7 or 8:
+    //               if($form['nivel']=='12' && $form['grado']=='1'){
+    //                 //good
+    //               }else{
+    //                 $status = 'error';
+    //                 $code = 400;
+    //                 $message = "El estudiante no cumple con lo requerido en edad";
+    //                 $swCorrectInscription = false; 
+    //               }
+    //               break;
+
+    //             default:
+    //               # code...
+    //                 $status = 'error';
+    //                 $code = 400;                  
+    //                 $message = "El estudiante no cumple con lo requerido en edad";
+    //                 $swCorrectInscription = false; 
+    //               break;
+    //           }
+
+    //           // $this->addFlash('idNoInscription', $message);
+              
+    //         }else{
+
+    //           $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+    //           $this->addFlash('idNoInscription', $message);
+    //           $swCorrectInscription = false;
+
+    //         }
+  
+
+    //         /*  if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+    //            //do the inscriptin
+    //          }else{//dump($newInfInscription);die;
+    //            $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+    //            $this->addFlash('idNoInscription', $message);
+    //            $swCorrectInscription = false;
+    //          }*/
+    //        }
+    //      }else{
+    //        $message = 'Estudiante ya cuenta con inscripción 1111';
+    //        $this->addFlash('idNoInscription', $message);
+    //        $swCorrectInscription = false;
+    //      }
+
+    //    }else{
+    //      //get the current level inscription to do the validation
+    //      $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+    //     //  dump($keyNextLevelStudent);die;
+    //      //validate the next level
+    //      if($keyNextLevelStudent>0){
+    //        if($keyNextLevelStudent == sizeof($this->aCursos)){
+    //          $message = 'Estudiante bachiller';
+    //          $this->addFlash('idNoInscription', $message);
+    //          $swCorrectInscription = false;
+    //        }else{
+    //          //validate the level selected
+    //          if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+    //            //do the inscriptin
+    //          }else{//dump($newInfInscription);die;
+    //            $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+    //            $this->addFlash('idNoInscription', $message);
+    //            $swCorrectInscription = false;
+    //          }
+    //        }
+    //        //dump(sizeof($this->aCursos));
+    //        //dump('krlos');
+
+    //      }else{
+    //        $message = 'Estudiante ya cuenta con inscripción 222';
+    //        $this->addFlash('idNoInscription', $message);
+    //        $swCorrectInscription = false;
+    //      }
+    //    }
+    // }else{
+    //   //do inscription inicial/ primaria or extranjero
+    //   //get the year of student
+
+    //   $dataStudent = unserialize($form['newdata']);
+    //   $arrStudentFecnac = array();
+    //   $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
+    //   list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
+    //   $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
+
+    //   //new student validation
+    //     if ($tiempo[0]<=6){
+    //       switch ($tiempo[0]) {
+    //         case 4:
+    //         # check level
+    //         $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
+    //         break;
+    //         case 5:
+    //         # check level
+    //         $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
+    //         break;
+    //         case 6:
+    //         # check level
+    //         $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
+    //         break;
+    //         default:
+    //           # code...
+    //           break;
+    //       }
+
+    //     }else{
+    //       //do inscription
+    //       $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
+    //     }//end new student validation
+    //     $message='';
+    //     if(!$swCorrectInscription){
+    //       $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+    //       $this->addFlash('idNoInscription', $message);
+    //       $swCorrectInscription = false;
+    //     }
+
+    // }///end validation
     // get the last inscription
     $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']-1);
     // validata inscription to the same UE
@@ -593,7 +629,7 @@ class InscriptionIniPriTrueController extends Controller {
       $obsvalue = $form['observacionOmitido'];
     }
     $estadomatriculaTipo = 15;
-
+    $form['observacionOmitido'] = preg_replace("/[\r\n|\n|\r]+/", " ", $form['observacionOmitido']);
     //check if the student has inscription like RT (9)
       $objInfoInscriptionRetiroTraslado = $em->createQueryBuilder()
                       ->select('ei')
@@ -609,8 +645,7 @@ class InscriptionIniPriTrueController extends Controller {
                       ->getResult();
 
       foreach ($objInfoInscriptionRetiroTraslado as $value) {
-        dump($form['institucionEducativa']);
-        dump($value->getCodUeProcedenciaId());
+        
         if($form['institucionEducativa']==$value->getCodUeProcedenciaId()){
           $message = 'El/la estudiante ya tiene un registro en la misma Unidad Educativa';
           $this->addFlash('idNoInscription', $message);
@@ -698,7 +733,8 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
          $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estadomatriculaTipo));
-         $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
+         // $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
+         $studentInscription->setCodUeProcedenciaId( $objInfoInscriptionEfectivo[0]->getInstitucioneducativa()->getId());
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();

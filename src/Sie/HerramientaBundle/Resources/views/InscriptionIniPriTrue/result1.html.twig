@@ -386,10 +386,12 @@
           var grado = $('#form_grado').val();
           var paralelo = $('#form_paralelo').val();
           var turno = $('#form_turno').val();
+          var observacionOmitido = $('#form_observacionOmitido').val();
          // var question = $('#form_questionStatus').val();
           var observation = $('#form_dateRequest').val();
           var arrDate = observation.split('-');
 
+          
           if(arrDate[2]!=2020){
              Swal.fire({
                 icon: 'error',
@@ -398,6 +400,16 @@
                 showConfirmButton: true,
             })
             return;
+          }
+          if(observacionOmitido.length<=15){
+             Swal.fire({
+                icon: 'error',
+                title: 'La justificación debe ser mayor a 15 caracteres!',
+                type: 'error',
+                showConfirmButton: true,
+            })
+            return;            
+
           }
           if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0 && observation.length > 0){
 
