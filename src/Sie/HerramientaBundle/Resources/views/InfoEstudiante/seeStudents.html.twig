@@ -229,7 +229,7 @@
                                     {# APODERADO BONO FAMILIA #}
                                     {% if gestion == 2020 and data.estadomatriculaId in [4] %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
-                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.eInsId}});" >
                                                 <i class="fa fa-user"></i>
                                             </button>
                                         </div>
@@ -631,11 +631,11 @@
         });
     };
 
-    var apoderadoBonoFamilia = function (infoUe, infoStudent) {
+    var apoderadoBonoFamilia = function (idInscripcion) {
 
         $.ajax({
             type: 'post',
-            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            data: ({idInscripcion: idInscripcion}),
             url: "{{ path('apoderado_bono_familia_index') }}",
             beforeSend: function () {
                 $('#modal').empty();

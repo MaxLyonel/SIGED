@@ -155,12 +155,18 @@
 					<tbody>
 						<tr><th width="120px">Código RUDE</th><td>{{inscripcion.estudiante.codigoRude}}</td></tr>
 						<tr><th>Estudiante</th><td>{{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}} {{inscripcion.estudiante.nombre}}</td></tr>
-						<tr><th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td></tr>
-						<tr><th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td></tr>
-						<tr><th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td></tr>
+						{# SOLO SE MUESTRA EL NIVEL GRADO Y PARALELO EN EL SISTEMA ACADEMICO #}
+						{% if pathSystem == 'SieHerramientaBundle' %}
+							<tr><th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td></tr>
+							<tr><th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td></tr>
+							<tr><th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td></tr>
+						{% endif %}
 					</tbody>
 				</table>
-				      		
+				<div class="alert alert-warning" v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
+					<h4><strong>Importante!</strong> &nbsp; Debe habilitar o registrar <b>un</b> solo apoderado. Esta será la única persona que podrá realizar el cobro del bono familia.</h4>
+					{# <i class="fa fa-info-circle"></i> No se tiene habilitado un apoderado para realizar el cobro. <br> #}
+				</div>
 				<div v-show="!formulario">
 					<div v-if="generos.length == 0" class="text-center">
 						{# <i class="fa fa-refresh fa-2x fa-spin"></i> Cargando... #}
@@ -168,9 +174,9 @@
 					</div>
 
 					<div v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
-						<div class="alert alert-info">
-							<i class="fa fa-info-circle"></i> No se tiene habilitado un apoderado para realizar el cobro. <br>
-							<div v-show="apoderados2019.length > 0"><b>Nota:</b> Se identificarón apoderados registrados, puede habilitar uno de ellos o registrar un nuevo apoderado para que pueda realizar el cobro del bono familia.</div>
+						
+						<div v-show="apoderados2019.length > 0" class="alert alert-info">
+							<b>Nota:</b> Se identificarón apoderados registrados, debe habilitar uno de ellos o registrar un nuevo apoderado
 						</div>
 						<div class="row">
 							<div v-for="(apoderado, key) in apoderados2019" :key="key" class="col-md-6">
@@ -243,7 +249,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="alert alert-success">
-									<p> <i class="fa fa-check-circle"></i> Apoderado habilitado para realizar el cobro del bono familia</p>
+									<h4> <i class="fa fa-check-circle"></i> Apoderado habilitado para realizar el cobro del bono familia</h4>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -304,6 +310,10 @@
 				</div>
 				<div v-show="formulario">
 					<h5>Registrar datos del apoderado <span class="requerido"> ( * campos requeridos )</span></h5>
+					<div class="alert alert-info">
+						Verifique bien la información del apoderado, esta será contrastada en la Entidad Financiera al momento de realizar el cobro.
+						{# <strong>Importante!</strong> El apoderado que registre será quien realizará el cobro del bono familia #}
+					</div>
 					<fieldset :disabled="validado">
 						<div class="row">
 							<div class="form-group col-md-6">
@@ -591,7 +601,7 @@
 	    	habilitarApoderado(apoderado){
 	    		Swal.fire({
 	    		  	title: 'Habilitar apoderado',
-	    		  	html: 'Se habilitará a '+ apoderado.paterno + ' ' + apoderado.materno + ' ' + apoderado.nombres + ' para realizar el cobro del bono familia. ¿Esta seguro de habilitar al apoderado?' ,
+	    		  	html: 'Se habilitará a '+ apoderado.nombres + ' ' + apoderado.paterno + ' ' + apoderado.materno + ' para realizar el cobro del bono familia. Verifique bien la información del apoderado, la autenticidad del dato puede ser auditada. ¿Esta seguro de habilitar al apoderado?',
 	    		  	type: 'question',
 	    		  	showCancelButton: true,
 	    		  	confirmButtonColor: '#3085d6',
@@ -701,9 +711,11 @@
 	    		
 	    		if (this.errores.length == 0) {
 		    		this.validando = true;
+		    		this.registrando = true;
 		    		axios.post(Routing.generate('apoderado_bono_familia_validar', {apoderado: this.apoderado}))
 		    			.then(response => {
 		    				this.validando = false;
+		    				this.registrando = false;
 		    				if (response.data.status == 'success') {
 		    					this.validado = true;
 		    				}
@@ -717,6 +729,7 @@
 		    			})
 		    			.catch(e => {
 		    				this.validando = false;
+		    				this.registrando = false;
 		    				console.log(e);
 		    			});
 		    	}else{
@@ -793,33 +806,46 @@
 	    		}
 
 	    		if (this.errores.length == 0) {
-	    			this.registrando = true;
-		    		axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
-		    			.then(response => {
-		    				if (response.data.status == 'success') {
-		    					this.registrando = false;
-		    					this.cargar();
-		    					this.validado = false;
-		    					this.formulario = false;
-		    					Swal.fire(
-	    					  		'Registro realizado!',
-	    					  		response.data.msg,
-	    					  		'success'
-	    						)
-	    						this.limpiarFormulario();
-		    				}
-		    				if (response.data.status == 'error') {
-		    					this.registrando = false;
-		    					Swal.fire(
-	    					  		'Aviso',
-	    					  		response.data.msg,
-	    					  		'warning'
-	    						)
-		    				}
-		    			})
-		    			.catch(e => {
-		    				console.log(e);
-		    			});
+		    		Swal.fire({
+		    		  	title: 'Registrar apoderado',
+		    		  	html: 'Se registrará a <span class="jupper">'+ this.apoderado.nombres + ' ' + this.apoderado.paterno + ' ' + this.apoderado.materno + '</span>. Verifique bien la información del apoderado, la autenticidad del dato puede ser auditada. ¿Esta seguro de registrar al apoderado?',
+		    		  	type: 'question',
+		    		  	showCancelButton: true,
+		    		  	confirmButtonColor: '#3085d6',
+		    		  	cancelButtonColor: '#d33',
+		    		  	confirmButtonText: 'Si, registrar',
+		    		  	cancelButtonText: 'No, cancelar'
+		    		}).then((result) => {
+		    		  	if (result.value) {
+				    		this.registrando = true;
+				    		axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
+				    			.then(response => {
+				    				if (response.data.status == 'success') {
+				    					this.registrando = false;
+				    					this.cargar();
+				    					this.validado = false;
+				    					this.formulario = false;
+				    					Swal.fire(
+			    					  		'Registro realizado!',
+			    					  		response.data.msg,
+			    					  		'success'
+			    						)
+			    						this.limpiarFormulario();
+				    				}
+				    				if (response.data.status == 'error') {
+				    					this.registrando = false;
+				    					Swal.fire(
+			    					  		'Aviso',
+			    					  		response.data.msg,
+			    					  		'warning'
+			    						)
+				    				}
+				    			})
+				    			.catch(e => {
+				    				console.log(e);
+				    			});
+		    		  	}
+		    		});
 		    	}else{
 		    		let texto = '<div class="errores">';
 		    		$.each(this.errores, function (i, value) {
@@ -841,8 +867,8 @@
 	    	},
 	    	eliminar(id){
 	    		Swal.fire({
-	    		  	title: 'Eliminar apoderado?',
-	    		  	html: 'Se eliminará el apoderado actual. <br> <b>Nota:</b> Podrá realizar el registro de un nuevo apoderado',
+	    		  	title: 'Eliminar apoderado',
+	    		  	html: 'Se eliminará el apoderado actual. <b>Esta eliminación estará sujeta a auditoría</b>, en lo posible evite la eliminación de apoderados. Verifique bien al momento de habilitarlo o registrarlo. ¿Desea eliminar el apoderado?',
 	    		  	type: 'question',
 	    		  	showCancelButton: true,
 	    		  	confirmButtonColor: '#3085d6',

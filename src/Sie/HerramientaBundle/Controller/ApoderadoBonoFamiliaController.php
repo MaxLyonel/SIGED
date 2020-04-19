@@ -32,20 +32,19 @@ class ApoderadoBonoFamiliaController extends Controller {
      * Muestra el listado de Menús
      */
     public function indexAction (Request $request) {
-        $infoUe = $request->get('infoUe');
-        $infoStudent = $request->get('infoStudent');
 
-        $aInfoUeducativa = unserialize($infoUe);
-        $aInfoStudent = json_decode($infoStudent, TRUE);
-
-        $idInscripcion = $aInfoStudent['eInsId'];
+        $idInscripcion = $request->get('idInscripcion');
 
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
+        $pathSystem = $this->session->get('pathSystem', null);
+
+
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:index.html.twig', array(
             'idInscripcion'=>$idInscripcion,
-            'inscripcion'=>$inscripcion
+            'inscripcion'=>$inscripcion,
+            'pathSystem'=>$pathSystem
         ));
     }
 
