@@ -1,122 +1,166 @@
 {% set onlyview = app.session.get('onlyview') %}
 {% if exist == true %}
     <small>
-      <div class="row">
-          <div class="col-md-12">
-              {% for flashMessage in app.session.flashbag.get('noinscription') %}
-                  <div class="alert alert-warning alert-dismissible" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                  </div>
-              {% endfor %}
-
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-12">
-              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
-                  <div class="alert alert-success alert-dismissible" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                  </div>
-              {% endfor %}
-
-          </div>
-      </div>
         <div class="row">
-          {#<div class="col-md-4">
-                <a class="btn btn-block btn-primary" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
-                  <i class="fa fa-download"></i> Listado de Estudiantes del Curso
-                </a>
-          </div>
-          <div class="col-md-4">
-                <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
-                  <i class="fa fa-download"></i> Boletin Centralizador
-                </a>
-          </div>#}
-          <div class="col-md-12 text-center">
-            {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
-              <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
-                  <i class="fa fa-user"></i> Inscripción
-              </button>
-            {% endif %}
-          </div>
-          <!--div class="col-md-3" >
-            {% if app.session.get('ue_modular') and nivel >= 13 %}
-            {% else %}
-            <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
-              <i class="fa fa-user-plus"></i> Inscrip. sin Rude
-            </button>
-            {% endif %}
-          </div-->
-      </div>
-    <br />
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="no-more-tables">
-                    <div class="row">
-
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                     </div>
+                {% endfor %}
 
-                    <table class="table table-teal table-bordered table-hover cf">
-                        <tr>
-
-                        <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
-                        <td class="bg-teal text-center" colspan="3">Estudiantes Inscritos<br />
-                            {{gradoname}} - {{paraleloname}}
-                        </td>
-                        <td class="bg-default text-center">Opciones</td>
-
-                        </tr>
-                        {#init the array info student #}
-                        {% set objInfoStudent = [] %}
-                        {% for data in objStudents %}
-
-                          {% set items = {
-
-                                          'id': data.id,
-                                          'carnetIdentidad': data.carnetIdentidad,
-                                          'codigoRude': data.codigoRude,
-                                          'paterno': '',
-                                          'materno': '',
-                                          'nombre': '',
-                                          'fechaNacimiento': data.fechaNacimiento,
-
-
-                                          } %}
-                            {% set jsnInfoStudent = items|json_encode() %}
-                            {# set the array student info and convert on json string #}
-                            {# set objInfoStudent = objInfoStudent|merge(data) #}
-                            {# set jsnInfoStudent = objInfoStudent|json_encode() #}
-                            <tr >
-                                <td>{{loop.index}}</td>
-                                <td>{{data.codigoRude}}</td>
-                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
-
-                                <td class="text-center">
-                                    {# {% if 1==1 %} #}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                        <button type="button" class="btn btn-circle btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
-                                            <i class="fa fa-list"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                    {% if onlyview == false and gestion == app.session.get('currentyear') %}
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
-                                        <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-
-                    </table>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                     <div class="alert alert-success alert-dismissible" role="alert">
+                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="header-content">
+            <h4><i class="glyphicon glyphicon-list-alt"></i> {{areaEspecial}}: {{turnoname}} / {{nivelname}} / {{gradoname}} / {{paraleloname}}</h4>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h5>Lista de inscritos</h5>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    {#<div class="col-md-4">
+                            <a class="btn btn-block btn-primary" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
+                            <i class="fa fa-download"></i> Listado de Estudiantes del Curso
+                            </a>
+                    </div>
+                    <div class="col-md-4">
+                            <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                            <i class="fa fa-download"></i> Boletin Centralizador
+                            </a>
+                    </div>#}
+                    {# <div class="col-md-12 text-center">
+                        {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                        <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                            <i class="fa fa-user"></i> Inscripción
+                        </button>
+                        {% endif %}
+                    </div> #}
+                    <!--div class="col-md-3" >
+                        {% if app.session.get('ue_modular') and nivel >= 13 %}
+                        {% else %}
+                        <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
+                        <i class="fa fa-user-plus"></i> Inscrip. sin Rude
+                        </button>
+                        {% endif %}
+                    </div-->
                 </div>
-                <!-- /.portlet -->
+                <div class="row">
+                    {#<div class="col-md-4">
+                            <a class="btn btn-block btn-primary" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
+                            <i class="fa fa-download"></i> Listado de Estudiantes del Curso
+                            </a>
+                    </div>
+                    <div class="col-md-4">
+                            <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                            <i class="fa fa-download"></i> Boletin Centralizador
+                            </a>
+                    </div>#}
+                    {# <div class="col-md-12 text-center">
+                        {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                        <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                            <i class="fa fa-user"></i> Inscripción
+                        </button>
+                        {% endif %}
+                    </div> #}
+                    <!--div class="col-md-3" >
+                        {% if app.session.get('ue_modular') and nivel >= 13 %}
+                        {% else %}
+                        <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
+                        <i class="fa fa-user-plus"></i> Inscrip. sin Rude
+                        </button>
+                        {% endif %}
+                    </div-->
+                </div>
+                <div class="row">
+                    <div id="no-more-tables table-responsive">
+                        <table class="table table-bordered table-hover cf">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>CÓDIGO RUDE</th>
+                                    <th>C.I.</th>
+                                    <th>PATERNO</th>
+                                    <th>MATERNO</th>
+                                    <th>NOMBRE(S)</th>
+                                    <th>FECHA NAC.</th>
+                                    <th>Obs. SEGIP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% set objInfoStudent = [] %}
+                            {% for data in objStudents %}
+                                {% set items = {
+                                    'id': data.id,
+                                    'carnetIdentidad': data.carnetIdentidad,
+                                    'codigoRude': data.codigoRude,
+                                    'paterno': '',
+                                    'materno': '',
+                                    'nombre': '',
+                                    'fechaNacimiento': data.fechaNacimiento,
+                                } %}
+                                {% set jsnInfoStudent = items|json_encode() %}
+                                {# set the array student info and convert on json string #}
+                                {# set objInfoStudent = objInfoStudent|merge(data) #}
+                                {# set jsnInfoStudent = objInfoStudent|json_encode() #}
+                                <tr {% if data.segipId == 0 %}class="text-danger"{% endif %} id="trEstudianteSegip_{{data.codigoRude}}">
+                                    <td>{{loop.index}}</td>
+                                    <td>{{data.codigoRude}}</td>
+                                    <td>{{data.carnetIdentidad}}{% if data.complemento %}-{{data.complemento}}{% endif %}</td>
+                                    <td>{{data.paterno}}</td>
+                                    <td>{{data.materno}}</td>
+                                    <td>{{data.nombre}}</td>
+                                    <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
+                                    <td class="text-center">
+                                        {# VALIDACIÓN SEGIP #}
+                                        <div id="estudianteSegip_{{data.codigoRude}}">
+                                            {% if data.segipId == 1 %}
+                                                <span class="badge badge-success"><i class="fa fa-fw fa-check"></i> Válido SEGIP</span>
+                                            {% elseif data.segipId == 0 and data.carnetIdentidad %}
+                                                <form action="{{path('herramienta_info_estudiante_validar_segip')}}" method="post">
+                                                    <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{data.codigoRude}}">
+                                                    <button type="button" class="btn btn-link text-danger" onclick="validarEstudianteSegip('{{data.codigoRude}}');"><i class="fa fa-fw fa-edit"></i> Validar con SEGIP</button>
+                                                </form>
+                                            {% else %}
+                                                <span class="badge badge-info"><i class="fa fa-fw fa-info"></i> No cuenta con C.I.</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {# <td class="text-center">
+                                        {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                            <button type="button" class="btn btn-circle btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
+                                                <i class="fa fa-list"></i>
+                                            </button>
+                                        </div>
+                                        {% endif %}
+                                        {% if onlyview == false and gestion == app.session.get('currentyear') %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
+                                            <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        {% endif %}
+                                    </td> #}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </small>
@@ -287,5 +331,38 @@
         });
     };
 
+    var validarEstudianteSegip = function(codigoRude){
+        if(confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?')) {
+            $.ajax({
+                type: 'post',
+                data: ({codigoRude: codigoRude}),
+                url: "{{path('herramienta_info_estudiante_validar_segip')}}",
+                beforeSend: function () {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    $('#estudianteSegip_'+codigoRude).html('Cargando...');
+                },
+                success: function (data) {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    if(data.estado){
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-success');
+                        $('#estudianteSegip_'+codigoRude).html('<span class="badge badge-success"><i class="fa fa-fw fa-check"></i> '+data.mensaje+'</span>');
+                    } else {
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-warning');
+                        $('#estudianteSegip_'+codigoRude).html('<span>'+data.mensaje+'</span>');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                        $('#estudianteSegip_'+codigoRude).empty();
+                        $('#estudianteSegip_'+codigoRude).html('Ocurrió un error interno.');                        
+                    },
+                    404: function () {
+                        $('#estudianteSegip_'+codigoRude).empty();
+                        $('#estudianteSegip_'+codigoRude).html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        }
+    };
 
 </script>
