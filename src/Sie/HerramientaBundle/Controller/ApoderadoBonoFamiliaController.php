@@ -297,11 +297,73 @@ class ApoderadoBonoFamiliaController extends Controller {
 
     private function validarSegip($apoderado){
         if($apoderado['carnet'] != '' && $apoderado['nombres'] != '' && $apoderado['fechaNacimiento'] != ''){
+            
+            $apoderado['carnet'] = trim($apoderado['carnet']);
+            $apoderado['complemento'] = trim(mb_strtoupper($apoderado['complemento'], 'utf-8'));
+            $apoderado['paterno'] = trim(mb_strtoupper($apoderado['paterno'], 'utf-8'));
+            $apoderado['materno'] = trim(mb_strtoupper($apoderado['materno'], 'utf-8'));
+            $apoderado['nombres'] = trim(mb_strtoupper($apoderado['nombres'], 'utf-8'));
+            $apoderado['lugar'] = trim(mb_strtoupper($apoderado['lugar'], 'utf-8'));
+
+            $em = $this->getDoctrine()->getManager();
+            $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                'carnet'=>$apoderado['carnet'],
+                'complemento'=>$apoderado['complemento'],
+                'paterno'=>$apoderado['paterno'],
+                'materno'=>$apoderado['materno'],
+                'nombre'=>$apoderado['nombres'],
+                'fechaNacimiento'=> new \DateTime($apoderado['fechaNacimiento'])
+            ));
+
+            if (is_object($persona)) {
+                if ($persona->getSegipId() == 1) {
+                    return [
+                        'status'=>'success',
+                        'validado'=>true,
+                        'msg'=>'Los datos fueron validados correctamente BD'
+                    ];
+                }
+            }
+
             $datos = array(
-                'complemento'=>mb_strtoupper($apoderado['complemento'], 'utf-8'),
-                'primer_apellido'=>mb_strtoupper($apoderado['paterno'], 'utf-8'),
-                'segundo_apellido'=>mb_strtoupper($apoderado['materno'], 'utf-8'),
-                'nombre'=>mb_strtoupper($apoderado['nombres'], 'utf-8'),
+                'complemento'=>$apoderado['complemento'],
+                'primer_apellido'=>$apoderado['paterno'],
+                'segundo_apellido'=>$apoderado['materno'],
+                'nombre'=>$apoderado['nombres'],
+                'fecha_nacimiento'=>$apoderado['fechaNacimiento']
+            );
+
+            $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($apoderado['carnet'],$datos,'prod','academico');
+            if($resultadoPersona){
+
+                return [
+                    'status'=>'success',
+                    'validado'=>true,
+                    'msg'=>'Los datos fueron validados correctamente SEGIP'
+                ];
+            } else {
+                return [
+                    'status'=>'error',
+                    'validado'=>false,
+                    'msg'=>'Los datos ingresados no son correctos, verifique e intente nuevamente'
+                ];
+            }
+        }
+        
+        return [
+            'status'=>'error',
+            'validado'=>false,
+            'msg'=>'Debe completar todos los datos para realizar la validación'
+        ];
+    }
+
+    private function validarSegip1($apoderado){
+        if($apoderado['carnet'] != '' && $apoderado['nombres'] != '' && $apoderado['fechaNacimiento'] != ''){
+            $datos = array(
+                'complemento'=>$apoderado['complemento'],
+                'primer_apellido'=>$apoderado['paterno'],
+                'segundo_apellido'=>$apoderado['materno'],
+                'nombre'=>$apoderado['nombres'],
                 'fecha_nacimiento'=>$apoderado['fechaNacimiento']
             );
 
