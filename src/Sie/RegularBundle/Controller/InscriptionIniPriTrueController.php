@@ -570,7 +570,8 @@ class InscriptionIniPriTrueController extends Controller {
        if($swCorrectInscription){
 
         // add validation segip if the student has CI
-        if(!$dataCurrentInscription['segipId'] && $dataCurrentInscription['carnetIdentidad']){
+        if(false){
+        //if(!$dataCurrentInscription['segipId'] && $dataCurrentInscription['carnetIdentidad']){
           $answerSegip = false;
           // to do the segip validation
           $arrParametros = array(
