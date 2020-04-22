@@ -96,7 +96,8 @@ class RemoveInscriptionStudentFreeController extends Controller {
          */
         $objObservation = $this->get('seguimiento')->getStudentObservationQA($form);
         // dump($objObservation);die;
-        if($objObservation){
+        if(false){
+        // if($objObservation){
   
             $message = "Estudiante observado - rude " . $form['codigoRude'] . " :";
             $this->addFlash('notiremovest', $message);
