@@ -508,7 +508,7 @@ class ApoderadoBonoFamiliaController extends Controller {
                 $persona = null;
                 // BUSCAMOS A LA PERSONA CON TODOS LOS DATOS VALIDADOS
                 foreach ($personas as $p) {
-                    if ($p->getCarnet() == $apoderado['carnet'] && $p->getComplemento() == $apoderado['complemento'] && $p->getPaterno() == $apoderado['paterno'] && $p->getMaterno() == $apoderado['materno'] && $p->getNombre() == $apoderado['nombres'] && $p->getFechaNacimiento()->format('d-m-Y') == $apoderado['fechaNacimiento']) {
+                    if (trim($p->getCarnet()) == $apoderado['carnet'] && trim($p->getComplemento()) == $apoderado['complemento'] && trim($p->getPaterno()) == $apoderado['paterno'] && trim($p->getMaterno()) == $apoderado['materno'] && trim($p->getNombre()) == $apoderado['nombres'] && trim($p->getFechaNacimiento()->format('d-m-Y')) == $apoderado['fechaNacimiento']) {
                         $persona = $p;
                     }
                 }
@@ -559,19 +559,24 @@ class ApoderadoBonoFamiliaController extends Controller {
 
                     // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS MENOS LA FECHA DE NACIMIENTO
                     foreach ($personas as $p) {
-                        if ($p->getCarnet() == $apoderado['carnet'] && $p->getComplemento() == $apoderado['complemento'] && $p->getPaterno() == $apoderado['paterno'] && $p->getMaterno() == $apoderado['materno'] && $p->getNombre() == $apoderado['nombres']) {
+                        if (trim($p->getCarnet()) == $apoderado['carnet'] && trim($p->getComplemento()) == $apoderado['complemento'] && trim($p->getPaterno()) == $apoderado['paterno'] && trim($p->getMaterno()) == $apoderado['materno'] && trim($p->getNombre()) == $apoderado['nombres']) {
                             $persona = $p;
                         }
                     }
 
                     if (is_object($persona)) {
                         $fechaNacimiento = ($persona->getFechaNacimiento())?$persona->getFechaNacimiento()->format('d-m-Y'):'';
+                        if (is_null($persona->getPaisTipo()) ) {
+                            $codpais = 'NULL';
+                        }else{
+                            $codpais = $persona->getPaisTipo()->getId();
+                        }
 
                         $datosAnteriores = array(
                             'fecha_nacimiento'=>$fechaNacimiento,
                             'celular'=>$persona->getCelular(),
                             'es_extranjero'=>$persona->getEsExtranjero(),
-                            'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                            'pais_tipo'=>$codpais,
                             'localidad_nac'=>$persona->getLocalidadNac(),
                             'segip_id'=>$persona->getSegipId()
                         );
@@ -610,17 +615,23 @@ class ApoderadoBonoFamiliaController extends Controller {
 
                         // BUSCAMOS A LA PERSONA EN LA BASE DE DATOS CON LOS DATOS VALIDADOS MENOS EL COMPLEMENTO
                         foreach ($personas as $p) {
-                            if ($p->getCarnet() == $apoderado['carnet'] && $p->getPaterno() == $apoderado['paterno'] && $p->getMaterno() == $apoderado['materno'] && $p->getNombre() == $apoderado['nombres'] && $p->getFechaNacimiento()->format('d-m-Y') == $apoderado['fechaNacimiento']) {
+                            if (trim($p->getCarnet()) == $apoderado['carnet'] && trim($p->getPaterno()) == $apoderado['paterno'] && trim($p->getMaterno()) == $apoderado['materno'] && trim($p->getNombre()) == $apoderado['nombres'] && trim($p->getFechaNacimiento()->format('d-m-Y')) == $apoderado['fechaNacimiento']) {
                                 $persona = $p;
                             }
                         }
 
                         if (is_object($persona)) {
+                            if (is_null($persona->getPaisTipo()) ) {
+                                $codpais = 'NULL';
+                            }else{
+                                $codpais = $persona->getPaisTipo()->getId();
+                            }
+
                             $datosAnteriores = array(
                                 'complemento'=>$persona->getComplemento(),
                                 'celular'=>$persona->getCelular(),
                                 'es_extranjero'=>$persona->getEsExtranjero(),
-                                'pais_tipo'=>$persona->getPaisTipo()->getId(),
+                                'pais_tipo'=>$codpais,
                                 'localidad_nac'=>$persona->getLocalidadNac(),
                                 'segip_id'=>$persona->getSegipId()
                             );
