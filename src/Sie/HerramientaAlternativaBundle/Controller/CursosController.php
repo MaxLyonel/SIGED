@@ -113,9 +113,18 @@ class CursosController extends Controller {
             //dump($dupcursover); die;
         }
         
-
         if (count($objStudents) > 0){
             $existins = true;
+            for($i=0; $i<count($objStudents);$i++) {
+                // $objStudents[$i]['edad'] = $this->calcularEdad($objStudents[$i]['fechaNacimiento']->format('Y-m-d'));
+
+                $query = $em->getConnection()->prepare('SELECT sp_calcula_edadanio (:rude::VARCHAR)');
+                $query->bindValue(':rude', $objStudents[$i]['codigoRude']);
+                $query->execute();
+                $edad = $query->fetchAll();
+                
+                $objStudents[$i]['edad'] = $edad[0]['sp_calcula_edadanio'];
+            }
         }
         else {
             $existins = false;
@@ -144,6 +153,17 @@ class CursosController extends Controller {
                     'primariaNuevo' => $primariaNuevo,
                     'iecId'  => $request->get('iecId')
         ));
+    }
+
+    private function calcularEdad($fechaNacimiento){
+        list($anio, $mes, $dia) = explode('-', $fechaNacimiento);
+        $anio_diferencia = date('Y') - $anio;
+        $mes_diferencia = date('m') - $mes;
+        $dia_diferencia = date('d') - $dia;
+        if ($dia_diferencia < 0 || $mes_diferencia < 0) {
+            $anio_diferencia--;
+        }
+        return $anio_diferencia;
     }
 
     public function verificarcursoduplicado($aInfoUeducativa, $idcurso) {
