@@ -15,8 +15,8 @@
         <div class="row">
             <div class="col-md-12">
                 {% for flashMessage in app.session.flashbag.get('goodinscription') %}
-                     <div class="alert alert-success alert-dismissible" role="alert">
-                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                     </div>
                 {% endfor %}
@@ -86,7 +86,7 @@
                     </div-->
                 </div>
                 <div class="row">
-                    <div id="no-more-tables table-responsive">
+                    <div id="no-more-tables" class="col-md-12 table-responsive">
                         <table class="table table-bordered table-hover cf">
                             <thead>
                                 <tr>
@@ -141,31 +141,37 @@
                                         </div>
                                     </td>
                                     <td>
-                                      {# <td class="text-center">
-                                          {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
-                                          <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                              <button type="button" class="btn btn-circle btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
-                                                  <i class="fa fa-list"></i>
-                                              </button>
-                                          </div>
-                                          {% endif %}
-                                          {% if onlyview == false and gestion == app.session.get('currentyear') %}
-                                          <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
-                                              <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
-                                                  <i class="fa fa-trash"></i>
-                                              </button>
-                                          </div>
-                                          {% endif %}
-                                      </td> #}
+                                        {# <td class="text-center">
+                                            {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                <button type="button" class="btn btn-circle btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
+                                                    <i class="fa fa-list"></i>
+                                                </button>
+                                            </div>
+                                            {% endif %}
+                                            {% if onlyview == false and gestion == app.session.get('currentyear') %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
+                                                <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            {% endif %}
+                                        </td> #}
 
-                                      {# APODERADO BONO FAMILIA #}
-                                      {% if gestion == 2020 %}
-                                          <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
-                                              <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.estInsId}});" >
-                                                  <i class="fa fa-user"></i>
-                                              </button>
-                                          </div>
-                                      {% endif %}
+                                        {# APODERADO BONO FAMILIA #}
+                                        {% if gestion == 2020 %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
+                                                <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.estInsId}});" >
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+                                        {# CERTIFICADO DE DISCAPACIDAD #}
+                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Certificado de Discapacidad">
+                                            <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="certificadoDiscapacidad({{data.id}});" >
+                                                <i class="fa fa-user"></i>
+                                            </button>
+                                        </div> #}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -212,10 +218,10 @@
                 $('#modal').empty();
                 $('#modal').append(data);
                 $('#sandbox-container input').datepicker({
-                  autoclose: true,
-                  todayHighlight: true,
-                  format: 'dd-mm-yyyy',
-                  language: "es"
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd-mm-yyyy',
+                    language: "es"
                 });
                 //$('#modal').modal({backdrop: 'static', keyboard: false})
             },
@@ -267,10 +273,10 @@
                 $('#modal').empty();
                 $('#modal').append(data);
                 $('#sandbox-container input').datepicker({
-                  autoclose: true,
-                  todayHighlight: true,
-                  format: 'dd-mm-yyyy',
-                  language: "es"
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd-mm-yyyy',
+                    language: "es"
                 });
                 //$('#modal').modal({backdrop: 'static', keyboard: false})
             },
@@ -313,29 +319,29 @@
         var horas = $('#form_horas').val();
         var eInsId = $('#form_eInsId').val();
 
-           $('#modal').modal('hide');
-             $.ajax({
-                 type: 'post',
-                 url: Routing.generate('herramienta_info_register_speciality_save'),
-                 data: ({specialityId: specialityId, horas: horas, eInsId: eInsId}),
-                 beforeSend: function () {
-                   $('#modal').empty();
-                 },
-                 success: function (data) {
-                   $('#modal').empty();
-                   //$('#modal').append(data);
-                   //location.reload(true);
-                 },
-                 statusCode: {
-                     500: function () {
+        $('#modal').modal('hide');
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_info_register_speciality_save'),
+                data: ({specialityId: specialityId, horas: horas, eInsId: eInsId}),
+                beforeSend: function () {
+                $('#modal').empty();
+                },
+                success: function (data) {
+                $('#modal').empty();
+                //$('#modal').append(data);
+                //location.reload(true);
+                },
+                statusCode: {
+                    500: function () {
 
-                     },
-                     404: function () {
+                    },
+                    404: function () {
 
-                     }
-                 }
-             });
-         }
+                    }
+                }
+            });
+        }
 
 
     var onlyNumber = function (event) {
@@ -412,6 +418,37 @@
                 }
             });
         }
+    };
+
+    var certificadoDiscapacidad = function (idEstudiante) {
+        /*$.ajax({
+            type: 'post',
+            data: ({idInscripcion: idInscripcion}),
+            url: "{{ path('apoderado_bono_familia_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd-mm-yyyy',
+                    language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });*/
     };
 
 </script>

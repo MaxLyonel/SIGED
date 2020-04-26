@@ -99,12 +99,12 @@ class ModCiLocalidadController extends Controller {
                 return $this->redirectToRoute('modificar_ci_localidad_index');
             }
              //*******VERIFICANDO QUE LA/EL ESTUDIANTE NO TENGA DATOS EN BACHILLER DESTACADO
-             $bdestacado=$this->get('seguimiento')->getBachillerDestacado($student->getCodigoRude());
-             if ($bdestacado) {
-                 $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", cuenta con historial en Bachiller Destacado, por lo que la modificación de datos no se realizará.";
-                 $this->addFlash('notihistory', $message);            
-                 return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-             }
+            $bdestacado=$this->get('seguimiento')->getBachillerDestacado($student->getCodigoRude());
+            if ($bdestacado) {
+                $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", cuenta con historial en Bachiller Destacado, por lo que la modificación de datos no se realizará.";
+                $this->addFlash('notihistory', $message);            
+                return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+            }
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE NO TENGA PARTICIPACIÓN EN OLIMPIADAS
             $olimpiadas=$this->get('seguimiento')->getOlimpiadasGestion($student->getCodigoRude(), $this->session->get('currentyear'));
             if ($olimpiadas) {
