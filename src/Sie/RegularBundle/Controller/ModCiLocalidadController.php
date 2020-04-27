@@ -70,23 +70,29 @@ class ModCiLocalidadController extends Controller {
         // $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'], 'segipId' => 0));
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //verificamos si existe el estudiante
+        
         if ($student) {
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE TENGA INSCRIPCIÓN EN LA GESTIÓN ACTUAL
             $objUe = $em->getRepository('SieAppWebBundle:Estudiante')->getUeIdbyEstudianteId($student->getId(), $this->session->get('currentyear'));
+            
             if (!$objUe) {
                 $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", no presenta inscripción para la presente gestión.";
                 $this->addFlash('noticilocalidad', $message);
                 return $this->redirectToRoute('modificar_ci_localidad_index');
             }
             //VERIFICANDO TUICIÓN DEL USUARIO
-            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
-            $query->bindValue(':user_id', $this->session->get('userId'));
-            $query->bindValue(':sie', $objUe[0]['ueId']);
-            $query->bindValue(':roluser', $this->session->get('roluser'));
-            $query->execute();
-            $aTuicion = $query->fetchAll();
+            $tuicion = false;
+            foreach ($objUe as $value) {
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $value['ueId']);
+                $query->bindValue(':roluser', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+                $tuicion = $tuicion || $aTuicion[0]['get_ue_tuicion'];
+            }
             
-            if (!$aTuicion[0]['get_ue_tuicion']) {
+            if (!$tuicion) {
                 $message = "EL Usuario no tiene tuición para realizar la operación.";
                 $this->addFlash('noticilocalidad', $message);
                 return $this->redirectToRoute('modificar_ci_localidad_index');
