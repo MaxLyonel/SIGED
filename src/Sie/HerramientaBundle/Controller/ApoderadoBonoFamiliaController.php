@@ -32,7 +32,7 @@ class ApoderadoBonoFamiliaController extends Controller {
      * Muestra el listado de Menús
      */
     public function indexAction (Request $request) {
-        return $this->redirect($this->generateUrl('principal_web'));
+        // return $this->redirect($this->generateUrl('principal_web'));
         $idInscripcion = $request->get('idInscripcion');
 
         $em = $this->getDoctrine()->getManager();
