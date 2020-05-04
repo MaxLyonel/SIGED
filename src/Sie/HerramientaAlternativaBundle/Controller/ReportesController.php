@@ -374,7 +374,7 @@ class ReportesController extends Controller {
         $paralelo = $objUeducativa[0]['paraleloId'];
         $turno = $objUeducativa[0]['turnoId'];
 
-        $data = $user.'|'.$sie.'|'.$eInsId.'|'.$gestion.'|'.(int)$nivel.'|'.$ciclo.'|'.$grado.'|'.(int)$paralelo.'|'.$turno;
+        $data = $est[0]->getCodigoRude().'|'.$eInsId.'|'.$sie.'|'.$gestion.'|'.(int)$nivel.'|'.$ciclo.'|'.$grado.'|'.(int)$paralelo.'|'.$turno;
         $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
        
         if ($nivel == '15'){
