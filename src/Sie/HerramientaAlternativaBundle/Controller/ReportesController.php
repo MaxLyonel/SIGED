@@ -369,13 +369,14 @@ class ReportesController extends Controller {
         $user= $this->session->get('userName');
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
+        $ciclo = $objUeducativa[0]['cicloId'];
         $grado = $objUeducativa[0]['gradoId'];
         $paralelo = $objUeducativa[0]['paraleloId'];
         $turno = $objUeducativa[0]['turnoId'];
 
-        $data = $user.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$grado.'|'.$paralelo.'|'.$turno;
+        $data = $user.'|'.$sie.'|'.$gestion.'|'.(int)$nivel.'|'.$ciclo.'|'.$grado.'|'.(int)$paralelo.'|'.$turno;
         $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
-        
+       
         if ($nivel == '15'){
             // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
             $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($idCurso);
