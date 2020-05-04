@@ -327,17 +327,54 @@ class ReportesController extends Controller {
             }
         }
         return $response;
-    }    
+    }
+    private function getLinkEncript($datos){
+      $codes = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/';
+
+      // Encriptamos los datos
+      $result = "";
+      $a = 0;
+      $b = 0;
+      for($i=0;$i<strlen($datos);$i++){
+          //$x = strpos($codes, $datos[$i]) ;
+          $x = ord($datos[$i]) ;
+          $b = $b * 256 + $x;
+          $a = $a + 8;
+
+          while ( $a >= 6) {
+              $a = $a - 6;
+              $x = floor($b/(1 << $a));
+              $b = $b % (1 << $a);
+              $result = $result.''.substr($codes, $x,1);
+          }
+      }
+      if($a > 0){
+          $x = $b << (6 - $a);
+          $result = $result.''.substr($codes, $x,1);
+      }
+      return $result;
+    }   
     
     public function siealtlibretasAction($eInsId, $nivel) {
         $em = $this->getDoctrine()->getManager();
-        $insobj = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId);        
+        $insobj = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId);      
         $estobjid = $insobj->getEstudiante()->getId();       
         $est = $em->getRepository('SieAppWebBundle:Estudiante')->findById($estobjid);
         $idCurso = $insobj->getInstitucioneducativaCurso()->getId();
+
+        //get info about the course
+        $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPerIecid($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'), $idCurso);
         
-//        dump($est[0]->getCodigoRude());
-//        die;
+        //get the data to do the report
+        $user= $this->session->get('userName');
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $grado = $objUeducativa[0]['gradoId'];
+        $paralelo = $objUeducativa[0]['paraleloId'];
+        $turno = $objUeducativa[0]['turnoId'];
+
+        $data = $user.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$grado.'|'.$paralelo.'|'.$turno;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
         
         if ($nivel == '15'){
             // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
@@ -352,8 +389,9 @@ class ReportesController extends Controller {
             $arch = $this->session->get('ie_id').'_'.$est[0]->getCodigoRude().'_'.date('Ymd') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
-            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));            
-            $link = $this->container->getParameter('urlreportweb') . $reporte . '&__format=pdf&estudiante_inscripcion_id='.$eInsId.'&&__format=pdf&';
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));  
+
+            $link = $this->container->getParameter('urlreportweb') . $reporte . '&__format=pdf&estudiante_inscripcion_id='.$eInsId. '&lk=' . $link .'&&__format=pdf&';
 //            dump($link);
 //            die;
             $response->setContent(file_get_contents($link));            
@@ -368,7 +406,7 @@ class ReportesController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $link = $this->container->getParameter('urlreportweb') . 'alt_est_LibretaElectronicaTecnica2016_v3_vcjm.rptdesign&__format=pdf&estudiante_inscripcion_id='.$eInsId.'&&__format=pdf&';
+            $link = $this->container->getParameter('urlreportweb') . 'alt_est_LibretaElectronicaTecnica2016_v3_vcjm.rptdesign&__format=pdf&estudiante_inscripcion_id='.$eInsId. '&lk=' . $link .'&&__format=pdf&';
 //            dump($link);
 //            die;
             $response->setContent(file_get_contents($link));            
