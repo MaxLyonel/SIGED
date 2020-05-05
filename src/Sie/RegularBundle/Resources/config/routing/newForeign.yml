@@ -57,3 +57,9 @@ newForeign_gohomonimo:
     defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:gohomonimo }
     options:
          expose: true  
+
+newForeign_showhistory:
+    path:     /showhistory
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:showHistory }
+    options:
+         expose: true  
