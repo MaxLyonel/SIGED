@@ -105,9 +105,11 @@
                                             <tr>
                                                 <th>No.</th>
                                                 <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
+                                                <th>Fecha de Nacimiento</th>
                                                 <th>Formación</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Fecha Modificación</th>
@@ -119,15 +121,46 @@
                                         </thead>
                                         <tbody>
                                             {% for maestro in maestro %}
-                                                <tr>
-                                                    <td data-title="N°">{{ loop.index }}</td>
-                                                    <td data-title="Carnet">{{ maestro.carnet }}</td>
-                                                    <td data-title="Paterno">{{ maestro.paterno }}</td>
-                                                    <td data-title="Materno">{{ maestro.materno }}</td>
-                                                    <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
-                                                    <td data-title="Formación">{{ maestro.formacion }}</td>
-                                                    <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
-                                                    <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                                <tr {% if maestro.segipId != 1 %}class="text-danger"{% endif %}>
+                                                    <td data-title="N°">{{loop.index}}</td>
+                                                    <td data-title="Carnet">{{maestro.carnet}}</td>
+                                                    <td data-title="Complemento">
+                                                        {% if maestro.segipId != 1 %}
+                                                            <input type="text" value="{{maestro.complemento}}" maxlength="2" class="form-control">
+                                                        {% else %}
+                                                            {{maestro.complemento}}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td data-title="Paterno">
+                                                        {% if maestro.segipId != 1 %}
+                                                            <input type="text" value="{{maestro.paterno}}" class="form-control">
+                                                        {% else %}
+                                                            {{maestro.paterno}}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td data-title="Materno">
+                                                        {% if maestro.segipId != 1 %}
+                                                            <input type="text" value="{{maestro.materno}}" class="form-control">
+                                                        {% else %}
+                                                            {{maestro.materno}}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td data-title="Nombre(s)">
+                                                        {% if maestro.segipId != 1 %}
+                                                            <input type="text" value="{{maestro.nombre}}" class="form-control">
+                                                        {% else %}
+                                                            {{maestro.nombre}}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td data-title="FechaNacimiento">
+                                                        {% if maestro.segipId != 1 %}
+                                                            <input type="text" value="{{maestro.fechaNacimiento|date('d-m-Y')}}" class="form-control calendario" autocomplete"off">
+                                                        {% else %}
+                                                            {{maestro.fechaNacimiento|date('d-m-Y')}}
+                                                        {% endif %}</td>
+                                                    <td data-title="Formación">{{maestro.formacion}}</td>
+                                                    <td data-title="FechReg">{% if maestro.fechaRegistro %}{{maestro.fechaRegistro|date('d-m-Y')}}{% else %}-{% endif %}</td>
+                                                    <td data-title="FechMod">{% if maestro.fechaModificacion %}{{maestro.fechaModificacion|date('d-m-Y')}}{% else %}-{% endif %}</td>
                                                     {% if app.session.get('ie_per_estado') != '0' %}
                                                         <td data-title="Acciones">
                                                             <form action="{{path('herramientalt_info_maestro_edit')}}" method="post" style="display:inline-block">
@@ -146,17 +179,24 @@
                                                             </form>
                                                         </td>
                                                         <td>
-                                                            <form action="{{path('herramientalt_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">
-                                                                <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
-                                                                <input type="hidden" name="gestion" value="{{gestion}}">
-                                                                <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
-                                                                <input type="hidden" name="idCargo" value="{{maestro.cargoId}}">
-                                                                {% if maestro.esVigenteAdministrativo %}
-                                                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
-                                                                {% else %}
-                                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
-                                                                {% endif %}
-                                                            </form>
+                                                            {% if maestro.segipId == 1 %}
+                                                                <form action="{{path('herramientalt_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">
+                                                                    <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                                    <input type="hidden" name="gestion" value="{{gestion}}">
+                                                                    <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
+                                                                    <input type="hidden" name="idCargo" value="{{maestro.cargoId}}">
+                                                                    {% if maestro.esVigenteAdministrativo %}
+                                                                        <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
+                                                                    {% else %}
+                                                                        <button type="submit" class="btn btn-warning" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
+                                                                    {% endif %}
+                                                                </form>
+                                                            {% else %}     
+                                                                <form name="form[{{maestro.miId}}]" id="form_{{maestro.miId}}" action="{{path('herramientalt_info_maestro_modifdatos')}}" method="post">
+                                                                    <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
+                                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Validar con SEGIP</button>
+                                                                </form>
+                                                            {% endif %}
                                                         </td>
                                                     {% endif %}
                                                 </tr>

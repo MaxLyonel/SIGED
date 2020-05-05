@@ -78,6 +78,7 @@
             <!--/ END IE SUPPORT -->
             <!-- <link rel="stylesheet" type="text/css" href="CSS.css"> -->
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
         </head>
     {% endblock %}
     <!--/ END HEAD -->
@@ -1275,9 +1276,6 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/tests/assets/jquery-jvectormap-world-mill-en.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/js/jquery.horizBarChart.min.js')}}"></script>#}
             
-
-            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
-            
             <!--/ END PAGE LEVEL PLUGINS -->
             
             <!-- START @PAGE LEVEL SCRIPTS -->
@@ -1291,6 +1289,7 @@
             <script src="{{asset('webherramienta/assets/admin/js/demo.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/menuTree.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.gallery.type3.js')}}"></script>
+            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.morris.js')}}"></script>            #}
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.project.portfolio.type4.js')}}"></script>#}
             <!--/ END PAGE LEVEL SCRIPTS -->
@@ -1305,6 +1304,14 @@
             <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
             <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
             #}
+            <script type="text/javascript">
+                $('.calendario').datepicker({
+                    format: 'dd-mm-yyyy',
+                    todayBtn: 'linked',
+                    language: 'es',
+                    autoclose: true
+                });
+            </script>
             
             <script>
             //ABRIR MODAL CON SUBCENTROS GESTIONES Y SEMESTRES
