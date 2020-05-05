@@ -1,0 +1,107 @@
+Sie\AppWebBundle\Entity\EstudianteDiscapacidadCertificado:
+    type: entity
+    table: estudiante_discapacidad_certificado
+    indexes:
+        IDX_9133C9B359590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        departamentoRegistro:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: departamento_registro
+        cedulaIdentidad:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: cedula_identidad
+        paterno:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: fecha_nacimiento
+        sexo:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        celular:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        certificados:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        esValidado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: es_validado
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

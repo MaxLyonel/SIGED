@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEspecial;
+use Sie\AppWebBundle\Entity\EstudianteDiscapacidadCertificado;
 
 class InfoStudentsController extends Controller {
 
@@ -283,12 +284,12 @@ class InfoStudentsController extends Controller {
   **/
   private function doInscriptionForm($data, $studentId){
     $form = $this->createFormBuilder()
-            //->add('caseespecial', 'checkbox', array('label'=>'Validacion Especial', 'attr'=>array('class'=>'form-control', 'checked'=>false ) ))
-            ->add('data', 'hidden', array('data'=> $data))
-            ->add('studentId', 'hidden', array('data'=> $studentId))
-            ->add('inscription', 'button', array('label'=> 'Inscribir', 'attr'=>array('class'=>'btn btn-success','data-placement'=>'top', 'onclick'=>'doInscription()')))
-            ->getForm();
-   return $form;
+    //->add('caseespecial', 'checkbox', array('label'=>'Validacion Especial', 'attr'=>array('class'=>'form-control', 'checked'=>false ) ))
+    ->add('data', 'hidden', array('data'=> $data))
+    ->add('studentId', 'hidden', array('data'=> $studentId))
+    ->add('inscription', 'button', array('label'=> 'Inscribir', 'attr'=>array('class'=>'btn btn-success','data-placement'=>'top', 'onclick'=>'doInscription()')))
+    ->getForm();
+    return $form;
   }
 
   /**
@@ -399,7 +400,6 @@ class InfoStudentsController extends Controller {
       try {
         //remove observaciones
         $objInscriptionObservacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->findby(array('estudianteInscripcion'=>$estInsId));
-        //dump($objInscriptionObservacion);die;
         if($objInscriptionObservacion){
           foreach($objInscriptionObservacion as $value) {
             $em->remove($value);
@@ -443,7 +443,6 @@ class InfoStudentsController extends Controller {
 
         //step 4 delete socio economico data
         $objSocioEco = $em->getRepository('SieAppWebBundle:SocioeconomicoRegular')->findBy(array('estudianteInscripcion' => $estInsEspId ));
-        //dump($objSocioEco);die;
         foreach ($objSocioEco as $element) {
             $em->remove($element);
         }
@@ -452,7 +451,6 @@ class InfoStudentsController extends Controller {
 
         //step 5 delete apoderado_inscripcion data
         $objApoIns = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $estInsId ));
-        //dump($objApoIns);die;
 
         foreach ($objApoIns as $element) {
             $objApoInsDat = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findBy(array('apoderadoInscripcion' => $element->getId()));
@@ -464,41 +462,41 @@ class InfoStudentsController extends Controller {
         $em->flush();
 
         //paso 6 borrando apoderados
-         $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $estInsId ));
-         foreach ($apoderados as $element) {
-             $em->remove($element);
-         }
-         $em->flush();
-        //paso 7 borrando apoderados
-         $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $estInsId ));
-         if($objEstudianteInscripcionSocioeconomicoRegular){
-           $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
-             'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-           ));
-           foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
-               $em->remove($element);
-           }
-           $em->flush();
+        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $estInsId ));
+        foreach ($apoderados as $element) {
+            $em->remove($element);
+        }
+        $em->flush();
+      //paso 7 borrando apoderados
+        $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $estInsId ));
+        if($objEstudianteInscripcionSocioeconomicoRegular){
+          $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
+            'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
+          ));
+          foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
+              $em->remove($element);
+          }
+          $em->flush();
 
-           $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
-             'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-           ));
-           foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
-               $em->remove($element);
-           }
-           $em->flush();
+          $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
+            'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
+          ));
+          foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
+              $em->remove($element);
+          }
+          $em->flush();
 
-           $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
-             'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-           ));
-           foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
-               $em->remove($element);
-           }
-           $em->flush();
+          $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
+            'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
+          ));
+          foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
+              $em->remove($element);
+          }
+          $em->flush();
 
-           $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
-           $em->flush();
-         }
+          $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
+          $em->flush();
+        }
 
         $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estInsId);
         if($objInscription){
@@ -581,5 +579,57 @@ class InfoStudentsController extends Controller {
                   'operativo'=>$operativo,
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
+  }
+
+  public function getCertificadoDiscapacidadAction(Request $request) {
+    $em = $this->getDoctrine()->getManager();
+    $idEstudiante = $request->get("idEstudiante");
+    $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($idEstudiante);
+    $estudianteDiscapacidadCertificado = $em->getRepository('SieAppWebBundle:EstudianteDiscapacidadCertificado')->findOneBy(array("estudiante" => $idEstudiante));
+    $tieneCertificado = true;
+    $mensaje = null;
+    $certificados = null;
+
+    if ($estudianteDiscapacidadCertificado) {
+      $certificados = json_decode($estudianteDiscapacidadCertificado->getCertificados(), true);
+    } else {
+      $estadoServicioDiscapacidad = $this->get('sie_app_web.agetic')->estadoServicioDiscapacidad();
+      if($estadoServicioDiscapacidad) {
+        $certificadoDiscapacidad = $this->get('sie_app_web.agetic')->buscarCertificadoDiscapacidad($estudiante->getCarnetIdentidad());
+        if($certificadoDiscapacidad["codigo"] === 1) {
+          $datos = $certificadoDiscapacidad["datos"];
+          $estudianteDiscapacidadCertificado = new EstudianteDiscapacidadCertificado();
+          $estudianteDiscapacidadCertificado->setDepartamentoRegistro($datos["departamentoRegistro"]);
+          $estudianteDiscapacidadCertificado->setCedulaIdentidad($datos["cedulaIdentidad"]);
+          $estudianteDiscapacidadCertificado->setPaterno($datos["apellidoPaterno"]);
+          $estudianteDiscapacidadCertificado->setMaterno($datos["apellidoMaterno"]);
+          $estudianteDiscapacidadCertificado->setNombre($datos["nombres"]);
+          $estudianteDiscapacidadCertificado->setFechaNacimiento($datos["fechaNacimiento"]);
+          $estudianteDiscapacidadCertificado->setSexo($datos["sexo"]);
+          $estudianteDiscapacidadCertificado->setCelular($datos["celular"]);
+          $estudianteDiscapacidadCertificado->setDireccion($datos["direccion"]);
+          $estudianteDiscapacidadCertificado->setCertificados(json_encode($datos["certificados"]));
+          $estudianteDiscapacidadCertificado->setEsValidado(1);
+          $estudianteDiscapacidadCertificado->setFechaRegistro(new \DateTime('now'));
+          $estudianteDiscapacidadCertificado->setEstudiante($estudiante);
+          $em->persist($estudianteDiscapacidadCertificado);
+          $em->flush();
+          $certificados = json_decode($estudianteDiscapacidadCertificado->getCertificados(), true);
+        } else {
+          $tieneCertificado = false;
+        }
+      } else {
+        $mensaje = "La verificación de Certificados de Discapacidad se encuentra temporalmente fuera de servicio.";
+      }
+    }
+
+    return $this->render('SieEspecialBundle:InfoStudents:certificado_discapacidad.html.twig', array(
+      'idEstudiante' => $idEstudiante,
+      'estudiante' => $estudiante,
+      'estudianteDiscapacidadCertificado' => $estudianteDiscapacidadCertificado,
+      'certificados' => $certificados,
+      'tieneCertificado' => $tieneCertificado,
+      'mensaje' => $mensaje
+    ));
   }
 }
