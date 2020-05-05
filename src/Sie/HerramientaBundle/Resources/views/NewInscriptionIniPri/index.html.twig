@@ -401,7 +401,7 @@
 	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="dataNewStudent.sie" maxlength="8" v-on:keyup="getInfoUe(1);">
 	                              </div>
 									{#
-	                              <div class="col-md-3">
+	                              <div class="col-md-3" v-if="allowwithoutci">
 	                              	<label for="form_articuleten" class="validation">INSCRIPCIÓN CON DIFERENCIA:</label>
 	                              	<input type="checkbox" data-toggle="toggle" data-size="xs" v-model="dataNewStudent.articuleten">
 	                              </div>
@@ -457,7 +457,7 @@
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptioninipri(1)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir 11</button>
+			                                <button v-on:click="doInscriptioninipri(1)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
 			                            </div>
 		                        	</div>
 
@@ -605,7 +605,7 @@
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptioninipri(0)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir old</button>
+			                                <button v-on:click="doInscriptioninipri(0)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
 			                            </div>
 		                        	</div>
 
@@ -1136,16 +1136,6 @@
             	
                 },        
                 doInscriptioninipri: function(swnewforeign){
-
-                	/*validate the file attached*/
-                    if (typeof this.informe != 'object') {
-                        Swal.fire(
-                        'Adjuntar Solicitud',
-                        'Debe adjuntar un escaneado del documento para ralizar la inscripción, puede ser un archivo de imagen o PDF',
-                        'warning'
-                        );
-                        return;
-                    }
 
                 	Swal.fire({
                         title: 'Realizar Inscripción?',
