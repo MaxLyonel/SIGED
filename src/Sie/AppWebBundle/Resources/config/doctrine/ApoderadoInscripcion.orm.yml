@@ -5,12 +5,18 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcion:
         idx_apoderado_inscripcion_estudiante_inscripcion_id:
             columns:
                 - estudiante_inscripcion_id
-        IDX_98C9376BF5F88DB9:
+        idx_apoderado_inscripcion_persona_id:
             columns:
                 - persona_id
         IDX_98C9376BC861DD7C:
             columns:
                 - apoderado_tipo_id
+    uniqueConstraints:
+        uq_apoderado_inscripcion:
+            columns:
+                - apoderado_tipo_id
+                - persona_id
+                - estudiante_inscripcion_id
     id:
         id:
             type: integer
@@ -33,14 +39,24 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcion:
             unsigned: false
             comment: ''
             column: es_validado
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
-        persona:
-            targetEntity: Persona
+        apoderadoTipo:
+            targetEntity: ApoderadoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                persona_id:
+                apoderado_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudianteInscripcion:
@@ -52,13 +68,13 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcion:
                 estudiante_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
-        apoderadoTipo:
-            targetEntity: ApoderadoTipo
+        persona:
+            targetEntity: Persona
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                apoderado_tipo_id:
+                persona_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
