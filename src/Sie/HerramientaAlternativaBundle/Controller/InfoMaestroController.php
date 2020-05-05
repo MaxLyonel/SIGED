@@ -64,7 +64,7 @@ class InfoMaestroController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
 
         $query = $repository->createQueryBuilder('mi')
-                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion, ct.id cargoId, ct.cargo')
+                ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, p.fechaNacimiento, p.segipId, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion, ct.id cargoId, ct.cargo')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
                 ->innerJoin('SieAppWebBundle:CargoTipo', 'ct', 'WITH', 'mi.cargoTipo = ct.id')
@@ -872,6 +872,34 @@ class InfoMaestroController extends Controller {
         } catch (Exception $ex) {
             
         }
+    }
+
+    public function maestroModifDatosAction(Request $request) {
+        dump($request);die;
+        // try {
+        //     $this->session = new Session();
+
+        //     // Verificamos si no ha caducado la session
+        //     if (!$this->session->get('userId')) {
+        //         return $this->redirect($this->generateUrl('login'));
+        //     }
+
+        //     $em = $this->getDoctrine()->getManager();
+        //     $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->get('gestion'));
+        //     $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
+        //     $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id' => $request->get('idMaestroInscripcion'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
+
+        //     $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($request->get('idCargo'));
+        //     $maestroInscripcion->setCargotipo($cargo);
+        //     $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
+
+        //     $em->persist($maestroInscripcion);
+        //     $em->flush();
+
+        //     return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
+        // } catch (Exception $ex) {
+            
+        // }
     }
 
 
