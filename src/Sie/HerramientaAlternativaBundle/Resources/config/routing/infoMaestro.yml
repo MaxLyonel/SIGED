@@ -76,3 +76,8 @@ herramientalt_info_maestro_es_vigente_maestro:
     path:     /maestroVigente/
     defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:esVigenteMaestro" }
     methods:  [POST, PUT]
+
+herramientalt_info_maestro_modifdatos:
+    path:     /maestroModifDatos/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:maestroModifDatos" }
+    methods:  [POST, PUT]
