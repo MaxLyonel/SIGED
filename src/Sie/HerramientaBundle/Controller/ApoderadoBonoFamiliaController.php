@@ -276,6 +276,8 @@ class ApoderadoBonoFamiliaController extends Controller {
             $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
             $nuevoApoderado->setObs('');
             $nuevoApoderado->setEsValidado(1);
+            $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
+            // $nuevoApoderado->setFechaModificacion(new \DateTime('now'));
             $em->persist($nuevoApoderado);
             $em->flush();
         }
@@ -782,6 +784,8 @@ class ApoderadoBonoFamiliaController extends Controller {
                 $newApoderadoInscripcion->setPersona($persona);
                 $newApoderadoInscripcion->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                 $newApoderadoInscripcion->setEsValidado(1);
+                $newApoderadoInscripcion->setFechaRegistro(new \DateTime('now'));
+                // $newApoderadoInscripcion->setFechaModificacion(new \DateTime('now'));
                 $em->persist($newApoderadoInscripcion);
                 $em->flush();
 
@@ -1156,6 +1160,8 @@ class ApoderadoBonoFamiliaController extends Controller {
                 $newApoderadoInscripcion->setPersona($persona);
                 $newApoderadoInscripcion->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                 $newApoderadoInscripcion->setEsValidado(1);
+                $newApoderadoInscripcion->setFechaRegistro(new \DateTime('now'));
+                // $newApoderadoInscripcion->setFechaModificacion(new \DateTime('now'));
                 $em->persist($newApoderadoInscripcion);
                 $em->flush();
 
@@ -1245,6 +1251,7 @@ class ApoderadoBonoFamiliaController extends Controller {
             // $em->flush();
             
             $apoderadoInscripcion->setEsValidado(0);
+            $apoderadoInscripcion->setFechaModificacion(new \DateTime('now'));
             $em->flush();
 
             return $response->setData([
