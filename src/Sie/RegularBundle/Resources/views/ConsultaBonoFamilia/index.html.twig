@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Consulta - Bono familia</title>
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+	<style>
+		body{
+			background: #EEEEEE;
+			margin: 0;
+			padding: 0;
+		}
+		[v-cloak]{
+			display: none;
+		}
+		.jupper{
+			text-transform: uppercase;
+		}
+		.titulo{
+			margin-bottom: 15px;
+		}
+		.caja{
+			background: #FFFFFF;
+			padding: 10px;
+			/*width: 500px;*/
+			margin-top: 50px;
+			/*margin-left: auto;*/
+			/*margin-right: auto;*/
+		}
+		.caja h2{
+			text-align: center;
+		}
+		.tab-pane{
+			padding-top: 10px;
+		}
+		.secundario{
+			color:#CCCCCC;
+			font-style: italic;
+			font-size: 0.8em;
+		}
+		.respuesta p{
+			margin-bottom: 10px;
+		}
+		.respuesta h3{
+			text-align: center;
+			margin-bottom: 15px;
+		}
+		.respuesta .botones{
+			text-align: center;
+		}
+		.cortina{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: #CCCCCC;
+			opacity: 0.6;
+			z-index: 100;
+			text-align: center;
+			font-size: 1.5em;
+			padding-top: 200px;
+		}
+		.form-control .popover {
+  			width:600px;
+  			height:250px;
+		}
+
+		.popover {
+		  	/*max-width: 700px;*/
+		  	width: 600px;
+		  	background: #EFF7FF;
+		  	color: #11BCFB;
+		}
+		.subtitulo{
+			font-size: 1.2em;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div v-if="cortina" class="cortina">
+			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-xs-12 col-md-offset-3 caja">
+					<h2 class="titulo">¿Soy beneficiario del bono?</h2>
+					<div v-show="!validado" class="contenido">
+						<p class="subtitulo">Verificar si el estudiante es beneficiario del bono familia</p>
+						<p>Puede realizar la búsqueda por:</p>
+						<div class="row">
+							<div class="col-md-12">
+								<div role="tabpanel">
+									<!-- Nav tabs -->
+									<ul class="nav nav-tabs" role="tablist">
+										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+											<a role="tab" data-toggle="tab">Código Rude</a>
+										</li>
+										<li :class="{active: opcion == 2}" @click="opcion = 2">
+											<a aria-controls="tabcarnet" role="tab" data-toggle="tab">Carnet</a>
+										</li>
+										<li :class="{active: opcion == 3}" @click="opcion = 3">
+											<a aria-controls="tabcarnet" role="tab" data-toggle="tab">Datos personales</a>
+										</li>
+									</ul>
+									<!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+											<div class="row">
+												<div class="form-group col-md-12">
+													<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
+													<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="17" v-on:keypress="alfanumerico">
+												</div>
+											</div>
+										</div>
+										<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
+											<div class="row">
+												<div class="form-group col-md-8">
+													<label>Carnet</label>
+													<input type="text" v-model="estudiante.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+													<input type="text" v-model="estudiante.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico">
+												</div>
+											</div>
+										</div>
+										<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
+											<div class="row">
+												<div class="form-group col-md-6">
+													<label>Nombre(s)</label>
+													<input type="text" v-model="estudiante.nombre" class="form-control jupper" maxlength="70" v-on:keypress="alfabetico">
+												</div>
+												<div class="form-group col-md-6">
+													<label>Apellido paterno</label>
+													<input type="text" v-model="estudiante.paterno" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+												</div>
+												<div class="form-group col-md-6">
+													<label>Apellido materno</label>
+													<input type="text" v-model="estudiante.materno" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+												</div>
+												<div class="form-group col-md-6">
+													<label>Fecha de nacimiento <span class="secundario">( dd-mm-aaaa )</span> </label>
+													<input type="text" v-model="estudiante.fechaNacimiento" class="form-control" maxlength="11" id="fecha" autocomplete="off">
+												</div>
+											</div>
+											<p>Actualmente se encuentra inscrito en:</p>
+											<div class="row">
+												<div class="form-group col-md-8">
+													<label>Nivel</label>
+													<select class="form-control jupper" v-model="estudiante.nivel" @change="actualizarGrados()">
+														<option v-for="(nivel, key) in niveles" :key="key" :value="nivel.id" v-text="nivel.nivel"></option>
+													</select>
+												</div>
+												<div class="form-group col-md-4">
+													<label>Grado</label>
+													<select class="form-control jupper" v-model="estudiante.grado">
+														<option v-for="(grado, key) in gradosDisponibles" :key="key" :value="grado.id" v-text="grado.grado"></option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<br>
+						<p class="subtitulo">Ingrese los datos del apoderado</p>
+						<div class="row">
+							<div class="form-group col-md-8">
+								<label>Carnet</label>
+								<input type="text" v-model="apoderado.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico">
+							</div>
+							<div class="form-group col-md-4">
+								<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+								<input type="text" v-model="apoderado.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico">
+							</div>
+						</div>
+
+						<div class="col-md-12 text-center">
+							<button type="button" class="btn btn-primary" @click="consultar">Verificar</button>
+						</div>
+					</div>
+					<div v-if="validado" class="respuesta">
+						<div class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
+							<p>Estudiante</p>
+							<p><b> ${datos.msgEstudiante} </b></p>
+						</div>
+
+						<div v-if="datos.msgApoderado != ''">
+							<div class="alert" :class="[{'alert-success':datos.statusApoderado == 'success'},{'alert-warning':datos.statusApoderado == 'warning'}]">
+								<p>Apoderado</p>
+								<p><b> ${datos.msgApoderado} </b></p>
+							</div>
+						</div>
+						<div class="botones">
+							<button type="button" @click="cerrar" class="btn btn-default">Volver a consultar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script src="{{asset('js/inputmask.js')}}"></script>
+	<script>
+		$(function () {
+			
+		})
+
+		var app = new Vue({
+		    delimiters: ['${', '}'],
+		    el: '#app',
+		    data: {
+		    	errores: [],
+		    	opcion: 1,
+		    	niveles: [],
+		    	grados: [],
+		    	gradosDisponibles: [],
+		    	apoderado: {
+		    		carnet: '',
+		    		complemento: ''
+		    	},
+		    	estudiante: {
+		    		codigoRude: '',
+		    		carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+		    		nivel: '',
+		    		grado: ''
+		    	},
+		    	validado: false,
+		    	cortina: false,
+		    	datos: [],
+		    },
+		    mounted(){
+		    	var selector = document.getElementById("fecha");
+		    	Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "dd-mm-yyyy", inputEventOnly: true}).mask(selector);
+		    	$('[data-toggle="popover"]').popover();
+		    	axios.get(Routing.generate('consulta_bono_familia_cargar'))
+		    		.then(response => {
+		    			this.niveles = response.data.niveles;
+		    			this.grados = response.data.grados;
+		    		})
+		    		.catch(e = {
+
+		    		});
+		    },
+		    methods: {
+		    	actualizarGrados(){
+		    		if (this.estudiante.nivel == 11) {
+		    			this.estudiante.grado = '1';
+		    			this.gradosDisponibles = [];
+		    			console.log(this.grados);
+		    			let me = this;
+		    			$.each(this.grados, function(index, val) {
+		    				console.log(val);
+		    				if (val.id == 1 || val.id == 2) {
+		    				 	me.gradosDisponibles.push(me.grados[index]);
+		    				}
+		    			});
+		    		}else{
+		    			this.gradosDisponibles = this.grados;
+		    		}
+		    	},
+		    	consultar(){
+		    		this.errores = [];
+		    		if (this.apoderado.carnet == '') {
+		    			this.errores.push('Carnet del apoderado');
+		    		}
+		    		if (this.opcion == 1) {
+		    			if (this.estudiante.codigoRude == '') {
+		    				this.errores.push('Código Rude');
+		    			}
+		    		}
+		    		if (this.opcion == 2) {
+		    			if (this.estudiante.carnet == '') {
+		    				this.errores.push('Carnet del estudiante');
+		    			}
+		    		}
+		    		if (this.opcion == 3) {
+		    			if (this.estudiante.nombre == '') {
+		    				this.errores.push('Nombre');
+		    			}
+		    			if (this.estudiante.paterno == '') {
+		    				this.errores.push('Apellido paterno');
+		    			}
+		    			if (this.estudiante.materno == '') {
+		    				this.errores.push('Apellido materno');
+		    			}
+		    			if (this.estudiante.fechaNacimiento == '') {
+			    			this.errores.push('Fecha de nacimiento');
+			    		}else{
+			    			if (!this.validarFormatoFecha(this.estudiante.fechaNacimiento)) {
+			    				this.errores.push('Formato de fecha no válido');
+			    			}
+			    		}
+			    		if (this.estudiante.nivel == '') {
+		    				this.errores.push('Nivel');
+		    			}
+		    			if (this.estudiante.grado == '') {
+		    				this.errores.push('Grado');
+		    			}
+		    		}
+
+		    		console.log(this.apoderado.carnet);
+		    		console.log(this.estudiante.codigoRude);
+
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+		    		this.datos = [];
+		    		this.validado = false;
+		    		this.cortina = true;
+	    			Swal.fire({
+	    		  		title:'Procesando',
+	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
+	    		  		type:'info',
+	    		  		showConfirmButton: false,
+	    			});
+		    		axios.post(Routing.generate('consulta_bono_familia_buscar', {apoderado: this.apoderado, estudiante: this.estudiante, opcion: this.opcion}))
+		    			.then(response => {
+		    				if (response.data.status === 'error') {
+			    				Swal.fire(
+	    					  		'Aviso',
+	    					  		response.data.msg,
+	    					  		'info'
+	    						)
+		    				}
+
+		    				if (response.data.status == 'success') {
+		    					Swal.close();
+		    					this.datos = response.data.datos;
+		    					this.validado = true;
+		    				}
+		    				this.cortina = false;
+		    			})
+		    			.catch(e => {
+		    				Swal.fire(
+    					  		'Aviso',
+    					  		'No se pudo realizar la verficación',
+    					  		'error'
+    						)
+		    				this.cortina = false;
+		    			});
+		    	},
+		    	cerrar(){
+		    		this.validado = false;
+		    		this.opcion = 1;
+		    		this.apoderado.carnet = '';
+		    		this.apoderado.complemento = '';
+		    		this.estudiante.codigoRude = '';
+		    		this.estudiante.carnet = '';
+		    		this.estudiante.complemento = '';
+		    		this.estudiante.nombre = '';
+		    		this.estudiante.paterno = '';
+		    		this.estudiante.materno = '';
+		    		this.estudiante.fechaNacimiento = '';
+		    		this.estudiante.nivel = '';
+		    		this.estudiante.grado = '';
+		    	},
+		    	validarFormatoFecha(campo) {
+	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+	    	            return true;
+	    	        } else {
+	    	            return false;
+	    	        }
+		    	},
+		    	numerico: function(event){
+		    	    var k = event.charCode || event.keyCode;
+		    	    if ((k < 48 || k > 57) //NUmeros
+		    	        && (k != 13) //ENTER
+		    	        && (k != 8) //retroceso
+		    	        && (k != 9) //tab
+		    	    ){
+		    	        event.preventDefault();
+		    	        return false;
+		    	    }
+		    	},
+		    	alfabetico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    	alfanumerico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k < 48 || k > 57) //NUmeros
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    }
+		});
+	</script>
+</body>
+</html>

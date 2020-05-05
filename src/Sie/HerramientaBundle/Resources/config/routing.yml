@@ -238,3 +238,11 @@ sie_newinscriptionInipri:
 sie_apoderado_nuevo:
      resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoNuevo.yml"
      prefix:   /sie/apoderadoNuevo
+
+sie_transfer_students:
+     resource: "@SieHerramientaBundle/Resources/config/routing/transferstudents.yml"
+     prefix:   /sie/transferstudents
+
+sie_apoderado_bono_familia:
+     resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoBonoFamilia.yml"
+     prefix:   /sie/apoderado-bono-familia

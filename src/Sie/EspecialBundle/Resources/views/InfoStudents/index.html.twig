@@ -25,24 +25,18 @@
 
         <!-- Start mail page -->
         <!--div class="container" style="margin-top:30px;"-->
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Unidad Educativa', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Información Estudiante'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Institución Educativa', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Información Estudiante'} %}
         {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
-        <div class="row">
-            <div class="col-md-4">
-                <form action="{{path('reporte_especial_cuatro')}}" method="post">
-                    <input type="hidden" name="idInstitucion" value="{{odataUedu.id}}">
-                    <input type="hidden" name="gestion" value="{{gestion}}">
-                    <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-download"></i> Descargar Lista de Estudiantes</button>
-                </form>
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-md-4">
-
                 <small>
                     <div class="tree well">
-
+                        <form action="{{path('reporte_especial_cuatro')}}" method="post">
+                            <input type="hidden" name="idInstitucion" value="{{odataUedu.id}}">
+                            <input type="hidden" name="gestion" value="{{gestion}}">
+                            <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-download"></i> Descargar Lista de Estudiantes</button>
+                        </form>
                         {%for turnoKey, dataTurno in aInfoUnidadEductiva%}
                             <ul>
                                 <li>
@@ -116,14 +110,14 @@
             </div>
 
             <div class='col-md-8'>
-                <div class="row">
+                {# <div class="row">
                     <div class="col-lg-12">
                         <div class="alert alert-danger" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <strong>Tomar en cuenta que:</strong> Únicamente se registrará calificaciones a las Áreas de Visual, Auditiva e Intelectual debido a que son las que cuentan con libreta.
                         </div>
                     </div>
-                </div>
+                </div> #}
                 <div id="idstudents"></div>
             </div>
 

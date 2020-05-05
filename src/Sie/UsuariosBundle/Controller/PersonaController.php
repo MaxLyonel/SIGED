@@ -61,7 +61,7 @@ class PersonaController extends Controller
             $newpersona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));
             $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
-            $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+            $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(0));
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
             $newpersona->setRda('0');
@@ -282,7 +282,7 @@ class PersonaController extends Controller
                         $newpersona->setNombre($nombre);
                         $newpersona->setCarnet($carnet);  
                         $newpersona->setComplemento($complemento);                        
-                        $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+                        $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
                         $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
                         $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
                         $newpersona->setRda('0');
@@ -448,7 +448,7 @@ class PersonaController extends Controller
             $newpersona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));
             $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];         
-            $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+            $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
             $newpersona->setRda('0');

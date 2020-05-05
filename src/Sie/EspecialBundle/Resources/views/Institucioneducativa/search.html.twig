@@ -19,9 +19,6 @@
 </div><!-- /.header-content -->
 <!--/ End page header -->
 <div class="body-content animated fadeIn">
-
-    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Seleccionar Centro', 'gestion': '-', 'sie': '-', 'ieducativa': '-', 'opcion': 'Buscar por código SIE'} %}
-
     <div class="row">
         <div class="col-md-12">
             {% for flashMessage in app.session.flashbag.get('noSearch') %}

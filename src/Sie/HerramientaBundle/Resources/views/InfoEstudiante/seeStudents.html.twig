@@ -111,16 +111,19 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                <div id="no-more-tables">
+                <div id="no-more-tables" class="table-responsive">
                     <table class="table table-bordered table-hover cf">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>CÓDIGO RUDE</th>
                                 <th>C.I.</th>
-                                <th>ESTUDIANTE</th>
+                                <th>PATERNO</th>
+                                <th>MATERNO</th>
+                                <th>NOMBRE(S)</th>
                                 <th>FECHA NAC.</th>
                                 <th>ESTADO DE MATRÍCULA</th>
+                                <th>Obs. SEGIP</th>
                                 <th>OPCIONES</th>
                                 <!--td>
                                     <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
@@ -172,17 +175,19 @@
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.carnetIdentidad}}{% if data.complemento %}-{{data.complemento}}{% endif %}</td>
-                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
+                                <td>{{data.paterno}}</td>
+                                <td>{{data.materno}}</td>
+                                <td>{{data.nombre}}</td>
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
                                     {% if gestion == 2020 %}
-                                        {% if data.cambioEstadoMatricula == true and 1 == 0 %}
+                                        {# {% if data.cambioEstadoMatricula == true and 1 == 0 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
                                             </button>
-                                        {% else %}
+                                        {% else %} #}
                                             {{data.estadomatricula}}
-                                        {% endif %}
+                                        {# {% endif %} #}
                                     {% else %}
                                         {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
                                             {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
@@ -202,7 +207,7 @@
                                         
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {# VALIDACIÓN SEGIP #}
                                     <div id="estudianteSegip_{{data.codigoRude}}">
                                         {% if data.segipId == 1 %}
@@ -216,12 +221,22 @@
                                             <span class="badge badge-info"><i class="fa fa-fw fa-info"></i> No cuenta con C.I.</span>
                                         {% endif %}
                                     </div>
-
+                                </div>
+                                <td class="text-center">
                                     {# APODERADOS #}
                                     {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderado('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-users"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+
+                                    {# APODERADO BONO FAMILIA #}
+                                    {% if gestion == 2020 and data.estadomatriculaId in [4] and true %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
+                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.eInsId}});" >
+                                                <i class="fa fa-user"></i>
                                             </button>
                                         </div>
                                     {% endif %}
@@ -236,7 +251,8 @@
                                     {% endif %}
                                     
                                     {# RUDE #}
-                                    {% if gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and (app.session.get('ue_plena') or app.session.get('ue_modular')) %}
+                                    {% if 1 == 2 and gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and (app.session.get('ue_plena') or app.session.get('ue_modular')) %}
+
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
@@ -595,6 +611,38 @@
             type: 'post',
             data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
             url: "{{ path('apoderado_nuevo_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var apoderadoBonoFamilia = function (idInscripcion) {
+
+        $.ajax({
+            type: 'post',
+            data: ({idInscripcion: idInscripcion}),
+            url: "{{ path('apoderado_bono_familia_index') }}",
             beforeSend: function () {
                 $('#modal').empty();
                 $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');

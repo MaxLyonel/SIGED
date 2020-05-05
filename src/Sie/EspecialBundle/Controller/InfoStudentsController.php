@@ -89,7 +89,7 @@ class InfoStudentsController extends Controller {
       //get the info ue
       $infoUe = $request->get('infoUe');
       $aInfoUeducativa = unserialize($infoUe);
-
+      
       //get the values throght the infoUe
       $sie = $aInfoUeducativa['requestUser']['sie'];
       $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -102,9 +102,12 @@ class InfoStudentsController extends Controller {
       $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
       $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
       $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+      $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
+      $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
+
       //get db connexion
       $em = $this->getDoctrine()->getManager();
-
+      $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
 
       //get next level data
       $objNextCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
@@ -153,15 +156,16 @@ class InfoStudentsController extends Controller {
                   'aData' => $aData,
                   'gradoname' => $gradoname,
                   'paraleloname' => $paraleloname,
-                  // 'nivelname' => $nivelname,
+                  'nivelname' => $nivelname,
+                  'turnoname' => $turnoname,
                   'form' => $this->createFormStudentInscription($infoUe)->createView(),
                   'infoUe' => $infoUe,
                   'exist' => $exist,
                   'itemsUe'=>$itemsUe,
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
-                  'arrDataLibreta'=> $arrDataLibreta
-                  // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
+                  'arrDataLibreta'=> $arrDataLibreta,
+                  'areaEspecial' => $objArea->getAreaEspecial()
       ));
   }
   /**

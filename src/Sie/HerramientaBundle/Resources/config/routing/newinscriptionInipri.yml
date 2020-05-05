@@ -57,3 +57,10 @@ newinscriptionInipri_gohomonimo:
     defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:gohomonimo }
     options:
          expose: true  
+
+newinscriptionInipri_goOldInscription:
+    path:     /goOldInscription
+    defaults: { _controller: SieHerramientaBundle:NewInscriptionIniPri:goOldInscription }
+    options:
+         expose: true
+         

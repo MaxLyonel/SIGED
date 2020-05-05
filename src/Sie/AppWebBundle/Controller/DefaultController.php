@@ -102,6 +102,7 @@ class DefaultController extends Controller {
                 $this->session->set('sistemaid', 2);
                 break;
             case 'eduper.sie.gob.bo':
+            case 'permanente.local':
             case '172.20.196.7':
                 $sysname = 'Sistema Académico Educación Permanente';
                 $sysporlet = 'green';

@@ -1,0 +1,36 @@
+apoderado_bono_familia_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:index }
+    options:
+         expose: true
+
+apoderado_bono_familia_apoderados:
+    path:     /apoderados/{idInscripcion}
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:apoderados" }
+    options:
+         expose: true
+
+apoderado_bono_familia_habilitar:
+    path:     /habilitar
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:habilitar" }
+    options:
+         expose: true
+
+apoderado_bono_familia_validar:
+    path:     /validar
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:validar" }
+    options:
+         expose: true
+
+apoderado_bono_familia_registrar:
+    path:     /registrar
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:registrar" }
+    options:
+         expose: true
+
+apoderado_bono_familia_eliminar:
+    path:     /eliminar/{idApoderado}
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:eliminar" }
+    options:
+         expose: true
+

@@ -1,0 +1,11 @@
+transferstudents_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:TransferStudents:index }
+    options:
+         expose: true
+
+transferstudents_lookforStudents:
+    path:     /lookforStudent
+    defaults: { _controller: SieHerramientaBundle:TransferStudents:lookforStudents }
+    options:
+         expose: true         

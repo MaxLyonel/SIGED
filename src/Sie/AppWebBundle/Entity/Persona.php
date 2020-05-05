@@ -115,14 +115,19 @@ class Persona
     private $esExtranjero;
 
     /**
+     * @var string
+     */
+    private $localidadNac;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadoCivilTipo
+     */
+    private $estadocivilTipo;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\DepartamentoTipo
      */
     private $expedido;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\IdiomaMaterno
-     */
-    private $idiomaMaterno;
 
     /**
      * @var \Sie\AppWebBundle\Entity\GeneroTipo
@@ -130,14 +135,19 @@ class Persona
     private $generoTipo;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $idiomaMaterno;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\SangreTipo
      */
     private $sangreTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\EstadoCivilTipo
+     * @var \Sie\AppWebBundle\Entity\PaisTipo
      */
-    private $estadocivilTipo;
+    private $paisTipo;
 
 
     /**
@@ -611,6 +621,52 @@ class Persona
     }
 
     /**
+     * Set localidadNac
+     *
+     * @param string $localidadNac
+     * @return Persona
+     */
+    public function setLocalidadNac($localidadNac)
+    {
+        $this->localidadNac = $localidadNac;
+    
+        return $this;
+    }
+
+    /**
+     * Get localidadNac
+     *
+     * @return string 
+     */
+    public function getLocalidadNac()
+    {
+        return $this->localidadNac;
+    }
+
+    /**
+     * Set estadocivilTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadoCivilTipo $estadocivilTipo
+     * @return Persona
+     */
+    public function setEstadocivilTipo(\Sie\AppWebBundle\Entity\EstadoCivilTipo $estadocivilTipo = null)
+    {
+        $this->estadocivilTipo = $estadocivilTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadocivilTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadoCivilTipo 
+     */
+    public function getEstadocivilTipo()
+    {
+        return $this->estadocivilTipo;
+    }
+
+    /**
      * Set expedido
      *
      * @param \Sie\AppWebBundle\Entity\DepartamentoTipo $expedido
@@ -631,29 +687,6 @@ class Persona
     public function getExpedido()
     {
         return $this->expedido;
-    }
-
-    /**
-     * Set idiomaMaterno
-     *
-     * @param \Sie\AppWebBundle\Entity\IdiomaMaterno $idiomaMaterno
-     * @return Persona
-     */
-    public function setIdiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaMaterno $idiomaMaterno = null)
-    {
-        $this->idiomaMaterno = $idiomaMaterno;
-    
-        return $this;
-    }
-
-    /**
-     * Get idiomaMaterno
-     *
-     * @return \Sie\AppWebBundle\Entity\IdiomaMaterno 
-     */
-    public function getIdiomaMaterno()
-    {
-        return $this->idiomaMaterno;
     }
 
     /**
@@ -680,6 +713,29 @@ class Persona
     }
 
     /**
+     * Set idiomaMaterno
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMaterno
+     * @return Persona
+     */
+    public function setIdiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMaterno = null)
+    {
+        $this->idiomaMaterno = $idiomaMaterno;
+    
+        return $this;
+    }
+
+    /**
+     * Get idiomaMaterno
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getIdiomaMaterno()
+    {
+        return $this->idiomaMaterno;
+    }
+
+    /**
      * Set sangreTipo
      *
      * @param \Sie\AppWebBundle\Entity\SangreTipo $sangreTipo
@@ -703,25 +759,25 @@ class Persona
     }
 
     /**
-     * Set estadocivilTipo
+     * Set paisTipo
      *
-     * @param \Sie\AppWebBundle\Entity\EstadoCivilTipo $estadocivilTipo
+     * @param \Sie\AppWebBundle\Entity\PaisTipo $paisTipo
      * @return Persona
      */
-    public function setEstadocivilTipo(\Sie\AppWebBundle\Entity\EstadoCivilTipo $estadocivilTipo = null)
+    public function setPaisTipo(\Sie\AppWebBundle\Entity\PaisTipo $paisTipo = null)
     {
-        $this->estadocivilTipo = $estadocivilTipo;
+        $this->paisTipo = $paisTipo;
     
         return $this;
     }
 
     /**
-     * Get estadocivilTipo
+     * Get paisTipo
      *
-     * @return \Sie\AppWebBundle\Entity\EstadoCivilTipo 
+     * @return \Sie\AppWebBundle\Entity\PaisTipo 
      */
-    public function getEstadocivilTipo()
+    public function getPaisTipo()
     {
-        return $this->estadocivilTipo;
+        return $this->paisTipo;
     }
 }

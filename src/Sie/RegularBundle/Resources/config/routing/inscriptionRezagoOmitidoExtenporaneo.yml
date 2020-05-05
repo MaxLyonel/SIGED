@@ -1,0 +1,64 @@
+
+inscription_reza_omi_exten_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:index }
+
+inscription_reza_omi_exten_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:result }
+
+inscription_reza_omi_exten_norude:
+    path:    /norude
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:norude }
+
+inscription_reza_omi_exten_save:
+    path:    /save
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:save }
+
+inscription_reza_omi_exten_findIE:
+     path:    /findIE/{id}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:findIE }
+     options:
+         expose: true
+
+inscription_reza_omi_exten_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:findgrado }
+     options:
+         expose: true
+
+inscription_reza_omi_exten_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:findparalelo }
+     options:
+         expose: true
+
+inscription_reza_omi_exten_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestionselected}
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:findturno }
+    options:
+        expose: true
+
+inscription_reza_omi_exten_verificainscription:
+     path:    /verificainscription
+     defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:verificaInscription }
+     options:
+         expose: true
+
+inscription_reza_omi_exten_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:saveext }
+
+inscription_reza_omi_exten_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:savenew }
+
+inscription_reza_omi_exten_savenewextranjero:
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:savenewextranjero }
+
+inscription_reza_omi_exten_notasInscription:
+     path:    /notasInscription
+     defaults: { _controller: SieRegularBundle:InscriptionRezagoOmitidoExtenporaneo:saveNotasInscription }
+     options:
+         expose: true
