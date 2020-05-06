@@ -1219,6 +1219,37 @@
                         );
                         return;
                     }
+
+                 if(this.dataSaveStudent.paisId == 1){
+                        if(typeof this.dataSaveStudent.lugarNacTipoId ==='undefined' ){
+                                Swal.fire(
+                                'Campo Departamento requerido',
+                                'Debe seleccionar un Departamento',
+                                'warning'
+                                );
+                                return;
+                        }
+
+                         if(typeof this.dataSaveStudent.lugarProvNacTipoId ==='undefined' ){
+                                Swal.fire(
+                                'Campo Provincia requerido',
+                                'Debe seleccionar una Provincia',
+                                'warning'
+                                );
+                                return;
+                        }
+                        if(this.dataSaveStudent.localidad =='' ){
+                                Swal.fire(
+                                'Campo Localidad requerido',
+                                'Debe registrar la localidad',
+                                'warning'
+                                );
+                                return;
+                        }
+
+
+                }
+
 		 if (this.dataSaveStudent.paraleloId == '') {
                         Swal.fire(
                         'Campo Paralelo requerido',

@@ -1180,8 +1180,7 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
                            this.dataNewStudent.swnewforeign = swnewforeign;
                            this.dataSaveStudent = this.dataNewStudent;
                          }
-		
-		 if (this.dataSaveStudent.generoId == '') {
+		 if(this.dataSaveStudent.generoId == '') {
                         Swal.fire(
                         'Campo Género requerido',
                         'Debe seleccionar Género',
@@ -1197,6 +1196,35 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
                         );
                         return;
                     }
+		 if(this.dataSaveStudent.paisId == 1){
+			if(typeof this.dataSaveStudent.lugarNacTipoId ==='undefined' ){
+			 	Swal.fire(
+                        	'Campo Departamento requerido',
+                        	'Debe seleccionar un Departamento',
+                	        'warning'
+        	                );
+	                        return;
+			}
+
+			 if(typeof this.dataSaveStudent.lugarProvNacTipoId ==='undefined' ){
+                                Swal.fire(
+                                'Campo Provincia requerido',
+                                'Debe seleccionar una Provincia',
+                                'warning'
+                                );
+                                return;
+                        }
+			if(this.dataSaveStudent.localidad =='' ){
+                                Swal.fire(
+                                'Campo Localidad requerido',
+                                'Debe registrar la localidad',
+                                'warning'
+                                );
+                                return;
+                        }
+
+
+		}
 		 if (this.dataSaveStudent.nivelId == '') {
                         Swal.fire(
                         'Campo Nivel requerido',
