@@ -1202,6 +1202,8 @@ die;*/
   private function rezagoYearValidation($yearStudent, $nivel, $grado){
                     $swinscription=true;
                     switch ($yearStudent) {
+                              case 7:
+                              case 8:
                               case 9:
                               case 10:
                               case 11:
