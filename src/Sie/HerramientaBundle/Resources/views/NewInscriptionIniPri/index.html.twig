@@ -353,7 +353,7 @@
 
 
 
-                            	<p class="encabezado bg-primary">INFORMACIÓN ADICIONAL DEL ESTUDIANTE</p>
+                            	<p class="encabezado bg-primary">INFORMACIÓN ADICIONAL DEL ESTUDIANTE </p>
 
 	                            <div class="row">
 	                             <div class="col-sm-3">
@@ -362,11 +362,7 @@
 		                                  <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
 		                                </select>
 	                              </div>
-	                             	<div class="col-sm-3" v-if="swhomonimo">
-			                             <label for="genero">Adjuntar Documento</label>
-			                                <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
-	                              	</div>
-	                          	</div>
+	                            </div>
 
 	                            <div class="row">
 	                              <div class="col-sm-3">
@@ -395,18 +391,42 @@
 	                            </br>
 
 	                            <p class="encabezado bg-primary">INFORMACIÓN UNIDAD EDUCATIVA</p>
+                                     <div class="row"  v-if="allowwithoutci" >
+                                      <div class="col-md-4" >
+				      <label for="inscription">Tipo de Inscripcion</label>
+					<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
+						<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
+                                            	<option value="1">ARTÍCULO 10 R.M. 001/2020</option>
+                                            	<option value="2">REZAGO ESCOLAR</option>
+                                        </select>
+
+                                      </div>
+					<div class="col-sm-4" v-if="allowwithoutci">
+                                                     <label for="certificado">Adjuntar Documento 
+							<div v-if="dataNewStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
+                                                 	<div v-if="dataNewStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div>
+                                                 	<div v-if="dataNewStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div>
+							</label>
+                                                        <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+                                        </div>
+
+					{#
+                                        <label for="form_articuleten" class="validation">INSCRIPCIÓN CON DIFERENCIA DE 24 MESES:</label>
+                                        <input type="checkbox" name="optioninscription" data-toggle="toggle" data-size="xs" v-model="dataNewStudent.articuleten" :disabled="hasadditional(1)">
+                                     <div class="col-md-4" v-if="allowwithoutci">
+                                        <label for="form_swrezago" class="validation">INSCRIPCIÓN PARA EL REZAGO:</label>
+                                        <input type="checkbox" name="optioninscription" data-toggle="toggle" data-size="xs" v-model="dataNewStudent.swrezago" :disabled="hasadditional(1)">
+                                      </div>
+                                       #}
+                                    </div>
+
 	                            <div class="row">
 	                              <div class="col-sm-3">
 	                                  <label for="localidad">SIE 11</label>
 	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="dataNewStudent.sie" maxlength="8" v-on:keyup="getInfoUe(1);">
 	                              </div>
-									{#
-	                              <div class="col-md-3" v-if="allowwithoutci">
-	                              	<label for="form_articuleten" class="validation">INSCRIPCIÓN CON DIFERENCIA:</label>
-	                              	<input type="checkbox" data-toggle="toggle" data-size="xs" v-model="dataNewStudent.articuleten">
-	                              </div>
-									#}
-	                            </div>
+									
+			            </div>
 	                            </br>
 
 	                            <div v-if="buscandoue" class="text-center">
@@ -510,7 +530,7 @@
 
 
                             	<!-- data new studen  -->
-                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE 3333</p>
+                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE </p>
                             	<table class="table table-dark">
 								  <tbody>
 								  	<tr>
@@ -540,20 +560,41 @@
                             	<!-- end data new studen  -->
 
 	                            <p class="encabezado bg-primary">INFORMACIÓN UNIDAD EDUCATIVA</p>
+				    <div class="row">
+					<div class="col-md-4" >                       
+                                      		<label for="provincia">Tipo de Inscripcion</label>
+                                        	<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="oldStudent.typeInscription" class="custom-select form-control" >
+							<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
+                                            		<option value="1">ARTÍCULO 10 R.M. 001/2020</option>
+                                            		<option value="2">REZAGO ESCOLAR</option>I                                           	
+                                        	</select>
+
+                                        </div>
+ 				        <div class="col-sm-8">
+                                         <label for="certificado">Adjuntar Documento
+						<div v-if="oldStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
+						<div v-if="oldStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div> 
+						<div v-if="oldStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div> 
+					</label>
+                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+                                        </div>
+
+					{#
+				      <div class="col-md-4">
+                                        <label for="form_articuleten" class="validation">INSCRIPCIÓN CON DIFERENCIA DE 24 MESES:</label>
+                                        <input type="checkbox" name="optioninscription"  data-toggle="toggle" data-size="xs" v-model="oldStudent.articuleten" :disabled="hasadditional(0)">
+                                      </div>
+                                     <div class="col-md-4" v-if="allowwithoutci">
+                                        <label for="form_swrezago" class="validation">INSCRIPCIÓN PARA EL REZAGO:</label>
+                                        <input type="checkbox" name="optioninscription" data-toggle="toggle" data-size="xs" v-model="oldStudent.swrezago" :disabled="hasadditional(0)">
+                                      </div>#}
+				    </div>
 	                            <div class="row">
 	                              <div class="col-sm-3">
-	                                  <label for="sie">SIE 22</label>
+	                                  <label for="sie22">SIE</label>
 	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="oldStudent.sie" maxlength="8" v-on:keyup="getInfoUe(0);">     
 	                              </div>
 
-	                              <div class="col-sm-3">
-			                             <label for="genero">Adjuntar Documento</label>
-			                                <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
-	                              </div>
-	                              <div class="col-md-3">
-	                              	<label for="form_articuleten" class="validation">INSCRIPCIÓN CON DIFERENCIA:</label>
-	                              	<input type="checkbox" data-toggle="toggle" data-size="xs" v-model="oldStudent.articuleten">
-	                              </div>
 	                            </div>
 	                            </br>
 
@@ -662,9 +703,9 @@
 			  },*/
 
             data: {
-				allowwithoutci : '{{allowwithoutci}}',
-            	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false, 'articuleten':false},
- 				oldStudent: {'articuleten':false},
+		allowwithoutci : '{{allowwithoutci}}',
+            	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false, 'articuleten':false, 'swrezago':false},
+ 		oldStudent: {'articuleten':false, 'swrezago':false},
             	responseprocess:false,
             	swprocessue:false,
             	swinscription:false,
@@ -684,14 +725,14 @@
                 DBTurno:{},
                 DBNewStudent:{},
                 DBNewInscription:{},
-				DBstudentExist:{},
-				dataSaveStudent:{},
-				informe:'',
-				swhistory:false,
-			    historyReg:{},
-			    historyAlt:{},
-			    historyEsp:{},
-			    historyPer:{},
+		DBstudentExist:{},
+		dataSaveStudent:{},
+		informe:'',
+		swhistory:false,
+		historyReg:{},
+		historyAlt:{},
+		historyEsp:{},
+		historyPer:{},
 				
                 swoldinscription:false,
 	           
@@ -758,7 +799,7 @@
 						if (typeof this.dataNewStudent.cifind === "undefined") {
 	        				Swal.fire(
 		                        'Carnet de Identidad',
-		                        'Debe ingresar un Carnet de Identidad válido',
+		                        'Debe ingresar un Carnet de Identidad válido, en caso de que la/el estudiante no tenga el carnet de identidad, el registro se lo realiza por medio del TÉCNICO DE DISTRITO',
 		                        'warning'
 		                        );
 	        				this.buscando = false;
@@ -821,6 +862,7 @@
                 	this.swhomonimo = false;
                 	this.swoldinscription = false;
 	                this.oldStudent.articuleten = false;
+	                this.oldStudent.swrezago = false;
 
                 	Swal.fire({
                         title: 'Estudiante Homónimo?',
@@ -862,6 +904,7 @@
                 	this.swhomonimo = false;
                 	this.swoldinscription = false;
 	                this.oldStudent.articuleten = false;
+	                this.oldStudent.swrezago = false;
 	                               
 					//console.log(this.oldStudent);return;
                 	Swal.fire({
@@ -1136,7 +1179,74 @@
             	
                 },        
                 doInscriptioninipri: function(swnewforeign){
-
+			if(swnewforeign == 0){
+                           this.oldStudent.swnewforeign = swnewforeign;
+                           this.dataSaveStudent = this.oldStudent;
+                         }else{
+                           this.dataNewStudent.swnewforeign = swnewforeign;
+                           this.dataSaveStudent = this.dataNewStudent;
+                         }
+		
+		 if (this.dataSaveStudent.generoId == '') {
+                        Swal.fire(
+                        'Campo Género requerido',
+                        'Debe seleccionar Género',
+                        'warning'
+                        );
+                        return;
+                    }
+		 if (this.dataSaveStudent.paisId == '') {
+                        Swal.fire(
+                        'Campo Pais requerido',
+                        'Debe debe seleccinar un Pais',
+                        'warning'
+                        );
+                        return;
+                    }
+		 if (this.dataSaveStudent.nivelId == '') {
+                        Swal.fire(
+                        'Campo Nivel requerido',
+                        'Debe seleccionar un Nivel',
+                        'warning'
+                        );
+                        return;
+                    }
+		 if (this.dataSaveStudent.gradoId == '') {
+                        Swal.fire(
+                        'Campo Grado requerido',
+                        'Debe seleccionar un Grado',
+                        'warning'
+                        );
+                        return;
+                    }
+		 if (this.dataSaveStudent.paraleloId == '') {
+                        Swal.fire(
+                        'Campo Paralelo requerido',
+                        'Debe seleccionar un Paralelo',
+                        'warning'
+                        );
+                        return;
+                    }
+		 if (this.dataSaveStudent.turnoId == '') {
+                        Swal.fire(
+                        'Campo Turno requerido',
+                        'Debe seleccionar un Turno',
+                        'warning'
+                        );
+                        return;
+                    }
+ 
+                /*validate the file attached*/
+		if(this.allowwithoutci){
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Documento',
+                        'Debe adjuntar el CERTIFICADO DE NACIMIENTO para ralizar la inscripción, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }
+                 }
                 	Swal.fire({
                         title: 'Realizar Inscripción?',
                         text: "esta seguro de realizar la Inscripción",
@@ -1149,13 +1259,13 @@
                     }).then((result) => {
                     	if (result.value) {
 
-                    		if(swnewforeign == 0){
-                    			this.oldStudent.swnewforeign = swnewforeign;
-                    			this.dataSaveStudent = this.oldStudent;
-                    		}else{
-                    			this.dataNewStudent.swnewforeign = swnewforeign;
-                    			this.dataSaveStudent = this.dataNewStudent;
-                    		}                    		
+                    	//	if(swnewforeign == 0){
+                    	//		this.oldStudent.swnewforeign = swnewforeign;
+                    	//		this.dataSaveStudent = this.oldStudent;
+                    	//	}else{
+                    	//		this.dataNewStudent.swnewforeign = swnewforeign;
+                    	//		this.dataSaveStudent = this.dataNewStudent;
+                    	//	}                    		
 							
                     		var data = new FormData();
                             data.append('datos', JSON.stringify(this.dataSaveStudent));

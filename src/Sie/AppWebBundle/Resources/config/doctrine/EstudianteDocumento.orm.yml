@@ -1,0 +1,70 @@
+Sie\AppWebBundle\Entity\EstudianteDocumento:
+    type: entity
+    table: estudiante_documento
+    indexes:
+        IDX_A08AB1C159590C39:
+            columns:
+                - estudiante_id
+        IDX_A08AB1C17C9FBE9A:
+            columns:
+                - documento_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        jsonTxt:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: json_txt
+        urlDocumento:
+            type: string
+            nullable: false
+            length: 200
+            fixed: false
+            comment: ''
+            column: url_documento
+        observacion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        documentoTipo:
+            targetEntity: DocumentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
