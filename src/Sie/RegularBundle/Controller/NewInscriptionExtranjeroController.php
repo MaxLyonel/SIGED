@@ -742,8 +742,10 @@ class NewInscriptionExtranjeroController extends Controller{
 	            //insert a new record with the new selected variables and put matriculaFinID like 5
 	            $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrQuery);
 
-	             try {
-
+		    try {
+			       $institucionEducativaDe = $arrDatos['institucionEducativaDe'];
+                               $cursoVencido = $arrDatos['cursoVencido'];
+ 				$paisId = $arrDatos['paisId'];
 					if($swnewforeign == 1){
 				        // get info about ubication
 				        $paisId = $arrDatos['paisId'];
@@ -844,7 +846,7 @@ class NewInscriptionExtranjeroController extends Controller{
 	            $em->persist($studentInscription);
 	            $em->flush();  
 
-	            if($swnewforeign == 1){
+	            if($swnewforeign == 1 or $swnewforeign==0){
 	            	 // save the file in case if exists
 	                    // check if the file exists
 			        	if(isset($_FILES['informe'])){
