@@ -81,7 +81,7 @@ class ModCiLocalidadController extends Controller {
                 return $this->redirectToRoute('modificar_ci_localidad_index');
             }
             //VERIFICANDO TUICIÓN DEL USUARIO
-            $tuicion = false;
+            $cont_true = 0;
             foreach ($objUe as $value) {
                 $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
                 $query->bindValue(':user_id', $this->session->get('userId'));
@@ -89,10 +89,12 @@ class ModCiLocalidadController extends Controller {
                 $query->bindValue(':roluser', $this->session->get('roluser'));
                 $query->execute();
                 $aTuicion = $query->fetchAll();
-                $tuicion = $tuicion || $aTuicion[0]['get_ue_tuicion'];
+                if($aTuicion[0]['get_ue_tuicion']) {
+                    $cont_true++;
+                }
             }
             
-            if (!$tuicion) {
+            if ($cont_true === 0) {
                 $message = "EL Usuario no tiene tuición para realizar la operación.";
                 $this->addFlash('noticilocalidad', $message);
                 return $this->redirectToRoute('modificar_ci_localidad_index');

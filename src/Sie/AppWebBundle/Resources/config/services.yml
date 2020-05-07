@@ -16,3 +16,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    sie_app_web.agetic:
+        class: Sie\AppWebBundle\Services\Agetic
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
