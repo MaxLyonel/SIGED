@@ -417,11 +417,18 @@ class NewInscriptionIniPriController extends Controller
 	      $arrData['gender'] = $arrGenero;
 
 	            //get pais data
-	      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+      	 $entity = $em->getRepository('SieAppWebBundle:PaisTipo');
+	       $query = $entity->createQueryBuilder('pt')
+	                ->orderBy('pt.pais', 'ASC')
+	                ->getQuery();
+	        $objPais = $query->getResult();
+	       
+
+	      // $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll(array('pais'=>'ASC'));
 	      foreach ($objPais as $value) {
 	        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
 	      }
-	      $arrData['country'] = $arrPais;
+	      $arrData['country'] = ($arrPais) ;
 
 	      return $arrData;
     }
