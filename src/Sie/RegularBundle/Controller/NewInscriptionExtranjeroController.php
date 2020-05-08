@@ -221,6 +221,75 @@ class NewInscriptionExtranjeroController extends Controller{
       die;
     }
 
+    public function lookforrudeAction(Request $request){
+	    //dump($request);die;
+	    //create db conexion
+	    $em = $this->getDoctrine()->getManager();
+	     $response = new JsonResponse();
+   // get the send values 
+	    $rude = $request->get('rude');
+	    $arrGenero = array();
+	    $arrPais = array();
+	    $withoutcifind=0;
+   	 $arrayCondition['codigoRude'] = $rude;
+                        // find the student by arrayCondition
+                        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
+                        //dump($objStudent);die;
+                        $existStudent = false;
+                        if(sizeof($objStudent)>0){
+                                $existStudent=true;
+                        }
+
+
+  
+                          $arrStudentExist = array();
+                          if(sizeof($objStudent)>0){
+                                          $arrStudentExist[] = array(
+                                                  'paterno'=>$objStudent->getPaterno(),
+                                                  'materno'=>$objStudent->getMaterno(),
+                                                  'nombre'=>$objStudent->getNombre(),
+                                                 'carnet'=>$objStudent->getCarnetIdentidad(),
+                                                  'complemento'=>$objStudent->getComplemento(),
+                                                  'fecNac'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
+                                                  'fecnacfind'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
+                                                  'rude'=>$objStudent->getCodigoRude() ,
+                                                  'idStudent'=>$objStudent->getId() ,
+                                          );
+                                 
+  
+			  }
+  
+                          // $studentId = $objStudent->getId();
+                          $existStudent = true;
+  
+                          $status = 'error';
+                          $code = 400;
+                          $message = "Estudiante ya tiene registro, favor realizar la inscripción por el modulo de Omitidos/Transferencia";
+                          $swcreatestudent = false;
+ 
+  
+         $arrResponse = array(
+          'status'          => $status,
+          'code'            => $code,
+          'message'         => $message,
+          'swcreatestudent' => $swcreatestudent,
+          'arrGenero' => $arrGenero,
+          'arrPais' => $arrPais,
+          'arrStudentExist' => $arrStudentExist,
+          'existStudent' => $existStudent,
+          'swhomonimo' => $withoutcifind,
+  
+        );
+  
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+  
+        return $response;
+
+
+
+    }
+
     private function getCurrentInscriptionsByGestoinValida($id, $gestion) {
     //$session = new Session();
         $swInscription = false;
@@ -275,6 +344,7 @@ class NewInscriptionExtranjeroController extends Controller{
 			/*validate students inscripción in current year*/
 			$rude = $request->get('rude');
 			$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($rude,$this->currentyear);
+			$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($rude,$this->currentyear-1);
 		
 
 		}else{
@@ -679,13 +749,17 @@ class NewInscriptionExtranjeroController extends Controller{
         $paterno = mb_strtoupper($arrDatos['paterno'], 'utf-8') ;
         $materno = mb_strtoupper($arrDatos['materno'], 'utf-8');
         $nombre = mb_strtoupper($arrDatos['nombre'], 'utf-8');
-       
-		$fecNac = $arrDatos['fecnacfind'];
+
         $carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
         $complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
         
         $withoutcifind = ($arrDatos['withoutcifind']==false)?false:true;
         $swnewforeign = $arrDatos['swnewforeign'];
+ 	if($swnewforeign == 1){
+		$fecNac = $arrDatos['fecnacfind'];
+	}else{
+		$fecNac = $arrDatos['fecNac'];
+	}
 
         // validation if the ue is over 4 operativo
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);

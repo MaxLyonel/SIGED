@@ -63,3 +63,10 @@ newForeign_showhistory:
     defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:showHistory }
     options:
          expose: true  
+
+newForeign_lookforrude:
+    path:     /lookforrude
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:lookforrude }
+    options:
+         expose: true
+         

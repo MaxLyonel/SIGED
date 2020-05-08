@@ -219,7 +219,7 @@
                     {% if enableoption %}
                     <div class="panel-body">
                         <!-- form to search student -->
-                       
+                      <h4><strong> INSCRIPCIÓN POR DATOS DEL ESTUDIANTE </strong></h4></br> 
 
                          <form role="form">
                             <div class="row">
@@ -277,6 +277,21 @@
 	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
 	                            </div>
                         	</div>
+</br>
+<h4><strong> INSCRIPCIÓN POR CÓDIGO RUDE DEL ESTUDIANTE </strong></h4></br>
+<form>
+  <div class="form-group">
+    <label for="rude">Código Rude</label>
+    <input type="text" v-model="dataNewStudent.rude"  class="form-control" id="exampleInputPassword1" placeholder="Rude">
+  </div>
+  <button v-on:click="lookforrude()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
+</form>
+
+
+
+
+
+
 
                         	<div v-if="buscando" class="text-center">
                                 <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
@@ -686,7 +701,7 @@
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptionExt(0)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir old</button>
+			                                <button v-on:click="doInscriptionExt(0)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir </button>
 			                            </div>
 		                        	</div>
 
@@ -803,6 +818,64 @@
                
             },
             methods: {
+		lookforrude: function(){
+                    this.buscando = true;
+                    this.responseprocess = false;
+                    this.swinscription = false;
+                    this.swoldinscription = false;
+                    this.swprocessue = false;
+                    this.DBstudentExist=false;
+                    this.oldStudent=false;
+                    this.existStudent=false;
+                    this.message = '';
+                    this.dataNewStudent.generoId= '';
+                    this.dataNewStudent.paisId= '';
+                        this.DBDepto= '';
+                        this.DBProvincia= '';
+                        this.dataNewStudent.localidad='';
+                        this.dataNewStudent.sie = '';
+                        this.swhomonimo = false;
+
+
+                        this.dataNewStudent.nivelId='';
+                        this.dataNewStudent.gradoId='';
+                        this.dataNewStudent.paraleloId='';
+                        this.dataNewStudent.turnoId='';
+
+                         this.oldStudent = false;
+
+
+    		           if (typeof this.dataNewStudent.rude === "undefined") {
+                                       Swal.fire(
+                                        'RUDE',
+                                        'Debe ingresar el  CÓDIGO RUDE DEL ESTUDIANTE',
+                                        'warning'
+                                        );
+                                       this.buscando = false;
+                                    return;
+                                   }
+                             
+
+
+                      axios.get(Routing.generate('newForeign_lookforrude', this.dataNewStudent ))
+                      .then(response => {
+                          if (response.status == 200) {
+                                  this.responseprocess = response.data.swcreatestudent;
+                                  this.message = response.data.message;
+                                  this.DBGenero= response.data.arrGenero;
+                                  this.DBPais= response.data.arrPais;
+                                  this.DBstudentExist= response.data.arrStudentExist;
+				  this.dataNewStudent.fecnacfind = this.DBstudentExist.fecnacfind;
+                                  this.existStudent = response.data.existStudent;
+                         }
+                          this.buscando = false;
+                      })
+                      .catch(e => {
+                          console.log(e);
+                          this.buscando = false;
+                      });
+
+		},
                 buscarEstudiante: function(){
 
                 	// this.dataNewStudent.fecnacfind = this.dataNewStudent.fecnacfindOrig;
@@ -944,7 +1017,7 @@
 
                 },
                 oldInscription: function(idStudent, index){
-                	
+
                 	//this.swhomonimo = false;
                 	this.swhomonimo = false;
                 	this.swoldinscription = false;
