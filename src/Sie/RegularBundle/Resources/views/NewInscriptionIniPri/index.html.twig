@@ -471,7 +471,7 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptioninipri(1)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
+			                                <button v-on:click="doInscriptioninipri(1)" type="button" class="btn btn-info"  :disabled="state.isSending"><i class="fa fa-book"></i> Inscribir</button>
 			                            </div>
 		                        	</div>
 
@@ -640,7 +640,7 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptioninipri(0)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
+			                                <button v-on:click="doInscriptioninipri(0)" type="button" class="btn btn-info" :disabled="state.isSending"><i class="fa fa-book"></i> Inscribir</button>
 			                            </div>
 		                        	</div>
 
@@ -697,9 +697,11 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
 			  },*/
 
             data: {
-		allowwithoutci : '{{allowwithoutci}}',
+
+		        state: {isSending: false},
+		        allowwithoutci : '{{allowwithoutci}}',
             	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false, 'articuleten':false, 'swrezago':false},
- 		oldStudent: {'articuleten':false, 'swrezago':false},
+ 		        oldStudent: {'articuleten':false, 'swrezago':false},
             	responseprocess:false,
             	swprocessue:false,
             	swinscription:false,
@@ -719,14 +721,14 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
                 DBTurno:{},
                 DBNewStudent:{},
                 DBNewInscription:{},
-		DBstudentExist:{},
-		dataSaveStudent:{},
-		informe:'',
-		swhistory:false,
-		historyReg:{},
-		historyAlt:{},
-		historyEsp:{},
-		historyPer:{},
+				DBstudentExist:{},
+				dataSaveStudent:{},
+				informe:'',
+				swhistory:false,
+				historyReg:{},
+				historyAlt:{},
+				historyEsp:{},
+				historyPer:{},
 				
                 swoldinscription:false,
 	           
@@ -1173,90 +1175,93 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
             	
                 },        
                 doInscriptioninipri: function(swnewforeign){
-			if(swnewforeign == 0){
-                           this.oldStudent.swnewforeign = swnewforeign;
-                           this.dataSaveStudent = this.oldStudent;
-                         }else{
-                           this.dataNewStudent.swnewforeign = swnewforeign;
-                           this.dataSaveStudent = this.dataNewStudent;
-                         }
-		 if(this.dataSaveStudent.generoId == '') {
-                        Swal.fire(
-                        'Campo Género requerido',
-                        'Debe seleccionar Género',
-                        'warning'
-                        );
-                        return;
-                    }
-		 if (this.dataSaveStudent.paisId == '') {
-                        Swal.fire(
-                        'Campo Pais requerido',
-                        'Debe debe seleccinar un Pais',
-                        'warning'
-                        );
-                        return;
-                    }
-		 if(this.dataSaveStudent.paisId == 1){
-			if(typeof this.dataSaveStudent.lugarNacTipoId ==='undefined' ){
-			 	Swal.fire(
-                        	'Campo Departamento requerido',
-                        	'Debe seleccionar un Departamento',
-                	        'warning'
-        	                );
-	                        return;
-			}
+                	
+				
+							
+						if(swnewforeign == 0){
+			                           this.oldStudent.swnewforeign = swnewforeign;
+			                           this.dataSaveStudent = this.oldStudent;
+			                         }else{
+			                           this.dataNewStudent.swnewforeign = swnewforeign;
+			                           this.dataSaveStudent = this.dataNewStudent;
+			                         }
+					 if(this.dataSaveStudent.generoId == '') {
+			                        Swal.fire(
+			                        'Campo Género requerido',
+			                        'Debe seleccionar Género',
+			                        'warning'
+			                        );
+			                        return;
+			                    }
+					 if (this.dataSaveStudent.paisId == '') {
+			                        Swal.fire(
+			                        'Campo Pais requerido',
+			                        'Debe debe seleccinar un Pais',
+			                        'warning'
+			                        );
+			                        return;
+			                    }
+					 if(this.dataSaveStudent.paisId == 1){
+						if(typeof this.dataSaveStudent.lugarNacTipoId ==='undefined' ){
+						 	Swal.fire(
+			                        	'Campo Departamento requerido',
+			                        	'Debe seleccionar un Departamento',
+			                	        'warning'
+			        	                );
+				                        return;
+						}
 
-			 if(typeof this.dataSaveStudent.lugarProvNacTipoId ==='undefined' ){
-                                Swal.fire(
-                                'Campo Provincia requerido',
-                                'Debe seleccionar una Provincia',
-                                'warning'
-                                );
-                                return;
-                        }
-			if(this.dataSaveStudent.localidad =='' ){
-                                Swal.fire(
-                                'Campo Localidad requerido',
-                                'Debe registrar la localidad',
-                                'warning'
-                                );
-                                return;
-                        }
+						 if(typeof this.dataSaveStudent.lugarProvNacTipoId ==='undefined' ){
+			                                Swal.fire(
+			                                'Campo Provincia requerido',
+			                                'Debe seleccionar una Provincia',
+			                                'warning'
+			                                );
+			                                return;
+			                        }
+						if(this.dataSaveStudent.localidad =='' ){
+			                                Swal.fire(
+			                                'Campo Localidad requerido',
+			                                'Debe registrar la localidad',
+			                                'warning'
+			                                );
+			                                return;
+			                        }
 
 
-		}
-		 if (this.dataSaveStudent.nivelId == '') {
-                        Swal.fire(
-                        'Campo Nivel requerido',
-                        'Debe seleccionar un Nivel',
-                        'warning'
-                        );
-                        return;
-                    }
-		 if (this.dataSaveStudent.gradoId == '') {
-                        Swal.fire(
-                        'Campo Grado requerido',
-                        'Debe seleccionar un Grado',
-                        'warning'
-                        );
-                        return;
-                    }
-		 if (this.dataSaveStudent.paraleloId == '') {
-                        Swal.fire(
-                        'Campo Paralelo requerido',
-                        'Debe seleccionar un Paralelo',
-                        'warning'
-                        );
-                        return;
-                    }
-		 if (this.dataSaveStudent.turnoId == '') {
-                        Swal.fire(
-                        'Campo Turno requerido',
-                        'Debe seleccionar un Turno',
-                        'warning'
-                        );
-                        return;
-                    }
+					}
+					 if (this.dataSaveStudent.nivelId == '') {
+			                        Swal.fire(
+			                        'Campo Nivel requerido',
+			                        'Debe seleccionar un Nivel',
+			                        'warning'
+			                        );
+			                        return;
+			                    }
+					 if (this.dataSaveStudent.gradoId == '') {
+			                        Swal.fire(
+			                        'Campo Grado requerido',
+			                        'Debe seleccionar un Grado',
+			                        'warning'
+			                        );
+			                        return;
+			                    }
+					 if (this.dataSaveStudent.paraleloId == '') {
+			                        Swal.fire(
+			                        'Campo Paralelo requerido',
+			                        'Debe seleccionar un Paralelo',
+			                        'warning'
+			                        );
+			                        return;
+			                    }
+					 if (this.dataSaveStudent.turnoId == '') {
+			                        Swal.fire(
+			                        'Campo Turno requerido',
+			                        'Debe seleccionar un Turno',
+			                        'warning'
+			                        );
+			                        return;
+			                    }
  
                 /*validate the file attached*/
 		if(this.allowwithoutci){
@@ -1288,7 +1293,7 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
                     	//		this.dataNewStudent.swnewforeign = swnewforeign;
                     	//		this.dataSaveStudent = this.dataNewStudent;
                     	//	}                    		
-							
+							this.state.isSending = true; 
                     		var data = new FormData();
                             data.append('datos', JSON.stringify(this.dataSaveStudent));
                             data.append('informe', this.informe);

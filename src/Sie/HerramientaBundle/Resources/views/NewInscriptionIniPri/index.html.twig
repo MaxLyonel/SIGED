@@ -477,7 +477,7 @@
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptioninipri(1)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
+			                                <button v-on:click="doInscriptioninipri(1)" type="button" class="btn btn-info" :disabled="state.isSending"><i class="fa fa-book"></i> Inscribir</button>
 			                            </div>
 		                        	</div>
 
@@ -646,7 +646,7 @@
 
 		                            <div class="row">
 			                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-			                                <button v-on:click="doInscriptioninipri(0)" type="button" class="btn btn-info"><i class="fa fa-book"></i> Inscribir</button>
+			                                <button v-on:click="doInscriptioninipri(0)" type="button" class="btn btn-info" :disabled="state.isSending"><i class="fa fa-book"></i> Inscribir</button>
 			                            </div>
 		                        	</div>
 
@@ -703,6 +703,7 @@
 			  },*/
 
             data: {
+              state: {isSending: false},
 		allowwithoutci : '{{allowwithoutci}}',
             	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false, 'articuleten':false, 'swrezago':false},
  		oldStudent: {'articuleten':false, 'swrezago':false},
@@ -1297,7 +1298,7 @@
                     	//		this.dataNewStudent.swnewforeign = swnewforeign;
                     	//		this.dataSaveStudent = this.dataNewStudent;
                     	//	}                    		
-							
+							this.state.isSending = true; 
                     		var data = new FormData();
                             data.append('datos', JSON.stringify(this.dataSaveStudent));
                             data.append('informe', this.informe);
