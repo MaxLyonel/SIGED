@@ -745,7 +745,7 @@ class NewInscriptionIniPriController extends Controller
     public function doInscriptioninipriAction(Request $request) {
     	
     	$arrDatos = json_decode($request->get('datos'), true);
-  	//dump($arrDatos);die;
+//  	dump($arrDatos);die;
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -889,7 +889,6 @@ die;*/
 				                $query->bindValue(':gestion', $gestion);
 				                $query->execute();
 				                $codigorude = $query->fetchAll();
-
 				                $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
 				                
 				                // set the data person to the student table
@@ -903,7 +902,7 @@ die;*/
 				                $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($genero));
 				                $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
 				                // check if the country is Bolivia
-				                if ($paisId === '1'){                    
+				                if ($paisId == '1'){                    
 				                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
 				                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
 				                    $estudiante->setLocalidadNac(mb_strtoupper($localidad, 'utf-8'));
