@@ -344,7 +344,7 @@ class NewInscriptionExtranjeroController extends Controller{
 			/*validate students inscripción in current year*/
 			$rude = $request->get('rude');
 			$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($rude,$this->currentyear);
-			$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($rude,$this->currentyear-1);
+			//$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($rude,$this->currentyear-1);
 		
 
 		}else{
