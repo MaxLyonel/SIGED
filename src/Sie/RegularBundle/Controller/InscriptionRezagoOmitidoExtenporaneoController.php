@@ -40,7 +40,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      *
      */
     public function indexAction() {
-//die('krlos');
+        return $this->redirect($this->generateUrl('principal_web'));
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
@@ -408,7 +408,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
             break;
             case 5:
             # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
+            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;  
             break;
             case 6:
             # check level
