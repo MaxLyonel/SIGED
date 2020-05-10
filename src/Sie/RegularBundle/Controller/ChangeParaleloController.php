@@ -31,6 +31,7 @@ class ChangeParaleloController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) {
+        return $this->redirect($this->generateUrl('principal_web'));
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         
