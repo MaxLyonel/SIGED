@@ -792,6 +792,7 @@
                 buscarEstudiante: function(){
                 	let _this = this;
                 	_this.clearFields();
+                	this.state.isSending = false;
                     
                     if (typeof this.dataNewStudent.withoutcifind === "undefined") {
 					  this.dataNewStudent.withoutcifind = false;

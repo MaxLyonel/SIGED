@@ -838,7 +838,11 @@ class NewInscriptionIniPriController extends Controller
 			break;
 		default:
 			$swinscription = false;
+			break;
 		}
+	
+			
+		
 		/*
 		if($articuleten){
 	        	$iswinscription = $this->articuletenYearValidation($yearStudent,$nivel,$grado);
@@ -1147,13 +1151,10 @@ die;*/
 
     private function articuletenYearValidation($yearStudent, $nivel, $grado){
 				$swinscription=true;
-	            switch ($yearStudent) {
-		              case 4:
-		              case 5:
-		              case 6:
-
+	            switch ($nivel.$grado) {
+		              case 111:
 		                # code...
-		                if($nivel=='11' && $grado=='1'){
+		                if(in_array($yearStudent, array(4,5,6) )){
 		                  //good
 		                }else{
 		                	$status = 'error';
@@ -1162,11 +1163,9 @@ die;*/
 					$swinscription = false; 					
 		                }
 		                break;
-		              case 5:
-		              case 6:
-		              case 7:
+		               case 112:
 		                # code...
-		                if($nivel=='11' && $grado=='2'){
+		                if(in_array($yearStudent, array(5,6,7) )){
 		                  //good
 		                }else{
 		                	$status = 'error';
@@ -1174,12 +1173,9 @@ die;*/
 					$message = "El estudiante no cumple con lo requerido en edad";
 					$swinscription = false;                   
 		                }
-		                break;
-		              case 6:
-		              case 7:
-		              case 8:
+		                 case 121:
 		                # code...
-				      if($nivel=='12' && $grado=='1'){
+		                if(in_array($yearStudent, array(6,7,8) )){
 		                  //good
 		                }else{
 		                	$status = 'error';
@@ -1187,6 +1183,7 @@ die;*/
 					$message = "El estudiante no cumple con lo requerido en edad";
 					$swinscription = false; 
 		                }
+		               
 		                break;
 		            
 
