@@ -1,4 +1,4 @@
-{% if pathSystem != 'SieHerramientaBundle' %}
+{% if (pathSystem != 'SieHerramientaBundle') or (pathSystem == 'SieHerramientaBundle' and dependencia == 3)  %}
 <style>
 	[v-cloak]{
 		display: none;
@@ -424,6 +424,20 @@
 								</select>
 							</div>
 						</div>
+						<div class="row" v-if="dependencia == 3">
+							<div class="form-group col-md-4">
+								<label>¿Tiene Entidad Financiera?<span class="requerido">*</span></label>
+								<select v-model="apoderado.tieneEntidad" class="form-control jupper" @change="seleccionarTieneEntidad()">
+									<option v-for="(extranjero, key) in extranjeros" :key="key" :value="extranjero.id" v-text="extranjero.extranjero"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-8" v-show="apoderado.tieneEntidad == '2'">
+								<label>Entidad Financiera</label>
+								<select v-model="apoderado.entidad" class="form-control jupper">
+									<option v-for="(entidad, key) in entidades" :key="key" :value="entidad.id" v-text="entidad.entidad"></option>
+								</select>
+							</div>
+						</div>
 					</div>
 
 					<div class="modal-footer">
@@ -469,6 +483,7 @@
 	    	validando: false,
 	    	registrando: false,
 	    	idInscripcion: '{{idInscripcion}}',
+	    	dependencia: '{{dependencia}}',
 	    	apoderados2019: '',
 	    	apoderadoBonoFamilia: '',
 	    	errores: [],
@@ -491,7 +506,9 @@
 	    		ocupacionOtro: '',
 	    		instruccion: '',
 	    		parentesco: '',
-	    		extranjero: ''
+	    		extranjero: '',
+	    		tieneEntidad: '',
+	    		entidad: '',
 	    	},
 	    	apoderadoTipo: '',
 	    	expedidos: [],
@@ -504,6 +521,7 @@
 	    	// parentescoMadre: [],
 	    	// parentescoTutor: [],
 	    	extranjeros: [],
+	    	entidades: []
 	    },
 	    mounted(){
 	    	this.cargar();
@@ -594,6 +612,7 @@
 	    				// this.parentescoTutor = response.data.parentescoTutor;
 	    				this.parentescos = response.data.parentescos;
 	    				this.extranjeros = response.data.extranjeros;
+	    				this.entidades = response.data.entidades;
 	    			})
 	    			.catch(e => {
 	    				console.log(e);
@@ -754,6 +773,11 @@
 	    			this.apoderado.pais = '';
 	    		}
 	    	},
+	    	seleccionarTieneEntidad(){
+	    		if (this.apoderado.tieneEntidad == 1) {
+	    			this.apoderado.entidad = '';
+	    		}
+	    	},
 	    	registrar(){
 	    		this.errores = [];
 	    		if (this.apoderado.carnet == '') {
@@ -804,6 +828,16 @@
 		    		if (this.apoderado.pais == '') {
 		    			this.errores.push('Pais de nacimiento');
 		    		}
+	    		}
+
+	    		if (this.dependencia == 3) {
+	    			if (this.apoderado.tieneEntidad == '') {
+	    				this.errores.push('Tiene Entidad Financiera?');
+	    			}else{
+		    			if (this.apoderado.tieneEntidad == 2 && this.apoderado.entidad == '') {
+		    				this.errores.push('Entidad Financiera');
+		    			}
+	    			}
 	    		}
 
 	    		if (this.errores.length == 0) {
