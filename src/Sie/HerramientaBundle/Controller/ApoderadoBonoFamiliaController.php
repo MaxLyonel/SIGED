@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcion;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos;
 use Sie\AppWebBundle\Entity\Persona;
+use Sie\AppWebBundle\Entity\PersonaCuentabancaria;
 
 /**
  * Apoderado2020 Controller
@@ -40,11 +41,16 @@ class ApoderadoBonoFamiliaController extends Controller {
 
         $pathSystem = $this->session->get('pathSystem', null);
 
+        $dependencia = 0;
+        if ($pathSystem == 'SieHerramientaBundle') {
+            $dependencia = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getDependenciaTipo()->getId();
+        }
 
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:index.html.twig', array(
             'idInscripcion'=>$idInscripcion,
             'inscripcion'=>$inscripcion,
-            'pathSystem'=>$pathSystem
+            'pathSystem'=>$pathSystem,
+            'dependencia'=>$dependencia
         ));
     }
 
@@ -60,7 +66,7 @@ class ApoderadoBonoFamiliaController extends Controller {
             ]);
         }
 
-        $apoderados = $this->obtenerApoderados($inscripcion->getEstudiante()->getId());
+        $apoderados = $this->obtenerApoderados($inscripcion->getEstudiante()->getId(), $idInscripcion);
         $apoderados2019 = $apoderados['apoderados2019'];
         $apoderados2020 = $apoderados['apoderados2020'];
 
@@ -149,6 +155,13 @@ class ApoderadoBonoFamiliaController extends Controller {
                             array('id'=>2,'extranjero'=>'SI')
                         );
 
+        $entidades = $em->createQueryBuilder()
+                        ->select('ebt.id, ebt.entidad')
+                        ->from('SieAppWebBundle:EntidadBancariaTipo','ebt')
+                        // ->where('ebt.id in (1,2,3,4,5,6,7,8)')
+                        ->addOrderBy('ebt.id','asc')
+                        ->getQuery()
+                        ->getResult();
 
 
         return $response->setData([
@@ -165,10 +178,11 @@ class ApoderadoBonoFamiliaController extends Controller {
             // 'parentescoMadre'=>$parentescoMadre,
             'parentescos'=>$parentescos,
             'extranjeros'=>$extranjeros,
+            'entidades'=>$entidades
         ]);
     }
 
-    private function obtenerApoderados($idEstudiante){
+    private function obtenerApoderados($idEstudiante, $idInscripcion){
         $em = $this->getDoctrine()->getManager();
 
         $apoderados = $em->createQueryBuilder()
@@ -198,7 +212,8 @@ class ApoderadoBonoFamiliaController extends Controller {
                             pt.id as pais,
                             pt.pais as paisText,
                             gest.id as gestion,
-                            p.id as idPersona
+                            p.id as idPersona,
+                            ei.id as idInscripcion
                         ')
                         ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
                         ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
@@ -227,7 +242,7 @@ class ApoderadoBonoFamiliaController extends Controller {
             if (!in_array($ap['idPersona'], $arrayPersonas)) {
                 $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
                 $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
-                if ($ap['gestion'] == 2020) {
+                if ($ap['gestion'] == 2020 && $ap['idInscripcion'] == $idInscripcion) {
                     $arrayApoderados2020[] = $ap;
                 }else{
                     $arrayApoderados2019[] = $ap;
@@ -845,6 +860,22 @@ class ApoderadoBonoFamiliaController extends Controller {
             //     $em->persist($apoderadoInscripcionDatos);
             //     $em->flush();
             // }
+            
+            // REGSITARMOS LA ENTIDAD FINANCIERA
+            
+            if ($apoderado['tieneEntidad'] == 2) { // si tiene cuenta
+                $apoderadoEntidad = new PersonaCuentabancaria();
+                $apoderadoEntidad->setPersona($persona);
+                $apoderadoEntidad->setEntidadBancariaTipo($em->getRepository('SieAppWebBundle:EntidadBancariaTipo')->find($apoderado['entidad']));
+                $apoderadoEntidad->setCuenta('');
+                $apoderadoEntidad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(date('Y')));
+                $apoderadoEntidad->setEsVigente(true);
+                $apoderadoEntidad->setObs('');
+                $apoderadoEntidad->setFechaRegistro(new \DateTime('now'));
+                $em->persist($apoderadoEntidad);
+                $em->flush();
+            }
+            // $persona
 
             return $response->setData([
                 'status'=>'success',

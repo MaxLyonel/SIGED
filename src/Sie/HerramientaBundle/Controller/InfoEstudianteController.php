@@ -868,6 +868,10 @@ class InfoEstudianteController extends Controller {
 
         $uesWenayek = [61710087,61710043,61710089,61710083,61710063,61710028,61710014,61710093,61710031,61710068,61710091,61710076,61710021,61710084,61710092,61710038,61710085,61710004,61710086,61710041,61710062,61710077,61710042,61710090,61710036,61710088,61710022];
         $wenayekBono = in_array($sie, $uesWenayek)? true: false;
+
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
+        $dependencia = $institucioneducativa->getDependenciaTipo()->getId(); // 3 privada
+
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
@@ -892,7 +896,8 @@ class InfoEstudianteController extends Controller {
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
-                    'wenakeyBono'=>$wenayekBono
+                    'wenakeyBono'=>$wenayekBono,
+                    'dependencia'=>$dependencia
         ));
     }
 
