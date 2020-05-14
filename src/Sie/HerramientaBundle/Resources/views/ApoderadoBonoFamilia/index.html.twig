@@ -300,6 +300,31 @@
 												<p>${apoderadoBonoFamilia.paisText}</p>
 											</div>
 										</div>
+										<div class="row" v-if="dependencia == 3">
+											<div class="col-md-12">
+												<label>Entidad financiera</label>
+												<p v-if="apoderadoBonoFamilia.entidad != ''">
+													${apoderadoBonoFamilia.entidad}
+													{# ${apoderadoBonoFamilia.idPersonaCuentaBancaria} #}
+												</p>
+												<p v-else>
+													<button v-if="!registrarEntidad" type="" class="btn btn-primary" @click="registrarEntidad = true">Registrar entidad financiera</button>
+													<div v-if="registrarEntidad">
+														<div class="row">
+															<div class="col-md-8">
+																<select v-model="apoderadoBonoFamilia.idEntidad" class="form-control jupper">
+																	<option v-for="(entidad, key) in entidades" :key="key" :value="entidad.id" v-text="entidad.entidad"></option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<button type="button" class="btn btn-primary" @click="agregarEntidad()">Registrar</button>
+																<button type="button" class="btn btn-default" @click="registrarEntidad = false">Cancelar</button>
+															</div>
+														</div>
+													</div>
+												</p>
+											</div>
+										</div>
 									</div>
 									<div class="tarjeta-footer">
 										<button type="button" class="btn btn-default btn-block" @click="eliminar(apoderadoBonoFamilia.id)">Eliminar</button>
@@ -521,7 +546,8 @@
 	    	// parentescoMadre: [],
 	    	// parentescoTutor: [],
 	    	extranjeros: [],
-	    	entidades: []
+	    	entidades: [],
+	    	registrarEntidad: false
 	    },
 	    mounted(){
 	    	this.cargar();
@@ -942,6 +968,52 @@
 	    		  	}
 	    		});
 	    	},
+	    	agregarEntidad(){
+	    		if (this.apoderadoBonoFamilia.idEntidad == '') {
+	    			Swal.fire({
+	    		  		title:'Completar información',
+	    		  		html:'<p>Debe seleccionar la Entidad financiera</p>',
+	    		  		type:'warning'
+	    			});
+	    		}else{
+		    		Swal.fire({
+		    		  	title: 'Registrar',
+		    		  	html: 'Se registrará la entidad financiera',
+		    		  	type: 'question',
+		    		  	showCancelButton: true,
+		    		  	confirmButtonColor: '#3085d6',
+		    		  	cancelButtonColor: '#d33',
+		    		  	confirmButtonText: 'Si, registrar',
+		    		  	cancelButtonText: 'No, cancelar'
+		    		}).then((result) => {
+		    		  	if (result.value) {
+				    		axios.post(Routing.generate('apoderado_bono_familia_registrar_entidad', {apoderadoBono: this.apoderadoBonoFamilia}))
+				    			.then(response => {
+				    				if (response.data.status == 'success') {
+				    					this.cargar();
+				    					this.registrarEntidad = false;
+				    					Swal.fire(
+			    					  		'Registro realizado!',
+			    					  		response.data.msg,
+			    					  		'success'
+			    						)
+			    						this.limpiarFormulario();
+				    				}
+				    				if (response.data.status == 'error') {
+				    					Swal.fire(
+			    					  		'Aviso',
+			    					  		response.data.msg,
+			    					  		'warning'
+			    						)
+				    				}
+				    			})
+				    			.catch(e => {
+				    				console.log(e);
+				    			});
+		    		  	}
+		    		});
+	    		}
+	    	},
 	    	validarFormatoFecha(campo) {
     	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
     	        if ((campo.match(RegExPattern)) && (campo!='')) {
@@ -960,8 +1032,7 @@
 		<div class="modal-content" style="height: 90%;">
 			<div class="modal-body">
 				<div class="alert alert-info">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-					El módulo de registro de apoderados no esta disponible
+					<i class="fa fa-info-circle"></i> El módulo de registro de apoderados no esta disponible
 				</div>
 			</div>
 		</div>
