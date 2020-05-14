@@ -34,3 +34,8 @@ apoderado_bono_familia_eliminar:
     options:
          expose: true
 
+apoderado_bono_familia_registrar_entidad:
+    path:     /registrar-entidad
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:registrarEntidad" }
+    options:
+         expose: true

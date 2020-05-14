@@ -45,6 +45,7 @@ class ApoderadoBonoFamiliaController extends Controller {
         if ($pathSystem == 'SieHerramientaBundle') {
             $dependencia = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getDependenciaTipo()->getId();
         }
+        // $dependencia = 3;
 
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:index.html.twig', array(
             'idInscripcion'=>$idInscripcion,
@@ -227,6 +228,8 @@ class ApoderadoBonoFamiliaController extends Controller {
                         ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
                         ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
                         ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
+                        ->leftJoin('SieAppWebBundle:PersonaCuentabancaria','pcb','with','pcb.persona = p.id')
+                        ->leftJoin('SieAppWebBundle:EntidadBancariaTipo','ebt','with','pcb.entidadBancariaTipo = ebt.id')
                         ->where('ei.estudiante = :idEstudiante')
                         ->andWhere('ai.esValidado = 1')
                         ->andWhere('p.segipId = 1')
@@ -242,6 +245,26 @@ class ApoderadoBonoFamiliaController extends Controller {
             if (!in_array($ap['idPersona'], $arrayPersonas)) {
                 $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
                 $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
+
+                // OBTENEMOS LA ENTIDAD FINANCIERA
+                $personaCuentabancaria = $em->createQueryBuilder()
+                                            ->select('ebt.id, ebt.entidad')
+                                            ->from('SieAppWebBundle:PersonaCuentabancaria','pcb')
+                                            ->innerJoin('SieAppWebBundle:EntidadBancariaTipo','ebt','with','pcb.entidadBancariaTipo = ebt.id')
+                                            ->where('pcb.persona = :idPersona')
+                                            ->orderBy('pcb.id', 'DESC')
+                                            ->setParameter('idPersona', $ap['idPersona'])
+                                            ->getQuery()
+                                            ->getResult();
+                $idEntidad = '';
+                $entidad = '';
+                if (count($personaCuentabancaria) > 0) {
+                    $idEntidad = $personaCuentabancaria[0]['id'];
+                    $entidad = $personaCuentabancaria[0]['entidad'];
+                }
+                $ap['idEntidad'] = $idEntidad;
+                $ap['entidad'] = $entidad;
+
                 if ($ap['gestion'] == 2020 && $ap['idInscripcion'] == $idInscripcion) {
                     $arrayApoderados2020[] = $ap;
                 }else{
@@ -1265,6 +1288,34 @@ class ApoderadoBonoFamiliaController extends Controller {
             'status'=>'error',
             'registrado'=>false,
             'msg'=>'No se pudo registrar al apoderado'
+        ]);
+    }
+
+    public function registrarEntidadAction(Request $request){
+        $response = new JsonResponse();
+        $apoderadoBono = $request->get('apoderadoBono', null);
+        if ($apoderadoBono == null) {
+            return $response->setData([
+                'status'=>'error',
+                'msg'=>'No se pudo registrar la Entidad Financiera'
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $apoderadoEntidad = new PersonaCuentabancaria();
+        $apoderadoEntidad->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($apoderadoBono['idPersona']));
+        $apoderadoEntidad->setEntidadBancariaTipo($em->getRepository('SieAppWebBundle:EntidadBancariaTipo')->find($apoderadoBono['idEntidad']));
+        $apoderadoEntidad->setCuenta('');
+        $apoderadoEntidad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(date('Y')));
+        $apoderadoEntidad->setEsVigente(true);
+        $apoderadoEntidad->setObs('');
+        $apoderadoEntidad->setFechaRegistro(new \DateTime('now'));
+        $em->persist($apoderadoEntidad);
+        $em->flush();
+
+         return $response->setData([
+            'status'=>'success',
+            'msg'=>'NLa Entidad Financiera fue registrado correctamente'
         ]);
     }
 
