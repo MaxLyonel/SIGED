@@ -1,54 +1,48 @@
 <div class="row"> 
-    <div class="col-lg-12 col-md-12">
+    <div class="col-lg-12 col-md-12" id="message">
+    </div>
+    <div class="col-lg-6 col-md-6">
         <h3>{{ notaTipo }}</h3>
         <h5>{{ detalleCursoOferta.asignatura }}</h5>
         <p><i class="fa fa-building-o fa-muted fa-fw"></i>  {{ detalleCursoOferta.institucioneducativaId }} - {{ detalleCursoOferta.institucioneducativa }}</p>
         <p><i class="fa fa-code-fork fa-muted fa-fw"></i> {{ detalleCursoOferta.turno }} - {{ detalleCursoOferta.nivel }}</p>
         <p><i class="fa fa-flag-o fa-muted fa-fw"></i> {{ detalleCursoOferta.grado }} - {{ detalleCursoOferta.paralelo }}</p>
-    </div> 
-
-    <div class="col-lg-12 col-md-12" id="maestrosAsignadosContent">
         <hr>
-        <h3 class="text-center">Maestro(s) Asignado(s)</h3>
-        {% for key, maestro in listaMaestros %}
-            <div class="media" id="media{{key}}" name="media[]">
-                <div class="media-body">
-                    <h4 class="media-heading">{{ maestro.nombre }} {{ maestro.paterno }} {{ maestro.materno }}
-                        <a class="btn btn-danger pull-right" onclick="eliminar('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}')"><i class="fa fa-trash-o"></i></a>
-                        <a class="btn btn-green pull-right" onclick="loadForm('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}','{{ maestro.item }}', '{{ maestro.nombre }} {{ maestro.paterno }} {{ maestro.materno }}', '{{ maestro.carnetIdentidad }}', '{% if maestro.asignacionFechaInicio != null %}{{ maestro.asignacionFechaInicio|date('d-m-Y') }}{% endif %}', '{% if maestro.asignacionFechaFin != null %}{{ maestro.asignacionFechaFin|date('d-m-Y') }}{% endif %}', '{{ maestro.financiamientoId }}')"><i class="fa fa-edit"></i></a>
-                    </h4>
-                    <p>C.I. 
-                        {% if maestro.complemento == "" %}
-                            {{ maestro.carnetIdentidad }}
-                        {% else %}
-                            {{ maestro.carnetIdentidad }} - {{ maestro.complemento }}
-                        {% endif %}
-                         - Item: {{ maestro.item }}
-                        <br>
-                        Ft. Fto.: {{ maestro.financiamiento }} - (Asignado: {% if maestro.asignacionFechaInicio != null %}{{ maestro.asignacionFechaInicio|date('d-m-Y') }}{% else %}__{% endif %} al {% if maestro.asignacionFechaFin != null %}{{ maestro.asignacionFechaFin|date('d-m-Y') }}{% else %}__{% endif %})
-                    </p>
+        <div id="maestrosAsignadosContent">
+            <h3 class="text-center">Maestro(s) Asignado(s)</h3>
+            {% for key, maestro in listaMaestros %}
+                <div class="media" id="media{{key}}" name="media[]">
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ maestro.nombre }} {{ maestro.paterno }} {{ maestro.materno }}
+                            <a class="btn btn-danger pull-right" onclick="eliminar('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}')"><i class="fa fa-trash-o"></i></a>
+                            <a class="btn btn-green pull-right" onclick="loadForm('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}','{{ maestro.item }}', '{{ maestro.nombre }} {{ maestro.paterno }} {{ maestro.materno }}', '{{ maestro.carnetIdentidad }}', '{% if maestro.asignacionFechaInicio != null %}{{ maestro.asignacionFechaInicio|date('d-m-Y') }}{% endif %}', '{% if maestro.asignacionFechaFin != null %}{{ maestro.asignacionFechaFin|date('d-m-Y') }}{% endif %}', '{{ maestro.financiamientoId }}', '{{ maestro.maestroInscripcionId|base64_encode }}')"><i class="fa fa-edit"></i></a>
+                        </h4>
+                        <p>C.I. 
+                            {% if maestro.complemento == "" %}
+                                {{ maestro.carnetIdentidad }}
+                            {% else %}
+                                {{ maestro.carnetIdentidad }} - {{ maestro.complemento }}
+                            {% endif %}
+                            - Item: {{ maestro.item }}
+                            <br>
+                            Ft. Fto.: {{ maestro.financiamiento }} - (Asignado: {% if maestro.asignacionFechaInicio != null %}{{ maestro.asignacionFechaInicio|date('d-m-Y') }}{% else %}__{% endif %} al {% if maestro.asignacionFechaFin != null %}{{ maestro.asignacionFechaFin|date('d-m-Y') }}{% else %}__{% endif %})
+                        </p>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}   
+            {% endfor %}  
+        </div> 
     </div> 
-    <div class="col-md-12 col-lg-12" id="message">
-    </div>
+    <div class="col-lg-6 col-md-6">
     {% if formNuevo is defined %}
-        <div class="col-lg-12 col-md-12" id="maestroNuevo">
-            <hr>
-            <h3 class="text-center" id="form_title">Maestro observado</h3>
+        <div id="maestroNuevo">
+            <h3 class="text-center" id="form_title">Registro de maestro</h3>
             <div class="tile orange text-center" style="height: auto;">
-                <h4 id="form_nombre">{{ casoMaestro.nombre }} {{ casoMaestro.paterno }} {{ casoMaestro.materno }}</h4>
-                <p class="text-faded" id="form_ci">
-                    {% if casoMaestro.complemento == "" %}
-                        {{ casoMaestro.carnetIdentidad }}
-                    {% else %}
-                        {{ casoMaestro.carnetIdentidad }} - {{ casoMaestro.complemento }}
-                    {% endif %}
-                </p>
                 {{form_start(formNuevo, {'attr': {'role': "form", 'id': "formNuevo"} } )}}
                     <input type="hidden" value="{% if formEnable == true %}true{% else %}false{% endif %}" id="form_enabled"/>
                     {{ form_widget(formNuevo.ofertaMaestro) }}
+                    <div class="form-group">
+                        {{ form_widget(formNuevo.maestro, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
                     <div class="form-group">
                         {{ form_widget(formNuevo.item, { 'attr': {'class': 'form-control'} }) }}
                     </div>
@@ -78,7 +72,19 @@
             </div>
         </div>
     {% endif %}
+    </div>
 </div> 
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-footer"  id="solucionFooter">
+                <div class="btn-group btn-group-justified">
+                    <a class="btn btn-default" role="button" onclick="finalizar()">Finalizar inconsistencia</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   
 
 <script>
     $('.sandbox-container input').datepicker({
@@ -99,6 +105,7 @@
         if(!validacion){
             return validacion;
         }
+        var form = $('#formNuevo');
         var asignaciones = document.getElementsByName('media[]');
         var maestroNuevoContent = $('#maestroNuevo').html();
         var boton = $('#form_asignar');
@@ -115,20 +122,12 @@
                 $("#message").empty();
                 if(data.estado){               
                     $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');
-                    $("#maestrosAsignadosContent").append(`<div class="media" id="media`+data.maestro.maestroCI+`" name="media[]"><div class="media-body"><h4 class="media-heading">`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`<a class="btn btn-social-icon btn-danger pull-right" onclick="eliminar('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`')"><i class="fa fa-trash-o"></i></a><a class="btn btn-social-icon btn-green pull-right" onclick="loadForm('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`','`+data.maestro.maestroItem+`','`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`', '`+data.maestro.maestroCI+`','`+data.maestro.maestroFechaInicio+`','`+data.maestro.maestroFechaFin+`','`+data.maestro.maestroFinanciamientoId+`')"><i class="fa fa-edit"></i></a></h4><p>C.I. `+data.maestro.maestroCI+` - Item: `+data.maestro.maestroItem+`<br>Ft. Fto.: `+data.maestro.maestroFinanciamiento+` - (Asignado: `+data.maestro.maestroFechaInicio+` al `+data.maestro.maestroFechaFin+`)</p></div></div>`); 
-                    if(asignaciones.length > 0){
-                        botonForm.removeClass('btn-default');
-                        botonForm.addClass('btn-green');
-                        botonForm.html("SI");
-                    } else {
-                        botonForm.removeClass('btn-green');
-                        botonForm.addClass('btn-default');
-                        botonForm.html("NO");
-                    }
+                    $("#maestrosAsignadosContent").append(`<div class="media" id="media`+data.maestro.maestroCI+`" name="media[]"><div class="media-body"><h4 class="media-heading">`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`<a class="btn btn-social-icon btn-danger pull-right" onclick="eliminar('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`')"><i class="fa fa-trash-o"></i></a><a class="btn btn-social-icon btn-green pull-right" onclick="loadForm('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`','`+data.maestro.maestroItem+`','`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`', '`+data.maestro.maestroCI+`','`+data.maestro.maestroFechaInicio+`','`+data.maestro.maestroFechaFin+`','`+data.maestro.maestroFinanciamientoId+`','`+data.maestro.maestroInscripcionId+`')"><i class="fa fa-edit"></i></a></h4><p>C.I. `+data.maestro.maestroCI+` - Item: `+data.maestro.maestroItem+`<br>Ft. Fto.: `+data.maestro.maestroFinanciamiento+` - (Asignado: `+data.maestro.maestroFechaInicio+` al `+data.maestro.maestroFechaFin+`)</p></div></div>`); 
+                    form[0].reset();
                 } else {
                     $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
-                    boton.show();
-                }                
+                } 
+                boton.show();              
             },
             error: function(error){ 
                 $("#message").empty();      
@@ -200,13 +199,18 @@
             alert("Cargue nuevamente el formulario");
             return false;
         }
+        if($('#form_maestro').val() == "0" || $('#form_maestro').val() == ""){
+            alert("Debe seleccionar el maestro");
+            $('#form_maestro').focus();
+            return false;
+        }
         if($('#form_item').val() == ""){
             alert("Debe ingresar el item de la asignación");
             $('#form_item').focus();
             return false;
         }
         if($('#form_financiamiento').val() == "0" || $('#form_financiamiento').val() == ""){
-            alert("Debe ingresar el financiamiento del item");
+            alert("Debe seleccionar el financiamiento del item");
             $('#form_financiamiento').focus();
             return false;
         }
@@ -223,7 +227,7 @@
         return true
     }
 
-    var loadForm = function(ofertaMaestro, media, item, nombre, ci, fechaInicio, fechaFin, financiamiento){   
+    var loadForm = function(ofertaMaestro, media, item, nombre, ci, fechaInicio, fechaFin, financiamiento, maestro){   
         init();   
         nuevoOfertaMaestro = $('#form_ofertaMaestro').val();
         nuevoOfertaMaestroNombre = $('#form_nombre').val();
@@ -232,6 +236,7 @@
         $('#form_title').html("Modificación de asignación");
         $('#form_nombre').html(nombre);
         $('#form_ci').html(ci);
+        $('#form_maestro').val(maestro);
         $('#form_item').val(item);
         $('#form_ofertaMaestro').val(ofertaMaestro);
         $('#form_financiamiento').val(financiamiento);
@@ -256,7 +261,8 @@
         $('#form_ofertaMaestro').val(nuevoOfertaMaestro);
         $('#form_nombre').html(nuevoOfertaMaestroNombre);
         $('#form_ci').html(nuevoOfertaMaestroCI);
-        $('#form_title').html("Maestro Observado");
+        $('#form_title').html("Registro de maestro");
+        $('#form_maestro').val(null);
         $('#form_item').val("");
         $('#form_financiamiento').val(null);
         $('#form_fechaInicio').val("");
@@ -294,7 +300,7 @@
                 if(data.estado){   
                     divMediaMaestro.remove();            
                     $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');
-                    $("#maestrosAsignadosContent").append(`<div class="media" id="media`+data.maestro.maestroCI+`" name="media[]"><div class="media-body"><h4 class="media-heading">`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`<a class="btn btn-social-icon btn-danger pull-right" onclick="eliminar('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`')"><i class="fa fa-trash-o"></i></a><a class="btn btn-social-icon btn-green pull-right" onclick="loadForm('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`','`+data.maestro.maestroItem+`','`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`','`+data.maestro.maestroCI+`','`+data.maestro.maestroFechaInicio+`','`+data.maestro.maestroFechaFin+`','`+data.maestro.maestroFinanciamientoId+`')"><i class="fa fa-edit"></i></a></h4><p>C.I. `+data.maestro.maestroCI+` - Item: `+data.maestro.maestroItem+`<br>Ft. Fto.: `+data.maestro.maestroFinanciamiento+` - (Asignado: `+data.maestro.maestroFechaInicio+` al `+data.maestro.maestroFechaFin+`)</p></div></div>`); 
+                    $("#maestrosAsignadosContent").append(`<div class="media" id="media`+data.maestro.maestroCI+`" name="media[]"><div class="media-body"><h4 class="media-heading">`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`<a class="btn btn-social-icon btn-danger pull-right" onclick="eliminar('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`')"><i class="fa fa-trash-o"></i></a><a class="btn btn-social-icon btn-green pull-right" onclick="loadForm('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`','`+data.maestro.maestroItem+`','`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`','`+data.maestro.maestroCI+`','`+data.maestro.maestroFechaInicio+`','`+data.maestro.maestroFechaFin+`','`+data.maestro.maestroFinanciamientoId+`','`+data.maestro.maestroInscripcionId+`')"><i class="fa fa-edit"></i></a></h4><p>C.I. `+data.maestro.maestroCI+` - Item: `+data.maestro.maestroItem+`<br>Ft. Fto.: `+data.maestro.maestroFinanciamiento+` - (Asignado: `+data.maestro.maestroFechaInicio+` al `+data.maestro.maestroFechaFin+`)</p></div></div>`); 
                     restoreForm();
                 } else {
                     $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
@@ -310,6 +316,40 @@
             },
         });        
     });
+
+    var finalizar = function(){
+            var r = confirm("¿Desea finalizar la insconsistencia del paralelo y asignatura?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_ofertaMaestro').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_maestro_finalizar', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
 
 
 </script>

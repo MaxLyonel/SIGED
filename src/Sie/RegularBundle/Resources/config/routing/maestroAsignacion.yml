@@ -5,13 +5,31 @@ maestroAsignacion:
 
 maestroAsignacion_asignar:
     path:     /asignar
-    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestro }
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignar }
     options:
         expose: true
 
 maestroAsignacion_asignar_materia:
     path:     /asignar/materia
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateria }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_finalizar:
+    path:     /asignar/materia/finalizar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaFinalizar }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_eliminar:
+    path:     /asignar/materia/eliminar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaEliminar }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_modificar_cargo_comisionado_organizacion_social:
+    path:     /asignar/materia/modificar/cargo/comisionado/organizacion/social
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaModificarCargoOrganizacionSocial }
     options:
         expose: true
 
@@ -66,5 +84,17 @@ maestroAsignacion_asignar_materia_elimina:
 maestroAsignacion_asignar_materia_edita:
     path:     /asignar/materia/edita
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaEdita }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_maestro:
+    path:     /asignar/maestro
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestro }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_maestro_finalizar:
+    path:     /asignar/maestro/finalizar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroFinalizar }
     options:
         expose: true

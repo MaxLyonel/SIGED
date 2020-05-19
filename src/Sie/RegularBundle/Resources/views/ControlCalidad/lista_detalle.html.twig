@@ -20,7 +20,7 @@
                         </thead>
                         <tbody>
                             {% for detalle in lista_detalle %}
-                                <tr>
+                                <tr id="rowListaDetalle{{ loop.index }}">
                                     <td data-title="No.">{{ loop.index }}</td>
                                     <td data-title="Gestion">{{detalle.gestionTipo}}</td>
                                     <td data-title="Observacion">{{detalle.obs}}</td>
@@ -248,7 +248,15 @@
                                             <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
                                             <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
                                         </form>
-                                        <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}}, '{{detalle.obs}}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                        <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                    {% elseif regla.id == 56 %}                                    
+                                        <form action="{{path('ccalidad_verificar')}}" method="post">
+                                            <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                            <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                            <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                            <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                        </form>
+                                        <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMaestro({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                     {% endif %}
                                     </td>
                                 </tr>
@@ -340,16 +348,45 @@
 {% block javascripts %}
     <script>
 
+    var botonListDetalle = null;             
 
     $('#collapseOne').removeClass('in').addClass('collapse');
     $('#collapseTwo').removeClass('collapse').addClass('in');
 
-    var ingresarSolucionAsignarMateria = function(vp_id, llave, gestion, obs){
+    var ingresarSolucionAsignarMateria = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
         var htmlTitulo = "Inconsistencia: "+obs+"";
         $('#collapseThreeTitle').html(htmlTitulo);
         $.ajax({
             type: 'get',
             url: Routing.generate('maestroAsignacion_asignar_materia', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
+    }
+
+    var ingresarSolucionAsignarMaestro = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
+        var htmlTitulo = "Inconsistencia: "+obs+"";
+        $('#collapseThreeTitle').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_asignar_maestro', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
             beforeSend: function () {
                 $("#collapseThreeBody").empty();
                 $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');

@@ -31,9 +31,17 @@
                 <div class="panel-body"  id="solucionContent">
                     
                 </div>
+                <br>
+                <div class="panel-footer"  id="solucionFooter">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-default" role="button" onclick="finalizar()">Finalizar inconsistencia</a>
+                        <a class="btn btn-warning" role="button" onclick="modificarCargo()">Definir como Comisionado - Organizacion Social y finalizar</a>
+                        <a class="btn btn-danger" role="button" onclick="eliminar()">Eliminar maestro y finalizar</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>     
+    </div>       
 	<script>
         var listar_nivel = function(){
             var turno = document.getElementById('form_turno').value;
@@ -213,5 +221,107 @@
                     $("#solucionContent").empty();                    
                 },
             });          
+        }
+
+        var finalizar = function(){
+            var r = confirm("¿Desea finalizar la insconsistencia del maestro?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_finalizar', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+        var eliminar = function(){
+            var r = confirm("¿Desea eliminar la inscripción del maestro y finalizar la incosistencia?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_eliminar', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+        var modificarCargo = function(){
+            var r = confirm("¿Está segura(o) de modificar el cargo del maestro a COMISIONADO ORGANIZACIÓN SOCIAL y finalizar la incosistencia?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_modificar_cargo_comisionado_organizacion_social', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
         }
 	</script>
