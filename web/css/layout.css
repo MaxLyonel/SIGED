@@ -1710,10 +1710,10 @@ body.page-footer-fixed #page-content .footer-content {
   float: left;
   z-index: 200;
   position: absolute;
-  background-color: #D6E9ED;
+  background-color: #644491;
 }
 #sidebar-left:after {
-  background-color: #CFD8DC;
+  background-color: #644491;
   position: fixed;
   height: 100%;
   top: 0px;
@@ -1865,17 +1865,17 @@ body.page-footer-fixed #page-content .footer-content {
 .sidebar-content {
   position: relative;
   padding: 15px 10px;
-  border-bottom: 2px solid #373737;
+  border-bottom: 2px solid #546E7A;
   min-height: 81px;
 }
 .sidebar-content .media-heading {
-  color: #777;
+  color: #f5f5f5;
 }
 .sidebar-content .media-heading span {
-  color: #455A64;
+  color: #f5f5f5;
 }
 .sidebar-content small {
-  color: #777;
+  color: #f5f5f5;
 }
 .sidebar-content .close {
   color: white;
