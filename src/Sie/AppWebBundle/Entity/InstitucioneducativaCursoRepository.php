@@ -95,7 +95,21 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->orderBy('j.paterno, j.materno, j.nombre')
                 ->setParameter('ie_curso_id', $ie_curso_id)
         ;
-        return $qb->getQuery()->getResult();
+
+        $objStudents = $qb->getQuery()->getResult();
+
+        for($i=0; $i<count($objStudents);$i++) {
+            // $objStudents[$i]['edad'] = $this->calcularEdad($objStudents[$i]['fechaNacimiento']->format('Y-m-d'));
+
+            $query = $this->getEntityMAnager()->getConnection()->prepare('SELECT sp_calcula_edadanio (:rude::VARCHAR)');
+            $query->bindValue(':rude', $objStudents[$i]['codigoRude']);
+            $query->execute();
+            $edad = $query->fetchAll();
+            
+            $objStudents[$i]['edad'] = $edad[0]['sp_calcula_edadanio'];
+        }
+
+        return $objStudents;
     }
 
     public function getStudentCourseAlterPerStudentId($studentId,$gestionId,$per_id_cod) {

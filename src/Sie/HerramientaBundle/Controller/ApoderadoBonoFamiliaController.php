@@ -46,12 +46,14 @@ class ApoderadoBonoFamiliaController extends Controller {
             $dependencia = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getDependenciaTipo()->getId();
         }
         // $dependencia = 3;
+        $vista = 0; // SOLO VISTA
 
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:index.html.twig', array(
             'idInscripcion'=>$idInscripcion,
             'inscripcion'=>$inscripcion,
             'pathSystem'=>$pathSystem,
-            'dependencia'=>$dependencia
+            'dependencia'=>$dependencia,
+            'vista'=>$vista
         ));
     }
 
