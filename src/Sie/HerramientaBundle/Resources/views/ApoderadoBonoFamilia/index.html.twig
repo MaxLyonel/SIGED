@@ -1,4 +1,5 @@
-{% if (pathSystem != 'SieHerramientaBundle' and pathSystem != 'SieHerramientaAlternativaBundle') or (pathSystem == 'SieHerramientaBundle' and dependencia == 3) and false %}
+{# {% if (pathSystem != 'SieHerramientaBundle' and pathSystem != 'SieHerramientaAlternativaBundle') or (pathSystem == 'SieHerramientaBundle' and dependencia == 3) and false %} #}
+{% if true %}
 <style>
 	[v-cloak]{
 		display: none;
@@ -164,18 +165,19 @@
 						{% endif %}
 					</tbody>
 				</table>
+				{% if vista != 0 %}
 				<div class="alert alert-warning" v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
 					<h4><strong>Importante!</strong> &nbsp; Debe habilitar o registrar <b>un</b> solo apoderado. Esta será la única persona que podrá realizar el cobro del bono familia.</h4>
 					{# <i class="fa fa-info-circle"></i> No se tiene habilitado un apoderado para realizar el cobro. <br> #}
 				</div>
+				{% endif %}
 				<div v-show="!formulario">
 					<div v-if="generos.length == 0" class="text-center">
 						{# <i class="fa fa-refresh fa-2x fa-spin"></i> Cargando... #}
 						<img src="{{asset("img/loading.gif")}}"><br>Cargando...
 					</div>
-
 					<div v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
-						
+						{% if vista != 0 %}
 						<div v-show="apoderados2019.length > 0" class="alert alert-info">
 							<b>Nota:</b> Se identificarón apoderados registrados, debe habilitar uno de ellos o registrar un nuevo apoderado
 						</div>
@@ -237,14 +239,21 @@
 								</div>
 							</div>
 							<div class="col-md-6">
+								{% if vista != 0 %}
 								<div class="tarjeta">
 									<button type="button" @click="abrirFormulario()" class="btn btn-primary btn-block">
 										<i class="fa fa-plus fa-3x"></i> <br>
 										Registrar nuevo apoderado
 									</button>
 								</div>
+								{% endif %}
 							</div>
 						</div>
+						{% else %}
+							<div class="alert alert-warning">
+								<i class="fa fa-info-circle"></i> Apoderado no registrado !
+							</div>
+						{% endif %}
 					</div>
 					<div v-if="generos.length > 0 && apoderadoBonoFamilia != ''">
 						<div class="row">
@@ -300,6 +309,7 @@
 												<p>${apoderadoBonoFamilia.paisText}</p>
 											</div>
 										</div>
+										{% if vista != 0 %}
 										<div class="row" v-if="dependencia == 3">
 											<div class="col-md-12">
 												<label>Entidad financiera</label>
@@ -325,9 +335,12 @@
 												</p>
 											</div>
 										</div>
+										{% endif %}
 									</div>
 									<div class="tarjeta-footer">
+										{% if vista != 0 %}
 										<button type="button" class="btn btn-default btn-block" @click="eliminar(apoderadoBonoFamilia.id)">Eliminar</button>
+										{% endif %}
 									</div>
 								</div>
 							</div>
