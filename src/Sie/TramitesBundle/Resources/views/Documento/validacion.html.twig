@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    <head>
+        <!-- START @META SECTION -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Diploma de Bachiller">
+        <meta name="keywords" content="Ministerio de Eduación">
+        <meta name="author" content="Djava UI">
+        <title>SIE | Diploma de Bachiller</title>
+        <!--/ END META SECTION -->
+
+
+        <!-- START @FONT STYLES -->
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
+        <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+        <!--/ END FONT STYLES -->
+
+        <!-- START @GLOBAL MANDATORY STYLES -->
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <!--/ END GLOBAL MANDATORY STYLES -->
+
+        <!-- START @PAGE LEVEL STYLES -->
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+
+      
+
+        <!-- START @THEME STYLES -->
+        <link href="{{asset('juegos/assets/admin/css/reset.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/layout.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/components.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/plugins.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
+        <link href="{{asset('juegos/assets/admin/css/pages/dashboard-real-estate.css')}}" rel="stylesheet" id="theme">
+        <link href="{{asset('juegos/assets/admin/css/custom.css')}}" rel="stylesheet">
+
+
+    </head>
+    <!--/ END HEAD -->
+
+    <!--
+
+    |=========================================================================================================================|
+    |  TABLE OF CONTENTS (Use search to find needed section)                                                                  |
+    |=========================================================================================================================|
+    |  01. @HEAD                        |  Container for all the head elements                                                |
+    |  02. @META SECTION                |  The meta tag provides metadata about the HTML document                             |
+    |  03. @FAVICONS                    |  Short for favorite icon, shortcut icon, website icon, tab icon or bookmark icon    |
+    |  04. @FONT STYLES                 |  Font from google fonts                                                             |
+    |  05. @GLOBAL MANDATORY STYLES     |  The main 3rd party plugins css file                                                |
+    |  06. @PAGE LEVEL STYLES           |  Specific 3rd party plugins css file                                                |
+    |  07. @THEME STYLES                |  The main theme css file                                                            |
+    |  08. @IE SUPPORT                  |  IE support of HTML5 elements and media queries                                     |
+    |=========================================================================================================================|
+    |  09. @BODY                        |  Contains all the contents of an HTML document                                      |
+    |  10. @WRAPPER                     |  Wrapping page section                                                              |
+    |  11. @HEADER                      |  Header page section contains about logo, top navigation, notification menu         |
+    |  12. @SIDEBAR LEFT                |  Sidebar page section contains all sidebar menu left                                |
+    |  13. @PAGE CONTENT                |  Contents page section contains breadcrumb, content page, footer page               |
+    |  14. @SIDEBAR RIGHT               |  Sidebar page section contains all sidebar menu right                               |
+    |  15. @BACK TOP                    |  Element back to top and action                                                     |
+    |========================================================================================================================|
+    |  16. @CORE PLUGINS                |  The main 3rd party plugins script file                                             |
+    |  17. @PAGE LEVEL PLUGINS          |  Specific 3rd party plugins script file                                             |
+    |  18. @PAGE LEVEL SCRIPTS          |  The main theme script file                                                         |
+    |=========================================================================================================================|
+
+    START @BODY
+    |=========================================================================================================================|
+        |  TABLE OF CONTENTS (Apply to body class)                                                                                |
+        |=========================================================================================================================|
+    |  01. page-boxed                   |  Page into the box is not full width screen                                         |
+        |  02. page-header-fixed            |  Header element become fixed position                                               |
+        |  03. page-sidebar-fixed           |  Sidebar element become fixed position with scroll support                          |
+        |  04. page-sidebar-minimize        |  Sidebar element become minimize style width sidebar                                |
+        |  05. page-footer-fixed            |  Footer element become fixed position with scroll support on page content           |
+        |  06. page-sound                   |  For playing sounds on user actions and page events                                 |
+        |=========================================================================================================================|
+
+    -->
+    <body class="page-header-fixed page-sidebar-fixed">
+
+        <!--[if lt IE 9]>
+        <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- START @WRAPPER -->
+        <section id="wrapper">
+
+            <!-- START @HEADER -->
+            <header id="header">
+                <nav class="navbar fixed-top navbar-expand-lg navbar-dark pink scrolling-navbar">
+                    <a class="navbar-brand" href="#">
+                        <span class="text hidden-xs hidden-sm text-muted">{{titulo}} - {{subtitulo}}</span>
+                    </a>
+                </nav>              
+            </header> <!-- /#header -->
+            <!--/ END HEADER -->
+          
+
+            <!-- START @PAGE CONTENT -->
+            <main>
+                 <!-- Start body content -->
+                <div class="body-content animated fadeIn">
+                    {% if estado is defined  %}
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                {% if estado == false %}
+                                    <div class="alert alert-danger ">
+                                        <span class="alert-icon"><i class="fa fa-comments-o"></i></span>
+                                        <div class="notification-info">
+                                            <ul class="clearfix notification-meta">
+                                                <li class="pull-left notification-sender"><span><a href="#">Error: </a></span>{{ msg }}</li>
+                                                <li class="pull-right notification-time">{{ "now"|date("d/m/Y") }}</li>
+                                            </ul>
+                                            <p>
+                                                Está página valida el documento a partir de los datos registrados y proporcionados en el documento emitido. 
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-success">
+                                        <span class="alert-icon"><i class="fa fa-twitter"></i></span>
+                                        <div class="notification-info">
+                                            <ul class="clearfix notification-meta">
+                                                <li class="pull-left notification-sender"><span><a href="#">Correcto: </a></span> {{ msg }}</li>
+                                                <li class="pull-right notification-time">{{ "now"|date("d/m/Y") }}</li>
+                                            </ul>
+                                            <p>
+                                                Está página valida el documento a partir de los datos registrados y proporcionados en el documento emitido. 
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-invoice rounded">
+                                        <div class="panel-sub-heading">
+                                            <div class="row inner-all">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="text-left mb-10">
+                                                        <h3 class="mt-0 text-primary"><strong>{{listaDocumento.paterno}} {{listaDocumento.materno}} {{listaDocumento.nombre}}</strong></h3>
+                                                        <address>
+                                                            <strong>Código RUDE/RUDEAL: </strong>{{listaDocumento.rude}}<br>
+                                                            <strong>Cédula de Identidad: </strong>{{listaDocumento.carnetidentidad}}<br>
+                                                            <strong>Código SIE: </strong>{{listaDocumento.sie}} - {{listaDocumento.gestion}}<br>
+                                                            <strong>Fecha de nacimiento: </strong>{{listaDocumento.fechanacimiento }}<br>
+                                                            <strong>Lugar de nacimiento: </strong>
+                                                                {% if listaDocumento.departamentonacimiento != "" %}{{ listaDocumento.departamentonacimiento }} - {% endif %}
+                                                                {{ listaDocumento.paisnacimiento }}
+                                                        </address>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="text-right">
+                                                        <h3 class="mt-0 text-info"><strong>Trámite Nro.: </strong> {{listaDocumento.tramite}}</h3>
+                                                        {% if listaDocumento.serie is not null and listaDocumento.serie != "" %}<h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>{% endif %}
+                                                        <address>
+                                                            {% if listaDocumento.documentotipo is not null and listaDocumento.documentotipo != "" %}<strong>Tipo documento: </strong>  {{listaDocumento.documentotipo}}{% endif %}<br>
+                                                            {% if listaDocumento.fechaemision is not null and listaDocumento.fechaemision != "" %}<strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}{% endif %} <br>
+                                                            {% if listaDocumento.departamentoemision is not null and listaDocumento.departamentoemision != "" %}<strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}{% endif %}<br>
+                                                        </address>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-sub-heading -->
+                                    </div>                    
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </main><!-- /#page-content -->
+
+            <footer class="footer-content" style="position: fixed; bottom: 0; width: 100%;">
+                <span id="copyright-year">2020</span> ©Administrador Creado por <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a>, Bolivia
+                <span class="pull-right">...</span>
+            </footer>
+            <!--/ END PAGE CONTENT -->
+        </section><!-- /#wrapper -->
+        <!--/ END WRAPPER -->
+
+        <!-- START GOOGLE ANALYTICS -->
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <!--/ END GOOGLE ANALYTICS -->
+
+        <script>
+        </script>
+    </body>
+    <!--/ END BODY -->
+</html>
+

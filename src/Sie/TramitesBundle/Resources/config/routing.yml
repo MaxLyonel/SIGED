@@ -183,3 +183,9 @@ sie_tramite_seguimiento_busqueda_rude_detalle:
 sie_tramite_ver_datos_estudiante:
     path:     /certificado/{tramite}
     defaults: { _controller: SieTramitesBundle:Default:datosCertificado }
+
+sie_tramite_documento_bachiller_humanidades:
+    path:     /diplomas/documento/bachiller/humanidades/{documento}/{qr}
+    defaults: { _controller: SieTramitesBundle:Documento:validarDocumentoElectronico }
+    requirements:
+        qr:  ^[a-zA-Z0-9\s\/\+\=]{1,2000}$
