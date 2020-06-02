@@ -2457,7 +2457,7 @@ class DocumentoController extends Controller {
     public function validarDocumentoElectronicoAction(Request $request, $documento, $qr){
         $em = $this->getDoctrine()->getManager();
         //dump($request);dump($documento);dump($qr);
-        $entityDocumento = $this->getDocumentoMd5(md5(3197208));
+        $entityDocumento = $this->getDocumentoMd5($documento);
         //dump($entityDocumento);
         $datosEnviados = str_replace(' ', '+', $qr);
         $datosEnviados = str_replace('%20', '+', $datosEnviados);
