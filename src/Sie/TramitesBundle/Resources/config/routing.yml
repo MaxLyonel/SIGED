@@ -185,7 +185,7 @@ sie_tramite_ver_datos_estudiante:
     defaults: { _controller: SieTramitesBundle:Default:datosCertificado }
 
 sie_tramite_documento_bachiller_humanidades:
-    path:     /diplomas/documento/bachiller/humanidades/{documento}/{qr}
+    path:     /diplomas/documento/bachiller/humanidades/{qr}
     defaults: { _controller: SieTramitesBundle:Documento:validarDocumentoElectronico }
     requirements:
         qr:  ^[a-zA-Z0-9\s\/\+\=]{1,2000}$

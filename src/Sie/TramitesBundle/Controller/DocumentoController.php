@@ -2454,21 +2454,35 @@ class DocumentoController extends Controller {
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function validarDocumentoElectronicoAction(Request $request, $documento, $qr){
+    public function validarDocumentoElectronicoAction(Request $request, $qr){
         $em = $this->getDoctrine()->getManager();
-        //dump($request);dump($documento);dump($qr);
-        $entityDocumento = $this->getDocumentoMd5($documento);
-        //dump($entityDocumento);
+        
         $datosEnviados = str_replace(' ', '+', $qr);
         $datosEnviados = str_replace('%20', '+', $datosEnviados);
 
-        $msg = '';
-        $estado = true;
-
+        // dump($request);dump($qr);
+        //$entityDocumento = $this->getDocumentoMd5($documento);
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $qr));
+        
         if(count($entityDocumento)>0){
-            $msg = 'Documento no vigente o inexistente, verifique con la Dirección Distrital o Dirección Departamental';
+            if(count($entityDocumento)>1){
+                $msg = 'Documento observado por duplicidad en su registro, verifique con la Dirección Distrital o Dirección Departamental';
+                $estado = false;
+            } else {
+                $entityDocumentoEstadoId = $entityDocumento->getDocumentoEstado()->getId();
+                if($entityDocumentoEstadoId != 1){
+                    $msg = 'Documento no vigente, verifique con la Dirección Distrital o Dirección Departamental';
+                    $estado = false;
+                }
+            }
+        } else {
+            $msg = 'Documento inexistente, verifique con la Dirección Distrital o Dirección Departamental';
             $estado = false;
         }
+        // dump($entityDocumento);die;
+
+        $msg = '';
+        $estado = true;        
 
         $datos = array(
             'inscripcion'=>$entityDocumento['estudianteinscripcionid'],
