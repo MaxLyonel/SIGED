@@ -2611,10 +2611,10 @@ public function getDocumentoTokenImpreso($token) {
             $msg = 'Documento inexistente, verifique con la Dirección Distrital o Dirección Departamental';
             $estado = false;
         }
-        // dump($entityDocumento);die;
+        // dump($this->session->get('pathSystem'));die;
 
 
-        return $this->render($this->session->get('pathSystem') . ':Documento:validacion.html.twig',array(
+        return $this->render('SieTramitesBundle:Documento:validacion.html.twig',array(
             'listaDocumento' => $datosDocumentoValidado,   
             'estado' => $estado, 
             'msg' => $msg,
