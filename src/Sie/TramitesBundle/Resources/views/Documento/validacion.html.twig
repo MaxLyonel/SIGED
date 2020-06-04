@@ -142,13 +142,11 @@
                                                     <div class="text-left mb-10">
                                                         <h3 class="mt-0 text-primary"><strong>{{listaDocumento.paterno}} {{listaDocumento.materno}} {{listaDocumento.nombre}}</strong></h3>
                                                         <address>
-                                                            <strong>Código RUDE/RUDEAL: </strong>{{listaDocumento.rude}}<br>
-                                                            <strong>Cédula de Identidad: </strong>{{listaDocumento.carnetidentidad}}<br>
-                                                            <strong>Código SIE: </strong>{{listaDocumento.sie}} - {{listaDocumento.gestion}}<br>
-                                                            <strong>Fecha de nacimiento: </strong>{{listaDocumento.fechanacimiento }}<br>
-                                                            <strong>Lugar de nacimiento: </strong>
-                                                                {% if listaDocumento.departamentonacimiento != "" %}{{ listaDocumento.departamentonacimiento }} - {% endif %}
-                                                                {{ listaDocumento.paisnacimiento }}
+                                                            <strong>Código RUDE/RUDEAL: </strong>{{listaDocumento.codigorude}}<br>
+                                                            <strong>Cédula de Identidad: </strong>{{listaDocumento.cedulaidentidad}}<br>
+                                                            <strong>Código SIE: </strong>{{listaDocumento.sie}} - {{listaDocumento.gestionegreso}}<br>
+                                                            <strong>Fecha de nacimiento: </strong>{{listaDocumento.nacimientofecha }}<br>
+                                                            <strong>Lugar de nacimiento: </strong>{{ listaDocumento.nacimientolugar }}
                                                         </address>
                                                     </div>
                                                 </div>
@@ -158,8 +156,8 @@
                                                         {% if listaDocumento.serie is not null and listaDocumento.serie != "" %}<h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>{% endif %}
                                                         <address>
                                                             {% if listaDocumento.documentotipo is not null and listaDocumento.documentotipo != "" %}<strong>Tipo documento: </strong>  {{listaDocumento.documentotipo}}{% endif %}<br>
-                                                            {% if listaDocumento.fechaemision is not null and listaDocumento.fechaemision != "" %}<strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}{% endif %} <br>
-                                                            {% if listaDocumento.departamentoemision is not null and listaDocumento.departamentoemision != "" %}<strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}{% endif %}<br>
+                                                            {% if listaDocumento.emisionfecha is not null and listaDocumento.emisionfecha != "" %}<strong>Fecha de emisión: </strong> {{listaDocumento.emisionfecha}}{% endif %} <br>
+                                                            {% if listaDocumento.emisiondepartamento is not null and listaDocumento.emisiondepartamento != "" %}<strong>D.D.E. Emisor: </strong> {{listaDocumento.emisiondepartamento}}{% endif %}<br>
                                                         </address>
                                                     </div>
                                                 </div>

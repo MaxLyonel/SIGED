@@ -110,6 +110,53 @@ class DocumentoController extends Controller {
     }
 
     //****************************************************************************************************
+// DESCRIPCION DEL METODO:
+// Funcion que lista un documento mediante un id md5
+// PARAMETROS: id
+// AUTOR: RCANAVIRI
+//****************************************************************************************************
+public function getDocumentoTokenImpreso($token) {
+    $em = $this->getDoctrine()->getManager();
+
+    $queryEntidad = $em->getConnection()->prepare("
+        select
+        d.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, to_char(d.fecha_impresion, 'dd/mm/YYYY') as fechaemision
+        , dept.id as departamentoemisionid, dept.departamento as departamentoemision, e.codigo_rude as rude, e.paterno as paterno, e.materno as materno
+        , e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, to_char(e.fecha_nacimiento, 'dd/mm/YYYY') as fechanacimiento
+        , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
+        , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
+        , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, de.id as documentoEstadoId
+        from documento as d
+        inner join documento_estado as de on de.id = d.documento_estado_id
+        inner join documento_tipo as dt on dt.id = d.documento_estado_id
+        inner join documento_serie as ds on ds.id = d.documento_serie_id
+        inner join tramite as t on t.id = d.tramite_id
+        inner join tramite_tipo as tt on tt.id = t.tramite_tipo
+        inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
+        inner join estudiante as e on e.id = ei.estudiante_id
+        inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+        inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+        inner join gestion_tipo as gt on gt.id = ds.gestion_id
+        inner join pais_tipo as pt on pt.id = e.pais_tipo_id
+        inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+        left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
+        left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
+        where d.token_impreso = :token and dt.id in (1,3,4,5,6,7,8,9)
+        order by e.paterno, e.materno, e.nombre
+    ");
+    $queryEntidad->bindValue(':token', $token);
+    $queryEntidad->execute();
+    $entityDocumento = $queryEntidad->fetchAll();
+
+    if(count($entityDocumento)>0){
+        return $entityDocumento;
+    } else {
+        return array();
+    }
+}
+
+
+    //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Funcion que lista un documento
     // PARAMETROS: id
@@ -708,16 +755,34 @@ class DocumentoController extends Controller {
                 // dump($getDocumentoFirma);die;
                 $lugarNacimiento = "";
                 if($entityDocumentoGenerado['departamentonacimiento'] == ""){
-                    $lugarNacimiento = $entityDocumentoGenerado['departamentonacimiento']." - ".$entityDocumentoGenerado['paisnacimiento'];
-                } else {
                     $lugarNacimiento = $entityDocumentoGenerado['paisnacimiento'];
+                } else {
+                    $lugarNacimiento = $entityDocumentoGenerado['departamentonacimiento']." - ".$entityDocumentoGenerado['paisnacimiento'];
                 }    
                 
                 // $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
                 // $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
                 $dateNacimiento = ($entityDocumentoGenerado['fechanacimiento']);
                 $dateEmision = ($entityDocumentoGenerado['fechaemision']);
+                // dump($dateNacimiento);dump($dateEmision);dump($dateEmision->format('d/m/Y'));die;
                             
+                // $datos = array(
+                //     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
+                //     'tramite'=>$entityDocumentoGenerado['tramite'],
+                //     'serie'=>$entityDocumentoGenerado['serie'],
+                //     'codigorude'=>$entityDocumentoGenerado['rude'],
+                //     'sie'=>$entityDocumentoGenerado['sie'],
+                //     'gestionegreso'=>$entityDocumentoGenerado['gestion'],
+                //     'nombre'=>$entityDocumentoGenerado['nombre'],
+                //     'paterno'=>$entityDocumentoGenerado['paterno'],
+                //     'materno'=>$entityDocumentoGenerado['materno'],
+                //     'nacimientolugar'=>$lugarNacimiento,
+                //     'nacimientofecha'=>date_format($dateNacimiento, 'd/m/Y'),
+                //     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
+                //     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
+                //     'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
+                //     'tokenfirma'=>base64_encode($getDocumentoFirma['id'])
+                // );
                 $datos = array(
                     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
                     'tramite'=>$entityDocumentoGenerado['tramite'],
@@ -729,10 +794,10 @@ class DocumentoController extends Controller {
                     'paterno'=>$entityDocumentoGenerado['paterno'],
                     'materno'=>$entityDocumentoGenerado['materno'],
                     'nacimientolugar'=>$lugarNacimiento,
-                    'nacimientofecha'=>date_format($dateNacimiento, 'd/m/Y'),
+                    'nacimientofecha'=>$dateNacimiento->format('d/m/Y'),
                     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
                     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
-                    'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
+                    'emisionfecha'=>$dateEmision->format('d/m/Y'),
                     'tokenfirma'=>base64_encode($getDocumentoFirma['id'])
                 );
                 $keys = $this->getEncodeRSA($datos);
@@ -2458,21 +2523,88 @@ class DocumentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         
         $datosEnviados = str_replace(' ', '+', $qr);
-        $datosEnviados = str_replace('%20', '+', $datosEnviados);
+        $datosEnviados = str_replace('%20', '+', $datosEnviados);    
+        $msg = '';
+        $estado = true;            
+        $datosDocumentoValidado = array();
 
         // dump($request);dump($qr);
         //$entityDocumento = $this->getDocumentoMd5($documento);
-        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $qr));
+        // $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $datosEnviados));
+        $entityDocumento = $this->getDocumentoTokenImpreso($datosEnviados);
+        //dump(count($entityDocumento));die;
         
         if(count($entityDocumento)>0){
             if(count($entityDocumento)>1){
                 $msg = 'Documento observado por duplicidad en su registro, verifique con la Dirección Distrital o Dirección Departamental';
                 $estado = false;
             } else {
-                $entityDocumentoEstadoId = $entityDocumento->getDocumentoEstado()->getId();
+                $entityDocumento = $entityDocumento[0];
+                $entityDocumentoEstadoId = $entityDocumento['documentoestadoid'];
                 if($entityDocumentoEstadoId != 1){
                     $msg = 'Documento no vigente, verifique con la Dirección Distrital o Dirección Departamental';
                     $estado = false;
+                } else {            
+                    if ($entityDocumento['departamentonacimiento'] == ""){
+                        $lugarNacimiento = $entityDocumento['departamentonacimiento'];
+                    } else {
+                        $lugarNacimiento = $entityDocumento['departamentonacimiento'] . ' - ' . $entityDocumento['paisnacimiento'];
+                    }
+                    $datos = array(
+                        'inscripcion'=>$entityDocumento['estudianteinscripcionid'],
+                        'tramite'=>$entityDocumento['tramite'],
+                        'serie'=>$entityDocumento['serie'],
+                        'codigorude'=>$entityDocumento['rude'],
+                        'sie'=>$entityDocumento['sie'],
+                        'gestionegreso'=>$entityDocumento['gestion'],
+                        'nombre'=>$entityDocumento['nombre'],
+                        'paterno'=>$entityDocumento['paterno'],
+                        'materno'=>$entityDocumento['materno'],
+                        'nacimientolugar'=>$lugarNacimiento,
+                        'nacimientofecha'=>$entityDocumento['fechanacimiento'],
+                        'cedulaidentidad'=>$entityDocumento['carnetidentidad'],
+                        'emisiondepartamento'=>$entityDocumento['departamentoemision'],
+                        'emisionfecha'=>$entityDocumento['fechaemision'],
+                        'tokenfirma'=>base64_encode($entityDocumento['documentofirmaid']),
+                        'documentotipo'=>$entityDocumento['documentotipo']
+                    );
+                    // dump($datos);
+                    $keys = $this->getEncodeRSA($datos);
+                    $datosRegistrados = $datos;
+
+                    $keyPrivado = $entityDocumento['keyprivado'];
+                    // $keyPrivado = $ll;
+                    // dump(md5(3197208));dump($entityDocumento['token_impreso']);dump($datos);dump($datosEnviados);dump($ll);
+                    try {
+                        $datosEnviadosDecode = $this->getDecodeRSA($datosEnviados, $keyPrivado);
+                        $datosEnviadosDecode = unserialize($datosEnviadosDecode);
+                        // dump($datosEnviadosDecode);die;
+                        if(
+                            $datosEnviadosDecode['inscripcion'] == $datosRegistrados['inscripcion'] and 
+                            $datosEnviadosDecode['tramite'] == $datosRegistrados['tramite'] and 
+                            $datosEnviadosDecode['serie'] == $datosRegistrados['serie'] and 
+                            $datosEnviadosDecode['codigorude'] == $datosRegistrados['codigorude'] and 
+                            $datosEnviadosDecode['sie'] == $datosRegistrados['sie'] and 
+                            $datosEnviadosDecode['gestionegreso'] == $datosRegistrados['gestionegreso'] and 
+                            $datosEnviadosDecode['nombre'] == $datosRegistrados['nombre'] and 
+                            $datosEnviadosDecode['paterno'] == $datosRegistrados['paterno'] and 
+                            $datosEnviadosDecode['materno'] == $datosRegistrados['materno'] and 
+                            $datosEnviadosDecode['cedulaidentidad'] == $datosRegistrados['cedulaidentidad'] and 
+                            $datosEnviadosDecode['emisiondepartamento'] == $datosRegistrados['emisiondepartamento'] and 
+                            $datosEnviadosDecode['tokenfirma'] == $datosRegistrados['tokenfirma']
+                            ){
+                            $msg = 'Documento válido';
+                            $estado = true;
+                            $datosDocumentoValidado = $datosRegistrados;
+                        } else {
+                            $msg = 'Datos modificados, documento no válido';
+                            $estado = false;
+                        }
+                    } catch (\Exception $e) {
+                        $msg = 'Documento no válido';
+                        $estado = false;
+                        // dump("no decodificado");die;
+                    }
                 }
             }
         } else {
@@ -2481,50 +2613,6 @@ class DocumentoController extends Controller {
         }
         // dump($entityDocumento);die;
 
-        $msg = '';
-        $estado = true;        
-
-        $datos = array(
-            'inscripcion'=>$entityDocumento['estudianteinscripcionid'],
-            'tramite'=>$entityDocumento['tramite'],
-            'serie'=>$entityDocumento['serie'],
-            'codigorude'=>$entityDocumento['rude'],
-            'sie'=>$entityDocumento['sie'],
-            'gestionegreso'=>$entityDocumento['gestion'],
-            'nombre'=>$entityDocumento['nombre'],
-            'paterno'=>$entityDocumento['paterno'],
-            'materno'=>$entityDocumento['materno'],
-            'nacimientolugar'=>$entityDocumento['departamentonacimiento'],
-            'nacimientofecha'=>$entityDocumento['fechanacimiento'],
-            'cedulaidentidad'=>$entityDocumento['carnetidentidad'],
-            'emisiondepartamento'=>$entityDocumento['departamentoemision'],
-            'emisionfecha'=>$entityDocumento['fechaemision'],
-            'tokenfirma'=>base64_encode($entityDocumento['documentofirmaid'])
-        );
-        $keys = $this->getEncodeRSA($datos);
-        $datosRegistrados = $datos;
-
-        $keyPrivado = $entityDocumento['keyprivado'];
-        // $keyPrivado = $ll;
-        // dump(md5(3197208));dump($entityDocumento['token_impreso']);dump($datos);dump($datosEnviados);dump($ll);
-        $datosDocumentoValidado = array();
-        try {
-            $datosEnviadosDecode = $this->getDecodeRSA($datosEnviados, $keyPrivado);
-            $datosEnviadosDecode = unserialize($datosEnviadosDecode);
-            // dump($datosEnviadosDecode);die;
-            if($datosEnviados == $datosRegistrados){
-                $msg = 'Documento válido';
-                $estado = true;
-                $datosDocumentoValidado = $datosRegistrados;
-            } else {
-                $msg = 'Datos modificados, documento no válido';
-                $estado = false;
-            }
-        } catch (\Exception $e) {
-            $msg = 'Documento no válido';
-            $estado = false;
-            // dump("no decodificado");die;
-        }
 
         return $this->render($this->session->get('pathSystem') . ':Documento:validacion.html.twig',array(
             'listaDocumento' => $datosDocumentoValidado,   
