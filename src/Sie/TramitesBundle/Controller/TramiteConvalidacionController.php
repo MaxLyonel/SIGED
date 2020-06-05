@@ -915,6 +915,7 @@ class TramiteConvalidacionController extends Controller {
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end 
                 and case when iec.gestion_tipo_id <= :gestion then iec.nivel_tipo_id = 3::int and iec.grado_tipo_id = 4::int else iec.nivel_tipo_id = 13::int and iec.grado_tipo_id = 6::int end    
+                and ei.estadomatricula_tipo_id in (4,5,55,11)
             ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);
