@@ -42,7 +42,7 @@ class InscriptionIniPriTrueController extends Controller {
      */
     public function indexAction() {
 
-      $arrUser = array('6478217','7861595','3139451');
+      $arrUser = array('6478217','7861595');
 
       if(!in_array($this->session->get('userId'), $arrUser) ){
         return $this->redirect($this->generateUrl('principal_web'));
