@@ -16,7 +16,7 @@ class DownloadRudeFileController extends Controller{
      }
 
     public function indexAction(Request $request){
-
+      return $this->redirect($this->generateUrl('principal_web'));
     	//get data user
     	$roluser = $this->session->get('roluser');
     	//get all data to send    	
