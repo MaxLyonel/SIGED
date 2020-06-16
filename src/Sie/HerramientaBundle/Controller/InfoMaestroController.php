@@ -458,7 +458,7 @@ class InfoMaestroController extends Controller {
             $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
             $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
             $newPersona->setSegipId(1);
-            $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+            $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
             $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
             $newPersona->setRda('0');

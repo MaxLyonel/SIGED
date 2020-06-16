@@ -48,7 +48,7 @@ class InstitucioneducativaController extends Controller {
         // Creación de formularios de busqueda por codigo SIE o nombre de institucion educativa
         $formInstitucioneducativaId = $this->createSearchFormInstitucioneducativaId();
 
-        return $this->render('SieDgesttlaBundle:InstitucionEducativa:search.html.twig', array(
+        return $this->render('SieDgesttlaBundle:Institucioneducativa:search.html.twig', array(
             'formInstitucioneducativaId' => $formInstitucioneducativaId->createView()
         ));
     }
