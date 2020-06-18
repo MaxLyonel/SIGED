@@ -1,0 +1,17 @@
+rudeunification_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:RudeUnification:index }
+    options:
+       expose: true
+
+rudeunification_lookfor_students_history:
+    path:     /lookforStudentsHistory
+    defaults: { _controller: SieAppWebBundle:RudeUnification:lookforStudentsHistory }
+    options:
+       expose: true
+
+rudeunification_doUnification:
+    path:     /doUnification
+    defaults: { _controller: SieAppWebBundle:RudeUnification:doUnification }
+    options:
+       expose: true         
