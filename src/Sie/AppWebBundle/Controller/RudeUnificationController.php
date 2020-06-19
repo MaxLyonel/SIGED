@@ -300,17 +300,21 @@ class RudeUnificationController extends Controller{
             if ($studenta->getSegipId() == 1 and $studentb->getSegipId() == 0){
                 $corr = $rudea;
                 $inc = $rudeb;
+
+                $segipmessage = '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'; 
             } 
             if ($studentb->getSegipId() == 1 and $studenta->getSegipId() == 0){
                 $corr = $rudeb;
                 $inc = $rudea;
+
+                $segipmessage = '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'; 
             }
             $swresponse=true;
             $swhistory=true;
             $status='success';
             $code = 200;
             $student = array();
-            $segipmessage = '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'; 
+            
         }
 
         // this is the new by krlos to do the new action when the level is INI 1,2 & PRI 1
