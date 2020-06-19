@@ -22,12 +22,14 @@ class RudeUnificationController extends Controller{
 
     private $session;
     public $inicialPrimaria;
+    public $inicialPrimariaCase2;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
         $this->inicialPrimaria = false;
+        $this->inicialPrimariaCase2 = false;
     }    
     
 
@@ -331,6 +333,7 @@ class RudeUnificationController extends Controller{
                 $this->inicialPrimaria = true;
             }else{
                 //do the unifcation
+                $this->inicialPrimariaCase2 = true;
             }
         }else{
 
@@ -387,6 +390,7 @@ class RudeUnificationController extends Controller{
             'studentA' => $arrStudenta,
             'studentB' => $arrStudentb,
             'unificationIniPri' => $this->inicialPrimaria,
+            'unificationIniPriCase2' => $this->inicialPrimariaCase2,
             'rudea' => $rudea,
             'rudeb' => $rudeb,            
         );
@@ -546,6 +550,7 @@ class RudeUnificationController extends Controller{
         $rudeCorrect = $request->get('rudeCorrect');
         $rudeWrong = $request->get('rudeWrong');
         $unificationIniPri = $request->get('unificationIniPri');
+        $unificationIniPriCase2 = $request->get('unificationIniPriCase2');
 
         // set the ini var
         $em = $this->getDoctrine()->getManager();
@@ -671,6 +676,10 @@ class RudeUnificationController extends Controller{
                     if($unificationIniPri){
                         $em->remove($inscrip);  
                     }else{
+                        if($unificationIniPriCase2){
+                            // to change the matricula student
+                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(9));
+                        }
                         $inscrip->setEstudiante($studentcor);
                     }
                     $em->flush();
