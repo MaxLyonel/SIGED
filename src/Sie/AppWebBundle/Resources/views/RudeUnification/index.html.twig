@@ -426,8 +426,8 @@
                     
                   </tr>
                   <tr>
-                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studenta.codigoRude, studentb.codigoRude, responseObject.unificationIniPri)" >RUDE CORRECTO -> ${studenta.codigoRude} </button> </td>
-                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studentb.codigoRude,studenta.codigoRude, responseObject.unificationIniPri)">RUDE CORRECTO -> ${studentb.codigoRude}</button> </td>
+                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studenta.codigoRude, studentb.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)" >RUDE CORRECTO -> ${studenta.codigoRude} </button> </td>
+                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studentb.codigoRude,studenta.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)">RUDE CORRECTO -> ${studentb.codigoRude}</button> </td>
                   </tr>
                 </tbody>
               </table>
@@ -759,7 +759,7 @@
 
                           <!-- END ADD OTHER HISTORY -->
                           <tr v-if="showButtonUnification">
-                            <td colspan="2" > <button class="btn btn-success" v-on:click="doUnification(studentCorrect.codigoRude, studentWrong.codigoRude, responseObject.unificationIniPri)" >Unificar</button> </td>
+                            <td colspan="2" > <button class="btn btn-success" v-on:click="doUnification(studentCorrect.codigoRude, studentWrong.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)" >Unificar</button> </td>
                           </tr>
 
 
@@ -818,7 +818,15 @@
             el: '#app',
             data: {
 
-		        responseObject: {rudea:'{{rudeStudent.rudea}}',rudeb:'{{rudeStudent.rudeb}}',messageqa:'{{rudeStudent.messageqa}}',unificationIniPri:false,rudeCorrect:false,rudeWrong:false},
+		        responseObject: {
+              rudea:'{{rudeStudent.rudea}}',
+              rudeb:'{{rudeStudent.rudeb}}',
+              messageqa:'{{rudeStudent.messageqa}}',
+              unificationIniPri:false,
+              unificationIniPriCase2:false,
+              rudeCorrect:false,
+              rudeWrong:false
+            },
             buscando:false,
             
             studentHistoryRegA:{},
@@ -933,6 +941,8 @@
                             this.responseObject.rudea = response.data.rudea;
                             this.responseObject.rudeb = response.data.rudeb;
                             this.responseObject.unificationIniPri = response.data.unificationIniPri;
+                            
+                            this.responseObject.unificationIniPriCase2 = response.data.unificationIniPriCase2;
 
 
                             this.swhistory = response.data.swhistory;
@@ -964,7 +974,7 @@
                       return total;
 
                 },
-                selectTheCorrectRude: function(rudeCorrect, rudeWrong, unificationIniPri){
+                selectTheCorrectRude: function(rudeCorrect, rudeWrong, unificationIniPri, unificationIniPriCase2){
 
                   this.message='';
                   this.swresponse = true;
@@ -1055,7 +1065,7 @@
                   return;
 
                 },
-                doUnification: function(rudeCorrect, rudeWrong, unificationIniPri){
+                doUnification: function(rudeCorrect, rudeWrong, unificationIniPri, unificationIniPriCase2){
                   // get the correct rudes
                     this.responseObject.rudeCorrect = rudeCorrect;
                     this.responseObject.rudeWrong = rudeWrong;
