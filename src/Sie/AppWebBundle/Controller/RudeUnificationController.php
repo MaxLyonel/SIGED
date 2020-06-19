@@ -687,7 +687,7 @@ class RudeUnificationController extends Controller{
                     }else{
                         if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 ){
                             // to change the matricula student
-                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(9));                            
+                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));                            
                         }
                         $inscrip->setEstudiante($studentcor);
                     }
