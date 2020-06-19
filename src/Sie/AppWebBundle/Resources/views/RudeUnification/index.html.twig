@@ -995,8 +995,6 @@
                   this.studentCorrect = {};
                   this.studentWrong = {};
 
-
-
                   var historyLengthA = (this.sumLength(this.studentHistoryRegA,this.studentHistoryAltA,this.studentHistoryEspA,this.studentHistoryPerA));
 
                   var historyLengthB = (this.sumLength(this.studentHistoryRegB,this.studentHistoryAltB,this.studentHistoryEspB,this.studentHistoryPerB));
@@ -1026,9 +1024,11 @@
                         this.showButtonUnification = true;
                       }
                     }
-                  }else{
+                  }else{  
+
                     this.showButtonUnification = true;
                     if(rudeCorrect == this.responseObject.rudea ){
+
                       this.studentCorrect =  this.studenta;
                       this.studentWrong =  this.studentb;
                       this.studentHistoryRegCorrect = this.studentHistoryRegA;
@@ -1040,6 +1040,12 @@
                       this.studentHistoryAltCorrect2 = this.studentHistoryAltB;
                       this.studentHistoryEspCorrect2 = this.studentHistoryEspB;
                       this.studentHistoryPerCorrect2 = this.studentHistoryPerB;
+                      
+                      if(unificationIniPriCase2){
+                         if( historyLengthA < historyLengthB){
+                            this.showButtonUnification = false;
+                          }
+                      }
 
                     }else{
                       this.studentCorrect =  this.studentb;
@@ -1054,6 +1060,12 @@
                       this.studentHistoryEspCorrect2 = this.studentHistoryEspA;
                       this.studentHistoryPerCorrect2 = this.studentHistoryPerA;
 
+                      if(unificationIniPriCase2){
+                         if( historyLengthB < historyLengthA){
+                            this.showButtonUnification = false;
+                          }
+                      }
+
                     }
 
                   }
@@ -1066,6 +1078,7 @@
 
                 },
                 doUnification: function(rudeCorrect, rudeWrong, unificationIniPri, unificationIniPriCase2){
+
                   // get the correct rudes
                     this.responseObject.rudeCorrect = rudeCorrect;
                     this.responseObject.rudeWrong = rudeWrong;
