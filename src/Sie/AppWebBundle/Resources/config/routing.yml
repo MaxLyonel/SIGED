@@ -267,4 +267,8 @@ sie_app_web_segip:
 
 sie_app_web_solicitudrue:
     resource: "@SieAppWebBundle/Resources/config/routing/solicitud.yml"
-    prefix:   /acceso/solicitudrue    
+    prefix:   /acceso/solicitudrue
+    
+sie_app_web_rudeunification:
+    resource: "@SieAppWebBundle/Resources/config/routing/rudeUnification.yml"
+    prefix:   /sie/newunification
