@@ -32,12 +32,58 @@ class RudeUnificationController extends Controller{
     
 
     public function indexAction(Request $request){
+        // db conexion
+        $em = $this->getDoctrine()->getManager();
+        // ini vars
+         $arrStudent = array( 
+                            'rudea' => '',
+                            'rudeb' => '',
+                            'messageqa' => '',
+                        ); 
+        //get info 
+        $form = $request->get('form');
+        if($form){
+            $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rude']));
+                if(!$student){
+                    $arrStudent['messageqa'] = 'Rudes no encontrados para unificar.';
+                    $vala = '';
+                    $valb = '';
+                }else{
+                    $students = $em->createQueryBuilder()
+                                ->select('DISTINCT e.codigoRude')
+                                ->from('SieAppWebBundle:Estudiante','e')
+                                ->where('e.paterno = :paterno')
+                                ->andWhere('e.materno = :materno')
+                                ->andWhere('e.nombre = :nombre')
+                                ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+                                ->setParameter('paterno', $student->getPaterno())
+                                ->setParameter('materno', $student->getMaterno())
+                                ->setParameter('nombre', $student->getNombre())
+                                ->setParameter('fechaNacimiento', $student->getFechaNacimiento())
+                                ->getQuery()
+                                ->getResult();
+
+                    if(sizeof($students)<=1){
+                        $arrStudent = array( 
+                            'rudea' => '',
+                            'rudeb' => '',   
+                            'messageqa' => 'No existen dos rudes para Unificar.',
+                        ); 
+                    }else{
+                         $arrStudent = array( 
+                            'rudea' => $students[0]['codigoRude'],
+                            'rudeb' => $students[1]['codigoRude'],
+                            'messageqa' => '',   
+                        );
+                    }
+            }
+        }
 
         return $this->render('SieAppWebBundle:RudeUnification:index.html.twig', array(
-                // ...
+                'rudeStudent' => $arrStudent
             ));    
     }
-
+    
     public function lookforStudentsHistoryAction(Request $request){
         // ini vars
         $response = new JsonResponse();
@@ -670,6 +716,48 @@ class RudeUnificationController extends Controller{
             $ur->setJsontxt(json_encode($arrDataUnification));
             $em->persist($ur);
             $em->flush();
+
+
+            //****PARA EL PROCESO DE CALIDAD******//
+            $valproceso = $em->createQueryBuilder()
+                                ->select('v')
+                                ->from('SieAppWebBundle:ValidacionProceso','v')
+                                ->where('v.esActivo is false')
+                                ->where('v.validacionReglaTipo = 8 and v.solucionTipoId = 2 and (v.llave = :llave1 or v.llave = :llave2)')
+                                ->orWhere('v.validacionReglaTipo in (24,25,26) and v.solucionTipoId = 0 and (v.llave = :llave3 or v.llave = :llave4)')
+                                ->setParameter('llave1', $rudecor)
+                                ->setParameter('llave2', $rudeinc)
+                                ->setParameter('llave3', $rudecor.'|'.$rudeinc)
+                                ->setParameter('llave4', $rudeinc.'|'.$rudecor)
+                                ->getQuery()
+                                ->getResult();
+            
+            if($valproceso){
+                foreach($valproceso as $v){
+                    $v->setEsActivo(true);
+                    $em->flush();
+                }
+                $gestion = $valproceso[0]->getGestionTipo()->getId();
+            }else{
+                $gestion = $inscripcorr[0]->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            }
+            
+            //**PARA LA REGLA 8 La/el estudiante cuenta con más de un RUDE***/
+            $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');
+            $query->bindValue(':tipo', '2');
+            $query->bindValue(':rude', $rudecor);
+            $query->bindValue(':param', '');
+            $query->bindValue(':gestion', $gestion);
+            $query->execute();
+            $resultado = $query->fetchAll();
+
+            //**PARA LA REGLA 26 Estudiantes con similitud de nombres y fecha de nacimiento***/
+            $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_similitud_nombres_certf_nac (:tipo, :codigo_rude)');
+            $query->bindValue(':tipo', '2');
+            $query->bindValue(':codigo_rude', $rudecor);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            //****FIN DEL PROCESO DE CALIDAD******//                        
 
 
 
