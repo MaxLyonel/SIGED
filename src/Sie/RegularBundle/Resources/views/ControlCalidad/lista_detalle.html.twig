@@ -196,17 +196,6 @@
                                                 </form>
                                             {% elseif detalle.solucionTipoId == 2 %}
                                                 {# {{dump(detalle)}} #}
-
-                                                <form action="{{path('rudeunification_index')}}" method="post"  target="_blank">
-                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
-                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
-                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
-                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
-                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
-                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
-                                                </form>
-
-                                                {#
                                                 <form action="{{path('unificacion_index_calidad')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
                                                     <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
@@ -215,7 +204,17 @@
                                                     <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                                 </form>
-                                                #}
+                                                <form action="{{path('rudeunification_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"> 
+                                                    <div style="opacity:0.6; color:white;">Ir a solución</div> 
+                                                    </button>
+                                                </form>                                                
+                                                
                                             {% endif %}
                                         {% endif %}
                                         
