@@ -30,6 +30,11 @@
                 <div class="panel panel-icon panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-search"></i>
+
+                        <div v-if="responseObject.messageqa != ''" class="alert alert-warning" role="alert" >
+                          ${responseObject.messageqa}
+                        </div>                        
+
                         <strong> Este módulo unificará la información de notas, inscripciones y otros datos del rude incorrecto a la información del rude correcto.</strong>
                         <div class="pull-right"></div>  
                         </br>                                      
@@ -813,7 +818,7 @@
             el: '#app',
             data: {
 
-		        responseObject: {rudea:'',rudeb:'',unificationIniPri:false,rudeCorrect:false,rudeWrong:false},
+		        responseObject: {rudea:'{{rudeStudent.rudea}}',rudeb:'{{rudeStudent.rudeb}}',messageqa:'{{rudeStudent.messageqa}}',unificationIniPri:false,rudeCorrect:false,rudeWrong:false},
             buscando:false,
             
             studentHistoryRegA:{},
@@ -847,6 +852,7 @@
             showButtonUnification:false,
             
             message:'',
+            messageqa:'',
             swresponse:true,
 
             },
