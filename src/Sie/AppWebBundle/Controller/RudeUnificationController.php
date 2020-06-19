@@ -738,10 +738,10 @@ class RudeUnificationController extends Controller{
                                 ->where('v.esActivo is false')
                                 ->where('v.validacionReglaTipo = 8 and v.solucionTipoId = 2 and (v.llave = :llave1 or v.llave = :llave2)')
                                 ->orWhere('v.validacionReglaTipo in (24,25,26) and v.solucionTipoId = 0 and (v.llave = :llave3 or v.llave = :llave4)')
-                                ->setParameter('llave1', $rudecor)
-                                ->setParameter('llave2', $rudeinc)
-                                ->setParameter('llave3', $rudecor.'|'.$rudeinc)
-                                ->setParameter('llave4', $rudeinc.'|'.$rudecor)
+                                ->setParameter('llave1', $rudeCorrect)
+                                ->setParameter('llave2', $rudeWrong)
+                                ->setParameter('llave3', $rudeCorrect.'|'.$rudeWrong)
+                                ->setParameter('llave4', $rudeWrong.'|'.$rudeCorrect)
                                 ->getQuery()
                                 ->getResult();
             
@@ -758,7 +758,7 @@ class RudeUnificationController extends Controller{
             //**PARA LA REGLA 8 La/el estudiante cuenta con más de un RUDE***/
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');
             $query->bindValue(':tipo', '2');
-            $query->bindValue(':rude', $rudecor);
+            $query->bindValue(':rude', $rudeCorrect);
             $query->bindValue(':param', '');
             $query->bindValue(':gestion', $gestion);
             $query->execute();
@@ -767,7 +767,7 @@ class RudeUnificationController extends Controller{
             //**PARA LA REGLA 26 Estudiantes con similitud de nombres y fecha de nacimiento***/
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_similitud_nombres_certf_nac (:tipo, :codigo_rude)');
             $query->bindValue(':tipo', '2');
-            $query->bindValue(':codigo_rude', $rudecor);
+            $query->bindValue(':codigo_rude', $rudeCorrect);
             $query->execute();
             $resultado = $query->fetchAll();
             //****FIN DEL PROCESO DE CALIDAD******//                        
