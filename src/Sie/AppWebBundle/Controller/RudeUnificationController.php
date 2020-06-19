@@ -549,8 +549,8 @@ class RudeUnificationController extends Controller{
         // get the send data
         $rudeCorrect = $request->get('rudeCorrect');
         $rudeWrong = $request->get('rudeWrong');
-        $unificationIniPri = $request->get('unificationIniPri');
-        $unificationIniPriCase2 = $request->get('unificationIniPriCase2');
+        $unificationIniPri = ($request->get('unificationIniPri')=='true')?true:false;
+        $unificationIniPriCase2 = ($request->get('unificationIniPriCase2')=='true')?true:false;
 
         // set the ini var
         $em = $this->getDoctrine()->getManager();
@@ -645,8 +645,17 @@ class RudeUnificationController extends Controller{
                 }                
             }
             
-            
+            //***********to EstudianteDocumento information
+            $EstudianteDocumento = $em->getRepository('SieAppWebBundle:EstudianteDocumento')->findBy(array('estudiante' => $studentinc)); 
 
+            $arrEstudianteDocumento=array();
+            if(sizeof($EstudianteDocumento)>0){
+                foreach ($EstudianteDocumento as $value) {
+                    $arrEstudianteDocumento[] = $value;
+                     $em->remove($value);     
+                }   
+                $em->flush();                   
+            }
 
             //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
             // $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find(array('estudiante' =>  $studentinc->getId()));
@@ -676,17 +685,16 @@ class RudeUnificationController extends Controller{
                     if($unificationIniPri){
                         $em->remove($inscrip);  
                     }else{
-                        if($unificationIniPriCase2){
+                        if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 ){
                             // to change the matricula student
-                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(9));
+                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(9));                            
                         }
                         $inscrip->setEstudiante($studentcor);
                     }
                     $em->flush();
                 }
             }                
-
-          
+            
             //***********REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD       
             if ($studentinc) {
                 $antes = $studentinc->getId(); 
@@ -712,6 +720,7 @@ class RudeUnificationController extends Controller{
                 'arrStudentPnpRecSab'=>$arrStudentPnpRecSab,
                 'arrStudentRudeInfo'=>$arrStudentRudeInfo,
                 'arrStudentHistoryModification'=>$arrStudentHistoryModification,
+                'arrEstudianteDocumento'=>$arrEstudianteDocumento,
             );            
             //guardado de log antiguo de datos de unificacion            
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcorr[0]->getInstitucioneducativaCurso()->getId());
