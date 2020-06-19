@@ -192,7 +192,7 @@
 
                         <div >
                             <div class="checkbox" style="margin-left: 15px">
-                                <label>
+                                <label> 
                                     <input type="checkbox" required="required"> <span style="margin-left: 10px;">Validar los datos</span>
                                 </label>
                             </div>
@@ -208,6 +208,17 @@
                             {% endif %}
                             #}
                             <br>
+
+                            {% if app.session.get('pathSystem') == 'SieHerramientaBundle' %}
+                                <div class="pull-left">
+                                    <a href="{{path('solicitud_rue_apertura',{'id':54,'desglose':0})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura RUE</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{path('tramite_rue_reapertura')}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Reapertura RUE</a>
+                                </div></br>
+                            {% endif %}
+
+
                             {# <a href="{{path('consulta_bono_familia_index')}}" style="color:#455A64; font-size:1em; margin-top:20px;">Consulta si eres beficiario del bono familia</a> #}
                         </div><!-- /.form-group -->
                     </div><!-- /.sign-footer -->
