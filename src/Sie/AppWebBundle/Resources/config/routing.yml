@@ -265,6 +265,6 @@ sie_app_web_segip:
 #     resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
 #     prefix:   /sie/tramite
 
-sie_app_web_searchRudeStudent:
-    resource: "@SieAppWebBundle/Resources/config/routing/searchRudeStudent.yml"
-    prefix:   /sie/searchRudeStudent
+sie_app_web_rudeunification:
+    resource: "@SieAppWebBundle/Resources/config/routing/rudeUnification.yml"
+    prefix:   /sie/newunification
