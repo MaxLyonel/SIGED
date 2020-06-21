@@ -23,6 +23,7 @@ class RudeUnificationController extends Controller{
     private $session;
     public $inicialPrimaria;
     public $inicialPrimariaCase2;
+    public $currentyear;
     /**
      * the class constructor
      */
@@ -30,6 +31,7 @@ class RudeUnificationController extends Controller{
         $this->session = new Session();
         $this->inicialPrimaria = false;
         $this->inicialPrimariaCase2 = false;
+        $this->currentyear = $this->session->get('currentyear');
     }    
     
 
@@ -323,6 +325,8 @@ class RudeUnificationController extends Controller{
         $arrLevelsAllows = array(111,112,121,122);
         $insriptinoStudentA = $this->getCurrentInscriptionsByGestoinValida($rudea, $this->session->get('currentyear'));
         $insriptinoStudentB = $this->getCurrentInscriptionsByGestoinValida($rudeb, $this->session->get('currentyear'));
+
+
         // validation to INI 1,2 & PRI 1
         if(
             in_array($insriptinoStudentA['nivelId'].$insriptinoStudentA['gradoId'], $arrLevelsAllows) &&
@@ -379,6 +383,7 @@ class RudeUnificationController extends Controller{
 
         }
 
+
         $arrResponse = array(
             'status'          => $status,
             'code'            => $code,
@@ -392,7 +397,8 @@ class RudeUnificationController extends Controller{
             'unificationIniPri' => $this->inicialPrimaria,
             'unificationIniPriCase2' => $this->inicialPrimariaCase2,
             'rudea' => $rudea,
-            'rudeb' => $rudeb,            
+            'rudeb' => $rudeb,           
+            'currentyear' => $this->currentyear,           
         );
 
         // dump($arrResponse);die;
@@ -410,7 +416,7 @@ class RudeUnificationController extends Controller{
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->select('ei.id as studentInscriptionId','n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -424,12 +430,12 @@ class RudeUnificationController extends Controller{
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6,10 ))
+                ->setParameter('mat', array( 4 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
             $objInfoInscription = $query->getResult();
-            if(sizeof($objInfoInscription)>=1)
+            if(sizeof($objInfoInscription)>0)
               return $objInfoInscription[0];
             else
               return false;
@@ -546,11 +552,13 @@ class RudeUnificationController extends Controller{
     }
 
     public function doUnificationAction(Request $request){
+
         // get the send data
         $rudeCorrect = $request->get('rudeCorrect');
         $rudeWrong = $request->get('rudeWrong');
         $unificationIniPri = ($request->get('unificationIniPri')=='true')?true:false;
         $unificationIniPriCase2 = ($request->get('unificationIniPriCase2')=='true')?true:false;
+        $swChanteStatusCorrectInscription = ($request->get('swChanteStatusCorrectInscription')=='true')?true:false;
 
         // set the ini var
         $em = $this->getDoctrine()->getManager();
@@ -677,6 +685,12 @@ class RudeUnificationController extends Controller{
 
 
             // check the inscription info todo the remove or update ON UNIFICATION
+            if($unificationIniPriCase2 && $swChanteStatusCorrectInscription){
+                $objInscriptionCorrect = $this->getCurrentInscriptionsByGestoinValida($rudeCorrect, $this->session->get('currentyear'));
+                $updateCurrenteInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objInscriptionCorrect['studentInscriptionId']);
+                 $updateCurrenteInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
+                 $em->flush();
+            }                
             if(($inscripinco) && ($studentcor)){
                 foreach ($inscripinco as $inscrip) {
                     $arrInscriptionsWrong[] = array(
@@ -685,7 +699,7 @@ class RudeUnificationController extends Controller{
                     if($unificationIniPri){
                         $em->remove($inscrip);  
                     }else{
-                        if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 ){
+                        if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
                             // to change the matricula student
                             $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));                            
                         }
@@ -693,7 +707,8 @@ class RudeUnificationController extends Controller{
                     }
                     $em->flush();
                 }
-            }                
+            } 
+          
             
             //***********REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD       
             if ($studentinc) {
