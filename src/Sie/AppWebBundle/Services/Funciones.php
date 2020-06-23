@@ -1844,4 +1844,60 @@ class Funciones {
         return $entities;
         
     }
+
+    public function getAllInscriptionRegular($codigoRude){
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('ei.id as studenInscriptionId,n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('it = :idTipo')
+                ->setParameter('id', $codigoRude)
+                ->setParameter('idTipo',1)
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->addorderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;                
+    }
+
+    public function getCurrentInscriptionByRudeAndGestionAndMatricula($data){
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('ei.id as studenInscriptionId', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('iec.gestionTipo = :gestion')                
+                ->andWhere('ei.estadomatriculaTipo = :matricula')                
+                ->andWhere('it = :idTipo')
+                ->setParameter('id', $data['codigoRude'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('matricula', $data['matriculaId'])
+                ->setParameter('idTipo',1)
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->addorderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;                
+    }    
 }
