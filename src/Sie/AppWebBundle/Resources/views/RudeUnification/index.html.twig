@@ -141,6 +141,10 @@
                                                                 <td>${historyR.paralelo_raep}</td>
                                                                 <td>${historyR.turno_raep}</td>
                                                                 <td class="text-center">${historyR.estadomatricula_fin_r}</td>
+                                                                <td v-if="responseObject.unificationIniPriCase2 && historyR.gestion_tipo_id_raep == currentyear && historyR.estadomatricula_tipo_id_fin_r == 4" class="text-center">
+                                                                   <label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" v-model="selectedInscriptionEfectivo">Mantener ESTADO</label>
+                                                                </td>
+
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -237,7 +241,7 @@
                                                         <th class="text-center">Fecha Fin</th>
                                                         <th class="text-center">Id Curso</th>
                                                         <th class="text-center">Estado Matrícula</th>
-                                                        <th class="text-center">Acciones</th>
+                                                        
                                                     </tr>
                                                     </thead>
 
@@ -304,13 +308,13 @@
                                                                 <td>${historyR.paralelo_raep}</td>
                                                                 <td>${historyR.turno_raep}</td>
                                                                 <td class="text-center">${historyR.estadomatricula_fin_r}</td>
+                                                                <td v-if="responseObject.unificationIniPriCase2 && historyR.gestion_tipo_id_raep == currentyear && historyR.estadomatricula_tipo_id_fin_r == 4" class="text-center"> <label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" v-model="selectedInscriptionEfectivo">Mantener ESTADO</label></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
 
                                             </div>
-
                                             <div v-if="studentHistoryAltB">
 
                                                 <h4 align="center" class="text-primary">Educación Alternativa</h4><hr>
@@ -825,8 +829,11 @@
               unificationIniPri:false,
               unificationIniPriCase2:false,
               rudeCorrect:false,
-              rudeWrong:false
+              rudeWrong:false,
+              swChanteStatusCorrectInscription:false
+              
             },
+            selectedInscriptionEfectivo:'',
             buscando:false,
             
             studentHistoryRegA:{},
@@ -861,6 +868,7 @@
             
             message:'',
             messageqa:'',
+            currentyear:'',
             swresponse:true,
 
             },
@@ -878,6 +886,7 @@
                               return;
                               
                     }
+
                     this.message='';
                     this.swresponse = true;
                     this.buscando = true;
@@ -915,8 +924,9 @@
 
                     this.studentCorrect = {};
                     this.studentWrong = {};
-
-
+                    this.currentyear ='';
+                    this.selectedInscriptionEfectivo ='';
+                    this.responseObject.swChanteStatusCorrectInscription = false;
                     
                      axios.get(Routing.generate('rudeunification_lookfor_students_history', this.responseObject ))
                     .then(response => {
@@ -946,6 +956,7 @@
 
 
                             this.swhistory = response.data.swhistory;
+                            this.currentyear = response.data.currentyear;
                             
                         }                        
                         this.buscando = false;
@@ -975,6 +986,17 @@
 
                 },
                 selectTheCorrectRude: function(rudeCorrect, rudeWrong, unificationIniPri, unificationIniPriCase2){
+                  if(this.responseObject.unificationIniPriCase2){
+                      if(this.selectedInscriptionEfectivo == '' ){
+                        Swal.fire(
+                              'Campo Mantener ESTADO es requerido',
+                              'Debe seleccionar la opción Mantener ESTADO ',
+                              'warning'
+                              );
+                              return;
+
+                      }
+                  }                  
 
                   this.message='';
                   this.swresponse = true;
@@ -1044,6 +1066,12 @@
                       if(unificationIniPriCase2){
                          if( historyLengthA < historyLengthB){
                             this.showButtonUnification = false;
+                          }else{
+                            // question if the selectedInscriptionEfectivo is rudeb
+                            if(this.selectedInscriptionEfectivo == 'swInscriptionB'){
+                              this.responseObject.swChanteStatusCorrectInscription = true;
+                            }
+
                           }
                       }
 
@@ -1063,6 +1091,11 @@
                       if(unificationIniPriCase2){
                          if( historyLengthB < historyLengthA){
                             this.showButtonUnification = false;
+                          }else{
+                            // question if the selectedInscriptionEfectivo is rudea
+                            if(this.selectedInscriptionEfectivo == 'swInscriptionA'){
+                              this.responseObject.swChanteStatusCorrectInscription = true;
+                            }
                           }
                       }
 
