@@ -272,3 +272,7 @@ sie_app_web_solicitudrue:
 sie_app_web_rudeunification:
     resource: "@SieAppWebBundle/Resources/config/routing/rudeUnification.yml"
     prefix:   /sie/newunification
+
+sie_app_web_updateStudentLevel:
+    resource: "@SieAppWebBundle/Resources/config/routing/updateStudentLevel.yml"
+    prefix:   /sie/updatestudentlevel
