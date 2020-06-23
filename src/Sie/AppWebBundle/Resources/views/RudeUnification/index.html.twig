@@ -141,6 +141,10 @@
                                                                 <td>${historyR.paralelo_raep}</td>
                                                                 <td>${historyR.turno_raep}</td>
                                                                 <td class="text-center">${historyR.estadomatricula_fin_r}</td>
+                                                                <td v-if="responseObject.unificationIniPriCase2 && historyR.gestion_tipo_id_raep == currentyear && historyR.estadomatricula_tipo_id_fin_r == 4" class="text-center">
+                                                                   <label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" v-model="selectedInscriptionEfectivo">Mantener ESTADO</label>
+                                                                </td>
+
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -237,7 +241,7 @@
                                                         <th class="text-center">Fecha Fin</th>
                                                         <th class="text-center">Id Curso</th>
                                                         <th class="text-center">Estado Matrícula</th>
-                                                        <th class="text-center">Acciones</th>
+                                                        
                                                     </tr>
                                                     </thead>
 
@@ -304,13 +308,13 @@
                                                                 <td>${historyR.paralelo_raep}</td>
                                                                 <td>${historyR.turno_raep}</td>
                                                                 <td class="text-center">${historyR.estadomatricula_fin_r}</td>
+                                                                <td v-if="responseObject.unificationIniPriCase2 && historyR.gestion_tipo_id_raep == currentyear && historyR.estadomatricula_tipo_id_fin_r == 4" class="text-center"> <label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" v-model="selectedInscriptionEfectivo">Mantener ESTADO</label></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
 
                                             </div>
-
                                             <div v-if="studentHistoryAltB">
 
                                                 <h4 align="center" class="text-primary">Educación Alternativa</h4><hr>
@@ -426,8 +430,8 @@
                     
                   </tr>
                   <tr>
-                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studenta.codigoRude, studentb.codigoRude, responseObject.unificationIniPri)" >RUDE CORRECTO -> ${studenta.codigoRude} </button> </td>
-                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studentb.codigoRude,studenta.codigoRude, responseObject.unificationIniPri)">RUDE CORRECTO -> ${studentb.codigoRude}</button> </td>
+                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studenta.codigoRude, studentb.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)" >RUDE CORRECTO -> ${studenta.codigoRude} </button> </td>
+                    <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studentb.codigoRude,studenta.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)">RUDE CORRECTO -> ${studentb.codigoRude}</button> </td>
                   </tr>
                 </tbody>
               </table>
@@ -759,7 +763,7 @@
 
                           <!-- END ADD OTHER HISTORY -->
                           <tr v-if="showButtonUnification">
-                            <td colspan="2" > <button class="btn btn-success" v-on:click="doUnification(studentCorrect.codigoRude, studentWrong.codigoRude, responseObject.unificationIniPri)" >Unificar</button> </td>
+                            <td colspan="2" > <button class="btn btn-success" v-on:click="doUnification(studentCorrect.codigoRude, studentWrong.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)" >Unificar</button> </td>
                           </tr>
 
 
@@ -818,7 +822,18 @@
             el: '#app',
             data: {
 
-		        responseObject: {rudea:'{{rudeStudent.rudea}}',rudeb:'{{rudeStudent.rudeb}}',messageqa:'{{rudeStudent.messageqa}}',unificationIniPri:false,rudeCorrect:false,rudeWrong:false},
+		        responseObject: {
+              rudea:'{{rudeStudent.rudea}}',
+              rudeb:'{{rudeStudent.rudeb}}',
+              messageqa:'{{rudeStudent.messageqa}}',
+              unificationIniPri:false,
+              unificationIniPriCase2:false,
+              rudeCorrect:false,
+              rudeWrong:false,
+              swChanteStatusCorrectInscription:false
+              
+            },
+            selectedInscriptionEfectivo:'',
             buscando:false,
             
             studentHistoryRegA:{},
@@ -853,6 +868,7 @@
             
             message:'',
             messageqa:'',
+            currentyear:'',
             swresponse:true,
 
             },
@@ -870,6 +886,7 @@
                               return;
                               
                     }
+
                     this.message='';
                     this.swresponse = true;
                     this.buscando = true;
@@ -907,8 +924,9 @@
 
                     this.studentCorrect = {};
                     this.studentWrong = {};
-
-
+                    this.currentyear ='';
+                    this.selectedInscriptionEfectivo ='';
+                    this.responseObject.swChanteStatusCorrectInscription = false;
                     
                      axios.get(Routing.generate('rudeunification_lookfor_students_history', this.responseObject ))
                     .then(response => {
@@ -933,9 +951,12 @@
                             this.responseObject.rudea = response.data.rudea;
                             this.responseObject.rudeb = response.data.rudeb;
                             this.responseObject.unificationIniPri = response.data.unificationIniPri;
+                            
+                            this.responseObject.unificationIniPriCase2 = response.data.unificationIniPriCase2;
 
 
                             this.swhistory = response.data.swhistory;
+                            this.currentyear = response.data.currentyear;
                             
                         }                        
                         this.buscando = false;
@@ -964,7 +985,18 @@
                       return total;
 
                 },
-                selectTheCorrectRude: function(rudeCorrect, rudeWrong, unificationIniPri){
+                selectTheCorrectRude: function(rudeCorrect, rudeWrong, unificationIniPri, unificationIniPriCase2){
+                  if(this.responseObject.unificationIniPriCase2){
+                      if(this.selectedInscriptionEfectivo == '' ){
+                        Swal.fire(
+                              'Campo Mantener ESTADO es requerido',
+                              'Debe seleccionar la opción Mantener ESTADO ',
+                              'warning'
+                              );
+                              return;
+
+                      }
+                  }                  
 
                   this.message='';
                   this.swresponse = true;
@@ -984,8 +1016,6 @@
 
                   this.studentCorrect = {};
                   this.studentWrong = {};
-
-
 
                   var historyLengthA = (this.sumLength(this.studentHistoryRegA,this.studentHistoryAltA,this.studentHistoryEspA,this.studentHistoryPerA));
 
@@ -1016,9 +1046,11 @@
                         this.showButtonUnification = true;
                       }
                     }
-                  }else{
+                  }else{  
+
                     this.showButtonUnification = true;
                     if(rudeCorrect == this.responseObject.rudea ){
+
                       this.studentCorrect =  this.studenta;
                       this.studentWrong =  this.studentb;
                       this.studentHistoryRegCorrect = this.studentHistoryRegA;
@@ -1030,6 +1062,18 @@
                       this.studentHistoryAltCorrect2 = this.studentHistoryAltB;
                       this.studentHistoryEspCorrect2 = this.studentHistoryEspB;
                       this.studentHistoryPerCorrect2 = this.studentHistoryPerB;
+                      
+                      if(unificationIniPriCase2){
+                         if( historyLengthA < historyLengthB){
+                            this.showButtonUnification = false;
+                          }else{
+                            // question if the selectedInscriptionEfectivo is rudeb
+                            if(this.selectedInscriptionEfectivo == 'swInscriptionB'){
+                              this.responseObject.swChanteStatusCorrectInscription = true;
+                            }
+
+                          }
+                      }
 
                     }else{
                       this.studentCorrect =  this.studentb;
@@ -1044,6 +1088,17 @@
                       this.studentHistoryEspCorrect2 = this.studentHistoryEspA;
                       this.studentHistoryPerCorrect2 = this.studentHistoryPerA;
 
+                      if(unificationIniPriCase2){
+                         if( historyLengthB < historyLengthA){
+                            this.showButtonUnification = false;
+                          }else{
+                            // question if the selectedInscriptionEfectivo is rudea
+                            if(this.selectedInscriptionEfectivo == 'swInscriptionA'){
+                              this.responseObject.swChanteStatusCorrectInscription = true;
+                            }
+                          }
+                      }
+
                     }
 
                   }
@@ -1055,7 +1110,8 @@
                   return;
 
                 },
-                doUnification: function(rudeCorrect, rudeWrong, unificationIniPri){
+                doUnification: function(rudeCorrect, rudeWrong, unificationIniPri, unificationIniPriCase2){
+
                   // get the correct rudes
                     this.responseObject.rudeCorrect = rudeCorrect;
                     this.responseObject.rudeWrong = rudeWrong;

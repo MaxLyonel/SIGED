@@ -22,12 +22,16 @@ class RudeUnificationController extends Controller{
 
     private $session;
     public $inicialPrimaria;
+    public $inicialPrimariaCase2;
+    public $currentyear;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
         $this->inicialPrimaria = false;
+        $this->inicialPrimariaCase2 = false;
+        $this->currentyear = $this->session->get('currentyear');
     }    
     
 
@@ -300,23 +304,29 @@ class RudeUnificationController extends Controller{
             if ($studenta->getSegipId() == 1 and $studentb->getSegipId() == 0){
                 $corr = $rudea;
                 $inc = $rudeb;
+
+                $segipmessage = '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'; 
             } 
             if ($studentb->getSegipId() == 1 and $studenta->getSegipId() == 0){
                 $corr = $rudeb;
                 $inc = $rudea;
+
+                $segipmessage = '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'; 
             }
             $swresponse=true;
             $swhistory=true;
             $status='success';
             $code = 200;
             $student = array();
-            $segipmessage = '<strong>¡TOME NOTA!: </strong></br>-El <strong>RUDE: '. $corr .'</strong> cuenta con el Carnet de Identidad validado por Segip.</br>-Si elige el <strong>RUDE: '.$inc.'</strong> actualize los datos personales del estudiante/participante para su correspondiente validación por Segip.'; 
+            
         }
 
         // this is the new by krlos to do the new action when the level is INI 1,2 & PRI 1
         $arrLevelsAllows = array(111,112,121,122);
         $insriptinoStudentA = $this->getCurrentInscriptionsByGestoinValida($rudea, $this->session->get('currentyear'));
         $insriptinoStudentB = $this->getCurrentInscriptionsByGestoinValida($rudeb, $this->session->get('currentyear'));
+
+
         // validation to INI 1,2 & PRI 1
         if(
             in_array($insriptinoStudentA['nivelId'].$insriptinoStudentA['gradoId'], $arrLevelsAllows) &&
@@ -327,6 +337,7 @@ class RudeUnificationController extends Controller{
                 $this->inicialPrimaria = true;
             }else{
                 //do the unifcation
+                $this->inicialPrimariaCase2 = true;
             }
         }else{
 
@@ -372,6 +383,7 @@ class RudeUnificationController extends Controller{
 
         }
 
+
         $arrResponse = array(
             'status'          => $status,
             'code'            => $code,
@@ -383,8 +395,10 @@ class RudeUnificationController extends Controller{
             'studentA' => $arrStudenta,
             'studentB' => $arrStudentb,
             'unificationIniPri' => $this->inicialPrimaria,
+            'unificationIniPriCase2' => $this->inicialPrimariaCase2,
             'rudea' => $rudea,
-            'rudeb' => $rudeb,            
+            'rudeb' => $rudeb,           
+            'currentyear' => $this->currentyear,           
         );
 
         // dump($arrResponse);die;
@@ -402,7 +416,7 @@ class RudeUnificationController extends Controller{
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->select('ei.id as studentInscriptionId','n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -416,12 +430,12 @@ class RudeUnificationController extends Controller{
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6,10 ))
+                ->setParameter('mat', array( 4 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
             $objInfoInscription = $query->getResult();
-            if(sizeof($objInfoInscription)>=1)
+            if(sizeof($objInfoInscription)>0)
               return $objInfoInscription[0];
             else
               return false;
@@ -538,10 +552,13 @@ class RudeUnificationController extends Controller{
     }
 
     public function doUnificationAction(Request $request){
+
         // get the send data
         $rudeCorrect = $request->get('rudeCorrect');
         $rudeWrong = $request->get('rudeWrong');
-        $unificationIniPri = $request->get('unificationIniPri');
+        $unificationIniPri = ($request->get('unificationIniPri')=='true')?true:false;
+        $unificationIniPriCase2 = ($request->get('unificationIniPriCase2')=='true')?true:false;
+        $swChanteStatusCorrectInscription = ($request->get('swChanteStatusCorrectInscription')=='true')?true:false;
 
         // set the ini var
         $em = $this->getDoctrine()->getManager();
@@ -636,8 +653,17 @@ class RudeUnificationController extends Controller{
                 }                
             }
             
-            
+            //***********to EstudianteDocumento information
+            $EstudianteDocumento = $em->getRepository('SieAppWebBundle:EstudianteDocumento')->findBy(array('estudiante' => $studentinc)); 
 
+            $arrEstudianteDocumento=array();
+            if(sizeof($EstudianteDocumento)>0){
+                foreach ($EstudianteDocumento as $value) {
+                    $arrEstudianteDocumento[] = $value;
+                     $em->remove($value);     
+                }   
+                $em->flush();                   
+            }
 
             //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
             // $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find(array('estudiante' =>  $studentinc->getId()));
@@ -659,6 +685,12 @@ class RudeUnificationController extends Controller{
 
 
             // check the inscription info todo the remove or update ON UNIFICATION
+            if($unificationIniPriCase2 && $swChanteStatusCorrectInscription){
+                $objInscriptionCorrect = $this->getCurrentInscriptionsByGestoinValida($rudeCorrect, $this->session->get('currentyear'));
+                $updateCurrenteInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objInscriptionCorrect['studentInscriptionId']);
+                 $updateCurrenteInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
+                 $em->flush();
+            }                
             if(($inscripinco) && ($studentcor)){
                 foreach ($inscripinco as $inscrip) {
                     $arrInscriptionsWrong[] = array(
@@ -667,13 +699,17 @@ class RudeUnificationController extends Controller{
                     if($unificationIniPri){
                         $em->remove($inscrip);  
                     }else{
+                        if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
+                            // to change the matricula student
+                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));                            
+                        }
                         $inscrip->setEstudiante($studentcor);
                     }
                     $em->flush();
                 }
-            }                
-
+            } 
           
+            
             //***********REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD       
             if ($studentinc) {
                 $antes = $studentinc->getId(); 
@@ -699,6 +735,7 @@ class RudeUnificationController extends Controller{
                 'arrStudentPnpRecSab'=>$arrStudentPnpRecSab,
                 'arrStudentRudeInfo'=>$arrStudentRudeInfo,
                 'arrStudentHistoryModification'=>$arrStudentHistoryModification,
+                'arrEstudianteDocumento'=>$arrEstudianteDocumento,
             );            
             //guardado de log antiguo de datos de unificacion            
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcorr[0]->getInstitucioneducativaCurso()->getId());
@@ -725,10 +762,10 @@ class RudeUnificationController extends Controller{
                                 ->where('v.esActivo is false')
                                 ->where('v.validacionReglaTipo = 8 and v.solucionTipoId = 2 and (v.llave = :llave1 or v.llave = :llave2)')
                                 ->orWhere('v.validacionReglaTipo in (24,25,26) and v.solucionTipoId = 0 and (v.llave = :llave3 or v.llave = :llave4)')
-                                ->setParameter('llave1', $rudecor)
-                                ->setParameter('llave2', $rudeinc)
-                                ->setParameter('llave3', $rudecor.'|'.$rudeinc)
-                                ->setParameter('llave4', $rudeinc.'|'.$rudecor)
+                                ->setParameter('llave1', $rudeCorrect)
+                                ->setParameter('llave2', $rudeWrong)
+                                ->setParameter('llave3', $rudeCorrect.'|'.$rudeWrong)
+                                ->setParameter('llave4', $rudeWrong.'|'.$rudeCorrect)
                                 ->getQuery()
                                 ->getResult();
             
@@ -745,7 +782,7 @@ class RudeUnificationController extends Controller{
             //**PARA LA REGLA 8 La/el estudiante cuenta con más de un RUDE***/
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_est_dos_RUDES (:tipo, :rude, :param, :gestion)');
             $query->bindValue(':tipo', '2');
-            $query->bindValue(':rude', $rudecor);
+            $query->bindValue(':rude', $rudeCorrect);
             $query->bindValue(':param', '');
             $query->bindValue(':gestion', $gestion);
             $query->execute();
@@ -754,7 +791,7 @@ class RudeUnificationController extends Controller{
             //**PARA LA REGLA 26 Estudiantes con similitud de nombres y fecha de nacimiento***/
             $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_similitud_nombres_certf_nac (:tipo, :codigo_rude)');
             $query->bindValue(':tipo', '2');
-            $query->bindValue(':codigo_rude', $rudecor);
+            $query->bindValue(':codigo_rude', $rudeCorrect);
             $query->execute();
             $resultado = $query->fetchAll();
             //****FIN DEL PROCESO DE CALIDAD******//                        
