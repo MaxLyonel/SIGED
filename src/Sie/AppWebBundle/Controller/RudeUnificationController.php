@@ -24,6 +24,7 @@ class RudeUnificationController extends Controller{
     public $inicialPrimaria;
     public $inicialPrimariaCase2;
     public $currentyear;
+    public $userlogged;
     /**
      * the class constructor
      */
@@ -32,10 +33,16 @@ class RudeUnificationController extends Controller{
         $this->inicialPrimaria = false;
         $this->inicialPrimariaCase2 = false;
         $this->currentyear = $this->session->get('currentyear');
+        $this->userlogged = $this->session->get('userId');
     }    
     
 
     public function indexAction(Request $request){
+
+        //validation if the user is logged
+        if (!isset($this->userlogged)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
         // db conexion
         $em = $this->getDoctrine()->getManager();
         // ini vars
