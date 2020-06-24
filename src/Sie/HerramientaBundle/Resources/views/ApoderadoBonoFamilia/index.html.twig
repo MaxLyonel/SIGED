@@ -249,9 +249,15 @@
 							</div>
 						</div>
 						{% else %}
-							<div class="alert alert-warning">
-								<i class="fa fa-info-circle"></i> ¡Apoderado no registrado!
-							</div>
+							{% if pagado == 1 %}
+								<div class="alert alert-info">
+									<h4><i class="fa fa-info-circle"></i> Ya realizó el cobro</h4>
+								</div>
+							{% else %}
+								<div class="alert alert-warning">
+									<i class="fa fa-info-circle"></i> ¡Apoderado no registrado!
+								</div>
+							{% endif %}
 						{% endif %}
 					</div>
 					<div v-if="generos.length > 0 && apoderadoBonoFamilia != ''">
