@@ -205,13 +205,13 @@
                                                 <ul class="dropdown-menu">
 
                                                     {# APODERADO BONO FAMILIA #}
-                                                    {% if app.session.get('ie_gestion') == 2020 and data.segipId == 1 and data.edad < 18 and true %}
+                                                    {# {% if app.session.get('ie_gestion') == 2020 and data.segipId == 1 and data.edad < 18 and true %}
                                                         <li>
                                                             <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.eInsId}});" >
                                                                 <span class="label label-info"><i class="fa fa-list"></i> Registro de apoderado</span>
                                                             </a>
                                                         </li>
-                                                    {% endif %}
+                                                    {% endif %} #}
 
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
                                                     {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
