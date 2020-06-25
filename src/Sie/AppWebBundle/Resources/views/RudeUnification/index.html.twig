@@ -781,7 +781,10 @@
 
         <div class="row" v-if="swDoneUnification" >
           <div class="col-md-12" >
-            ${messageDoneUnification}
+            <div class="alert alert-success" role="alert">
+              ${messageDoneUnification}
+            </div>
+            
           </div>        
         </div>
 
@@ -1035,7 +1038,7 @@
                       this.studentHistoryEspCorrect = this.studentHistoryEspA;
                       this.studentHistoryPerCorrect = this.studentHistoryPerA;
 
-                      if( historyLengthA > historyLengthB){
+                      if( historyLengthA >= historyLengthB){
                         this.showButtonUnification = true;
                       }
                      
@@ -1047,7 +1050,7 @@
                       this.studentHistoryEspCorrect = this.studentHistoryEspB;
                       this.studentHistoryPerCorrect = this.studentHistoryPerB;
 
-                      if( historyLengthB > historyLengthA){
+                      if( historyLengthB >= historyLengthA){
                         this.showButtonUnification = true;
                       }
                     }
